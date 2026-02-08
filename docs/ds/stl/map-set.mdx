@@ -1,0 +1,22 @@
+﻿---
+title: map / set 常用技巧与坑点
+tags: [stl, map, set]
+---
+
+import BilibiliEmbed from '@site/src/components/BilibiliEmbed';
+
+<BilibiliEmbed bvid="BV1xxxxxxxx" page={1} />
+
+## 核心性质
+- set：有序去重集合
+- map：键有序，键唯一
+
+## 复杂度
+插入/删除/查找：O(log n)
+
+## 示例
+```cpp
+set<int> s;
+s.insert(3);
+auto it = s.lower_bound(3);
+```
