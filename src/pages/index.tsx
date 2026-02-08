@@ -20,7 +20,7 @@ export default function Home(){
               查看博客
             </Link>
             <Link className="button button--secondary" to="/videos">
-              视频聚合
+              观看视频
             </Link>
           </div>
         </section>
