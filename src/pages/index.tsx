@@ -49,6 +49,14 @@ export default function Home(){
             </p>
             <Link to="/blog">进入博客</Link>
           </div>
+
+          <div className="card" style={{ padding: 16 }}>
+            <h3>🧭 资源导航</h3>
+            <p style={{ opacity: 0.9 }}>
+              个人经常使用的资源导航。
+            </p>
+            <Link to="/blog">进入导航</Link>
+          </div>
         </section>
       </main>
     </Layout>
