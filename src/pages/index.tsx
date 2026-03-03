@@ -55,6 +55,7 @@ export default function Home(){
             <p style={{ opacity: 0.9 }}>
               个人经常使用的资源导航。
             </p>
+            <br></br>
             <Link to="/blog">进入导航</Link>
           </div>
         </section>
