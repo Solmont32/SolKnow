@@ -1,10 +1,7 @@
-# SolKnow Autonomous Pulse Runner (V3.6 - UNIVERSAL AESTHETIC)
+# SolKnow Autonomous Pulse Runner (V3.7 - STRATEGIC TURBO)
 # Usage: pwsh -ExecutionPolicy Bypass -File infinite_runner.ps1
 
-# 核心：强制设置 Windows 终端代码页为 65001 (UTF-8)
-if ($IsWindows) {
-    chcp 65001 | Out-Null
-}
+if ($IsWindows) { chcp 65001 | Out-Null }
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 $CHECK_INTERVAL = 300 
@@ -12,7 +9,7 @@ $LOG_FILE = "AUTOMATION_LOG.md"
 $TASKS_FILE = "TASKS.md"
 
 function Invoke-GCP($message) {
-    Write-Host ">>> Cloud Sync: $message" -ForegroundColor Gray
+    Write-Host ">>> [SYNC] $message" -ForegroundColor Gray
     git add .
     $status = git status --porcelain
     if ($status) {
@@ -25,10 +22,9 @@ function Show-Logo {
     $colors = @("Cyan", "Blue", "White")
     $randomColor = $colors[(Get-Random -Maximum $colors.Count)]
     Clear-Host
-    # 使用基础字符重构的工业级 Logo，确保 0 乱码
     Write-Host @"
 
-      [ STRATEGIC CORE ACTIVE ]
+      [ STRATEGIC ENGINE V3.7 - TURBO MODE ]
       ________________________________________________________________________________________________________
 
        ####   ####  #      #  # #  #  ####  #      #       #  #  #      #  ####  #   #
@@ -40,8 +36,8 @@ function Show-Logo {
                                      S O L K N O W   I N D U S T R I A L
       ________________________________________________________________________________________________________
       
-      >>> OBJECTIVE: INTEGRATED LEARNING SYSTEM (MATH & CS)
-      >>> STATUS: RESILIENT SYNC & AUTO-PLANNING
+      >>> FOCUS: MATH ANALYSIS & CS INTEGRATION
+      >>> MODE: BATCH EXECUTION (TURBO)
       >>> TIME: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
       ________________________________________________________________________________________________________
 
@@ -49,8 +45,11 @@ function Show-Logo {
 }
 
 function Show-Resting {
-    Clear-Host
-    Write-Host @"
+    param([int]$seconds)
+    for ($i = $seconds; $i -gt 0; $i--) {
+        Clear-Host
+        $bar = "[" + ("#" * ($seconds - $i)) + ("." * $i) + "]"
+        Write-Host @"
 
       [ SYSTEM STANDBY ]
       ________________________________________________________________________________________________________
@@ -59,8 +58,11 @@ function Show-Resting {
 
       ________________________________________________________________________________________________________
       
-      >>> NEXT HEARTBEAT IN $($CHECK_INTERVAL) SECONDS...
+      >>> NEXT HEARTBEAT: $i SECONDS
+      >>> $bar
 "@ -ForegroundColor DarkGray
+        Start-Sleep -Seconds 1
+    }
 }
 
 function Write-Log($message, $type="INFO") {
@@ -78,75 +80,81 @@ function Write-Log($message, $type="INFO") {
 
 if (-not (Test-Path $LOG_FILE)) { Add-Content -Path $LOG_FILE -Value "# SolKnow Automation Vital Logs`n" }
 
-Write-Log "SolKnow Industrial Core V3.6 (Universal) Initialized." "SUCCESS"
+Write-Log "SolKnow Industrial Core V3.7 (Turbo) Initialized." "SUCCESS"
 
 while($true) {
     try {
         Show-Logo
-        
-        Write-Host ">>> Verifying workspace integrity..." -ForegroundColor Gray
-        Invoke-GCP "chore: automated pre-pulse sync"
-        
-        Write-Log "Pulling intelligence from cloud..." "INFO"
+        Write-Host ">>> Heartbeat started. Initializing workspace..." -ForegroundColor Gray
+        Invoke-GCP "chore: pre-heartbeat synchronization"
         git pull origin main --rebase
 
+        # --- 阶段 1：战略规划 (Strategic Planning) ---
         $content = Get-Content $TASKS_FILE -Raw
-        
-        # 1. STRATEGIC PLANNING PHASE
         if ($content -notmatch "(?m)^## 待办子任务\s*(\r?\n- \[ \] .*)+") {
-            Write-Log "SUB-TASK LIST DEPLETED. PLANNING NEXT BATCH..." "PLAN"
-            
+            Write-Log "SUB-TASK QUEUE EMPTY. ANALYZING ROADMAP..." "PLAN"
             $planPrompt = @"
 Target: $TASKS_FILE
-Objective: Read '## 总任务'. Plan 3-5 granular sub-tasks to fulfill it.
-Requirements: Textbook quality, detailed knowledge, 1-2 examples, and multiple exercises per task.
-Action: Append them under '## 待办子任务' header as '- [ ] Task (YYYY-MM-DD)'.
-Rule: Do NOT change other sections. Run 'gcp' via Gemini CLI when done.
+Vision: Math Analysis Integrated System.
+Instructions:
+1. Review '## 总任务' and '## 已完成任务'.
+2. Plan 3-5 new sub-tasks that follow a logical progression of Math Analysis.
+3. Each task MUST focus on 'Detail + 1-2 Examples + Exercise Pool Expansion'.
+Action: Append under '## 待办子任务'. Run 'gcp'.
 "@
             & gemini -y -p $planPrompt
-            Write-Log "PLANNING COMPLETE." "SUCCESS"
+            Write-Log "STRATEGIC PLANNING COMPLETE. BATCH INJECTED." "SUCCESS"
             $content = Get-Content $TASKS_FILE -Raw 
         }
 
-        # 2. TACTICAL EXECUTION PHASE
-        if ($content -match "(?m)^## 待办子任务[\s\S]*?^- \[ \] (.*)") {
-            $taskDesc = $matches[1].Trim()
-            Write-Log "LOCKED TARGET: $taskDesc" "EXEC"
+        # --- 阶段 2：全量执行 (Turbo Execution) ---
+        # 在单次循环中处理所有待办任务，直到列表清空
+        while ($true) {
+            $content = Get-Content $TASKS_FILE -Raw
+            if ($content -match "(?m)^## 待办子任务[\s\S]*?^- \[ \] (.*)") {
+                $taskDesc = $matches[1].Trim()
+                Write-Log "TURBO LOCKED TARGET: $taskDesc" "EXEC"
 
-            $processingContent = $content -replace "(?m)^- \[ \] $([regex]::Escape($taskDesc))", "- [/] $taskDesc (Processing...)"
-            Set-Content $TASKS_FILE $processingContent
-            Invoke-GCP "chore: pulse - locking task: $taskDesc"
+                # 锁定任务并上云
+                $processingContent = $content -replace "(?m)^- \[ \] $([regex]::Escape($taskDesc))", "- [/] $taskDesc (Processing...)"
+                Set-Content $TASKS_FILE $processingContent
+                Invoke-GCP "chore: pulse - processing task: $taskDesc"
 
-            Write-Log "EXECUTOR DEPLOYED." "EXEC"
-            $execPrompt = @"
+                Write-Log "EXECUTING TASK..." "EXEC"
+                $execPrompt = @"
 Task: $taskDesc
-Context: Math Analysis Textbook Style.
+Context: Math Analysis Textbook Quality.
 Action: 
-1. Perform task (content + examples + exercises).
-2. Physical move: Remove from '## 待办子任务', add to '## 已完成任务' as '- [x]'.
+1. Perform task (write content, examples, exercises).
+2. Move task to '## 已完成任务' and mark as [x].
 3. Run 'gcp'.
-4. Verify with 'gh run list'.
 "@
-            & gemini -y -p $execPrompt
+                & gemini -y -p $execPrompt
 
-            $postCheck = Get-Content $TASKS_FILE -Raw
-            if ($postCheck -match "(?m)^- \[\/\] $([regex]::Escape($taskDesc))") {
-                Write-Log "EXECUTOR INTERRUPTED. REVERTING TASK STATUS." "ERROR"
-                $revertContent = $postCheck -replace "(?m)^- \[\/\] $([regex]::Escape($taskDesc)) \(Processing...\)", "- [ ] $taskDesc"
-                Set-Content $TASKS_FILE $revertContent
-                Invoke-GCP "chore: pulse - reverting failed task: $taskDesc"
+                # 同步并验证
+                git pull origin main --rebase
+                $postCheck = Get-Content $TASKS_FILE -Raw
+                if ($postCheck -match "(?m)^- \[\/\] $([regex]::Escape($taskDesc))") {
+                    Write-Log "TASK FAILED. REVERTING..." "ERROR"
+                    $revertContent = $postCheck -replace "(?m)^- \[\/\] $([regex]::Escape($taskDesc)) \(Processing...\)", "- [ ] $taskDesc"
+                    Set-Content $TASKS_FILE $revertContent
+                    Invoke-GCP "chore: pulse - task reverted: $taskDesc"
+                    break # 跳出 Turbo 循环，等待下次心跳重试
+                } else {
+                    Write-Log "TASK SUCCESSFUL. MOVING TO NEXT..." "SUCCESS"
+                }
             } else {
-                Write-Log "MISSION SUCCESS: $taskDesc" "SUCCESS"
+                Write-Log "ALL SUB-TASKS CLEARED IN THIS CYCLE." "SUCCESS"
+                break
             }
         }
-        
+
         Write-Log "Cloud verification..." "INFO"
         gh run list --limit 1
         
     } catch {
-        Write-Log "SYSTEM FAULT: $($_.Exception.Message)" "ERROR"
+        Write-Log "TURBO ENGINE FAULT: $($_.Exception.Message)" "ERROR"
     }
     
-    Show-Resting
-    Start-Sleep -Seconds $CHECK_INTERVAL
+    Show-Resting $CHECK_INTERVAL
 }
