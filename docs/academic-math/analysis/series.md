@@ -6,93 +6,126 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # 级数 (Series)
 
-级数是分析学中处理无限求和问题的核心工具，是连接离散与连续、代数与分析的桥梁。
-
-## 1. 数项级数回顾
-若数列 $\{a_n\}$ 的部分和 $S_n = \sum_{i=1}^n a_i$ 当 $n \to \infty$ 时极限存在且为 $S$，则称级数收敛。
-
-### 敛散性判别法
-1.  **正项级数**：比较判别法、比值判别法 (d'Alembert)、根值判别法 (Cauchy)。
-2.  **交错级数**：Leibniz 判别法（$|a_n|$ 单调递减且趋于 0）。
-3.  **绝对收敛与条件收敛**：若 $\sum |a_n|$ 收敛，则 $\sum a_n$ 绝对收敛。
+级数是分析学中处理无限求和问题的核心工具，是连接离散与连续、代数与分析的桥梁。本节重点讨论数项级数的敛散性判别及其分析性质。
 
 ---
 
-## 2. 幂级数 (Power Series) 深度扩展
+## 1. 数项级数基本概念
 
-形如 $\sum_{n=0}^\infty a_n (x - x_0)^n$ 的级数称为 **幂级数**。本节重点讨论以 0 为中心的幂级数 $\sum a_n x^n$。
+对于数列 $\{a_n\}$，其无限求和 $\sum_{n=1}^\infty a_n$ 称为 **数项级数**。
+- **部分和**：$S_n = \sum_{i=1}^n a_i$。
+- **收敛性**：若 $\lim_{n \to \infty} S_n = S$ 存在（有限），则级数收敛，称 $S$ 为其和；否则级数发散。
+- **必要条件**：若 $\sum a_n$ 收敛，则 $\lim_{n \to \infty} a_n = 0$。（注意：逆命题不成立，如调和级数 $\sum \frac{1}{n}$）。
 
-### 2.1 收敛半径与 Cauchy-Hadamard 公式
-根据 Abel 引理，若幂级数在 $x_0 \neq 0$ 处收敛，则对于满足 $|x| < |x_0|$ 的一切 $x$，级数绝对收敛。
+---
 
+## 2. 正项级数判别法 (Positive Term Series)
+
+若 $a_n \geq 0$，则级数 $\sum a_n$ 的敛散性判别有如下工具：
+
+### 2.1 比较判别法 (Comparison Test)
+设 $0 \leq a_n \leq b_n$：
+- 若 $\sum b_n$ 收敛，则 $\sum a_n$ 收敛；
+- 若 $\sum a_n$ 发散，则 $\sum b_n$ 发散。
+
+<KnowledgeCard type="info" title="极限形式 (Limit Comparison Test)">
+若 $\lim_{n \to \infty} \frac{a_n}{b_n} = l$：
+- $0 < l < \infty$：$\sum a_n$ 与 $\sum b_n$ 同敛散；
+- $l = 0$：$\sum b_n$ 收敛 $\implies \sum a_n$ 收敛；
+- $l = \infty$：$\sum b_n$ 发散 $\implies \sum a_n$ 发散。
+</KnowledgeCard>
+
+### 2.2 比值与根值判别法
+- **比值判别法 (D'Alembert)**：设 $r = \lim_{n \to \infty} \frac{a_{n+1}}{a_n}$。
+  - $r < 1$ 收敛；$r > 1$ 发散；$r = 1$ 失效。
+- **根值判别法 (Cauchy)**：设 $\rho = \lim_{n \to \infty} \sqrt[n]{a_n}$。
+  - $\rho < 1$ 收敛；$\rho > 1$ 发散；$\rho = 1$ 失效。
+
+### 2.3 积分判别法 (Integral Test)
+若 $f(x)$ 是 $[1, \infty)$ 上的非负、递减连续函数，且 $f(n) = a_n$，则：
+$\sum_{n=1}^\infty a_n$ 收敛 $\iff \int_1^\infty f(x) dx$ 收敛。
+> **应用**：$p$-级数 $\sum \frac{1}{n^p}$ 在 $p > 1$ 时收敛，$p \leq 1$ 时发散。
+
+### 2.4 Raabe 判别法 (深度扩展)
+当比值判别法失效（$r=1$）时，可尝试 **Raabe 判别法**：
+设 $K = \lim_{n \to \infty} n \left( \frac{a_n}{a_{n+1}} - 1 \right)$。
+- $K > 1$ 收敛；$K < 1$ 发散；$K = 1$ 仍可能失效。
+
+---
+
+## 3. 变号级数 (Series with Arbitrary Terms)
+
+### 3.1 交错级数与 Leibniz 判别法
+形如 $\sum (-1)^{n-1} a_n$ ($a_n > 0$) 的级数称为 **交错级数**。
+<KnowledgeCard type="success" title="Leibniz 判别法">
+若数列 $\{a_n\}$ 满足：
+1. $a_n \geq a_{n+1}$ (单调不增)；
+2. $\lim_{n \to \infty} a_n = 0$；
+则级数 $\sum_{n=1}^\infty (-1)^{n-1} a_n$ 收敛，且余项 $|R_n| \leq a_{n+1}$。
+</KnowledgeCard>
+
+### 3.2 绝对收敛与条件收敛
+- **绝对收敛**：若 $\sum |a_n|$ 收敛，则 $\sum a_n$ 必收敛。
+- **条件收敛**：若 $\sum a_n$ 收敛但 $\sum |a_n|$ 发散。
+> **重要定理 (Riemann)**：条件收敛级数经适当重排后，其和可为任意实数或发散。
+
+---
+
+## 4. 深度例题：数项级数
+
+### 例题 1：Raabe 判别法的应用
+判定级数 $\sum_{n=1}^\infty \frac{(2n-1)!!}{(2n)!!} \frac{1}{2n+1}$ 的敛散性。
+
+**解析**：
+设 $a_n = \frac{(2n-1)!!}{(2n)!!} \frac{1}{2n+1}$。考察比值：
+$\frac{a_n}{a_{n+1}} = \frac{(2n-1)!!}{(2n)!! (2n+1)} \cdot \frac{(2n+2)!! (2n+3)}{(2n+1)!!} = \frac{(2n+2)(2n+3)}{(2n+1)(2n+1)} = \frac{4n^2 + 10n + 6}{4n^2 + 4n + 1}$
+当 $n \to \infty$ 时，比值趋于 1，D'Alembert 失效。使用 Raabe 判别法：
+$K = \lim_{n \to \infty} n \left( \frac{4n^2 + 10n + 6}{4n^2 + 4n + 1} - 1 \right) = \lim_{n \to \infty} n \frac{6n + 5}{4n^2 + 4n + 1} = \frac{6}{4} = 1.5$
+因为 $1.5 > 1$，由 Raabe 判别法知级数 **收敛**。
+
+### 例题 2：交错级数的敛散性分析
+讨论级数 $\sum_{n=2}^\infty \frac{(-1)^n}{n + (-1)^n}$ 的敛散性。
+
+**解析**：
+该级数虽然是交错的，但项 $|a_n| = \frac{1}{n + (-1)^n}$ 并不单调递减（例如 $a_2 = 1/3, a_3 = 1/2$），不能直接用 Leibniz 判别法。
+利用泰勒展开或代数变形：
+$\frac{(-1)^n}{n + (-1)^n} = \frac{(-1)^n}{n(1 + \frac{(-1)^n}{n})} = \frac{(-1)^n}{n} \left( 1 - \frac{(-1)^n}{n} + O(\frac{1}{n^2}) \right) = \frac{(-1)^n}{n} - \frac{1}{n^2} + O(\frac{1}{n^3})$
+- $\sum \frac{(-1)^n}{n}$ 收敛（Leibniz）；
+- $\sum \frac{1}{n^2}$ 收敛（$p$-级数）；
+- $\sum O(\frac{1}{n^3})$ 绝对收敛。
+故原级数 **收敛**（实际上是条件收敛）。
+
+---
+
+## 5. 幂级数 (Power Series) 核心性质
+
+形如 $\sum_{n=0}^\infty a_n (x - x_0)^n$ 的级数。
+
+### 5.1 收敛半径与 Cauchy-Hadamard 公式
 <KnowledgeCard type="tip" title="收敛半径的判定">
-幂级数的收敛半径 $R$ 由 **Cauchy-Hadamard 公式** 给出：
-$$\frac{1}{R} = \limsup_{n \to \infty} \sqrt[n]{|a_n|}$$
-此外，若极限 $\lim_{n \to \infty} \left| \frac{a_{n+1}}{a_n} \right| = \rho$ 存在，则 $R = \frac{1}{\rho}$。
+幂级数的收敛半径 $R$：
+$$\frac{1}{R} = \limsup_{n \to \infty} \sqrt[n]{|a_n|} \quad \text{或} \quad R = \lim_{n \to \infty} \left| \frac{a_n}{a_{n+1}} \right|$$
 </KnowledgeCard>
 
-- 若 $|x| < R$，级数绝对收敛；
-- 若 $|x| > R$，级数发散；
-- 若 $|x| = R$，敛散性需单独讨论。
+- $|x| < R$ 绝对收敛；$|x| > R$ 发散；$|x| = R$ 需单独讨论。
 
-### 2.2 幂级数的解析性质
-幂级数在其收敛区间 $(-R, R)$ 内定义的和函数 $S(x)$ 具有极佳的分析性质：
-
-1.  **内一致收敛性**：幂级数在任何闭区间 $[a, b] \subset (-R, R)$ 上一致收敛。
-2.  **连续性**：和函数 $S(x)$ 在 $(-R, R)$ 内连续。若级数在端点 $x=R$ 处收敛，则根据 **Abel 第二定理**，$S(x)$ 在该端点左连续。
-3.  **逐项求导**：在收敛区间内可逐项求导，且收敛半径不变：
-    $$S'(x) = \sum_{n=1}^\infty n a_n x^{n-1}, \quad |x| < R$$
-4.  **逐项积分**：在收敛区间内可逐项积分，且收敛半径不变：
-    $$\int_0^x S(t) dt = \sum_{n=0}^\infty \frac{a_n}{n+1} x^{n+1}, \quad |x| < R$$
+### 5.2 解析性质与 Taylor 展开
+1. **一致收敛性**：在闭子区间 $[a, b] \subset (-R, R)$ 上一致收敛。
+2. **分析操作**：在收敛区间内可 **逐项求导** 与 **逐项积分**，且半径不变。
+3. **Taylor 展开**：$f(x) = \sum_{n=0}^\infty \frac{f^{(n)}(x_0)}{n!} (x - x_0)^n$，需余项 $R_n(x) \to 0$。
 
 ---
 
-## 3. 函数的幂级数展开 (Taylor 展开)
+## 6. 配套练习
 
-### 3.1 泰勒级数
-若 $f(x)$ 在 $x_0$ 处具有各阶导数，则称其泰勒级数为：
-$$f(x) \sim \sum_{n=0}^\infty \frac{f^{(n)}(x_0)}{n!} (x - x_0)^n$$
-**注意**：泰勒级数收敛并不一定收敛于 $f(x)$。只有当余项 $R_n(x) \to 0$ 时，展开式才成立（此时称 $f$ 为解析函数）。
-
-<KnowledgeCard type="info" title="常用麦克劳林展开 ($|x| < R$)">
-- $e^x = \sum_{n=0}^\infty \frac{x^n}{n!}, \quad R = \infty$
-- $\sin x = \sum_{n=0}^\infty \frac{(-1)^n x^{2n+1}}{(2n+1)!}, \quad R = \infty$
-- $\ln(1+x) = \sum_{n=1}^\infty \frac{(-1)^{n-1} x^n}{n}, \quad R = 1$
-- $\frac{1}{1-x} = \sum_{n=0}^\infty x^n, \quad R = 1$
-</KnowledgeCard>
-
----
-
-## 4. 深度例题
-
-### 例题 1：求级数的收敛半径与和函数
-求级数 $\sum_{n=1}^\infty n x^n$ 的收敛半径及和函数。
-
-**解析**：
-1. **收敛半径**：$a_n = n$，$\lim_{n \to \infty} \frac{a_{n+1}}{a_n} = \lim \frac{n+1}{n} = 1$，故 $R=1$。
-2. **求和函数**：
-   注意到 $\sum_{n=1}^\infty n x^n = x \sum_{n=1}^\infty n x^{n-1} = x \frac{d}{dx} \left( \sum_{n=0}^\infty x^n \right)$。
-   在 $|x| < 1$ 时，$\sum_{n=0}^\infty x^n = \frac{1}{1-x}$。
-   求导得：$\frac{d}{dx} \left( \frac{1}{1-x} \right) = \frac{1}{(1-x)^2}$。
-   故 $S(x) = \frac{x}{(1-x)^2}$。
-
-### 例题 2：利用幂级数计算定积分
-利用幂级数展开计算 $\int_0^1 \frac{\sin x}{x} dx$（保留前三项）。
-
-**解析**：
-$\frac{\sin x}{x} = \frac{1}{x} \left( x - \frac{x^3}{3!} + \frac{x^5}{5!} - \dots \right) = 1 - \frac{x^2}{6} + \frac{x^4}{120} - \dots$
-逐项积分：
-$\int_0^1 \left( 1 - \frac{x^2}{6} + \frac{x^4}{120} \right) dx = \left[ x - \frac{x^3}{18} + \frac{x^5}{600} \right]_0^1 = 1 - \frac{1}{18} + \frac{1}{600} \approx 0.9461$。
-
----
-
-## 5. 配套练习
-
-1.  **基础**：求幂级数 $\sum_{n=1}^\infty \frac{(x-2)^n}{n^2 3^n}$ 的收敛区间。
-2.  **进阶**：将函数 $f(x) = \frac{1}{1+x^2}$ 展开为关于 $x$ 的幂级数，并由此求 $\sum_{n=0}^\infty \frac{(-1)^n}{2n+1}$ 的值（提示：利用 $\arctan x$）。
-3.  **深度**：证明：若幂级数 $\sum a_n x^n$ 的收敛半径 $R > 0$，则和函数 $S(x)$ 在 $(-R, R)$ 内无限次可导。
-4.  **挑战**：计算级数和 $\sum_{n=1}^\infty \frac{n^2}{2^n}$。
+1.  **基础-正项**：判定 $\sum_{n=1}^\infty \left( 1 - \cos \frac{1}{n} \right)$ 的敛散性。
+2.  **基础-交错**：判定 $\sum_{n=2}^\infty \frac{(-1)^n}{\ln n}$ 是绝对收敛、条件收敛还是发散。
+3.  **进阶-判别法**：使用积分判别法判定 $\sum_{n=2}^\infty \frac{1}{n(\ln n)^p}$ 在不同 $p$ 值下的敛散性。
+4.  **深度-综合**：设 $a_n > 0$ 且 $\sum a_n$ 收敛，证明 $\sum \sqrt{a_n a_{n+1}}$ 亦收敛。
+5.  **挑战**：求级数 $\sum_{n=1}^\infty \frac{1}{n^2 + n}$ 的和（提示：部分分数分解）。
 
 <KnowledgeCard type="success" title="学习提示">
-掌握幂级数的关键在于“逐项求导”与“逐项积分”的自由切换，这使得我们可以通过简单的几何级数推导出复杂的函数展开。
+掌握数项级数的关键在于：
+1. **量级估算**：通过等价无穷小快速确定正项级数的基准（通常是 $p$-级数）。
+2. **特殊构造**：遇到 Leibniz 失效时，考虑泰勒展开分离出主项。
 </KnowledgeCard>
