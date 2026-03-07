@@ -239,22 +239,28 @@ function Suspend-ExcludedChanges {
         return $null
     }
 
+    $beforeRefs = @(git stash list --format="%gd")
+    if ($LASTEXITCODE -ne 0) {
+        throw "Failed to inspect stash state before suspending runtime changes."
+    }
+
     & git stash push --include-untracked -m $stashName -- $targetPaths *> $null
     if ($LASTEXITCODE -ne 0) {
         throw "Failed to stash excluded runtime changes."
     }
 
-    $topEntry = git stash list --format="%gd`t%s" | Select-Object -First 1
-    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($topEntry)) {
+    $afterRefs = @(git stash list --format="%gd")
+    if ($LASTEXITCODE -ne 0 -or -not $afterRefs -or $afterRefs.Count -eq 0) {
         throw "Unable to verify temporary runtime stash."
     }
 
-    $parts = $topEntry -split "`t", 2
-    if ($parts.Count -lt 2 -or $parts[1] -ne $stashName) {
-        throw "Unable to verify temporary runtime stash."
+    foreach ($ref in $afterRefs) {
+        if ($beforeRefs -notcontains $ref) {
+            return $ref
+        }
     }
 
-    return $parts[0]
+    throw "Unable to verify temporary runtime stash."
 }
 
 function Restore-ExcludedChanges($stashRef) {
@@ -265,6 +271,26 @@ function Restore-ExcludedChanges($stashRef) {
     git stash pop $stashRef *> $null
     if ($LASTEXITCODE -ne 0) {
         Write-Log "Failed to restore temporary runtime stash: $stashRef" "WARN"
+        return
+    }
+
+    Write-Log "Restored temporary runtime stash: $stashRef" "INFO"
+}
+
+function Restore-LatestCodexRuntimeStash {
+    $entries = @(git stash list)
+    if ($LASTEXITCODE -ne 0 -or -not $entries) {
+        return
+    }
+
+    $targetEntry = $entries | Where-Object { $_ -match 'codex-runner-temp-' } | Select-Object -First 1
+    if (-not $targetEntry) {
+        return
+    }
+
+    $stashRef = ($targetEntry -split ':', 2)[0].Trim()
+    if (-not [string]::IsNullOrWhiteSpace($stashRef)) {
+        Restore-ExcludedChanges $stashRef
     }
 }
 
@@ -494,6 +520,7 @@ function Run-ExecutionCycle {
 try {
     Ensure-LogFile
     Assert-Environment
+    Restore-LatestCodexRuntimeStash
     Acquire-Lock
     Write-Log "Codex Engine V6.0 Initialized." "SUCCESS"
     Unlock-StuckTasks
