@@ -14,11 +14,13 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 度量空间是赋予了“距离”概念的集合。
 
 ### 定义 1.1 (度量/距离)
+
 设 $X$ 是一个集合。如果对 $X$ 中任意两点 $p, q$，都有一个实数 $d(p, q)$（称为 $p$ 到 $q$ 的**距离**），满足：
+
 1. **非负性**：$d(p, q) \geq 0$，且 $d(p, q) = 0 \iff p = q$。
 2. **对称性**：$d(p, q) = d(q, p)$。
 3. **三角不等式**：$d(p, r) \leq d(p, q) + d(q, r)$。
-则称 $d$ 为 $X$ 上的一个**度量**，$(X, d)$ 称为一个**度量空间**。
+   则称 $d$ 为 $X$ 上的一个**度量**，$(X, d)$ 称为一个**度量空间**。
 
 <KnowledgeCard type="info" title="欧氏空间与离散空间">
 - **欧氏度量**：在 $\mathbb{R}^k$ 中，$d(\mathbf{x}, \mathbf{y}) = |\mathbf{x} - \mathbf{y}|$。这是我们最熟悉的度量。
@@ -32,6 +34,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 在度量空间中，我们通过“邻域”来定义集合的性质。
 
 ### 定义 2.1 (邻域与开集)
+
 - **邻域**：$N_r(p) = \{ q \in X \mid d(p, q) < r \}$ 称为 $p$ 的 $r$-邻域。
 - **开集**：如果集合 $E$ 的每个点都是其**内点**（即存在邻域 $N \subset E$），则称 $E$ 为**开集**。
 - **闭集**：如果集合 $E$ 包含其所有的**极限点**，则称 $E$ 为**闭集**。
@@ -48,23 +51,30 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 紧致性 (Compactness) 是分析学中最强大的概念之一，它将“无限”的问题转化为“有限”来处理。
 
 ### 定义 3.1 (紧致性 - 开覆盖定义)
+
 如果集合 $K$ 的任意**开覆盖**都存在**有限子覆盖**，则称 $K$ 是**紧致的**。
+
 > 换句话说：如果你用无穷多个开集盖住了 $K$，你总能从中挑出有限个来，依然能盖住 $K$。
 
 ### 定理 3.2 (Heine-Borel 定理)
+
 在欧氏空间 $\mathbb{R}^k$ 中，一个子集 $K$ 是**紧致的**，当且仅当它是**有界且闭的**。
 
 ---
+
 ## 4. 连续性与收敛性 (Continuity and Convergence)
 
 在度量空间中，极限和连续性的定义可以从 $\mathbb{R}$ 完美地推广。
 
 ### 定义 4.1 (收敛性)
+
 序列 $\{p_n\}$ 在度量空间 $X$ 中**收敛**于 $p \in X$，记作 $p_n \to p$，如果：
 $$\forall \epsilon > 0, \exists N \in \mathbb{N}, \text{ 使得当 } n > N \text{ 时, } d(p_n, p) < \epsilon$$
 
 ### 定义 4.2 (拓扑连续性)
+
 设 $f: X \to Y$ 是两个度量空间之间的映射。以下陈述等价：
+
 1. **$\epsilon-\delta$ 定义**：$\forall p \in X, \forall \epsilon > 0, \exists \delta > 0$，使得 $d_X(x, p) < \delta \implies d_Y(f(x), f(p)) < \epsilon$。
 2. **开集原像定义**：对于 $Y$ 中的任意开集 $V$，$f^{-1}(V)$ 是 $X$ 中的开集。
 
@@ -80,6 +90,7 @@ $$\forall \epsilon > 0, \exists N \in \mathbb{N}, \text{ 使得当 } n > N \text
 连通性描述了一个集合是否是“一体”的。
 
 ### 定义 5.1 (连通集)
+
 如果集合 $E$ 不能表示为两个**不相交的非空开集**（在 $E$ 的相对拓扑下）的并集，则称 $E$ 是**连通的**。
 
 <KnowledgeCard type="info" title="介值定理的本质">
@@ -93,6 +104,7 @@ $$\forall \epsilon > 0, \exists N \in \mathbb{N}, \text{ 使得当 } n > N \text
 完备性确保了“看起来应该有极限的序列确实有极限”。
 
 ### 定义 6.1 (柯西序列与完备空间)
+
 - **柯西序列**：如果 $\forall \epsilon > 0, \exists N \in \mathbb{N}$，使得 $n, m > N \implies d(p_n, p_m) < \epsilon$。
 - **完备空间**：如果 $X$ 中每一个柯西序列都收敛于 $X$ 中的某个点，则称 $X$ 是**完备的**。
 
@@ -120,6 +132,7 @@ $$\forall \epsilon > 0, \exists N \in \mathbb{N}, \text{ 使得当 } n > N \text
 
 **证明：**
 构造开覆盖 $\{ G_n \}_{n=2}^\infty$，其中 $G_n = (1/n, 1)$。
+
 1. 显然 $\cup_{n=2}^\infty G_n = (0, 1)$，所以这是一个开覆盖。
 2. 假设存在有限子覆盖 $\{ G_{n_1}, G_{n_2}, \dots, G_{n_k} \}$。
 3. 取 $N = \max \{ n_1, \dots, n_k \}$，则有限并集为 $(1/N, 1)$。
@@ -135,14 +148,16 @@ $$\forall \epsilon > 0, \exists N \in \mathbb{N}, \text{ 使得当 } n > N \text
 
 ---
 
-## 5. 练习库入口 (Exercises)
+## 9. 练习库入口 (Exercises)
 
 本章相关的深度练习已同步至练习库：
+
 - [度量空间基本定义练习](/docs/exercises/math/topology-exercises#metric-spaces)
 - [开闭集与紧致性判定](/docs/exercises/math/topology-exercises#compactness)
 
 ---
 
-## 🚀 延伸思考
+## 10. 🚀 延伸思考
+
 - **无限维空间**：在无限维的希尔伯特空间中，有界闭集（如单位球）是否依然紧致？（提示：Riesz 引理）。
 - **连通性**：除了紧致性，拓扑学中另一个核心概念是连通性。如何用开集定义一个集合是“连在一起的”？

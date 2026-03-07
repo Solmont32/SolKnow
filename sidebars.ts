@@ -156,6 +156,7 @@ const sidebars: SidebarsConfig = {
                 'academic-math/analysis/limits', 
                 'academic-math/analysis/function-limits',
                 'academic-math/analysis/continuity',
+                'academic-math/analysis/topology',
                 'academic-math/analysis/derivatives', 
                 'academic-math/analysis/indefinite-integrals',
                 'academic-math/analysis/integrals',
