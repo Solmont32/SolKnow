@@ -170,10 +170,10 @@ $$L_{12} = \lim_{x \to x_0} \left( \lim_{y \to y_0} f(x, y) \right), \quad L_{21
 <SupportingExercises 
   topic="多元函数极限与连续" 
   exercises={[
-    { index: 23, title: "多元函数极限不存在性证明", slug: "练习-23多元函数极限不存在性" },
-    { index: 43, title: "利用极坐标求重极限", slug: "练习-43极坐标求极限" },
-    { index: 44, title: "二元函数连续性判定", slug: "练习-44函数连续性判定" },
-    { index: 45, title: "累次极限与重极限的辨析", slug: "练习-45累次极限辨析" }
+    { index: 124, title: "多元极限路径判别", slug: "练习-124多元极限路径判别" },
+    { index: 125, title: "多元连续性判定", slug: "练习-125多元连续性判定" },
+    { index: 127, title: "全微分与可微性的预备训练", slug: "练习-127全微分与可微性" },
+    { index: 129, title: "二元函数极值基础", slug: "练习-129二元函数极值" }
   ]} 
 />
 

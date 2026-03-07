@@ -3,6 +3,7 @@ title: 幂级数 (Power Series)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import SupportingExercises from '@site/src/components/SupportingExercises';
 
 # 第十四章 幂级数 (Power Series)
 
@@ -184,6 +185,17 @@ $\sum_{n=0}^\infty \frac{(-1)^n}{3n+1} = \lim_{x \to 1^-} f(x) = \frac{1}{3} \ln
 3. **级数求和**：求 $\sum_{n=1}^\infty \frac{x^n}{n(n+1)}$ 的和函数。
 4. **函数展开**：将 $f(x) = \ln(x^2 + 3x + 2)$ 展开为 $x$ 的幂级数。
 5. **极限综合**：利用 Taylor 展开求 $\lim_{x \to 0} \frac{\cos x - e^{-x^2/2}}{x^4}$。
+
+---
+<SupportingExercises
+  topic="幂级数与 Fourier 级数"
+  exercises={[
+    { index: 118, title: "幂级数收敛半径", slug: "练习-118幂级数收敛半径" },
+    { index: 119, title: "幂级数和函数", slug: "练习-119幂级数和函数" },
+    { index: 120, title: "Taylor 展开求极限", slug: "练习-120taylor展开求极限" },
+    { index: 122, title: "Fourier 系数计算", slug: "练习-122fourier系数计算" }
+  ]}
+/>
 
 ---
 

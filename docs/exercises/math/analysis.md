@@ -2453,3 +2453,822 @@ $-\frac{x}{4(x^2+1)^2} + \frac{x}{8(x^2+1)} + \frac{1}{8}\arctan x + C$
 $\ln |\tan x + 2 + \sqrt{\tan^2 x + 4\tan x + 1}| + C$
 </details>
 
+---
+
+# 数学分析练习库 Volume 2 专题实战
+
+> 覆盖专题：[数项级数](../../academic-math/analysis/series.md)、[幂级数](../../academic-math/analysis/power-series.md)、[多元函数的极限与连续](../../academic-math/analysis/multivariable-limits.md)、[多元函数微分学](../../academic-math/analysis/multivariable-differentiation.md)、[隐函数定理及其应用](../../academic-math/analysis/implicit-function-theorem.md)、[重积分](../../academic-math/analysis/multiple-integrals.md)、[曲线积分](../../academic-math/analysis/line-integrals.md)、[曲面积分](../../academic-math/analysis/surface-integrals.md)。
+
+## 专题 A：级数与展开
+
+<a id="练习-116正项级数比较判别"></a>
+## 练习 116：[基础] 正项级数比较判别
+判定级数 $\sum_{n=1}^{\infty}\frac{n+1}{n^3+2}$ 的敛散性。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 当 $n$ 充分大时，$\frac{n+1}{n^3+2} \sim \frac{1}{n^2}$。
+2. 取比较级数 $\sum \frac{1}{n^2}$，它收敛。
+3. 由极限比较判别法，原级数收敛。
+
+#### 答案
+收敛。
+</details>
+
+---
+
+<a id="练习-117交错级数误差估计"></a>
+## 练习 117：[基础] 交错级数误差估计
+用前 4 项近似交错级数 $\sum_{n=1}^{\infty}(-1)^{n-1}\frac{1}{n}$，并给出误差上界。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 前 4 项和为 $S_4=1-\frac12+\frac13-\frac14=\frac{7}{12}$。
+2. 该级数满足 Leibniz 判别法。
+3. 交错级数截断误差满足 $|R_4|\le a_5=\frac15$。
+
+#### 答案
+近似值为 $\frac{7}{12}$，误差不超过 $\frac15$。
+</details>
+
+---
+
+<a id="练习-118幂级数收敛半径"></a>
+## 练习 118：[基础] 幂级数收敛半径
+求幂级数 $\sum_{n=1}^{\infty}\frac{(n+1)x^n}{3^n}$ 的收敛半径与收敛区间。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 设 $a_n=\frac{n+1}{3^n}$，则
+   $$\lim_{n\to\infty}\left|\frac{a_n}{a_{n+1}}\right|=\lim_{n\to\infty}3\frac{n+1}{n+2}=3.$$
+   所以收敛半径 $R=3$。
+2. 当 $x=3$ 时，级数化为 $\sum (n+1)$，发散。
+3. 当 $x=-3$ 时，级数化为 $\sum (n+1)(-1)^n$，通项不趋于 0，发散。
+
+#### 答案
+收敛半径 $R=3$，收敛区间为 $(-3,3)$。
+</details>
+
+---
+
+<a id="练习-119幂级数和函数"></a>
+## 练习 119：[提高] 幂级数和函数
+求 $\sum_{n=1}^{\infty}\frac{x^n}{n(n+1)}$ 的和函数。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 裂项：
+   $$\frac{1}{n(n+1)}=\frac{1}{n}-\frac{1}{n+1}.$$
+2. 因而
+   $$\sum_{n=1}^{\infty}\frac{x^n}{n(n+1)}
+   =\sum_{n=1}^{\infty}\frac{x^n}{n}-\sum_{n=1}^{\infty}\frac{x^n}{n+1}.$$
+3. 利用 $\sum_{n=1}^{\infty}\frac{x^n}{n}=-\ln(1-x)$，并注意
+   $$\sum_{n=1}^{\infty}\frac{x^n}{n+1}=\frac{1}{x}\sum_{n=2}^{\infty}\frac{x^n}{n}=\frac{-\ln(1-x)-x}{x}.$$
+4. 合并得
+   $$S(x)=1+\frac{1-x}{x}\ln(1-x),\quad |x|<1.$$
+
+#### 答案
+$$\sum_{n=1}^{\infty}\frac{x^n}{n(n+1)}=1+\frac{1-x}{x}\ln(1-x)\quad(|x|<1).$$
+</details>
+
+---
+
+<a id="练习-120taylor展开求极限"></a>
+## 练习 120：[提高] Taylor 展开求极限
+计算 $\lim_{x\to 0}\frac{e^x-\cos x-x}{x^2}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 展开：
+   $$e^x=1+x+\frac{x^2}{2}+o(x^2),\qquad \cos x=1-\frac{x^2}{2}+o(x^2).$$
+2. 分子为
+   $$e^x-\cos x-x=x^2+o(x^2).$$
+3. 故极限为 1。
+
+#### 答案
+$1$
+</details>
+
+---
+
+<a id="练习-121abel定理求和"></a>
+## 练习 121：[提高] Abel 定理求和
+求级数 $\sum_{n=1}^{\infty}\frac{(-1)^{n-1}}{n\cdot 3^n}$ 的和。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 利用公式
+   $$\sum_{n=1}^{\infty}\frac{(-1)^{n-1}x^n}{n}=\ln(1+x),\quad |x|\le 1,\ x\neq -1.$$
+2. 取 $x=\frac13$，得
+   $$\sum_{n=1}^{\infty}\frac{(-1)^{n-1}}{n\cdot 3^n}=\ln\left(1+\frac13\right)=\ln\frac43.$$
+
+#### 答案
+$\ln\frac43$
+</details>
+
+---
+
+<a id="练习-122fourier系数计算"></a>
+## 练习 122：[挑战] Fourier 系数计算
+设 $f(x)=x$ 在 $(-\pi,\pi)$ 上作 $2\pi$ 周期延拓，求其 Fourier 级数。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. $f(x)=x$ 是奇函数，所以 $a_0=a_n=0$。
+2. 只需计算
+   $$b_n=\frac{1}{\pi}\int_{-\pi}^{\pi}x\sin nx\,dx=\frac{2}{\pi}\int_0^{\pi}x\sin nx\,dx.$$
+3. 分部积分得
+   $$b_n=\frac{2(-1)^{n+1}}{n}.$$
+
+#### 答案
+$$x\sim 2\sum_{n=1}^{\infty}\frac{(-1)^{n+1}}{n}\sin nx,\quad -\pi<x<\pi.$$
+</details>
+
+---
+
+<a id="练习-123级数与积分交换"></a>
+## 练习 123：[挑战] 级数与积分交换
+计算 $\int_0^1 \sum_{n=0}^{\infty}x^{2n}\,dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 当 $|x|<1$ 时，
+   $$\sum_{n=0}^{\infty}x^{2n}=\frac{1}{1-x^2}.$$
+2. 但积分区间含端点 $x=1$，原函数作为广义积分处理：
+   $$\int_0^1\frac{dx}{1-x^2}=\frac12\int_0^1\left(\frac{1}{1-x}+\frac{1}{1+x}\right)dx.$$
+3. 因 $\int_0^1\frac{dx}{1-x}$ 发散，所以积分发散。
+
+#### 答案
+发散到 $+\infty$。
+</details>
+
+---
+
+## 专题 B：多元微积分
+
+<a id="练习-124多元极限路径判别"></a>
+## 练习 124：[基础] 多元极限路径判别
+判定 $\lim_{(x,y)\to(0,0)}\frac{x^2y}{x^4+y^2}$ 是否存在。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 沿直线 $y=0$，极限为 0。
+2. 沿抛物线 $y=x^2$，
+   $$\frac{x^2\cdot x^2}{x^4+x^4}=\frac12.$$
+3. 两条路径极限不同，故重极限不存在。
+
+#### 答案
+不存在。
+</details>
+
+---
+
+<a id="练习-125多元连续性判定"></a>
+## 练习 125：[基础] 多元连续性判定
+讨论函数
+$$f(x,y)=\begin{cases}
+\frac{x^2y^2}{x^2+y^2},&(x,y)\neq(0,0),\\
+0,&(x,y)=(0,0)
+\end{cases}$$
+在原点处是否连续。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 有估计
+   $$0\le \frac{x^2y^2}{x^2+y^2}\le \frac{x^2+y^2}{4},$$
+   因为 $2|xy|\le x^2+y^2$。
+2. 当 $(x,y)\to(0,0)$ 时，右端趋于 0。
+3. 因而 $\lim_{(x,y)\to(0,0)}f(x,y)=0=f(0,0)$。
+
+#### 答案
+在原点连续。
+</details>
+
+---
+
+<a id="练习-126方向导数与梯度"></a>
+## 练习 126：[基础] 方向导数与梯度
+设 $f(x,y)=x^2y+y^2$，求其在点 $(1,-1)$ 沿向量 $(3,4)$ 方向的方向导数。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 梯度为
+   $$\nabla f=(2xy,\ x^2+2y).$$
+2. 在 $(1,-1)$ 处，
+   $$\nabla f(1,-1)=(-2,-1).$$
+3. 单位方向向量为 $\mathbf{u}=(3/5,4/5)$。
+4. 方向导数
+   $$D_{\mathbf{u}}f=\nabla f\cdot \mathbf{u}=-2\cdot \frac35-1\cdot \frac45=-2.$$
+
+#### 答案
+$-2$
+</details>
+
+---
+
+<a id="练习-127全微分与可微性"></a>
+## 练习 127：[提高] 全微分与可微性
+设 $f(x,y)=x^2e^y$，求 $df$，并写出点 $(1,0)$ 处的线性主部。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 偏导数：
+   $$f_x=2xe^y,\qquad f_y=x^2e^y.$$
+2. 全微分为
+   $$df=2xe^y\,dx+x^2e^y\,dy.$$
+3. 在 $(1,0)$ 处，
+   $$df_{(1,0)}=2\,dx+dy.$$
+
+#### 答案
+$$df=2xe^y\,dx+x^2e^y\,dy,\qquad (1,0)\text{ 处线性主部为 }2\Delta x+\Delta y.$$
+</details>
+
+---
+
+<a id="练习-128切平面与法线"></a>
+## 练习 128：[提高] 切平面与法线
+求曲面 $z=x^2+xy+y^2$ 在点 $(1,1,3)$ 处的切平面方程。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 设 $F(x,y,z)=x^2+xy+y^2-z$。
+2. 偏导为
+   $$F_x=2x+y,\quad F_y=x+2y,\quad F_z=-1.$$
+3. 在点 $(1,1,3)$ 处，法向量为 $(3,3,-1)$。
+4. 切平面：
+   $$3(x-1)+3(y-1)-(z-3)=0.$$
+
+#### 答案
+$$3x+3y-z-3=0.$$
+</details>
+
+---
+
+<a id="练习-129二元函数极值"></a>
+## 练习 129：[提高] 二元函数极值
+求函数 $f(x,y)=x^2+y^2-2x-4y$ 的极值。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 配方：
+   $$f(x,y)=(x-1)^2+(y-2)^2-5.$$
+2. 显然在 $(1,2)$ 处取最小值 $-5$。
+3. 无最大值。
+
+#### 答案
+在 $(1,2)$ 处取极小值 $-5$，无极大值。
+</details>
+
+---
+
+<a id="练习-130隐函数求导进阶"></a>
+## 练习 130：[挑战] 隐函数求导进阶
+由方程 $x^2+xy+y^2=3$ 确定隐函数 $y=y(x)$，求 $\frac{dy}{dx}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 对方程两边求导：
+   $$2x+y+x\frac{dy}{dx}+2y\frac{dy}{dx}=0.$$
+2. 整理：
+   $$(x+2y)\frac{dy}{dx}=-(2x+y).$$
+
+#### 答案
+$$\frac{dy}{dx}=-\frac{2x+y}{x+2y}.$$
+</details>
+
+---
+
+<a id="练习-131lagrange乘数法"></a>
+## 练习 131：[挑战] Lagrange 乘数法
+求函数 $f(x,y)=x^2+y^2$ 在约束 $x+y=1$ 下的最小值。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 构造
+   $$L=x^2+y^2+\lambda(x+y-1).$$
+2. 由方程组
+   $$2x+\lambda=0,\quad 2y+\lambda=0,\quad x+y=1$$
+   得 $x=y=\frac12$。
+3. 代回得
+   $$f_{\min}=\frac14+\frac14=\frac12.$$
+
+#### 答案
+最小值为 $\frac12$，在 $\left(\frac12,\frac12\right)$ 处取得。
+</details>
+
+---
+
+## 专题 C：重积分
+
+<a id="练习-132二重积分换序"></a>
+## 练习 132：[基础] 二重积分换序
+计算 $\int_0^1\int_x^1 (x+y)\,dy\,dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 先对 $y$ 积分：
+   $$\int_x^1(x+y)\,dy=x(1-x)+\frac{1-x^2}{2}=\frac12+x-\frac32x^2.$$
+2. 再对 $x$ 积分：
+   $$\int_0^1\left(\frac12+x-\frac32x^2\right)\,dx=\frac12.$$
+
+#### 答案
+$\frac12$
+</details>
+
+---
+
+<a id="练习-133极坐标面积积分"></a>
+## 练习 133：[基础] 极坐标面积积分
+计算 $\iint_{x^2+y^2\le 4}(x^2+y^2)\,dA$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 改用极坐标：$x^2+y^2=r^2,\ dA=r\,dr\,d\theta$。
+2. 积分为
+   $$\int_0^{2\pi}\int_0^2 r^3\,dr\,d\theta=2\pi\cdot \frac{2^4}{4}=8\pi.$$
+
+#### 答案
+$8\pi$
+</details>
+
+---
+
+<a id="练习-134三重积分柱坐标"></a>
+## 练习 134：[基础] 三重积分柱坐标
+计算圆柱体 $\Omega:\ x^2+y^2\le 1,\ 0\le z\le 2$ 上的积分 $\iiint_\Omega (x^2+y^2)\,dV$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 柱坐标下被积函数为 $\rho^2$，体积元为 $\rho\,d\rho\,d\phi\,dz$。
+2. 积分为
+   $$\int_0^2dz\int_0^{2\pi}d\phi\int_0^1\rho^3\,d\rho=2\cdot 2\pi\cdot \frac14=\pi.$$
+
+#### 答案
+$\pi$
+</details>
+
+---
+
+<a id="练习-135对称性求质心"></a>
+## 练习 135：[提高] 对称性求质心
+求均匀半圆盘 $x^2+y^2\le a^2,\ y\ge 0$ 的质心纵坐标 $\bar y$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 面积 $A=\frac12\pi a^2$。
+2. 利用极坐标：
+   $$\bar y=\frac{1}{A}\iint_D y\,dA
+   =\frac{1}{A}\int_0^\pi\int_0^a (r\sin\theta)r\,dr\,d\theta.$$
+3. 计算得
+   $$\bar y=\frac{1}{\frac12\pi a^2}\cdot \frac{a^3}{3}\cdot 2=\frac{4a}{3\pi}.$$
+
+#### 答案
+$$\bar y=\frac{4a}{3\pi}.$$
+</details>
+
+---
+
+<a id="练习-136变量代换jacobian"></a>
+## 练习 136：[提高] 变量代换与 Jacobian
+令 $u=x+y,\ v=x-y$，计算区域 $D$ 由 $0\le x+y\le 2,\ 0\le x-y\le 1$ 围成时的积分 $\iint_D 1\,dA$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 反解：
+   $$x=\frac{u+v}{2},\qquad y=\frac{u-v}{2}.$$
+2. Jacobian
+   $$\left|\frac{\partial(x,y)}{\partial(u,v)}\right|=\frac12.$$
+3. 新区域为矩形 $0\le u\le 2,\ 0\le v\le 1$。
+4. 面积
+   $$\iint_D1\,dA=\int_0^2\int_0^1\frac12\,dv\,du=1.$$
+
+#### 答案
+$1$
+</details>
+
+---
+
+<a id="练习-137球坐标积分"></a>
+## 练习 137：[提高] 球坐标积分
+计算球体 $x^2+y^2+z^2\le a^2$ 的体积。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 球坐标下：
+   $$0\le r\le a,\ 0\le \theta\le \pi,\ 0\le \phi\le 2\pi.$$
+2. 体积为
+   $$V=\int_0^{2\pi}\int_0^\pi\int_0^a r^2\sin\theta\,dr\,d\theta\,d\phi
+   =2\pi\cdot 2\cdot \frac{a^3}{3}=\frac{4}{3}\pi a^3.$$
+
+#### 答案
+$$\frac{4}{3}\pi a^3.$$
+</details>
+
+---
+
+<a id="练习-138变密度质量计算"></a>
+## 练习 138：[挑战] 变密度质量计算
+设薄板 $D=\{(x,y)\mid 0\le x\le 1,\ 0\le y\le x\}$ 的面密度 $\rho(x,y)=x+y$，求总质量。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 质量
+   $$M=\int_0^1\int_0^x (x+y)\,dy\,dx.$$
+2. 内积分得
+   $$\int_0^x(x+y)\,dy=x^2+\frac{x^2}{2}=\frac32x^2.$$
+3. 再积分得
+   $$M=\int_0^1\frac32x^2\,dx=\frac12.$$
+
+#### 答案
+$\frac12$
+</details>
+
+---
+
+<a id="练习-139三重积分综合应用"></a>
+## 练习 139：[挑战] 三重积分综合应用
+计算 $\iiint_\Omega z\,dV$，其中 $\Omega=\{(x,y,z)\mid x^2+y^2+z^2\le a^2,\ z\ge 0\}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 用球坐标，$z=r\cos\theta$，上半球对应 $0\le \theta\le \frac{\pi}{2}$。
+2. 积分为
+   $$\int_0^{2\pi}\int_0^{\pi/2}\int_0^a r\cos\theta\cdot r^2\sin\theta\,dr\,d\theta\,d\phi.$$
+3. 分离变量：
+   $$2\pi\cdot \int_0^{\pi/2}\sin\theta\cos\theta\,d\theta\cdot \int_0^a r^3\,dr
+   =2\pi\cdot \frac12\cdot \frac{a^4}{4}.$$
+
+#### 答案
+$$\frac{\pi a^4}{4}.$$
+</details>
+
+---
+
+## 专题 D：曲线积分
+
+<a id="练习-140第一类曲线积分"></a>
+## 练习 140：[基础] 第一类曲线积分
+计算 $\int_L y\,ds$，其中 $L$ 为直线段 $x=t,\ y=2t,\ 0\le t\le 1$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. $y=2t$，且
+   $$ds=\sqrt{1^2+2^2}\,dt=\sqrt5\,dt.$$
+2. 因而
+   $$\int_L y\,ds=\int_0^1 2t\sqrt5\,dt=\sqrt5.$$
+
+#### 答案
+$\sqrt5$
+</details>
+
+---
+
+<a id="练习-141第二类曲线积分参数法"></a>
+## 练习 141：[基础] 第二类曲线积分参数法
+计算 $\int_L (y\,dx+x\,dy)$，其中 $L$ 为从 $(0,0)$ 到 $(1,1)$ 的抛物线段 $y=x^2$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 取参数 $x=t,\ y=t^2,\ 0\le t\le 1$。
+2. 则 $dx=dt,\ dy=2t\,dt$。
+3. 积分为
+   $$\int_0^1(t^2+2t^2)\,dt=\int_0^1 3t^2\,dt=1.$$
+
+#### 答案
+$1$
+</details>
+
+---
+
+<a id="练习-142保守场路径无关"></a>
+## 练习 142：[基础] 保守场路径无关
+计算 $\int_L (2x\,dx+2y\,dy)$，其中 $L$ 为连接 $(0,0)$ 与 $(1,2)$ 的任意分段光滑曲线。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 向量场为 $\nabla(x^2+y^2)$，是保守场。
+2. 线积分只与端点有关：
+   $$\int_L (2x\,dx+2y\,dy)=x^2+y^2\Big|_{(0,0)}^{(1,2)}=5.$$
+
+#### 答案
+$5$
+</details>
+
+---
+
+<a id="练习-143格林公式求面积"></a>
+## 练习 143：[提高] 格林公式求面积
+利用格林公式计算单位圆周 $x^2+y^2=1$ 围成区域的面积。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 取 $P=-\frac y2,\ Q=\frac x2$，则
+   $$\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}=1.$$
+2. 所以
+   $$\text{Area}(D)=\oint_{\partial D}\left(-\frac y2\,dx+\frac x2\,dy\right).$$
+3. 对单位圆参数化 $x=\cos t,\ y=\sin t$，可得积分值为 $\pi$。
+
+#### 答案
+$\pi$
+</details>
+
+---
+
+<a id="练习-144平面环量计算"></a>
+## 练习 144：[提高] 平面环量计算
+计算 $\oint_L (-y\,dx+x\,dy)$，其中 $L$ 为逆时针方向单位圆周。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 由格林公式：
+   $$\oint_L(-y\,dx+x\,dy)=\iint_D\left(\frac{\partial x}{\partial x}-\frac{\partial(-y)}{\partial y}\right)\,dA.$$
+2. 被积函数为 $1-(-1)=2$。
+3. 单位圆面积为 $\pi$，故积分为 $2\pi$。
+
+#### 答案
+$2\pi$
+</details>
+
+---
+
+<a id="练习-145空间曲线做功"></a>
+## 练习 145：[提高] 空间曲线做功
+计算向量场 $\mathbf{F}=(z,0,x)$ 沿线段 $L:\ \mathbf{r}(t)=(t,t,t),\ 0\le t\le 1$ 的功。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 代入参数后，$\mathbf{F}(\mathbf{r}(t))=(t,0,t)$。
+2. 有 $\mathbf{r}'(t)=(1,1,1)$。
+3. 故
+   $$\int_L\mathbf{F}\cdot d\mathbf{r}=\int_0^1 (t,0,t)\cdot(1,1,1)\,dt=\int_0^1 2t\,dt=1.$$
+
+#### 答案
+$1$
+</details>
+
+---
+
+<a id="练习-146非单连通区域环量"></a>
+## 练习 146：[挑战] 非单连通区域环量
+计算 $\oint_{x^2+y^2=4}\frac{-y\,dx+x\,dy}{x^2+y^2}$，方向取逆时针。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 参数化：$x=2\cos t,\ y=2\sin t,\ 0\le t\le 2\pi$。
+2. 则
+   $$-y\,dx+x\,dy=4\,dt,\qquad x^2+y^2=4.$$
+3. 积分化为
+   $$\int_0^{2\pi}\frac{4}{4}\,dt=2\pi.$$
+
+#### 答案
+$2\pi$
+</details>
+
+---
+
+<a id="练习-147格林公式逆向构造"></a>
+## 练习 147：[挑战] 格林公式逆向构造
+设 $L$ 为矩形边界 $0\le x\le 1,\ 0\le y\le 2$ 的正向边界，计算 $\oint_L (x^2y\,dx+xy^2\,dy)$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 由格林公式，
+   $$\oint_L P\,dx+Q\,dy=\iint_D\left(Q_x-P_y\right)\,dA.$$
+2. 这里
+   $$Q_x=y^2,\qquad P_y=x^2.$$
+3. 所以
+   $$\oint_L=\int_0^1\int_0^2 (y^2-x^2)\,dy\,dx
+   =\int_0^1\left(\frac83-2x^2\right)\,dx=2.$$
+
+#### 答案
+$2$
+</details>
+
+---
+
+## 专题 E：曲面积分
+
+<a id="练习-148第一类曲面积分"></a>
+## 练习 148：[基础] 第一类曲面积分
+计算曲面 $\Sigma:\ z=x+y,\ 0\le x\le 1,\ 0\le y\le 1$ 上的积分 $\iint_\Sigma 1\,dS$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 对图形曲面有
+   $$dS=\sqrt{1+z_x^2+z_y^2}\,dA=\sqrt3\,dA.$$
+2. 投影区域面积为 1。
+3. 所以
+   $$\iint_\Sigma1\,dS=\sqrt3.$$
+
+#### 答案
+$\sqrt3$
+</details>
+
+---
+
+<a id="练习-149平面通量计算"></a>
+## 练习 149：[基础] 平面通量计算
+求向量场 $\mathbf{F}=(0,0,1)$ 穿过上侧单位圆盘 $\Sigma:\ z=0,\ x^2+y^2\le 1$ 的通量。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 上侧单位法向量为 $\mathbf{n}=(0,0,1)$。
+2. 有 $\mathbf{F}\cdot \mathbf{n}=1$。
+3. 因而通量等于圆盘面积 $\pi$。
+
+#### 答案
+$\pi$
+</details>
+
+---
+
+<a id="练习-150图形曲面的面积元"></a>
+## 练习 150：[基础] 图形曲面的面积元
+计算 $\iint_\Sigma z\,dS$，其中 $\Sigma:\ z=x^2+y^2,\ x^2+y^2\le 1$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 这里 $z_x=2x,\ z_y=2y$，故
+   $$dS=\sqrt{1+4x^2+4y^2}\,dA.$$
+2. 改用极坐标：
+   $$\iint_\Sigma z\,dS=\int_0^{2\pi}\int_0^1 r^2\sqrt{1+4r^2}\,r\,dr\,d\theta.$$
+3. 令 $u=1+4r^2$，则
+   $$2\pi\int_0^1 r^3\sqrt{1+4r^2}\,dr
+   =\frac{\pi}{16}\int_1^5 (u-1)\sqrt{u}\,du.$$
+4. 计算得
+   $$\frac{\pi}{60}(25\sqrt5+1).$$
+
+#### 答案
+$$\frac{\pi}{60}(25\sqrt5+1).$$
+</details>
+
+---
+
+<a id="练习-151高斯公式基础"></a>
+## 练习 151：[提高] 高斯公式基础
+计算向量场 $\mathbf{F}=(x,y,z)$ 穿过半径为 $a$ 的球面 $x^2+y^2+z^2=a^2$ 外侧的通量。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 散度为
+   $$\nabla\cdot \mathbf{F}=1+1+1=3.$$
+2. 由高斯公式，
+   $$\oiint_\Sigma \mathbf{F}\cdot d\mathbf{S}=3\cdot \frac43\pi a^3=4\pi a^3.$$
+
+#### 答案
+$4\pi a^3$
+</details>
+
+---
+
+<a id="练习-152斯托克斯公式基础"></a>
+## 练习 152：[提高] 斯托克斯公式基础
+计算 $\oint_\Gamma (-y\,dx+x\,dy)$，其中 $\Gamma$ 为平面 $z=0$ 上的单位圆周，方向取从 $z$ 轴正向看为逆时针。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 取 $\mathbf{F}=(-y,x,0)$，则
+   $$\nabla\times \mathbf{F}=(0,0,2).$$
+2. 由斯托克斯公式，
+   $$\oint_\Gamma \mathbf{F}\cdot d\mathbf{r}
+   =\iint_{x^2+y^2\le 1}(0,0,2)\cdot(0,0,1)\,dA=2\pi.$$
+
+#### 答案
+$2\pi$
+</details>
+
+---
+
+<a id="练习-153闭曲面通量零判定"></a>
+## 练习 153：[提高] 闭曲面通量零判定
+设 $\mathbf{F}=(-y,x,0)$，求它穿过任意封闭曲面外侧的通量。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 散度为
+   $$\nabla\cdot \mathbf{F}=0+0+0=0.$$
+2. 由高斯公式，任意闭曲面的通量都等于区域内散度体积分，因此为 0。
+
+#### 答案
+$0$
+</details>
+
+---
+
+<a id="练习-154球面通量直接法"></a>
+## 练习 154：[挑战] 球面通量直接法
+计算向量场 $\mathbf{F}=\frac{1}{a}(x,y,z)$ 穿过球面 $x^2+y^2+z^2=a^2$ 外侧的通量。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 在球面上单位外法向量为
+   $$\mathbf{n}=\frac{1}{a}(x,y,z).$$
+2. 因而
+   $$\mathbf{F}\cdot \mathbf{n}=\frac{x^2+y^2+z^2}{a^2}=1.$$
+3. 通量等于球面面积：
+   $$4\pi a^2.$$
+
+#### 答案
+$4\pi a^2$
+</details>
+
+---
+
+<a id="练习-155斯托克斯与曲面无关性"></a>
+## 练习 155：[挑战] 斯托克斯与曲面无关性
+设 $\Gamma$ 为圆周 $x^2+y^2=1,\ z=0$，计算 $\oint_\Gamma z\,dx+x\,dy+y\,dz$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 取 $\mathbf{F}=(z,x,y)$，则
+   $$\nabla\times \mathbf{F}=(1,1,1).$$
+2. 取圆盘 $\Sigma:\ z=0,\ x^2+y^2\le 1$，其法向量为 $(0,0,1)$。
+3. 由斯托克斯公式，
+   $$\oint_\Gamma \mathbf{F}\cdot d\mathbf{r}
+   =\iint_\Sigma (1,1,1)\cdot(0,0,1)\,dA
+   =\iint_\Sigma 1\,dA=\pi.$$
+
+#### 答案
+$\pi$
+</details>
+

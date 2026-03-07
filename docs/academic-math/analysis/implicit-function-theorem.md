@@ -155,10 +155,10 @@ $$u_x = \frac{\begin{vmatrix} 1 & 1 \\ -u & y \end{vmatrix}}{y - x} = \frac{y + 
 <SupportingExercises 
   topic="隐函数与极值" 
   exercises={[
-    { index: 29, title: "隐函数求导公式应用", slug: "练习-29隐函数求导" },
-    { index: 39, title: "隐函数方程组求导进阶", slug: "练习-39隐函数求导方程组" },
-    { index: 11, title: "多元函数极值判别综合", slug: "练习-11多元函数极值判别" },
-    { index: 12, title: "Lagrange 乘数法与条件极值", slug: "练习-12lagrange乘数法应用" }
+    { index: 128, title: "切平面与法线", slug: "练习-128切平面与法线" },
+    { index: 130, title: "隐函数求导进阶", slug: "练习-130隐函数求导进阶" },
+    { index: 131, title: "Lagrange 乘数法", slug: "练习-131lagrange乘数法" },
+    { index: 129, title: "二元函数极值", slug: "练习-129二元函数极值" }
   ]} 
 />
 

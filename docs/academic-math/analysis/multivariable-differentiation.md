@@ -101,10 +101,10 @@ $$f(x_0+h, y_0+k) - f(x_0, y_0) \approx \frac{1}{2} (Ah^2 + 2Bhk + Ck^2)$$
 <SupportingExercises 
   topic="多元函数微分学" 
   exercises={[
-    { index: 24, title: "基本偏导数计算训练", slug: "练习-24偏导数计算" },
-    { index: 25, title: "多元复合函数链式法则", slug: "练习-25多元复合函数求导链式法则" },
-    { index: 26, title: "全微分的求法与形式不变性", slug: "练习-26全微分计算" },
-    { index: 27, title: "方向导数与梯度向量", slug: "练习-27方向导数" }
+    { index: 126, title: "方向导数与梯度", slug: "练习-126方向导数与梯度" },
+    { index: 127, title: "全微分与可微性", slug: "练习-127全微分与可微性" },
+    { index: 128, title: "切平面与法线", slug: "练习-128切平面与法线" },
+    { index: 129, title: "二元函数极值", slug: "练习-129二元函数极值" }
   ]} 
 />
 

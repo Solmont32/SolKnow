@@ -277,13 +277,14 @@ $3/4$
 <SupportingExercises 
   topic="重积分" 
   exercises={[
-    { index: 5, title: "二重积分直角坐标计算", slug: "练习-5二重积分计算" },
-    { index: 6, title: "三重积分柱坐标变换", slug: "练习-6利用柱坐标计算三重积分" },
-    { index: 68, title: "平面图形的质心计算", slug: "练习-68平面图形的质心计算" },
-    { index: 69, title: "均匀球体的转动惯量", slug: "练习-69均匀球体的转动惯量" },
-    { index: 70, title: "引力的计算（直线段对质点）", slug: "练习-70引力的计算（直线段对质点）" },
-    { index: 71, title: "复杂雅可比行列式的应用", slug: "练习-71复杂雅可比行列式的应用" },
-    { index: 72, title: "变密度球体的质量计算", slug: "练习-72变密度球体的质量计算" }
+    { index: 132, title: "二重积分换序", slug: "练习-132二重积分换序" },
+    { index: 133, title: "极坐标面积积分", slug: "练习-133极坐标面积积分" },
+    { index: 134, title: "三重积分柱坐标", slug: "练习-134三重积分柱坐标" },
+    { index: 135, title: "对称性求质心", slug: "练习-135对称性求质心" },
+    { index: 136, title: "变量代换与 Jacobian", slug: "练习-136变量代换jacobian" },
+    { index: 137, title: "球坐标积分", slug: "练习-137球坐标积分" },
+    { index: 138, title: "变密度质量计算", slug: "练习-138变密度质量计算" },
+    { index: 139, title: "三重积分综合应用", slug: "练习-139三重积分综合应用" }
   ]} 
 />
 

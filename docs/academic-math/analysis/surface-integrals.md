@@ -136,8 +136,14 @@ $$\int_\Omega d\omega = \int_{\partial \Omega} \omega$$
 <SupportingExercises 
   topic="曲面积分" 
   exercises={[
-    { index: 9, title: "高斯公式综合应用", slug: "练习-9高斯公式综合应用" },
-    { index: 10, title: "斯托克斯公式与旋度场", slug: "练习-10斯托克斯公式与旋度场" }
+    { index: 148, title: "第一类曲面积分", slug: "练习-148第一类曲面积分" },
+    { index: 149, title: "平面通量计算", slug: "练习-149平面通量计算" },
+    { index: 150, title: "图形曲面的面积元", slug: "练习-150图形曲面的面积元" },
+    { index: 151, title: "高斯公式基础", slug: "练习-151高斯公式基础" },
+    { index: 152, title: "斯托克斯公式基础", slug: "练习-152斯托克斯公式基础" },
+    { index: 153, title: "闭曲面通量零判定", slug: "练习-153闭曲面通量零判定" },
+    { index: 154, title: "球面通量直接法", slug: "练习-154球面通量直接法" },
+    { index: 155, title: "斯托克斯与曲面无关性", slug: "练习-155斯托克斯与曲面无关性" }
   ]} 
 />
 

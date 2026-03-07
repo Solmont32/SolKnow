@@ -130,8 +130,14 @@ $$\oint_L P dx + Q dy = \iint_D \left( \frac{\partial Q}{\partial x} - \frac{\pa
 <SupportingExercises 
   topic="曲线积分" 
   exercises={[
-    { index: 7, title: "格林公式与环量计算", slug: "练习-7格林公式与环量计算" },
-    { index: 8, title: "保守场判别与势函数", slug: "练习-8保守场判别与势函数" }
+    { index: 140, title: "第一类曲线积分", slug: "练习-140第一类曲线积分" },
+    { index: 141, title: "第二类曲线积分参数法", slug: "练习-141第二类曲线积分参数法" },
+    { index: 142, title: "保守场路径无关", slug: "练习-142保守场路径无关" },
+    { index: 143, title: "格林公式求面积", slug: "练习-143格林公式求面积" },
+    { index: 144, title: "平面环量计算", slug: "练习-144平面环量计算" },
+    { index: 145, title: "空间曲线做功", slug: "练习-145空间曲线做功" },
+    { index: 146, title: "非单连通区域环量", slug: "练习-146非单连通区域环量" },
+    { index: 147, title: "格林公式逆向构造", slug: "练习-147格林公式逆向构造" }
   ]} 
 />
 
