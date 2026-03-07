@@ -30,7 +30,7 @@ while($true) {
         # 匹配第一个待办任务 - [ ]
         if ($content -match "- \[ \] (.*)") {
             $taskDescription = $matches[1].Trim()
-            Write-Log "【发现任务】: $taskDescription"
+            Write-Log "【执行模式】: 发现待办任务 -> $taskDescription"
 
             # 标记为进行中 [/] 防止重复领题
             $newContent = $content -replace "- \[ \] $taskDescription", "- [/] $taskDescription (正在执行...)"
@@ -38,16 +38,19 @@ while($true) {
             git add TASKS.md; git commit -m "status: 开始执行任务 - $taskDescription"; git push origin main
 
             # 3. 唤醒 Gemini 执行核心逻辑
-            Write-Log ">>> Gemini 进入核心处理阶段..."
-            
-            # 使用 -p 模式，注入严格的闭环指令
+            Write-Log ">>> Gemini 前线执行官正在处理任务..."
             $geminiCmd = "gemini -p ""任务内容：$taskDescription 。完成后请按以下步骤操作：1. 严谨修改代码或文档。2. 将 TASKS.md 中的该项标记为 [x]。3. 执行 gcp 完成提交推送。4. 如果遇到无法解决的错误，请将该项标记为 [!] 并简述原因。"""
-            
             Invoke-Expression $geminiCmd
 
             Write-Log "【任务闭环】: $taskDescription 处理完毕。"
         } else {
-            Write-Log "当前无待办任务，进入低功耗监听..."
+            Write-Log "【规划模式】: 当前无待办任务，唤醒 Gemini 架构师进行自我规划..."
+            
+            # 自我派发任务逻辑
+            $planningCmd = "gemini -p ""当前 TASKS.md 中已无待办任务。作为 SolKnow 的数字合伙人，请审视目前知识库（数学、竞赛、AI、安全）与练习库的建设进度。请自主规划 1 个接下来最迫切需要进行的『深度内容扩充』或『练习库建设』任务。要求任务必须非常具体（例如：'深度重构高等代数中的矩阵特征值章节，增加万字解析和 3 道例题'）。将该任务以 '- [ ] 新任务描述' 的格式追加到 TASKS.md 的 '## 待办任务' 标题下，最后执行 gcp 完成推送。"""
+            Invoke-Expression $planningCmd
+            
+            Write-Log "【规划完成】: 新任务已生成，将在下一次心跳周期中执行。"
         }
     } catch {
         Write-Log "【警告】循环过程中出现异常: $($_.Exception.Message)"
