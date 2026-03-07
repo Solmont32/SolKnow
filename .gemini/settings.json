@@ -4,10 +4,6 @@
       "command": "uvx mcp-server-fetch",
       "args": []
     },
-    "thinking": {
-      "command": "uvx --from @modelcontextprotocol/server-sequential-thinking mcp-server-sequential-thinking",
-      "args": []
-    },
     "memory": {
       "command": "uvx --from @modelcontextprotocol/server-memory mcp-server-memory",
       "args": []
