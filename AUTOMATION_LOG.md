@@ -214,3 +214,4 @@
 [2026-03-08 03:37:46] [ OK ] Mission Accomplished: 全量扩充『数学分析练习库』Volume 1 专题 (2026-03-08)：在 `exercises/math/analysis` 中针对积分学与级数初步补充 30 道分梯度习题（基础/提高/挑战），并严格执行“答案折叠”规范。
 [2026-03-08 03:38:03] [ OK ] Batch queue cleared.
 [2026-03-08 03:39:05] [PLAN] No pending tasks. Initiating audit-first planning...
+[2026-03-08 03:41:57] [EXE ] Target Locked: 深度开发『凸函数、不等式与极值应用』专题 (2026-03-08)：对标华师大版 Ch 6，系统化凸函数理论：详述定义（Jensen 不等式形式）、二阶导数判别法，并以此推导 Young, Hölder, Minkowski 等分析学核心不等式，补充 8+ 道教科书级证明例题。
