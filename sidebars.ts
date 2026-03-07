@@ -8,7 +8,14 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: '基础算法',
       link: {type: 'doc', id: 'basic/index'},
-      items: ['basic/io', 'basic/complexity', 'basic/binary-search', 'basic/sorting', 'basic/greedy', 'basic/two-pointers'],
+      items: [
+        'basic/io',
+        'basic/complexity',
+        'basic/binary-search',
+        'basic/sorting',
+        'basic/greedy',
+        'basic/two-pointers',
+      ],
     },
     {
       type: 'category',
@@ -57,6 +64,7 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: '数学知识库',
+      collapsible: false,
       items: [
         {
           type: 'category',
@@ -68,8 +76,8 @@ const sidebars: SidebarsConfig = {
               link: {type: 'doc', id: 'academic-math/elementary/index'},
               items: [
                 'academic-math/elementary/arithmetic',
-                'academic-math/elementary/fractions',
                 'academic-math/elementary/geometry-basic',
+                'academic-math/elementary/fractions',
                 'academic-math/elementary/word-problems',
               ],
             },
@@ -78,11 +86,11 @@ const sidebars: SidebarsConfig = {
               label: '初中数学',
               link: {type: 'doc', id: 'academic-math/junior-high/index'},
               items: [
-                'academic-math/junior-high/algebraic-expressions',
-                'academic-math/junior-high/functions-basic',
-                'academic-math/junior-high/linear-equations',
-                'academic-math/junior-high/plane-geometry',
                 'academic-math/junior-high/real-numbers',
+                'academic-math/junior-high/linear-equations',
+                'academic-math/junior-high/algebraic-expressions',
+                'academic-math/junior-high/plane-geometry',
+                'academic-math/junior-high/functions-basic',
               ],
             },
             {
@@ -90,13 +98,13 @@ const sidebars: SidebarsConfig = {
               label: '高中数学',
               link: {type: 'doc', id: 'academic-math/senior-high/index'},
               items: [
-                'academic-math/senior-high/calculus-intro',
-                'academic-math/senior-high/conics',
-                'academic-math/senior-high/elementary-functions',
                 'academic-math/senior-high/sets',
-                'academic-math/senior-high/stats-basic',
+                'academic-math/senior-high/elementary-functions',
                 'academic-math/senior-high/trigonometry',
                 'academic-math/senior-high/vectors',
+                'academic-math/senior-high/conics',
+                'academic-math/senior-high/stats-basic',
+                'academic-math/senior-high/calculus-intro',
               ],
             },
           ],
@@ -110,11 +118,11 @@ const sidebars: SidebarsConfig = {
               label: '数学分析',
               link: {type: 'doc', id: 'academic-math/analysis/index'},
               items: [
+                'academic-math/analysis/limits',
+                'academic-math/analysis/series',
                 'academic-math/analysis/continuity',
                 'academic-math/analysis/derivatives',
                 'academic-math/analysis/integrals',
-                'academic-math/analysis/limits',
-                'academic-math/analysis/series',
               ],
             },
             {
@@ -122,10 +130,10 @@ const sidebars: SidebarsConfig = {
               label: '高等代数',
               link: {type: 'doc', id: 'academic-math/algebra/index'},
               items: [
+                'academic-math/algebra/polynomial',
                 'academic-math/algebra/determinant',
                 'academic-math/algebra/linear-equations',
                 'academic-math/algebra/matrix',
-                'academic-math/algebra/polynomial',
                 'academic-math/algebra/quadratic-forms',
               ],
             },
@@ -134,9 +142,9 @@ const sidebars: SidebarsConfig = {
               label: '概率论',
               link: {type: 'doc', id: 'academic-math/probability/index'},
               items: [
-                'academic-math/probability/continuous-rv',
-                'academic-math/probability/discrete-rv',
                 'academic-math/probability/events',
+                'academic-math/probability/discrete-rv',
+                'academic-math/probability/continuous-rv',
                 'academic-math/probability/limit-theorems',
               ],
             },
@@ -145,10 +153,10 @@ const sidebars: SidebarsConfig = {
               label: '数理统计',
               link: {type: 'doc', id: 'academic-math/statistics/index'},
               items: [
+                'academic-math/statistics/sampling',
                 'academic-math/statistics/estimation',
                 'academic-math/statistics/hypothesis-testing',
                 'academic-math/statistics/regression',
-                'academic-math/statistics/sampling',
               ],
             },
             {
@@ -157,8 +165,8 @@ const sidebars: SidebarsConfig = {
               link: {type: 'doc', id: 'academic-math/abstract-algebra/index'},
               items: [
                 'academic-math/abstract-algebra/groups',
-                'academic-math/abstract-algebra/lattices',
                 'academic-math/abstract-algebra/rings',
+                'academic-math/abstract-algebra/lattices',
               ],
             },
             {
@@ -166,10 +174,10 @@ const sidebars: SidebarsConfig = {
               label: '离散数学',
               link: {type: 'doc', id: 'academic-math/discrete-math/index'},
               items: [
-                'academic-math/discrete-math/combinatorics',
-                'academic-math/discrete-math/graph-theory',
                 'academic-math/discrete-math/logic',
                 'academic-math/discrete-math/set-theory',
+                'academic-math/discrete-math/graph-theory',
+                'academic-math/discrete-math/combinatorics',
               ],
             },
           ],
