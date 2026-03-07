@@ -162,6 +162,7 @@ const sidebars: SidebarsConfig = {
                 'academic-math/analysis/riemann-stieltjes-integral',
                 'academic-math/analysis/definite-integral-applications',
                 'academic-math/analysis/series',
+                'academic-math/analysis/fourier-series',
                 'academic-math/analysis/function-sequences',
                 'academic-math/analysis/differential-equations',
               ] 
