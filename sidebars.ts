@@ -70,7 +70,12 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: '字符串',
       link: {type: 'doc', id: 'string/index'},
-      items: ['string/kmp'],
+      items: [
+        'string/kmp',
+        'string/hashing',
+        'string/manacher',
+        'string/ac-automaton',
+      ],
     },
   ],
 
