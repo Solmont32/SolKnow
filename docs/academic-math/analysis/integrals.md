@@ -48,10 +48,28 @@ $$S(f, P, \{\xi_i\}) = \sum_{i=1}^n f(\xi_i) \Delta x_i$$
 ### 1. 变上限积分的导数
 设 $f(x)$ 在 $[a, b]$ 上连续，定义 $\Phi(x) = \int_a^x f(t) dt$。则 $\Phi(x)$ 在 $[a, b]$ 上可导，且：
 $$\Phi'(x) = f(x)$$
-这表明**连续函数的原函数一定存在**（即变上限积分函数）。
+
+**证明**：
+根据导数定义，
+$$\Phi'(x) = \lim_{\Delta x \to 0} \frac{\Phi(x+\Delta x) - \Phi(x)}{\Delta x} = \lim_{\Delta x \to 0} \frac{1}{\Delta x} \int_x^{x+\Delta x} f(t) dt$$
+由积分第一中值定理，存在 $\xi$ 介于 $x$ 与 $x+\Delta x$ 之间，使得：
+$$\int_x^{x+\Delta x} f(t) dt = f(\xi) \cdot \Delta x$$
+于是 $\Phi'(x) = \lim_{\Delta x \to 0} f(\xi)$。
+当 $\Delta x \to 0$ 时，由于 $\xi$ 被夹在 $x$ 与 $x+\Delta x$ 之间，必有 $\xi \to x$。
+又因 $f(x)$ 连续，故 $\lim_{\xi \to x} f(\xi) = f(x)$。
+所以 $\Phi'(x) = f(x)$。
 
 ### 2. 牛顿-莱布尼茨公式 (Newton-Leibniz Formula)
 若 $F(x)$ 是 $f(x)$ 在 $[a, b]$ 上的任一原函数，则：
+$$\int_a^b f(x) dx = F(b) - F(a)$$
+
+**证明**：
+由变上限积分的性质知，$\Phi(x) = \int_a^x f(t) dt$ 也是 $f(x)$ 的一个原函数。
+既然 $F(x)$ 和 $\Phi(x)$ 都是 $f(x)$ 的原函数，它们之间必只差一个常数 $C$：
+$$\int_a^x f(t) dt = F(x) + C$$
+令 $x = a$，由于 $\int_a^a f(t) dt = 0$，得 $0 = F(a) + C \implies C = -F(a)$。
+因此 $\int_a^x f(t) dt = F(x) - F(a)$。
+令 $x = b$，即得：
 $$\int_a^b f(x) dx = F(b) - F(a)$$
 
 ---
@@ -103,7 +121,7 @@ $1/3$
 
 ---
 
-## 五、 定积分实战练习库
+## 五、 练习库同步 (Analysis Exercise Sync)
 
 ### 练习 1：利用定积分定义求数列极限
 求极限：$\lim_{n \to \infty} (\frac{1}{n+1} + \frac{1}{n+2} + \dots + \frac{1}{n+n})$。
