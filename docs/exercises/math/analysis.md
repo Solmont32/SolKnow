@@ -1586,7 +1586,7 @@ $\frac{x^2+1}{2}\arctan x - \frac{x}{2} + C$
 计算 $\int \frac{\ln x}{x(1+\ln^2 x)} dx$。
 
 <details>
-<summary>点击查看解析与答案</summary>
+<summary>点击查看解析</summary>
 
 #### 解析
 1. **换元**：令 $u = \ln x, du = \frac{1}{x} dx$。
@@ -1597,6 +1597,583 @@ $\frac{1}{2}\ln(1+\ln^2 x) + C$
 </details>
 
 ---
+
+# 数学分析练习库扩充 Volume 1 (2026-03-08)
+
+> **专题：积分学与级数初步**
+> 梯度说明：基础 (Basic) | 提高 (Advanced) | 挑战 (Challenge)
+
+## 练习 84：[基础] 定积分的线性性质
+计算 $\int_1^2 (3x^2 - 2x + 1) dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **利用线性性**：
+   $\int_1^2 (3x^2 - 2x + 1) dx = 3\int_1^2 x^2 dx - 2\int_1^2 x dx + \int_1^2 1 dx$
+2. **逐项积分**：
+   $= [x^3 - x^2 + x]_1^2$
+3. **代入端点**：
+   $= (8 - 4 + 2) - (1 - 1 + 1) = 6 - 1 = 5$
+
+#### 答案
+5
+</details>
+
+---
+
+## 练习 85：[基础] 第一换元法（凑微分）
+计算 $\int \frac{e^x}{1+e^x} dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **凑微分**：注意到 $(1+e^x)' = e^x$，故 $e^x dx = d(1+e^x)$。
+2. **代入**：
+   $\int \frac{d(1+e^x)}{1+e^x} = \ln|1+e^x| + C$
+3. **简化**：由于 $1+e^x > 0$，可去掉绝对值。
+
+#### 答案
+$\ln(1+e^x) + C$
+</details>
+
+---
+
+## 练习 86：[基础] 分部积分法初步
+计算 $\int x \sin x dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **选定 $u, dv$**：令 $u = x, dv = \sin x dx$，则 $du = dx, v = -\cos x$。
+2. **应用分部积分公式**：$\int u dv = uv - \int v du$。
+3. **计算**：
+   $\int x \sin x dx = -x \cos x - \int (-\cos x) dx = -x \cos x + \sin x + C$
+
+#### 答案
+$\sin x - x \cos x + C$
+</details>
+
+---
+
+## 练习 87：[基础] 定积分的几何应用（面积）
+求曲线 $y = x^2$ 与直线 $y = x$ 在第一象限围成的图形面积。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **求交点**：$x^2 = x \Rightarrow x(x-1) = 0$，交点为 $(0,0)$ 和 $(1,1)$。
+2. **确定范围与上下界**：在 $[0, 1]$ 内，$x \ge x^2$。
+3. **设置积分**：
+   $A = \int_0^1 (x - x^2) dx = [\frac{1}{2}x^2 - \frac{1}{3}x^3]_0^1 = \frac{1}{2} - \frac{1}{3} = \frac{1}{6}$
+
+#### 答案
+$1/6$
+</details>
+
+---
+
+## 练习 88：[基础] 反常积分的敛散性判定
+判断反常积分 $\int_1^{+\infty} \frac{1}{x^2} dx$ 是否收敛，若收敛则计算其值。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **定义**：$\lim_{M \to +\infty} \int_1^M x^{-2} dx$。
+2. **计算积分**：
+   $\int_1^M x^{-2} dx = [-x^{-1}]_1^M = 1 - \frac{1}{M}$
+3. **取极限**：
+   $\lim_{M \to +\infty} (1 - \frac{1}{M}) = 1$。
+4. **结论**：收敛。
+
+#### 答案
+收敛，值为 1。
+</details>
+
+---
+
+## 练习 89：[基础] 几何级数的求和
+计算级数 $\sum_{n=0}^\infty (\frac{2}{3})^n$ 的和。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **识别类型**：首项 $a = 1$，公比 $q = 2/3$。
+2. **判定收敛性**：因为 $|q| < 1$，级数收敛。
+3. **利用求和公式**：$S = \frac{a}{1-q}$。
+4. **计算**：
+   $S = \frac{1}{1 - 2/3} = \frac{1}{1/3} = 3$
+
+#### 答案
+3
+</details>
+
+---
+
+## 练习 90：[基础] $p$-级数的敛散性
+判定级数 $\sum_{n=1}^\infty \frac{1}{n\sqrt{n}}$ 的敛散性。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **化简项**：$\frac{1}{n\sqrt{n}} = \frac{1}{n^{3/2}}$。
+2. **识别类型**：这是 $p$-级数，其中 $p = 3/2$。
+3. **判定标准**：当 $p > 1$ 时收敛。
+4. **结论**：由于 $3/2 > 1$，该级数收敛。
+
+#### 答案
+收敛
+</details>
+
+---
+
+## 练习 91：[基础] 正项级数的比较判别法
+判定级数 $\sum_{n=1}^\infty \frac{\sin^2 n}{n^2}$ 的敛散性。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **放大不等式**：注意到 $0 \le \sin^2 n \le 1$，故 $0 \le \frac{\sin^2 n}{n^2} \le \frac{1}{n^2}$。
+2. **已知级数**：$\sum_{n=1}^\infty \frac{1}{n^2}$ 是 $p=2$ 的 $p$-级数，收敛。
+3. **应用比较判别法**：较大项级数收敛，则较小项级数必收敛。
+
+#### 答案
+收敛
+</details>
+
+---
+
+## 练习 92：[基础] 比值判别法（D'Alembert）
+判定级数 $\sum_{n=1}^\infty \frac{n!}{n^n}$ 的敛散性。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **设 $a_n = \frac{n!}{n^n}$**。
+2. **计算比值极限**：
+   $\rho = \lim_{n \to \infty} \frac{a_{n+1}}{a_n} = \lim_{n \to \infty} \frac{(n+1)!}{(n+1)^{n+1}} \cdot \frac{n^n}{n!} = \lim_{n \to \infty} \frac{n+1}{(n+1)^{n+1}} \cdot n^n = \lim_{n \to \infty} (\frac{n}{n+1})^n$
+3. **利用重要极限**：
+   $\rho = \lim_{n \to \infty} \frac{1}{(1 + 1/n)^n} = \frac{1}{e}$
+4. **判定**：因为 $1/e < 1$，级数收敛。
+
+#### 答案
+收敛
+</details>
+
+---
+
+## 练习 93：[基础] 根值判别法（Cauchy）
+判定级数 $\sum_{n=1}^\infty (\frac{n}{2n+1})^n$ 的敛散性。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **设 $a_n = (\frac{n}{2n+1})^n$**。
+2. **计算根值极限**：
+   $\rho = \lim_{n \to \infty} \sqrt[n]{a_n} = \lim_{n \to \infty} \frac{n}{2n+1} = \frac{1}{2}$
+3. **判定**：因为 $1/2 < 1$，级数收敛。
+
+#### 答案
+收敛
+</details>
+
+---
+
+## 练习 94：[提高] 有理函数积分（部分分式）
+计算 $\int \frac{1}{x^2-5x+6} dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **因式分解分母**：$x^2-5x+6 = (x-2)(x-3)$。
+2. **待定系数法分解**：
+   $\frac{1}{(x-2)(x-3)} = \frac{A}{x-2} + \frac{B}{x-3}$
+   $1 = A(x-3) + B(x-2)$
+   令 $x=2 \Rightarrow A=-1$；令 $x=3 \Rightarrow B=1$。
+3. **积分**：
+   $\int (\frac{1}{x-3} - \frac{1}{x-2}) dx = \ln|x-3| - \ln|x-2| + C = \ln|\frac{x-3}{x-2}| + C$
+
+#### 答案
+$\ln|\frac{x-3}{x-2}| + C$
+</details>
+
+---
+
+## 练习 95：[提高] 第二换元法（三角代换）
+计算 $\int_0^a \sqrt{a^2-x^2} dx \quad (a>0)$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **代换**：令 $x = a \sin t, dx = a \cos t dt$。
+2. **改变范围**：$x=0 \to t=0$；$x=a \to t=\pi/2$。
+3. **设置积分**：
+   $\int_0^{\pi/2} \sqrt{a^2(1-\sin^2 t)} \cdot a \cos t dt = \int_0^{\pi/2} a^2 \cos^2 t dt$
+4. **利用二倍角公式**：
+   $a^2 \int_0^{\pi/2} \frac{1+\cos 2t}{2} dt = \frac{a^2}{2} [t + \frac{1}{2}\sin 2t]_0^{\pi/2} = \frac{a^2}{2} \cdot \frac{\pi}{2} = \frac{\pi a^2}{4}$
+5. **几何意义**：该积分表示半径为 $a$ 的圆在第一象限的面积（四分之一圆）。
+
+#### 答案
+$\frac{\pi a^2}{4}$
+</details>
+
+---
+
+## 练习 96：[提高] 定积分应用：旋转体体积
+求由曲线 $y = \sin x$（$0 \le x \le \pi$）与 $x$ 轴围成的图形绕 $x$ 轴旋转一周所成的体积。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **体积公式**：$V = \pi \int_a^b [f(x)]^2 dx$。
+2. **设置积分**：
+   $V = \pi \int_0^\pi \sin^2 x dx$
+3. **计算**：
+   $V = \pi \int_0^\pi \frac{1-\cos 2x}{2} dx = \frac{\pi}{2} [x - \frac{1}{2}\sin 2x]_0^\pi = \frac{\pi^2}{2}$
+
+#### 答案
+$\pi^2/2$
+</details>
+
+---
+
+## 练习 97：[提高] 弧长计算
+计算曲线 $y = \frac{2}{3}x^{3/2}$ 从 $x=0$ 到 $x=3$ 的弧长。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **弧长公式**：$s = \int_a^b \sqrt{1 + (y')^2} dx$。
+2. **求导**：$y' = \sqrt{x}$。
+3. **设置积分**：
+   $s = \int_0^3 \sqrt{1 + x} dx$
+4. **计算**：
+   $s = [\frac{2}{3}(1+x)^{3/2}]_0^3 = \frac{2}{3}(4^{3/2} - 1^{3/2}) = \frac{2}{3}(8 - 1) = \frac{14}{3}$
+
+#### 答案
+$14/3$
+</details>
+
+---
+
+## 练习 98：[提高] 交错级数的 Leibniz 判别法
+判定级数 $\sum_{n=1}^\infty (-1)^n \frac{1}{\sqrt{n}}$ 的敛散性，并说明是绝对收敛还是条件收敛。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **Leibniz 判别法**：
+   - $u_n = 1/\sqrt{n} > 0$。
+   - $u_n$ 单调递减（因为 $\sqrt{n+1} > \sqrt{n}$）。
+   - $\lim_{n \to \infty} u_n = 0$。
+   - 故级数**收敛**。
+2. **绝对收敛判定**：
+   考察 $\sum |a_n| = \sum \frac{1}{n^{1/2}}$。这是 $p=1/2$ 的 $p$-级数，发散。
+3. **结论**：级数条件收敛。
+
+#### 答案
+条件收敛
+</details>
+
+---
+
+## 练习 99：[提高] 幂级数的收敛域
+求幂级数 $\sum_{n=1}^\infty \frac{x^n}{n \cdot 2^n}$ 的收敛域。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **计算收敛半径**：
+   $R = \lim_{n \to \infty} |\frac{a_n}{a_{n+1}}| = \lim_{n \to \infty} \frac{(n+1)2^{n+1}}{n \cdot 2^n} = 2$。
+2. **检查端点**：
+   - 当 $x=2$ 时：$\sum \frac{2^n}{n \cdot 2^n} = \sum \frac{1}{n}$，调和级数，发散。
+   - 当 $x=-2$ 时：$\sum \frac{(-2)^n}{n \cdot 2^n} = \sum \frac{(-1)^n}{n}$，交错调和级数，收敛。
+3. **收敛域**：$[-2, 2)$。
+
+#### 答案
+$[-2, 2)$
+</details>
+
+---
+
+## 练习 100：[提高] 函数展开为幂级数
+将 $f(x) = \frac{1}{1+x^2}$ 在 $x=0$ 处展开为幂级数，并指出收敛区间。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **利用几何级数公式**：$\frac{1}{1-u} = \sum_{n=0}^\infty u^n \quad (|u|<1)$。
+2. **代换**：令 $u = -x^2$。
+3. **展开**：
+   $f(x) = \sum_{n=0}^\infty (-x^2)^n = \sum_{n=0}^\infty (-1)^n x^{2n}$
+4. **收敛区间**：$|-x^2| < 1 \Rightarrow x^2 < 1 \Rightarrow x \in (-1, 1)$。
+
+#### 答案
+$\sum_{n=0}^\infty (-1)^n x^{2n}$，收敛区间 $(-1, 1)$。
+</details>
+
+---
+
+## 练习 101：[提高] 利用定积分求数列极限
+计算 $\lim_{n \to \infty} \frac{1}{n} (\sin \frac{\pi}{n} + \sin \frac{2\pi}{n} + \dots + \sin \frac{n\pi}{n})$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **识别 Riemann 和**：该式可写为 $\lim_{n \to \infty} \sum_{i=1}^n \sin(i\pi/n) \cdot \frac{1}{n}$。
+2. **对应积分**：函数 $f(x) = \sin(\pi x)$，区间 $[0, 1]$。
+3. **计算积分**：
+   $I = \int_0^1 \sin(\pi x) dx = [-\frac{1}{\pi} \cos(\pi x)]_0^1 = -\frac{1}{\pi}(-1 - 1) = \frac{2}{\pi}$
+
+#### 答案
+$2/\pi$
+</details>
+
+---
+
+## 练习 102：[提高] 反常积分的比较判别法（极限形式）
+判定 $\int_1^{+\infty} \frac{\sqrt{x}}{1+x^2} dx$ 的敛散性。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **分析无穷大阶数**：当 $x \to \infty$ 时，被积函数 $f(x) \approx \frac{x^{1/2}}{x^2} = \frac{1}{x^{3/2}}$。
+2. **选择比较对象**：取 $g(x) = \frac{1}{x^{3/2}}$。
+3. **计算极限**：
+   $\lim_{x \to \infty} \frac{f(x)}{g(x)} = \lim_{x \to \infty} \frac{\sqrt{x}/(1+x^2)}{1/x^{3/2}} = \lim_{x \to \infty} \frac{x^2}{1+x^2} = 1$。
+4. **结论**：因为 $\int_1^\infty \frac{1}{x^{3/2}} dx$ 收敛（$p=1.5 > 1$），故原积分收敛。
+
+#### 答案
+收敛
+</details>
+
+---
+
+## 练习 103：[提高] 变限积分求导
+求 $F(x) = \int_{x^2}^{x^3} \sqrt{1+t^2} dt$ 的导数 $F'(x)$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **公式**：$\frac{d}{dx} \int_{\phi(x)}^{\psi(x)} f(t) dt = f(\psi(x))\psi'(x) - f(\phi(x))\phi'(x)$。
+2. **代入**：
+   $F'(x) = \sqrt{1+(x^3)^2} \cdot (3x^2) - \sqrt{1+(x^2)^2} \cdot (2x)$
+   $= 3x^2\sqrt{1+x^6} - 2x\sqrt{1+x^4}$
+
+#### 答案
+$3x^2\sqrt{1+x^6} - 2x\sqrt{1+x^4}$
+</details>
+
+---
+
+## 练习 104：[挑战] 狄利克雷积分 (Dirichlet Integral)
+证明 $I = \int_0^{+\infty} \frac{\sin x}{x} dx = \frac{\pi}{2}$。（本题要求简述思路）
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **引入含参量积分**：$I(a) = \int_0^\infty e^{-ax} \frac{\sin x}{x} dx \quad (a \ge 0)$。
+2. **对 $a$ 求导**：$I'(a) = -\int_0^\infty e^{-ax} \sin x dx = -\frac{1}{a^2+1}$。
+3. **积分还原**：$I(a) = -\arctan a + C$。
+4. **确定常数**：由 $\lim_{a \to \infty} I(a) = 0$ 得 $C = \pi/2$。
+5. **取极限**：$I(0) = \pi/2$。利用一致收敛性（Dirichlet 判别法）保证极限交换。
+
+#### 答案
+$\pi/2$
+</details>
+
+---
+
+## 练习 105：[挑战] 特殊对数三角积分
+计算 $\int_0^{\pi/2} \ln(\sin x) dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **利用对称性**：$I = \int_0^{\pi/2} \ln(\sin x) dx = \int_0^{\pi/2} \ln(\cos x) dx$。
+2. **求和**：
+   $2I = \int_0^{\pi/2} \ln(\sin x \cos x) dx = \int_0^{\pi/2} \ln(\frac{\sin 2x}{2}) dx$
+   $2I = \int_0^{\pi/2} \ln(\sin 2x) dx - \frac{\pi}{2} \ln 2$
+3. **变换第一项**：令 $2x = u$，则 $\int_0^{\pi/2} \ln(\sin 2x) dx = \frac{1}{2} \int_0^\pi \ln(\sin u) du = \int_0^{\pi/2} \ln(\sin u) du = I$。
+4. **解方程**：$2I = I - \frac{\pi}{2} \ln 2 \Rightarrow I = -\frac{\pi}{2} \ln 2$。
+
+#### 答案
+$-\frac{\pi}{2} \ln 2$
+</details>
+
+---
+
+## 练习 106：[挑战] 级数求和技巧（逐项积分）
+计算级数 $\sum_{n=1}^\infty \frac{1}{n \cdot 2^n}$ 的和。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **构造幂级数**：设 $S(x) = \sum_{n=1}^\infty \frac{x^n}{n}$，则原式为 $S(1/2)$。
+2. **求导**：$S'(x) = \sum_{n=1}^\infty x^{n-1} = \frac{1}{1-x} \quad (|x|<1)$。
+3. **积分还原**：$S(x) = \int_0^x \frac{1}{1-t} dt = -\ln(1-x) + C$。
+4. **确定常数**：$S(0)=0 \Rightarrow C=0$。
+5. **代入**：$S(1/2) = -\ln(1-1/2) = -\ln(1/2) = \ln 2$。
+
+#### 答案
+$\ln 2$
+</details>
+
+---
+
+## 练习 107：[挑战] 广义积分的一致收敛判定
+判定 $I(y) = \int_0^{+\infty} \frac{\sin xy}{x} dx$ 在 $y \in [a, b] \quad (0 < a < b)$ 上是否一致收敛。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **变量替换**：令 $xy = t$，则 $I(y) = \int_0^\infty \frac{\sin t}{t} dt$。
+2. **分析**：积分值对所有 $y > 0$ 都是常数 $\pi/2$。
+3. **余项判定**：$|R_A(y)| = |\int_{Ay}^\infty \frac{\sin t}{t} dt|$。
+4. **一致性**：对于 $y \ge a > 0$，当 $A \to \infty$ 时，$Ay \ge Aa \to \infty$。由于 $\int_0^\infty \frac{\sin t}{t} dt$ 收敛，其尾端趋于 0。
+5. **结论**：一致收敛。
+
+#### 答案
+一致收敛
+</details>
+
+---
+
+## 练习 108：[挑战] 傅里叶级数展开（方波）
+求周期为 $2\pi$ 的函数 $f(x) = \begin{cases} -1, & -\pi < x < 0 \\ 1, & 0 \le x < \pi \end{cases}$ 的傅里叶展开式。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **奇偶性**：$f(x)$ 是奇函数，故 $a_n = 0$。
+2. **计算 $b_n$**：
+   $b_n = \frac{2}{\pi} \int_0^\pi 1 \cdot \sin nx dx = \frac{2}{\pi} [-\frac{1}{n} \cos nx]_0^\pi = \frac{2}{n\pi} (1 - \cos n\pi)$
+3. **讨论 $n$**：
+   - 当 $n$ 为偶数时，$b_n = 0$。
+   - 当 $n$ 为奇数时，$b_n = \frac{4}{n\pi}$。
+4. **展开式**：$f(x) \sim \frac{4}{\pi} (\sin x + \frac{1}{3}\sin 3x + \frac{1}{5}\sin 5x + \dots)$。
+
+#### 答案
+$\frac{4}{\pi} \sum_{k=1}^\infty \frac{\sin(2k-1)x}{2k-1}$
+</details>
+
+---
+
+## 练习 109：[挑战] 沃利斯 (Wallis) 公式推导
+利用 $I_n = \int_0^{\pi/2} \sin^n x dx$ 的递推关系证明 Wallis 公式。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **递推公式**：$I_n = \frac{n-1}{n} I_{n-2}$。
+2. **分情况**：
+   - $I_{2m} = \frac{2m-1}{2m} \cdot \frac{2m-3}{2m-2} \dots \frac{1}{2} \cdot \frac{\pi}{2}$
+   - $I_{2m+1} = \frac{2m}{2m+1} \cdot \frac{2m-2}{2m-1} \dots \frac{2}{3} \cdot 1$
+3. **利用 $I_{2m+1} < I_{2m} < I_{2m-1}$** 夹逼得出 $\frac{\pi}{2} = \lim_{m \to \infty} \frac{1}{2m+1} [ \frac{(2m)!!}{(2m-1)!!} ]^2$。
+
+#### 答案
+证毕。
+</details>
+
+---
+
+## 练习 110：[挑战] 弗鲁拉尼 (Frullani) 积分
+计算 $\int_0^{+\infty} \frac{e^{-ax} - e^{-bx}}{x} dx \quad (a, b > 0)$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **一般公式**：$\int_0^\infty \frac{f(ax)-f(bx)}{x} dx = [f(0) - f(\infty)] \ln \frac{b}{a}$。
+2. **本题应用**：$f(x) = e^{-x}$，则 $f(0) = 1, f(\infty) = 0$。
+3. **计算**：$I = (1 - 0) \ln \frac{b}{a} = \ln \frac{b}{a}$。
+
+#### 答案
+$\ln(b/a)$
+</details>
+
+---
+
+## 练习 111：[挑战] 斯托尔茨 (Stolz) 定理在积分序列中的应用
+计算极限 $\lim_{n \to \infty} \frac{1}{n^{k+1}} \int_0^n x^k dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **直接积分**：$\int_0^n x^k dx = \frac{n^{k+1}}{k+1}$。
+2. **求极限**：$\lim_{n \to \infty} \frac{n^{k+1}/(k+1)}{n^{k+1}} = \frac{1}{k+1}$。
+3. **注**：本题亦可用离散形式的 Stolz 定理验证。
+
+#### 答案
+$\frac{1}{k+1}$
+</details>
+
+---
+
+## 练习 112：[挑战] 涉及级数展开的积分计算
+计算 $\int_0^1 \frac{\ln(1+x)}{x} dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **级数展开**：$\ln(1+x) = \sum_{n=1}^\infty (-1)^{n-1} \frac{x^n}{n}$。
+2. **除以 $x$**：$\frac{\ln(1+x)}{x} = \sum_{n=1}^\infty (-1)^{n-1} \frac{x^{n-1}}{n}$。
+3. **逐项积分**（在 $[0, 1]$ 上收敛性允许）：
+   $I = \sum_{n=1}^\infty \frac{(-1)^{n-1}}{n} \int_0^1 x^{n-1} dx = \sum_{n=1}^\infty \frac{(-1)^{n-1}}{n^2}$
+4. **已知结论**：该级数和为 $\frac{\pi^2}{12}$。
+
+#### 答案
+$\pi^2/12$
+</details>
+
+---
+
+## 练习 113：[挑战] 斯特林 (Stirling) 公式的初步应用
+利用 $\Gamma$ 函数证明 $n! \sim \sqrt{2\pi n} (n/e)^n$ 的阶数（简述思路）。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **利用积分表达**：$n! = \Gamma(n+1) = \int_0^\infty x^n e^{-x} dx$。
+2. **寻找极大值点**：$f(x) = x^n e^{-x}$ 在 $x=n$ 处取极大值。
+3. **拉普拉斯方法 (Laplace Method)**：在 $x=n$ 处进行 Taylor 展开并作近似高斯积分。
+4. **得出主项**：主项即为 Stirling 公式。
+
+#### 答案
+证毕。
+</details>
+
+---
+
 
 
 
