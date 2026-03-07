@@ -3,6 +3,7 @@ title: 函数极限：连续与突变的边界 (Limits of Functions)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import EpsilonDeltaVisualizer from '@site/src/components/EpsilonDeltaVisualizer';
 
 # 函数极限：连续与突变的边界
 
@@ -20,9 +21,11 @@ $$0 < |x - x_0| < \delta$$
 $$|f(x) - A| < \epsilon$$
 则称常数 $A$ 为函数 $f(x)$ 当 $x \to x_0$ 时的极限，记作 $\lim_{x \to x_0} f(x) = A$。
 
+<EpsilonDeltaVisualizer />
+
 **哲学剖析**：
 - **“去心”**（$0 < |x - x_0|$）：极限考量的是函数在 $x_0$ **周围**的行为，与 $f(x_0)$ 在该点本身是否有定义、定义为何值**毫无关系**。这正是极限能够处理 $\frac{0}{0}$ 型未定式的根本原因。
-- **$\delta$ 依赖于 $\epsilon$**：你要将函数值限制在宽为 $2\epsilon$ 的带状区域内，就必须在 $x$ 轴上找到一个足够窄的宽为 $2\delta$ 的控制区间。
+- **$\delta$ 依赖于 $\epsilon$**：你要将函数值限制在宽为 $2\epsilon$ 的带状区域内，就必须在 $x$ 轴上找到一个足够窄的宽为 $2\delta$ 的控制区间。上面的可视化实验直观地展示了这种“你缩我也缩”的动态平衡。
 
 ### 2. $\epsilon-M$ 定义（自变量趋于无穷大）
 若 $\forall \epsilon > 0, \exists M > 0$，使得当 $|x| > M$ 时，恒有 $|f(x) - A| < \epsilon$，则称 $\lim_{x \to \infty} f(x) = A$。
@@ -190,6 +193,30 @@ $f(x) = \begin{cases} \frac{e^{ax} - 1}{x}, & x < 0 \\ b, & x = 0 \\ \frac{\sqrt
 
 #### 答案
 $a = 1/2, b = 1/2$
+</details>
+
+### 练习 6：利用极限的保号性证明不等式 (Sign-Preserving Property)
+设 $\lim_{x \to x_0} f(x) = A > 0$，证明：存在 $x_0$ 的某个去心邻域 $\mathring{U}(x_0, \delta)$，使得在该邻域内 $f(x) > 0$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+这是极限保号性的基本证明，充分体现了 $\epsilon-\delta$ 语言的威力。
+
+1. **选取合适的 $\epsilon$**：
+   既然 $A > 0$，我们可以取 $\epsilon = \frac{A}{2}$。由于 $A > 0$，显然 $\epsilon > 0$。
+2. **运用定义**：
+   根据极限定义，对于这个特定的 $\epsilon = A/2$，必存在 $\delta > 0$，使得当 $0 < |x - x_0| < \delta$ 时，有：
+   $|f(x) - A| < \frac{A}{2}$
+3. **去绝对值符号**：
+   $-\frac{A}{2} < f(x) - A < \frac{A}{2}$
+4. **得出结论**：
+   不等式左侧变为：$f(x) > A - \frac{A}{2} = \frac{A}{2} > 0$。
+   证毕。
+
+#### 答案
+证明核心在于取 $\epsilon = A/2$ 并应用 $\epsilon-\delta$ 定义。
 </details>
 
 ---
