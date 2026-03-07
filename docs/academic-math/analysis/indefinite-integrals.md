@@ -194,3 +194,88 @@ $x \arctan x - \frac{1}{2} \ln(1+x^2) + C$
 #### 答案
 $\frac{7}{3}\ln|x-2| - \frac{4}{3}\ln|x+1| + C$
 </details>
+
+---
+
+## 三、 深度例题：技巧的综合与对称性
+
+### 深度例题 1：倒代换与对称构造
+求不定积分：$I = \int \frac{x^2+1}{x^4+1} dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+这是一个非常经典的高阶积分，直接分解分母（利用 $x^4+1 = (x^2+1)^2 - 2x^2 = (x^2-\sqrt{2}x+1)(x^2+\sqrt{2}x+1)$）后进行部分分式分解非常繁琐。更好的方法是利用**代数构造**。
+
+1. **分子分母同时除以 $x^2$**：
+   $$I = \int \frac{1 + \frac{1}{x^2}}{x^2 + \frac{1}{x^2}} dx$$
+2. **观察分子与分母的关系**：
+   注意到 $(x - \frac{1}{x})' = 1 + \frac{1}{x^2}$。
+   而分母可以凑成：$x^2 + \frac{1}{x^2} = (x - \frac{1}{x})^2 + 2$。
+3. **凑微分与换元**：
+   令 $u = x - \frac{1}{x}$，则 $du = (1 + \frac{1}{x^2}) dx$。
+   $$I = \int \frac{du}{u^2 + 2}$$
+4. **应用基本积分公式**：
+   $$I = \frac{1}{\sqrt{2}} \arctan \frac{u}{\sqrt{2}} + C$$
+5. **回代 x**：
+   $$I = \frac{1}{\sqrt{2}} \arctan \frac{x - 1/x}{\sqrt{2}} + C = \frac{1}{\sqrt{2}} \arctan \frac{x^2-1}{\sqrt{2}x} + C$$
+
+#### 答案
+$\frac{1}{\sqrt{2}} \arctan \frac{x^2-1}{\sqrt{2}x} + C$
+</details>
+
+### 深度例题 2：分部积分与方程法结合（无理函数）
+求不定积分：$I = \int \sqrt{a^2 - x^2} dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+除了常见的三角代换（$x = a \sin t$），本题也可以通过分部积分直接求解，这种方法在推导递推公式时非常有用。
+
+1. **设定分部积分项**：
+   设 $u = \sqrt{a^2 - x^2}, dv = dx$。
+   则 $du = \frac{-x}{\sqrt{a^2 - x^2}} dx, v = x$。
+2. **应用分部积分公式**：
+   $$I = x\sqrt{a^2 - x^2} - \int x \cdot \frac{-x}{\sqrt{a^2 - x^2}} dx = x\sqrt{a^2 - x^2} + \int \frac{x^2}{\sqrt{a^2 - x^2}} dx$$
+3. **分子加减 $a^2$ 构造原积分**：
+   $$\int \frac{x^2}{\sqrt{a^2 - x^2}} dx = \int \frac{a^2 - (a^2 - x^2)}{\sqrt{a^2 - x^2}} dx = a^2 \int \frac{dx}{\sqrt{a^2 - x^2}} - \int \sqrt{a^2 - x^2} dx$$
+   注意到最后一项正是原积分 $I$。
+4. **建立关于 I 的方程**：
+   $$I = x\sqrt{a^2 - x^2} + a^2 \arcsin \frac{x}{a} - I$$
+5. **解出 I**：
+   $$2I = x\sqrt{a^2 - x^2} + a^2 \arcsin \frac{x}{a}$$
+   $$I = \frac{1}{2} x\sqrt{a^2 - x^2} + \frac{a^2}{2} \arcsin \frac{x}{a} + C$$
+
+#### 答案
+$\frac{x}{2}\sqrt{a^2 - x^2} + \frac{a^2}{2} \arcsin \frac{x}{a} + C$
+</details>
+
+---
+
+## 四、 综合配套练习
+
+请尝试独立完成以下练习，检验你对积分技巧的掌握程度：
+
+1. **（凑微分）** $\int \frac{\sin 2x}{1 + \cos^2 x} dx$
+   *提示：$\sin 2x = -d(1+\cos^2 x)$*
+2. **（换元法）** $\int \frac{dx}{\sqrt{x}(1+\sqrt[3]{x})}$
+   *提示：令 $x = t^6$ 消去所有根号*
+3. **（分部积分）** $\int x^2 \cos x dx$
+   *提示：连续应用两次分部积分，降幂处理*
+4. **（综合技巧）** $\int \frac{dx}{x \sqrt{1+x^2}}$
+   *提示：尝试倒代换 $x = 1/t$ 或令 $\sqrt{1+x^2} = t$*
+5. **（挑战题）** $\int \frac{\ln x}{(1+x)^2} dx$
+   *提示：先分部积分，再进行部分分式分解*
+
+<details>
+<summary>查看练习参考答案</summary>
+
+1. $-\ln(1+\cos^2 x) + C$
+2. $6(\frac{1}{2}x^{1/3} - x^{1/6} + \arctan x^{1/6}) + C$
+3. $x^2 \sin x + 2x \cos x - 2\sin x + C$
+4. $-\ln \left| \frac{1+\sqrt{1+x^2}}{x} \right| + C$
+5. $\frac{- \ln x}{1+x} + \ln \frac{x}{1+x} + C$
+
+</details>
