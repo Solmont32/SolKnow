@@ -172,6 +172,69 @@ const sidebars: SidebarsConfig = {
   ],
 
   resourceSidebar: [{ type: 'doc', id: 'resources/index', label: '资源导航' }],
+
+  // 练习库镜像结构
+  mathExerciseSidebar: [
+    {
+      type: 'category',
+      label: '数学练习库',
+      collapsible: false,
+      items: [
+        {
+          type: 'category',
+          label: '数学竞赛练习',
+          items: [
+            { type: 'doc', id: 'exercises/math/competition/elementary', label: '小学奥数练习' },
+            { type: 'doc', id: 'exercises/math/competition/junior', label: '初中竞赛练习' },
+            { type: 'doc', id: 'exercises/math/competition/senior', label: '高中竞赛练习' },
+          ],
+        },
+        {
+          type: 'category',
+          label: '大学数学练习',
+          items: [
+            { type: 'doc', id: 'exercises/math/analysis', label: '数学分析练习' },
+            { type: 'doc', id: 'exercises/math/algebra', label: '高等代数练习' },
+          ],
+        },
+      ],
+    },
+  ],
+
+  csExerciseSidebar: [
+    {
+      type: 'category',
+      label: '计算机练习库',
+      items: [
+        { type: 'doc', id: 'exercises/cs/linux', label: 'Linux 实操练习' },
+        { type: 'doc', id: 'exercises/cs/cpp', label: 'C++ 编程练习' },
+        { type: 'doc', id: 'exercises/cs/os', label: '操作系统练习' },
+      ],
+    },
+  ],
+
+  aiExerciseSidebar: [
+    {
+      type: 'category',
+      label: 'AI 练习库',
+      items: [
+        { type: 'doc', id: 'exercises/ai/ml', label: '机器学习练习' },
+        { type: 'doc', id: 'exercises/ai/dl', label: '深度学习练习' },
+      ],
+    },
+  ],
+
+  infosecExerciseSidebar: [
+    {
+      type: 'category',
+      label: '安全练习库',
+      items: [
+        { type: 'doc', id: 'exercises/infosec/web', label: 'Web 安全练习' },
+        { type: 'doc', id: 'exercises/infosec/pwn', label: '二进制安全练习' },
+      ],
+    },
+  ],
 };
+
 
 export default sidebars;

@@ -72,6 +72,18 @@ const config: Config = {
             { type: 'docSidebar', sidebarId: 'infosecSidebar', label: '信息安全' },
           ],
         },
+        {
+          type: 'dropdown',
+          label: '练习库',
+          position: 'left',
+          items: [
+            { type: 'docSidebar', sidebarId: 'mathExerciseSidebar', label: '数学练习' },
+            { type: 'docSidebar', sidebarId: 'csExerciseSidebar', label: '计算机练习' },
+            { type: 'docSidebar', sidebarId: 'aiExerciseSidebar', label: 'AI 练习' },
+            { type: 'docSidebar', sidebarId: 'infosecExerciseSidebar', label: '安全练习' },
+          ],
+        },
+
         { type: 'docSidebar', sidebarId: 'resourceSidebar', label: '资源导航', position: 'left' },
         { to: '/blog', label: '博客', position: 'left' },
         { to: '/videos', label: '视频', position: 'left' },
