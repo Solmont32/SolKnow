@@ -234,7 +234,7 @@ function Unlock-StuckTasks {
     if ($updated -ne $content) {
         Write-Log "Startup: detected stuck task marker and reverted it." "WARN"
         Replace-FileContent -path $TasksFile -content $updated
-        Invoke-Sync "chore: startup self-heal"
+        $null = Invoke-Sync "chore: startup self-heal"
     }
 }
 
@@ -344,6 +344,12 @@ function Restore-ExcludedChanges($stashRef) {
     $conflicts = @($stashPaths | Where-Object { $workingPaths -contains $_ })
     if ($conflicts.Count -gt 0) {
         Write-Log "Skipped restoring temporary runtime stash $stashRef due to local changes in: $($conflicts -join ', ')" "WARN"
+        if ($stashRef -match '^stash@\{\d+\}$') {
+            cmd /c "git stash drop $stashRef 1>nul 2>nul"
+            if ($LASTEXITCODE -eq 0) {
+                Write-Log "Dropped stale temporary runtime stash: $stashRef" "INFO"
+            }
+        }
         return
     }
 
@@ -535,7 +541,7 @@ function Assert-TaskIntegrity($expectedTask) {
         Write-Log "Integrity FAILED for: $expectedTask. Reverting lock marker." "ERROR"
         $updated = [regex]::Replace($content, '(?m)^\s*\[\/\]\s+(.*?)\s+\((正在执行\.\.\.|姝ｅ湪鎵ц\.\.\.)\)\s*$', '- [ ] $1')
         Replace-FileContent -path $TasksFile -content $updated
-        Invoke-Sync "revert: failure"
+        $null = Invoke-Sync "revert: failure"
         return $false
     }
     return $true
@@ -565,7 +571,7 @@ function Run-PlanningCycle {
     Write-Log "No pending tasks. Running deep audit..." "PLAN"
     $planned = Invoke-CodexSmart -prompt (Build-PlanPrompt) -models $MODEL_CANDIDATES_PRIMARY -modeLabel "planning"
     if ($planned) {
-        Invoke-Sync "plan: strategic expansion via Codex"
+        $null = Invoke-Sync "plan: strategic expansion via Codex"
     }
 }
 
@@ -579,7 +585,7 @@ function Run-ExecutionCycle {
 
         Write-Log "Target Locked: $taskDesc" "EXEC"
         Lock-Task $taskDesc
-        Invoke-Sync "lock: $taskDesc"
+        $null = Invoke-Sync "lock: $taskDesc"
 
         $executed = Invoke-CodexSmart -prompt (Build-ExecPrompt $taskDesc) -models $MODEL_CANDIDATES_EXECUTOR -modeLabel "execution"
         if (-not $executed) {
@@ -589,7 +595,7 @@ function Run-ExecutionCycle {
 
         if (Assert-TaskIntegrity $taskDesc) {
             Write-Log "Mission Accomplished: $taskDesc" "SUCCESS"
-            Invoke-Sync "feat: completed $taskDesc via Codex"
+            $null = Invoke-Sync "feat: completed $taskDesc via Codex"
         } else {
             break
         }
