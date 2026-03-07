@@ -173,3 +173,4 @@
 [2026-03-08 02:28:00] [ OK ] Batch queue cleared.
 [2026-03-08 02:29:01] [PLAN] No pending tasks. Initiating audit-first planning...
 [2026-03-08 02:31:04] [EXE ] Target Locked: 深度细化『反常积分』章节 (2026-03-08)：对标 Ch 11，补充 Dirichlet 与 Abel 判别法的严格证明，新增 5-8 道涵盖收敛性判定与 Cauchy 主值计算的深度例题及配套练习。
+[2026-03-08 02:33:53] [ OK ] Mission Accomplished: 深度细化『反常积分』章节 (2026-03-08)：对标 Ch 11，补充 Dirichlet 与 Abel 判别法的严格证明，新增 5-8 道涵盖收敛性判定与 Cauchy 主值计算的深度例题及配套练习。
