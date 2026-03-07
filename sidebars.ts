@@ -166,7 +166,7 @@ const sidebars: SidebarsConfig = {
                     { type: 'doc', id: 'academic-math/analysis/indefinite-integrals', label: '第八章 不定积分' },
                     { type: 'doc', id: 'academic-math/analysis/integrals', label: '第九章 定积分' },
                     { type: 'doc', id: 'academic-math/analysis/definite-integral-applications', label: '第十章 定积分的应用' },
-                    { type: 'doc', id: 'academic-math/analysis/integrals', label: '第十一章 反常积分' },
+                    { type: 'doc', id: 'academic-math/analysis/improper-integrals', label: '第十一章 反常积分' },
                   ]
                 },
                 {

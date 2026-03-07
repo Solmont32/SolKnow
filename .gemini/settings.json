@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "fetch": {
-      "command": "npx -y @modelcontextprotocol/server-fetch",
+      "command": "uvx mcp-server-fetch",
       "args": []
     }
   }

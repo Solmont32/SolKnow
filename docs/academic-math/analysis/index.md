@@ -32,7 +32,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 - **[第八章 不定积分](indefinite-integrals)**：换元法、分部积分法、有理函数积分。
 - **[第九章 定积分](integrals)**：Riemann 积分定义、微积分基本定理 (FTC)。
 - **[第十章 定积分的应用](definite-integral-applications)**：面积、体积、弧长、物理应用。
-- **[第十一章 反常积分](integrals)**：无穷限积分、瑕积分、敛散性判别。
+- **[第十一章 反常积分](improper-integrals)**：无穷限积分、瑕积分、敛散性判别。
 
 </div>
 
