@@ -12,12 +12,34 @@ $TASKS_FILE = "TASKS.md"
 function Invoke-Sync($message) {
     $status = git status --porcelain
     if ($status) {
-        Write-Host ">>> [SYNC] Changes detected. Aligning with cloud..." -ForegroundColor Green
+        Write-Log ">>> [SYNC] Changes detected. Aligning with cloud..." "EXEC"
         git add .
         git commit -m $message
         # 强制在 Push 前再次 Rebase，确保高频执行不冲突
         git pull origin main --rebase
         git push origin main
+
+        # --- GitHub Actions 部署审查 ---
+        Write-Log "Waiting for deployment workflow to complete..." "INFO"
+        Start-Sleep -Seconds 5 # 等待 GitHub 接收 Push
+        try {
+            # 获取最新运行的 Workflow ID 并监视
+            $runId = (gh run list --workflow "Deploy to GitHub Pages" --limit 1 --json databaseId --jq ".[0].databaseId")
+            if ($runId) {
+                Write-Log "Watching workflow run: $runId" "INFO"
+                gh run watch $runId --exit-status
+                if ($LASTEXITCODE -eq 0) {
+                    Write-Log "Deployment SUCCESS: $message" "SUCCESS"
+                } else {
+                    Write-Log "Deployment FAILED: $message" "ERROR"
+                }
+            } else {
+                Write-Log "Could not find recent deployment workflow." "ERROR"
+            }
+        } catch {
+            Write-Log "Error during deployment verification: $($_.Exception.Message)" "ERROR"
+        }
+
         Start-Sleep -Seconds $SYNC_COOLDOWN
         return $true
     }
