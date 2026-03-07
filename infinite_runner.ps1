@@ -1,4 +1,4 @@
-# SolKnow Autonomous Pulse Runner (V4.4 - ULTRA STABLE)
+# SolKnow Autonomous Pulse Runner (V4.6 - SELF-HEALING ENGINE)
 # Usage: pwsh -ExecutionPolicy Bypass -File infinite_runner.ps1
 
 if ($IsWindows) { chcp 65001 | Out-Null }
@@ -9,10 +9,11 @@ $SYNC_COOLDOWN = 10
 $LOG_FILE = "AUTOMATION_LOG.md"
 $TASKS_FILE = "TASKS.md"
 
+# 核心同步函数：负责清理本地更改并推送到云端
 function Invoke-Sync($message) {
     $status = git status --porcelain
     if ($status) {
-        Write-Host ">>> [SYNC] $message" -ForegroundColor Green
+        Write-Host ">>> [SELF-HEAL] Dirty workspace detected. Saving state: $message" -ForegroundColor Green
         git add .
         git commit -m $message
         git push origin main
@@ -28,7 +29,7 @@ function Show-Logo {
     Clear-Host
     Write-Host @"
 
-      [ STRATEGIC ENGINE V4.4 - STABLE ]
+      [ STRATEGIC SELF-HEALING V4.6 ]
       ________________________________________________________________________________________________________
 
        ####   ####  #      #  # #  #  ####  #      #       #  #  #      #  ####  #   #
@@ -46,7 +47,7 @@ function Show-Resting {
     param([int]$seconds)
     for ($i = $seconds; $i -gt 0; $i--) {
         Clear-Host
-        Write-Host ">>> NEXT HEARTBEAT IN $i SECONDS..." -ForegroundColor DarkGray
+        Write-Host ">>> COOLING DOWN: $i SECONDS..." -ForegroundColor DarkGray
         Start-Sleep -Seconds 1
     }
 }
@@ -63,58 +64,77 @@ function Write-Log($message, $type="INFO", $toFile=$true) {
     if ($toFile) { Add-Content -Path $LOG_FILE -Value $logEntry }
 }
 
-if (-not (Test-Path $LOG_FILE)) { Add-Content -Path $LOG_FILE -Value "# SolKnow Logs`n" }
+if (-not (Test-Path $LOG_FILE)) { Add-Content -Path $LOG_FILE -Value "# SolKnow Audit Logs`n" }
 
-Write-Log "System V4.4 Initialized." "SUCCESS"
+Write-Log "Self-Healing Engine V4.6 Initialized." "SUCCESS"
 
 while($true) {
     try {
         Show-Logo
-        Write-Host ">>> Syncing..." -ForegroundColor Gray
+        
+        # 修复关键点：先提交本地更改，确保工作区干净
+        Write-Host ">>> Cleaning local workspace to prevent pull conflicts..." -ForegroundColor Gray
+        Invoke-Sync "chore: self-healing pre-pulse sync"
+        
+        Write-Log "Synchronizing with cloud intelligence..." "INFO"
         git pull origin main --rebase
 
         $content = Get-Content $TASKS_FILE -Raw
         
-        # 1. PLANNING
+        # 1. ANALYTICAL PLANNING
         if ($content -notlike "*- [ ] *") {
-            Write-Log "Queue empty. Planning..." "PLAN"
-            $planPrompt = "Read $TASKS_FILE. Plan 3-5 sub-tasks for Math Analysis depth expansion. Append under '## 待办子任务' header as '- [ ] Task (YYYY-MM-DD)'. NO Git commands."
+            Write-Log "Analyzing gaps for next planning batch..." "PLAN"
+            
+            $planPrompt = @"
+Objective: Read '## 总任务' in $TASKS_FILE. 
+Step 1: Audit the 'docs/' directory and 'sidebars.ts' to see what content already exists.
+Step 2: Compare existing content with the 'Textbook Style Math Analysis' goal.
+Step 3: Plan a batch of 3-5 high-quality sub-tasks to fill the gaps. 
+Criteria: Ensure tasks follow a logical pedagogical order (e.g. Limits -> Continuity -> Derivatives).
+Action: Append new tasks under '## 待办子任务' as '- [ ] Task (YYYY-MM-DD)'. 
+NO Git commands. Do not modify other sections.
+"@
             & gemini -y -p $planPrompt
-            Invoke-Sync "plan: new batch"
+            Invoke-Sync "plan: analytical roadmap update"
             $content = Get-Content $TASKS_FILE -Raw 
         }
 
-        # 2. EXECUTION
+        # 2. BATCH EXECUTION
         $lines = $content -split "`r?`n"
         foreach ($line in $lines) {
             if ($line -match '^- \[ \] (.*)') {
                 $taskDesc = $matches[1].Trim()
-                Write-Log "Target locked: $taskDesc" "EXEC"
+                Write-Log "Targeting: $taskDesc" "EXEC"
 
-                # Mark processing
                 $newContent = $content -replace "\[ \] $([regex]::Escape($taskDesc))", "[/] $taskDesc (Processing...)"
                 Set-Content $TASKS_FILE $newContent
                 Invoke-Sync "lock: $taskDesc"
 
-                $execPrompt = "Goal: $taskDesc. Context: Math Analysis. Action: 1. Edit docs. 2. Move task to '## 已完成任务' as '- [x]'. NO Git commands. Precision required."
+                $execPrompt = @"
+Goal: $taskDesc. 
+Context: Integrated Math Analysis System. 
+Task: 1. Edit docs/exercise files. 2. Move task to '## 已完成任务' and mark as [x].
+Rule: If files are updated but $TASKS_FILE is not precisely updated, mission FAILS. 
+NO Git commands.
+"@
                 & gemini -y -p $execPrompt
 
                 git pull origin main --rebase
                 $postCheck = Get-Content $TASKS_FILE -Raw
                 if ($postCheck -like "*[/] $taskDesc*") {
-                    Write-Log "Failed: $taskDesc. Reverting..." "ERROR"
+                    Write-Log "Integrity check failed for: $taskDesc. Reverting." "ERROR"
                     $revertContent = $postCheck -replace "\[\/\] $([regex]::Escape($taskDesc)) \(Processing...\)", "[ ] $taskDesc"
                     Set-Content $TASKS_FILE $revertContent
-                    Invoke-Sync "revert: $taskDesc"
+                    Invoke-Sync "revert: $taskDesc (missing status update)"
                     break
                 } else {
-                    Write-Log "Completed: $taskDesc" "SUCCESS"
+                    Write-Log "Mission success: $taskDesc" "SUCCESS"
                     Invoke-Sync "feat: $taskDesc"
                 }
             }
         }
     } catch {
-        Write-Log "Critical fault: $($_.Exception.Message)" "ERROR"
+        Write-Log "System encountered an error: $($_.Exception.Message)" "ERROR"
     }
     Show-Resting $CHECK_INTERVAL
 }
