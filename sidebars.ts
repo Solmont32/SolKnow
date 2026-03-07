@@ -118,7 +118,22 @@ const sidebars: SidebarsConfig = {
           type: 'category',
           label: '大学数学',
           items: [
-            { type: 'category', label: '数学分析', link: {type: 'doc', id: 'academic-math/analysis/index'}, items: ['academic-math/analysis/limits', 'academic-math/analysis/series', 'academic-math/analysis/continuity', 'academic-math/analysis/derivatives', 'academic-math/analysis/integrals'] },
+            { 
+              type: 'category', 
+              label: '数学分析', 
+              link: {type: 'doc', id: 'academic-math/analysis/index'}, 
+              items: [
+                'academic-math/analysis/limits', 
+                'academic-math/analysis/function-limits',
+                'academic-math/analysis/continuity',
+                'academic-math/analysis/derivatives', 
+                'academic-math/analysis/indefinite-integrals',
+                'academic-math/analysis/integrals',
+                'academic-math/analysis/definite-integral-applications',
+                'academic-math/analysis/series',
+                'academic-math/analysis/differential-equations',
+              ] 
+            },
             { type: 'category', label: '高等代数', link: {type: 'doc', id: 'academic-math/algebra/index'}, items: ['academic-math/algebra/polynomial', 'academic-math/algebra/determinant', 'academic-math/algebra/linear-equations', 'academic-math/algebra/matrix', 'academic-math/algebra/quadratic-forms'] },
             { type: 'category', label: '离散数学', link: {type: 'doc', id: 'academic-math/discrete-math/index'}, items: ['academic-math/discrete-math/logic', 'academic-math/discrete-math/set-theory', 'academic-math/discrete-math/graph-theory', 'academic-math/discrete-math/combinatorics'] },
           ],

@@ -1,32 +1,46 @@
 ---
-title: 积分 (Integrals)
+title: 定积分及其应用 (Definite Integrals)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
-# 积分 (Integrals)
+# 定积分及其应用 (Definite Integrals)
 
-积分是导数的逆运算，主要用于计算面积、体积及物理量。
+定积分不仅是一个数值，更是求和极限的艺术。
 
-## 不定积分
-$$\int f(x) dx = F(x) + C \iff F'(x) = f(x)$$
+## 一、 核心知识点讲解
 
-## 定积分 (Riemann Integral)
-定积分的本质是黎曼和的极限。对于连续函数 $f(x)$：
-$$\int_a^b f(x) dx = \lim_{n \to \infty} \sum_{i=1}^n f(\xi_i) \Delta x_i$$
-
-## 牛顿-莱布尼茨公式
-如果 $F(x)$ 是 $f(x)$ 的原函数，则：
+### 1. 牛顿-莱布尼茨公式
+若 $F(x)$ 是 $f(x)$ 在 $[a, b]$ 上的原函数，则：
 $$\int_a^b f(x) dx = F(b) - F(a)$$
 
-<KnowledgeCard type="code" title="常用积分法">
-1. **第一类换元法**：$\int f(g(x))g'(x)dx = \int f(u)du$。
-2. **分部积分法**：$\int u dv = uv - \int v du$。（口诀：反对幂三指）
+### 2. 几何应用
+-   **平面图形面积**：$S = \int_a^b |f(x) - g(x)| dx$。
+-   **旋转体体积**：绕 $x$ 轴旋转所得体积 $V = \pi \int_a^b f^2(x) dx$。
+
+### 3. 物理应用
+-   **变力做功**：$W = \int_a^b F(x) dx$。
+
+<KnowledgeCard type="tip" title="技巧">
+利用 **对称性**（奇偶性）可以大幅简化定积分计算。在对称区间 $[-a, a]$ 上，奇函数积分为 $0$。
 </KnowledgeCard>
 
-## 常见积分公式库
--   $\int x^n dx = \frac{x^{n+1}}{n+1} + C \quad (n \neq -1)$
--   $\int \frac{1}{x} dx = \ln|x| + C$
--   $\int a^x dx = \frac{a^x}{\ln a} + C$
--   $\int \frac{1}{1+x^2} dx = \arctan x + C$
--   $\int \frac{1}{\sqrt{1-x^2}} dx = \arcsin x + C$
+---
+
+## 二、 经典例题实战
+
+### 例题 1：求旋转体体积
+将曲线 $y = \sqrt{x}$ 与直线 $x = 4$ 及 $x$ 轴围成的图形绕 $x$ 轴旋转一周，求所得体积。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+1.  **设定积分式**：$V = \pi \int_0^4 (\sqrt{x})^2 dx$。
+2.  **化简**：$V = \pi \int_0^4 x dx$。
+3.  **计算积分**：
+    $$V = \pi \left[ \frac{1}{2}x^2 \right]_0^4 = \pi (\frac{1}{2} \cdot 16 - 0) = 8\pi$$
+
+#### 答案
+$8\pi$
+</details>

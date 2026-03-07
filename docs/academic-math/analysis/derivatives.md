@@ -1,34 +1,52 @@
 ---
-title: 导数 (Derivatives)
+title: 导数与微分 (Derivatives and Differentials)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
-# 导数 (Derivatives)
+# 导数与微分 (Derivatives and Differentials)
 
-导数描述了函数在某一点的变化率，几何上对应切线的斜率。
+本章探讨函数的变化率及其局部线性逼近。
 
-## 定义
-函数 $f(x)$ 在点 $x_0$ 处的导数定义为：
-$$f'(x_0) = \lim_{\Delta x \to 0} \frac{f(x_0 + \Delta x) - f(x_0)}{\Delta x}$$
+## 一、 核心知识点讲解
 
-## 基本求导法则
--   **线性法则**：$(af + bg)' = af' + bg'$
--   **乘法法则**：$(uv)' = u'v + uv'$
--   **除法法则**：$(\frac{u}{v})' = \frac{u'v - uv'}{v^2}$
--   **复合函数求导 (链式法则)**：若 $y = f(u), u = g(x)$，则：
-    $$\frac{dy}{dx} = \frac{dy}{du} \cdot \frac{du}{dx}$$
+### 1. 导数的几何与物理意义
+-   **几何**：切线的斜率。
+-   **物理**：瞬时速度。
 
-<KnowledgeCard type="warning" title="注意">
-函数在某点**可导**必定**连续**，但**连续**不一定**可导**（例如 $f(x) = |x|$ 在 $x=0$ 处）。
+### 2. 微分定义
+若 $\Delta y = A \Delta x + o(\Delta x)$，则称 $dy = A dx$ 为函数的微分。
+-   **核心公式**：$dy = f'(x) dx$。
+
+### 3. 三大微分中值定理
+1.  **罗尔定理**：端点值相等，中间必有导数为 0 点。
+2.  **拉格朗日中值定理**：$f(b) - f(a) = f'(\xi)(b - a)$。
+3.  **柯西中值定理**：双函数中值关系。
+
+<KnowledgeCard type="tip" title="泰勒公式">
+泰勒展开是导数的高级形态，它将复杂的函数局部线性化甚至多项式化。
+$$f(x) = \sum \frac{f^{(n)}(x_0)}{n!} (x-x_0)^n + R_n(x)$$
 </KnowledgeCard>
 
-## 高阶导数与莱布尼茨公式
-$$(uv)^{(n)} = \sum_{k=0}^n \binom{n}{k} u^{(n-k)} v^{(k)}$$
+---
 
-## 微分中值定理
-1.  **罗尔定理**：若 $f(a)=f(b)$，则 $\exists \xi \in (a,b)$ 使得 $f'(\xi)=0$。
-2.  **拉格朗日中值定理**：
-    $$f(b) - f(a) = f'(\xi)(b - a)$$
-3.  **柯西中值定理**：
-    $$\frac{f(b) - f(a)}{g(b) - g(a)} = \frac{f'(\xi)}{g'(\xi)}$$
+## 二、 经典例题实战
+
+### 例题 1：利用导数求极值
+求 $f(x) = x^3 - 3x$ 的极值。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+1.  **求导**：$f'(x) = 3x^2 - 3 = 3(x-1)(x+1)$。
+2.  **求驻点**：令 $f'(x) = 0$，得 $x = 1$ 或 $x = -1$。
+3.  **判定**：
+    -   $x < -1$ 时，$f'(x) > 0$（递增）。
+    -   $-1 < x < 1$ 时，$f'(x) < 0$（递减）。
+    -   $x > 1$ 时，$f'(x) > 0$（递增）。
+4.  **结论**：$x = -1$ 为极大值点，$f(-1) = 2$；$x = 1$ 为极小值点，$f(1) = -2$。
+
+#### 答案
+极大值 2，极小值 -2。
+</details>
