@@ -55,8 +55,66 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 在欧氏空间 $\mathbb{R}^k$ 中，一个子集 $K$ 是**紧致的**，当且仅当它是**有界且闭的**。
 
 ---
+## 4. 连续性与收敛性 (Continuity and Convergence)
 
-## 4. 深度例题 (Selected Examples)
+在度量空间中，极限和连续性的定义可以从 $\mathbb{R}$ 完美地推广。
+
+### 定义 4.1 (收敛性)
+序列 $\{p_n\}$ 在度量空间 $X$ 中**收敛**于 $p \in X$，记作 $p_n \to p$，如果：
+$$\forall \epsilon > 0, \exists N \in \mathbb{N}, \text{ 使得当 } n > N \text{ 时, } d(p_n, p) < \epsilon$$
+
+### 定义 4.2 (拓扑连续性)
+设 $f: X \to Y$ 是两个度量空间之间的映射。以下陈述等价：
+1. **$\epsilon-\delta$ 定义**：$\forall p \in X, \forall \epsilon > 0, \exists \delta > 0$，使得 $d_X(x, p) < \delta \implies d_Y(f(x), f(p)) < \epsilon$。
+2. **开集原像定义**：对于 $Y$ 中的任意开集 $V$，$f^{-1}(V)$ 是 $X$ 中的开集。
+
+<KnowledgeCard type="success" title="紧致性与连续性">
+**定理**：紧集在连续映射下的像是紧集。
+这是“闭区间上的连续函数必有最值”这一分析学定理的本质推广。
+</KnowledgeCard>
+
+---
+
+## 5. 连通性 (Connectedness)
+
+连通性描述了一个集合是否是“一体”的。
+
+### 定义 5.1 (连通集)
+如果集合 $E$ 不能表示为两个**不相交的非空开集**（在 $E$ 的相对拓扑下）的并集，则称 $E$ 是**连通的**。
+
+<KnowledgeCard type="info" title="介值定理的本质">
+实数轴 $\mathbb{R}$ 上的连通子集只有区间。连续映射保持连通性，因此连续函数会将区间映射为区间——这就是**介值定理 (IVT)** 的拓扑根源。
+</KnowledgeCard>
+
+---
+
+## 6. 完备性 (Completeness)
+
+完备性确保了“看起来应该有极限的序列确实有极限”。
+
+### 定义 6.1 (柯西序列与完备空间)
+- **柯西序列**：如果 $\forall \epsilon > 0, \exists N \in \mathbb{N}$，使得 $n, m > N \implies d(p_n, p_m) < \epsilon$。
+- **完备空间**：如果 $X$ 中每一个柯西序列都收敛于 $X$ 中的某个点，则称 $X$ 是**完备的**。
+
+<KnowledgeCard type="warning" title="常见空间对比">
+- $\mathbb{R}^k$ 是完备的。
+- 有理数集 $\mathbb{Q}$ **不是**完备的（如 $\sqrt{2}$ 的有理逼近序列不收敛于有理数）。
+- $C[a, b]$（连续函数空间）在一致范数下是完备的（Banach 空间）。
+</KnowledgeCard>
+
+---
+
+## 7. 计算机科学中的拓扑 (Topological CS)
+
+拓扑学不仅是纯数学，它在计算机科学中有着深远的引用：
+
+1. **度量学习 (Metric Learning)**：在机器学习中，定义合适的“距离”（如马氏距离、余弦相似度）本质上是在寻找最适合数据的度量空间。
+2. **不动点语义 (Fixed-Point Semantics)**：程序递归和循环的语义可以通过完备偏序集 (CPO) 上的拓扑来定义。Banach 不动点定理是迭代算法收敛性的保障。
+3. **拓扑数据分析 (TDA)**：利用持久同调 (Persistent Homology) 来研究高维数据的“形状”，识别数据中的洞或连通分量。
+
+---
+
+## 8. 深度例题 (Selected Examples)
 
 ### 例 1：证明区间 $(0, 1)$ 在 $\mathbb{R}$ 中不是紧致的
 
