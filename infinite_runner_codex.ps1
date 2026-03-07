@@ -22,9 +22,9 @@ $global:EXCLUDED_SYNC_PATHS = @(
     $CodexOutputFile
 )
 
-# 模型优先级：先尝试使用 CLI 默认模型，再回退到显式模型。
-$MODEL_CANDIDATES_PRIMARY = @("", "gpt-5", "o3")
-$MODEL_CANDIDATES_EXECUTOR = @("", "gpt-5-mini", "o3")
+# 模型优先级：优先使用指定主模型，再回退到 Codex 专用模型。
+$MODEL_CANDIDATES_PRIMARY = @("gpt-5.4", "gpt-5.3-codex")
+$MODEL_CANDIDATES_EXECUTOR = @("gpt-5.4", "gpt-5.3-codex")
 
 function Write-Log($message, $type = "INFO", $toFile = $true) {
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
@@ -68,7 +68,27 @@ function Test-GitAvailable {
 function Acquire-Lock {
     if (Test-Path $LockFile) {
         $existing = Get-Content -Path $LockFile -ErrorAction SilentlyContinue
-        throw "Runner lock already exists: $LockFile | $existing"
+        $pidLine = $existing | Where-Object { $_ -match '^pid=\d+$' } | Select-Object -First 1
+        $existingPid = $null
+
+        if ($pidLine) {
+            $existingPid = [int]($pidLine -replace '^pid=', '')
+        }
+
+        $lockIsActive = $false
+        if ($existingPid) {
+            $activeProcess = Get-Process -Id $existingPid -ErrorAction SilentlyContinue
+            if ($activeProcess) {
+                $lockIsActive = $true
+            }
+        }
+
+        if ($lockIsActive) {
+            throw "Runner lock already exists: $LockFile | $existing"
+        }
+
+        Write-Log "Detected stale runner lock. Reclaiming $LockFile." "WARN"
+        Remove-Item $LockFile -Force -ErrorAction SilentlyContinue
     }
 
     $payload = @(
@@ -195,6 +215,80 @@ function Get-ChangedPaths {
     return $paths | Select-Object -Unique
 }
 
+function Test-HasSyncableChanges {
+    $paths = Get-ChangedPaths
+    return ($paths -and $paths.Count -gt 0)
+}
+
+function Suspend-ExcludedChanges {
+    $stashName = "codex-runner-temp-$(Get-Date -Format 'yyyyMMddHHmmss')"
+    $targetPaths = @()
+
+    foreach ($path in $global:EXCLUDED_SYNC_PATHS) {
+        if (Test-Path $path) {
+            $targetPaths += $path
+        }
+    }
+
+    if (-not $targetPaths -or $targetPaths.Count -eq 0) {
+        return $null
+    }
+
+    $statusBefore = git status --porcelain -- $targetPaths
+    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace(($statusBefore -join "").Trim())) {
+        return $null
+    }
+
+    & git stash push --include-untracked -m $stashName -- $targetPaths *> $null
+    if ($LASTEXITCODE -ne 0) {
+        throw "Failed to stash excluded runtime changes."
+    }
+
+    $topEntry = git stash list --format="%gd`t%s" | Select-Object -First 1
+    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($topEntry)) {
+        throw "Unable to verify temporary runtime stash."
+    }
+
+    $parts = $topEntry -split "`t", 2
+    if ($parts.Count -lt 2 -or $parts[1] -ne $stashName) {
+        throw "Unable to verify temporary runtime stash."
+    }
+
+    return $parts[0]
+}
+
+function Restore-ExcludedChanges($stashRef) {
+    if ([string]::IsNullOrWhiteSpace($stashRef)) {
+        return
+    }
+
+    git stash pop $stashRef *> $null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Log "Failed to restore temporary runtime stash: $stashRef" "WARN"
+    }
+}
+
+function Invoke-InitialPullSafely {
+    if (Test-HasSyncableChanges) {
+        Write-Log "Initial sync skipped: workspace has local syncable changes." "WARN"
+        return $false
+    }
+
+    $runtimeStash = $null
+    try {
+        $runtimeStash = Suspend-ExcludedChanges
+
+        git pull origin main --rebase
+        if ($LASTEXITCODE -ne 0) {
+            throw "Initial git pull --rebase failed."
+        }
+
+        return $true
+    } finally {
+        Restore-ExcludedChanges $runtimeStash
+    }
+}
+
 function Invoke-Sync($message) {
     $paths = Get-ChangedPaths
     if (-not $paths -or $paths.Count -eq 0) {
@@ -226,14 +320,21 @@ function Invoke-Sync($message) {
         throw "git commit failed."
     }
 
-    git pull origin main --rebase
-    if ($LASTEXITCODE -ne 0) {
-        throw "git pull --rebase failed."
-    }
+    $runtimeStash = $null
+    try {
+        $runtimeStash = Suspend-ExcludedChanges
 
-    git push origin main
-    if ($LASTEXITCODE -ne 0) {
-        throw "git push failed."
+        git pull origin main --rebase
+        if ($LASTEXITCODE -ne 0) {
+            throw "git pull --rebase failed."
+        }
+
+        git push origin main
+        if ($LASTEXITCODE -ne 0) {
+            throw "git push failed."
+        }
+    } finally {
+        Restore-ExcludedChanges $runtimeStash
     }
 
     Start-Sleep -Seconds $SyncCooldown
@@ -381,11 +482,6 @@ function Run-ExecutionCycle {
             break
         }
 
-        git pull origin main --rebase
-        if ($LASTEXITCODE -ne 0) {
-            throw "Post-exec git pull --rebase failed."
-        }
-
         if (Assert-TaskIntegrity $taskDesc) {
             Write-Log "Mission Accomplished: $taskDesc" "SUCCESS"
             Invoke-Sync "feat: completed $taskDesc via Codex"
@@ -408,10 +504,7 @@ try {
             Check-CloudStatus
             Write-Host ">>> Initializing pulse sync..." -ForegroundColor Gray
 
-            git pull origin main --rebase
-            if ($LASTEXITCODE -ne 0) {
-                throw "Initial git pull --rebase failed."
-            }
+            Invoke-InitialPullSafely *> $null
 
             Run-PlanningCycle
             Run-ExecutionCycle
