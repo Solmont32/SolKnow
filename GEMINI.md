@@ -24,7 +24,7 @@
 
 ## 4. 自定义高效工作流 (User Profile Shortcuts)
 用户本地定义了高效的 PowerShell 捷径，Gemini CLI 应当优先配合：
-- **gcp "message"**: 执行 `git add .`, `git commit -m $args[0]`, `git push origin main` 的一键操作。
+- **gcp "message"**: 执行 `git add .`, `git commit -m $args[0]`, `git push origin main` 后，**必须执行 `gh run watch` 确保部署成功**。此闭环已集成至 `infinite_runner.ps1`。
 - **spx / upx**: 切换本地代理 (`http://127.0.0.1:7897`)。
 
 ## 5. 组件规范
