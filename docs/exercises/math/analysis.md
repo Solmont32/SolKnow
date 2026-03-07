@@ -1137,4 +1137,31 @@ $d^2 u = \frac{2(du dv - dx dy)}{u-v}$。
 最短距离为 $\sqrt{4-2\sqrt{2}}$。
 </details>
 
+---
+
+## 练习 62：离散概率分布的熵最大化
+在信息论与统计物理中，**熵 (Entropy)** 是系统无序度的度量。设一个离散系统有 $n$ 个可能状态，各状态发生的概率为 $p_i \ge 0$。求在满足概率归一化条件 $\sum_{i=1}^n p_i = 1$ 的约束下，使得信息熵 $H(p_1, p_2, \dots, p_n) = -\sum_{i=1}^n p_i \ln p_i$ 达到最大的概率分布。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **构造目标函数与约束**：
+   目标函数：$f(p_1, \dots, p_n) = -\sum_{i=1}^n p_i \ln p_i$。
+   约束条件：$g(p_1, \dots, p_n) = \sum_{i=1}^n p_i - 1 = 0$。
+2. **构造 Lagrangian**：
+   $$L(p_1, \dots, p_n, \lambda) = -\sum_{i=1}^n p_i \ln p_i + \lambda (\sum_{i=1}^n p_i - 1)$$
+3. **求偏导并令其为零**：
+   对于每个 $p_j$：
+   $$\frac{\partial L}{\partial p_j} = -(\ln p_j + 1) + \lambda = 0 \implies \ln p_j = \lambda - 1 \implies p_j = e^{\lambda - 1}$$
+4. **利用约束条件求解 $\lambda$**：
+   由于 $p_j$ 对所有 $j$ 都是常数，代入 $\sum p_j = 1$ 得：
+   $$n \cdot e^{\lambda - 1} = 1 \implies e^{\lambda - 1} = \frac{1}{n} \implies p_j = \frac{1}{n}$$
+5. **结论**：
+   当概率分布为**均匀分布**（各状态等概率）时，系统的熵达到最大值 $H_{\max} = \ln n$。这正是热力学第二定律在微观状态下的体现：系统趋向于占据尽可能多的微观状态。
+
+#### 答案
+当 $p_1 = p_2 = \dots = p_n = 1/n$ 时，熵达到极大值。
+</details>
+
 

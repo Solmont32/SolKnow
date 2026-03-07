@@ -28,57 +28,102 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 
 ---
 
-## 三、 多元函数的极值 (Extremum)
+## 三、 多元函数的极值理论 (Extremum Theory)
 
-### 1. 无条件极值
-- **必要条件**：驻点 $f_x = f_y = 0$。
-- **充分条件**：Hessian 矩阵 $H = \begin{pmatrix} f_{xx} & f_{xy} \\ f_{yx} & f_{yy} \end{pmatrix}$。
-  - $H$ 正定 $\Rightarrow$ 极小值。
-  - $H$ 负定 $\Rightarrow$ 极大值。
-  - $H$ 不定 $\Rightarrow$ 鞍点。
+多元函数的极值问题是微分学最重要的应用之一。根据是否有边界约束，分为**无条件极值**与**条件极值**。
 
----
+### 1. 无条件极值的必要条件
+**定理（费马引理的推广）**：设 $f(\mathbf{x})$ 在点 $P_0$ 处取得极值，且在该点处偏导数存在，则 $P_0$ 必为**驻点 (Stationary Point)**，即：
+$$\nabla f(P_0) = \mathbf{0} \iff \frac{\partial f}{\partial x_1} = \frac{\partial f}{\partial x_2} = \dots = \frac{\partial f}{\partial x_n} = 0$$
 
-## 四、 Lagrange 乘数法的严格证明与几何意义
+### 2. 判别极值的充分条件：Hessian 矩阵
+驻点不一定是极值点（如鞍点）。判定驻点性质需考察二阶微分，即 **Hessian 矩阵**：
+$$H(f) = \begin{pmatrix} 
+f_{x_1 x_1} & f_{x_1 x_2} & \dots & f_{x_1 x_n} \\
+f_{x_2 x_1} & f_{x_2 x_2} & \dots & f_{x_2 x_n} \\
+\vdots & \vdots & \ddots & \vdots \\
+f_{x_n x_1} & f_{x_n x_2} & \dots & f_{x_n x_n}
+\end{pmatrix}$$
 
-### 1. 定理陈述
-求 $f(x, y, z)$ 在约束 $g(x, y, z) = 0$ 下的极值。若 $P_0$ 是极值点且 $\nabla g(P_0) \neq \mathbf{0}$，则存在 $\lambda$ 使得 $\nabla f(P_0) + \lambda \nabla g(P_0) = \mathbf{0}$。
+根据 Taylor 展开：$f(P_0 + \mathbf{h}) \approx f(P_0) + \frac{1}{2} \mathbf{h}^T H(P_0) \mathbf{h}$。极值性质取决于二次型 $\mathbf{h}^T H \mathbf{h}$ 的正定性：
 
-### 2. 几何意义：梯度共线
-在约束曲线/曲面 $g=0$ 上，极值点 $P_0$ 处的等值面 $f=c$ 必须与约束面 $g=0$ **相切**。
-- 如果不相切（即 $\nabla f$ 与 $\nabla g$ 不共线），则 $\nabla f$ 在约束面切平面上有非零分量，函数值可以沿该方向继续增大或减小，故不是极值点。
-- 因此，$\nabla f$ 必须垂直于约束面的切空间，即 $\nabla f \parallel \nabla g$。
+| Hessian 矩阵特征 | 二次型性质 | 驻点性质 |
+| :--- | :--- | :--- |
+| 所有特征值 $\lambda_i > 0$ | **正定** | 极小值点 |
+| 所有特征值 $\lambda_i < 0$ | **负定** | 极大值点 |
+| 特征值有正有负 | **不定** | 鞍点 (Saddle Point) |
+| 存在 $\lambda_i = 0$ 且其余同号 | **半正定/半负定** | 无法判定（需更高阶项） |
 
-### 3. 严格证明：链式法则法
-由于 $\nabla g \neq 0$，假设 $g_z(P_0) \neq 0$。根据隐函数定理，局部存在 $z = z(x, y)$。
-令 $h(x, y) = f(x, y, z(x, y))$。在极值点 $P_0$，$h$ 的全微分为 $0$：
-$$dh = f_x dx + f_y dy + f_z dz = 0$$
-而由 $g(x, y, z) = 0$ 可得：
-$$dg = g_x dx + g_y dy + g_z dz = 0$$
-由 $dg=0$ 解出 $dz = -\frac{1}{g_z}(g_x dx + g_y dy)$ 代入 $dh=0$：
-$$(f_x - f_z \frac{g_x}{g_z}) dx + (f_y - f_z \frac{g_y}{g_z}) dy = 0$$
-由于 $dx, dy$ 独立，系数必为 $0$：
-$$\frac{f_x}{g_x} = \frac{f_y}{g_y} = \frac{f_z}{g_z} = -\lambda$$
-由此得辅助函数（Lagrangian） $L = f + \lambda g$ 的驻点方程。
-
-### 4. 多约束情形
-若有多个约束 $g_1=0, g_2=0, \dots, g_m=0$，则极值点处目标函数的梯度必须处于约束函数梯度的张成空间内：
-$$\nabla f + \sum_{i=1}^m \lambda i \nabla g_i = \mathbf{0}$$
-这要求目标函数的梯度与所有约束面的交集（流形）的切空间正交。
+**Sylvester 判别法（顺序主子式）**：
+- **正定**：所有顺序主子式 $D_k > 0$。
+- **负定**：顺序主子式符号正负相间，即 $(-1)^k D_k > 0$（$D_1<0, D_2>0, D_3<0 \dots$）。
 
 ---
 
-## 五、 判别极值的充分条件：Hessian 矩阵
+## 四、 Lagrange 乘数法 (Lagrange Multipliers)
 
-在求得驻点后，需判定其性质：
-1. **无条件极值**：检查 Hessian 矩阵 $H(f)$ 的正定性。
-2. **条件极值**：严格来说需检查 **有约束的 Hessian (Bordered Hessian)**，或将约束代入后化为低维无条件极值问题进行判定。
+### 1. 单约束情形
+求 $f(\mathbf{x})$ 在约束 $g(\mathbf{x}) = 0$ 下的极值。引入辅助函数：
+$$L(\mathbf{x}, \lambda) = f(\mathbf{x}) + \lambda g(\mathbf{x})$$
+解方程组 $\nabla L = \mathbf{0}$ 可得极值候选点。
+
+### 2. 多约束情形 (Multiple Constraints)
+若有多个约束 $g_1(\mathbf{x})=0, g_2(\mathbf{x})=0, \dots, g_m(\mathbf{x})=0$ ($m < n$)，引入 $m$ 个乘数 $\lambda_1, \dots, \lambda_m$：
+$$L(\mathbf{x}, \lambda_1, \dots, \lambda_m) = f(\mathbf{x}) + \sum_{i=1}^m \lambda_i g_i(\mathbf{x})$$
+**几何本质**：目标函数 $f$ 的梯度 $\nabla f$ 必须落在约束函数梯度 $\{\nabla g_i\}$ 所张成的法空间内。即 $\nabla f$ 在约束流形的切空间上投影为零。
+
+### 3. 深度例题：多约束极值计算
+**题目**：求原点到曲线 $\begin{cases} x+y+z=1 \\ x^2+y^2=1 \end{cases}$ 的最短距离。
+
+<details>
+<summary>点击查看解析</summary>
+
+目标函数（距离平方）：$f(x, y, z) = x^2 + y^2 + z^2$。
+约束条件：$g_1 = x+y+z-1=0$，$g_2 = x^2+y^2-1=0$。
+构造 Lagrangian：
+$$L = x^2+y^2+z^2 + \lambda_1(x+y+z-1) + \lambda_2(x^2+y^2-1)$$
+求偏导：
+1. $L_x = 2x + \lambda_1 + 2\lambda_2 x = 0$
+2. $L_y = 2y + \lambda_1 + 2\lambda_2 y = 0$
+3. $L_z = 2z + \lambda_1 = 0$
+4. $g_1 = 0, g_2 = 0$
+
+由 (1)(2) 得：$(2+2\lambda_2)(x-y) = 0$。
+**Case 1**: $x=y$。代入 $g_2$ 得 $2x^2=1 \Rightarrow x=y=\pm \frac{\sqrt{2}}{2}$。
+代入 $g_1$ 得 $z = 1 \mp \sqrt{2}$。
+**Case 2**: $2+2\lambda_2=0 \Rightarrow \lambda_2=-1$。代入 (1) 得 $\lambda_1=0$。由 (3) 得 $z=0$。
+代入 $g_1$ 得 $x+y=1$，联立 $g_2$ 得 $x^2+(1-x)^2=1 \Rightarrow 2x^2-2x=0 \Rightarrow x=0, 1$。
+得到点 $(0, 1, 0)$ 和 $(1, 0, 0)$。
+
+计算各点到原点距离：
+- $P_1, P_2: (\pm \frac{\sqrt{2}}{2}, \pm \frac{\sqrt{2}}{2}, 1 \mp \sqrt{2}) \Rightarrow d^2 = 1 + (1 \mp \sqrt{2})^2 = 4 \mp 2\sqrt{2}$。
+- $P_3, P_4: (0, 1, 0), (1, 0, 0) \Rightarrow d^2 = 1$。
+比较得最短距离为 $1$（此时点为 $(0, 1, 0)$ 或 $(1, 0, 0)$）。
+</details>
+
+---
+
+## 五、 物理最优化应用专题：Fermat 原理与折射定律
+
+在物理学中，许多规律都可以表述为某个量的极值（变分原理）。
+
+### 1. Fermat 原理 (Fermat's Principle)
+光在两点间传播的路径，是使所需时间取平稳值（通常是极小值）的路径。
+
+### 2. 推导 Snell 折射定律
+设光从介质 1（折射率 $n_1$, 速度 $v_1$）进入介质 2（折射率 $n_2$, 速度 $v_2$）。
+入射点 $A(-a, h_1)$，折射点 $B(b, -h_2)$，交界面为 $x$ 轴。设折射点为 $(x, 0)$。
+传播时间 $T(x) = \frac{\sqrt{(x+a)^2 + h_1^2}}{v_1} + \frac{\sqrt{(b-x)^2 + h_2^2}}{v_2}$。
+求极值：$\frac{dT}{dx} = \frac{x+a}{v_1 \sqrt{(x+a)^2 + h_1^2}} - \frac{b-x}{v_2 \sqrt{(b-x)^2 + h_2^2}} = 0$。
+注意到 $\frac{x+a}{\sqrt{\dots}} = \sin \theta_1$，$\frac{b-x}{\sqrt{\dots}} = \sin \theta_2$。
+则有 $\frac{\sin \theta_1}{v_1} = \frac{\sin \theta_2}{v_2}$。
+由于 $n = c/v$，得：$n_1 \sin \theta_1 = n_2 \sin \theta_2$。
 
 ---
 
 ## 六、 深度实战解析
 
-### 深度例题 1：隐函数方程组求导
+### 深度例题 2：隐函数方程组求导
 设 $u+v=x+y$，$xu+yv=1$，求 $\frac{\partial u}{\partial x}$。
 
 <details>
