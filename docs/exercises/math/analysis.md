@@ -660,3 +660,62 @@ $x=1$ 为跳跃间断点。
 
 ### 综合证明 5：高阶导数与多点罗尔定理
 利用罗尔定理递推证明 $f^{(n)}(\xi) = 0$。
+
+---
+
+## 练习 41：空间曲线的切线与法平面
+求曲线 $x = t, y = t^2, z = t^3$ 在点 $(1, 1, 1)$ 处的切线与法平面方程。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **参数值**：点 $(1, 1, 1)$ 对应 $t = 1$。
+2. **切向量**：$\mathbf{r}'(t) = (1, 2t, 3t^2)$。在 $t=1$ 时，$\mathbf{r}'(1) = (1, 2, 3)$。
+3. **切线方程**：
+   $$\frac{x-1}{1} = \frac{y-1}{2} = \frac{z-1}{3}$$
+4. **法平面方程**：
+   $1(x-1) + 2(y-1) + 3(z-1) = 0 \Rightarrow x + 2y + 3z - 6 = 0$。
+
+#### 答案
+切线：$\frac{x-1}{1} = \frac{y-1}{2} = \frac{z-1}{3}$；法平面：$x + 2y + 3z - 6 = 0$。
+</details>
+
+---
+
+## 练习 42：圆柱螺旋线的曲率与挠率计算
+计算螺旋线 $\mathbf{r}(t) = (3\cos t, 3\sin t, 4t)$ 的曲率 $\kappa$ 与挠率 $\tau$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **导数**：$\mathbf{r}' = (-3\sin t, 3\cos t, 4)$，$|\mathbf{r}'| = \sqrt{3^2+4^2} = 5$。
+2. **二阶导**：$\mathbf{r}'' = (-3\cos t, -3\sin t, 0)$，$|\mathbf{r}' \times \mathbf{r}''| = 3\sqrt{3^2+4^2} = 15$（利用螺旋线公式）。
+3. **曲率**：$\kappa = \frac{15}{5^3} = \frac{15}{125} = \frac{3}{25} = 0.12$。
+4. **挠率**：$\tau = \frac{b}{a^2+b^2} = \frac{4}{3^2+4^2} = \frac{4}{25} = 0.16$。
+
+#### 答案
+$\kappa = 0.12, \tau = 0.16$。
+</details>
+
+---
+
+## 练习 43：Frenet 标架求解
+求曲线 $\mathbf{r}(t) = (t, t^2, \frac{2}{3}t^3)$ 在 $t=1$ 处的单位切向量 $\mathbf{T}$ 和单位副法向量 $\mathbf{B}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **导数**：$\mathbf{r}' = (1, 2t, 2t^2)$。在 $t=1$ 时，$\mathbf{r}'(1) = (1, 2, 2)$，$|\mathbf{r}'| = 3$。
+   故 $\mathbf{T} = (\frac{1}{3}, \frac{2}{3}, \frac{2}{3})$。
+2. **二阶导**：$\mathbf{r}'' = (0, 2, 4t)$。在 $t=1$ 时，$\mathbf{r}''(1) = (0, 2, 4)$。
+3. **外积**：$\mathbf{r}' \times \mathbf{r}'' = \begin{vmatrix} \mathbf{i} & \mathbf{j} & \mathbf{k} \\ 1 & 2 & 2 \\ 0 & 2 & 4 \end{vmatrix} = (4, -4, 2)$。
+4. **模长**：$|\mathbf{r}' \times \mathbf{r}''| = \sqrt{16+16+4} = 6$。
+   故 $\mathbf{B} = (\frac{4}{6}, -\frac{4}{6}, \frac{2}{6}) = (\frac{2}{3}, -\frac{2}{3}, \frac{1}{3})$。
+
+#### 答案
+$\mathbf{T} = (\frac{1}{3}, \frac{2}{3}, \frac{2}{3}), \mathbf{B} = (\frac{2}{3}, -\frac{2}{3}, \frac{1}{3})$。
+</details>
+

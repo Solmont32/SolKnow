@@ -51,6 +51,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ### 第五部分：多元微积分 (Chapters 16-22)
 - **[第十六章 多元函数的极限与连续](multivariable-derivatives)**：二元极限、连续性。
 - **[第十七章 多元函数微分学](multivariable-derivatives)**：全微分、偏导数、极值问题。
+- **[第十七章 (续) 空间曲线与曲面的微分几何](differential-geometry)**：切向量、法向量、曲率与挠率。
 - **[第十八章 隐函数定理及其应用](multivariable-derivatives)**：隐函数存在定理、雅可比矩阵。
 - **[第十九章 含参量积分](parametric-integrals)**：含参量正常/反常积分、Beta/Gamma 函数。
 - **[第二十章 重积分](multiple-integrals)**：二重/三重积分、变量替换、Jacobi 行列式。
