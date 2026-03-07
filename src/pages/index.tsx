@@ -77,7 +77,7 @@ const FeatureList = [
     title: '系统化数学知识',
     Icon: InfinityIcon,
     description: '从 K-12 基础教育到大学数学分析、高等代数与离散数学，建立坚实的数学底座。',
-    link: '/docs/academic-math/analysis/index',
+    link: '/docs/academic-math/analysis/',
     linkText: '探索数学世界',
     color: '#8b5cf6',
   },
@@ -85,7 +85,7 @@ const FeatureList = [
     title: '计算机科学知识库',
     Icon: Monitor,
     description: '从 Linux 操作系统、计算机网络到 C/C++ 与 Python 语言特性，构建完整的底层思维体系。',
-    link: '/docs/cs/index',
+    link: '/docs/cs/',
     linkText: '深入底层原理',
     color: '#f59e0b',
   },
@@ -101,10 +101,11 @@ const FeatureList = [
     title: '资源导航与工具',
     Icon: Compass,
     description: '收录全球顶尖的算法竞赛平台、在线数学可视化工具及推荐书籍，让学习快人一步。',
-    link: '/docs/resources/index',
+    link: '/docs/resources/',
     linkText: '发现优质资源',
     color: '#10b981',
   },
+
 ];
 
 const Roadmaps = [

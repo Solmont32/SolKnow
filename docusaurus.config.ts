@@ -140,8 +140,8 @@ const config: Config = {
           title: '知识探索',
           items: [
             {label: '算法算法', to: '/docs/intro'},
-            {label: '数学大厦', to: '/docs/academic-math/analysis/index'},
-            {label: '计算机底层', to: '/docs/cs/index'},
+            {label: '数学大厦', to: '/docs/academic-math/analysis/'},
+            {label: '计算机底层', to: '/docs/cs/'},
           ],
         },
         {
@@ -155,13 +155,13 @@ const config: Config = {
         {
           title: '关注作者',
           items: [
-            {label: 'Bilibili', href: 'https://space.bilibili.com'}, // 建议用户后续填入真实UID
-            {label: 'RSS 订阅', to: '/blog/rss.xml'},
+            {label: 'Bilibili', href: 'https://space.bilibili.com'}, 
           ],
         },
       ],
       copyright: `Copyright © ${new Date().getFullYear()} SolKnow（知岛）. Built with Docusaurus & Passion.`,
     },
+
     docs: {
       sidebar: {
         hideable: true,
