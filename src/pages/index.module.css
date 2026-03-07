@@ -1,27 +1,56 @@
 .heroBanner {
-  padding: 8rem 0;
+  padding: 10rem 0;
   text-align: center;
   position: relative;
   overflow: hidden;
-  background: var(--solknow-bg-gradient);
+  background: var(--ifm-background-color);
   border-bottom: 1px solid var(--ifm-color-emphasis-200);
 }
 
+.heroGlow {
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 140%;
+  background: radial-gradient(
+    circle at center,
+    rgba(37, 99, 235, 0.08) 0%,
+    rgba(37, 99, 235, 0.03) 40%,
+    transparent 70%
+  );
+  filter: blur(80px);
+  z-index: 0;
+  pointer-events: none;
+  animation: pulseGlow 10s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(1); }
+  50% { opacity: 0.8; transform: translateX(-50%) scale(1.1); }
+}
+
 .heroTitle {
-  font-size: 4rem;
-  font-weight: 800;
+  font-size: 4.5rem;
+  font-weight: 900;
   margin-bottom: 1.5rem;
-  background: -webkit-linear-gradient(45deg, var(--ifm-color-primary), #0ea5e9);
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--ifm-color-primary) 0%, #0ea5e9 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  position: relative;
+  z-index: 1;
 }
 
 .heroSubtitle {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   color: var(--ifm-color-emphasis-700);
-  max-width: 750px;
-  margin: 0 auto 3rem;
-  line-height: 1.8;
+  max-width: 800px;
+  margin: 0 auto 3.5rem;
+  line-height: 1.7;
+  position: relative;
+  z-index: 1;
 }
 
 .buttons {
@@ -30,95 +59,129 @@
   justify-content: center;
   gap: 1.5rem;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.buttons a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: 12px;
+  font-weight: 700;
+  transition: transform 0.2s;
+}
+
+.buttons a:hover {
+  transform: translateY(-2px);
 }
 
 .sectionTitle {
   text-align: center;
-  font-size: 2.2rem;
+  font-size: 2.8rem;
   font-weight: 800;
-  margin-bottom: 3rem;
-  position: relative;
-}
-
-.sectionTitle::after {
-  content: "";
-  display: block;
-  width: 60px;
-  height: 4px;
-  background: var(--ifm-color-primary);
-  margin: 15px auto 0;
-  border-radius: 2px;
+  margin-bottom: 4rem;
+  letter-spacing: -0.01em;
 }
 
 .features {
-  padding: 6rem 0;
+  padding: 8rem 0;
+  background: var(--ifm-background-color);
 }
 
 .featureGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2.5rem;
-  margin-bottom: 6rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 8rem;
 }
 
 .featureCard {
-  padding: 3rem 2rem;
+  padding: 2.5rem;
+  border-radius: 24px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  background: var(--ifm-card-background-color);
+  backdrop-filter: blur(10px);
+  height: 100%;
   display: flex;
   flex-direction: column;
-  height: 100%;
 }
 
-.featureIcon {
-  font-size: 3.5rem;
-  margin-bottom: 1.5rem;
+.featureIconWrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
 }
 
 .featureTitle {
   font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1.2rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
 }
 
 .featureDesc {
   flex-grow: 1;
-  color: var(--ifm-color-emphasis-700);
+  color: var(--ifm-color-emphasis-600);
   line-height: 1.7;
   margin-bottom: 2rem;
 }
 
 .featureLink {
-  font-weight: 600;
+  font-weight: 700;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 6px;
+  font-size: 0.95rem;
+  transition: gap 0.2s;
 }
 
-/* Roadmap Section */
+.featureLink:hover {
+  gap: 10px;
+  text-decoration: none;
+}
+
+/* Roadmap Section Upgrade */
 .roadmapSection {
-  background: var(--ifm-color-emphasis-100);
-  padding: 4rem 2rem;
-  border-radius: 24px;
-  margin-top: 4rem;
+  background: rgba(37, 99, 235, 0.03);
+  padding: 5rem 3rem;
+  border-radius: 32px;
+  border: 1px solid rgba(37, 99, 235, 0.1);
 }
 
 .roadmapGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
 }
 
 .roadmapCard {
-  background: var(--solknow-card-bg);
-  padding: 2.5rem;
-  border-radius: 20px;
-  border-left: 6px solid;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  background: var(--ifm-card-background-color);
+  padding: 2rem;
+  border-radius: 24px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  transition: border-color 0.3s;
+}
+
+.roadmapCard:hover {
+  border-color: var(--accent-color);
+}
+
+.roadmapHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.5rem;
 }
 
 .roadmapCard h4 {
-  font-size: 1.4rem;
-  margin-bottom: 1.5rem;
-  font-weight: 700;
+  font-size: 1.25rem;
+  margin: 0;
+  font-weight: 800;
 }
 
 .roadmapCard ul {
@@ -128,27 +191,40 @@
 }
 
 .roadmapCard li {
-  padding: 0.8rem 0;
-  border-bottom: 1px solid var(--ifm-color-emphasis-200);
-  color: var(--ifm-color-emphasis-800);
-  font-weight: 500;
+  padding: 10px 0;
+  color: var(--ifm-color-emphasis-700);
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .roadmapCard li::before {
-  content: "✦";
-  margin-right: 10px;
-  color: var(--ifm-color-primary);
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--accent-color);
+  opacity: 0.6;
 }
 
 .homeFooter {
-  padding: 4rem 0;
+  padding: 6rem 0;
   background: var(--ifm-footer-background-color);
-  color: var(--ifm-footer-color);
   border-top: 1px solid var(--ifm-color-emphasis-200);
 }
 
+.footerBrand {
+  margin-top: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  opacity: 0.5;
+  font-size: 0.9rem;
+}
+
 @media screen and (max-width: 996px) {
-  .heroBanner { padding: 5rem 1.5rem; }
-  .heroTitle { font-size: 2.8rem; }
-  .featureGrid { gap: 1.5rem; }
+  .heroTitle { font-size: 3rem; }
+  .heroSubtitle { font-size: 1.2rem; }
+  .roadmapSection { padding: 3rem 1.5rem; }
 }
