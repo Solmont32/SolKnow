@@ -4,7 +4,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'SolKnow（知岛）',
-  tagline: '知识点 + 视频讲解 的竞赛笔记与博客',
+  tagline: '计算机与数学交叉领域的集成式零基础学习系统',
   favicon: 'img/favicon.ico',
 
   url: 'https://solmont32.github.io',

@@ -1,38 +1,35 @@
-# SolKnow (知岛)
+# SolKnow (知岛) 🚀
 
-沉浸式的 **算法竞赛笔记** 与 **数学知识体系**。
-整合图文教程与 B 站视频讲解，打造属于你的结构化数字大脑。
-
----
-
-## 🌟 项目亮点
-- **三足鼎立**: 涵盖算法竞赛、系统数学、计算机科学三大核心板块。
-- **视觉驱动**: 采用 `framer-motion` 动效、`Lucide` 图标与玻璃拟态设计。
-- **视频整合**: 核心笔记均配备 B 站嵌入式视频解析。
-- **公式支持**: 基于 KaTeX 的高质量数学公式渲染。
+> **集成式零基础学习系统 (Integrated Zero-Foundation Learning System)**：致力于打造计算机科学、系统数学及其交叉领域的全链条认知闭环。
 
 ---
 
-## 🚀 2026.03.07 最新里程碑 (Major Upgrade)
-今天项目完成了 **V2 全站审美与工程化重塑**：
-1. **首页重构**: 引入动态 Hero 区域、计算机科学板块及琥珀橘视觉符号。
-2. **视频页进化**: 打造响应式视频聚合中心。
-3. **内容组件**: 引入 `KnowledgeCard` 增强文档呈现。
-4. **工程闭环**: 建立 ESLint/Prettier 规范及 GitHub CLI 部署监控流程。
+## 🏗️ 项目使命 (Our Mission)
+SolKnow 不仅仅是一个文档库，它是一个**知识路由器**。我们旨在为初学者（零基础）提供一条从数学底层逻辑到计算机工业应用的平滑曲线。通过结构化的图谱、深度互动的组件与工业级的代码规范，将枯燥的定义转化为可感知的直觉。
+
+### 核心板块 (Core Pillars)
+- **💻 计算机科学 (CS)**: 从二进制到分布式系统，涵盖 C/C++、OS、网络与架构。
+- **🔢 系统数学 (Math)**: 数学分析、高等代数、离散数学、概率论（学术级/竞赛级并重）。
+- **⚡ 交叉领域 (Intersect)**: 人工智能、信息安全、算法竞赛 (CP)，探索数机结合的终极奥义。
+- **🎥 视频引擎**: 深度集成 Bilibili 原生教学，实现“文字+视频+交互”的立体化学习。
 
 ---
 
-## 🛠️ 本地开发
-```bash
-npm install
-npm start
-```
-
-## 🏗️ 生产构建与部署
-```bash
-npm run build
-npm run deploy
-```
+## 🎨 工程与审美标准
+- **结构化导航**: 基于知识图谱 (Knowledge Graph) 的非线性下钻体验。
+- **现代化视觉**: 玻璃拟态 UI, Framer Motion 交互，Lucide 线性图标。
+- **工业级交付**: 严格的 TypeScript 类型检查、ESLint 与 Prettier 规范。
 
 ---
-*Built with ❤️ by Solmont32*
+
+## 🛠️ 技术架构 (Stack)
+- **SSG**: [Docusaurus 3.x](https://docusaurus.io/)
+- **UI**: React 18 + Vanilla CSS (Aesthetic Overdrive)
+- **Interaction**: Framer Motion + React Force Graph
+- **Icons**: Lucide React
+- **Automation**: GitHub Actions + SolKnow Pulse Runner (v2.6)
+
+---
+
+## 🤝 贡献与致谢
+*Built with ❤️ and Precision by Solmont32*
