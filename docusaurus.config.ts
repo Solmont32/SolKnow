@@ -129,7 +129,14 @@ const config: Config = {
       darkTheme: prismThemes.dracula,
       additionalLanguages: ['cpp', 'python', 'java', 'bash', 'sql', 'latex'],
     },
+    docs: {
+      sidebar: {
+        hideable: true,
+        autoCollapseCategories: true,
+      },
+    },
   } satisfies Preset.ThemeConfig,
 };
+
 
 export default config;
