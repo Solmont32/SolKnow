@@ -160,3 +160,4 @@
 [2026-03-08 02:07:29] [ OK ] Mission Accomplished: 完善『练习库』配套 (2026-03-08)：在 `exercises/math/analysis` 中新增 15 道涵盖 Gauss 公式、Stokes 公式及含参量广义积分的综合性高难习题。
 [2026-03-08 02:07:46] [ OK ] Batch queue cleared.
 [2026-03-08 02:08:48] [PLAN] No pending tasks. Initiating audit-first planning...
+[2026-03-08 02:11:14] [EXE ] Target Locked: 拆分并重构『微分中值定理』章节 (2026-03-08)：从 `derivatives.md` 中独立出第 6 章，深度开发 Taylor 公式各型余项讨论及 L'Hopital 法则实战例题。
