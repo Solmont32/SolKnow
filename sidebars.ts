@@ -47,7 +47,13 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: '动态规划',
       link: {type: 'doc', id: 'dp/index'},
-      items: ['dp/knapsack'],
+      items: [
+        'dp/linear-dp',
+        'dp/knapsack',
+        'dp/range-dp',
+        'dp/tree-dp',
+        'dp/state-compression-dp',
+      ],
     },
     {
       type: 'category',
