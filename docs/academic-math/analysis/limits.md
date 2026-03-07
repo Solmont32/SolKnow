@@ -3,6 +3,7 @@ title: 第二章：数列极限 (Limits of Sequences)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import SupportingExercises from '@site/src/components/SupportingExercises';
 
 # 第二章：数列极限
 
@@ -130,13 +131,14 @@ $1/(k+1)$
 
 ---
 
-## 四、 练习库同步 (Analysis Exercise Sync)
-
-本章知识点对应练习库中的以下题目，建议完成以巩固理解：
-
-1.  [**练习 13：迫敛定理综合应用**](../exercises/math/analysis.md#练习-13数列极限迫敛定理) - 训练复杂根式和的缩放技巧。
-2.  **Cauchy 准则进阶**：证明 $\sum \frac{1}{n^2}$ 收敛（提示：利用 $\frac{1}{k^2} < \frac{1}{k(k-1)}$ 进行级数求和比较）。
-3.  **Stolz 定理变体**：求 $\lim_{n \to \infty} \frac{\sqrt[n]{n!}}{n}$（提示：利用 $a_n/a_{n-1}$ 与 $\sqrt[n]{a_n}$ 的极限关系，或利用 Stirling 公式初步思想）。
+<SupportingExercises 
+  topic="数列极限" 
+  exercises={[
+    { index: 13, title: "数列极限 (迫敛定理)", slug: "练习-13数列极限迫敛定理" },
+    { index: 1, title: "函数极限求法", slug: "练习-1求极限" },
+    { index: 14, title: "等价无穷小综合", slug: "练习-14函数极限利用等价无穷小" }
+  ]} 
+/>
 
 ---
 *编者注：数列极限是进入无穷世界的门票。理解 $\epsilon-N$ 语言不仅是为了证明，更是为了建立对“无限”过程的有限控制能力。*

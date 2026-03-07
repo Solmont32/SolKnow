@@ -3,6 +3,7 @@ title: 多元函数微分学：高维空间的局部线性化 (Multivariable Der
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import SupportingExercises from '@site/src/components/SupportingExercises';
 
 # 多元函数微分学：高维空间的局部线性化
 
@@ -191,103 +192,23 @@ $4 f'(x^2 + y^2) + 4(x^2 + y^2) f''(x^2 + y^2)$。
 
 ---
 
-## 八、 配套练习库
+<SupportingExercises 
+  topic="多元函数微分学" 
+  exercises={[
+    { index: 23, title: "多元函数极限不存在性证明", slug: "练习-23多元函数极限不存在性" },
+    { index: 24, title: "基本偏导数计算训练", slug: "练习-24偏导数计算" },
+    { index: 25, title: "多元复合函数链式法则", slug: "练习-25多元复合函数求导链式法则" },
+    { index: 26, title: "全微分的求法与形式不变性", slug: "练习-26全微分计算" },
+    { index: 27, title: "方向导数与梯度向量", slug: "练习-27方向导数" },
+    { index: 28, title: "空间曲面的切平面与法线", slug: "练习-28曲面的切平面" },
+    { index: 29, title: "隐函数求导公式应用", slug: "练习-29隐函数求导" },
+    { index: 39, title: "隐函数方程组求导进阶", slug: "练习-39隐函数求导方程组" },
+    { index: 30, title: "二元函数极值与鞍点判别", slug: "练习-30二元函数极值" },
+    { index: 11, title: "多元函数极值判别综合", slug: "练习-11多元函数极值判别" },
+    { index: 12, title: "Lagrange 乘数法与条件极值", slug: "练习-12lagrange乘数法应用" }
+  ]} 
+/>
 
-### 练习 1：基本偏导数计算
-已知 $z = x^y$，求 $\frac{\partial z}{\partial x}$ 与 $\frac{\partial z}{\partial y}$。
-
-<details>
-<summary>点击查看解析与答案</summary>
-
-#### 答案
-- $\frac{\partial z}{\partial x} = y x^{y-1}$（幂函数求导）
-- $\frac{\partial z}{\partial y} = x^y \ln x$（指数函数求导）
-</details>
-
-### 练习 2：全微分的计算
-求函数 $f(x, y) = e^x \cos y$ 在点 $(0, \pi/2)$ 处的全微分。
-
-<details>
-<summary>点击查看解析与答案</summary>
-
-#### 解析过程
-1. $f_x = e^x \cos y \Rightarrow f_x(0, \pi/2) = e^0 \cos(\pi/2) = 0$
-2. $f_y = -e^x \sin y \Rightarrow f_y(0, \pi/2) = -e^0 \sin(\pi/2) = -1$
-3. $df = f_x dx + f_y dy = 0 \cdot dx + (-1) \cdot dy = -dy$
-
-#### 答案
-$df = -dy$
-</details>
-
-### 练习 3：欧拉齐次函数定理的应用
-如果函数 $f(x, y)$ 满足 $f(tx, ty) = t^n f(x, y)$（$n$ 阶齐次函数），证明：
-$$x \frac{\partial f}{\partial x} + y \frac{\partial f}{\partial y} = n f(x, y)$$
-
-<details>
-<summary>点击查看解析与答案</summary>
-
-#### 证明过程
-1. 对等式 $f(tx, ty) = t^n f(x, y)$ 两边关于 $t$ 求导。
-2. 左边使用链式法则：设 $u = tx, v = ty$，则 $\frac{\partial f}{\partial u} \frac{\partial u}{\partial t} + \frac{\partial f}{\partial v} \frac{\partial v}{\partial t} = \frac{\partial f}{\partial u} \cdot x + \frac{\partial f}{\partial v} \cdot y$。
-3. 右边关于 $t$ 求导得 $n t^{n-1} f(x, y)$。
-4. 令 $t = 1$，则 $u = x, v = y$，代入得：
-   $$x \frac{\partial f}{\partial x} + y \frac{\partial f}{\partial y} = n f(x, y)$$
-   证毕。
-</details>
-
-### 练习 4：混合偏导数的不等性（反例）
-已知 $f(x, y) = \begin{cases} xy \frac{x^2 - y^2}{x^2 + y^2}, & x^2 + y^2 \neq 0 \\ 0, & x^2 + y^2 = 0 \end{cases}$。验证 $f_{xy}(0, 0) \neq f_{yx}(0, 0)$。
-
-<details>
-<summary>点击查看解析与答案</summary>
-
-#### 解析过程
-1. **求 $f_x(0, y)$**：
-   $f_x(0, y) = \lim_{x \to 0} \frac{f(x, y) - f(0, y)}{x} = \lim_{x \to 0} \frac{xy \frac{x^2 - y^2}{x^2 + y^2} - 0}{x} = \lim_{x \to 0} y \frac{x^2 - y^2}{x^2 + y^2} = -y$。
-2. **求 $f_{xy}(0, 0)$**：
-   $f_{xy}(0, 0) = \left.\frac{\partial}{\partial y}(f_x(0, y))\right|_{y=0} = \frac{d}{dy}(-y) = -1$。
-3. **求 $f_y(x, 0)$**：
-   $f_y(x, 0) = \lim_{y \to 0} \frac{f(x, y) - f(x, 0)}{y} = \lim_{y \to 0} \frac{xy \frac{x^2 - y^2}{x^2 + y^2} - 0}{y} = x$。
-4. **求 $f_{yx}(0, 0)$**：
-   $f_{yx}(0, 0) = \left.\frac{\partial}{\partial x}(f_y(x, 0))\right|_{x=0} = \frac{d}{dx}(x) = 1$。
-
-#### 结论
-$-1 \neq 1$，因此该函数的混合偏导数在原点不相等。这说明其混合偏导数在原点是不连续的。
-</details>
-
-### 练习 5：隐函数求导
-由方程 $x^2 + y^2 + z^2 - 4z = 0$ 确定的隐函数 $z = z(x, y)$，求 $\frac{\partial z}{\partial x}$。
-
-<details>
-<summary>点击查看解析与答案</summary>
-
-#### 解析过程
-1. 令 $F(x, y, z) = x^2 + y^2 + z^2 - 4z$。
-2. $F_x = 2x, F_z = 2z - 4$。
-3. $\frac{\partial z}{\partial x} = -\frac{F_x}{F_z} = -\frac{2x}{2z - 4} = \frac{x}{2 - z}$。
-
-#### 答案
-$\frac{\partial z}{\partial x} = \frac{x}{2-z}$
-</details>
-
-### 练习 6：条件极值与 Lagrange 乘数法
-求表面积为 $6a^2$ 的长方体的最大体积。
-
-<details>
-<summary>点击查看解析与答案</summary>
-
-#### 解析过程
-1. 设长方体三边为 $x, y, z$，体积 $V = xyz$，约束 $\varphi(x, y, z) = 2(xy + yz + zx) - 6a^2 = 0$。
-2. $L = xyz + \lambda(xy + yz + zx - 3a^2)$。
-3. 求导：
-   $L_x = yz + \lambda(y + z) = 0$
-   $L_y = xz + \lambda(x + z) = 0$
-   $L_z = xy + \lambda(x + y) = 0$
-4. 由前两式：$yz(x+z) = xz(y+z) \Rightarrow yx+yz = xy+xz \Rightarrow y=x$。同理 $x=y=z$。
-5. 代入约束：$3x^2 = 3a^2 \Rightarrow x=a$。
-6. $V = a^3$。
-
-#### 答案
-当长方体为正方体（边长为 $a$）时，体积最大，为 $a^3$。
-</details>
+---
+*编者注：多元微分学是将一元分析推广至高维的关键。理解全微分的存在性，是掌握现代分析与几何语言的第一步。*
 

@@ -3,6 +3,7 @@ title: 曲线与曲面积分：格林、高斯与斯托克斯公式 (Vector Calc
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import SupportingExercises from '@site/src/components/SupportingExercises';
 
 # 曲线与曲面积分：格林、高斯与斯托克斯公式
 
@@ -167,3 +168,19 @@ $-3/2$
 #### 答案
 $3\pi/2$
 </details>
+
+---
+
+<SupportingExercises 
+  topic="向量微积分" 
+  exercises={[
+    { index: 7, title: "第一类曲线积分计算", slug: "练习-7第一类曲线积分计算" },
+    { index: 8, title: "格林公式计算功", slug: "练习-8格林公式计算功" },
+    { index: 9, title: "高斯公式求通量", slug: "练习-9高斯公式求穿过球面的通量" },
+    { index: 10, title: "斯托克斯公式计算线积分", slug: "练习-10斯托克斯公式计算线积分" },
+    { index: 42, title: "封闭曲面高斯公式综合", slug: "练习-42利用高斯公式求穿过封闭曲面的通量" }
+  ]} 
+/>
+
+---
+*编者注：向量微积分是物理场论的数学基础。格林、高斯与斯托克斯三大公式，本质上都是关于内部变化与边界累积之间关系的深刻表达。*

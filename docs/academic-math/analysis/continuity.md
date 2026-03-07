@@ -3,6 +3,7 @@ title: 连续性 (Continuity)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import SupportingExercises from '@site/src/components/SupportingExercises';
 
 # 连续性 (Continuity)
 
@@ -130,19 +131,21 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 ---
 
-## 四、 练习库同步链接
-
-为了巩固本章知识，建议完成以下针对性练习：
-
-- [ ] **基础练习**：间断点分类与零点定理基础应用（练习 4, 15, 33）
-- [ ] **进阶练习**：闭区间连续函数性质证明（练习 34, 35, 36）
-- [ ] **挑战练习**：一致连续性的严格 $\epsilon-\delta$ 证明（练习 37, 38）
-
-👉 [前往数学分析练习库 - 连续性专题](./../../exercises/math/analysis.md)
+<SupportingExercises 
+  topic="函数连续性" 
+  exercises={[
+    { index: 3, title: "一致连续性初步判定", slug: "练习-3一致连续性判定" },
+    { index: 4, title: "介值定理基础应用", slug: "练习-4介值定理的应用" },
+    { index: 33, title: "复合函数间断点分析", slug: "练习-33复合函数连续性与间断点" },
+    { index: 34, title: "零点定理证明根的存在性", slug: "练习-34利用零点定理证明根的存在性" },
+    { index: 37, title: "不一致连续性的深度判别", slug: "练习-37一致连续性的判定" },
+    { index: 38, title: "有界区间一致连续性扩展", slug: "练习-38一致连续性的性质" }
+  ]} 
+/>
 
 ---
 
-## 五、 知识卡片回顾
+## 四、 知识卡片回顾
 
 <KnowledgeCard 
   title="Cauchy 连续性 vs 一致连续性" 

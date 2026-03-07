@@ -3,6 +3,7 @@ title: 导数与微分：瞬时变化的数学显微镜 (Derivatives and Differe
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import SupportingExercises from '@site/src/components/SupportingExercises';
 
 # 导数与微分：瞬时变化的数学显微镜
 
@@ -254,3 +255,22 @@ $-1/12$
 #### 答案
 证明如上。核心技巧是利用介值定理找到 $f(c)=1/2$ 作为分割点，分段应用拉格朗日中值定理。
 </details>
+
+---
+
+<SupportingExercises 
+  topic="导数与微分" 
+  exercises={[
+    { index: 2, title: "初等函数求导基础", slug: "练习-2求导数" },
+    { index: 15, title: "导数定义的严格应用", slug: "练习-15导数定义应用" },
+    { index: 16, title: "复合函数求导 (x^x)", slug: "练习-16复合函数求导" },
+    { index: 17, title: "隐函数高阶导数计算", slug: "练习-17隐函数二阶导数" },
+    { index: 18, title: "参数方程求导技巧", slug: "练习-18参数方程求导" },
+    { index: 19, title: "微分中值定理与方程根", slug: "练习-19微分中值定理rolle" },
+    { index: 20, title: "Taylor 公式展开应用", slug: "练习-20taylor公式应用" },
+    { index: 21, title: "单调性与极值点综合", slug: "练习-21函数单调性与极值" }
+  ]} 
+/>
+
+---
+*编者注：导数是局部变化的度量。理解微分中值定理，是从“已知变化率”反推“整体变化量”的关键一步。*

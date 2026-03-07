@@ -132,8 +132,8 @@ export default function EpsilonDeltaVisualizer() {
               <span style={{ fontFamily: 'monospace', fontWeight: 700 }}>{delta.toFixed(3)}</span>
             </div>
             <div style={{ fontSize: '0.75rem', opacity: 0.7 }}>
-              为了使 $|x^2 - 4| < {epsilon.toFixed(2)}$，<br/>
-              只需保证 $|x - 2| < {delta.toFixed(3)}$
+              为了使 $|x^2 - 4| &lt; {epsilon.toFixed(2)}$，<br/>
+              只需保证 $|x - 2| &lt; {delta.toFixed(3)}$
             </div>
           </motion.div>
 

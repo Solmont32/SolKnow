@@ -3,6 +3,7 @@ title: 重积分：二重与三重积分、坐标变换与物理应用 (Multiple
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import SupportingExercises from '@site/src/components/SupportingExercises';
 
 # 重积分：二重与三重积分、坐标变换与物理应用
 
@@ -166,3 +167,16 @@ $\pi R^2 h$
 #### 答案
 $I_z = \frac{1}{2} M R^2$
 </details>
+
+---
+
+<SupportingExercises 
+  topic="重积分" 
+  exercises={[
+    { index: 5, title: "二重积分直角坐标计算", slug: "练习-5二重积分计算" },
+    { index: 6, title: "三重积分柱坐标变换", slug: "练习-6利用柱坐标计算三重积分" }
+  ]} 
+/>
+
+---
+*编者注：重积分是物理量空间分布的累加。掌握坐标变换（雅可比行列式）是处理对称性问题的核心武器。*

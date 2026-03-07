@@ -3,6 +3,7 @@ title: 不定积分：寻找反导数的艺术 (Indefinite Integrals)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import SupportingExercises from '@site/src/components/SupportingExercises';
 
 # 不定积分：寻找反导数的艺术
 
@@ -254,28 +255,12 @@ $\frac{x}{2}\sqrt{a^2 - x^2} + \frac{a^2}{2} \arcsin \frac{x}{a} + C$
 
 ---
 
-## 四、 综合配套练习
+<SupportingExercises 
+  topic="不定积分" 
+  exercises={[
+    { index: 22, title: "不定积分换元法综合", slug: "练习-22不定积分换元法" }
+  ]} 
+/>
 
-请尝试独立完成以下练习，检验你对积分技巧的掌握程度：
-
-1. **（凑微分）** $\int \frac{\sin 2x}{1 + \cos^2 x} dx$
-   *提示：$\sin 2x = -d(1+\cos^2 x)$*
-2. **（换元法）** $\int \frac{dx}{\sqrt{x}(1+\sqrt[3]{x})}$
-   *提示：令 $x = t^6$ 消去所有根号*
-3. **（分部积分）** $\int x^2 \cos x dx$
-   *提示：连续应用两次分部积分，降幂处理*
-4. **（综合技巧）** $\int \frac{dx}{x \sqrt{1+x^2}}$
-   *提示：尝试倒代换 $x = 1/t$ 或令 $\sqrt{1+x^2} = t$*
-5. **（挑战题）** $\int \frac{\ln x}{(1+x)^2} dx$
-   *提示：先分部积分，再进行部分分式分解*
-
-<details>
-<summary>查看练习参考答案</summary>
-
-1. $-\ln(1+\cos^2 x) + C$
-2. $6(\frac{1}{2}x^{1/3} - x^{1/6} + \arctan x^{1/6}) + C$
-3. $x^2 \sin x + 2x \cos x - 2\sin x + C$
-4. $-\ln \left| \frac{1+\sqrt{1+x^2}}{x} \right| + C$
-5. $\frac{- \ln x}{1+x} + \ln \frac{x}{1+x} + C$
-
-</details>
+---
+*编者注：不定积分是寻找反导数的艺术。掌握了不定积分，你就掌握了微积分基本定理的计算核心。*
