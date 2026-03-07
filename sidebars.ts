@@ -77,6 +77,7 @@ const sidebars: SidebarsConfig = {
                 'academic-math/competition/elementary/counting',
                 'academic-math/competition/elementary/geometry',
                 'academic-math/competition/elementary/algebra',
+                'academic-math/competition/elementary/word-problems',
               ]
             },
             {
