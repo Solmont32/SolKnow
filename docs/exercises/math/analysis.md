@@ -1164,4 +1164,123 @@ $d^2 u = \frac{2(du dv - dx dy)}{u-v}$。
 当 $p_1 = p_2 = \dots = p_n = 1/n$ 时，熵达到极大值。
 </details>
 
+---
+
+## 练习 63：Beta 函数与余元公式应用
+计算积分 $I = \int_0^{+\infty} \frac{dx}{1+x^4}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **变量替换**：令 $t = \frac{1}{1+x^4}$，则 $x = (\frac{1-t}{t})^{1/4}$。
+2. **转化为 Beta 函数**：
+   由前文例题 5 的结论，$\int_0^{\infty} \frac{x^{a-1}}{1+x^n} dx = \frac{\pi}{n \sin(a\pi/n)}$。
+3. **代入参数**：此处 $a-1 = 0 \Rightarrow a=1$，$n=4$。
+4. **计算**：
+   $I = \frac{\pi}{4 \sin(\pi/4)} = \frac{\pi}{4 \cdot \frac{\sqrt{2}}{2}} = \frac{\pi}{2\sqrt{2}} = \frac{\sqrt{2}\pi}{4}$。
+
+#### 答案
+$\frac{\sqrt{2}\pi}{4}$
+</details>
+
+---
+
+## 练习 64：Weierstrass 一致收敛判定
+判定含参量反常积分 $I(y) = \int_0^{+\infty} e^{-xy} \frac{\sin x}{x} dx$ 在 $y \in [0, +\infty)$ 上的收敛性。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **分析 $y > 0$**：
+   当 $y \ge y_0 > 0$ 时，$|e^{-xy} \frac{\sin x}{x}| \le e^{-y_0 x}$。因为 $\int_0^\infty e^{-y_0 x} dx$ 收敛，由 M-判别法知在该区间上一致收敛。
+2. **分析 $y = 0$ 处**：
+   当 $y \to 0^+$ 时，积分退化为 $\int_0^\infty \frac{\sin x}{x} dx$（收敛）。
+3. **利用 Dirichlet 判别法**：
+   令 $f(x, y) = \sin x$，$g(x, y) = \frac{e^{-xy}}{x}$。
+   - $\int_0^A \sin x dx = 1 - \cos A$ 一致有界。
+   - $g(x, y)$ 对每个 $y \ge 0$ 关于 $x$ 单调减（$g_x = \frac{e^{-xy}(-xy-1)}{x^2} < 0$）。
+   - 当 $x \to +\infty$ 时，$g(x, y) \to 0$。且在 $y \ge 0$ 时一致（因 $|g(x, y)| \le 1/x$）。
+4. **结论**：在 $y \in [0, +\infty)$ 上一致收敛。
+
+#### 答案
+在 $y \in [0, +\infty)$ 上一致收敛。
+</details>
+
+---
+
+## 练习 65：利用 Leibniz 公式求导计算
+已知 $I(a) = \int_0^{\pi/2} \frac{\ln(1+a \cos x)}{\cos x} dx \quad (|a| < 1)$，求 $I(a)$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **对参数 $a$ 求导**：
+   $I'(a) = \int_0^{\pi/2} \frac{\partial}{\partial a} (\frac{\ln(1+a \cos x)}{\cos x}) dx = \int_0^{\pi/2} \frac{1}{1+a \cos x} dx$。
+2. **利用万能公式计算积分**：
+   令 $t = \tan(x/2)$，$dx = \frac{2 dt}{1+t^2}$，$\cos x = \frac{1-t^2}{1+t^2}$。
+   $I'(a) = \int_0^1 \frac{1}{1+a \frac{1-t^2}{1+t^2}} \frac{2 dt}{1+t^2} = \int_0^1 \frac{2}{1+t^2 + a(1-t^2)} dt$
+   $I'(a) = \int_0^1 \frac{2}{(1-a)t^2 + (1+a)} dt = \frac{2}{1-a} \int_0^1 \frac{1}{t^2 + \frac{1+a}{1-a}} dt$
+3. **计算结果**：
+   $I'(a) = \frac{2}{1-a} \cdot \sqrt{\frac{1-a}{1+a}} \arctan(t \sqrt{\frac{1-a}{1+a}}) \Big|_0^1 = \frac{2}{\sqrt{1-a^2}} \arctan \sqrt{\frac{1-a}{1+a}}$。
+4. **利用三角恒等式**：
+   $\arctan \sqrt{\frac{1-a}{1+a}} = \frac{1}{2} \arccos a$（或类似变形）。
+   实际上，$I'(a) = \frac{\arccos a}{\sqrt{1-a^2}}$。
+5. **积分还原**：
+   $I(a) = \int \frac{\arccos a}{\sqrt{1-a^2}} da = -\frac{1}{2} (\arccos a)^2 + C$。
+6. **确定常数**：
+   $I(0) = 0 \Rightarrow -\frac{1}{2}(\frac{\pi}{2})^2 + C = 0 \Rightarrow C = \frac{\pi^2}{8}$。
+   故 $I(a) = \frac{\pi^2}{8} - \frac{1}{2}(\arccos a)^2$。
+
+#### 答案
+$\frac{\pi^2}{8} - \frac{1}{2}(\arccos a)^2$
+</details>
+
+---
+
+## 练习 66：Gamma 函数的特殊值推导
+证明 $\Gamma(1/2) = \sqrt{\pi}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **定义**：$\Gamma(1/2) = \int_0^{+\infty} x^{-1/2} e^{-x} dx$。
+2. **变量替换**：令 $x = u^2, dx = 2u du$。
+3. **计算**：
+   $\Gamma(1/2) = \int_0^{+\infty} (u^2)^{-1/2} e^{-u^2} (2u du) = 2 \int_0^{+\infty} e^{-u^2} du$。
+4. **利用高斯积分**：
+   已知 $\int_0^{+\infty} e^{-u^2} du = \frac{\sqrt{\pi}}{2}$。
+   故 $\Gamma(1/2) = 2 \cdot \frac{\sqrt{\pi}}{2} = \sqrt{\pi}$。
+
+#### 答案
+证毕。
+</details>
+
+---
+
+## 练习 67：含参量积分与级数结合
+计算 $\int_0^1 \frac{x^a-1}{\ln x} dx \quad (a > 0)$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **构造含参量积分**：设 $I(a) = \int_0^1 \frac{x^a-1}{\ln x} dx$。
+2. **求导**：
+   $I'(a) = \int_0^1 \frac{\partial}{\partial a} (\frac{x^a-1}{\ln x}) dx = \int_0^1 \frac{x^a \ln x}{\ln x} dx = \int_0^1 x^a dx$。
+3. **计算**：
+   $I'(a) = [\frac{x^{a+1}}{a+1}]_0^1 = \frac{1}{a+1}$。
+4. **还原**：
+   $I(a) = \int \frac{1}{a+1} da = \ln(a+1) + C$。
+5. **确定常数**：
+   $I(0) = \int_0^1 0 dx = 0 \Rightarrow \ln(1) + C = 0 \Rightarrow C = 0$。
+
+#### 答案
+$\ln(a+1)$
+</details>
+
+
 

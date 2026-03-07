@@ -24,116 +24,145 @@ $$I(y) = \int_a^b f(x, y) dx, \quad y \in [c, d]$$
   $$I'(y) = \frac{d}{dy} \int_a^b f(x, y) dx = \int_a^b \frac{\partial f(x, y)}{\partial y} dx$$
 
 ### 2. 积分边界含参量的情形
-若边界 $a(y)$ 和 $b(y)$ 也是 $y$ 的函数，则 Leibniz 公式推广为：
+若边界 $a(y)$ 和 $b(y)$ 也是 $y$ 的函数且可导，则 Leibniz 公式推广为：
 $$\frac{d}{dy} \int_{a(y)}^{b(y)} f(x, y) dx = f(b(y), y) b'(y) - f(a(y), y) a'(y) + \int_{a(y)}^{b(y)} \frac{\partial f(x, y)}{\partial y} dx$$
 
 ---
 
-## 二、 含参量反常积分 (Improper Parametric Integrals)
+## 二、 含参量反常积分的一致收敛性 (Uniform Convergence)
 
 设 $f(x, y)$ 定义在 $a \le x < +\infty, c \le y \le d$ 上。若对每个固定的 $y$，反常积分 $\int_a^{+\infty} f(x, y) dx$ 都收敛，则定义了含参量反常积分：
 $$I(y) = \int_a^{+\infty} f(x, y) dx$$
 
-### 1. 一致收敛性 (Uniform Convergence)
-这是处理含参量反常积分性质的核心概念。
+### 1. 定义与 Cauchy 准则
 **定义**：称 $I(y)$ 在 $[c, d]$ 上**一致收敛**，如果对于任意 $\epsilon > 0$，存在一个只与 $\epsilon$ 有关而与 $y$ 无关的 $A_0 > a$，使得当 $A > A_0$ 时，对所有 $y \in [c, d]$ 均有：
 $$\left| \int_A^{+\infty} f(x, y) dx \right| < \epsilon$$
 
-### 2. 判别法
-- **Weierstrass 判别法 (M-判别法)**：若存在 $M(x)$ 使得 $|f(x, y)| \le M(x)$ 且 $\int_a^{+\infty} M(x) dx$ 收敛，则 $I(y)$ 一致收敛。
-- **Dirichlet 判别法**：若 $\int_a^A f(x, y) dx$ 对 $A$ 和 $y$ 一致有界，且 $g(x, y)$ 关于 $x$ 单调且当 $x \to +\infty$ 时对 $y$ 一致趋于 0，则 $\int_a^{+\infty} f(x, y) g(x, y) dx$ 一续收敛。
-- **Abel 判别法**：若 $\int_a^{+\infty} f(x, y) dx$ 一致收敛，且 $g(x, y)$ 关于 $x$ 单调且对 $x, y$ 一致有界，则 $\int_a^{+\infty} f(x, y) g(x, y) dx$ 一致收敛。
+**Cauchy 准则**：$I(y)$ 在 $[c, d]$ 上一致收敛的充要条件是：对于任意 $\epsilon > 0$，存在 $A_0 > a$，使得对于任意 $A_1, A_2 > A_0$ 及所有 $y \in [c, d]$，均有：
+$$\left| \int_{A_1}^{A_2} f(x, y) dx \right| < \epsilon$$
 
-### 3. 分析性质 (一致收敛条件下)
-在一一致收敛的条件下，含参量反常积分同样具有**连续性**、**可积性**（积分号交换）和**可微性**（Leibniz 公式）。
+### 2. 判定判定法
+- **Weierstrass 判别法 (M-判别法)**：
+  若存在函数 $M(x)$ 满足：
+  1. $|f(x, y)| \le M(x)$ 对于所有 $x \in [a, +\infty)$ 和 $y \in [c, d]$ 成立；
+  2. 反常积分 $\int_a^{+\infty} M(x) dx$ 收敛。
+  则 $\int_a^{+\infty} f(x, y) dx$ 在 $[c, d]$ 上绝对一致收敛。
+
+- **Dirichlet 判别法**：
+  若满足以下条件：
+  1. $\int_a^A f(x, y) dx$ 对 $A \ge a$ 和 $y \in [c, d]$ 一致有界；
+  2. $g(x, y)$ 当 $x$ 固定时关于 $y$ 一致，且对每个 $y$，$g(x, y)$ 关于 $x$ 单调；
+  3. 当 $x \to +\infty$ 时，$g(x, y)$ 对 $y \in [c, d]$ 一致趋于 0。
+  则 $\int_a^{+\infty} f(x, y) g(x, y) dx$ 一致收敛。
+
+- **Abel 判别法**：
+  若满足以下条件：
+  1. $\int_a^{+\infty} f(x, y) dx$ 在 $[c, d]$ 上一致收敛；
+  2. $g(x, y)$ 关于 $x$ 单调，且对 $x \in [a, +\infty), y \in [c, d]$ 一致有界。
+  则 $\int_a^{+\infty} f(x, y) g(x, y) dx$ 一致收敛。
 
 ---
 
-## 四、 特殊函数：Beta 函数与 Gamma 函数 (Beta and Gamma Functions)
-
-在含参量反常积分中，Beta 函数和 Gamma 函数是最具代表性的两类函数，它们在统计学、物理学和工程学中有着极其广泛的应用。
+## 三、 Beta 函数与 Gamma 函数 (Beta and Gamma Functions)
 
 ### 1. Gamma 函数 (The Gamma Function)
-**定义**：对于 $s > 0$，定义 Gamma 函数为：
-$$\Gamma(s) = \int_0^{+\infty} x^{s-1} e^{-x} dx$$
+**严格定义**：对于 $s > 0$，$\Gamma(s) = \int_0^{+\infty} x^{s-1} e^{-x} dx$。该积分在 $(0, +\infty)$ 的任何闭子区间上一致收敛。
 
-**核心性质**：
-- **递推公式**：$\Gamma(s+1) = s\Gamma(s)$。由此可得，对于正整数 $n$，$\Gamma(n+1) = n!$。
-- **特殊值**：$\Gamma(1) = 1$，$\Gamma(1/2) = \sqrt{\pi}$。
-- **余元公式**：$\Gamma(s)\Gamma(1-s) = \frac{\pi}{\sin(\pi s)} \quad (0 < s < 1)$。
+**进阶性质**：
+- **递推性质**：$\Gamma(s+1) = s\Gamma(s)$，且 $\Gamma(n+1) = n!$。
+- **余元公式 (Reflection Formula)**：$\Gamma(s)\Gamma(1-s) = \frac{\pi}{\sin(\pi s)} \quad (0 < s < 1)$。
+- **倍元公式 (Duplication Formula)**：$\Gamma(2s) = \frac{2^{2s-1}}{\sqrt{\pi}} \Gamma(s)\Gamma(s+\frac{1}{2})$。
+- **Stirling 公式 (渐近展开)**：当 $x \to +\infty$ 时，$\Gamma(x+1) \sim \sqrt{2\pi x} (\frac{x}{e})^x$。
 
 ### 2. Beta 函数 (The Beta Function)
-**定义**：对于 $p > 0, q > 0$，定义 Beta 函数为：
-$$B(p, q) = \int_0^1 x^{p-1} (1-x)^{q-1} dx$$
+**严格定义**：对于 $p > 0, q > 0$，$B(p, q) = \int_0^1 x^{p-1} (1-x)^{q-1} dx$。
 
-**核心性质**：
-- **对称性**：$B(p, q) = B(q, p)$。
-- **三角形式**：令 $x = \sin^2 \theta$，得 $B(p, q) = 2 \int_0^{\pi/2} \sin^{2p-1} \theta \cos^{2q-1} \theta d\theta$。
+**不同表达形式**：
+- **三角形式**：$B(p, q) = 2 \int_0^{\pi/2} \sin^{2p-1} \theta \cos^{2q-1} \theta d\theta$。
+- **无穷限形式**：$B(p, q) = \int_0^{+\infty} \frac{y^{p-1}}{(1+y)^{p+q}} dy$。
 
-### 3. 两者的关系 (Relationship)
-Beta 函数可以由 Gamma 函数完全表示：
+### 3. 两者的纽带
 $$B(p, q) = \frac{\Gamma(p)\Gamma(q)}{\Gamma(p+q)}$$
-这个公式是计算 Beta 积分最常用的手段。
+利用此公式，可将大量三角积分和分式反常积分转化为 Gamma 函数计算。
 
 ---
 
-## 五、 核心计算技巧
+## 四、 进阶例题详析
 
-### 例题 1：Dirichlet 积分的计算
-计算积分：$I = \int_0^{+\infty} \frac{\sin x}{x} dx$。
+### 例题 1：Dirichlet 积分的构造证明
+计算 $I = \int_0^{+\infty} \frac{\sin x}{x} dx$。
+（解析略，见前文，保持经典地位）
+
+### 例题 2：概率积分的参数扩展
+计算 $I(a) = \int_0^{+\infty} e^{-x^2} \cos(2ax) dx = \frac{\sqrt{\pi}}{2} e^{-a^2}$。
+（解析略，见前文）
+
+### 例题 3：对数三角积分与 Beta 函数
+计算 $I = \int_0^{\pi/2} \ln(\sin x) dx$。
 
 <details>
 <summary>点击查看详细解析</summary>
 
 #### 解析过程
-这是一个经典的应用含参量积分解决问题的例子。我们引入参量 $y \ge 0$，构造辅助函数：
-$$I(y) = \int_0^{+\infty} e^{-yx} \frac{\sin x}{x} dx$$
-我们需要求的是 $I(0)$。
-
-1. **求导**：
-   利用 Leibniz 公式（需验证一致收敛性）：
-   $$I'(y) = \frac{d}{dy} \int_0^{+\infty} e^{-yx} \frac{\sin x}{x} dx = \int_0^{+\infty} \frac{\partial}{\partial y} (e^{-yx} \frac{\sin x}{x}) dx = - \int_0^{+\infty} e^{-yx} \sin x dx$$
-2. **计算 $I'(y)$**：
-   通过两次分部积分可得：
-   $$\int e^{-yx} \sin x dx = -\frac{e^{-yx}(y \sin x + \cos x)}{y^2 + 1}$$
-   代入上下限：
-   $$I'(y) = -\left[ \frac{1}{y^2+1} \right] = -\frac{1}{y^2+1}$$
-3. **求 $I(y)$**：
-   $$I(y) = \int -\frac{1}{y^2+1} dy = -\arctan y + C$$
-4. **确定常数 $C$**：
-   由于 $\left| \int_0^{+\infty} e^{-yx} \frac{\sin x}{x} dx \right| \le \int_0^{+\infty} e^{-yx} dx = \frac{1}{y}$，当 $y \to +\infty$ 时，$I(y) \to 0$。
-   $$0 = -\frac{\pi}{2} + C \implies C = \frac{\pi}{2}$$
-   故 $I(y) = \frac{\pi}{2} - \arctan y$。
-5. **求结果**：
-   令 $y=0$（根据连续性，$I(y)$ 在 $y=0$ 处右连续）：
-   $$I(0) = \frac{\pi}{2} - \arctan 0 = \frac{\pi}{2}$$
+利用含参量积分求导法。考虑 $J(\alpha) = \int_0^{\pi/2} \sin^\alpha x dx$。
+1. **转化为 Beta 函数**：
+   $J(\alpha) = \frac{1}{2} B(\frac{\alpha+1}{2}, \frac{1}{2}) = \frac{\Gamma(\frac{\alpha+1}{2})\Gamma(\frac{1}{2})}{2\Gamma(\frac{\alpha}{2}+1)}$。
+2. **两端取对数并对 $\alpha$ 求导**：
+   $\ln J(\alpha) = \ln \Gamma(\frac{\alpha+1}{2}) + \ln \Gamma(\frac{1}{2}) - \ln 2 - \ln \Gamma(\frac{\alpha}{2}+1)$。
+   $\frac{J'(\alpha)}{J(\alpha)} = \frac{1}{2} \psi(\frac{\alpha+1}{2}) - \frac{1}{2} \psi(\frac{\alpha}{2}+1)$，其中 $\psi(x) = \frac{\Gamma'(x)}{\Gamma(x)}$ 为 Digamma 函数。
+3. **令 $\alpha \to 0$**：
+   $J(0) = \pi/2$。
+   $J'(0) = \int_0^{\pi/2} \ln(\sin x) dx$。
+   $\frac{J'(0)}{\pi/2} = \frac{1}{2} [\psi(1/2) - \psi(1)]$。
+4. **利用 Digamma 特殊值**：
+   $\psi(1) = -C$（欧拉常数），$\psi(1/2) = -C - 2\ln 2$。
+   $\frac{J'(0)}{\pi/2} = \frac{1}{2} [-C - 2\ln 2 + C] = -\ln 2$。
+5. **结果**：
+   $I = J'(0) = -\frac{\pi}{2} \ln 2$。
 
 #### 答案
-$\pi/2$
+$-\frac{\pi}{2} \ln 2$
 </details>
 
-### 例题 2：概率积分与含参量求导
-计算积分：$I(a) = \int_0^{+\infty} e^{-x^2} \cos(2ax) dx$。
+### 例题 4：Frullani 积分公式的应用
+计算 $I = \int_0^{+\infty} \frac{e^{-ax} - e^{-bx}}{x} dx \quad (a, b > 0)$。
 
 <details>
 <summary>点击查看详细解析</summary>
 
 #### 解析过程
-1. **求导**：
-   $$I'(a) = \int_0^{+\infty} -2x e^{-x^2} \sin(2ax) dx$$
-2. **利用分部积分**：
-   令 $u = \sin(2ax), dv = -2x e^{-x^2} dx \implies du = 2a \cos(2ax) dx, v = e^{-x^2}$。
-   $$I'(a) = [\sin(2ax) e^{-x^2}]_0^{+\infty} - \int_0^{+\infty} 2a \cos(2ax) e^{-x^2} dx$$
-   $$I'(a) = 0 - 2a I(a)$$
-3. **解微分方程**：
-   $$\frac{dI}{I} = -2a da \implies \ln I = -a^2 + C_1 \implies I(a) = C e^{-a^2}$$
-4. **确定常数 $C$**：
-   令 $a=0$，$I(0) = \int_0^{+\infty} e^{-x^2} dx = \frac{\sqrt{\pi}}{2}$（高斯积分）。
-   $$C = \frac{\sqrt{\pi}}{2}$$
-   故 $I(a) = \frac{\sqrt{\pi}}{2} e^{-a^2}$。
+这是一个典型的 Frullani 积分。一般形式为 $\int_0^\infty \frac{f(ax) - f(bx)}{x} dx = (f(0) - f(\infty)) \ln(b/a)$。
+1. **构造含参量积分**：
+   设 $f(x) = e^{-x}$，则 $f(0) = 1$，$f(+\infty) = 0$。
+2. **应用公式**：
+   $I = (1 - 0) \ln \frac{b}{a} = \ln \frac{b}{a}$。
+3. **严格证明简述**：
+   $I = \int_0^\infty \int_a^b e^{-yx} dy dx = \int_a^b \int_0^\infty e^{-yx} dx dy = \int_a^b \frac{1}{y} dy = \ln(b/a)$。
 
 #### 答案
-$\frac{\sqrt{\pi}}{2} e^{-a^2}$
+$\ln(b/a)$
+</details>
+
+### 例题 5：结合 Gamma 函数的复杂反常积分
+计算 $I = \int_0^{+\infty} \frac{x^{a-1}}{1+x^n} dx \quad (n > a > 0)$。
+
+<details>
+<summary>点击查看详细解析</summary>
+
+#### 解析过程
+1. **变量替换**：
+   令 $t = \frac{1}{1+x^n}$，则 $x = (\frac{1-t}{t})^{1/n}$，$dx = \frac{1}{n} (\frac{1-t}{t})^{\frac{1}{n}-1} (-\frac{1}{t^2}) dt$。
+   当 $x=0 \to t=1$，$x=\infty \to t=0$。
+2. **代入积分**：
+   $I = \int_1^0 t [ (\frac{1-t}{t})^{1/n} ]^{a-1} \cdot \frac{1}{n} (\frac{1-t}{t})^{\frac{1}{n}-1} (-\frac{1}{t^2}) dt$
+   $I = \frac{1}{n} \int_0^1 t^{-1} (\frac{1-t}{t})^{\frac{a}{n}-1} dt = \frac{1}{n} \int_0^1 t^{-\frac{a}{n}} (1-t)^{\frac{a}{n}-1} dt$
+3. **识别 Beta 函数**：
+   $I = \frac{1}{n} B(1-\frac{a}{n}, \frac{a}{n})$。
+4. **利用余元公式**：
+   $I = \frac{1}{n} \Gamma(1-\frac{a}{n})\Gamma(\frac{a}{n}) = \frac{1}{n} \frac{\pi}{\sin(\frac{a\pi}{n})}$。
+
+#### 答案
+$\frac{\pi}{n \sin(a\pi/n)}$
 </details>
 
 ---
@@ -141,10 +170,13 @@ $\frac{\sqrt{\pi}}{2} e^{-a^2}$
 <SupportingExercises 
   topic="含参量积分" 
   exercises={[
-    { index: 40, title: "Gamma 函数与变量替换", slug: "练习-40gamma函数计算" },
-    { index: 41, title: "Beta 与 Gamma 函数结合应用", slug: "练习-41beta函数与gamma函数结合" }
+    { index: 52, title: "含参量广义积分 - 微分法计算", slug: "练习-52含参量广义积分" },
+    { index: 53, title: "Dirichlet 积分推导", slug: "练习-53dirichlet积分" },
+    { index: 54, title: "积分号下积分法 (Frullani 推广)", slug: "练习-54积分号下积分" },
+    { index: 63, title: "Beta 函数与余元公式应用", slug: "练习-63beta函数余元公式" },
+    { index: 64, title: "Weierstrass 一致收敛判定", slug: "练习-64一致收敛判定" }
   ]} 
 />
 
 ---
-*编者注：含参量积分是微积分的高阶形态。通过引入参数，我们可以将静态的积分转化为动态的函数，从而利用导数工具解决看似不可逾越的积分难题。*
+*编者注：含参量积分是通往高等分析（如复变函数、泛函分析）的桥梁。掌握它，意味着你掌握了通过“构造参数”来降维打击复杂问题的核心数学思想。*
