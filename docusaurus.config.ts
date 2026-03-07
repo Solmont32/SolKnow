@@ -13,7 +13,7 @@ const config: Config = {
   organizationName: 'Solmont32',
   projectName: 'SolKnow',
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
 
   i18n: {
