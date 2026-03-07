@@ -181,9 +181,9 @@ const sidebars: SidebarsConfig = {
                     { type: 'doc', id: 'academic-math/analysis/multivariable-derivatives', label: '第十七章 多元函数微分学' },
                     { type: 'doc', id: 'academic-math/analysis/multivariable-derivatives', label: '第十八章 隐函数定理及其应用' },
                     { type: 'doc', id: 'academic-math/analysis/parametric-integrals', label: '第十九章 含参量积分' },
-                    { type: 'doc', id: 'academic-math/analysis/vector-calculus', label: '第二十章 曲线积分' },
-                    { type: 'doc', id: 'academic-math/analysis/multiple-integrals', label: '第二十一章 重积分' },
-                    { type: 'doc', id: 'academic-math/analysis/vector-calculus', label: '第二十二章 曲面积分' },
+                    { type: 'doc', id: 'academic-math/analysis/multiple-integrals', label: '第二十章 重积分' },
+                    { type: 'doc', id: 'academic-math/analysis/line-integrals', label: '第二十一章 曲线积分' },
+                    { type: 'doc', id: 'academic-math/analysis/surface-integrals', label: '第二十二章 曲面积分' },
                   ]
                 },
                 {

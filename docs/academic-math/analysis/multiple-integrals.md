@@ -1,11 +1,11 @@
 ---
-title: 重积分：二重与三重积分、坐标变换与物理应用 (Multiple Integrals)
+title: 第二十章 重积分 (Multiple Integrals)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 import SupportingExercises from '@site/src/components/SupportingExercises';
 
-# 重积分：二重与三重积分、坐标变换与物理应用
+# 第二十章 重积分
 
 重积分是定积分在多元函数上的推广。它不仅是计算高维体积、质量、引力等物理量的核心工具，更是多变量微积分的核心内容。本章将深入探讨重积分的定义、计算技巧以及在各种坐标系下的变换。
 

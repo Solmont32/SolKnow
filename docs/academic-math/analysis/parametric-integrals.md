@@ -1,11 +1,11 @@
 ---
-title: 含参量积分与含参量反常积分 (Parametric Integrals)
+title: 第十九章 含参量积分 (Parametric Integrals)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 import SupportingExercises from '@site/src/components/SupportingExercises';
 
-# 含参量积分与含参量反常积分
+# 第十九章 含参量积分
 
 在数学分析中，当我们考虑的积分不仅依赖于积分变量，还依赖于一个或多个参数时，就引入了**含参量积分**。它是研究特殊函数（如 Gamma、Beta 函数）、解决微分方程以及进行复杂积分计算的有力工具。
 
