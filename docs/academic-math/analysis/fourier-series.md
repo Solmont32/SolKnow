@@ -19,23 +19,42 @@ $$b_n = \frac{1}{L} \int_{-L}^L f(x) \sin\frac{n\pi x}{L} dx, \quad n=1,2,\dots$
 
 ---
 
-## 2. Dirichlet 收敛定理 (Dirichlet Conditions)
+## 2. Dirichlet 收敛定理与收敛条件
 
-Fourier 级数是否收敛于原函数是一个复杂的问题。Dirichlet 给出了最常用的充分条件。
+Fourier 级数是否收敛于原函数取决于函数的局部性质。Dirichlet 条件是分析中最常用的判别准则。
 
-<KnowledgeCard type="warning" title="Dirichlet 收敛定理">
+<KnowledgeCard type="warning" title="Dirichlet 收敛定理 (点收敛)">
 若 $f(x)$ 以 $2L$ 为周期，且在 $[-L, L]$ 上满足以下 **Dirichlet 条件**：
-1. $f(x)$ 在一个周期内连续或只有有限个第一类间断点。
-2. $f(x)$ 在一个周期内只有有限个极值点。
+1. **分段连续**：$f(x)$ 在一个周期内只有有限个第一类间断点。
+2. **分段单调**：$f(x)$ 在一个周期内可划分为有限个单调区间（即只有有限个极值点）。
 
-则 $f(x)$ 的 Fourier 级数在 $x$ 处收敛于：
-- $f(x)$，若 $x$ 是连续点；
-- $\frac{f(x^+) + f(x^-)}{2}$，若 $x$ 是间断点。
+则 $f(x)$ 的 Fourier 级数 $S(x)$ 在每一点 $x$ 处均收敛，且：
+$$S(x) = \frac{f(x^+) + f(x^-)}{2}$$
+- 若 $x$ 是 **连续点**：$S(x) = f(x)$；
+- 若 $x$ 是 **间断点**：$S(x)$ 收敛于左右极限的算术平均值。
 </KnowledgeCard>
 
 ---
 
-## 3. Bessel 不等式与 Parseval 等式
+## 3. Gibbs 现象 (Gibbs Phenomenon)
+
+Gibbs 现象揭示了 Fourier 级数在处理非连续信号时的本质局限性。
+
+### 3.1 现象描述
+当一个具有第一类间断点的函数（如矩形波）用 Fourier 级数的前 $N$ 项部分和 $S_N(x)$ 来逼近时，在间断点附近会出现明显的 **过冲（Overshoot）**。
+- **不可消除性**：即使 $N \to \infty$，这个过冲的幅度也不会消失，而是趋向于一个固定比例。
+- **幅度**：过冲的高度约为间断点跳变高度的 **9%** (精确值为 $\frac{1}{\pi} \int_0^\pi \frac{\sin t}{t} dt - \frac{1}{2} \approx 0.0895$)。
+
+### 3.2 数学本质
+Gibbs 现象的根源在于 Fourier 级数在包含间断点的区间上 **不具备一致收敛性**。虽然级数在每一处都点收敛（趋于平均值），但在间断点附近的误差峰值只是向间断点靠拢，而不会减小。
+
+<KnowledgeCard type="info" title="工程启示">
+在数字信号处理中，Gibbs 现象会导致图像边缘的“振铃效应”（Ringing artifacts）。为了抑制这种效应，通常会采用 **窗函数（Windowing）** 处理。
+</KnowledgeCard>
+
+---
+
+## 4. 能量与性质：Bessel 与 Parseval
 
 从希尔伯特空间（Hilbert Space）的角度看，Fourier 级数本质上是函数在正交基上的投影。
 
