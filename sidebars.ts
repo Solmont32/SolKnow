@@ -243,7 +243,16 @@ const sidebars: SidebarsConfig = {
             'cs/c/memory-management',
           ],
         },
-        {type: 'doc', id: 'cs/cpp/index', label: 'C++'},
+        {
+          type: 'category',
+          label: 'C++',
+          link: {type: 'doc', id: 'cs/cpp/index'},
+          items: [
+            'cs/cpp/oop-basics',
+            'cs/cpp/inheritance-polymorphism',
+            'cs/cpp/modern-cpp',
+          ],
+        },
         {type: 'doc', id: 'cs/python/index', label: 'Python'},
         {type: 'doc', id: 'cs/organization/index', label: '计算机组织与结构'},
         {type: 'doc', id: 'cs/os/index', label: '操作系统'},
