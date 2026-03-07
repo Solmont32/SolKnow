@@ -39,10 +39,17 @@ while($true) {
 
             # 3. 唤醒 Gemini 执行核心逻辑
             Write-Log ">>> Gemini 前线执行官正在处理任务..."
-            $geminiCmd = "gemini -p ""任务内容：$taskDescription 。完成后请按以下步骤操作：1. 严谨修改代码或文档。2. 将 TASKS.md 中的该项标记为 [x]。3. 执行 gcp 完成提交推送。4. 如果遇到无法解决的错误，请将该项标记为 [!] 并简述原因。"""
+            
+            # 定义日志文件路径
+            $LOG_MD = "AUTOMATION_LOG.md"
+            
+            # 增强指令：要求 Gemini 在完成任务后，不仅要打钩，还要在 AUTOMATION_LOG.md 追加记录
+            $geminiCmd = "gemini -p ""任务内容：$taskDescription 。完成后请严格执行以下闭环操作：1. 严谨修改代码或文档。2. 将 TASKS.md 中的该项标记为 [x]。3. 在 $LOG_MD 的表格末尾追加一行记录，格式为：| $(Get-Date -Format 'yyyy-MM-dd HH:mm') | $taskDescription | ✅ 成功 | [此处写 20 字以内的成果摘要] |。4. 如果失败，请将 TASKS.md 标记为 [!]，并在 $LOG_MD 追加：| $(Get-Date -Format 'yyyy-MM-dd HH:mm') | $taskDescription | ❌ 失败 | [此处简述报错原因] |。5. 执行 gcp 完成提交推送。"""
+            
             Invoke-Expression $geminiCmd
 
-            Write-Log "【任务闭环】: $taskDescription 处理完毕。"
+            Write-Log "【任务闭环】: $taskDescription 处理完毕，日志已更新。"
+
         } else {
             Write-Log "【规划模式】: 当前无待办任务，唤醒 Gemini 架构师进行自我规划..."
             
