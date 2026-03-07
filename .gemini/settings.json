@@ -4,8 +4,12 @@
       "command": "uvx mcp-server-fetch",
       "args": []
     },
+    "thinking": {
+      "command": "node C:\\Users\\29301\\AppData\\Roaming\\npm\\node_modules\\@modelcontextprotocol\\server-sequential-thinking\\dist\\index.js",
+      "args": []
+    },
     "memory": {
-      "command": "uvx --from @modelcontextprotocol/server-memory mcp-server-memory",
+      "command": "node C:\\Users\\29301\\AppData\\Roaming\\npm\\node_modules\\@modelcontextprotocol\\server-memory\\dist\\index.js",
       "args": []
     }
   }
