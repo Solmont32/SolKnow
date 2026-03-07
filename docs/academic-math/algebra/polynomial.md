@@ -1,13 +1,18 @@
-# 多项式 (Polynomials)
+﻿---
+id: polynomial
+title: 澶氶」寮?(Polynomials)
+---
 
-## 定义
-一个变元 $x$ 的多项式是一个具有如下形式的表达式：
+# 澶氶」寮?(Polynomials)
+
+## 瀹氫箟
+涓€涓彉鍏?$x$ 鐨勫椤瑰紡鏄竴涓叿鏈夊涓嬪舰寮忕殑琛ㄨ揪寮忥細
 $P(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_1 x + a_0$
-其中 $a_i$ 为系数，$n$ 为非负整数（称为多项式的次数，记作 $\deg(P)$）。
+鍏朵腑 $a_i$ 涓虹郴鏁帮紝$n$ 涓洪潪璐熸暣鏁帮紙绉颁负澶氶」寮忕殑娆℃暟锛岃浣?$\deg(P)$锛夈€?
 
-## 带余除法 (Euclidean Division)
-对于两个多项式 $f(x)$ 和 $g(x) \neq 0$，存在唯一的多项式 $q(x)$（商）和 $r(x)$（余式），使得：
-$f(x) = g(x)q(x) + r(x)$，且 $\deg(r) < \deg(g)$。
+## 甯︿綑闄ゆ硶 (Euclidean Division)
+瀵逛簬涓や釜澶氶」寮?$f(x)$ 鍜?$g(x) \neq 0$锛屽瓨鍦ㄥ敮涓€鐨勫椤瑰紡 $q(x)$锛堝晢锛夊拰 $r(x)$锛堜綑寮忥級锛屼娇寰楋細
+$f(x) = g(x)q(x) + r(x)$锛屼笖 $\deg(r) < \deg(g)$銆?
 
-## 代数基本定理 (Fundamental Theorem of Algebra)
-任何一个非常数复系数多项式在复数域中至少有一个根。
+## 浠ｆ暟鍩烘湰瀹氱悊 (Fundamental Theorem of Algebra)
+浠讳綍涓€涓潪甯告暟澶嶇郴鏁板椤瑰紡鍦ㄥ鏁板煙涓嚦灏戞湁涓€涓牴銆?

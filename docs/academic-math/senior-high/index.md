@@ -1,13 +1,14 @@
-# 高中数学 (Senior High School Math)
+﻿# 楂樹腑鏁板 (Senior High School Math)
 
-深入探索函数、代数与立体几何，为高等数学打下坚实基础。
+娣卞叆鎺㈢储鍑芥暟銆佷唬鏁颁笌绔嬩綋鍑犱綍锛屼负楂樼瓑鏁板鎵撲笅鍧氬疄鍩虹銆?
 
-## 目录
-- [第一章：集合与逻辑](sets.md)
-- [第二章：基本初等函数 (幂指对)](elementary-functions.md)
-- [第三章：三角函数与恒等变换](trigonometry.md)
-- [第四章：平面向量与复数](vectors.md)
-- [第五章：解析几何 (圆锥曲线)](conics.md)
-- [第六章：数列与归纳法](series.md)
-- [第七章：概率统计基础](stats-basic.md)
-- [第八章：导数及其应用](calculus-intro.md)
+## 鐩綍
+- [绗竴绔狅細闆嗗悎涓庨€昏緫](./sets)
+- [绗簩绔狅細鍩烘湰鍒濈瓑鍑芥暟 (骞傛寚瀵?](./elementary-functions)
+- [绗笁绔狅細涓夎鍑芥暟涓庢亽绛夊彉鎹(trigonometry.md)
+- [绗洓绔狅細骞抽潰鍚戦噺涓庡鏁癩(vectors.md)
+- [绗簲绔狅細瑙ｆ瀽鍑犱綍 (鍦嗛敟鏇茬嚎)](./conics)
+- [绗叚绔狅細鏁板垪涓庡綊绾虫硶](./series)
+- [绗竷绔狅細姒傜巼缁熻鍩虹](./stats-basic)
+- [绗叓绔狅細瀵兼暟鍙婂叾搴旂敤](./calculus-intro)
+

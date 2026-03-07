@@ -1,10 +1,11 @@
-# 高等代数 (Advanced Algebra)
+﻿# 楂樼瓑浠ｆ暟 (Advanced Algebra)
 
-高等代数包括线性代数和多项式代数两部分。
+楂樼瓑浠ｆ暟鍖呮嫭绾挎€т唬鏁板拰澶氶」寮忎唬鏁颁袱閮ㄥ垎銆?
 
-## 目录
-- [第一章：多项式](polynomial.md)
-- [第二章：行列式](determinant.md)
-- [第三章：线性方程组](linear-equations.md)
-- [第四章：矩阵](matrix.md)
-- [第五章：二次型](quadratic-forms.md)
+## 鐩綍
+- [绗竴绔狅細澶氶」寮廬(polynomial.md)
+- [绗簩绔狅細琛屽垪寮廬(determinant.md)
+- [绗笁绔狅細绾挎€ф柟绋嬬粍](./linear-equations)
+- [绗洓绔狅細鐭╅樀](./matrix)
+- [绗簲绔狅細浜屾鍨媇(quadratic-forms.md)
+

@@ -1,9 +1,10 @@
-# 离散数学 (Discrete Mathematics)
+﻿# 绂绘暎鏁板 (Discrete Mathematics)
 
-离散数学是现代数学的一个重要分支，是计算机科学的数学基础。
+绂绘暎鏁板鏄幇浠ｆ暟瀛︾殑涓€涓噸瑕佸垎鏀紝鏄绠楁満绉戝鐨勬暟瀛﹀熀纭€銆?
 
-## 目录
-- [第一章：数理逻辑](logic.md)
-- [第二章：集合论](set-theory.md)
-- [第三章：图论基础](graph-theory.md)
-- [第四章：组合数学](combinatorics.md)
+## 鐩綍
+- [绗竴绔狅細鏁扮悊閫昏緫](./logic)
+- [绗簩绔狅細闆嗗悎璁篯(set-theory.md)
+- [绗笁绔狅細鍥捐鍩虹](./graph-theory)
+- [绗洓绔狅細缁勫悎鏁板](./combinatorics)
+

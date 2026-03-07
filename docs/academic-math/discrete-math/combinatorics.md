@@ -1,15 +1,20 @@
-# 组合数学 (Combinatorics)
+﻿---
+id: combinatorics
+title: 缁勫悎鏁板 (Combinatorics)
+---
 
-## 计数原理
-- **加法原理**：完成一件事有 $n$ 类办法，每类办法分别有 $m_i$ 种方式，总数 $\sum m_i$。
-- **乘法原理**：完成一件事有 $n$ 个步骤，每个步骤分别有 $m_i$ 种方式，总数 $\prod m_i$。
+# 缁勫悎鏁板 (Combinatorics)
 
-## 排列与组合
-- **排列 (Permutation)**：从 $n$ 个不同元素中取出 $k$ 个的排列数 $P(n, k) = \frac{n!}{(n-k)!}$。
-- **组合 (Combination)**：从 $n$ 个不同元素中取出 $k$ 个的组合数 $C(n, k) = \binom{n}{k} = \frac{n!}{k!(n-k)!}$。
+## 璁℃暟鍘熺悊
+- **鍔犳硶鍘熺悊**锛氬畬鎴愪竴浠朵簨鏈?$n$ 绫诲姙娉曪紝姣忕被鍔炴硶鍒嗗埆鏈?$m_i$ 绉嶆柟寮忥紝鎬绘暟 $\sum m_i$銆?
+- **涔樻硶鍘熺悊**锛氬畬鎴愪竴浠朵簨鏈?$n$ 涓楠わ紝姣忎釜姝ラ鍒嗗埆鏈?$m_i$ 绉嶆柟寮忥紝鎬绘暟 $\prod m_i$銆?
 
-## 二项式定理 (Binomial Theorem)
+## 鎺掑垪涓庣粍鍚?
+- **鎺掑垪 (Permutation)**锛氫粠 $n$ 涓笉鍚屽厓绱犱腑鍙栧嚭 $k$ 涓殑鎺掑垪鏁?$P(n, k) = \frac{n!}{(n-k)!}$銆?
+- **缁勫悎 (Combination)**锛氫粠 $n$ 涓笉鍚屽厓绱犱腑鍙栧嚭 $k$ 涓殑缁勫悎鏁?$C(n, k) = \binom{n}{k} = \frac{n!}{k!(n-k)!}$銆?
+
+## 浜岄」寮忓畾鐞?(Binomial Theorem)
 $(a+b)^n = \sum_{k=0}^n \binom{n}{k} a^{n-k} b^k$
 
-## 鸽巢原理 (Pigeonhole Principle)
-如果 $n+1$ 只鸽子飞进 $n$ 个笼子，则至少有一个笼子包含至少两只鸽子。
+## 楦藉发鍘熺悊 (Pigeonhole Principle)
+濡傛灉 $n+1$ 鍙附瀛愰杩?$n$ 涓瀛愶紝鍒欒嚦灏戞湁涓€涓瀛愬寘鍚嚦灏戜袱鍙附瀛愩€?
