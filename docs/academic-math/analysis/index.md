@@ -58,6 +58,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 - **[第二十章 重积分](multiple-integrals)**：二重/三重积分、变量替换、Jacobi 行列式。
 - **[第二十一章 曲线积分](line-integrals)**：第一/二型曲线积分、Green 公式。
 - **[第二十二章 曲面积分](surface-integrals)**：第一/二型曲面积分、Gauss 公式、Stokes 公式。
+- **[第二十三章 矢量分析与场论初步](vector-analysis)**：Hamilton 算子、梯度、散度与旋度。
 
 </div>
 

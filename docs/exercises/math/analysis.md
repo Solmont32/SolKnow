@@ -2174,6 +2174,50 @@ $\pi^2/12$
 
 ---
 
+## 练习 114：[提高] 哈密顿算子恒等式证明
+证明恒等式：$\nabla \cdot (\phi \mathbf{A}) = \phi (\nabla \cdot \mathbf{A}) + \mathbf{A} \cdot (\nabla \phi)$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **左式展开**：
+   $\nabla \cdot (\phi \mathbf{A}) = \frac{\partial(\phi P)}{\partial x} + \frac{\partial(\phi Q)}{\partial y} + \frac{\partial(\phi R)}{\partial z}$
+2. **利用导数乘积法则**：
+   $= (\phi \frac{\partial P}{\partial x} + P \frac{\partial \phi}{\partial x}) + (\phi \frac{\partial Q}{\partial y} + Q \frac{\partial \phi}{\partial y}) + (\phi \frac{\partial R}{\partial z} + R \frac{\partial \phi}{\partial z})$
+3. **提取公因子与合并**：
+   $= \phi (\frac{\partial P}{\partial x} + \frac{\partial Q}{\partial y} + \frac{\partial R}{\partial z}) + (P \frac{\partial \phi}{\partial x} + Q \frac{\partial \phi}{\partial y} + R \frac{\partial \phi}{\partial z})$
+   $= \phi (\nabla \cdot \mathbf{A}) + \mathbf{A} \cdot (\nabla \phi)$
+
+#### 答案
+证毕。
+</details>
+
+---
+
+## 练习 115：[提高] 势函数与保守场判定
+判定向量场 $\mathbf{A} = (e^x \sin y) \mathbf{i} + (e^x \cos y) \mathbf{j} + 2z \mathbf{k}$ 是否为保守场，若是，求其势函数。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **计算旋度**：
+   $\text{curl } \mathbf{A} = \begin{vmatrix} \mathbf{i} & \mathbf{j} & \mathbf{k} \\ \partial_x & \partial_y & \partial_z \\ e^x \sin y & e^x \cos y & 2z \end{vmatrix}$
+   $= (0-0)\mathbf{i} + (0-0)\mathbf{j} + (e^x \cos y - e^x \cos y)\mathbf{k} = \mathbf{0}$
+   故 $\mathbf{A}$ 是保守场。
+2. **积分求势函数**：
+   - $\frac{\partial \phi}{\partial x} = e^x \sin y \implies \phi = e^x \sin y + f(y, z)$
+   - $\frac{\partial \phi}{\partial y} = e^x \cos y + \frac{\partial f}{\partial y} = e^x \cos y \implies f = g(z)$
+   - $\frac{\partial \phi}{\partial z} = g'(z) = 2z \implies g(z) = z^2 + C$
+3. **结论**：$\phi = e^x \sin y + z^2 + C$。
+
+#### 答案
+$\phi = e^x \sin y + z^2 + C$
+</details>
+
+---
+
 
 
 

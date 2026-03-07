@@ -187,6 +187,7 @@ const sidebars: SidebarsConfig = {
                     { type: 'doc', id: 'academic-math/analysis/multiple-integrals', label: '第二十章 重积分' },
                     { type: 'doc', id: 'academic-math/analysis/line-integrals', label: '第二十一章 曲线积分' },
                     { type: 'doc', id: 'academic-math/analysis/surface-integrals', label: '第二十二章 曲面积分' },
+                    { type: 'doc', id: 'academic-math/analysis/vector-analysis', label: '第二十三章 矢量分析与场论初步' },
                   ]
                 },
                 {
