@@ -233,7 +233,16 @@ const sidebars: SidebarsConfig = {
             'cs/linux/file-system',
           ],
         },
-        {type: 'doc', id: 'cs/c/index', label: 'C 语言'},
+        {
+          type: 'category',
+          label: 'C 语言',
+          link: {type: 'doc', id: 'cs/c/index'},
+          items: [
+            'cs/c/basic-syntax',
+            'cs/c/pointers',
+            'cs/c/memory-management',
+          ],
+        },
         {type: 'doc', id: 'cs/cpp/index', label: 'C++'},
         {type: 'doc', id: 'cs/python/index', label: 'Python'},
         {type: 'doc', id: 'cs/organization/index', label: '计算机组织与结构'},
