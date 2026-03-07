@@ -1,68 +1,100 @@
-﻿# SolKnow 工业级任务执行器 (24/7 版)
+# SolKnow 工业级任务执行器 (V2.0 - Gemini 心跳版)
 # 启动方式: powershell -ExecutionPolicy Bypass -File infinite_runner.ps1
 
-$CHECK_INTERVAL = 300 # 每 5 分钟拉取一次任务
+$CHECK_INTERVAL = 300 # 每 5 分钟 (300秒) 心跳一次
 $LOG_FILE = "AUTOMATION_LOG.md"
+$TASKS_FILE = "TASKS.md"
 
-function Write-Log($message) {
+# --- 视觉配置 ---
+function Show-Heartbeat {
+    $colors = @("Cyan", "Magenta", "Yellow", "White")
+    $randomColor = $colors[(Get-Random -Maximum $colors.Count)]
+    
+    cls
+    Write-Host @"
+    
+     ██████╗  ██████╗ ██╗     ██╗  ██╗███╗   ██╗ ██████╗ ██╗    ██╗
+    ██╔════╝ ██╔═══██╗██║     ██║ ██╔╝████╗  ██║██╔═══██╗██║    ██║
+    ██║  ███╗██║   ██║██║     █████╔╝ ██╔██╗ ██║██║   ██║██║ █╗ ██║
+    ██║   ██║██║   ██║██║     ██╔═██╗ ██║╚██╗██║██║   ██║██║███╗██║
+    ╚██████╔╝╚██████╔╝███████╗██║  ██╗██║ ╚████║╚██████╔╝╚███╔███╔╝
+     ╚═════╝  ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝  ╚══╝╚══╝ 
+                      [ SolKnow Gemini CLI Heartbeat ]
+"@ -ForegroundColor $randomColor
+
+    $now = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    Write-Host "    >>> 心跳正常 | 模式: 24/7 监听 | 当前时间: $now <<<" -ForegroundColor Gray
+    Write-Host "    --------------------------------------------------------" -ForegroundColor DarkGray
+}
+
+function Write-Log($message, $type="INFO") {
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    $logEntry = "[$timestamp] $message"
-    Write-Host $logEntry -ForegroundColor Cyan
+    $color = "Cyan"
+    if ($type -eq "SUCCESS") { $color = "Green" }
+    if ($type -eq "ERROR") { $color = "Red" }
+    if ($type -eq "WARN") { $color = "Yellow" }
+    
+    $logEntry = "[$timestamp] [$type] $message"
+    Write-Host $logEntry -ForegroundColor $color
     Add-Content -Path $LOG_FILE -Value $logEntry
 }
 
+# --- 初始化 ---
 if (-not (Test-Path $LOG_FILE)) {
     New-Item -Path $LOG_FILE -ItemType File
     Add-Content -Path $LOG_FILE -Value "# SolKnow 自动化执行日志`n"
 }
 
-Write-Log "自动化引擎启动，进入 24/7 监听模式..."
+Write-Log "自动化引擎 V2.0 启动，进入沉浸式监听模式..." "SUCCESS"
 
 while($true) {
     try {
-        # 1. 同步远程指令
-        Write-Log "正在同步 GitHub 任务表..."
+        Show-Heartbeat
+
+        # 1. 权限确认与远程同步
+        Write-Log "正在执行 git pull 同步远程指令..."
         git pull origin main --rebase
 
-        # 2. 读取任务表
-        $content = Get-Content "TASKS.md" -Raw
+        # 2. 读取任务表并判断模式
+        $content = Get-Content $TASKS_FILE -Raw
         
-        # 匹配第一个待办任务 - [ ] (仅匹配行首，避免匹配说明文档)
+        # 匹配第一个待办任务 - [ ] (仅匹配行首)
         if ($content -match "(?m)^- \[ \] (.*)") {
             $taskDescription = $matches[1].Trim()
-            Write-Log "【执行模式】: 发现待办任务 -> $taskDescription"
+            Write-Log "【执行模式】: 发现待办任务 -> $taskDescription" "SUCCESS"
 
-            # 标记为进行中 [/] 防止重复领题 (仅替换行首匹配项)
+            # 标记为进行中 [/] (仅替换匹配行)
             $newContent = $content -replace "(?m)^- \[ \] $taskDescription", "- [/] $taskDescription (正在执行...)"
-            Set-Content "TASKS.md" $newContent
-            git add TASKS.md; git commit -m "status: 开始执行任务 - $taskDescription"; git push origin main
+            Set-Content $TASKS_FILE $newContent
+            git add $TASKS_FILE; git commit -m "status: 开始执行任务 - $taskDescription"; git push origin main
 
-            # 3. 唤醒 Gemini 执行核心逻辑
-            Write-Log ">>> Gemini 前线执行官正在处理任务..."
+            # 3. 唤醒 Gemini 执行核心逻辑 (开启 YOLO 模式，赋予完全执行权限)
+            Write-Log ">>> Gemini 前线执行官正在处理任务 (YOLO Mode)..."
             
-            # 定义日志文件路径
-            $LOG_MD = "AUTOMATION_LOG.md"
-            
-            # 增强指令：要求 Gemini 在完成任务后，不仅要打钩，还要在 AUTOMATION_LOG.md 追加记录
-            $geminiCmd = "gemini -p ""任务内容：$taskDescription 。完成后请严格执行以下闭环操作：1. 严谨修改代码或文档。2. 将 TASKS.md 中的该项标记为 [x]。3. 在 $LOG_MD 的表格末尾追加一行记录，格式为：| $(Get-Date -Format 'yyyy-MM-dd HH:mm') | $taskDescription | ✅ 成功 | [此处写 20 字以内的成果摘要] |。4. 如果失败，请将 TASKS.md 标记为 [!]，并在 $LOG_MD 追加：| $(Get-Date -Format 'yyyy-MM-dd HH:mm') | $taskDescription | ❌ 失败 | [此处简述报错原因] |。5. 执行 gcp 完成提交推送。"""
+            # 增强指令：闭环执行任务，跳过确认
+            $geminiCmd = "gemini -y --approval-mode=yolo -p ""任务指令：$taskDescription 。作为拥有完全执行权限的代理，请完成以下流程：1. 深度实施任务内容。2. 在 TASKS.md 中将该项标记为 [x]。3. 在 $LOG_FILE 追加一条表格记录（| 时间 | 任务 | 状态 | 成果 |）。4. 执行 gcp 完成提交。5. 使用 'gh run list --limit 1' 检查部署状态并确保成功。"""
             
             Invoke-Expression $geminiCmd
 
-            Write-Log "【任务闭环】: $taskDescription 处理完毕，日志已更新。"
+            Write-Log "【任务闭环】: $taskDescription 处理完毕。" "SUCCESS"
 
         } else {
-            Write-Log "【规划模式】: 当前无待办任务，唤醒 Gemini 架构师进行自我规划..."
+            Write-Log "【规划模式】: 当前无待办任务，唤醒 Gemini 架构师进行自我规划..." "WARN"
             
-            # 自我派发任务逻辑
-            $planningCmd = "gemini -p ""当前 TASKS.md 中已无待办任务。作为 SolKnow 的数字合伙人，请审视目前知识库（数学、竞赛、AI、安全）与练习库的建设进度。请自主规划 1 个接下来最迫切需要进行的『深度内容扩充』或『练习库建设』任务。要求任务必须非常具体（例如：'深度重构高等代数中的矩阵特征值章节，增加万字解析和 3 道例题'）。将该任务以 '- [ ] 新任务描述' 的格式追加到 TASKS.md 的 '## 待办任务' 标题下，最后执行 gcp 完成推送。"""
+            # 自我派发任务逻辑 (开启 YOLO 模式)
+            $planningCmd = "gemini -y --approval-mode=yolo -p ""当前待办任务为空。作为 SolKnow 的数字合伙人，请审视项目现状并规划 1 个具有深度且实用的新任务。将该任务以 '- [ ] 新任务描述' 格式写入 TASKS.md 的待办任务区，并执行 gcp 推送。"""
             Invoke-Expression $planningCmd
             
-            Write-Log "【规划完成】: 新任务已生成，将在下一次心跳周期中执行。"
+            Write-Log "【规划完成】: 新任务已生成。" "SUCCESS"
         }
+
+        # 4. 状态检查
+        gh run list --limit 1
+
     } catch {
-        Write-Log "【警告】循环过程中出现异常: $($_.Exception.Message)"
+        Write-Log "【错误】: $($_.Exception.Message)" "ERROR"
     }
 
-    Write-Host "休眠中，等待下一次巡检..." -ForegroundColor Gray
+    Write-Host "休眠中，等待 5 分钟后的下一次心跳..." -ForegroundColor DarkGray
     Start-Sleep -Seconds $CHECK_INTERVAL
 }
