@@ -90,6 +90,11 @@ function Test-GitAvailable {
     }
 }
 
+function Invoke-GitRebasePull {
+    cmd /c "git pull origin main --rebase"
+    return $LASTEXITCODE
+}
+
 function Acquire-Lock {
     if (Test-Path $LockFile) {
         $existing = Get-Content -Path $LockFile -ErrorAction SilentlyContinue
@@ -358,8 +363,8 @@ function Invoke-InitialPullSafely {
     try {
         $runtimeStash = Suspend-ExcludedChanges
 
-        git pull origin main --rebase
-        if ($LASTEXITCODE -ne 0) {
+        $pullExit = Invoke-GitRebasePull
+        if ($pullExit -ne 0) {
             throw "Initial git pull --rebase failed."
         }
 
@@ -404,8 +409,8 @@ function Invoke-Sync($message) {
     try {
         $runtimeStash = Suspend-ExcludedChanges
 
-        git pull origin main --rebase
-        if ($LASTEXITCODE -ne 0) {
+        $pullExit = Invoke-GitRebasePull
+        if ($pullExit -ne 0) {
             throw "git pull --rebase failed."
         }
 
