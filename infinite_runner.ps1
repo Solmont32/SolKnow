@@ -1,18 +1,19 @@
-# SolKnow Autonomous Pulse Runner (V3.5 - RESILIENT EDITION)
+# SolKnow Autonomous Pulse Runner (V3.6 - UNIVERSAL AESTHETIC)
 # Usage: pwsh -ExecutionPolicy Bypass -File infinite_runner.ps1
 
-# 强制 UTF-8 编码确保 ASCII 艺术不乱码
+# 核心：强制设置 Windows 终端代码页为 65001 (UTF-8)
+if ($IsWindows) {
+    chcp 65001 | Out-Null
+}
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-$OutputEncoding = [System.Text.Encoding]::UTF8
 
 $CHECK_INTERVAL = 300 
 $LOG_FILE = "AUTOMATION_LOG.md"
 $TASKS_FILE = "TASKS.md"
 
 function Invoke-GCP($message) {
-    Write-Host ">>> Executing Cloud Sync: $message" -ForegroundColor Gray
+    Write-Host ">>> Cloud Sync: $message" -ForegroundColor Gray
     git add .
-    # 仅在有更改时才 commit
     $status = git status --porcelain
     if ($status) {
         git commit -m $message
@@ -24,28 +25,25 @@ function Show-Logo {
     $colors = @("Cyan", "Blue", "White")
     $randomColor = $colors[(Get-Random -Maximum $colors.Count)]
     Clear-Host
-    # 换用更兼容的实心块字符
+    # 使用基础字符重构的工业级 Logo，确保 0 乱码
     Write-Host @"
 
-      [ STRATEGIC AUTONOMY V3.5 ]
-      __________________________________________________________________________________________________________________________
+      [ STRATEGIC CORE ACTIVE ]
+      ________________________________________________________________________________________________________
 
-      ███           █████████   ███████████  █████        █████  █████  ██████   █████  ███████████  █████        █████ 
-      ░░░███       ███░░░░░███ ░░███░░░░░███░░███        ░░███  ░░███  ░░██████ ░░███ ░░███░░░░░███░░███        ░░███  
-        ░░░███    ░███    ░░░   ░███    ░███ ░███         ░███   ░███   ░███░███ ░███  ░███    ░███ ░███      ░███   
-          ░░░███  ░░█████████   ░███    ░███ ░███         ░███████     ░███░░███░███  ░███    ░███ ░███  ██  ░███   
-           ███░    ░░░░░░░░███  ░███    ░███ ░███         ░███░░███    ░███ ░░██████  ░███    ░███ ░███ ░███ ░███   
-         ███░      ███    ░███  ░███    ░███ ░███      █  ░███ ░░███   ░███  ░░█████  ░███    ░███ ░███░█████░███   
-       ███░       ░░█████████   ███████████  ███████████  █████ ░░███  ░█████  ░░███ ░░███████████ ░██████░██████   
-      ░░░          ░░░░░░░░░   ░░░░░░░░░░░  ░░░░░░░░░░░  ░░░░░   ░░░   ░░░░░    ░░░   ░░░░░░░░░░░  ░░░░░░ ░░░░░░    
+       ####   ####  #      #  # #  #  ####  #      #       #  #  #      #  ####  #   #
+      #      #    # #      # #  # #  #    # #  #   #       #  #  # #    # #    # #   #
+       ####  #    # #      ##   # #  #    # # # #  #       #  #  #  #  #  #    # # # #
+           # #    # #      # #  # #  #    # ##   ##        #  #  #   # #  #    # # # #
+       ####   ####  ###### #  # # #   ####  #     #        ####  #    #   ####   # # 
 
-                                               S O L K N O W   I N D U S T R I A L
-      __________________________________________________________________________________________________________________________
+                                     S O L K N O W   I N D U S T R I A L
+      ________________________________________________________________________________________________________
       
-      >>> TARGET: INTEGRATED LEARNING SYSTEM (MATH & CS)
+      >>> OBJECTIVE: INTEGRATED LEARNING SYSTEM (MATH & CS)
       >>> STATUS: RESILIENT SYNC & AUTO-PLANNING
       >>> TIME: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
-      __________________________________________________________________________________________________________________________
+      ________________________________________________________________________________________________________
 
 "@ -ForegroundColor $randomColor
 }
@@ -55,17 +53,11 @@ function Show-Resting {
     Write-Host @"
 
       [ SYSTEM STANDBY ]
-      __________________________________________________________________________________________________________________________
+      ________________________________________________________________________________________________________
 
-       ███████████  ███████████   █████████  █████  ░░███  ███████████  ███████████  █████      █████
-      ░░███░░░░░░░ ░░░░███░░░░   ███░░░░░███ ░█████  ░███ ░░███░░░░░███░░███░░░░░███░░███      ░░███ 
-       ░░█████████     ░███     ░███    ░███ ░███░███ ░███  ░███    ░███ ░███    ░███ ░███      ░███  
-        ░░░░░░░░███    ░███     ░███████████ ░███░░███████  ░███    ░███ ░██████████  ░░███    ███░   
-       ███████████     ░███     ░███░░░░░███ ░███ ░░██████  ░███    ░███ ░███░░░░░███   ░░██████░     
-      ░░░░░░░░░░░      ░░░      ░░░     ░░░  ░░░   ░░░░░░   ███████████  ███████████     ░░░███░      
+               S  T  A  N  D  B  Y     M  O  D  E     A  C  T  I  V  A  T  E  D
 
-                                               R E S T I N G   P H A S E
-      __________________________________________________________________________________________________________________________
+      ________________________________________________________________________________________________________
       
       >>> NEXT HEARTBEAT IN $($CHECK_INTERVAL) SECONDS...
 "@ -ForegroundColor DarkGray
@@ -86,17 +78,16 @@ function Write-Log($message, $type="INFO") {
 
 if (-not (Test-Path $LOG_FILE)) { Add-Content -Path $LOG_FILE -Value "# SolKnow Automation Vital Logs`n" }
 
-Write-Log "SolKnow Industrial Core V3.5 (Resilient) Initialized." "SUCCESS"
+Write-Log "SolKnow Industrial Core V3.6 (Universal) Initialized." "SUCCESS"
 
 while($true) {
     try {
         Show-Logo
         
-        # 弹性同步逻辑：在 Pull 前自动 Commit 未存盘的更改
-        Write-Host ">>> Resolving local workspace potential conflicts..." -ForegroundColor Gray
-        Invoke-GCP "chore: autonomous workspace sync before heartbeat"
+        Write-Host ">>> Verifying workspace integrity..." -ForegroundColor Gray
+        Invoke-GCP "chore: automated pre-pulse sync"
         
-        Write-Log "Pulling latest intelligence from cloud..." "INFO"
+        Write-Log "Pulling intelligence from cloud..." "INFO"
         git pull origin main --rebase
 
         $content = Get-Content $TASKS_FILE -Raw
@@ -149,7 +140,7 @@ Action:
             }
         }
         
-        Write-Log "Deployment verification..." "INFO"
+        Write-Log "Cloud verification..." "INFO"
         gh run list --limit 1
         
     } catch {
