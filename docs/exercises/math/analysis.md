@@ -1282,5 +1282,120 @@ $\frac{\pi^2}{8} - \frac{1}{2}(\arccos a)^2$
 $\ln(a+1)$
 </details>
 
+---
+
+## 练习 68：平面图形的质心计算
+求由曲线 $y^2 = x$ 和直线 $x = 1$ 围成的均匀薄板的质心。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **对称性**：图形关于 $x$ 轴对称，故 $\bar{y} = 0$。
+2. **计算面积**：
+   $$A = 2 \int_0^1 \sqrt{x} dx = 2 \cdot [\frac{2}{3}x^{3/2}]_0^1 = \frac{4}{3}$$
+3. **计算 $y$ 轴矩**：
+   $$M_y = \iint_D x dA = \int_0^1 x \cdot 2\sqrt{x} dx = 2 \int_0^1 x^{3/2} dx = 2 \cdot [\frac{2}{5}x^{5/2}]_0^1 = \frac{4}{5}$$
+4. **求质心**：$\bar{x} = \frac{M_y}{A} = \frac{4/5}{4/3} = \frac{3}{5}$。
+
+#### 答案
+质心坐标为 $(3/5, 0)$。
+</details>
+
+---
+
+## 练习 69：均匀球体的转动惯量
+计算质量为 $M$、半径为 $R$ 的均匀球体对其直径的转动惯量。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **设置坐标**：对 $z$ 轴求转动惯量。$r^2 = x^2 + y^2 = \rho^2 \sin^2 \theta$（球坐标）。
+2. **建立积分**：
+   $$I_z = \rho \int_0^{2\pi} d\phi \int_0^\pi \sin \theta \cdot (\rho^2 \sin^2 \theta) \cdot \rho^2 d\rho$$
+   $$I_z = \rho \cdot 2\pi \cdot \int_0^\pi \sin^3 \theta d\theta \cdot \int_0^R \rho^4 d\rho$$
+3. **计算分量**：
+   - $\rho$ 积分：$R^5/5$。
+   - $\theta$ 积分：$\int_0^\pi (1-\cos^2 \theta) \sin \theta d\theta = 4/3$。
+   $I_z = \rho \cdot 2\pi \cdot \frac{4}{3} \cdot \frac{R^5}{5} = \frac{8\pi \rho R^5}{15}$。
+4. **利用质量 $M = \frac{4}{3}\pi R^3 \rho$**：
+   $I_z = \frac{2}{5} (\frac{4}{3}\pi R^3 \rho) R^2 = \frac{2}{5} M R^2$。
+
+#### 答案
+$I = \frac{2}{5} M R^2$。
+</details>
+
+---
+
+## 练习 70：引力的计算（直线段对质点）
+长为 $L$、质量为 $M$ 的均匀细杆放置在 $x$ 轴上（端点为 $(0,0)$ 和 $(L,0)$）。求其对位于 $(0, a)$ 处质量为 $m$ 的质点的引力的 $y$ 分量。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **密度**：$\lambda = M/L$。
+2. **取微元**：$dx$ 位于 $(x, 0)$，其对质点的引力 $dF$ 指向 $(x, 0)$。
+3. **距离**：$r = \sqrt{x^2 + a^2}$。
+4. **引力 $y$ 分量**：
+   $$dF_y = G \frac{m \lambda dx}{r^2} \cdot \sin \theta = G \frac{m \lambda dx}{x^2 + a^2} \cdot \frac{a}{\sqrt{x^2 + a^2}}$$
+5. **积分**：
+   $$F_y = G m \lambda a \int_0^L \frac{1}{(x^2 + a^2)^{3/2}} dx$$
+   令 $x = a \tan \phi$。
+   $$F_y = G m \lambda a \int_0^{\arctan(L/a)} \frac{a \sec^2 \phi}{a^3 \sec^3 \phi} d\phi = \frac{G m \lambda}{a} \int_0^{\arctan(L/a)} \cos \phi d\phi = \frac{G m \lambda}{a} \sin(\arctan \frac{L}{a})$$
+   $\sin(\arctan \frac{L}{a}) = \frac{L}{\sqrt{L^2 + a^2}}$。
+6. **结果**：$F_y = \frac{G m M}{a \sqrt{L^2 + a^2}}$。
+
+#### 答案
+$F_y = \frac{G m M}{a \sqrt{L^2 + a^2}}$。
+</details>
+
+---
+
+## 练习 71：复杂雅可比行列式的应用
+利用变换 $u = x+y, v = y/x$ 计算 $\iint_D (x+y)^2 dx dy$，其中 $D$ 是由 $x=0, y=0, x+y=1$ 围成的三角形。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **解出 $x, y$**：
+   $y = vx \implies u = x + vx = x(1+v) \implies x = \frac{u}{1+v}, y = \frac{uv}{1+v}$。
+2. **计算雅可比**：
+   $$J = \det \begin{pmatrix} \frac{1}{1+v} & -\frac{u}{(1+v)^2} \\ \frac{v}{1+v} & \frac{u}{(1+v)^2} \end{pmatrix} = \frac{u}{(1+v)^3} + \frac{uv}{(1+v)^3} = \frac{u(1+v)}{(1+v)^3} = \frac{u}{(1+v)^2}$$
+3. **确定范围**：
+   $x+y \le 1 \implies u \le 1$。$x, y \ge 0 \implies u \ge 0, v \ge 0$。故 $0 \le u \le 1, 0 \le v < \infty$。
+   （注：本题通常用于广义积分或特定边界，此处范围依题意调整）
+4. **计算**：
+   $$I = \int_0^1 du \int_0^\infty u^2 \cdot \frac{u}{(1+v)^2} dv = \int_0^1 u^3 du \cdot [-\frac{1}{1+v}]_0^\infty = \frac{1}{4} \cdot 1 = \frac{1}{4}$$
+
+#### 答案
+$1/4$。
+</details>
+
+---
+
+## 练习 72：变密度球体的质量计算
+求中心在原点、半径为 $R$ 的球体 $\Omega$ 的质量，其密度函数为 $\rho(x, y, z) = \sqrt{x^2 + y^2 + z^2} \cdot e^{-(x^2+y^2+z^2)}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **采用球坐标**：$\rho(r) = r e^{-r^2}$。
+2. **建立积分**：
+   $$M = \int_0^{2\pi} d\phi \int_0^\pi \sin \theta d\theta \int_0^R (r e^{-r^2}) r^2 dr$$
+3. **计算**：
+   - 角度部分：$4\pi$。
+   - $r$ 部分：$\int_0^R r^3 e^{-r^2} dr$。
+     令 $t = r^2, dt = 2r dr$。
+     $\int_0^{R^2} \frac{1}{2} t e^{-t} dt = \frac{1}{2} [-t e^{-t} - e^{-t}]_0^{R^2} = \frac{1}{2} (1 - (R^2+1)e^{-R^2})$。
+4. **结论**：$M = 2\pi (1 - (R^2+1)e^{-R^2})$。
+
+#### 答案
+$M = 2\pi (1 - (R^2+1)e^{-R^2})$。
+</details>
+
 
 

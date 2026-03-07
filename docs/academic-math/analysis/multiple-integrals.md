@@ -54,9 +54,141 @@ $$\Delta A = |\mathbf{a} \times \mathbf{b}| = \left| \det \begin{pmatrix} \frac{
   $$J = \frac{\partial(x, y, z)}{\partial(r, \theta, \phi)} = \det \begin{pmatrix} \sin \theta \cos \phi & r \cos \theta \cos \phi & -r \sin \theta \sin \phi \\ \sin \theta \sin \phi & r \cos \theta \sin \phi & r \sin \theta \cos \phi \\ \cos \theta & -r \sin \theta & 0 \end{pmatrix} = r^2 \sin \theta$$
 - **适用场景**：关于原点对称或具有圆锥形边界的区域。
 
+### 3. 复杂换元与广义雅可比 (Deep Analysis)
+在处理非标准区域或具有特定代数结构的被积函数时，雅可比矩阵的构造至关重要。
+
+**案例：非线性坐标变换 $x = u^2 - v^2, y = 2uv$**
+这是一个经典的映射（复平面下的 $w = z^2$）。其雅可比行列式为：
+$$J = \frac{\partial(x, y)}{\partial(u, v)} = \det \begin{pmatrix} 2u & -2v \\ 2v & 2u \end{pmatrix} = 4(u^2 + v^2)$$
+这种变换常用于处理边界为抛物线的区域。
+
+<KnowledgeCard type="warning" title="雅可比行列式的零点问题">
+若在区域内 $J = 0$，变换可能不再是单射的，这会导致积分区域的叠加或遗漏。在实际应用中，必须确保变换在积分区域内部是“一一对应”的。
+</KnowledgeCard>
+
 ---
 
-## 四、 教材经典例题解析
+## 四、 重积分的物理应用 (Applications)
+
+重积分不仅是数学抽象，更是经典力学的基础。以下是对标 Ch 20 的核心应用公式与例题。
+
+### 1. 质量与质心 (Mass and Centroid)
+对于密度分布为 $\rho(\mathbf{x})$ 的物体 $\Omega$：
+- **总质量**：$M = \iiint_\Omega \rho(x, y, z) dV$
+- **质心坐标** ($\bar{x}, \bar{y}, \bar{z}$)：
+  $$\bar{x} = \frac{1}{M} \iiint_\Omega x \rho dV, \quad \bar{y} = \frac{1}{M} \iiint_\Omega y \rho dV, \quad \bar{z} = \frac{1}{M} \iiint_\Omega z \rho dV$$
+
+### 2. 转动惯量 (Moment of Inertia)
+物体 $\Omega$ 对某轴 $L$ 的转动惯量 $I_L$：
+$$I_L = \iiint_\Omega r^2(x, y, z) \rho(x, y, z) dV$$
+其中 $r$ 是点 $(x, y, z)$ 到轴 $L$ 的垂直距离。
+
+### 3. 引力 (Gravitational Force)
+质量为 $M$ 的物体 $\Omega$ 对位于 $(x_0, y_0, z_0)$ 处质量为 $m$ 的质点的引力 $\mathbf{F}$：
+$$\mathbf{F} = G m \iiint_\Omega \frac{\rho(x, y, z)}{r^3} (\mathbf{r} - \mathbf{r}_0) dV$$
+
+---
+
+## 五、 物理应用典型例题解析
+
+### 例题 5：半圆盘的质心（二重积分）
+求半径为 $R$ 的均匀半圆盘 $x^2 + y^2 \le R^2, y \ge 0$ 的质心。
+
+<details>
+<summary>点击查看解析</summary>
+
+#### 解析过程
+1. **对称性分析**：由于图形关于 $y$ 轴对称且密度均匀，故 $\bar{x} = 0$。
+2. **计算质量**：$M = \sigma \cdot \frac{1}{2}\pi R^2$（$\sigma$ 为面密度）。
+3. **计算 $y$ 方向矩**：
+   $$M_x = \iint_D y \sigma dA = \sigma \int_0^\pi d\theta \int_0^R (r \sin \theta) r dr$$
+   $$M_x = \sigma \int_0^\pi \sin \theta d\theta \int_0^R r^2 dr = \sigma \cdot 2 \cdot \frac{R^3}{3} = \frac{2}{3} \sigma R^3$$
+4. **求质心**：$\bar{y} = \frac{M_x}{M} = \frac{2/3 \sigma R^3}{1/2 \sigma \pi R^2} = \frac{4R}{3\pi}$。
+
+#### 答案
+质心坐标为 $(0, \frac{4R}{3\pi})$。
+</details>
+
+### 例题 6：均匀球体的质心（三重积分）
+求均匀半球体 $x^2 + y^2 + z^2 \le R^2, z \ge 0$ 的质心。
+
+<details>
+<summary>点击查看解析</summary>
+
+#### 解析过程
+1. **对称性**：$\bar{x} = \bar{y} = 0$。
+2. **建立球坐标**：$0 \le r \le R, 0 \le \theta \le \pi/2, 0 \le \phi \le 2\pi$。
+3. **计算 $z$ 方向矩**：
+   $$M_{xy} = \rho \int_0^{2\pi} d\phi \int_0^{\pi/2} \sin \theta \cos \theta d\theta \int_0^R r^3 dr$$
+   （注意：$z = r \cos \theta$，体积元含 $\sin \theta$）
+   - $r$ 积分：$R^4/4$。
+   - $\theta$ 积分：$1/2$。
+   - $\phi$ 积分：$2\pi$。
+   $M_{xy} = \rho \cdot 2\pi \cdot \frac{1}{2} \cdot \frac{R^4}{4} = \frac{\pi \rho R^4}{4}$。
+4. **体积与质量**：$V = \frac{2}{3}\pi R^3, M = \rho V$。
+5. **求质心**：$\bar{z} = \frac{M_{xy}}{M} = \frac{\pi \rho R^4 / 4}{2/3 \pi \rho R^3} = \frac{3}{8}R$。
+
+#### 答案
+质心坐标为 $(0, 0, \frac{3}{8}R)$。
+</details>
+
+### 例题 7：矩形薄板的转动惯量
+长为 $a$ 宽为 $b$ 的均匀矩形薄板，求其对中心且垂直于板面的轴的转动惯量。
+
+<details>
+<summary>点击查看解析</summary>
+
+#### 解析过程
+1. **建立坐标系**：矩形中心在原点，$-a/2 \le x \le a/2, -b/2 \le y \le b/2$。
+2. **距离平方**：$r^2 = x^2 + y^2$。
+3. **积分计算**：
+   $$I = \sigma \int_{-a/2}^{a/2} dx \int_{-b/2}^{b/2} (x^2 + y^2) dy$$
+   $$I = \sigma \int_{-a/2}^{a/2} (x^2 b + \frac{1}{12}b^3) dx = \sigma (b \cdot \frac{1}{12}a^3 + a \cdot \frac{1}{12}b^3) = \frac{1}{12} \sigma ab (a^2 + b^2)$$
+4. **利用总质量 $M = \sigma ab$**：$I = \frac{1}{12} M (a^2 + b^2)$。
+
+#### 答案
+$I = \frac{1}{12} M (a^2 + b^2)$
+</details>
+
+### 例题 8：均匀圆柱体的转动惯量
+求底面半径为 $R$、高为 $h$、质量为 $M$ 的均匀圆柱体对其中心轴（$z$ 轴）的转动惯量。
+
+<details>
+<summary>点击查看解析</summary>
+
+#### 解析过程
+1. **采用柱坐标**：$0 \le \rho \le R, 0 \le \phi \le 2\pi, 0 \le z \le h$。
+2. **距离平方**：到 $z$ 轴距离为 $\rho$，故 $r^2 = \rho^2$。
+3. **积分计算**：
+   $$I_z = \iiint_\Omega \rho^2 \sigma dV = \sigma \int_0^h dz \int_0^{2\pi} d\phi \int_0^R \rho^2 \cdot \rho d\rho$$
+   $$I_z = \sigma \cdot h \cdot 2\pi \cdot \frac{R^4}{4} = \frac{1}{2} \sigma (\pi R^2 h) R^2$$
+4. **利用质量 $M = \sigma \pi R^2 h$**：$I_z = \frac{1}{2} M R^2$。
+
+#### 答案
+$I_z = \frac{1}{2} M R^2$
+</details>
+
+### 例题 9：球壳对质点的引力（壳层定理证明基础）
+计算质量为 $M$、半径为 $R$ 的均匀球体对位于球外距离球心 $d$ 处质量为 $m$ 的质点的引力。
+
+<details>
+<summary>点击查看解析</summary>
+
+#### 解析过程
+1. **设置坐标**：将球心置于原点，质点置于 $z$ 轴上的 $(0, 0, d)$。
+2. **对称性**：引力仅有 $z$ 方向分量。
+3. **引力公式**（仅 $z$ 分量）：
+   $$F_z = Gm\rho \iiint_\Omega \frac{z - d}{(x^2 + y^2 + (z-d)^2)^{3/2}} dV$$
+   （通常利用球坐标或分层法计算。根据高斯定理或牛顿壳层定理，结果等效于质量集中于球心）
+4. **结论**：$F = \frac{G M m}{d^2}$。
+
+#### 答案
+$F = \frac{G M m}{d^2}$，方向指向球心。
+</details>
+
+---
+
+## 六、 教材经典例题解析
 
 ### 例题 1：极坐标计算二重积分
 计算 $\iint_D e^{-(x^2 + y^2)} dx dy$，其中 $D$ 是全平面 $\mathbb{R}^2$。
@@ -146,7 +278,12 @@ $3/4$
   topic="重积分" 
   exercises={[
     { index: 5, title: "二重积分直角坐标计算", slug: "练习-5二重积分计算" },
-    { index: 6, title: "三重积分柱坐标变换", slug: "练习-6利用柱坐标计算三重积分" }
+    { index: 6, title: "三重积分柱坐标变换", slug: "练习-6利用柱坐标计算三重积分" },
+    { index: 68, title: "平面图形的质心计算", slug: "练习-68平面图形的质心计算" },
+    { index: 69, title: "均匀球体的转动惯量", slug: "练习-69均匀球体的转动惯量" },
+    { index: 70, title: "引力的计算（直线段对质点）", slug: "练习-70引力的计算（直线段对质点）" },
+    { index: 71, title: "复杂雅可比行列式的应用", slug: "练习-71复杂雅可比行列式的应用" },
+    { index: 72, title: "变密度球体的质量计算", slug: "练习-72变密度球体的质量计算" }
   ]} 
 />
 
