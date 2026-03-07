@@ -32,24 +32,57 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 ---
 
-## 二、 高阶线性微分方程
+## 二、 可降阶的高阶方程
+
+对于某些特殊的高阶方程，可以通过变量代换将其化为低阶方程求解。
+
+### 1. $y^{(n)} = f(x)$ 型
+这类方程只需通过连续积分 $n$ 次即可求解。通解包含 $n$ 个任意常数。
+
+### 2. 不显含 $y$ 的方程：$F(x, y', y'') = 0$
+**方法**：令 $p = y'$，则 $y'' = \frac{dp}{dx}$。
+方程变为关于 $p$ 的一阶方程 $F(x, p, \frac{dp}{dx}) = 0$。求出 $p(x, C_1)$ 后，再通过 $y = \int p dx + C_2$ 得到原函数的解。
+
+### 3. 不显含 $x$ 的方程：$F(y, y', y'') = 0$
+**方法**：令 $p = y'$，将 $y$ 视为自变量。
+利用复合函数求导法则：$y'' = \frac{dp}{dx} = \frac{dp}{dy} \cdot \frac{dy}{dx} = p \frac{dp}{dy}$。
+原方程化为关于 $p$ 和 $y$ 的一阶方程 $F(y, p, p \frac{dp}{dy}) = 0$。
+
+---
+
+## 三、 高阶线性微分方程
 
 高阶方程的研究核心在于其解空间的线性结构。
 
-### 1. 线性相关性与 Wronski 行列式
-对于 $n$ 阶线性齐次方程，若有 $n$ 个解 $y_1, y_2, \dots, y_n$，它们线性无关的充要条件是其 **Wronski 行列式** $W(x) \neq 0$：
-$$W(x) = \begin{vmatrix} y_1 & y_2 & \dots & y_n \\ y_1' & y_2' & \dots & y_n' \\ \vdots & \vdots & \ddots & \vdots \\ y_1^{(n-1)} & y_2^{(n-1)} & \dots & y_n^{(n-1)} \end{vmatrix}$$
+### 1. 齐次线性方程的解空间结构
+对于 $n$ 阶齐次线性方程 $L[y] = y^{(n)} + p_{n-1}(x)y^{(n-1)} + \dots + p_0(x)y = 0$：
+- **解的叠加原理**：若 $y_1, y_2$ 是解，则其线性组合 $C_1 y_1 + C_2 y_2$ 也是解。
+- **解空间的维度**：方程的所有解构成一个 $n$ 维向量空间。
+- **基本解组 (Fundamental Set)**：$n$ 个线性无关的解 $y_1, \dots, y_n$ 构成该空间的一组基。
+- **线性无关判别**：使用 **Wronski 行列式** $W(x)$：
+  $$W(x) = \begin{vmatrix} y_1 & y_2 & \dots & y_n \\ y_1' & y_2' & \dots & y_n' \\ \vdots & \vdots & \ddots & \vdots \\ y_1^{(n-1)} & y_2^{(n-1)} & \dots & y_n^{(n-1)} \end{vmatrix}$$
+  若在定义区间内某点 $W(x_0) \neq 0$，则这些解在整个区间上线性无关。
 
-### 2. $n$ 阶常系数线性齐次方程
-特征方程法可以自然推广。对于 $a_n y^{(n)} + \dots + a_1 y' + a_0 y = 0$，其特征方程为：
+### 2. 非齐次线性方程的构造
+对于非齐次方程 $L[y] = f(x)$，其通解结构为：
+**通解 $y$ = 对应齐次方程的通解 $y_h$ + 非齐次方程的一个特解 $y_p$**
+$$y = \sum_{i=1}^n C_i y_i + y_p$$
+
+### 3. 常系数线性方程
+对于 $a_n y^{(n)} + \dots + a_1 y' + a_0 y = 0$，其特征方程为：
 $$a_n r^n + a_{n-1} r^{n-1} + \dots + a_1 r + a_0 = 0$$
 - **单实根 $r$**：对应解 $e^{rx}$。
 - **$k$ 重实根 $r$**：对应解 $e^{rx}, x e^{rx}, \dots, x^{k-1} e^{rx}$。
 - **复根 $\alpha \pm \beta i$**：对应解 $e^{\alpha x} \cos \beta x, e^{\alpha x} \sin \beta x$。
 
+### 4. 欧拉方程 (Euler Equation)
+**形式**：$x^n y^{(n)} + a_{n-1} x^{n-1} y^{(n-1)} + \dots + a_1 x y' + a_0 y = f(x)$。
+**解法**：引入变换 $x = e^t$ ($x > 0$)，可将其化为常系数线性方程。
+算子代换关系：$x y' = Dy, x^2 y'' = D(D-1)y, \dots$（其中 $D = \frac{d}{dt}$）。
+
 ---
 
-## 三、 线性微分方程组初步
+## 四、 线性微分方程组初步
 
 在现实系统中，多个变量往往相互耦合。
 
@@ -62,60 +95,60 @@ $$a_n r^n + a_{n-1} r^{n-1} + \dots + a_1 r + a_0 = 0$$
 
 ---
 
-## 四、 深度深度例题解析
+## 五、 物理应用：振动系统与建模
 
-### 例题 1：伯努利方程的降阶与物理应用
-求解方程 $x y' + y = y^2 \ln x$。
+微分方程最直观的物理应用之一是描述力学系统的动力学行为。
+
+### 1. 阻尼振动模型 (Damped Vibration)
+根据牛顿第二定律，受弹性恢复力 $-kx$ 和阻尼力 $-c\dot{x}$ 作用的物体满足：
+$$m \frac{d^2x}{dt^2} + c \frac{dx}{dt} + kx = 0$$
+特征方程：$mr^2 + cr + k = 0 \implies r = \frac{-c \pm \sqrt{c^2 - 4mk}}{2m}$。
+
+### 2. 运动状态分析
+- **过阻尼 (Over-damped)**：$c^2 > 4mk$。系统无振荡，缓慢回到平衡位置。
+- **临界阻尼 (Critically damped)**：$c^2 = 4mk$。系统以最快速度回到平衡位置且不发生振荡。
+- **欠阻尼 (Under-damped)**：$c^2 < 4mk$。系统呈现指数衰减的周期性振动：
+  $x(t) = e^{-\gamma t}(A \cos \omega t + B \sin \omega t)$，其中衰减系数 $\gamma = \frac{c}{2m}$。
+
+---
+
+## 六、 深度例题解析
+
+### 例题 1：不显含自变量 $x$ 的降阶法
+求解初值问题 $y y'' - (y')^2 = 0$，且 $y(0)=1, y'(0)=1$。
 
 <details>
 <summary>点击查看解析</summary>
 
 #### 解析过程
-1. **标准化**：
-   $y' + \frac{1}{x} y = \frac{\ln x}{x} y^2$
-   这是一个 $n=2$ 的伯努利方程。
-2. **变量代换**：
-   令 $z = y^{1-2} = y^{-1}$，则 $\frac{dz}{dx} = -y^{-2} \frac{dy}{dx}$。
-   原方程除以 $y^2$：$y^{-2} y' + \frac{1}{x} y^{-1} = \frac{\ln x}{x}$。
-   代入 $z$：$-\frac{dz}{dx} + \frac{1}{x} z = \frac{\ln x}{x} \implies \frac{dz}{dx} - \frac{1}{x} z = -\frac{\ln x}{x}$。
-3. **求解一阶线性方程**：
-   积分因子 $\mu(x) = e^{\int -1/x dx} = 1/x$。
-   $\frac{d}{dx}(\frac{z}{x}) = -\frac{\ln x}{x^2}$。
-   积分：$\frac{z}{x} = -\int \frac{\ln x}{x^2} dx$。
-   利用分部积分：$\int \ln x d(-1/x) = -\frac{\ln x}{x} + \int \frac{1}{x^2} dx = -\frac{\ln x}{x} - \frac{1}{x} + C$。
-   所以 $\frac{z}{x} = \frac{\ln x}{x} + \frac{1}{x} + C \implies z = \ln x + 1 + Cx$。
-4. **回代 $y$**：
-   $y = \frac{1}{\ln x + 1 + Cx}$。
+1. **降阶**：令 $y' = p$，则 $y'' = p \frac{dp}{dy}$。
+2. **代入方程**：$y p \frac{dp}{dy} - p^2 = 0 \implies p(y \frac{dp}{dy} - p) = 0$。
+3. **求解一阶方程**：
+   - 若 $p=0$，则 $y=C$，不满足初值 $y'(0)=1$。
+   - 若 $y \frac{dp}{dy} = p$，分离变量：$\frac{dp}{p} = \frac{dy}{y}$。
+   - 积分得 $\ln |p| = \ln |y| + C_1 \implies p = C_2 y \implies y' = C_2 y$。
+4. **利用初值求常数**：$y'(0) = C_2 y(0) \implies 1 = C_2 \cdot 1 \implies C_2 = 1$。
+5. **求解最终函数**：$y' = y \implies \frac{dy}{y} = dx \implies \ln y = x + C_3$。
+   - $y(0)=1 \implies \ln 1 = 0 + C_3 \implies C_3 = 0$。
+   - 所以 $y = e^x$。
 
 #### 答案
-$y = \frac{1}{\ln x + 1 + Cx}$
+$y = e^x$
 </details>
 
-### 例题 2：微分方程组与相轨迹分析
-求解初值问题：
-$\begin{cases} \frac{dx}{dt} = x + 2y \\ \frac{dy}{dt} = 3x + 2y \end{cases}$，且 $x(0)=0, y(0)=5$。
+### 例题 2：线性方程组与特征值方法
+求解方程组 $\begin{cases} \frac{dx}{dt} = x + 2y \\ \frac{dy}{dt} = 3x + 2y \end{cases}$，且 $x(0)=0, y(0)=5$。
 
 <details>
 <summary>点击查看解析</summary>
 
 #### 解析过程
-1. **矩阵形式**：
-   $\mathbf{y}' = A\mathbf{y}$，其中 $A = \begin{pmatrix} 1 & 2 \\ 3 & 2 \end{pmatrix}$。
-2. **求特征值**：
-   $\det(A - \lambda I) = \begin{vmatrix} 1-\lambda & 2 \\ 3 & 2-\lambda \end{vmatrix} = (\lambda-1)(\lambda-2) - 6 = \lambda^2 - 3\lambda - 4 = 0$。
-   解得 $\lambda_1 = 4, \lambda_2 = -1$。
-3. **求特征向量**：
-   - 对于 $\lambda_1 = 4$：$(A-4I)\mathbf{v} = 0 \implies \begin{pmatrix} -3 & 2 \\ 3 & -2 \end{pmatrix} \begin{pmatrix} v_1 \\ v_2 \end{pmatrix} = 0 \implies \mathbf{v}_1 = \begin{pmatrix} 2 \\ 3 \end{pmatrix}$。
-   - 对于 $\lambda_2 = -1$：$(A+I)\mathbf{v} = 0 \implies \begin{pmatrix} 2 & 2 \\ 3 & 3 \end{pmatrix} \begin{pmatrix} v_1 \\ v_2 \end{pmatrix} = 0 \implies \mathbf{v}_2 = \begin{pmatrix} 1 \\ -1 \end{pmatrix}$。
-4. **写出通解**：
-   $\begin{pmatrix} x(t) \\ y(t) \end{pmatrix} = C_1 \begin{pmatrix} 2 \\ 3 \end{pmatrix} e^{4t} + C_2 \begin{pmatrix} 1 \\ -1 \end{pmatrix} e^{-t}$。
-5. **利用初值求常数**：
-   $t=0$ 时：$\begin{pmatrix} 0 \\ 5 \end{pmatrix} = \begin{pmatrix} 2C_1 + C_2 \\ 3C_1 - C_2 \end{pmatrix}$。
-   联立方程：$2C_1 + C_2 = 0$ 且 $3C_1 - C_2 = 5$。
-   相加得 $5C_1 = 5 \implies C_1 = 1$，则 $C_2 = -2$。
-6. **最终特解**：
-   $x(t) = 2e^{4t} - 2e^{-t}$
-   $y(t) = 3e^{4t} + 2e^{-t}$
+1. **矩阵形式**：$A = \begin{pmatrix} 1 & 2 \\ 3 & 2 \end{pmatrix}$。
+2. **求特征值**：$\det(A - \lambda I) = \lambda^2 - 3\lambda - 4 = 0 \implies \lambda_1 = 4, \lambda_2 = -1$。
+3. **求特征向量**：$\mathbf{v}_1 = \begin{pmatrix} 2 \\ 3 \end{pmatrix}, \mathbf{v}_2 = \begin{pmatrix} 1 \\ -1 \end{pmatrix}$。
+4. **写出通解**：$\mathbf{y}(t) = C_1 \begin{pmatrix} 2 \\ 3 \end{pmatrix} e^{4t} + C_2 \begin{pmatrix} 1 \\ -1 \end{pmatrix} e^{-t}$。
+5. **代入初值**：$2C_1 + C_2 = 0, 3C_1 - C_2 = 5 \implies C_1 = 1, C_2 = -2$。
+6. **最终特解**：$x(t) = 2e^{4t} - 2e^{-t}, y(t) = 3e^{4t} + 2e^{-t}$。
 
 #### 答案
 $x(t) = 2e^{4t} - 2e^{-t}, y(t) = 3e^{4t} + 2e^{-t}$
@@ -123,7 +156,7 @@ $x(t) = 2e^{4t} - 2e^{-t}, y(t) = 3e^{4t} + 2e^{-t}$
 
 ---
 
-## 五、 练习库强化
+## 七、 练习库强化
 
 ### 练习 1：全微分方程判别与求解
 求解方程 $(3x^2 + 6xy^2)dx + (6x^2y + 4y^3)dy = 0$。
@@ -132,12 +165,9 @@ $x(t) = 2e^{4t} - 2e^{-t}, y(t) = 3e^{4t} + 2e^{-t}$
 <summary>点击查看解析与答案</summary>
 
 **解析**：
-$M = 3x^2 + 6xy^2, N = 6x^2y + 4y^3$。
-$\frac{\partial M}{\partial y} = 12xy, \frac{\partial N}{\partial x} = 12xy$。
-是全微分方程。
-积分：$u = \int (3x^2 + 6xy^2) dx = x^3 + 3x^2y^2 + \phi(y)$。
-对 $y$ 求导：$\frac{\partial u}{\partial y} = 6x^2y + \phi'(y) = N = 6x^2y + 4y^3$。
-所以 $\phi'(y) = 4y^3 \implies \phi(y) = y^4$。
+$M = 3x^2 + 6xy^2, N = 6x^2y + 4y^3 \implies \frac{\partial M}{\partial y} = 12xy = \frac{\partial N}{\partial x}$。
+积分 $u = \int M dx = x^3 + 3x^2y^2 + \phi(y)$。
+$\frac{\partial u}{\partial y} = 6x^2y + \phi'(y) = N = 6x^2y + 4y^3 \implies \phi(y) = y^4$。
 **答案**：$x^3 + 3x^2y^2 + y^4 = C$。
 </details>
 
@@ -148,37 +178,36 @@ $\frac{\partial M}{\partial y} = 12xy, \frac{\partial N}{\partial x} = 12xy$。
 <summary>点击查看解析与答案</summary>
 
 **解析**：
-特征方程：$r^4 - 2r^2 + 1 = 0 \implies (r^2 - 1)^2 = 0 \implies (r-1)^2(r+1)^2 = 0$。
-特征根为 $r_1 = r_2 = 1$（二重根），$r_3 = r_4 = -1$（二重根）。
-对应解：$e^x, xe^x, e^{-x}, xe^{-x}$。
+特征方程：$r^4 - 2r^2 + 1 = (r^2 - 1)^2 = (r-1)^2(r+1)^2 = 0$。
+特征根为 $1, -1$ 均为二重根。
 **答案**：$y = (C_1 + C_2 x) e^x + (C_3 + C_4 x) e^{-x}$。
 </details>
 
-### 练习 3：复数特征值与振荡系统
-求解方程组 $\dot{x} = y, \dot{y} = -4x$。
+### 练习 3：欠阻尼振动求解
+一质量 $m=1$ 的物体，弹簧常数 $k=5$，阻尼系数 $c=2$。初始位移 $x(0)=1$，初速度 $v(0)=0$。求运动方程。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 **解析**：
-矩阵 $A = \begin{pmatrix} 0 & 1 \\ -4 & 0 \end{pmatrix}$。特征方程 $\lambda^2 + 4 = 0 \implies \lambda = \pm 2i$。
-特征向量（对应 $2i$）：$\begin{pmatrix} -2i & 1 \\ -4 & -2i \end{pmatrix} \begin{pmatrix} v_1 \\ v_2 \end{pmatrix} = 0 \implies v_2 = 2iv_1 \implies \mathbf{v} = \begin{pmatrix} 1 \\ 2i \end{pmatrix}$。
-复数解 $\mathbf{w}(t) = \begin{pmatrix} 1 \\ 2i \end{pmatrix} e^{2it} = \begin{pmatrix} 1 \\ 2i \end{pmatrix} (\cos 2t + i \sin 2t) = \begin{pmatrix} \cos 2t + i \sin 2t \\ -2 \sin 2t + 2i \cos 2t \end{pmatrix}$。
-实部 $\mathbf{y}_1 = \begin{pmatrix} \cos 2t \\ -2 \sin 2t \end{pmatrix}$，虚部 $\mathbf{y}_2 = \begin{pmatrix} \sin 2t \\ 2 \cos 2t \end{pmatrix}$。
-**答案**：$\begin{cases} x(t) = C_1 \cos 2t + C_2 \sin 2t \\ y(t) = -2C_1 \sin 2t + 2C_2 \cos 2t \end{cases}$。
+方程 $\ddot{x} + 2\dot{x} + 5x = 0$。特征方程 $r^2 + 2r + 5 = 0 \implies r = -1 \pm 2i$。
+通解 $x(t) = e^{-t}(A \cos 2t + B \sin 2t)$。
+$x(0)=1 \implies A=1$。
+$v(t) = -e^{-t}(A \cos 2t + B \sin 2t) + e^{-t}(-2A \sin 2t + 2B \cos 2t)$。
+$v(0) = -A + 2B = 0 \implies B = 1/2$。
+**答案**：$x(t) = e^{-t}(\cos 2t + \frac{1}{2} \sin 2t)$。
 </details>
 
-### 练习 4：欧拉方程（变系数高阶）
-求解方程 $x^2 y'' + 3xy' + y = 0$ ($x > 0$)。
+### 练习 4：欧拉方程求解
+求解 $x^2 y'' - 2xy' + 2y = x^3 \ln x$ ($x>0$)。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 **解析**：
-令 $x = e^t$，则 $x \frac{dy}{dx} = D_t y$，$x^2 \frac{d^2y}{dx^2} = D_t(D_t-1)y$。
-原方程化为：$D_t(D_t-1)y + 3D_t y + y = 0 \implies (D_t^2 + 2D_t + 1)y = 0$。
-特征方程 $(r+1)^2 = 0 \implies r = -1$（二重根）。
-解为 $y = (C_1 + C_2 t) e^{-t}$。
-回代 $t = \ln x$，$e^{-t} = 1/x$：
-**答案**：$y = \frac{C_1 + C_2 \ln x}{x}$。
+令 $x=e^t$，原方程化为 $[D(D-1) - 2D + 2]y = e^{3t} \cdot t \implies (D^2 - 3D + 2)y = t e^{3t}$。
+1. 齐次通解：$r^2-3r+2=0 \implies r_1=1, r_2=2 \implies y_h = C_1 e^t + C_2 e^{2t} = C_1 x + C_2 x^2$。
+2. 非齐次特解：设 $y_p = (At+B)e^{3t}$。代入得 $y_p = (\frac{1}{2}t - \frac{3}{4})e^{3t}$。
+3. 回代 $x$：$y_p = (\frac{1}{2}\ln x - \frac{3}{4})x^3$。
+**答案**：$y = C_1 x + C_2 x^2 + \frac{1}{4}x^3(2\ln x - 3)$。
 </details>
