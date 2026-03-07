@@ -9,121 +9,132 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 
 隐函数定理是数学分析中最深刻的定理之一。它描述了方程在局部能否解出变量的条件，并将多元微分学的应用从显式函数推广到由方程定义的隐式图形。
 
+<KnowledgeCard type="tip" title="核心洞察">
+隐函数定理的本质是将**非线性方程的局部可解性**转化为其**线性逼近（导数/雅可比矩阵）的可逆性**。只要雅可比行列式非零，我们就能在局部“切开”复杂的约束面，将其视为一个标准的显式函数图像。
+</KnowledgeCard>
+
 ## 一、 隐函数定理 (Implicit Function Theorem)
 
 ### 1. 单个方程的情形
 **定理**：设 $F(x, y)$ 在点 $P_0(x_0, y_0)$ 的邻域内连续可微，且：
 1. $F(x_0, y_0) = 0$
 2. $F_y(x_0, y_0) \neq 0$
-则在 $x_0$ 附近唯一确定连续可微函数 $y = f(x)$，且 $\frac{dy}{dx} = -\frac{F_x}{F_y}$。
+则在 $x_0$ 附近唯一确定连续可微函数 $y = f(x)$，其导数为 $\frac{dy}{dx} = -\frac{F_x}{F_y}$。
 
-### 2. 方程组与雅可比行列式
-对于方程组 $F(\mathbf{x}, \mathbf{y}) = 0, G(\mathbf{x}, \mathbf{y}) = 0$，其隐函数存在的关键是雅可比行列式 $\frac{\partial(F, G)}{\partial(u, v)} \neq 0$。
+### 2. 多维隐函数定理 (General Case)
+**定理**：设 $\mathbf{F}: D \subset \mathbb{R}^n \times \mathbb{R}^m \to \mathbb{R}^m$ 是 $C^1$ 映射。若在 $P_0(\mathbf{x}_0, \mathbf{y}_0)$ 满足：
+1. $\mathbf{F}(\mathbf{x}_0, \mathbf{y}_0) = \mathbf{0}$
+2. **雅可比行列式 (Jacobian)** $\det \frac{\partial \mathbf{F}}{\partial \mathbf{y}} = \det \begin{pmatrix} \frac{\partial F_1}{\partial y_1} & \dots & \frac{\partial F_1}{\partial y_m} \\ \vdots & \ddots & \vdots \\ \frac{\partial F_m}{\partial y_1} & \dots & \frac{\partial F_m}{\partial y_m} \end{pmatrix} \neq 0$
+则在 $\mathbf{x}_0$ 的某个邻域内唯一确定 $C^1$ 映射 $\mathbf{y} = \mathbf{f}(\mathbf{x})$，且其导数阵为：
+$$D\mathbf{f}(\mathbf{x}) = -[D_{\mathbf{y}}\mathbf{F}(\mathbf{x}, \mathbf{y})]^{-1} [D_{\mathbf{x}}\mathbf{F}(\mathbf{x}, \mathbf{y})]$$
 
----
-
-## 二、 逆函数定理 (Inverse Function Theorem)
-
-若映射 $\mathbf{f}: \mathbb{R}^n \to \mathbb{R}^n$ 在 $\mathbf{x}_0$ 处连续可微且 $J_{\mathbf{f}}(\mathbf{x}_0) \neq 0$，则 $\mathbf{f}$ 在 $\mathbf{x}_0$ 附近存在局部逆函数。
-
----
-
-## 三、 多元函数的极值理论 (Extremum Theory)
-
-多元函数的极值问题是微分学最重要的应用之一。根据是否有边界约束，分为**无条件极值**与**条件极值**。
-
-### 1. 无条件极值的必要条件
-**定理（费马引理的推广）**：设 $f(\mathbf{x})$ 在点 $P_0$ 处取得极值，且在该点处偏导数存在，则 $P_0$ 必为**驻点 (Stationary Point)**，即：
-$$\nabla f(P_0) = \mathbf{0} \iff \frac{\partial f}{\partial x_1} = \frac{\partial f}{\partial x_2} = \dots = \frac{\partial f}{\partial x_n} = 0$$
-
-### 2. 判别极值的充分条件：Hessian 矩阵
-驻点不一定是极值点（如鞍点）。判定驻点性质需考察二阶微分，即 **Hessian 矩阵**：
-$$H(f) = \begin{pmatrix} 
-f_{x_1 x_1} & f_{x_1 x_2} & \dots & f_{x_1 x_n} \\
-f_{x_2 x_1} & f_{x_2 x_2} & \dots & f_{x_2 x_n} \\
-\vdots & \vdots & \ddots & \vdots \\
-f_{x_n x_1} & f_{x_n x_2} & \dots & f_{x_n x_n}
-\end{pmatrix}$$
-
-根据 Taylor 展开：$f(P_0 + \mathbf{h}) \approx f(P_0) + \frac{1}{2} \mathbf{h}^T H(P_0) \mathbf{h}$。极值性质取决于二次型 $\mathbf{h}^T H \mathbf{h}$ 的正定性：
-
-| Hessian 矩阵特征 | 二次型性质 | 驻点性质 |
-| :--- | :--- | :--- |
-| 所有特征值 $\lambda_i > 0$ | **正定** | 极小值点 |
-| 所有特征值 $\lambda_i < 0$ | **负定** | 极大值点 |
-| 特征值有正有负 | **不定** | 鞍点 (Saddle Point) |
-| 存在 $\lambda_i = 0$ 且其余同号 | **半正定/半负定** | 无法判定（需更高阶项） |
-
-**Sylvester 判别法（顺序主子式）**：
-- **正定**：所有顺序主子式 $D_k > 0$。
-- **负定**：顺序主子式符号正负相间，即 $(-1)^k D_k > 0$（$D_1<0, D_2>0, D_3<0 \dots$）。
+#### 存在性证明要点
+证明通常基于 **Banach 压缩映射原理 (Contraction Mapping Principle)**：
+1. **构造映射**：定义辅助映射 $\mathbf{G}(\mathbf{x}, \mathbf{y}) = \mathbf{y} - [D_{\mathbf{y}}\mathbf{F}(\mathbf{x}_0, \mathbf{y}_0)]^{-1} \mathbf{F}(\mathbf{x}, \mathbf{y})$。
+2. **一致压缩性**：利用 $C^1$ 连续性，证明在 $P_0$ 的闭球邻域内，$D_{\mathbf{y}}\mathbf{G}(\mathbf{x}_0, \mathbf{y}_0) = \mathbf{0}$。由微分中值定理，存在足够小的邻域使得 $\mathbf{G}$ 是关于 $\mathbf{y}$ 的一致压缩映射。
+3. **不动点存在**：由压缩映射原理，对于固定的 $\mathbf{x}$，存在唯一 $\mathbf{y}$ 满足 $\mathbf{G}(\mathbf{x}, \mathbf{y}) = \mathbf{y}$。
+4. **连续性与可微性**：通过隐式增量 $\Delta \mathbf{y}$ 与 $\Delta \mathbf{x}$ 的关系，利用矩阵求逆的连续性证明 $\mathbf{f}$ 的 $C^1$ 性质。
 
 ---
 
-## 四、 Lagrange 乘数法 (Lagrange Multipliers)
+## 二、 逆映射定理 (Inverse Mapping Theorem)
 
-### 1. 单约束情形
-求 $f(\mathbf{x})$ 在约束 $g(\mathbf{x}) = 0$ 下的极值。引入辅助函数：
-$$L(\mathbf{x}, \lambda) = f(\mathbf{x}) + \lambda g(\mathbf{x})$$
-解方程组 $\nabla L = \mathbf{0}$ 可得极值候选点。
+### 1. 定理表述
+设 $\mathbf{f}: U \subset \mathbb{R}^n \to \mathbb{R}^n$ 是 $C^1$ 映射。若 $\mathbf{x}_0 \in U$ 且 $\det D\mathbf{f}(\mathbf{x}_0) \neq 0$，则：
+1. 存在 $\mathbf{x}_0$ 的邻域 $V$ 和 $\mathbf{y}_0 = \mathbf{f}(\mathbf{x}_0)$ 的邻域 $W$，使得 $\mathbf{f}: V \to W$ 是双射（同胚）。
+2. 其逆映射 $\mathbf{g} = \mathbf{f}^{-1}$ 在 $W$ 上也是 $C^1$ 的，且：
+$$Dg(\mathbf{y}) = [D\mathbf{f}(\mathbf{x})]^{-1}, \quad \mathbf{y} = \mathbf{f}(\mathbf{x})$$
 
-### 2. 多约束情形 (Multiple Constraints)
-若有多个约束 $g_1(\mathbf{x})=0, g_2(\mathbf{x})=0, \dots, g_m(\mathbf{x})=0$ ($m < n$)，引入 $m$ 个乘数 $\lambda_1, \dots, \lambda_m$：
-$$L(\mathbf{x}, \lambda_1, \dots, \lambda_m) = f(\mathbf{x}) + \sum_{i=1}^m \lambda_i g_i(\mathbf{x})$$
-**几何本质**：目标函数 $f$ 的梯度 $\nabla f$ 必须落在约束函数梯度 $\{\nabla g_i\}$ 所张成的法空间内。即 $\nabla f$ 在约束流形的切空间上投影为零。
+### 2. 在坐标变换中的几何意义
+逆映射定理保证了坐标变换的**局部有效性**：
+- **局部微分同胚**：雅可比行列式非零意味着映射在局部是“良态”的，不发生维度坍缩（如平面折叠成线）。
+- **雅可比行列式与测度**：在 $n$ 维空间中，$|J|$ 刻画了局部区域在变换后的体积膨胀率。例如在极坐标变换中，$dx dy = r dr d\theta$，其中的 $r$ 正是雅可比行列式。
 
-### 3. 深度例题：多约束极值计算
-**题目**：求原点到曲线 $\begin{cases} x+y+z=1 \\ x^2+y^2=1 \end{cases}$ 的最短距离。
+---
 
+## 三、 函数的相关性判定 (Functional Dependence)
+
+### 1. 理论基础
+设 $m$ 个函数 $u_1, u_2, \dots, u_m$ 都是变量 $x_1, \dots, x_n$ 的函数。
+- **函数相关**：若存在不全为零的函数 $\Phi$，使得 $\Phi(u_1, u_2, \dots, u_m) \equiv 0$。
+- **判定准则**：若雅可比矩阵 $\frac{\partial(u_1, \dots, u_m)}{\partial(x_1, \dots, x_n)}$ 的秩 $r < m$，则这些函数在局部是相关的。
+
+### 2. 复杂函数相关性判定例题 (5道)
+
+**例 1：基本代数相关性**
+判定 $u = x+y+z, v = xy+yz+zx, w = x^2+y^2+z^2$ 的相关性。
 <details>
 <summary>点击查看解析</summary>
+计算雅可比矩阵：
+$$J = \begin{pmatrix} 1 & 1 & 1 \\ y+z & x+z & x+y \\ 2x & 2y & 2z \end{pmatrix}$$
+观察到 $u^2 = (x+y+z)^2 = x^2+y^2+z^2 + 2(xy+yz+zx) = w + 2v$。
+故存在关系 $\Phi(u, v, w) = u^2 - 2v - w = 0$。
+**结论**：函数相关。雅可比行列式 $\det J \equiv 0$。
+</details>
 
-目标函数（距离平方）：$f(x, y, z) = x^2 + y^2 + z^2$。
-约束条件：$g_1 = x+y+z-1=0$，$g_2 = x^2+y^2-1=0$。
-构造 Lagrangian：
-$$L = x^2+y^2+z^2 + \lambda_1(x+y+z-1) + \lambda_2(x^2+y^2-1)$$
-求偏导：
-1. $L_x = 2x + \lambda_1 + 2\lambda_2 x = 0$
-2. $L_y = 2y + \lambda_1 + 2\lambda_2 y = 0$
-3. $L_z = 2z + \lambda_1 = 0$
-4. $g_1 = 0, g_2 = 0$
+**例 2：分式与乘积**
+判定 $u = \frac{x}{y}, v = \frac{y}{z}, w = \frac{x}{z}$ 的相关性。
+<details>
+<summary>点击查看解析</summary>
+显然有 $w = \frac{x}{y} \cdot \frac{y}{z} = u \cdot v$。
+构造函数 $\Phi(u, v, w) = uv - w = 0$。
+**结论**：函数相关。其雅可比矩阵的秩为 2（小于函数个数 3）。
+</details>
 
-由 (1)(2) 得：$(2+2\lambda_2)(x-y) = 0$。
-**Case 1**: $x=y$。代入 $g_2$ 得 $2x^2=1 \Rightarrow x=y=\pm \frac{\sqrt{2}}{2}$。
-代入 $g_1$ 得 $z = 1 \mp \sqrt{2}$。
-**Case 2**: $2+2\lambda_2=0 \Rightarrow \lambda_2=-1$。代入 (1) 得 $\lambda_1=0$。由 (3) 得 $z=0$。
-代入 $g_1$ 得 $x+y=1$，联立 $g_2$ 得 $x^2+(1-x)^2=1 \Rightarrow 2x^2-2x=0 \Rightarrow x=0, 1$。
-得到点 $(0, 1, 0)$ 和 $(1, 0, 0)$。
+**例 3：超越函数组合**
+判定 $u = \ln x - \ln y, v = \frac{x^2+y^2}{xy}, w = \frac{x+y}{x-y}$ 的相关性。
+<details>
+<summary>点击查看解析</summary>
+注意到：
+1. $u = \ln(x/y)$，说明 $u$ 仅取决于 $x/y$。
+2. $v = \frac{x}{y} + \frac{y}{x}$，说明 $v$ 也仅取决于 $x/y$。
+3. $w = \frac{x/y + 1}{x/y - 1}$，说明 $w$ 同样仅取决于 $x/y$。
+因为三个函数都由同一个中间变量 $t = x/y$ 确定，它们之间必然存在两个独立的约束关系。
+**结论**：函数相关，秩为 1。
+</details>
 
-计算各点到原点距离：
-- $P_1, P_2: (\pm \frac{\sqrt{2}}{2}, \pm \frac{\sqrt{2}}{2}, 1 \mp \sqrt{2}) \Rightarrow d^2 = 1 + (1 \mp \sqrt{2})^2 = 4 \mp 2\sqrt{2}$。
-- $P_3, P_4: (0, 1, 0), (1, 0, 0) \Rightarrow d^2 = 1$。
-比较得最短距离为 $1$（此时点为 $(0, 1, 0)$ 或 $(1, 0, 0)$）。
+**例 4：三元复杂结构**
+判定 $u = x+y+z, v = x^2+y^2+z^2, w = x^3+y^3+z^3 - 3xyz$ 的相关性。
+<details>
+<summary>点击查看解析</summary>
+利用恒等式：$x^3+y^3+z^3-3xyz = (x+y+z)(x^2+y^2+z^2 - (xy+yz+zx))$。
+由例 1 知 $xy+yz+zx = \frac{1}{2}(u^2 - v)$。
+代入得：$w = u(v - \frac{1}{2}(u^2 - v)) = \frac{3}{2}uv - \frac{1}{2}u^3$。
+**结论**：函数相关。
+</details>
+
+**例 5：指数与对数混合**
+判定 $u = e^{x-y}, v = e^{y-z}, w = e^{x-z}$ 的相关性。
+<details>
+<summary>点击查看解析</summary>
+计算乘积：$u \cdot v = e^{x-y} \cdot e^{y-z} = e^{x-z} = w$。
+关系式：$uv - w = 0$。
+**结论**：函数相关。
 </details>
 
 ---
 
-## 五、 物理最优化应用专题：Fermat 原理与折射定律
+## 四、 多元函数的极值理论 (Extremum Theory)
 
-在物理学中，许多规律都可以表述为某个量的极值（变分原理）。
+### 1. 无条件极值的判定：Hessian 矩阵
+对于驻点 $\nabla f = \mathbf{0}$，极值性质取决于 **Hessian 矩阵** $H(P_0)$：
 
-### 1. Fermat 原理 (Fermat's Principle)
-光在两点间传播的路径，是使所需时间取平稳值（通常是极小值）的路径。
+| Hessian 矩阵特征 | 驻点性质 |
+| :--- | :--- |
+| **正定** ($\lambda_i > 0$) | 极小值点 |
+| **负定** ($\lambda_i < 0$) | 极大值点 |
+| **不定** (特征值正负混合) | 鞍点 (Saddle Point) |
 
-### 2. 推导 Snell 折射定律
-设光从介质 1（折射率 $n_1$, 速度 $v_1$）进入介质 2（折射率 $n_2$, 速度 $v_2$）。
-入射点 $A(-a, h_1)$，折射点 $B(b, -h_2)$，交界面为 $x$ 轴。设折射点为 $(x, 0)$。
-传播时间 $T(x) = \frac{\sqrt{(x+a)^2 + h_1^2}}{v_1} + \frac{\sqrt{(b-x)^2 + h_2^2}}{v_2}$。
-求极值：$\frac{dT}{dx} = \frac{x+a}{v_1 \sqrt{(x+a)^2 + h_1^2}} - \frac{b-x}{v_2 \sqrt{(b-x)^2 + h_2^2}} = 0$。
-注意到 $\frac{x+a}{\sqrt{\dots}} = \sin \theta_1$，$\frac{b-x}{\sqrt{\dots}} = \sin \theta_2$。
-则有 $\frac{\sin \theta_1}{v_1} = \frac{\sin \theta_2}{v_2}$。
-由于 $n = c/v$，得：$n_1 \sin \theta_1 = n_2 \sin \theta_2$。
+### 2. Lagrange 乘数法 (Lagrange Multipliers)
+求 $f(\mathbf{x})$ 在约束 $\mathbf{g}(\mathbf{x}) = \mathbf{0}$ 下的极值。
+构造 $L(\mathbf{x}, \lambda) = f(\mathbf{x}) + \sum \lambda_i g_i(\mathbf{x})$。
+**几何本质**：目标函数的梯度 $\nabla f$ 必须落在约束面法向量张成的空间内。
 
 ---
 
-## 六、 深度实战解析
+## 五、 深度实战解析
 
-### 深度例题 2：隐函数方程组求导
+### 深度例题 3：隐函数方程组求导
 设 $u+v=x+y$，$xu+yv=1$，求 $\frac{\partial u}{\partial x}$。
 
 <details>
@@ -152,4 +163,4 @@ $$u_x = \frac{\begin{vmatrix} 1 & 1 \\ -u & y \end{vmatrix}}{y - x} = \frac{y + 
 />
 
 ---
-*编者注：隐函数定理是连接几何与代数的桥梁。通过约束条件的局部解出，我们将复杂的条件极值问题转化为了熟悉的一元微积分问题。*
+*编者注：隐函数定理是连接几何与代数的桥梁。通过雅可比矩阵，我们能够刻画非线性映射的局部线性本质，这是理解微分流形与坐标变换的核心。*
