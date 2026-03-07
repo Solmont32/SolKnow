@@ -253,7 +253,16 @@ const sidebars: SidebarsConfig = {
             'cs/cpp/modern-cpp',
           ],
         },
-        {type: 'doc', id: 'cs/python/index', label: 'Python'},
+        {
+          type: 'category',
+          label: 'Python',
+          link: {type: 'doc', id: 'cs/python/index'},
+          items: [
+            'cs/python/basics',
+            'cs/python/functions-modules',
+            'cs/python/advanced',
+          ],
+        },
         {type: 'doc', id: 'cs/organization/index', label: '计算机组织与结构'},
         {type: 'doc', id: 'cs/os/index', label: '操作系统'},
         {type: 'doc', id: 'cs/ds/index', label: '数据结构'},
