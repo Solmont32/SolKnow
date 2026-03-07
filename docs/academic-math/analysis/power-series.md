@@ -1,0 +1,122 @@
+---
+title: 幂级数 (Power Series)
+---
+
+import KnowledgeCard from '@site/src/components/KnowledgeCard';
+
+# 第十四章 幂级数 (Power Series)
+
+幂级数是函数项级数中最重要、性质最完整的一类。它不仅是研究解析函数的工具，也是将复杂函数转化为代数多项式处理的核心手段。
+
+---
+
+## 1. 收敛半径与收敛域 (Convergence)
+
+形如 $\sum_{n=0}^\infty a_n (x - x_0)^n$ 的级数称为 **幂级数**。通常取 $x_0 = 0$ 进行讨论。
+
+### 1.1 Cauchy-Hadamard 定理
+对于任意幂级数 $\sum a_n x^n$，其收敛性由唯一的 **收敛半径 $R$** 决定：
+- 若 $|x| < R$，级数绝对收敛；
+- 若 $|x| > R$，级数发散；
+- 若 $|x| = R$，敛散性不确定，需单独分析。
+
+<KnowledgeCard type="info" title="收敛半径计算公式">
+1. **Cauchy-Hadamard 公式**：
+   $$\frac{1}{R} = \limsup_{n \to \infty} \sqrt[n]{|a_n|}$$
+2. **比值判别法 (常用)**：
+   $$R = \lim_{n \to \infty} \left| \frac{a_n}{a_{n+1}} \right| \quad (\text{前提是极限存在或为 } \infty)$$
+</KnowledgeCard>
+
+### 1.2 缺项与特殊幂级数
+对于缺项幂级数（如 $\sum a_n x^{2n}$）或复合形式 $\sum a_n [g(x)]^n$，建议直接使用 **根值判别法或比值判别法** 对整体项 $u_n(x)$ 进行敛散性判定，而非死套 $R$ 的公式。
+
+---
+
+## 2. 幂级数的一致收敛性与分析性质
+
+### 2.1 Abel 第一定理
+**定理**：若幂级数 $\sum a_n x^n$ 在 $x = x_1 \neq 0$ 处收敛，则对于满足 $|x| < |x_1|$ 的所有 $x$，该级数绝对收敛。
+> **推论**：幂级数在收敛区间 $( -R, R )$ 内的任何闭子区间 $[a, b] \subset (-R, R)$ 上均 **一致收敛**。
+
+### 2.2 和函数的解析性质
+在收敛区间 $(-R, R)$ 内，和函数 $S(x) = \sum_{n=0}^\infty a_n x^n$ 具有极好的性质：
+1. **连续性**：$S(x)$ 在 $(-R, R)$ 内连续。
+2. **逐项求导**：$S'(x) = \sum_{n=1}^\infty n a_n x^{n-1}$。求导后的级数与原级数具有相同的收敛半径。
+3. **逐项积分**：$\int_0^x S(t) dt = \sum_{n=0}^\infty \frac{a_n}{n+1} x^{n+1}$。积分后的级数与原级数具有相同的收敛半径。
+
+<KnowledgeCard type="warning" title="端点的一致收敛性：Abel 第二定理">
+若级数 $\sum a_n x^n$ 在端点 $x=R$ 处收敛，则级数在 $[0, R]$ 上一致收敛，且和函数 $S(x)$ 在 $x=R$ 处 **左连续**：
+$$\lim_{x \to R^-} S(x) = \sum_{n=0}^\infty a_n R^n$$
+</KnowledgeCard>
+
+---
+
+## 3. 函数的幂级数展开 (Expansion)
+
+### 3.1 Taylor 级数与 Maclaurin 级数
+若 $f(x)$ 在 $x_0$ 处具有各阶导数，则其 Taylor 级数为：
+$$f(x) \sim \sum_{n=0}^\infty \frac{f^{(n)}(x_0)}{n!} (x - x_0)^n$$
+**收敛性注意**：Taylor 级数收敛并不一定收敛于 $f(x)$。只有当余项 $R_n(x) \to 0$ 时，展开式才成立。
+
+### 3.2 常用 Maclaurin 展开表 (核心必背)
+
+| 函数 $f(x)$ | 展开式 | 收敛区间 |
+| :--- | :--- | :--- |
+| $\frac{1}{1-x}$ | $\sum_{n=0}^\infty x^n = 1 + x + x^2 + \dots$ | $(-1, 1)$ |
+| $e^x$ | $\sum_{n=0}^\infty \frac{x^n}{n!} = 1 + x + \frac{x^2}{2!} + \dots$ | $(-\infty, \infty)$ |
+| $\sin x$ | $\sum_{n=0}^\infty (-1)^n \frac{x^{2n+1}}{(2n+1)!} = x - \frac{x^3}{3!} + \dots$ | $(-\infty, \infty)$ |
+| $\cos x$ | $\sum_{n=0}^\infty (-1)^n \frac{x^{2n}}{(2n)!} = 1 - \frac{x^2}{2!} + \dots$ | $(-\infty, \infty)$ |
+| $\ln(1+x)$ | $\sum_{n=1}^\infty (-1)^{n-1} \frac{x^n}{n} = x - \frac{x^2}{2} + \frac{x^3}{3} - \dots$ | $(-1, 1]$ |
+| $(1+x)^\alpha$ | $\sum_{n=0}^\infty \binom{\alpha}{n} x^n = 1 + \alpha x + \frac{\alpha(\alpha-1)}{2!} x^2 + \dots$ | $(-1, 1)$ |
+
+### 3.3 高阶展开技巧
+1. **代换法**：利用已知展开式。如展开 $e^{-x^2}$。
+2. **代数变形**：如 $\frac{1}{x^2+3x+2} = \frac{1}{x+1} - \frac{1}{x+2}$。
+3. **逐项导积法**：
+   - 展开 $\arctan x$：先导得 $\frac{1}{1+x^2} = \sum (-1)^n x^{2n}$，再积分。
+   - 展开 $\frac{1}{(1-x)^2}$：对 $\frac{1}{1-x}$ 求导。
+4. **待定系数法**：用于处理复合函数或除法运算。
+
+---
+
+## 4. 深度例题：综合应用
+
+### 例题 1：利用 Abel 第二定理求级数和
+求级数 $1 - \frac{1}{2} + \frac{1}{3} - \dots = \sum_{n=1}^\infty \frac{(-1)^{n-1}}{n}$ 的值。
+**解析**：考虑 $f(x) = \sum_{n=1}^\infty \frac{(-1)^{n-1} x^n}{n}$。
+在 $(-1, 1)$ 内，$f'(x) = \sum_{n=1}^\infty (-1)^{n-1} x^{n-1} = \frac{1}{1+x}$。
+积分得 $f(x) = \ln(1+x) + C$，由 $f(0)=0$ 知 $C=0$。
+由于原级数在 $x=1$ 处收敛（Leibniz），根据 Abel 第二定理：
+$\sum_{n=1}^\infty \frac{(-1)^{n-1}}{n} = f(1) = \lim_{x \to 1^-} \ln(1+x) = \ln 2$。
+
+### 例题 2：高阶导数的计算技巧
+求 $f(x) = \arctan x$ 在 $x=0$ 处的 $n$ 阶导数 $f^{(n)}(0)$。
+**解析**：利用 Maclaurin 展开式：
+$\arctan x = \sum_{n=0}^\infty (-1)^n \frac{x^{2n+1}}{2n+1}$
+对比 Taylor 展开通项 $\frac{f^{(k)}(0)}{k!} x^k$：
+- 当 $k = 2n$ (偶数) 时，$f^{(k)}(0) = 0$。
+- 当 $k = 2n+1$ (奇数) 时，$\frac{f^{(2n+1)}(0)}{(2n+1)!} = \frac{(-1)^n}{2n+1} \implies f^{(2n+1)}(0) = (-1)^n (2n)!$。
+
+---
+
+## 5. 配套练习
+
+1. **半径计算**：求 $\sum_{n=1}^\infty \frac{n!}{n^n} x^n$ 的收敛半径。
+2. **端点讨论**：讨论 $\sum_{n=1}^\infty \frac{2^n + 3^n}{n} x^n$ 的收敛域。
+3. **级数求和**：求 $\sum_{n=1}^\infty \frac{x^n}{n(n+1)}$ 的和函数。
+4. **函数展开**：将 $f(x) = \ln(x^2 + 3x + 2)$ 展开为 $x$ 的幂级数。
+5. **极限综合**：利用 Taylor 展开求 $\lim_{x \to 0} \frac{\cos x - e^{-x^2/2}}{x^4}$。
+
+---
+
+<div className="bilibili-embed-inner">
+  <iframe 
+    src="//player.bilibili.com/player.html?aid=710813214&bvid=BV1BQ4y1P7vE&cid=210323924&page=2" 
+    scrolling="no" 
+    border="0" 
+    frameborder="no" 
+    framespacing="0" 
+    allowfullscreen="true"
+    loading="lazy">
+  </iframe>
+</div>

@@ -175,7 +175,7 @@ const sidebars: SidebarsConfig = {
                   items: [
                     { type: 'doc', id: 'academic-math/analysis/series', label: '第十二章 数项级数' },
                     { type: 'doc', id: 'academic-math/analysis/function-sequences', label: '第十三章 函数列与函数项级数' },
-                    { type: 'doc', id: 'academic-math/analysis/series', label: '第十四章 幂级数' },
+                    { type: 'doc', id: 'academic-math/analysis/power-series', label: '第十四章 幂级数' },
                     { type: 'doc', id: 'academic-math/analysis/fourier-series', label: '第十五章 傅里叶级数' },
                     { type: 'doc', id: 'academic-math/analysis/multivariable-limits', label: '第十六章 多元函数的极限与连续' },
                     { type: 'doc', id: 'academic-math/analysis/multivariable-differentiation', label: '第十七章 多元函数微分学' },

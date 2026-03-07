@@ -1,10 +1,10 @@
 ---
-title: 函数序列与函数项级数 (Function Sequences & Series)
+title: 第十三章 函数序列与函数项级数 (Function Sequences & Series)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
-# 函数序列与函数项级数
+# 第十三章 函数序列与函数项级数 (Function Sequences & Series)
 
 在数学分析中，研究函数序列与函数项级数的收敛性不仅是极限理论的自然延伸，更是构造复杂函数（如 Fourier 级数、特殊函数）的基石。其中，**一致收敛性 (Uniform Convergence)** 是确保极限函数继承原序列分析性质（连续、可积、可微）的关键。
 
