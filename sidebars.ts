@@ -8,7 +8,7 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: '基础算法',
       link: {type: 'doc', id: 'basic/index'},
-      items: ['basic/io', 'basic/complexity', 'basic/binary-search', 'basic/sorting'],
+      items: ['basic/io', 'basic/complexity', 'basic/binary-search', 'basic/sorting', 'basic/greedy', 'basic/two-pointers'],
     },
     {
       type: 'category',
