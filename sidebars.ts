@@ -143,29 +143,58 @@ const sidebars: SidebarsConfig = {
           type: 'category',
           collapsible: true,
           collapsed: true,
-          label: '大学数学',
+          label: '大学数学 (University Math)',
           items: [
             { 
               type: 'category', 
               collapsible: true,
               collapsed: true,
-              label: '数学分析', 
+              label: '数学分析 (Mathematical Analysis)', 
               link: {type: 'doc', id: 'academic-math/analysis/index'}, 
               items: [
-                'academic-math/analysis/real-numbers-and-functions',
-                'academic-math/analysis/limits', 
-                'academic-math/analysis/function-limits',
-                'academic-math/analysis/continuity',
-                'academic-math/analysis/topology',
-                'academic-math/analysis/derivatives', 
-                'academic-math/analysis/indefinite-integrals',
-                'academic-math/analysis/integrals',
-                'academic-math/analysis/riemann-stieltjes-integral',
-                'academic-math/analysis/definite-integral-applications',
-                'academic-math/analysis/series',
-                'academic-math/analysis/fourier-series',
-                'academic-math/analysis/function-sequences',
-                'academic-math/analysis/differential-equations',
+                {
+                  type: 'category',
+                  label: '上册 (Volume 1)',
+                  items: [
+                    { type: 'doc', id: 'academic-math/analysis/real-numbers-and-functions', label: '第一章 实数集与函数' },
+                    { type: 'doc', id: 'academic-math/analysis/limits', label: '第二章 数列极限' },
+                    { type: 'doc', id: 'academic-math/analysis/function-limits', label: '第三章 函数极限' },
+                    { type: 'doc', id: 'academic-math/analysis/continuity', label: '第四章 函数的连续性' },
+                    { type: 'doc', id: 'academic-math/analysis/derivatives', label: '第五章 导数与微分' },
+                    { type: 'doc', id: 'academic-math/analysis/derivatives', label: '第六章 微分中值定理及其应用' },
+                    { type: 'doc', id: 'academic-math/analysis/topology', label: '第七章 实数的完备性' },
+                    { type: 'doc', id: 'academic-math/analysis/indefinite-integrals', label: '第八章 不定积分' },
+                    { type: 'doc', id: 'academic-math/analysis/integrals', label: '第九章 定积分' },
+                    { type: 'doc', id: 'academic-math/analysis/definite-integral-applications', label: '第十章 定积分的应用' },
+                    { type: 'doc', id: 'academic-math/analysis/integrals', label: '第十一章 反常积分' },
+                  ]
+                },
+                {
+                  type: 'category',
+                  label: '下册 (Volume 2)',
+                  items: [
+                    { type: 'doc', id: 'academic-math/analysis/series', label: '第十二章 数项级数' },
+                    { type: 'doc', id: 'academic-math/analysis/function-sequences', label: '第十三章 函数列与函数项级数' },
+                    { type: 'doc', id: 'academic-math/analysis/series', label: '第十四章 幂级数' },
+                    { type: 'doc', id: 'academic-math/analysis/fourier-series', label: '第十五章 傅里叶级数' },
+                    { type: 'doc', id: 'academic-math/analysis/multivariable-derivatives', label: '第十六章 多元函数的极限与连续' },
+                    { type: 'doc', id: 'academic-math/analysis/multivariable-derivatives', label: '第十七章 多元函数微分学' },
+                    { type: 'doc', id: 'academic-math/analysis/multivariable-derivatives', label: '第十八章 隐函数定理及其应用' },
+                    { type: 'doc', id: 'academic-math/analysis/parametric-integrals', label: '第十九章 含参量积分' },
+                    { type: 'doc', id: 'academic-math/analysis/vector-calculus', label: '第二十章 曲线积分' },
+                    { type: 'doc', id: 'academic-math/analysis/multiple-integrals', label: '第二十一章 重积分' },
+                    { type: 'doc', id: 'academic-math/analysis/vector-calculus', label: '第二十二章 曲面积分' },
+                  ]
+                },
+                {
+                  type: 'category',
+                  label: '专题补充与进阶 (Supplements)',
+                  items: [
+                    'academic-math/analysis/differential-equations',
+                    'academic-math/analysis/riemann-stieltjes-integral',
+                    'academic-math/analysis/infinite-products',
+                  ]
+                }
               ] 
             },
             {
