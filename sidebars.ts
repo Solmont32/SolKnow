@@ -159,6 +159,7 @@ const sidebars: SidebarsConfig = {
                 'academic-math/analysis/derivatives', 
                 'academic-math/analysis/indefinite-integrals',
                 'academic-math/analysis/integrals',
+                'academic-math/analysis/riemann-stieltjes-integral',
                 'academic-math/analysis/definite-integral-applications',
                 'academic-math/analysis/series',
                 'academic-math/analysis/differential-equations',
