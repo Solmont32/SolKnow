@@ -719,3 +719,341 @@ $\kappa = 0.12, \tau = 0.16$。
 $\mathbf{T} = (\frac{1}{3}, \frac{2}{3}, \frac{2}{3}), \mathbf{B} = (\frac{2}{3}, -\frac{2}{3}, \frac{1}{3})$。
 </details>
 
+---
+
+## 练习 44：高斯公式 - 向量场通量计算（高阶）
+计算向量场 $\mathbf{F} = (x^3, y^3, z^3)$ 穿过整个球面 $x^2 + y^2 + z^2 = a^2$ 向外侧的通量 $\Phi$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **应用高斯公式**：
+   $\Phi = \oiint_S \mathbf{F} \cdot d\mathbf{S} = \iiint_\Omega \text{div } \mathbf{F} dV$。
+2. **计算散度**：
+   $\text{div } \mathbf{F} = \frac{\partial (x^3)}{\partial x} + \frac{\partial (y^3)}{\partial y} + \frac{\partial (z^3)}{\partial z} = 3x^2 + 3y^2 + 3z^2 = 3(x^2 + y^2 + z^2)$。
+3. **球坐标变换**：
+   在球坐标下，$x^2 + y^2 + z^2 = r^2$，$dV = r^2 \sin \theta dr d\theta d\phi$。
+   范围：$0 \le r \le a, 0 \le \theta \le \pi, 0 \le \phi \le 2\pi$。
+4. **设置积分**：
+   $\Phi = \int_0^{2\pi} d\phi \int_0^\pi \sin \theta d\theta \int_0^a 3r^2 \cdot r^2 dr$
+   $\Phi = 2\pi \cdot 2 \cdot [ \frac{3}{5}r^5 ]_0^a = 4\pi \cdot \frac{3}{5}a^5 = \frac{12}{5}\pi a^5$。
+
+#### 答案
+$\frac{12}{5}\pi a^5$
+</details>
+
+---
+
+## 练习 45：高斯公式 - 封闭曲面的方向余弦积分
+计算积分 $I = \oiint_S (x^2 \cos \alpha + y^2 \cos \beta + z^2 \cos \gamma) dS$，其中 $S$ 是立方体 $0 \le x, y, z \le a$ 的整个表面，$(\cos \alpha, \cos \beta, \cos \gamma)$ 为其外法向方向余弦。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **转化形式**：
+   $I = \oiint_S (x^2, y^2, z^2) \cdot \mathbf{n} dS = \oiint_S x^2 dy dz + y^2 dz dx + z^2 dx dy$。
+2. **应用高斯公式**：
+   $I = \iiint_\Omega (\frac{\partial x^2}{\partial x} + \frac{\partial y^2}{\partial y} + \frac{\partial z^2}{\partial z}) dV = \iiint_\Omega 2(x + y + z) dV$。
+3. **计算积分**：
+   $I = 2 \int_0^a \int_0^a \int_0^a (x + y + z) dx dy dz$
+   利用对称性：$\iiint x dV = \iiint y dV = \iiint z dV$。
+   $\int_0^a x dx \int_0^a dy \int_0^a dz = \frac{1}{2}a^2 \cdot a \cdot a = \frac{1}{2}a^4$。
+   故 $I = 2 \cdot 3 \cdot \frac{1}{2}a^4 = 3a^4$。
+
+#### 答案
+$3a^4$
+</details>
+
+---
+
+## 练习 46：高斯公式 - 带有奇点的向量场
+设 $\mathbf{F} = \frac{\mathbf{r}}{r^3} = \frac{(x, y, z)}{(x^2+y^2+z^2)^{3/2}}$。证明：对于任何包围原点的光滑封闭曲面 $S$，通量均为 $4\pi$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **散度计算**：
+   在 $r > 0$ 时，$\text{div } \mathbf{F} = \nabla \cdot (\frac{\mathbf{r}}{r^3}) = \frac{\nabla \cdot \mathbf{r}}{r^3} + \mathbf{r} \cdot \nabla(r^{-3}) = \frac{3}{r^3} + \mathbf{r} \cdot (-3r^{-4} \frac{\mathbf{r}}{r}) = \frac{3}{r^3} - \frac{3r^2}{r^5} = 0$。
+2. **利用辅助面**：
+   取足够小的球面 $S_\epsilon$ 包围原点且位于 $S$ 内部。
+   由高斯公式对 $S$ 与 $S_\epsilon$ 围成的区域（散度处处为 0）得：
+   $\oiint_S \mathbf{F} \cdot d\mathbf{S} = \oiint_{S_\epsilon} \mathbf{F} \cdot d\mathbf{S}$。
+3. **计算球面通量**：
+   在 $S_\epsilon$ 上，$\mathbf{n} = \frac{\mathbf{r}}{\epsilon}$，$\mathbf{F} = \frac{\mathbf{r}}{\epsilon^3}$。
+   $\mathbf{F} \cdot \mathbf{n} = \frac{\mathbf{r} \cdot \mathbf{r}}{\epsilon^4} = \frac{\epsilon^2}{\epsilon^4} = \frac{1}{\epsilon^2}$。
+   $\Phi = \oiint_{S_\epsilon} \frac{1}{\epsilon^2} dS = \frac{1}{\epsilon^2} \cdot 4\pi \epsilon^2 = 4\pi$。
+
+#### 答案
+证毕。
+</details>
+
+---
+
+## 练习 47：高斯公式 - 复杂边界区域计算
+计算 $\iint_S x^2 dy dz + y^2 dz dx + z^2 dx dy$，其中 $S$ 是由抛物面 $x^2 + y^2 = z$ 与平面 $z = 1$ 所围成的区域的整个表面（取外侧）。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **应用高斯公式**：
+   $I = \iiint_\Omega 2(x + y + z) dV$。
+2. **利用对称性**：
+   区域 $\Omega: x^2 + y^2 \le z \le 1$ 关于 $xz$ 和 $yz$ 平面对称。
+   故 $\iiint_\Omega x dV = 0$ 且 $\iiint_\Omega y dV = 0$。
+3. **计算剩余部分**：
+   $I = 2 \iiint_\Omega z dV$。
+   采用柱坐标：$0 \le \rho \le 1, 0 \le \phi \le 2\pi, \rho^2 \le z \le 1$。
+   $I = 2 \int_0^{2\pi} d\phi \int_0^1 \rho d\rho \int_{\rho^2}^1 z dz = 4\pi \int_0^1 \rho [\frac{1}{2}z^2]_{\rho^2}^1 d\rho$
+   $I = 2\pi \int_0^1 \rho(1 - \rho^4) d\rho = 2\pi [\frac{1}{2}\rho^2 - \frac{1}{6}\rho^6]_0^1 = 2\pi (\frac{1}{2} - \frac{1}{6}) = \frac{2}{3}\pi$。
+
+#### 答案
+$\frac{2}{3}\pi$
+</details>
+
+---
+
+## 练习 48：高斯公式 - 格林第一恒等式应用
+证明格林第一恒等式：$\iiint_\Omega (u \Delta v + \nabla u \cdot \nabla v) dV = \oiint_S u \frac{\partial v}{\partial n} dS$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **构造向量场**：设 $\mathbf{F} = u \nabla v$。
+2. **计算散度**：
+   $\text{div } \mathbf{F} = \nabla \cdot (u \nabla v) = \nabla u \cdot \nabla v + u (\nabla \cdot \nabla v) = \nabla u \cdot \nabla v + u \Delta v$。
+3. **应用高斯公式**：
+   $\iiint_\Omega \text{div } \mathbf{F} dV = \oiint_S \mathbf{F} \cdot \mathbf{n} dS$。
+4. **代入方向导数**：
+   $\mathbf{F} \cdot \mathbf{n} = (u \nabla v) \cdot \mathbf{n} = u (\nabla v \cdot \mathbf{n}) = u \frac{\partial v}{\partial n}$。
+   代入上式即证得恒等式。
+
+#### 答案
+证毕。
+</details>
+
+---
+
+## 练习 49：斯托克斯公式 - 平面与柱面交线积分
+计算 $I = \oint_C (y-z)dx + (z-x)dy + (x-y)dz$，其中 $C$ 是圆柱面 $x^2 + y^2 = 1$ 与平面 $x+z=1$ 的交线，从 $z$ 轴正向看为逆时针方向。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **计算旋度**：
+   $\mathbf{F} = (y-z, z-x, x-y)$。
+   $\nabla \times \mathbf{F} = \begin{vmatrix} \mathbf{i} & \mathbf{j} & \mathbf{k} \\ \partial_x & \partial_y & \partial_z \\ y-z & z-x & x-y \end{vmatrix} = (-1-1, -1-1, -1-1) = (-2, -2, -2)$。
+2. **选择曲面**：
+   取平面 $x+z=1$ 被柱面截得的部分 $\Sigma$。其单位法向量（向上）为 $\mathbf{n} = \frac{(1, 0, 1)}{\sqrt{2}}$。
+3. **应用斯托克斯公式**：
+   $I = \iint_\Sigma (\nabla \times \mathbf{F}) \cdot \mathbf{n} dS = \iint_\Sigma (-2, -2, -2) \cdot \frac{(1, 0, 1)}{\sqrt{2}} dS$
+   $I = \iint_\Sigma \frac{-4}{\sqrt{2}} dS = -2\sqrt{2} \cdot \text{Area}(\Sigma)$。
+4. **计算曲面面积**：
+   $\text{Area}(\Sigma) = \iint_{x^2+y^2 \le 1} \sqrt{1 + z_x^2 + z_y^2} dA$。
+   由 $z = 1-x$ 知 $z_x = -1, z_y = 0$。
+   $\text{Area}(\Sigma) = \iint_D \sqrt{1 + (-1)^2 + 0^2} dA = \sqrt{2} \pi(1)^2 = \sqrt{2}\pi$。
+5. **最终结果**：
+   $I = -2\sqrt{2} \cdot \sqrt{2}\pi = -4\pi$。
+
+#### 答案
+$-4\pi$
+</details>
+
+---
+
+## 练习 50：斯托克斯公式 - 三角形边界积分
+计算 $\oint_C y^2 dx + z^2 dy + x^2 dz$，其中 $C$ 是以 $(a,0,0), (0,a,0), (0,0,a)$ 为顶点的三角形边界，按上述顶点顺序。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **计算旋度**：
+   $\nabla \times \mathbf{F} = \begin{vmatrix} \mathbf{i} & \mathbf{j} & \mathbf{k} \\ \partial_x & \partial_y & \partial_z \\ y^2 & z^2 & x^2 \end{vmatrix} = (-2z, -2x, -2y)$。
+2. **选择曲面与法向**：
+   取三角形平面 $\Sigma: x+y+z=a$。法向量 $\mathbf{n} = \frac{(1, 1, 1)}{\sqrt{3}}$（对应右手系）。
+3. **计算点积**：
+   $(\nabla \times \mathbf{F}) \cdot \mathbf{n} = \frac{-2(x+y+z)}{\sqrt{3}} = \frac{-2a}{\sqrt{3}}$（在曲面上）。
+4. **应用斯托克斯公式**：
+   $I = \iint_\Sigma \frac{-2a}{\sqrt{3}} dS = \frac{-2a}{\sqrt{3}} \cdot \text{Area}(\Sigma)$。
+5. **计算面积**：
+   三角形面积 $\text{Area}(\Sigma) = \frac{\sqrt{3}}{2} a^2$（或利用投影）。
+   $I = \frac{-2a}{\sqrt{3}} \cdot \frac{\sqrt{3}}{2} a^2 = -a^3$。
+
+#### 答案
+$-a^3$
+</details>
+
+---
+
+## 练习 51：斯托克斯公式 - 第一卦限球面边界
+计算 $\oint_C (y^2-z^2)dx + (z^2-x^2)dy + (x^2-y^2)dz$，其中 $C$ 为球面 $x^2+y^2+z^2=a^2$ 在第一卦限部分的边界（由三段圆弧组成），方向与外法向符合右手系。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **计算旋度**：
+   $\nabla \times \mathbf{F} = \begin{vmatrix} \mathbf{i} & \mathbf{j} & \mathbf{k} \\ \partial_x & \partial_y & \partial_z \\ y^2-z^2 & z^2-x^2 & x^2-y^2 \end{vmatrix} = (-2y-2z, -2z-2x, -2x-2y) = -2(y+z, z+x, x+y)$。
+2. **应用斯托克斯公式**：
+   取球面部分 $\Sigma$，其外法向 $\mathbf{n} = \frac{(x, y, z)}{a}$。
+3. **计算点积**：
+   $(\nabla \times \mathbf{F}) \cdot \mathbf{n} = -\frac{2}{a} [x(y+z) + y(z+x) + z(x+y)] = -\frac{4}{a} (xy + yz + zx)$。
+4. **积分计算**：
+   利用球坐标 $\iint_\Sigma (xy+yz+zx) dS = 3 \iint_\Sigma xy dS$（由对称性）。
+   $\iint_\Sigma xy dS = \int_0^{\pi/2} d\phi \int_0^{\pi/2} (a^2 \sin^2 \theta \cos \phi \sin \phi) (a^2 \sin \theta d\theta) = a^4 [\frac{1}{2}\sin^2 \phi]_0^{\pi/2} [\frac{2}{3}] = \frac{1}{3}a^4$。
+   故 $I = -\frac{4}{a} \cdot (3 \cdot \frac{1}{3}a^4) = -4a^3$。
+
+#### 答案
+$-4a^3$
+</details>
+
+---
+
+## 练习 52：含参量广义积分 - 微分法计算
+计算 $I(a) = \int_0^{+\infty} \frac{1-e^{-ax^2}}{xe^{x^2}} dx \quad (a > -1)$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **求导**：
+   $I'(a) = \int_0^{+\infty} \frac{\partial}{\partial a} (\frac{1-e^{-ax^2}}{xe^{x^2}}) dx = \int_0^{+\infty} \frac{x^2 e^{-ax^2}}{xe^{x^2}} dx = \int_0^{+\infty} x e^{-(a+1)x^2} dx$。
+2. **计算积分**：
+   令 $u = (a+1)x^2, du = 2(a+1)x dx$。
+   $I'(a) = \frac{1}{2(a+1)} \int_0^{+\infty} e^{-u} du = \frac{1}{2(a+1)}$。
+3. **积分还原**：
+   $I(a) = \int \frac{1}{2(a+1)} da = \frac{1}{2} \ln(a+1) + C$。
+4. **确定常数**：
+   由 $I(0) = \int_0^\infty 0 dx = 0$，得 $C = 0$。
+
+#### 答案
+$\frac{1}{2} \ln(a+1)$
+</details>
+
+---
+
+## 练习 53：含参量广义积分 - 迪利克雷积分推导
+利用含参量积分 $I(y) = \int_0^{+\infty} e^{-yx} \frac{\sin x}{x} dx$ 证明 $\int_0^{+\infty} \frac{\sin x}{x} dx = \frac{\pi}{2}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **微分**：
+   $I'(y) = -\int_0^{+\infty} e^{-yx} \sin x dx = - \text{Im} \int_0^\infty e^{-(y-i)x} dx = - \frac{1}{y^2+1}$。
+2. **还原**：
+   $I(y) = -\arctan y + C$。
+3. **确定常数**：
+   当 $y \to +\infty$ 时，$|I(y)| \le \int_0^\infty e^{-yx} dx = 1/y \to 0$。
+   故 $0 = -\frac{\pi}{2} + C \Rightarrow C = \frac{\pi}{2}$。
+4. **取极限**：
+   由于积分在 $y \ge 0$ 上一致收敛，由连续性知 $\int_0^\infty \frac{\sin x}{x} dx = I(0) = \frac{\pi}{2}$。
+
+#### 答案
+证毕。
+</details>
+
+---
+
+## 练习 54：含参量广义积分 - 积分号下积分法
+计算 $I(a, b) = \int_0^{+\infty} \frac{\arctan ax - \arctan bx}{x} dx \quad (a, b > 0)$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **转化为重积分**：
+   $\arctan ax - \arctan bx = \int_b^a \frac{x}{1+y^2x^2} dy$。
+2. **交换积分次序**：
+   $I = \int_0^\infty dx \int_b^a \frac{1}{1+y^2x^2} dy = \int_b^a dy \int_0^\infty \frac{1}{1+y^2x^2} dx$。
+3. **内层积分**：
+   $\int_0^\infty \frac{dx}{1+(yx)^2} = \frac{1}{y} [\arctan yx]_0^\infty = \frac{\pi}{2y}$。
+4. **外层计算**：
+   $I = \int_b^a \frac{\pi}{2y} dy = \frac{\pi}{2} \ln \frac{a}{b}$。
+
+#### 答案
+$\frac{\pi}{2} \ln \frac{a}{b}$
+</details>
+
+---
+
+## 练习 55：含参量广义积分 - 综合计算
+计算 $\int_0^{+\infty} \frac{\ln(1+a^2x^2)}{x^2} dx \quad (a > 0)$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **求导**：
+   设 $I(a) = \int_0^\infty \frac{\ln(1+a^2x^2)}{x^2} dx$。
+   $I'(a) = \int_0^\infty \frac{2ax^2}{x^2(1+a^2x^2)} dx = 2a \int_0^\infty \frac{1}{1+a^2x^2} dx$。
+2. **计算**：
+   $I'(a) = 2a \cdot \frac{1}{a} [\arctan ax]_0^\infty = 2 \cdot \frac{\pi}{2} = \pi$。
+3. **还原**：
+   $I(a) = \pi a + C$。由于 $I(0) = 0$，故 $C = 0$。
+
+#### 答案
+$\pi a$
+</details>
+
+---
+
+## 练习 56：斯托克斯公式 - 旋转场线积分
+计算 $\oint_C (x+y) dx + (y+z) dy + (z+x) dz$，其中 $C$ 为球面 $x^2+y^2+z^2=R^2$ 与平面 $x+y+z=0$ 的交线，从 $z$ 轴正向看为逆时针。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **旋度**：$\nabla \times \mathbf{F} = \begin{vmatrix} \mathbf{i} & \mathbf{j} & \mathbf{k} \\ \partial_x & \partial_y & \partial_z \\ x+y & y+z & z+x \end{vmatrix} = (-1, -1, -1)$。
+2. **单位法向量**：平面 $x+y+z=0$ 的法向为 $\mathbf{n} = \frac{(1, 1, 1)}{\sqrt{3}}$。
+3. **点积**：$(\nabla \times \mathbf{F}) \cdot \mathbf{n} = -3/\sqrt{3} = -\sqrt{3}$。
+4. **结果**：$I = -\sqrt{3} \cdot \text{Area}(\Sigma) = -\sqrt{3} \cdot \pi R^2$。
+
+#### 答案
+$-\sqrt{3}\pi R^2$
+</details>
+
+---
+
+## 练习 57：高斯公式 - 椭球面上的积分
+计算 $\oiint_S x^2 dy dz + y^2 dz dx + z^2 dx dy$，其中 $S$ 是椭球面 $\frac{x^2}{a^2} + \frac{y^2}{b^2} + \frac{z^2}{c^2} = 1$ 的外侧。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **应用高斯公式**：$I = \iiint_\Omega 2(x+y+z) dV$。
+2. **对称性**：由椭球区域关于原点对称，$\iiint x dV = 0$ 等。
+3. **结果**：$I = 0$。
+
+#### 答案
+0
+</details>
+
+---
+
+## 练习 58：含参量广义积分 - 极限与积分交换
+计算极限 $\lim_{n \to \infty} \int_0^{+\infty} \frac{dx}{1+x^n}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **分段**：
+   $I_n = \int_0^1 \frac{dx}{1+x^n} + \int_1^\infty \frac{dx}{1+x^n}$。
+2. **取极限**：
+   - 在 $[0, 1)$ 上，$x^n \to 0$，被积函数 $\to 1$。由优性收敛定理（或控制收敛），积分 $\to 1$。
+   - 在 $(1, \infty)$ 上，当 $n \ge 2$ 时，$1/(1+x^n) \le 1/x^2$，由控制收敛定理，$x^n \to \infty$，被积函数 $\to 0$，积分 $\to 0$。
+3. **结论**：极限为 $1 + 0 = 1$。
+
+#### 答案
+1
+</details>
+
