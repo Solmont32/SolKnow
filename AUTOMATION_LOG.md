@@ -138,3 +138,4 @@
 [2026-03-08 01:29:05] [ OK ] Mission Accomplished: 拆分并细化“多元微积分”：新增『重积分』、『曲线/曲面积分』、『含参量积分』独立章节并对标教材目录 (2026-03-08)
 [2026-03-08 01:29:26] [EXE ] Target Locked: 扩充『实数完备性』专题：详细阐述七大基本定理（确界、单调、闭区间套、Bolzano-Weierstrass、Cauchy、Heine-Borel、Dedekind）及其等价性证明 (2026-03-08)
 [2026-03-08 01:33:55] [ OK ] Mission Accomplished: 扩充『实数完备性』专题：详细阐述七大基本定理（确界、单调、闭区间套、Bolzano-Weierstrass、Cauchy、Heine-Borel、Dedekind）及其等价性证明 (2026-03-08)
+[2026-03-08 01:34:14] [EXE ] Target Locked: 完善『反常积分』章节：补充反常积分的收敛判别法（比较判别法、Dirichlet、Abel 判别法）及 Cauchy 主值概念 (2026-03-08)
