@@ -91,8 +91,28 @@ function Test-GitAvailable {
 }
 
 function Invoke-GitRebasePull {
-    cmd /c "git pull origin main --rebase"
-    return $LASTEXITCODE
+    $pullOutput = cmd /c "git pull origin main --rebase 2>&1"
+    $pullExit = $LASTEXITCODE
+
+    if ($pullOutput) {
+        $logType = if ($pullExit -eq 0) { "INFO" } else { "WARN" }
+        foreach ($line in @($pullOutput)) {
+            if (-not [string]::IsNullOrWhiteSpace($line)) {
+                Write-Log "git pull: $line" $logType
+            }
+        }
+    }
+
+    if ($pullExit -ne 0) {
+        $rebaseMerge = Test-Path ".git\rebase-merge"
+        $rebaseApply = Test-Path ".git\rebase-apply"
+        if ($rebaseMerge -or $rebaseApply) {
+            Write-Log "Detected unfinished rebase state. Trying auto-abort." "WARN"
+            cmd /c "git rebase --abort 2>&1" *> $null
+        }
+    }
+
+    return $pullExit
 }
 
 function Acquire-Lock {
