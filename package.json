@@ -20,11 +20,13 @@
     "@easyops-cn/docusaurus-search-local": "^0.53.0",
     "@mdx-js/react": "^3.0.0",
     "clsx": "^2.0.0",
+    "d3-force": "^3.0.0",
     "framer-motion": "^12.35.0",
     "lucide-react": "^0.577.0",
     "prism-react-renderer": "^2.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-force-graph-2d": "^1.29.1",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0"
   },
