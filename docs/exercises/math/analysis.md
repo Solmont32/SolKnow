@@ -77,3 +77,47 @@ $\ln x + 1$
 #### 答案
 在区间 $[0, 1]$ 内至少有一个实根。
 </details>
+
+---
+
+## 练习 5：二重积分计算
+计算 $\iint_D (x + y) dA$，其中 $D$ 是由 $y = \sqrt{x}$ 和 $y = x^2$ 围成的区域。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **交点计算**：$x^2 = \sqrt{x} \implies x^4 = x \implies x(x^3 - 1) = 0$。交点为 $(0, 0)$ 和 $(1, 1)$。
+2. **确定范围**：$0 \le x \le 1, x^2 \le y \le \sqrt{x}$。
+3. **设置积分**：
+   $$I = \int_0^1 dx \int_{x^2}^{\sqrt{x}} (x + y) dy$$
+4. **计算内层**：
+   $$\int_{x^2}^{\sqrt{x}} (x + y) dy = [xy + \frac{1}{2}y^2]_{x^2}^{\sqrt{x}} = (x\sqrt{x} + \frac{1}{2}x) - (x^3 + \frac{1}{2}x^4)$$
+   $$= x^{3/2} + \frac{1}{2}x - x^3 - \frac{1}{2}x^4$$
+5. **计算外层**：
+   $$\int_0^1 (x^{3/2} + \frac{1}{2}x - x^3 - \frac{1}{2}x^4) dx = [\frac{2}{5}x^{5/2} + \frac{1}{4}x^2 - \frac{1}{4}x^4 - \frac{1}{10}x^5]_0^1$$
+   $$= \frac{2}{5} + \frac{1}{4} - \frac{1}{4} - \frac{1}{10} = \frac{4}{10} - \frac{1}{10} = \frac{3}{10}$$
+
+#### 答案
+$3/10$
+</details>
+
+---
+
+## 练习 6：利用柱坐标计算三重积分
+计算 $\iiint_\Omega z dV$，其中 $\Omega$ 是由柱面 $x^2 + y^2 = 1$ 和平面 $z = 0, z = 1$ 围成的区域。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **采用柱坐标**：$x = \rho \cos \phi, y = \rho \sin \phi, z = z$。
+2. **确定范围**：$0 \le \rho \le 1, 0 \le \phi \le 2\pi, 0 \le z \le 1$。
+3. **设置积分**：
+   $$I = \int_0^{2\pi} d\phi \int_0^1 \rho d\rho \int_0^1 z dz$$
+4. **计算**：
+   $$I = 2\pi \cdot [\frac{1}{2}\rho^2]_0^1 \cdot [\frac{1}{2}z^2]_0^1 = 2\pi \cdot \frac{1}{2} \cdot \frac{1}{2} = \frac{\pi}{2}$$
+
+#### 答案
+$\pi/2$
+</details>
