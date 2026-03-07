@@ -1,0 +1,6 @@
+{"user": null, "model": "", "provider": "Qwen", "total_tokens": 267, "prompt_tokens": 45, "completion_tokens": 222, "reasoning_tokens": 208}
+{"user": null, "model": "", "provider": "Qwen", "total_tokens": 17332, "prompt_tokens": 229, "completion_tokens": 17103, "reasoning_tokens": 15898}
+{"user": null, "model": "glm-4.7", "provider": "ApiAirforce", "completion_tokens": 950, "prompt_tokens": 685, "total_tokens": 1635}
+{"user": null, "model": "gpt-4o-mini", "provider": "ApiAirforce", "completion_tokens": 662, "prompt_tokens": 1077, "total_tokens": 1739}
+{"user": null, "model": "deepseek-ai/DeepSeek-R1", "provider": "ApiAirforce", "completion_tokens": 8, "completion_tokens_details": null, "prompt_tokens": 391, "total_tokens": 399}
+{"user": null, "model": "deepseek-ai/DeepSeek-R1-0528", "provider": "ApiAirforce", "completion_tokens": 8, "completion_tokens_details": null, "prompt_tokens": 391, "total_tokens": 399}
