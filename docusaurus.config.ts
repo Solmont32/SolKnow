@@ -116,14 +116,16 @@ const config: Config = {
               sidebarId: 'csSidebar',
               label: '计算机科学',
             },
-            {
-              type: 'docSidebar',
-              sidebarId: 'resourceSidebar',
-              label: '资源导航',
-            },
           ],
         },
+        {
+          type: 'docSidebar',
+          sidebarId: 'resourceSidebar',
+          label: '资源导航',
+          position: 'left',
+        },
         {to: '/blog', label: '博客', position: 'left'},
+
         {to: '/videos', label: '视频', position: 'left'},
         {
           href: 'https://github.com/Solmont32/SolKnow',
