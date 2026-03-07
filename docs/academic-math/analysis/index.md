@@ -25,7 +25,8 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 ### 第二部分：微分学 (Chapters 5-7)
 - **[第五章 导数与微分](derivatives)**：导数定义、求导法则、高阶导数。
-- **[第六章 微分中值定理及其应用](derivatives)**：Rolle 定理、Lagrange 定理、Taylor 公式。
+- **[第六章 微分中值定理及其应用](mean-value-theorems)**：Rolle 定理、Lagrange 定理、Taylor 公式。
+    - **[(续) 凸函数、不等式与极值应用](convexity-and-extremum)**：Jensen 不等式、Young/Hölder 不等式证明。
 - **[第七章 实数的完备性](completeness)**：七大等价定理（闭区间套、聚点、有限覆盖等）。
 
 ### 第三部分：积分学 (Chapters 8-11)
