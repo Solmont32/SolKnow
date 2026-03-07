@@ -97,8 +97,9 @@ const sidebars: SidebarsConfig = {
               link: { type: 'doc', id: 'academic-math/competition/senior/index' },
               items: [
                 'academic-math/competition/senior/inequalities',
-                'academic-math/competition/senior/number-theory-advanced',
                 'academic-math/competition/senior/geometry-theorems',
+                'academic-math/competition/senior/number-theory-advanced',
+                'academic-math/competition/senior/combinatorics-advanced',
               ]
             },
           ],

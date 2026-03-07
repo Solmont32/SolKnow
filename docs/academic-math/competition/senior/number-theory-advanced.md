@@ -1,41 +1,49 @@
 ---
-title: 竞赛数论：费马、欧拉与同余
+title: 竞赛数论：原根、剩余与构造
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
-# 竞赛数论：费马、欧拉与同余
+# 竞赛数论：原根、剩余与构造
 
-数论竞赛题目通常考察对整数结构和同余理论的深刻理解。
+高中数论竞赛在同余的基础上，深入研究模指数结构与存在性证明。
 
-## 1. 费马小定理 (Fermat's Little Theorem)
-若 $p$ 为质数，且 $gcd(a, p) = 1$，则：
-$$a^{p-1} \equiv 1 \pmod{p}$$
+## 一、 核心知识点讲解
 
-## 2. 欧拉定理 (Euler's Theorem)
-若 $gcd(a, n) = 1$，则：
-$$a^{\phi(n)} \equiv 1 \pmod{n}$$
-其中 $\phi(n)$ 是欧拉函数。
+### 1. 中国剩余定理 (CRT)
+用于求解模数两两互质的一元线性同余方程组。
+
+### 2. 阶与原根
+-   **阶**：满足 $a^k \equiv 1 \pmod n$ 的最小正整数 $k$。
+-   **原根**：若 $a$ 的阶等于 $\phi(n)$，则称 $a$ 为模 $n$ 的原根。存在原根的充要条件：$n = 2, 4, p^k, 2p^k$。
+
+### 3. 二次剩余 (Quadratic Residue)
+-   研究 $x^2 \equiv a \pmod p$ 是否有解。
+-   **勒让德符号 (Legendre Symbol)** 与 **二次互反律**：$\left(\frac{p}{q}\right)\left(\frac{q}{p}\right) = (-1)^{\frac{p-1}{2}\frac{q-1}{2}}$。
+
+<KnowledgeCard type="tip" title="解题关键">
+在处理不定方程 $x^n + y^n = z^n$ 类的题目时，**“无穷递降法”** 或 **“模分析法”** 是核心手段。
+</KnowledgeCard>
 
 ---
 
-## 典型例题
+## 二、 经典例题实战
 
-### 例题 1：求余数
-求 $3^{100}$ 被 $7$ 除的余数。
+### 例题 1：勒让德符号的计算
+判断 $x^2 \equiv 3 \pmod{13}$ 是否有解。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
-#### 解析
-1. **应用费马小定理**：由于 $7$ 是质数，$gcd(3, 7) = 1$，则 $3^{7-1} \equiv 1 \pmod{7}$，即 $3^6 \equiv 1 \pmod{7}$。
-2. **指数分解**：$100 = 6 \times 16 + 4$。
-3. **同余变换**：
-   $3^{100} = (3^6)^{16} \cdot 3^4 \equiv 1^{16} \cdot 3^4 \pmod{7}$
-   $3^4 = 81$
-4. **最后计算**：$81 = 7 \times 11 + 4$。
-5. **结论**：余数为 $4$。
+#### 解析过程
+1.  **计算勒让德符号**：$\left(\frac{3}{13}\right)$。
+2.  **应用二次互反律**：$\left(\frac{3}{13}\right) = \left(\frac{13}{3}\right) \cdot (-1)^{\frac{3-1}{2}\frac{13-1}{2}}$。
+3.  **简化计算**：
+    -   $\left(\frac{13}{3}\right) = \left(\frac{1}{3}\right) = 1$。
+    -   指数部分：$1 \times 6 = 6$（偶数），故 $(-1)^6 = 1$。
+4.  **结果**：$\left(\frac{3}{13}\right) = 1 \times 1 = 1$。
+5.  **结论**：由于结果为 $1$，说明该方程有解。
 
 #### 答案
-$4$
+有解。
 </details>
