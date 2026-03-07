@@ -1,4 +1,4 @@
-# SolKnow Autonomous Pulse Runner (V4.8 - LOGIC ROBUSTNESS)
+# SolKnow Autonomous Pulse Runner (V5.0 - OMNI-FLOW)
 # Usage: pwsh -ExecutionPolicy Bypass -File infinite_runner.ps1
 
 if ($IsWindows) { chcp 65001 | Out-Null }
@@ -12,9 +12,11 @@ $TASKS_FILE = "TASKS.md"
 function Invoke-Sync($message) {
     $status = git status --porcelain
     if ($status) {
-        Write-Host ">>> [SYNC] $message" -ForegroundColor Green
+        Write-Host ">>> [SYNC] Changes detected. Aligning with cloud..." -ForegroundColor Green
         git add .
         git commit -m $message
+        # 强制在 Push 前再次 Rebase，确保高频执行不冲突
+        git pull origin main --rebase
         git push origin main
         Start-Sleep -Seconds $SYNC_COOLDOWN
         return $true
@@ -28,7 +30,7 @@ function Show-Logo {
     Clear-Host
     Write-Host @"
 
-      [ STRATEGIC ENGINE V4.8 - ROBUST ]
+      [ SOLKNOW OMNI-FLOW V5.0 ]
       ________________________________________________________________________________________________________
 
        ####   ####  #      #  # #  #  ####  #      #       #  #  #      #  ####  #   #
@@ -37,103 +39,113 @@ function Show-Logo {
            # #    # #      # #  # #  #    # ##   ##        #  #  #   # #  #    # # # #
        ####   ####  ###### #  # # #   ####  #     #        ####  #    #   ####   # # 
 
-                                     S O L K N O W   I N D U S T R I A L
+                                     S T R A T E G I C   A U T O N O M Y
       ________________________________________________________________________________________________________
 "@ -ForegroundColor $randomColor
-}
-
-function Show-Resting {
-    param([int]$seconds)
-    for ($i = $seconds; $i -gt 0; $i--) {
-        Clear-Host
-        Write-Host ">>> NEXT HEARTBEAT: $i SECONDS..." -ForegroundColor DarkGray
-        Start-Sleep -Seconds 1
-    }
 }
 
 function Write-Log($message, $type="INFO", $toFile=$true) {
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     $tag = "[INFO]"
-    if ($type -eq "SUCCESS") { $tag = "[OK]" }
-    if ($type -eq "ERROR") { $tag = "[ERR]" }
+    if ($type -eq "SUCCESS") { $tag = "[ OK ]" }
+    if ($type -eq "ERROR") { $tag = "[ERR ]" }
     if ($type -eq "PLAN") { $tag = "[PLAN]" }
-    if ($type -eq "EXEC") { $tag = "[EXE]" }
+    if ($type -eq "EXEC") { $tag = "[EXE ]" }
     $logEntry = "[$timestamp] $tag $message"
     Write-Host $logEntry
     if ($toFile) { Add-Content -Path $LOG_FILE -Value $logEntry }
 }
 
-if (-not (Test-Path $LOG_FILE)) { Add-Content -Path $LOG_FILE -Value "# SolKnow Logs`n" }
+# --- 启动自愈：修复卡住的 Processing 状态 ---
+function Startup-Heal {
+    if (Test-Path $TASKS_FILE) {
+        $content = Get-Content $TASKS_FILE -Raw
+        if ($content -match '\[\/\] (.*) \(正在执行...\)') {
+            Write-Log "Startup: Detected stuck task. Reverting to pending state..." "ERROR"
+            $healed = $content -replace '\[\/\] (.*) \(正在执行...\)', '[ ] $1'
+            Set-Content $TASKS_FILE $healed
+            Invoke-Sync "chore: startup self-heal - recovered stuck task"
+        }
+    }
+}
 
-Write-Log "Robust Engine V4.8 Started." "SUCCESS"
+if (-not (Test-Path $LOG_FILE)) { Add-Content -Path $LOG_FILE -Value "# SolKnow Audit Logs`n" }
+
+Write-Log "Omni-Flow Engine V5.0 Initialized." "SUCCESS"
+Startup-Heal
 
 while($true) {
     try {
         Show-Logo
-        Write-Host ">>> Syncing..." -ForegroundColor Gray
-        Invoke-Sync "chore: workspace self-heal"
+        Write-Host ">>> Initializing pulse sync..." -ForegroundColor Gray
         git pull origin main --rebase
 
-        # 1. STRATEGIC PLANNING
+        # 1. STRATEGIC AUDIT & PLANNING
         $content = Get-Content $TASKS_FILE -Raw
-        # 更加鲁棒的检测：如果内容中不包含任何未勾选的任务框
         if ($content -notmatch '- \[ \]') {
-            Write-Log "No active tasks found in TASKS.md. Triggering Planner..." "PLAN"
+            Write-Log "No pending tasks. Initiating audit-first planning..." "PLAN"
             $planPrompt = @"
-Target: $TASKS_FILE
-Vision: Math Analysis Integrated System.
-Instructions:
-1. Audit current content in 'docs/'.
-2. Plan 3-5 sub-tasks for Math Analysis depth expansion.
-3. Append them under '## 待办子任务' exactly as '- [ ] Task (YYYY-MM-DD)'.
-NO Git commands.
+Current Date: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
+Goal: Plan 3-5 sub-tasks for '## 总任务' in $TASKS_FILE.
+Mandatory Action:
+1. Audit 'docs/academic-math/analysis/' and 'sidebars.ts'.
+2. Plan granular, textbook-quality chapters (Theory + Examples + Exercises).
+3. Append under '## 待办子任务' header as '- [ ] Task (YYYY-MM-DD)'.
+Requirement: Do NOT use Git. Be precise.
 "@
             & gemini -y -p $planPrompt
-            Invoke-Sync "plan: injecting analytical tasks"
+            Invoke-Sync "plan: strategic roadmap expansion"
         }
 
         # 2. SEQUENTIAL EXECUTION
         while ($true) {
             $content = Get-Content $TASKS_FILE -Raw
-            # 改进正则：允许前置空格，确保匹配成功
             if ($content -match '(?m)^\s*- \[ \] (.*)') {
                 $taskDesc = $matches[1].Trim()
-                Write-Log "Locked: $taskDesc" "EXEC"
+                Write-Log "Target Locked: $taskDesc" "EXEC"
 
-                # 锁定任务状态 (支持前置空格)
-                $newContent = $content -replace "- \[ \] $([regex]::Escape($taskDesc))", "[/] $taskDesc (Processing...)"
-                Set-Content $TASKS_FILE $newContent
+                # 锁定任务状态
+                $lockedContent = $content -replace "- \[ \] $([regex]::Escape($taskDesc))", "[/] $taskDesc (正在执行...)"
+                Set-Content $TASKS_FILE $lockedContent
                 Invoke-Sync "lock: $taskDesc"
 
                 $execPrompt = @"
+Current Date: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
 Task: $taskDesc
-Rule: Textbook content + 1-2 Examples + Exercises.
-Action: 
-1. Create/Edit documentation.
-2. PHYSICALLY MOVE the task line to '## 已完成任务' and change to '- [x]'.
-CRITICAL: If task is not moved, mission REVERTS. NO Git commands.
+Context: Math Analysis Integrated Zero-Foundation System.
+Instruction: 
+1. Research existing files to maintain continuity.
+2. Implement content, examples, and exercise additions.
+3. MOVE the task line from '## 待办子任务' to the TOP of '## 已完成任务' and change to '- [x]'.
+CRITICAL: NO Git commands. Status update must be perfect.
 "@
                 & gemini -y -p $execPrompt
 
                 git pull origin main --rebase
                 $postCheck = Get-Content $TASKS_FILE -Raw
                 if ($postCheck -match '\[\/\]') {
-                    Write-Log "Status check failed for: $taskDesc. Reverting..." "ERROR"
-                    $revertContent = $postCheck -replace '\[\/\] .* \(Processing...\)', "[ ] $taskDesc"
+                    Write-Log "Integrity check FAILED for: $taskDesc. Reverting." "ERROR"
+                    $revertContent = $postCheck -replace '\[\/\] .* \(正在执行...\)', "[ ] $taskDesc"
                     Set-Content $TASKS_FILE $revertContent
-                    Invoke-Sync "revert: task status error"
+                    Invoke-Sync "revert: failed mission status"
                     break
                 } else {
-                    Write-Log "Mission success: $taskDesc" "SUCCESS"
-                    Invoke-Sync "feat: $taskDesc"
+                    Write-Log "Mission Accomplished: $taskDesc" "SUCCESS"
+                    Invoke-Sync "feat: completed $taskDesc"
                 }
             } else {
-                Write-Log "All tasks in queue completed." "SUCCESS"
+                Write-Log "Batch queue cleared." "SUCCESS"
                 break
             }
         }
     } catch {
-        Write-Log "Fault: $($_.Exception.Message)" "ERROR"
+        Write-Log "Critical Fault: $($_.Exception.Message)" "ERROR"
     }
-    Show-Resting $CHECK_INTERVAL
+    
+    # 动态休眠 UI
+    for ($i = $CHECK_INTERVAL; $i -gt 0; $i--) {
+        Clear-Host
+        Write-Host ">>> OMNI-FLOW STANDBY | NEXT HEARTBEAT: $i SECONDS..." -ForegroundColor DarkGray
+        Start-Sleep -Seconds 1
+    }
 }
