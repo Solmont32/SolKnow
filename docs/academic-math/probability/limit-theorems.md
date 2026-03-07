@@ -1,16 +1,18 @@
 ---
-title: 澶ф暟瀹氬緥涓庝腑蹇冩瀬闄愬畾鐞?(Limit Theorems)
+title: 大数定律与中心极限定理 (Limit Theorems)
 ---
 
-# 澶ф暟瀹氬緥涓庝腑蹇冩瀬闄愬畾鐞?(Limit Theorems)
+# 大数定律与中心极限定理 (Limit Theorems)
 
-## 鍒囨瘮闆か涓嶇瓑寮?
-$P(|X - E[X]| \ge \epsilon) \le \frac{Var(X)}{\epsilon^2}$銆?
+## 大数定律 (Law of Large Numbers)
+阐明在大量重复试验中，随机变量序列的算术平均值趋向于它们的期望值。
+- **切比雪夫大数定律**。
+- **伯努利大数定律**：在 $n$ 次独立重复试验中，事件发生的频率依概率收敛于其概率 $p$。
 
-## 澶ф暟瀹氬緥 (Law of Large Numbers)
-褰撹瘯楠屾鏁?$n$ 寰堝ぇ鏃讹紝浜嬩欢鍙戠敓鐨勯鐜囩ǔ瀹氬湪姒傜巼闄勮繎銆?
-
-## 涓績鏋侀檺瀹氱悊 (Central Limit Theorem, CLT)
-澶ч噺鐩镐簰鐙珛鐨勩€佸悓鍒嗗竷鐨勯殢鏈哄彉閲忎箣鍜岋紝杩戜技鏈嶄粠姝ｆ€佸垎甯冦€?
-鑻?$X_1, X_2, \dots$ 鐙珛鍚屽垎甯冿紝涓?$E[X_i] = \mu, Var(X_i) = \sigma^2$锛屽垯锛?
-$\frac{\sum X_i - n\mu}{\sqrt{n}\sigma} \xrightarrow{d} N(0, 1)$銆?
+## 中心极限定理 (Central Limit Theorem)
+阐明大量独立随机变量之和的分布近似于正态分布。
+- **独立同分布 (i.i.d.) 中心极限定理 (Lindeberg-Levy)**：
+  若 $X_1, X_2, \dots$ 独立同分布，期望为 $\mu$，方差为 $\sigma^2$，则当 $n$ 很大时：
+  $$\frac{\sum_{i=1}^n X_i - n\mu}{\sqrt{n}\sigma} \sim N(0, 1)$$
+- **隶莫弗-拉普拉斯定理 (De Moivre-Laplace)**：二项分布的极限是正态分布。
+迫使统计学在样本量大时可以使用正态分布进行推断。

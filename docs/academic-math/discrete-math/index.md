@@ -1,14 +1,13 @@
 ---
-title: 绂绘暎鏁板 (Discrete Mathematics)
+title: 离散数学 (Discrete Mathematics)
 ---
 
-# 绂绘暎鏁板 (Discrete Mathematics)
+# 离散数学 (Discrete Mathematics)
 
-绂绘暎鏁板鏄幇浠ｆ暟瀛︾殑涓€涓噸瑕佸垎鏀紝鏄绠楁満绉戝鐨勬暟瀛﹀熀纭€銆?
+离散数学是研究离散结构的数学分支，是计算机科学的数学理论基础。
 
-## 鐩綍
-- [绗竴绔狅細鏁扮悊閫昏緫](./logic)
-- [绗簩绔狅細闆嗗悎璁篯(set-theory.md)
-- [绗笁绔狅細鍥捐鍩虹](./graph-theory)
-- [绗洓绔狅細缁勫悎鏁板](./combinatorics)
-
+## 目录
+- [数理逻辑 (Logic)](logic.md)
+- [集合论 (Set Theory)](set-theory.md)
+- [图论 (Graph Theory)](graph-theory.md)
+- [组合数学 (Combinatorics)](combinatorics.md)

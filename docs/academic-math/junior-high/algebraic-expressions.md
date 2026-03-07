@@ -1,6 +1,18 @@
 ---
-title: 整式与分式 (Algebraic Expressions)
+title: 代数式 (Algebraic Expressions)
 ---
 
-# 整式与分式 (Algebraic Expressions)
-...内容略...
+# 代数式 (Algebraic Expressions)
+
+## 整式
+- **单项式**：数与字母的积。
+- **多项式**：几个单项式的和。
+
+## 因式分解
+- **提公因式法**。
+- **公式法**：
+  - 平方差公式：$a^2 - b^2 = (a+b)(a-b)$
+  - 完全平方公式：$(a \pm b)^2 = a^2 \pm 2ab + b^2$
+
+## 分式
+- 分式的基本性质：分式的分子与分母同乘或除以同一个不为 0 的整式，分式的值不变。

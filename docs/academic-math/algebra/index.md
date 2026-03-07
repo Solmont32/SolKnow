@@ -1,15 +1,14 @@
 ---
-title: 楂樼瓑浠ｆ暟 (Advanced Algebra)
+title: 高等代数 (Higher Algebra)
 ---
 
-# 楂樼瓑浠ｆ暟 (Advanced Algebra)
+# 高等代数 (Higher Algebra)
 
-楂樼瓑浠ｆ暟鍖呮嫭绾挎€т唬鏁板拰澶氶」寮忎唬鏁颁袱閮ㄥ垎銆?
+高等代数是研究向量空间、线性变换以及多项式理论的数学分支。
 
-## 鐩綍
-- [绗竴绔狅細澶氶」寮廬(polynomial.md)
-- [绗簩绔狅細琛屽垪寮廬(determinant.md)
-- [绗笁绔狅細绾挎€ф柟绋嬬粍](./linear-equations)
-- [绗洓绔狅細鐭╅樀](./matrix)
-- [绗簲绔狅細浜屾鍨媇(quadratic-forms.md)
-
+## 目录
+- [行列式 (Determinant)](determinant.md)
+- [矩阵 (Matrix)](matrix.md)
+- [线性方程组 (Linear Equations)](linear-equations.md)
+- [多项式 (Polynomial)](polynomial.md)
+- [二次型 (Quadratic Forms)](quadratic-forms.md)

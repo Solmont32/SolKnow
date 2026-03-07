@@ -1,20 +1,16 @@
 ---
-title: 鏍?(Lattices)
+title: 格 (Lattices)
 ---
 
-# 鏍?(Lattices)
+# 格 (Lattices)
 
-## 瀹氫箟 (鍋忓簭闆嗗畾涔?
-涓€涓牸鏄竴涓亸搴忛泦 $(L, \le)$锛屽叾涓换鎰忎袱涓厓绱?$a, b$ 閮芥湁鍞竴鐨勪笂纭晫 (Join, $\lor$) 鍜屽敮涓€鐨勪笅纭晫 (Meet, $\land$)銆?
-- $a \lor b = \sup\{a, b\}$
-- $a \land b = \inf\{a, b\}$
+## 定义
+**格**是一个偏序集 $(L, \le)$，其中任意两个元素 $a, b$ 都有唯一的上确界（记作 $a \vee b$）和下确界（记作 $a \wedge b$）。
 
-## 瀹氫箟 (浠ｆ暟瀹氫箟)
-涓€涓牸鏄竴涓泦鍚?$L$ 杩炲悓涓や釜浜屽厓杩愮畻 $\lor$ 鍜?$\land$锛屾弧瓒筹細
-1. **缁撳悎寰?*锛?a \lor (b \lor c) = (a \lor b) \lor c$, $a \land (b \land c) = (a \land b) \land c$
-2. **浜ゆ崲寰?*锛?a \lor b = b \lor a$, $a \land b = b \land a$
-3. **绛夊箓寰?*锛?a \lor a = a$, $a \land a = a$
-4. **鍚告敹寰?*锛?a \lor (a \land b) = a$, $a \land (a \lor b) = a$
+## 代数定义
+也可以将格看作带有两个结合、交换且满足吸收律的操作 $\vee$ 和 $\wedge$ 的代数结构。
 
-## 甯冨皵浠ｆ暟 (Boolean Algebra)
-甯冨皵浠ｆ暟鏄竴涓湁鐣屻€佸垎閰嶄笖鏈夎ˉ鐨勬牸銆?
+## 特殊格
+- **分配格**：满足分配律 $a \wedge (b \vee c) = (a \wedge b) \vee (a \wedge c)$。
+- **有补格**：每个元素都有补元。
+- **布尔代数**：一个有补分配格。

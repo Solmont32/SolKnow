@@ -15,4 +15,4 @@
 
 ## 区间查询与优化
 - [Sparse Table (ST表)](st.md)
-- [分块 (Block Decomposition)](index.md) <!-- 待补充 -->
+// - [分块 (Block Decomposition)](index.md) <!-- 待补充 -->

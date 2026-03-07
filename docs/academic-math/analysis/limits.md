@@ -1,17 +1,19 @@
 ---
-title: 鏋侀檺 (Limits)
+title: 极限 (Limits)
 ---
 
-# 鏋侀檺 (Limits)
+# 极限 (Limits)
 
-## 鏁板垪鏋侀檺
-瀵逛簬鏁板垪 $\{a_n\}$锛屽鏋滃瓨鍦ㄥ父鏁?$L$锛屼娇寰楀浠绘剰 $\epsilon > 0$锛岄兘瀛樺湪 $N$锛屽綋 $n > N$ 鏃讹紝閮芥湁 $|a_n - L| < \epsilon$锛屽垯绉?$L$ 鏄鏁板垪鐨勬瀬闄愩€?
-$\lim_{n \to \infty} a_n = L$
+## 数列极限
+设 $\{a_n\}$ 为一数列，若对于任意 $\epsilon > 0$，存在 $N > 0$，使得当 $n > N$ 时，满足 $|a_n - L| < \epsilon$，则称 $L$ 为数列的极限。
 
-## 鍑芥暟鏋侀檺
-$\epsilon-\delta$ 瀹氫箟锛?
-濡傛灉瀵逛簬浠绘剰 $\epsilon > 0$锛屽瓨鍦?$\delta > 0$锛屼娇寰楀綋 $0 < |x - c| < \delta$ 鏃讹紝閮芥湁 $|f(x) - L| < \epsilon$锛屽垯绉?$L$ 涓?$f(x)$ 褰?$x \to c$ 鏃剁殑鏋侀檺銆?
+## 函数极限
+$\lim_{x \to x_0} f(x) = L$ 的含义是：当 $x$ 无限趋近于 $x_0$ 时，$f(x)$ 无限趋近于 $L$。
 
-## 閲嶈鏋侀檺
+## 重要极限
 1. $\lim_{x \to 0} \frac{\sin x}{x} = 1$
 2. $\lim_{x \to \infty} (1 + \frac{1}{x})^x = e$
+
+## 无穷小与无穷大
+- **无穷小**：极限为 0 的变量。
+- **等价无穷小**：若 $\lim \frac{\alpha}{\beta} = 1$，则称 $\alpha \sim \beta$（如 $x \to 0$ 时，$\sin x \sim x$）。

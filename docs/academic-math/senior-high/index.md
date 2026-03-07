@@ -1,18 +1,14 @@
 ---
-title: 楂樹腑鏁板 (Senior High School Math)
+title: 高中数学 (Senior High Math)
 ---
 
-# 楂樹腑鏁板 (Senior High School Math)
+# 高中数学 (Senior High Math)
 
-娣卞叆鎺㈢储鍑芥暟銆佷唬鏁颁笌绔嬩綋鍑犱綍锛屼负楂樼瓑鏁板鎵撲笅鍧氬疄鍩虹銆?
-
-## 鐩綍
-- [绗竴绔狅細闆嗗悎涓庨€昏緫](./sets)
-- [绗簩绔狅細鍩烘湰鍒濈瓑鍑芥暟 (骞傛寚瀵?](./elementary-functions)
-- [绗笁绔狅細涓夎鍑芥暟涓庢亽绛夊彉鎹(trigonometry.md)
-- [绗洓绔狅細骞抽潰鍚戦噺涓庡鏁癩(vectors.md)
-- [绗簲绔狅細瑙ｆ瀽鍑犱綍 (鍦嗛敟鏇茬嚎)](./conics)
-- [绗叚绔狅細鏁板垪涓庡綊绾虫硶](./series)
-- [绗竷绔狅細姒傜巼缁熻鍩虹](./stats-basic)
-- [绗叓绔狅細瀵兼暟鍙婂叾搴旂敤](./calculus-intro)
-
+## 目录
+- [集合与常用逻辑 (Sets)](sets.md)
+- [基本初等函数 (Functions)](elementary-functions.md)
+- [三角函数 (Trigonometry)](trigonometry.md)
+- [平面向量 (Vectors)](vectors.md)
+- [解析几何/圆锥曲线 (Conics)](conics.md)
+- [概率与统计初步 (Stats)](stats-basic.md)
+- [导数与微积分入门 (Calculus Intro)](calculus-intro.md)

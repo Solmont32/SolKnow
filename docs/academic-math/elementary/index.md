@@ -1,14 +1,11 @@
 ---
-title: 灏忓鏁板 (Elementary School Math)
+title: 小学数学 (Elementary Math)
 ---
 
-# 灏忓鏁板 (Elementary School Math)
+# 小学数学 (Elementary Math)
 
-鍩瑰吇瀵规暟瀛︾殑鍏磋叮锛屽缓绔嬪熀纭€鐨勮绠椾笌閫昏緫鎬濈淮銆?
-
-## 鐩綍
-- [绗竴绔狅細鍥涘垯杩愮畻](./arithmetic)
-- [绗簩绔狅細鍥惧舰涓庡嚑浣曞熀纭€](./geometry-basic)
-- [绗笁绔狅細鍒嗘暟涓庢瘮渚媇(./fractions)
-- [绗洓绔狅細绠€鍗曠殑搴旂敤棰榏(./word-problems)
-
+## 目录
+- [算术基础 (Arithmetic)](arithmetic.md)
+- [分数与小数 (Fractions)](fractions.md)
+- [基础几何 (Geometry)](geometry-basic.md)
+- [应用题 (Word Problems)](word-problems.md)

@@ -1,13 +1,12 @@
 ---
-title: 鎶借薄浠ｆ暟 (Abstract Algebra)
+title: 抽象代数 (Abstract Algebra)
 ---
 
-# 鎶借薄浠ｆ暟 (Abstract Algebra)
+# 抽象代数 (Abstract Algebra)
 
-鐮旂┒缇ゃ€佺幆銆佸煙绛変唬鏁扮粨鏋勭殑鏁板鍒嗘敮銆?
+抽象代数是研究代数结构（如群、环、域）的数学分支。
 
-## 鐩綍
-- [绗竴绔狅細缇よ鍩虹](./groups)
-- [绗簩绔狅細鐜笌鍩焆(rings.md)
-- [绗笁绔狅細鏍间笌甯冨皵浠ｆ暟](./lattices)
-
+## 目录
+- [群论 (Group Theory)](groups.md)
+- [环与域 (Rings and Fields)](rings.md)
+- [格与布尔代数 (Lattices)](lattices.md)

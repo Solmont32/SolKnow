@@ -1,21 +1,21 @@
 ---
-title: 閫昏緫 (Logic)
+title: 数理逻辑 (Logic)
 ---
 
-# 閫昏緫 (Logic)
+# 数理逻辑 (Logic)
 
-## 鍛介閫昏緫 (Propositional Logic)
-鍛介鏄竴涓彲浠ュ垽鏂湡鍋囩殑闄堣堪鍙ャ€?
-- **涓?(AND, $\land$)**锛氬綋 $P, Q$ 閮戒负鐪熸椂锛?P \land Q$ 涓虹湡銆?
-- **鎴?(OR, $\lor$)**锛氬綋 $P, Q$ 涓嚦灏戜竴涓负鐪熸椂锛?P \lor \lor Q$ 涓虹湡銆?
-- **闈?(NOT, $\neg$)**锛?\neg P$ 鐨勭湡鍊间笌 $P$ 鐩稿弽銆?
-- **钑存兜 (Implication, $\to$)**锛?P \to Q$ 鍙湁鍦?$P$ 鐪熶笖 $Q$ 鍋囨椂涓哄亣銆?
+## 命题逻辑
+- **命题**：能判断真假的陈述句。
+- **联结词**：$\neg$ (非), $\wedge$ (与), $\vee$ (或), $\to$ (蕴含), $\leftrightarrow$ (等价)。
+- **蕴含关系**：$P \to Q$ 仅在 $P$ 真 $Q$ 假时为假。
 
-## 璋撹瘝閫昏緫 (Predicate Logic)
-- **鍏ㄧО閲忚瘝 ($\forall$)**锛氬鎵€鏈夊厓绱犻兘鎴愮珛銆?
-- **瀛樺湪閲忚瘝 ($\exists$)**锛氬瓨鍦ㄨ嚦灏戜竴涓厓绱犳垚绔嬨€?
+## 谓词逻辑
+- **个体与谓词**：$P(x)$ 表示 $x$ 具有性质 $P$。
+- **量词**：$\forall$ (全称量词), $\exists$ (存在量词)。
 
-## 閫昏緫绛変环鎬?
-- **寰仿锋懇鏍瑰畾寰?(De Morgan's Laws)**锛?
-  - $\neg(P \land Q) \equiv \neg P \lor \neg Q$
-  - $\neg(P \lor Q) \equiv \neg P \land \neg Q$
+## 范式
+- **析取范式 (DNF)**。
+- **合取范式 (CNF)**。
+
+## 推理规则
+- **肯定前件 (Modus Ponens)**：由 $P$ 和 $P \to Q$ 得到 $Q$。
