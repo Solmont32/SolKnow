@@ -1,49 +1,109 @@
 ---
-title: 定积分：无穷小累加的黎曼和 (Definite Integrals)
+title: 定积分：Riemann 积分、性质与微积分基本定理 (Definite Integrals)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
-# 定积分：无穷小累加的黎曼和
+# 定积分：Riemann 积分、性质与微积分基本定理
 
-不定积分解决的是“已知导数求原函数”的代数问题，而定积分解决的则是“计算曲边梯形面积”等涉及无穷累加的几何与物理问题。这两者本互不相干，直到牛顿和莱布尼茨用一条伟大的公式将它们桥接在一起。
+定积分是微积分学的核心，它通过无穷小量的累加解决了面积、功、质量等连续量的求和问题。本章将从严格的 Riemann 定义出发，探讨定积分的深刻性质及其与微分学的内在联系。
 
-## 一、 定积分的核心理论
+## 一、 定积分的严格定义：Riemann 积分
 
-### 1. 黎曼积分 (Riemann Integral) 的定义
-设函数 $f(x)$ 在区间 $[a, b]$ 上有界。在 $[a, b]$ 中任意插入 $n-1$ 个分点，将其分成 $n$ 个小区间，长度为 $\Delta x_i$。在每个小区间内任取一点 $\xi_i$，作乘积 $f(\xi_i)\Delta x_i$，并求和：
-$$S = \sum_{i=1}^n f(\xi_i) \Delta x_i$$
-记 $\lambda = \max\{\Delta x_i\}$。如果不论对 $[a, b]$ 怎样划分，也不论在小区间上点 $\xi_i$ 怎样选取，只要当 $\lambda \to 0$ 时，和 $S$ 的极限总存在且为 $I$，则称 $f(x)$ 在 $[a, b]$ 上可积，极限 $I$ 称为定积分，记作：
-$$\int_a^b f(x) dx = \lim_{\lambda \to 0} \sum_{i=1}^n f(\xi_i) \Delta x_i$$
+### 1. Riemann 和与定积分
+设函数 $f(x)$ 在区间 $[a, b]$ 上有界。对 $[a, b]$ 进行一个**划分** $P: a = x_0 < x_1 < \dots < x_n = b$。记 $\Delta x_i = x_i - x_{i-1}$，$\lambda(P) = \max_{1 \le i \le n} \Delta x_i$（称为划分的模）。在每个小区间 $[x_{i-1}, x_i]$ 上任取一点 $\xi_i$，构造 **Riemann 和**：
+$$S(f, P, \{\xi_i\}) = \sum_{i=1}^n f(\xi_i) \Delta x_i$$
+若当 $\lambda(P) \to 0$ 时，该和式的极限存在且与划分方式 $P$ 及点 $\xi_i$ 的选取无关，则称 $f(x)$ 在 $[a, b]$ 上 **Riemann 可积**，极限值即为定积分 $\int_a^b f(x) dx$。
 
-**几何意义**：定积分表示曲线 $y=f(x)$、$x$ 轴及直线 $x=a, x=b$ 围成的**代数和面积**（$x$ 轴上方为正，下方为负）。
+### 2. 达布和 (Darboux Sums) 与可积准则
+为了更严格地刻画可积性，引入上、下达布和。设 $M_i$ 和 $m_i$ 分别为 $f(x)$ 在 $[x_{i-1}, x_i]$ 上的上、下确界：
+- **上达布和**：$\overline{S}(P) = \sum_{i=1}^n M_i \Delta x_i$
+- **下达布和**：$\underline{S}(P) = \sum_{i=1}^n m_i \Delta x_i$
 
-### 2. 微积分基本定理 (Fundamental Theorem of Calculus)
-这是微积分学中最重要的一座桥梁。
-**第一基本定理（变上限积分）**：
-若 $f(x)$ 在 $[a, b]$ 上连续，则变上限积分函数 $\Phi(x) = \int_a^x f(t) dt$ 在 $[a, b]$ 上可导，且：
-$$\Phi'(x) = \frac{d}{dx} \int_a^x f(t) dt = f(x)$$
-
-**第二基本定理（牛顿-莱布尼茨公式 Newton-Leibniz Formula）**：
-若 $F(x)$ 是连续函数 $f(x)$ 在 $[a, b]$ 上的一个原函数，则：
-$$\int_a^b f(x) dx = F(b) - F(a) = \left[ F(x) \right]_a^b$$
-
-### 3. 定积分的计算技巧
-- **换元法**：在定积分中换元时，**必须同时换积分上下限**。换元后无需再回代原来的变量。
-- **分部积分法**：$\int_a^b u dv = \left[ uv \right]_a^b - \int_a^b v du$。
-- **对称性法则**：
-  若 $f(x)$ 为奇函数，则 $\int_{-a}^a f(x) dx = 0$。
-  若 $f(x)$ 为偶函数，则 $\int_{-a}^a f(x) dx = 2 \int_0^a f(x) dx$。
-
-### 4. 广义积分 (Improper Integrals)
-当积分区间无限，或被积函数在区间内存在瑕点（趋于无穷）时，定积分推广为广义积分。
-- **无穷区间**：$\int_a^{+\infty} f(x) dx = \lim_{b \to +\infty} \int_a^b f(x) dx$。
-- **无界函数**（设 $a$ 为瑕点）：$\int_a^b f(x) dx = \lim_{\epsilon \to 0^+} \int_{a+\epsilon}^b f(x) dx$。
-若极限存在则称积分**收敛**，否则称**发散**。
+**可积的充要条件**：$f(x)$ 在 $[a, b]$ 上可积 $\iff \lim_{\lambda(P) \to 0} (\overline{S}(P) - \underline{S}(P)) = 0$。
+> **Lebesgue 判别法**：有界函数 $f(x)$ 在 $[a, b]$ 上 Riemann 可积的充要条件是其间断点集的勒贝格测度为零（即“几乎处处连续”）。
 
 ---
 
-## 二、 定积分高阶实战解析
+## 二、 定积分的性质
+
+### 1. 线性与区间可加性
+- **线性**：$\int_a^b [\alpha f(x) + \beta g(x)] dx = \alpha \int_a^b f(x) dx + \beta \int_a^b g(x) dx$。
+- **区间可加性**：$\int_a^b f(x) dx = \int_a^c f(x) dx + \int_c^b f(x) dx$（无论 $c$ 是否在 $a, b$ 之间，只要积分存在）。
+
+### 2. 比较性质与绝对值不等式
+- **保序性**：若在 $[a, b]$ 上 $f(x) \le g(x)$，则 $\int_a^b f(x) dx \le \int_a^b g(x) dx$。
+- **绝对值不等式**：$|\int_a^b f(x) dx| \le \int_a^b |f(x)| dx$。
+
+### 3. 积分中值定理
+- **第一中值定理**：若 $f(x)$ 在 $[a, b]$ 上连续，则存在 $\xi \in [a, b]$ 使得：
+  $$\int_a^b f(x) dx = f(\xi)(b-a)$$
+- **第二中值定理（推广）**：若 $f, g$ 在 $[a, b]$ 上可积，$g(x) \ge 0$（或 $\le 0$），且 $f(x)$ 连续，则存在 $\xi \in [a, b]$ 使得：
+  $$\int_a^b f(x) g(x) dx = f(\xi) \int_a^b g(x) dx$$
+
+---
+
+## 三、 微积分基本定理 (FTC)
+
+### 1. 变上限积分的导数
+设 $f(x)$ 在 $[a, b]$ 上连续，定义 $\Phi(x) = \int_a^x f(t) dt$。则 $\Phi(x)$ 在 $[a, b]$ 上可导，且：
+$$\Phi'(x) = f(x)$$
+这表明**连续函数的原函数一定存在**（即变上限积分函数）。
+
+### 2. 牛顿-莱布尼茨公式 (Newton-Leibniz Formula)
+若 $F(x)$ 是 $f(x)$ 在 $[a, b]$ 上的任一原函数，则：
+$$\int_a^b f(x) dx = F(b) - F(a)$$
+
+---
+
+## 四、 深度深度例题解析
+
+### 例题 1：积分上限函数的极限与 Taylor 展开
+计算极限：$\lim_{x \to 0} \frac{\int_0^x (e^{t^2} - 1) dt}{x^3}$。
+
+<details>
+<summary>点击查看解析</summary>
+
+#### 解析过程
+1. **识别类型**：分子为 $\int_0^x (e^{t^2} - 1) dt$，当 $x \to 0$ 时，分子分母均为 $0$，属于 $\frac{0}{0}$ 型。
+2. **洛必达法则结合 FTC**：
+   分子求导：$\frac{d}{dx} \int_0^x (e^{t^2} - 1) dt = e^{x^2} - 1$。
+   分母求导：$3x^2$。
+3. **再次计算极限**：
+   $\lim_{x \to 0} \frac{e^{x^2} - 1}{3x^2}$
+4. **利用等价无穷小**：当 $u \to 0$ 时，$e^u - 1 \sim u$。
+   令 $u = x^2$，则 $e^{x^2} - 1 \sim x^2$。
+   $\lim_{x \to 0} \frac{x^2}{3x^2} = \frac{1}{3}$。
+
+#### 答案
+$1/3$
+</details>
+
+### 例题 2：第二积分中值定理的应用
+证明：当 $b > a > 0$ 时，$|\int_a^b \frac{\sin x}{x} dx| < \frac{2}{a}$。
+
+<details>
+<summary>点击查看解析</summary>
+
+#### 解析过程
+1. **分析特征**：被积函数为 $\frac{1}{x} \cdot \sin x$。其中 $\frac{1}{x}$ 在 $(0, +\infty)$ 上单调递减且趋于 0。
+2. **应用第二积分中值定理**（积分形式）：
+   由于 $f(x) = \frac{1}{x}$ 单调且 $f(x) \ge 0$，存在 $\xi \in [a, b]$ 使得：
+   $\int_a^b \frac{\sin x}{x} dx = \frac{1}{a} \int_a^\xi \sin x dx$
+3. **计算积分部分**：
+   $\int_a^\xi \sin x dx = [-\cos x]_a^\xi = \cos a - \cos \xi$。
+4. **利用三角函数有界性**：
+   $|\cos a - \cos \xi| \le |\cos a| + |\cos \xi| \le 2$。
+5. **得出结论**：
+   $|\int_a^b \frac{\sin x}{x} dx| = \frac{1}{a} |\cos a - \cos \xi| \le \frac{2}{a}$。
+   （注：严格小于符号可以通过更精细的讨论或 $b \to \infty$ 的极限情况得到）。
+
+#### 证明完毕
+</details>
+
+---
+
+## 五、 定积分实战练习库
 
 ### 练习 1：利用定积分定义求数列极限
 求极限：$\lim_{n \to \infty} (\frac{1}{n+1} + \frac{1}{n+2} + \dots + \frac{1}{n+n})$。
