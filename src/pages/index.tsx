@@ -13,7 +13,9 @@ import {
   GraduationCap, 
   ExternalLink,
   ChevronRight,
-  Monitor
+  Monitor,
+  Brain,
+  ShieldCheck
 } from 'lucide-react';
 import styles from './index.module.css';
 
@@ -88,6 +90,22 @@ const FeatureList = [
     link: '/docs/cs/',
     linkText: '深入底层原理',
     color: '#f59e0b',
+  },
+  {
+    title: '人工智能知识库',
+    Icon: Brain,
+    description: '探索机器学习、深度学习与自然语言处理的前沿技术，构建通往智能时代的知识阶梯。',
+    link: '/docs/ai/',
+    linkText: '开启智能之旅',
+    color: '#06b6d4',
+  },
+  {
+    title: '信息安全知识库',
+    Icon: ShieldCheck,
+    description: '涵盖 Web 安全、现代密码学与二进制攻防，培养严谨的安全思维与实战技能。',
+    link: '/docs/infosec/',
+    linkText: '筑牢安全防线',
+    color: '#6366f1',
   },
   {
     title: '视频讲解整合',
