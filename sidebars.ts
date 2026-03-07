@@ -86,8 +86,9 @@ const sidebars: SidebarsConfig = {
               link: { type: 'doc', id: 'academic-math/competition/junior/index' },
               items: [
                 'academic-math/competition/junior/algebra-skills',
-                'academic-math/competition/junior/number-theory-basic',
                 'academic-math/competition/junior/circle-geometry',
+                'academic-math/competition/junior/number-theory-basic',
+                'academic-math/competition/junior/combinatorics',
               ]
             },
             {
