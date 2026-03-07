@@ -41,7 +41,7 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 
 #### (1) 定义的精确对比
 - **连续 (Continuity)**：在区间 $I$ 上连续是指 $\forall x_0 \in I, \forall \epsilon > 0, \exists \delta > 0$（$\delta$ 与 $\epsilon$ 和 $x_0$ 均有关），使得当 $|x - x_0| < \delta$ 时，有 $|f(x) - f(x_0)| < \epsilon$。
-- **一致连续 (Uniform Continuity)**：$\forall \epsilon > 0, \exists \delta > 0$（**$\delta$ 仅与 $\epsilon$ 有关**，对区间内所有点通用），使得 $\forall x_1, x_2 \in I$，只要 $|x_1 - x_2| < \delta$，就有 $|f(x_1) - f(x_2)| < \epsilon$。
+- **一致连续 (Uniform Continuity)**：$\forall \epsilon > 0, \exists \delta > 0$（$\delta$ 仅与 $\epsilon$ 有关，对区间内所有点通用），使得 $\forall x_1, x_2 \in I$，只要 $|x_1 - x_2| < \delta$，就有 $|f(x_1) - f(x_2)| < \epsilon$。
 
 **核心差异**：连续性是“点点为营”（局部性质），而一致连续性是“全线协同”（全局性质）。
 
