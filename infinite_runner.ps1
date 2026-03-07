@@ -1,15 +1,16 @@
-# SolKnow Autonomous Pulse Runner (V3.7 - STRATEGIC TURBO)
+# SolKnow Autonomous Pulse Runner (V3.8 - LIGHTWEIGHT STANDARD)
 # Usage: pwsh -ExecutionPolicy Bypass -File infinite_runner.ps1
 
 if ($IsWindows) { chcp 65001 | Out-Null }
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-$CHECK_INTERVAL = 300 
+$CHECK_INTERVAL = 60 
 $LOG_FILE = "AUTOMATION_LOG.md"
 $TASKS_FILE = "TASKS.md"
 
-function Invoke-GCP($message) {
-    Write-Host ">>> [SYNC] $message" -ForegroundColor Gray
+# 内部同步函数：使用标准 Git 指令代替 gcp 别名
+function Invoke-Sync($message) {
+    Write-Host ">>> [GIT] $message" -ForegroundColor Gray
     git add .
     $status = git status --porcelain
     if ($status) {
@@ -24,7 +25,7 @@ function Show-Logo {
     Clear-Host
     Write-Host @"
 
-      [ STRATEGIC ENGINE V3.7 - TURBO MODE ]
+      [ STRATEGIC ENGINE V3.8 - LIGHTWEIGHT ]
       ________________________________________________________________________________________________________
 
        ####   ####  #      #  # #  #  ####  #      #       #  #  #      #  ####  #   #
@@ -37,7 +38,7 @@ function Show-Logo {
       ________________________________________________________________________________________________________
       
       >>> FOCUS: MATH ANALYSIS & CS INTEGRATION
-      >>> MODE: BATCH EXECUTION (TURBO)
+      >>> SYNC FREQUENCY: 60s
       >>> TIME: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
       ________________________________________________________________________________________________________
 
@@ -80,80 +81,71 @@ function Write-Log($message, $type="INFO") {
 
 if (-not (Test-Path $LOG_FILE)) { Add-Content -Path $LOG_FILE -Value "# SolKnow Automation Vital Logs`n" }
 
-Write-Log "SolKnow Industrial Core V3.7 (Turbo) Initialized." "SUCCESS"
+Write-Log "SolKnow Industrial Core V3.8 Initialized." "SUCCESS"
 
 while($true) {
     try {
         Show-Logo
-        Write-Host ">>> Heartbeat started. Initializing workspace..." -ForegroundColor Gray
-        Invoke-GCP "chore: pre-heartbeat synchronization"
+        Write-Host ">>> Heartbeat started. Syncing..." -ForegroundColor Gray
+        Invoke-Sync "chore: scheduled pulse sync"
         git pull origin main --rebase
 
-        # --- 阶段 1：战略规划 (Strategic Planning) ---
-        $content = Get-Content $TASKS_FILE -Raw
+        # --- 阶段 1：规划代理 (Planning Agent) ---
+        $content = Get-Get-Content $TASKS_FILE -Raw
         if ($content -notmatch "(?m)^## 待办子任务\s*(\r?\n- \[ \] .*)+") {
-            Write-Log "SUB-TASK QUEUE EMPTY. ANALYZING ROADMAP..." "PLAN"
+            Write-Log "SUB-TASK QUEUE EMPTY. PLANNING..." "PLAN"
             $planPrompt = @"
 Target: $TASKS_FILE
-Vision: Math Analysis Integrated System.
-Instructions:
-1. Review '## 总任务' and '## 已完成任务'.
-2. Plan 3-5 new sub-tasks that follow a logical progression of Math Analysis.
-3. Each task MUST focus on 'Detail + 1-2 Examples + Exercise Pool Expansion'.
-Action: Append under '## 待办子任务'. Run 'gcp'.
+Objective: Read '## 总任务'. Plan 3-5 granular sub-tasks for Math Analysis depth expansion.
+Action: Append them under '## 待办子任务' using the format '- [ ] Task (YYYY-MM-DD)'.
+Note: Please stage, commit, and push your changes once the planning is done.
 "@
             & gemini -y -p $planPrompt
-            Write-Log "STRATEGIC PLANNING COMPLETE. BATCH INJECTED." "SUCCESS"
+            Write-Log "STRATEGIC PLANNING COMPLETE." "SUCCESS"
             $content = Get-Content $TASKS_FILE -Raw 
         }
 
-        # --- 阶段 2：全量执行 (Turbo Execution) ---
-        # 在单次循环中处理所有待办任务，直到列表清空
+        # --- 阶段 2：执行代理 (Execution Agent) ---
         while ($true) {
             $content = Get-Content $TASKS_FILE -Raw
             if ($content -match "(?m)^## 待办子任务[\s\S]*?^- \[ \] (.*)") {
                 $taskDesc = $matches[1].Trim()
-                Write-Log "TURBO LOCKED TARGET: $taskDesc" "EXEC"
+                Write-Log "LOCKED TARGET: $taskDesc" "EXEC"
 
-                # 锁定任务并上云
+                # 锁定并提交
                 $processingContent = $content -replace "(?m)^- \[ \] $([regex]::Escape($taskDesc))", "- [/] $taskDesc (Processing...)"
                 Set-Content $TASKS_FILE $processingContent
-                Invoke-GCP "chore: pulse - processing task: $taskDesc"
+                Invoke-Sync "chore: pulse - processing task: $taskDesc"
 
-                Write-Log "EXECUTING TASK..." "EXEC"
+                Write-Log "EXECUTING..." "EXEC"
                 $execPrompt = @"
 Task: $taskDesc
-Context: Math Analysis Textbook Quality.
-Action: 
-1. Perform task (write content, examples, exercises).
-2. Move task to '## 已完成任务' and mark as [x].
-3. Run 'gcp'.
+Objective: Textbook quality content + 1-2 examples + exercise pool expansion.
+Instruction: 
+1. Complete the content in relevant files.
+2. Move the task to '## 已完成任务' and mark as [x].
+3. Stage, commit, and push all changes.
 "@
                 & gemini -y -p $execPrompt
 
-                # 同步并验证
                 git pull origin main --rebase
                 $postCheck = Get-Content $TASKS_FILE -Raw
                 if ($postCheck -match "(?m)^- \[\/\] $([regex]::Escape($taskDesc))") {
                     Write-Log "TASK FAILED. REVERTING..." "ERROR"
                     $revertContent = $postCheck -replace "(?m)^- \[\/\] $([regex]::Escape($taskDesc)) \(Processing...\)", "- [ ] $taskDesc"
                     Set-Content $TASKS_FILE $revertContent
-                    Invoke-GCP "chore: pulse - task reverted: $taskDesc"
-                    break # 跳出 Turbo 循环，等待下次心跳重试
+                    Invoke-Sync "chore: pulse - task reverted: $taskDesc"
+                    break 
                 } else {
-                    Write-Log "TASK SUCCESSFUL. MOVING TO NEXT..." "SUCCESS"
+                    Write-Log "SUCCESS: $taskDesc" "SUCCESS"
                 }
             } else {
-                Write-Log "ALL SUB-TASKS CLEARED IN THIS CYCLE." "SUCCESS"
                 break
             }
         }
-
-        Write-Log "Cloud verification..." "INFO"
-        gh run list --limit 1
         
     } catch {
-        Write-Log "TURBO ENGINE FAULT: $($_.Exception.Message)" "ERROR"
+        Write-Log "ENGINE FAULT: $($_.Exception.Message)" "ERROR"
     }
     
     Show-Resting $CHECK_INTERVAL
