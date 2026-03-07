@@ -17,8 +17,30 @@ if ($null -ne (Get-Variable -Name PSNativeCommandUseErrorActionPreference -Error
     $PSNativeCommandUseErrorActionPreference = $false
 }
 
+function Resolve-CodexLauncher {
+    $candidates = @()
+    try {
+        $candidates = @(where.exe codex 2>$null)
+    } catch {
+        $candidates = @()
+    }
+
+    $cmdCandidate = $candidates | Where-Object { $_ -match '\.cmd$' } | Select-Object -First 1
+    if (-not [string]::IsNullOrWhiteSpace($cmdCandidate)) {
+        return $cmdCandidate.Trim()
+    }
+
+    $direct = Get-Command "codex" -ErrorAction SilentlyContinue
+    if ($direct -and -not [string]::IsNullOrWhiteSpace($direct.Path)) {
+        return $direct.Path
+    }
+
+    return "codex"
+}
+
 $global:LAST_CHECKED_RUN_ID = ""
 $global:WORKSPACE_ROOT = (Get-Location).Path
+$global:CODEX_LAUNCHER = Resolve-CodexLauncher
 $global:EXCLUDED_SYNC_PATHS = @(
     $LogFile,
     $LockFile,
@@ -457,8 +479,8 @@ function Invoke-CodexSmart($prompt, [string[]]$models, $modeLabel) {
 
             $args += $prompt
 
-            $process = Start-Process -FilePath "codex" -ArgumentList $args -NoNewWindow -PassThru -Wait
-            $exitCode = $process.ExitCode
+            & $global:CODEX_LAUNCHER @args
+            $exitCode = $LASTEXITCODE
 
             if ($exitCode -eq 0) {
                 if (Test-Path $CodexOutputFile) {
@@ -497,7 +519,7 @@ function Assert-TaskIntegrity($expectedTask) {
 function Assert-Environment {
     Ensure-Command "git"
     Ensure-Command "npm"
-    Ensure-Command "codex"
+    Ensure-Command $global:CODEX_LAUNCHER
     Ensure-Command "gh"
 
     if (-not (Test-GitAvailable)) {
