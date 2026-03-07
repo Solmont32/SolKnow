@@ -194,6 +194,7 @@ const sidebars: SidebarsConfig = {
                   type: 'category',
                   label: '专题补充与进阶 (Supplements)',
                   items: [
+                    'academic-math/analysis/inequalities',
                     'academic-math/analysis/differential-equations',
                     'academic-math/analysis/riemann-stieltjes-integral',
                     'academic-math/analysis/infinite-products',

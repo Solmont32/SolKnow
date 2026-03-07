@@ -68,6 +68,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 为了满足更高阶的学习需求，本库额外提供了以下专题：
 
+- **[分析学不等式全书](inequalities)**：系统化梳理 Young, Hölder, Minkowski 等核心工具。
 - **[Riemann-Stieltjes 积分](riemann-stieltjes-integral)**：Lebesgue 积分的序曲。
 - **[常微分方程初步](differential-equations)**：动态系统的数学描述。
 - **[无穷乘积](infinite-products)**：与级数并行的无限运算。
