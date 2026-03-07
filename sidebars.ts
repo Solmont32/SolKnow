@@ -68,11 +68,39 @@ const sidebars: SidebarsConfig = {
           type: 'category',
           label: '数学竞赛 (Olympiad)',
           items: [
-            { type: 'doc', id: 'academic-math/competition/elementary', label: '小学奥数' },
-            { type: 'doc', id: 'academic-math/competition/junior', label: '初中数学竞赛' },
-            { type: 'doc', id: 'academic-math/competition/senior', label: '高中数学竞赛' },
+            {
+              type: 'category',
+              label: '小学奥数',
+              link: { type: 'doc', id: 'academic-math/competition/elementary/index' },
+              items: [
+                'academic-math/competition/elementary/number-theory',
+                'academic-math/competition/elementary/counting',
+                'academic-math/competition/elementary/geometry',
+              ]
+            },
+            {
+              type: 'category',
+              label: '初中数学竞赛',
+              link: { type: 'doc', id: 'academic-math/competition/junior/index' },
+              items: [
+                'academic-math/competition/junior/algebra-skills',
+                'academic-math/competition/junior/number-theory-basic',
+                'academic-math/competition/junior/circle-geometry',
+              ]
+            },
+            {
+              type: 'category',
+              label: '高中数学竞赛',
+              link: { type: 'doc', id: 'academic-math/competition/senior/index' },
+              items: [
+                'academic-math/competition/senior/inequalities',
+                'academic-math/competition/senior/number-theory-advanced',
+                'academic-math/competition/senior/geometry-theorems',
+              ]
+            },
           ],
         },
+
         {
           type: 'category',
           label: '基础教育 (K-12)',
