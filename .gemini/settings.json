@@ -3,14 +3,6 @@
     "fetch": {
       "command": "uvx mcp-server-fetch",
       "args": []
-    },
-    "thinking": {
-      "command": "npx -y @modelcontextprotocol/server-sequential-thinking",
-      "args": []
-    },
-    "memory": {
-      "command": "npx -y @modelcontextprotocol/server-memory",
-      "args": []
     }
   }
 }
