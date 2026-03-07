@@ -1,22 +1,18 @@
 ---
-title: 浜嬩欢涓庢鐜?(Events and Probability)
+title: 事件与概率 (Events and Probability)
 ---
 
-# 浜嬩欢涓庢鐜?(Events and Probability)
+# 事件与概率 (Events and Probability)
 
-## 鍩烘湰瀹氫箟
-- **鏍锋湰绌洪棿 ($\Omega$)**锛氶殢鏈鸿瘯楠屾墍鏈夊彲鑳界粨鏋滅殑闆嗗悎銆?
-- **浜嬩欢 ($A$)**锛氭牱鏈┖闂寸殑瀛愰泦銆?
-- **姒傜巼 ($P(A)$)**锛氫簨浠?$A$ 鍙戠敓鐨勫彲鑳芥€э紝婊¤冻 $0 \le P(A) \le 1$銆?
+## 基本概念
+- **样本空间 ($\Omega$)**：随机试验所有可能结果的集合。
+- **随机事件**：样本空间的子集。
+- **概率 ($P$)**：描述事件发生的可能性大小，满足 $0 \le P(A) \le 1$。
 
-## 姒傜巼鍏悊
-1. 闈炶礋鎬э細$P(A) \ge 0$銆?
-2. 瑙勮寖鎬э細$P(\Omega) = 1$銆?
-3. 鍙垪鍙姞鎬э細鑻?$A_i$ 涓や袱浜掍笉鐩稿锛屽垯 $P(\cup A_i) = \sum P(A_i)$銆?
-
-## 鏉′欢姒傜巼
-$P(A|B) = \frac{P(AB)}{P(B)}$ (褰?$P(B) > 0$)銆?
-
-## 鍏ㄦ鐜囧叕寮忎笌璐濆彾鏂叕寮?
-- **鍏ㄦ鐜?*锛?P(A) = \sum P(A|B_i) P(B_i)$銆?
-- **璐濆彾鏂?*锛?P(B_j|A) = \frac{P(A|B_j) P(B_j)}{\sum P(A|B_i) P(B_i)}$銆?
+## 概率公式
+- **加法公式**：$P(A \cup B) = P(A) + P(B) - P(A \cap B)$
+- **条件概率**：$P(A|B) = \frac{P(A \cap B)}{P(B)}$
+- **乘法公式**：$P(A \cap B) = P(B)P(A|B)$
+- **全概率公式**：$P(A) = \sum_{i} P(B_i)P(A|B_i)$
+- **贝叶斯公式 (Bayes' Theorem)**：
+$$P(B_i|A) = \frac{P(B_i)P(A|B_i)}{\sum_{j} P(B_j)P(A|B_j)}$$
