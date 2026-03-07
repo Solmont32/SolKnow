@@ -8,38 +8,49 @@ $CHECK_INTERVAL = 60
 $SYNC_COOLDOWN = 10 
 $LOG_FILE = "AUTOMATION_LOG.md"
 $TASKS_FILE = "TASKS.md"
+$LAST_CHECKED_RUN_ID = ""
+
+function Check-CloudStatus {
+    try {
+        $lastRunJson = gh run list --workflow "Deploy to GitHub Pages" --limit 1 --json databaseId,status,conclusion,displayTitle
+        $lastRun = $lastRunJson | ConvertFrom-Json
+        if ($lastRun -and $lastRun[0].databaseId -ne $global:LAST_CHECKED_RUN_ID) {
+            $status = $lastRun[0].status
+            $conclusion = $lastRun[0].conclusion
+            $title = $lastRun[0].displayTitle
+            
+            if ($status -eq "completed") {
+                if ($conclusion -eq "success") {
+                    Write-Log "Cloud Deployment VERIFIED: $title" "SUCCESS"
+                } else {
+                    Write-Log "Cloud Deployment ALERT: $title FAILED on cloud!" "ERROR"
+                }
+                $global:LAST_CHECKED_RUN_ID = $lastRun[0].databaseId
+            }
+        }
+    } catch {
+        # 允许静默失败，避免影响主逻辑
+    }
+}
 
 function Invoke-Sync($message) {
     $status = git status --porcelain
     if ($status) {
+        # --- 本地预判：类型检查 ---
+        Write-Log "Pre-flight: Running local type-check..." "INFO"
+        npm run typecheck > $null 2>&1
+        if ($LASTEXITCODE -ne 0) {
+            Write-Log "Pre-flight FAILED: Type errors detected. Sync aborted." "ERROR"
+            return $false
+        }
+
         Write-Log ">>> [SYNC] Changes detected. Aligning with cloud..." "EXEC"
         git add .
         git commit -m $message
-        # 强制在 Push 前再次 Rebase，确保高频执行不冲突
         git pull origin main --rebase
         git push origin main
-
-        # --- GitHub Actions 部署审查 ---
-        Write-Log "Waiting for deployment workflow to complete..." "INFO"
-        Start-Sleep -Seconds 5 # 等待 GitHub 接收 Push
-        try {
-            # 获取最新运行的 Workflow ID 并监视
-            $runId = (gh run list --workflow "Deploy to GitHub Pages" --limit 1 --json databaseId --jq ".[0].databaseId")
-            if ($runId) {
-                Write-Log "Watching workflow run: $runId" "INFO"
-                gh run watch $runId --exit-status
-                if ($LASTEXITCODE -eq 0) {
-                    Write-Log "Deployment SUCCESS: $message" "SUCCESS"
-                } else {
-                    Write-Log "Deployment FAILED: $message" "ERROR"
-                }
-            } else {
-                Write-Log "Could not find recent deployment workflow." "ERROR"
-            }
-        } catch {
-            Write-Log "Error during deployment verification: $($_.Exception.Message)" "ERROR"
-        }
-
+        Write-Log "Push completed. Cloud status will be verified in background." "SUCCESS"
+        
         Start-Sleep -Seconds $SYNC_COOLDOWN
         return $true
     }
@@ -99,6 +110,7 @@ Startup-Heal
 while($true) {
     try {
         Show-Logo
+        Check-CloudStatus
         Write-Host ">>> Initializing pulse sync..." -ForegroundColor Gray
         git pull origin main --rebase
 
