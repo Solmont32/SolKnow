@@ -32,26 +32,24 @@ $$\int f(\phi(x)) \phi'(x) dx = \int f(\phi(x)) d(\phi(x)) = F(\phi(x)) + C$$
 - $\cos x dx = d(\sin x)$
 - $e^x dx = d(e^x)$
 
-### 3. 第二类换元法
-当凑微分法失效，特别是遇到复杂的根式时，我们主动引入一个新变量 $x = \psi(t)$，将复杂的积分化为简单的积分。
-**常见代换**：
-- 遇到 $\sqrt{a^2 - x^2}$，令 $x = a \sin t$。
-- 遇到 $\sqrt{x^2 + a^2}$，令 $x = a \tan t$。
-- 遇到 $\sqrt{x^2 - a^2}$，令 $x = a \sec t$。
+### 3. 第二类换元法 (Integration by Substitution)
+当凑微分法失效，特别是遇到复杂的根式或分式时，我们主动引入一个新变量 $x = \psi(t)$。
+**常用代换类型**：
+1. **三角代换**：
+   - 遇到 $\sqrt{a^2 - x^2}$，令 $x = a \sin t$。
+   - 遇到 $\sqrt{x^2 + a^2}$，令 $x = a \tan t$。
+   - 遇到 $\sqrt{x^2 - a^2}$，令 $x = a \sec t$。
+2. **倒代换 ($x = 1/t$)**：常用于分母次数显著高于分子的情形。
+3. **根式代换**：令 $t = \sqrt[n]{ax+b}$ 或 $t = \sqrt[n]{\frac{ax+b}{cx+d}}$ 消去根号。
 
 ### 4. 分部积分法 (Integration by Parts)
 源于乘积的求导法则 $(uv)' = u'v + uv'$。
 **公式**：
 $$\int u dv = uv - \int v du$$
-**核心难点**：如何选择 $u$ 和 $dv$？
-**LIATE 法则（反对幂三指）**：
-按以下顺序优先选择 $u$（求导容易变简单的函数）：
-1. **L**ogarithmic (对数函数，如 $\ln x$)
-2. **I**nverse trigonometric (反三角函数，如 $\arctan x$)
-3. **A**lgebraic (代数/多项式函数，如 $x^2$)
-4. **T**rigonometric (三角函数，如 $\sin x$)
-5. **E**xponential (指数函数，如 $e^x$)
-排在前面的设为 $u$，剩下的设为 $dv$。
+**核心技巧**：
+- **LIATE 法则**：优先选反对幂三指作为 $u$。
+- **循环型**：如 $\int e^{ax} \sin bx dx$，需两次分部积分后移项求解。
+- **递推型**：用于求解含 $n$ 次幂的积分（如 $I_n = \int \sin^n x dx$）。
 
 <KnowledgeCard type="warning" title="原函数存在定理">
 并非所有函数都有原函数。**连续函数一定有原函数**。但即便有原函数，也未必能用“初等函数”表示出来（如 $\int e^{-x^2} dx, \int \frac{\sin x}{x} dx$ 等著名的“积不出”函数）。
@@ -59,142 +57,24 @@ $$\int u dv = uv - \int v du$$
 
 ---
 
-## 二、 积分计算高阶实战解析
+## 二、 有理函数与特殊函数积分技巧
 
-### 练习 1：代数变形与凑微分的结合
-求不定积分：$\int \frac{dx}{x(1+x^2)}$。
+### 1. 有理函数积分 (Rational Functions)
+对于 $R(x) = \frac{P(x)}{Q(x)}$：
+1. **化为真分式**：若 $\deg(P) \ge \deg(Q)$，先进行多项式除法。
+2. **部分分式分解**：根据 $Q(x)$ 的因式分解（实数域内必可分解为一次项与二次项之积）：
+   - $\frac{1}{(x-a)^k} \to \frac{A_1}{x-a} + \dots + \frac{A_k}{(x-a)^k}$
+   - $\frac{Mx+N}{(x^2+px+q)^k} \to$ 利用配方化为 $\int \frac{dt}{(t^2+1)^k}$ 类型。
 
-<details>
-<summary>点击查看解析与答案</summary>
+### 2. 三角函数有理式 (Universal Substitution)
+对于 $\int R(\sin x, \cos x) dx$，引入**万能代换** $t = \tan \frac{x}{2}$：
+- $\sin x = \frac{2t}{1+t^2}, \cos x = \frac{1-t^2}{1+t^2}, dx = \frac{2 dt}{1+t^2}$
 
-#### 解析过程
-**方法一：分项法（裂项）**
-1. 观察被积函数，分子是 1，我们可以巧妙地构造出与分母相关的项：
-   $$1 = (1+x^2) - x^2$$
-2. 将被积函数拆分：
-   $$\frac{1}{x(1+x^2)} = \frac{1+x^2 - x^2}{x(1+x^2)} = \frac{1+x^2}{x(1+x^2)} - \frac{x^2}{x(1+x^2)} = \frac{1}{x} - \frac{x}{1+x^2}$$
-3. 分别积分：
-   $\int \frac{1}{x} dx = \ln|x| + C_1$
-   对于第二项，凑微分：$\int \frac{x}{1+x^2} dx = \frac{1}{2} \int \frac{d(1+x^2)}{1+x^2} = \frac{1}{2} \ln(1+x^2) + C_2$
-4. 合并结果：
-   $$\ln|x| - \frac{1}{2} \ln(1+x^2) + C = \ln \frac{|x|}{\sqrt{1+x^2}} + C$$
-
-**方法二：提次幂（更具普适性）**
-1. 提取分母的 $x^3$：
-   $\int \frac{dx}{x^3(x^{-2} + 1)}$
-2. 凑微分，令 $t = x^{-2}$，则 $dt = -2x^{-3}dx \implies x^{-3}dx = -\frac{1}{2}dt$。
-3. 积分变为：
-   $-\frac{1}{2} \int \frac{dt}{t+1} = -\frac{1}{2}\ln|t+1| + C = -\frac{1}{2}\ln(x^{-2}+1) + C$
-4. 化简后与方法一结果完全一致。
-
-#### 答案
-$\ln \frac{|x|}{\sqrt{1+x^2}} + C$
-</details>
-
-### 练习 2：第二类换元法（三角代换）
-求不定积分：$\int \frac{\sqrt{4-x^2}}{x^2} dx$。
-
-<details>
-<summary>点击查看解析与答案</summary>
-
-#### 解析过程
-遇到 $\sqrt{a^2-x^2}$ 形式，标准做法是三角代换。
-1. **设代换**：令 $x = 2 \sin t, (-\frac{\pi}{2} < t < \frac{\pi}{2})$。
-2. **计算微分与根式**：
-   $dx = 2 \cos t dt$
-   $\sqrt{4-x^2} = \sqrt{4 - 4\sin^2 t} = 2 \cos t$
-3. **代入原积分**：
-   $$\int \frac{2 \cos t}{4 \sin^2 t} \cdot 2 \cos t dt = \int \frac{\cos^2 t}{\sin^2 t} dt = \int \cot^2 t dt$$
-4. **利用三角恒等式**：$\cot^2 t = \csc^2 t - 1$。
-   $$\int (\csc^2 t - 1) dt = -\cot t - t + C$$
-5. **回代 $x$**：
-   已知 $\sin t = \frac{x}{2}$，则 $t = \arcsin \frac{x}{2}$。
-   画出直角三角形，对边为 $x$，斜边为 2，邻边为 $\sqrt{4-x^2}$。
-   所以 $\cot t = \frac{\text{邻边}}{\text{对边}} = \frac{\sqrt{4-x^2}}{x}$。
-6. **最终结果**：
-   $$-\frac{\sqrt{4-x^2}}{x} - \arcsin \frac{x}{2} + C$$
-
-#### 答案
-$-\frac{\sqrt{4-x^2}}{x} - \arcsin \frac{x}{2} + C$
-</details>
-
-### 练习 3：分部积分法的经典循环
-求不定积分：$I = \int e^{2x} \sin x dx$。
-
-<details>
-<summary>点击查看解析与答案</summary>
-
-#### 解析过程
-这是经典的“循环型”分部积分。指数函数和三角函数无论怎么求导都不会消失，但两次分部积分后会出现自身。
-
-1. **第一次分部积分**：
-   选择 $u = \sin x, dv = e^{2x}dx$（根据反对幂三指，选三角函数为 u 更优，虽此题选指数也可）。
-   $du = \cos x dx, v = \frac{1}{2}e^{2x}$。
-   $$I = \frac{1}{2}e^{2x}\sin x - \frac{1}{2}\int e^{2x}\cos x dx$$
-2. **第二次分部积分**：对 $\int e^{2x}\cos x dx$ 进行同样的操作。
-   选择 $u = \cos x, dv = e^{2x}dx$。
-   $du = -\sin x dx, v = \frac{1}{2}e^{2x}$。
-   $$\int e^{2x}\cos x dx = \frac{1}{2}e^{2x}\cos x - \int \frac{1}{2}e^{2x}(-\sin x)dx = \frac{1}{2}e^{2x}\cos x + \frac{1}{2}I$$
-3. **建立方程**：将第二步结果代入第一步的式子：
-   $$I = \frac{1}{2}e^{2x}\sin x - \frac{1}{2} \left[ \frac{1}{2}e^{2x}\cos x + \frac{1}{2}I \right]$$
-4. **解出 I**：
-   $$I = \frac{1}{2}e^{2x}\sin x - \frac{1}{4}e^{2x}\cos x - \frac{1}{4}I$$
-   移项得：
-   $$\frac{5}{4}I = \frac{1}{4}e^{2x}(2\sin x - \cos x)$$
-   $$I = \frac{1}{5}e^{2x}(2\sin x - \cos x) + C$$
-
-#### 答案
-$\frac{1}{5}e^{2x}(2\sin x - \cos x) + C$
-</details>
-
-### 练习 4：隐藏的“反对幂三指”
-求不定积分：$\int \arctan x dx$。
-
-<details>
-<summary>点击查看解析与答案</summary>
-
-#### 解析过程
-被积函数只有一个孤立的反三角函数，很多初学者会不知所措。这里的关键是**把 $1$ 当作代数函数**。
-
-1. **设定 u 和 dv**：根据 LIATE 法则，反三角函数优先设为 $u$。
-   设 $u = \arctan x, dv = 1 \cdot dx$。
-   则 $du = \frac{1}{1+x^2} dx, v = x$。
-2. **应用分部积分公式**：
-   $$\int \arctan x dx = x \arctan x - \int \frac{x}{1+x^2} dx$$
-3. **计算剩余的积分**（第一类换元法）：
-   $$\int \frac{x}{1+x^2} dx = \frac{1}{2} \int \frac{d(1+x^2)}{1+x^2} = \frac{1}{2} \ln(1+x^2)$$
-4. **合并结果**：
-   $$x \arctan x - \frac{1}{2} \ln(1+x^2) + C$$
-
-#### 答案
-$x \arctan x - \frac{1}{2} \ln(1+x^2) + C$
-</details>
-
-### 练习 5：有理函数的积分（部分分式分解）
-求不定积分：$\int \frac{x+5}{x^2 - x - 2} dx$。
-
-<details>
-<summary>点击查看解析与答案</summary>
-
-#### 解析过程
-对于真分式（分子次数低于分母），标准解法是将分母因式分解，然后化为部分分式之和。
-
-1. **分母因式分解**：
-   $x^2 - x - 2 = (x-2)(x+1)$。
-2. **设部分分式**：
-   设 $\frac{x+5}{(x-2)(x+1)} = \frac{A}{x-2} + \frac{B}{x+1}$。
-3. **求待定系数 A, B**：
-   通分并令分子相等：$A(x+1) + B(x-2) = x+5$。
-   - 令 $x = 2$：$3A = 7 \implies A = \frac{7}{3}$。
-   - 令 $x = -1$：$-3B = 4 \implies B = -\frac{4}{3}$。
-4. **代入积分**：
-   $$\int \left( \frac{7/3}{x-2} - \frac{4/3}{x+1} \right) dx$$
-5. **计算结果**：
-   $$= \frac{7}{3}\ln|x-2| - \frac{4}{3}\ln|x+1| + C$$
-
-#### 答案
-$\frac{7}{3}\ln|x-2| - \frac{4}{3}\ln|x+1| + C$
-</details>
+### 3. 无理函数积分 (Euler Substitutions)
+对于 $\int R(x, \sqrt{ax^2+bx+c}) dx$，利用 **Euler 代换**：
+1. 若 $a > 0$，令 $\sqrt{ax^2+bx+c} = \pm \sqrt{a}x + t$。
+2. 若 $c > 0$，令 $\sqrt{ax^2+bx+c} = xt \pm \sqrt{c}$。
+3. 若 $ax^2+bx+c = a(x-x_1)(x-x_2)$，令 $\sqrt{ax^2+bx+c} = t(x-x_1)$。
 
 ---
 
@@ -207,7 +87,7 @@ $\frac{7}{3}\ln|x-2| - \frac{4}{3}\ln|x+1| + C$
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
-这是一个非常经典的高阶积分，直接分解分母（利用 $x^4+1 = (x^2+1)^2 - 2x^2 = (x^2-\sqrt{2}x+1)(x^2+\sqrt{2}x+1)$）后进行部分分式分解非常繁琐。更好的方法是利用**代数构造**。
+这是一个非常经典的高阶积分，利用**代数构造**。
 
 1. **分子分母同时除以 $x^2$**：
    $$I = \int \frac{1 + \frac{1}{x^2}}{x^2 + \frac{1}{x^2}} dx$$
@@ -217,9 +97,7 @@ $\frac{7}{3}\ln|x-2| - \frac{4}{3}\ln|x+1| + C$
 3. **凑微分与换元**：
    令 $u = x - \frac{1}{x}$，则 $du = (1 + \frac{1}{x^2}) dx$。
    $$I = \int \frac{du}{u^2 + 2}$$
-4. **应用基本积分公式**：
-   $$I = \frac{1}{\sqrt{2}} \arctan \frac{u}{\sqrt{2}} + C$$
-5. **回代 x**：
+4. **回代 x**：
    $$I = \frac{1}{\sqrt{2}} \arctan \frac{x - 1/x}{\sqrt{2}} + C = \frac{1}{\sqrt{2}} \arctan \frac{x^2-1}{\sqrt{2}x} + C$$
 
 #### 答案
@@ -233,24 +111,209 @@ $\frac{1}{\sqrt{2}} \arctan \frac{x^2-1}{\sqrt{2}x} + C$
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
-除了常见的三角代换（$x = a \sin t$），本题也可以通过分部积分直接求解，这种方法在推导递推公式时非常有用。
+除了常见的三角代换，本题也可以通过分部积分直接求解。
 
 1. **设定分部积分项**：
    设 $u = \sqrt{a^2 - x^2}, dv = dx$。
    则 $du = \frac{-x}{\sqrt{a^2 - x^2}} dx, v = x$。
 2. **应用分部积分公式**：
-   $$I = x\sqrt{a^2 - x^2} - \int x \cdot \frac{-x}{\sqrt{a^2 - x^2}} dx = x\sqrt{a^2 - x^2} + \int \frac{x^2}{\sqrt{a^2 - x^2}} dx$$
+   $$I = x\sqrt{a^2 - x^2} + \int \frac{x^2}{\sqrt{a^2 - x^2}} dx$$
 3. **分子加减 $a^2$ 构造原积分**：
-   $$\int \frac{x^2}{\sqrt{a^2 - x^2}} dx = \int \frac{a^2 - (a^2 - x^2)}{\sqrt{a^2 - x^2}} dx = a^2 \int \frac{dx}{\sqrt{a^2 - x^2}} - \int \sqrt{a^2 - x^2} dx$$
-   注意到最后一项正是原积分 $I$。
+   $$\int \frac{x^2}{\sqrt{a^2 - x^2}} dx = \int \frac{a^2 - (a^2 - x^2)}{\sqrt{a^2 - x^2}} dx = a^2 \int \frac{dx}{\sqrt{a^2 - x^2}} - I$$
 4. **建立关于 I 的方程**：
    $$I = x\sqrt{a^2 - x^2} + a^2 \arcsin \frac{x}{a} - I$$
 5. **解出 I**：
-   $$2I = x\sqrt{a^2 - x^2} + a^2 \arcsin \frac{x}{a}$$
-   $$I = \frac{1}{2} x\sqrt{a^2 - x^2} + \frac{a^2}{2} \arcsin \frac{x}{a} + C$$
+   $$I = \frac{x}{2}\sqrt{a^2 - x^2} + \frac{a^2}{2} \arcsin \frac{x}{a} + C$$
 
 #### 答案
 $\frac{x}{2}\sqrt{a^2 - x^2} + \frac{a^2}{2} \arcsin \frac{x}{a} + C$
+</details>
+
+### 深度例题 3：分部积分的嵌套与循环
+求不定积分：$\int \sin(\ln x) dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+**方法一：代换后分部积分**
+令 $u = \ln x, x = e^u, dx = e^u du$。
+$\int e^u \sin u du$，此为典型的循环型，两次分部积分得 $\frac{e^u}{2}(\sin u - \cos u) + C$。
+
+**方法二：直接分部积分**
+设 $I = \int \sin(\ln x) dx$。
+$u = \sin(\ln x), dv = dx \implies du = \frac{\cos(\ln x)}{x} dx, v = x$。
+$I = x\sin(\ln x) - \int \cos(\ln x) dx$。
+对 $\int \cos(\ln x) dx$ 再次分部积分：
+$u = \cos(\ln x), dv = dx \implies du = -\frac{\sin(\ln x)}{x} dx, v = x$。
+$\int \cos(\ln x) dx = x\cos(\ln x) + \int \sin(\ln x) dx = x\cos(\ln x) + I$。
+代回原式：$I = x\sin(\ln x) - [x\cos(\ln x) + I] \implies 2I = x[\sin(\ln x) - \cos(\ln x)]$。
+
+#### 答案
+$\frac{x}{2} [\sin(\ln x) - \cos(\ln x)] + C$
+</details>
+
+### 深度例题 4：有理函数的高阶配方技巧
+求不定积分：$\int \frac{dx}{(x^2+1)^2}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+这是求解 $I_n = \int \frac{dx}{(x^2+a^2)^n}$ 递推公式的基础。
+1. **分子拆分**：
+   $1 = (x^2+1) - x^2$。
+   $\int \frac{dx}{(x^2+1)^2} = \int \frac{1}{x^2+1} dx - \int \frac{x^2}{(x^2+1)^2} dx = \arctan x - \int x \cdot \frac{x}{(x^2+1)^2} dx$。
+2. **对第二项分部积分**：
+   设 $u = x, dv = \frac{x}{(x^2+1)^2} dx \implies du = dx, v = -\frac{1}{2(x^2+1)}$。
+   $\int \frac{x^2}{(x^2+1)^2} dx = -\frac{x}{2(x^2+1)} + \frac{1}{2} \int \frac{dx}{x^2+1} = -\frac{x}{2(x^2+1)} + \frac{1}{2}\arctan x$。
+3. **合并**：
+   $\arctan x - [-\frac{x}{2(x^2+1)} + \frac{1}{2}\arctan x] = \frac{1}{2}\arctan x + \frac{x}{2(x^2+1)} + C$。
+
+#### 答案
+$\frac{1}{2}\arctan x + \frac{x}{2(x^2+1)} + C$
+</details>
+
+### 深度例题 5：欧拉代换实战
+求不定积分：$\int \frac{dx}{x + \sqrt{x^2+x+1}}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+根式下 $a=1>0$，采用第一类 Euler 代换。
+1. **设代换**：令 $\sqrt{x^2+x+1} = t - x$。
+2. **解出 x**：
+   $x^2+x+1 = t^2 - 2tx + x^2 \implies x(1+2t) = t^2-1 \implies x = \frac{t^2-1}{2t+1}$。
+3. **微分**：
+   $dx = \frac{2t(2t+1) - 2(t^2-1)}{(2t+1)^2} dt = \frac{2t^2+2t+2}{(2t+1)^2} dt$。
+4. **分母化简**：
+   $x + \sqrt{x^2+x+1} = t$。
+5. **代入积分**：
+   $\int \frac{1}{t} \cdot \frac{2(t^2+t+1)}{(2t+1)^2} dt = \int \frac{2t^2+2t+2}{t(2t+1)^2} dt$。
+   利用部分分式分解：$\frac{2t^2+2t+2}{t(2t+1)^2} = \frac{2}{t} - \frac{3}{2t+1} - \frac{3}{(2t+1)^2}$。
+6. **最终结果**：
+   $2\ln|t| - \frac{3}{2}\ln|2t+1| + \frac{3}{2(2t+1)} + C$。
+
+#### 答案
+$2\ln|x+\sqrt{x^2+x+1}| - \frac{3}{2}\ln|2(x+\sqrt{x^2+x+1})+1| + \frac{3}{2[2(x+\sqrt{x^2+x+1})+1]} + C$
+</details>
+
+### 深度例题 6：万能代换的精简应用
+求不定积分：$\int \frac{dx}{1+\sin x + \cos x}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+令 $t = \tan \frac{x}{2}$。
+1. **代换**：
+   $I = \int \frac{1}{1 + \frac{2t}{1+t^2} + \frac{1-t^2}{1+t^2}} \cdot \frac{2dt}{1+t^2} = \int \frac{2 dt}{2t+2} = \ln|t+1| + C$。
+2. **回代**：
+   $\ln|1 + \tan \frac{x}{2}| + C$。
+
+#### 答案
+$\ln|1 + \tan \frac{x}{2}| + C$
+</details>
+
+### 深度例题 7：配方法消去交叉项
+求不定积分：$\int \frac{dx}{\sin^4 x + \cos^4 x}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+1. **同除以 $\cos^4 x$**：
+   $I = \int \frac{\sec^4 x}{\tan^4 x + 1} dx = \int \frac{(1+\tan^2 x) \sec^2 x}{\tan^4 x + 1} dx$。
+2. **换元**：令 $u = \tan x, du = \sec^2 x dx$。
+   $I = \int \frac{1+u^2}{1+u^4} du = \int \frac{1+1/u^2}{u^2+1/u^2} du = \frac{1}{\sqrt{2}}\arctan \frac{u-1/u}{\sqrt{2}} + C$。
+3. **回代**：
+   $\frac{1}{\sqrt{2}}\arctan \frac{\tan x - \cot x}{\sqrt{2}} + C$。
+
+#### 答案
+$\frac{1}{\sqrt{2}}\arctan \frac{\tan x - \cot x}{\sqrt{2}} + C$
+</details>
+
+### 深度例题 8：指数函数代换技巧
+求不定积分：$\int \frac{dx}{e^{2x} + e^x - 2}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+1. **换元**：令 $u = e^x, dx = \frac{du}{u}$。
+2. **代入**：
+   $\int \frac{du}{u(u+2)(u-1)} = \int (-\frac{1}{2u} + \frac{1}{6(u+2)} + \frac{1}{3(u-1)}) du$。
+3. **结果**：
+   $-\frac{1}{2}x + \frac{1}{6}\ln(e^x+2) + \frac{1}{3}\ln|e^x-1| + C$。
+
+#### 答案
+$-\frac{1}{2}x + \frac{1}{6}\ln(e^x+2) + \frac{1}{3}\ln|e^x-1| + C$
+</details>
+
+### 深度例题 9：递推公式的推导（分部积分）
+求 $I_n = \int \sin^n x dx$ 的递推公式。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+$I_n = \int \sin^{n-1} x \sin x dx$。
+设 $u = \sin^{n-1} x, dv = \sin x dx \implies du = (n-1)\sin^{n-2} x \cos x dx, v = -\cos x$。
+$I_n = -\sin^{n-1} x \cos x + (n-1) \int \sin^{n-2} x \cos^2 x dx$
+$I_n = -\sin^{n-1} x \cos x + (n-1) \int \sin^{n-2} x (1-\sin^2 x) dx$
+$I_n = -\sin^{n-1} x \cos x + (n-1) I_{n-2} - (n-1) I_n$
+$(n) I_n = -\sin^{n-1} x \cos x + (n-1) I_{n-2}$。
+
+#### 答案
+$I_n = -\frac{1}{n} \sin^{n-1} x \cos x + \frac{n-1}{n} I_{n-2}$
+</details>
+
+### 深度例题 10：特殊凑微分技巧（反比例项）
+求不定积分：$\int \frac{dx}{x\sqrt{x^{2n}+1}}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+1. **变形**：$I = \int \frac{dx}{x^{n+1}\sqrt{1+x^{-2n}}}$。
+2. **换元**：令 $t = x^{-2n} + 1, dt = -2n x^{-2n-1} dx$。
+   $I = -\frac{1}{2n} \int \frac{dt}{\sqrt{t}} = -\frac{1}{n} \sqrt{t} + C$。
+3. **回代**：
+   $-\frac{1}{n} \sqrt{x^{-2n}+1} + C = -\frac{\sqrt{x^{2n}+1}}{nx^n} + C$。
+
+#### 答案
+$-\frac{\sqrt{x^{2n}+1}}{nx^n} + C$
+</details>
+
+### 深度例题 11：分母含二次根式的倒代换
+求不定积分：$\int \frac{dx}{(x+1)\sqrt{x^2+x}}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+1. **倒代换**：令 $x+1 = 1/t, dx = -1/t^2 dt$。
+2. **根式化简**：$\sqrt{x^2+x} = \sqrt{(1/t-1)^2+(1/t-1)} = \frac{\sqrt{1-t}}{t}$。
+3. **代入**：$-\int \frac{dt}{\sqrt{1-t}} = 2\sqrt{1-t} + C = 2\sqrt{\frac{x}{x+1}} + C$。
+
+#### 答案
+$2\sqrt{\frac{x}{x+1}} + C$
+</details>
+
+### 深度例题 12：分部积分的隐蔽应用
+求不定积分：$\int \sqrt{1+e^x} dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+1. **换元**：令 $t = \sqrt{1+e^x}, e^x = t^2-1, x = \ln(t^2-1), dx = \frac{2t}{t^2-1} dt$。
+2. **代入**：$\int t \cdot \frac{2t}{t^2-1} dt = \int (2 + \frac{2}{t^2-1}) dt = 2t + \ln|\frac{t-1}{t+1}| + C$。
+3. **回代**：$2\sqrt{1+e^x} + \ln\frac{\sqrt{1+e^x}-1}{\sqrt{1+e^x}+1} + C$。
+
+#### 答案
+$2\sqrt{1+e^x} + \ln\frac{\sqrt{1+e^x}-1}{\sqrt{1+e^x}+1} + C$
 </details>
 
 ---
@@ -258,7 +321,8 @@ $\frac{x}{2}\sqrt{a^2 - x^2} + \frac{a^2}{2} \arcsin \frac{x}{a} + C$
 <SupportingExercises 
   topic="不定积分" 
   exercises={[
-    { index: 22, title: "不定积分换元法综合", slug: "练习-22不定积分换元法" }
+    { index: 22, title: "不定积分基础", slug: "练习-22不定积分换元法" },
+    { index: 73, title: "不定积分深度技巧", slug: "练习-73不定积分深度技巧" }
   ]} 
 />
 

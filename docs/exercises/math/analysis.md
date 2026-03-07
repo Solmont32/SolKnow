@@ -1397,5 +1397,206 @@ $1/4$。
 $M = 2\pi (1 - (R^2+1)e^{-R^2})$。
 </details>
 
+---
+
+## 练习 73：不定积分深度技巧 - 代数构造
+计算 $\int \frac{x^2-1}{x^4+1} dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **同除以 $x^2$**：
+   $I = \int \frac{1-1/x^2}{x^2+1/x^2} dx$。
+2. **观察分子**：$(x+1/x)' = 1-1/x^2$。
+3. **凑微分**：
+   $I = \int \frac{d(x+1/x)}{(x+1/x)^2-2}$。
+4. **公式计算**：
+   $I = \frac{1}{2\sqrt{2}} \ln|\frac{x+1/x-\sqrt{2}}{x+1/x+\sqrt{2}}| + C = \frac{1}{2\sqrt{2}} \ln|\frac{x^2-\sqrt{2}x+1}{x^2+\sqrt{2}x+1}| + C$。
+
+#### 答案
+$\frac{1}{2\sqrt{2}} \ln|\frac{x^2-\sqrt{2}x+1}{x^2+\sqrt{2}x+1}| + C$
+</details>
+
+---
+
+## 练习 74：不定积分深度技巧 - 分部积分递推
+利用递推公式计算 $I_4 = \int \sin^4 x dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **利用递推公式**：$I_n = -\frac{1}{n} \sin^{n-1} x \cos x + \frac{n-1}{n} I_{n-2}$。
+2. **计算 $I_0$**：$I_0 = \int dx = x + C$。
+3. **计算 $I_2$**：$I_2 = -\frac{1}{2} \sin x \cos x + \frac{1}{2} x = \frac{1}{2} (x - \sin x \cos x)$。
+4. **计算 $I_4$**：
+   $I_4 = -\frac{1}{4} \sin^3 x \cos x + \frac{3}{4} [\frac{1}{2}(x - \sin x \cos x)] = -\frac{1}{4} \sin^3 x \cos x - \frac{3}{8} \sin x \cos x + \frac{3}{8} x + C$。
+
+#### 答案
+$\frac{3}{8}x - \frac{1}{4}\sin^3 x \cos x - \frac{3}{8}\sin x \cos x + C$
+</details>
+
+---
+
+## 练习 75：不定积分深度技巧 - 欧拉代换
+计算 $\int \frac{dx}{x\sqrt{x^2+2x-1}}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **代换**：令 $\sqrt{x^2+2x-1} = t-x$（Euler 第一代换）。
+2. **解出 x**：$x^2+2x-1 = t^2-2tx+x^2 \implies x = \frac{t^2+1}{2t+2}$。
+3. **计算**：代入后利用有理函数积分处理。亦可用倒代换 $x=1/t$ 处理，更为简便。
+
+#### 答案
+$2\arctan(\sqrt{x^2+2x-1}+x) + C$
+</details>
+
+---
+
+## 练习 76：不定积分深度技巧 - 万能代换
+计算 $\int \frac{dx}{2+\cos x}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **令 $t = \tan(x/2)$**：
+   $I = \int \frac{1}{2 + \frac{1-t^2}{1+t^2}} \frac{2 dt}{1+t^2} = \int \frac{2 dt}{2+2t^2+1-t^2} = \int \frac{2 dt}{t^2+3}$。
+2. **积分**：
+   $I = \frac{2}{\sqrt{3}} \arctan \frac{t}{\sqrt{3}} = \frac{2}{\sqrt{3}} \arctan(\frac{\tan(x/2)}{\sqrt{3}}) + C$。
+
+#### 答案
+$\frac{2}{\sqrt{3}} \arctan(\frac{\tan(x/2)}{\sqrt{3}}) + C$
+</details>
+
+---
+
+## 练习 77：不定积分深度技巧 - 倒代换实战
+计算 $\int \frac{dx}{x^2\sqrt{1+x^2}}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **倒代换**：令 $x = 1/t, dx = -1/t^2 dt$。
+2. **代入**：
+   $I = \int \frac{-1/t^2 dt}{(1/t^2) \sqrt{1+1/t^2}} = -\int \frac{t}{\sqrt{t^2+1}} dt = -\sqrt{t^2+1} + C$。
+3. **回代**：
+   $I = -\sqrt{1/x^2+1} + C = -\frac{\sqrt{1+x^2}}{x} + C$。
+
+#### 答案
+$-\frac{\sqrt{x^2+1}}{x} + C$
+</details>
+
+---
+
+## 练习 78：不定积分深度技巧 - 循环分部积分
+计算 $\int e^{-x} \cos 2x dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **两次分部积分**：
+   $I = -e^{-x}\cos 2x - \int 2e^{-x}\sin 2x dx = -e^{-x}\cos 2x - [ -2e^{-x}\sin 2x + \int 4e^{-x}\cos 2x dx ]$。
+2. **建立方程**：
+   $I = -e^{-x}\cos 2x + 2e^{-x}\sin 2x - 4I$。
+3. **解出 I**：
+   $5I = e^{-x}(2\sin 2x - \cos 2x) \implies I = \frac{1}{5}e^{-x}(2\sin 2x - \cos 2x) + C$。
+
+#### 答案
+$\frac{e^{-x}}{5}(2\sin 2x - \cos 2x) + C$
+</details>
+
+---
+
+## 练习 79：不定积分深度技巧 - 根式代换
+计算 $\int \sqrt{\frac{1-x}{1+x}} dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **代换**：令 $x = \cos \theta, dx = -\sin \theta d\theta$。
+2. **化简**：$\sqrt{\frac{1-\cos\theta}{1+\cos\theta}} = \tan\frac{\theta}{2}$。
+3. **积分**：
+   $I = \int \tan\frac{\theta}{2} (-\sin\theta) d\theta = \int \frac{\sin(\theta/2)}{\cos(\theta/2)} (-2\sin\frac{\theta}{2}\cos\frac{\theta}{2}) d\theta = \int -2\sin^2\frac{\theta}{2} d\theta = \int (\cos\theta-1) d\theta$。
+4. **结果**：$\sin\theta - \theta = \sqrt{1-x^2} - \arccos x + C$。
+
+#### 答案
+$\sqrt{1-x^2} - \arccos x + C$
+</details>
+
+---
+
+## 练习 80：不定积分深度技巧 - 标准换元
+计算 $\int \frac{dx}{\sqrt{x^2+a^2}}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **代换**：令 $x = a \tan \theta, dx = a \sec^2 \theta d\theta$。
+2. **积分**：$\int \sec \theta d\theta = \ln|\sec \theta + \tan \theta| + C = \ln|x + \sqrt{x^2+a^2}| + C$。
+
+#### 答案
+$\ln(x + \sqrt{x^2+a^2}) + C$
+</details>
+
+---
+
+## 练习 81：不定积分深度技巧 - 有理函数分解
+计算 $\int \frac{dx}{x^3+1}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **分解**：$\frac{1}{x^3+1} = \frac{1}{3}(\frac{1}{x+1} - \frac{x-2}{x^2-x+1})$。
+2. **积分项**：第一项为 $\ln|x+1|$，第二项需配方并拆分为 $\ln$ 和 $\arctan$ 项。
+3. **结果**：$\frac{1}{3}\ln|x+1| - \frac{1}{6}\ln(x^2-x+1) + \frac{1}{\sqrt{3}}\arctan\frac{2x-1}{\sqrt{3}} + C$。
+
+#### 答案
+$\frac{1}{3}\ln|x+1| - \frac{1}{6}\ln(x^2-x+1) + \frac{1}{\sqrt{3}}\arctan\frac{2x-1}{\sqrt{3}} + C$
+</details>
+
+---
+
+## 练习 82：不定积分深度技巧 - 反三角分部积分
+计算 $\int x \arctan x dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **分部积分**：$u = \arctan x, dv = x dx$。
+2. **代入**：$\frac{x^2}{2}\arctan x - \frac{1}{2} \int \frac{x^2}{1+x^2} dx = \frac{x^2}{2}\arctan x - \frac{1}{2} (x - \arctan x) + C$。
+3. **合并**：$\frac{x^2+1}{2}\arctan x - \frac{x}{2} + C$。
+
+#### 答案
+$\frac{x^2+1}{2}\arctan x - \frac{x}{2} + C$
+</details>
+
+---
+
+## 练习 83：不定积分深度技巧 - 凑微分综合
+计算 $\int \frac{\ln x}{x(1+\ln^2 x)} dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **换元**：令 $u = \ln x, du = \frac{1}{x} dx$。
+2. **积分**：$\int \frac{u}{1+u^2} du = \frac{1}{2}\ln(1+u^2) + C = \frac{1}{2}\ln(1+\ln^2 x) + C$。
+
+#### 答案
+$\frac{1}{2}\ln(1+\ln^2 x) + C$
+</details>
+
+---
+
 
 
