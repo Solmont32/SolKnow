@@ -223,7 +223,16 @@ const sidebars: SidebarsConfig = {
       link: {type: 'doc', id: 'cs/index'},
       collapsible: false,
       items: [
-        {type: 'doc', id: 'cs/linux/index', label: 'Linux 操作系统'},
+        {
+          type: 'category',
+          label: 'Linux 操作系统',
+          link: {type: 'doc', id: 'cs/linux/index'},
+          items: [
+            'cs/linux/basic-commands',
+            'cs/linux/permissions',
+            'cs/linux/file-system',
+          ],
+        },
         {type: 'doc', id: 'cs/c/index', label: 'C 语言'},
         {type: 'doc', id: 'cs/cpp/index', label: 'C++'},
         {type: 'doc', id: 'cs/python/index', label: 'Python'},
