@@ -164,6 +164,16 @@ const sidebars: SidebarsConfig = {
                 'academic-math/analysis/differential-equations',
               ] 
             },
+            {
+              type: 'category',
+              collapsible: true,
+              collapsed: true,
+              label: '实变函数',
+              link: { type: 'doc', id: 'academic-math/real-analysis/index' },
+              items: [
+                'academic-math/real-analysis/lebesgue-integral',
+              ]
+            },
             { type: 'category', collapsible: true, collapsed: true, label: '高等代数', link: {type: 'doc', id: 'academic-math/algebra/index'}, items: ['academic-math/algebra/polynomial', 'academic-math/algebra/determinant', 'academic-math/algebra/linear-equations', 'academic-math/algebra/matrix', 'academic-math/algebra/quadratic-forms'] },
             { type: 'category', collapsible: true, collapsed: true, label: '离散数学', link: {type: 'doc', id: 'academic-math/discrete-math/index'}, items: ['academic-math/discrete-math/logic', 'academic-math/discrete-math/set-theory', 'academic-math/discrete-math/graph-theory', 'academic-math/discrete-math/combinatorics'] },
           ],

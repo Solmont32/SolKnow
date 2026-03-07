@@ -1,4 +1,4 @@
-# SolKnow 自动任务处理器
+﻿# SolKnow 自动任务处理器
 # 用法: powershell -ExecutionPolicy Bypass -File auto_processor.ps1
 
 while($true) {

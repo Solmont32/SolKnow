@@ -1,4 +1,4 @@
-# SolKnow 工业级任务执行器 (24/7 版)
+﻿# SolKnow 工业级任务执行器 (24/7 版)
 # 启动方式: powershell -ExecutionPolicy Bypass -File infinite_runner.ps1
 
 $CHECK_INTERVAL = 300 # 每 5 分钟拉取一次任务
@@ -27,13 +27,13 @@ while($true) {
         # 2. 读取任务表
         $content = Get-Content "TASKS.md" -Raw
         
-        # 匹配第一个待办任务 - [ ]
-        if ($content -match "- \[ \] (.*)") {
+        # 匹配第一个待办任务 - [ ] (仅匹配行首，避免匹配说明文档)
+        if ($content -match "(?m)^- \[ \] (.*)") {
             $taskDescription = $matches[1].Trim()
             Write-Log "【执行模式】: 发现待办任务 -> $taskDescription"
 
-            # 标记为进行中 [/] 防止重复领题
-            $newContent = $content -replace "- \[ \] $taskDescription", "- [/] $taskDescription (正在执行...)"
+            # 标记为进行中 [/] 防止重复领题 (仅替换行首匹配项)
+            $newContent = $content -replace "(?m)^- \[ \] $taskDescription", "- [/] $taskDescription (正在执行...)"
             Set-Content "TASKS.md" $newContent
             git add TASKS.md; git commit -m "status: 开始执行任务 - $taskDescription"; git push origin main
 
