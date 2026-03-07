@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "fetch": {
+      "command": "npx -y @modelcontextprotocol/server-fetch",
+      "args": []
+    }
+  }
+}

@@ -162,7 +162,7 @@ const sidebars: SidebarsConfig = {
                     { type: 'doc', id: 'academic-math/analysis/continuity', label: '第四章 函数的连续性' },
                     { type: 'doc', id: 'academic-math/analysis/derivatives', label: '第五章 导数与微分' },
                     { type: 'doc', id: 'academic-math/analysis/derivatives', label: '第六章 微分中值定理及其应用' },
-                    { type: 'doc', id: 'academic-math/analysis/topology', label: '第七章 实数的完备性' },
+                    { type: 'doc', id: 'academic-math/analysis/completeness', label: '第七章 实数的完备性' },
                     { type: 'doc', id: 'academic-math/analysis/indefinite-integrals', label: '第八章 不定积分' },
                     { type: 'doc', id: 'academic-math/analysis/integrals', label: '第九章 定积分' },
                     { type: 'doc', id: 'academic-math/analysis/definite-integral-applications', label: '第十章 定积分的应用' },

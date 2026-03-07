@@ -26,7 +26,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ### 第二部分：微分学 (Chapters 5-7)
 - **[第五章 导数与微分](derivatives)**：导数定义、求导法则、高阶导数。
 - **[第六章 微分中值定理及其应用](derivatives)**：Rolle 定理、Lagrange 定理、Taylor 公式。
-- **[第七章 实数的完备性](topology)**：七大等价定理（闭区间套、聚点、有限覆盖等）。
+- **[第七章 实数的完备性](completeness)**：七大等价定理（闭区间套、聚点、有限覆盖等）。
 
 ### 第三部分：积分学 (Chapters 8-11)
 - **[第八章 不定积分](indefinite-integrals)**：换元法、分部积分法、有理函数积分。
