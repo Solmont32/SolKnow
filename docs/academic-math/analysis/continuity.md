@@ -32,12 +32,48 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 | :--- | :--- | :--- |
 | **有界性定理** | 若 $f \in C[a, b]$，则 $f$ 在 $[a, b]$ 上有界。 | 连续曲线在有限范围内不会“跑向无穷”。 |
 | **最值定理** | 若 $f \in C[a, b]$，则 $f$ 必能在该区间取到最大值 $M$ 和最小值 $m$。 | 闭区间上的连续函数一定有“最高点”和“最低点”。 |
-| **介值定理** | 若 $f \in C[a, b]$，且 $f(a)=A, f(b)=B$，则对 $A, B$ 间任一值 $C$，$\exists \xi \in [a, b]$ 使 $f(\xi)=C$。 | 连续曲线从一个高度到另一个高度，必须经过中间所有高度。 |
+| **介值定理** | 若 $f \in C[a, b]$，且 $f(a)=A, f(b)=B$，则对 $A, B$ 间任一值 $C$，$\exists \xi \in [a, b]$ 使 $f(\xi)=C$ | 连续曲线从一个高度到另一个高度，必须经过中间所有高度。 |
 | **零点定理** | 若 $f \in C[a, b]$ 且 $f(a) \cdot f(b) < 0$，则 $\exists \xi \in (a, b)$ 使得 $f(\xi) = 0$。 | 曲线跨越 $x$ 轴时必与之相交。 |
+| **一致连续性定理 (Cantor)** | 若 $f \in C[a, b]$，则 $f$ 在 $[a, b]$ 上一致连续。 | 局部连续在紧集上可提升为全局一致连续。 |
+
+### 4. 一致连续性 (Uniform Continuity) 深度解析
+这是本章最抽象但也最重要的概念之一。
+
+#### (1) 定义的精确对比
+- **连续 (Continuity)**：在区间 $I$ 上连续是指 $\forall x_0 \in I, \forall \epsilon > 0, \exists \delta > 0$（$\delta$ 与 $\epsilon$ 和 $x_0$ 均有关），使得当 $|x - x_0| < \delta$ 时，有 $|f(x) - f(x_0)| < \epsilon$。
+- **一致连续 (Uniform Continuity)**：$\forall \epsilon > 0, \exists \delta > 0$（**$\delta$ 仅与 $\epsilon$ 有关**，对区间内所有点通用），使得 $\forall x_1, x_2 \in I$，只要 $|x_1 - x_2| < \delta$，就有 $|f(x_1) - f(x_2)| < \epsilon$。
+
+**核心差异**：连续性是“点点为营”（局部性质），而一致连续性是“全线协同”（全局性质）。
+
+#### (2) Cantor 大定理的 $\epsilon-\delta$ 证明
+**定理**：若 $f(x)$ 在闭区间 $[a, b]$ 上连续，则 $f(x)$ 在 $[a, b]$ 上一致连续。
+
+**证明（反证法 + 聚点定理/数列性）**：
+1. 假设 $f(x)$ 在 $[a, b]$ 上不一致连续。
+2. 则存在某个 $\epsilon_0 > 0$，对任意 $\delta_n = 1/n$ ($n=1,2,\dots$)，都存在点对 $x_n, y_n \in [a, b]$，虽然 $|x_n - y_n| < 1/n$，但 $|f(x_n) - f(y_n)| \ge \epsilon_0$。
+3. 由于 $\{x_n\}$ 是闭区间 $[a, b]$ 上的有界数列，由 **Bolzano-Weierstrass 定理**，必存在收敛子列 $\{x_{n_k}\}$，设其极限为 $x^* \in [a, b]$。
+4. 因为 $|x_{n_k} - y_{n_k}| < 1/n_k \to 0$，所以子列 $\{y_{n_k}\}$ 也收敛于 $x^*$。
+5. 由于 $f(x)$ 在 $x^*$ 处连续，由海涅定理（Heine's theorem）：
+   $\lim_{k \to \infty} f(x_{n_k}) = f(x^*)$ 且 $\lim_{k \to \infty} f(y_{n_k}) = f(x^*)$。
+6. 从而 $\lim_{k \to \infty} |f(x_{n_k}) - f(y_{n_k})| = |f(x^*) - f(x^*)| = 0$。
+7. 这与假设 $|f(x_n) - f(y_n)| \ge \epsilon_0$ 矛盾！
+8. 故假设不成立，$f(x)$ 在 $[a, b]$ 上必一致连续。 $\square$
 
 ---
 
-## 二、 深度理论探索：证明的严谨性
+## 二、 典型函数的一致连续性辨析
+
+| 函数 $f(x)$ | 区间 $I$ | 是否一致连续 | 深度辨析（Why?） |
+| :--- | :--- | :--- | :--- |
+| $f(x) = \frac{1}{x}$ | $(0, 1]$ | **否** | 当 $x \to 0^+$ 时，函数变化剧烈。取 $x_n = 1/n, y_n = 1/2n$，虽然 $|x_n - y_n| = 1/2n \to 0$，但 $|f(x_n) - f(y_n)| = n \to \infty$。 |
+| $f(x) = x^2$ | $[0, +\infty)$ | **否** | 斜率无限增大。取 $x_n = \sqrt{n+1}, y_n = \sqrt{n}$，虽然 $|x_n - y_n| = \frac{1}{\sqrt{n+1}+\sqrt{n}} \to 0$，但 $|f(x_n) - f(y_n)| = 1$。 |
+| $f(x) = \sin\frac{1}{x}$ | $(0, 1]$ | **否** | 在 $x=0$ 附近无限震荡。取 $x_n = \frac{1}{2n\pi+\pi/2}, y_n = \frac{1}{2n\pi}$，距离趋于 0 但函数值差恒为 1。 |
+| $f(x) = \sqrt{x}$ | $[0, +\infty)$ | **是** | 虽然在 $x=0$ 处导数不存在，但在 $[0, 1]$ 上由于连续性一致连续，在 $[1, +\infty)$ 上导数有界 ($f' \le 1/2$) 故一致连续。 |
+| $f(x) = \sin x$ | $\mathbb{R}$ | **是** | 导数绝对值 $|\cos x| \le 1$ 全域有界。由中值定理 $|f(x_1) - f(x_2)| \le |x_1 - x_2|$，取 $\delta = \epsilon$ 即可。 |
+
+---
+
+## 三、 深度例题实战
 
 ### 1. 利用“有限覆盖定理”证明有界性定理
 **证明思路**：
