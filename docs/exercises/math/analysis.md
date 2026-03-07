@@ -1057,3 +1057,84 @@ $-\sqrt{3}\pi R^2$
 1
 </details>
 
+---
+
+## 练习 59：全微分存在性的严谨判定
+判定函数 $f(x, y) = \sqrt[3]{x^3+y^3}$ 在 $(0, 0)$ 处的可微性。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **求偏导数**：
+   $f_x(0,0) = \lim_{x \to 0} \frac{\sqrt[3]{x^3+0}-0}{x} = 1$。
+   $f_y(0,0) = \lim_{y \to 0} \frac{\sqrt[3]{0+y^3}-0}{y} = 1$。
+2. **考察全微分定义的极限**：
+   $\Delta z - [f_x \Delta x + f_y \Delta y] = \sqrt[3]{\Delta x^3 + \Delta y^3} - (\Delta x + \Delta y)$。
+   计算极限 $\lim_{(\Delta x, \Delta y) \to (0,0)} \frac{\sqrt[3]{\Delta x^3 + \Delta y^3} - (\Delta x + \Delta y)}{\sqrt{\Delta x^2 + \Delta y^2}}$。
+   沿直线 $\Delta y = \Delta x$ 趋近：
+   $\lim_{\Delta x \to 0^+} \frac{\sqrt[3]{2\Delta x^3} - 2\Delta x}{\sqrt{2\Delta x^2}} = \frac{\sqrt[3]{2}-2}{\sqrt{2}} \neq 0$。
+3. **结论**：由于极限不为 $0$，故函数在该点不可微。
+
+#### 答案
+在 $(0, 0)$ 处不可微。
+</details>
+
+---
+
+## 练习 60：隐函数方程组的二阶全微分
+已知 $u + v = x + y$ 且 $uv = xy$，求 $d^2 u$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **利用微分算子**：对两式求微分。
+   $du + dv = dx + dy$
+   $v du + u dv = y dx + x dy$
+2. **解出 $du, dv$**：
+   利用克莱姆法则或代入法：
+   $(u-v) du = (u-y) dx + (u-x) dy$。
+   若 $u \neq v$，则 $du = \frac{u-y}{u-v} dx + \frac{u-x}{u-v} dy$。
+3. **求二阶全微分**：对 $du$ 再次微分（注意 $u, v$ 均是 $x, y$ 的函数）。
+   由于 $d^2 x = d^2 y = 0$，对一阶全微分式两端再求一次微分：
+   $d^2 u + d^2 v = 0$
+   $dv du + v d^2 u + du dv + u d^2 v = dy dx + dx dy = 2 dx dy$
+   代入 $d^2 v = -d^2 u$：
+   $(v-u) d^2 u + 2 du dv = 2 dx dy \implies d^2 u = \frac{2(du dv - dx dy)}{u-v}$。
+   将 $du, dv$ 的一阶项代入即可。
+
+#### 答案
+$d^2 u = \frac{2(du dv - dx dy)}{u-v}$。
+</details>
+
+---
+
+## 练习 61：多约束 Lagrange 乘数法实战
+求原点到曲线 $\begin{cases} x^2 + y^2 = 1 \\ x + y + z = 1 \end{cases}$ 的最短距离。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **构造目标函数**（距离平方）：$f(x, y, z) = x^2 + y^2 + z^2$。
+2. **约束条件**：$g_1 = x^2 + y^2 - 1 = 0, g_2 = x + y + z - 1 = 0$。
+3. **Lagrange 函数**：$L = x^2 + y^2 + z^2 + \lambda(x^2 + y^2 - 1) + \mu(x + y + z - 1)$。
+4. **求偏导方程组**：
+   - $L_x = 2x + 2\lambda x + \mu = 0 \implies 2x(1+\lambda) = -\mu$
+   - $L_y = 2y + 2\lambda y + \mu = 0 \implies 2y(1+\lambda) = -\mu$
+   - $L_z = 2z + \mu = 0 \implies \mu = -2z$
+5. **解方程**：
+   由前两式，$2(x-y)(1+\lambda) = 0 \Rightarrow x = y$（若 $1+\lambda \neq 0$）。
+   代入约束：$x^2 + x^2 = 1 \Rightarrow x = \pm 1/\sqrt{2}$。
+   由 $g_2$：$z = 1 - (x+y) = 1 \mp \sqrt{2}$。
+6. **比较**：
+   点为 $(1/\sqrt{2}, 1/\sqrt{2}, 1-\sqrt{2})$ 和 $(-1/\sqrt{2}, -1/\sqrt{2}, 1+\sqrt{2})$。
+   计算距离 $d = \sqrt{1 + (1 \mp \sqrt{2})^2}$。
+   最短距离对应 $x = 1/\sqrt{2}$，此时 $d = \sqrt{1 + (1-\sqrt{2})^2} = \sqrt{4-2\sqrt{2}}$。
+
+#### 答案
+最短距离为 $\sqrt{4-2\sqrt{2}}$。
+</details>
+
+

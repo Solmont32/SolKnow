@@ -39,34 +39,44 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 
 ---
 
-## 四、 Lagrange 乘数法的严格证明
+## 四、 Lagrange 乘数法的严格证明与几何意义
 
 ### 1. 定理陈述
-求 $f(x, y)$ 在约束 $g(x, y) = 0$ 下的极值。若 $(x_0, y_0)$ 是极值点且 $\nabla g(x_0, y_0) \neq \mathbf{0}$，则存在 $\lambda$ 使得 $\nabla f(x_0, y_0) + \lambda \nabla g(x_0, y_0) = \mathbf{0}$。
+求 $f(x, y, z)$ 在约束 $g(x, y, z) = 0$ 下的极值。若 $P_0$ 是极值点且 $\nabla g(P_0) \neq \mathbf{0}$，则存在 $\lambda$ 使得 $\nabla f(P_0) + \lambda \nabla g(P_0) = \mathbf{0}$。
 
-### 2. 严格证明过程
-**第一步：利用隐函数定理局部化**
-由于 $\nabla g \neq 0$，不妨设 $g_y(x_0, y_0) \neq 0$。根据隐函数定理，在 $x_0$ 的邻域内，方程 $g(x, y) = 0$ 唯一确定了连续可微函数 $y = y(x)$，且：
-$$y'(x) = -\frac{g_x(x, y(x))}{g_y(x, y(x))}$$
+### 2. 几何意义：梯度共线
+在约束曲线/曲面 $g=0$ 上，极值点 $P_0$ 处的等值面 $f=c$ 必须与约束面 $g=0$ **相切**。
+- 如果不相切（即 $\nabla f$ 与 $\nabla g$ 不共线），则 $\nabla f$ 在约束面切平面上有非零分量，函数值可以沿该方向继续增大或减小，故不是极值点。
+- 因此，$\nabla f$ 必须垂直于约束面的切空间，即 $\nabla f \parallel \nabla g$。
 
-**第二步：化为一元函数极值问题**
-将约束代入目标函数，定义复合函数 $h(x) = f(x, y(x))$。
-由于 $(x_0, y_0)$ 是 $f$ 在约束下的极值点，则 $x_0$ 必须是 $h(x)$ 的无条件极值点。由 Fermat 引理可知：
-$$h'(x_0) = 0$$
+### 3. 严格证明：链式法则法
+由于 $\nabla g \neq 0$，假设 $g_z(P_0) \neq 0$。根据隐函数定理，局部存在 $z = z(x, y)$。
+令 $h(x, y) = f(x, y, z(x, y))$。在极值点 $P_0$，$h$ 的全微分为 $0$：
+$$dh = f_x dx + f_y dy + f_z dz = 0$$
+而由 $g(x, y, z) = 0$ 可得：
+$$dg = g_x dx + g_y dy + g_z dz = 0$$
+由 $dg=0$ 解出 $dz = -\frac{1}{g_z}(g_x dx + g_y dy)$ 代入 $dh=0$：
+$$(f_x - f_z \frac{g_x}{g_z}) dx + (f_y - f_z \frac{g_y}{g_z}) dy = 0$$
+由于 $dx, dy$ 独立，系数必为 $0$：
+$$\frac{f_x}{g_x} = \frac{f_y}{g_y} = \frac{f_z}{g_z} = -\lambda$$
+由此得辅助函数（Lagrangian） $L = f + \lambda g$ 的驻点方程。
 
-**第三步：链式法则展开**
-$$h'(x) = \frac{\partial f}{\partial x} + \frac{\partial f}{\partial y} y'(x) = f_x - f_y \frac{g_x}{g_y} = 0$$
-整理得：
-$$\frac{f_x(x_0, y_0)}{g_x(x_0, y_0)} = \frac{f_y(x_0, y_0)}{g_y(x_0, y_0)}$$
-
-**第四步：引入乘子 $\lambda$**
-令上述比值为 $-\lambda$，则有：
-$$f_x + \lambda g_x = 0, \quad f_y + \lambda g_y = 0$$
-证毕。
+### 4. 多约束情形
+若有多个约束 $g_1=0, g_2=0, \dots, g_m=0$，则极值点处目标函数的梯度必须处于约束函数梯度的张成空间内：
+$$\nabla f + \sum_{i=1}^m \lambda i \nabla g_i = \mathbf{0}$$
+这要求目标函数的梯度与所有约束面的交集（流形）的切空间正交。
 
 ---
 
-## 五、 深度实战解析
+## 五、 判别极值的充分条件：Hessian 矩阵
+
+在求得驻点后，需判定其性质：
+1. **无条件极值**：检查 Hessian 矩阵 $H(f)$ 的正定性。
+2. **条件极值**：严格来说需检查 **有约束的 Hessian (Bordered Hessian)**，或将约束代入后化为低维无条件极值问题进行判定。
+
+---
+
+## 六、 深度实战解析
 
 ### 深度例题 1：隐函数方程组求导
 设 $u+v=x+y$，$xu+yv=1$，求 $\frac{\partial u}{\partial x}$。

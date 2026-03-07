@@ -17,12 +17,30 @@ $$f_x(x_0, y_0) = \lim_{\Delta x \to 0} \frac{f(x_0 + \Delta x, y_0) - f(x_0, y_
 这是函数沿坐标轴方向的变化率。
 
 ### 2. 全微分 (Total Differential)
-**定义**：若函数增量可表示为 $\Delta z = A \Delta x + B \Delta y + o(\rho)$，则称函数在点 $(x, y)$ 可微。
-**全微分**：$dz = f_x dx + f_y dy$。
+**定义**：若函数增量可表示为 $\Delta z = A \Delta x + B \Delta y + o(\rho)$，其中 $\rho = \sqrt{(\Delta x)^2 + (\Delta y)^2}$，则称函数在点 $(x, y)$ 可微。
 
-> **关键定理**：
-> 1. **必要条件**：若可微，则偏导数必存在。
-> 2. **充分条件**：若偏导数在点 $(x, y)$ 连续，则函数在该点必可微。
+#### **全微分存在性判定“四步走”**
+判定一个多元函数在某点 $(x_0, y_0)$ 是否可微，通常遵循以下严谨步骤：
+
+1.  **连续性检验**（必要条件）：若函数在该点不连续，则必不可微。
+2.  **求偏导数**：利用定义求出 $f_x(x_0, y_0)$ 和 $f_y(x_0, y_0)$。若偏导数不存在，则必不可微。
+3.  **构造线性增量**：写出全增量 $\Delta z = f(x_0+\Delta x, y_0+\Delta y) - f(x_0, y_0)$。
+4.  **极限判定**（充分必要条件）：计算以下极限：
+    $$\lim_{(\Delta x, \Delta y) \to (0, 0)} \frac{\Delta z - [f_x(x_0, y_0)\Delta x + f_y(x_0, y_0)\Delta y]}{\sqrt{(\Delta x)^2 + (\Delta y)^2}}$$
+    若极限为 $0$，则可微；否则不可微。
+
+> **关键定理回顾**：
+> - **必要条件**：可微 $\Rightarrow$ 连续 且 偏导数存在。
+> - **充分条件**：偏导数在点 $(x, y)$ 连续 $\Rightarrow$ 函数在该点可微。
+> - **注意**：偏导数存在并不意味着函数连续，更不意味着可微。
+
+#### **经典反例：偏导数存在但不可微**
+考虑函数：
+$$f(x, y) = \begin{cases} \frac{xy}{\sqrt{x^2+y^2}}, & (x, y) \neq (0, 0) \\ 0, & (x, y) = (0, 0) \end{cases}$$
+- **偏导数**：利用定义可算得 $f_x(0,0)=0, f_y(0,0)=0$。
+- **全微分判定**：
+  $$\lim_{(\Delta x, \Delta y) \to (0, 0)} \frac{\frac{\Delta x \Delta y}{\sqrt{(\Delta x)^2+(\Delta y)^2}} - 0}{\sqrt{(\Delta x)^2+(\Delta y)^2}} = \lim_{\rho \to 0} \frac{\rho^2 \cos \theta \sin \theta}{\rho^2} = \cos \theta \sin \theta$$
+  极限随角度 $\theta$ 变化而不为 $0$，故在该点不可微。
 
 ---
 
