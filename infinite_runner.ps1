@@ -1,4 +1,4 @@
-# SolKnow Autonomous Pulse Runner (V3.1 - REFINED EDITION)
+# SolKnow Autonomous Pulse Runner (V3.3 - ALIGNED EDITION)
 # Usage: pwsh -ExecutionPolicy Bypass -File infinite_runner.ps1
 
 $CHECK_INTERVAL = 300 
@@ -11,7 +11,7 @@ function Show-Logo {
     Clear-Host
     Write-Host @"
 
-      [ AUTONOMOUS MODE ACTIVE ]
+      [ STRATEGIC AUTONOMY V3.3 ]
       __________________________________________________________________________________________________________________________
 
       ███           █████████   ███████████  █████        █████  █████  ██████   █████  ███████████  █████        █████ 
@@ -20,14 +20,14 @@ function Show-Logo {
           ░░░███  ░░█████████   ░███    ░███ ░███         ░███████     ░███░░███░███  ░███    ░███ ░███    █    ░███  
            ███░    ░░░░░░░░███  ░███    ░███ ░███         ░███░░███    ░███ ░░██████  ░███    ░███ ░███   ███   ░███  
          ███░      ███    ░███  ░███    ░███ ░███      █  ░███ ░░███   ░███  ░░█████  ░███    ░███ ░███  █████  ░███  
-       ███░       ░░█████████   ███████████  ███████████  █████ ░░███  ░█████  ░░███ ░░███████████ ░██████░████████  
+       ███░       ░░█████████   ███████████  ███████████  █████ ░░███  ░░█████  ░░███ ░░███████████ ░██████░████████  
       ░░░          ░░░░░░░░░   ░░░░░░░░░░░  ░░░░░░░░░░░  ░░░░░   ░░░   ░░░░░    ░░░   ░░░░░░░░░░░  ░░░░░░  ░░░░░░░░   
 
                                                S O L K N O W   I N D U S T R I A L
       __________________________________________________________________________________________________________________________
       
-      >>> TARGET: INTEGRATED ZERO-FOUNDATION LEARNING SYSTEM
-      >>> STATUS: AUTONOMOUS PLANNING & EXECUTION
+      >>> TARGET: INTEGRATED LEARNING SYSTEM (MATH & CS)
+      >>> FOCUS: MATH ANALYSIS (TEXTBOOK STYLE)
       >>> FREQUENCY: 300s SYNC
       >>> TIME: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
       __________________________________________________________________________________________________________________________
@@ -69,75 +69,78 @@ function Write-Log($message, $type="INFO") {
     Add-Content -Path $LOG_FILE -Value $logEntry
 }
 
-# Ensure Vital Files Exist
 if (-not (Test-Path $LOG_FILE)) { Add-Content -Path $LOG_FILE -Value "# SolKnow Automation Vital Logs`n" }
-if (-not (Test-Path $TASKS_FILE)) { New-Item -Path $TASKS_FILE -ItemType File | Out-Null }
 
-Write-Log "SolKnow Industrial Core V3.1 Initialized." "SUCCESS"
+Write-Log "SolKnow Industrial Core V3.3 Initialized." "SUCCESS"
 
 while($true) {
     try {
         Show-Logo
-        Write-Log "Pulling latest state from cloud..."
+        Write-Log "Syncing with GitHub..." "INFO"
         git pull origin main --rebase
 
         $content = Get-Content $TASKS_FILE -Raw
         
-        # 1. STRATEGIC PLANNING PHASE
-        if ($content -notmatch "(?m)^- \[ \] (.*)") {
-            Write-Log "NO ACTIVE SUB-TASKS. ANALYZING GOALS IN $TASKS_FILE..." "PLAN"
+        # 1. ANALYZE & PLAN PHASE
+        # Check if "## 待办子任务" section has any uncompleted tasks
+        if ($content -notmatch "(?m)^## 待办子任务\s*(\r?\n- \[ \] .*)+") {
+            Write-Log "NO ACTIVE SUB-TASKS. ANALYZING GLOBAL GOALS..." "PLAN"
             
             $planPrompt = @"
-Objective: Read $TASKS_FILE. Based on the project description and mission in that file, plan exactly 1-3 granular, high-quality technical sub-tasks.
-Action: Append them to $TASKS_FILE under the '## 待办任务' section as '- [ ] Task Description' and run 'gcp'.
-Requirement: Tasks must be highly relevant to the 'integrated zero-foundation learning system' goal.
+Target: $TASKS_FILE
+Objective: Read the content under '## 总任务'. Based on that, plan 3-5 granular sub-tasks.
+Criteria: 
+- Each sub-task must involve writing detailed Math Analysis content (textbook style).
+- Each sub-task must include: 1. Knowledge points, 2. 1-2 Examples, 3. Multiple Exercises in the exercise pool.
+Format: Append as '- [ ] Task Description (YYYY-MM-DD)' under '## 待办子任务'.
+Constraint: Do NOT change the '## 总任务' or '## 已完成任务' headers. Run 'gcp' after modification.
 "@
             & gemini -y -p $planPrompt
             Write-Log "STRATEGIC PLANNING COMPLETE. SUB-TASKS INJECTED." "SUCCESS"
-            $content = Get-Content $TASKS_FILE -Raw # Refresh content
+            $content = Get-Content $TASKS_FILE -Raw 
         }
 
         # 2. EXECUTION PHASE
-        if ($content -match "(?m)^- \[ \] (.*)") {
+        # Find the first `- [ ]` task under "## 待办子任务"
+        if ($content -match "(?m)^## 待办子任务[\s\S]*?^- \[ \] (.*)") {
             $taskDesc = $matches[1].Trim()
-            Write-Log "ACTIVE SUB-TASK DETECTED: $taskDesc" "EXEC"
+            Write-Log "TARGET LOCKED: $taskDesc" "EXEC"
 
-            # Mark as processing to prevent race conditions
+            # Mark as processing
             $processingContent = $content -replace "(?m)^- \[ \] $([regex]::Escape($taskDesc))", "- [/] $taskDesc (Processing...)"
             Set-Content $TASKS_FILE $processingContent
             git add $TASKS_FILE
-            git commit -m "chore: pulse - processing sub-task: $taskDesc"
+            git commit -m "chore: pulse - processing $taskDesc"
             git push origin main
 
             Write-Log "ACTIVATING EXECUTOR..." "EXEC"
             $execPrompt = @"
-Task: $taskDesc.
-Vision: Refer to the top of $TASKS_FILE for project goals.
-Instructions: 
-1. Execute the task (write code/docs).
-2. Mark [x] in $TASKS_FILE.
+Task: $taskDesc
+Objective: Fulfill the '## 总任务' requirements: textbook quality, 1-2 examples per point, multiple exercises in the corresponding exercises/ directory.
+Action: 
+1. Perform the task (create/edit docs and exercises).
+2. Move the task from '## 待办子任务' to '## 已完成任务' and mark as [x].
 3. Finalize with 'gcp'.
-4. Verify with 'gh run list'.
+4. Check 'gh run list'.
 "@
             & gemini -y -p $execPrompt
 
-            # Post-Execution Validation
+            # Post-check: If still in processing, something went wrong
             $postCheck = Get-Content $TASKS_FILE -Raw
             if ($postCheck -match "(?m)^- \[\/\] $([regex]::Escape($taskDesc))") {
-                Write-Log "EXECUTOR FAILED TO COMPLETE OR MARK TASK. REVERTING STATE." "ERROR"
+                Write-Log "EXECUTOR INTERRUPTED. REVERTING TASK STATUS." "ERROR"
                 $revertContent = $postCheck -replace "(?m)^- \[\/\] $([regex]::Escape($taskDesc)) \(Processing...\)", "- [ ] $taskDesc"
                 Set-Content $TASKS_FILE $revertContent
             } else {
-                Write-Log "SUB-TASK COMPLETED: $taskDesc" "SUCCESS"
+                Write-Log "MISSION ACCOMPLISHED: $taskDesc" "SUCCESS"
             }
         }
         
-        # 3. GLOBAL CLOUD REVIEW
-        Write-Log "Reviewing cloud deployment status..." "INFO"
+        Write-Log "Deployment review..." "INFO"
         gh run list --limit 1
         
     } catch {
-        Write-Log "CORE SYSTEM FAULT: $($_.Exception.Message)" "ERROR"
+        Write-Log "CORE ERROR: $($_.Exception.Message)" "ERROR"
     }
     
     Show-Resting
