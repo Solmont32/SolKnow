@@ -1,41 +1,38 @@
-# Website
+# SolKnow (知岛)
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+沉浸式的 **算法竞赛笔记** 与 **数学知识体系**。
+整合图文教程与 B 站视频讲解，打造属于你的结构化数字大脑。
 
-## Installation
+---
 
+## 🌟 项目亮点
+- **三足鼎立**: 涵盖算法竞赛、系统数学、计算机科学三大核心板块。
+- **视觉驱动**: 采用 `framer-motion` 动效、`Lucide` 图标与玻璃拟态设计。
+- **视频整合**: 核心笔记均配备 B 站嵌入式视频解析。
+- **公式支持**: 基于 KaTeX 的高质量数学公式渲染。
+
+---
+
+## 🚀 2026.03.07 最新里程碑 (Major Upgrade)
+今天项目完成了 **V2 全站审美与工程化重塑**：
+1. **首页重构**: 引入动态 Hero 区域、计算机科学板块及琥珀橘视觉符号。
+2. **视频页进化**: 打造响应式视频聚合中心。
+3. **内容组件**: 引入 `KnowledgeCard` 增强文档呈现。
+4. **工程闭环**: 建立 ESLint/Prettier 规范及 GitHub CLI 部署监控流程。
+
+---
+
+## 🛠️ 本地开发
 ```bash
-yarn
+npm install
+npm start
 ```
 
-## Local Development
-
+## 🏗️ 生产构建与部署
 ```bash
-yarn start
+npm run build
+npm run deploy
 ```
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
-
-## Build
-
-```bash
-yarn build
-```
-
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
-
-## Deployment
-
-Using SSH:
-
-```bash
-USE_SSH=true yarn deploy
-```
-
-Not using SSH:
-
-```bash
-GIT_USER=<Your GitHub username> yarn deploy
-```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+---
+*Built with ❤️ by Solmont32*
