@@ -214,6 +214,26 @@ const sidebars: SidebarsConfig = {
       label: '资源导航',
     },
   ],
+
+  // 计算机知识库
+  csSidebar: [
+    {
+      type: 'category',
+      label: '计算机知识库',
+      link: {type: 'doc', id: 'cs/index'},
+      collapsible: false,
+      items: [
+        {type: 'doc', id: 'cs/linux/index', label: 'Linux 操作系统'},
+        {type: 'doc', id: 'cs/c/index', label: 'C 语言'},
+        {type: 'doc', id: 'cs/cpp/index', label: 'C++'},
+        {type: 'doc', id: 'cs/python/index', label: 'Python'},
+        {type: 'doc', id: 'cs/organization/index', label: '计算机组织与结构'},
+        {type: 'doc', id: 'cs/os/index', label: '操作系统'},
+        {type: 'doc', id: 'cs/ds/index', label: '数据结构'},
+        {type: 'doc', id: 'cs/network/index', label: '计算机网络'},
+      ],
+    },
+  ],
 };
 
 export default sidebars;

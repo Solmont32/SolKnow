@@ -85,6 +85,12 @@ const config: Config = {
         },
         {
           type: 'docSidebar',
+          sidebarId: 'csSidebar',
+          position: 'left',
+          label: '计算机知识库',
+        },
+        {
+          type: 'docSidebar',
           sidebarId: 'resourceSidebar',
           position: 'left',
           label: '资源导航',
