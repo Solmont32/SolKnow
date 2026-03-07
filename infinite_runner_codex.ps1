@@ -268,7 +268,36 @@ function Restore-ExcludedChanges($stashRef) {
         return
     }
 
-    git stash pop $stashRef *> $null
+    $stashFiles = @(git stash show --name-only --format="" $stashRef)
+    if ($LASTEXITCODE -ne 0) {
+        Write-Log "Failed to inspect temporary runtime stash: $stashRef" "WARN"
+        return
+    }
+
+    $stashPaths = $stashFiles | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | ForEach-Object { $_.Trim() } | Select-Object -Unique
+    $workingPaths = @()
+    $statusLines = @(git status --porcelain)
+    if ($LASTEXITCODE -eq 0) {
+        foreach ($line in $statusLines) {
+            if ([string]::IsNullOrWhiteSpace($line) -or $line.Length -lt 4) {
+                continue
+            }
+
+            $rawPath = $line.Substring(3).Trim()
+            if ($rawPath -match ' -> ') {
+                $rawPath = ($rawPath -split ' -> ')[-1].Trim()
+            }
+            $workingPaths += $rawPath
+        }
+    }
+
+    $conflicts = @($stashPaths | Where-Object { $workingPaths -contains $_ })
+    if ($conflicts.Count -gt 0) {
+        Write-Log "Skipped restoring temporary runtime stash $stashRef due to local changes in: $($conflicts -join ', ')" "WARN"
+        return
+    }
+
+    cmd /c "git stash pop $stashRef 1>nul 2>nul"
     if ($LASTEXITCODE -ne 0) {
         Write-Log "Failed to restore temporary runtime stash: $stashRef" "WARN"
         return
