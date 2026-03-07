@@ -100,8 +100,8 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: '人工智能',
+      link: {type: 'doc', id: 'ai/index'},
       items: [
-        { type: 'doc', id: 'ai/index', label: 'AI 导论' },
         { type: 'doc', id: 'ai/machine-learning', label: '机器学习' },
         { type: 'doc', id: 'ai/deep-learning', label: '深度学习' },
         { type: 'doc', id: 'ai/nlp', label: '自然语言处理' },
@@ -114,14 +114,15 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: '信息安全',
+      link: {type: 'doc', id: 'infosec/index'},
       items: [
-        { type: 'doc', id: 'infosec/index', label: '安全概论' },
         { type: 'doc', id: 'infosec/web-security', label: 'Web 安全' },
         { type: 'doc', id: 'infosec/cryptography', label: '密码学' },
         { type: 'doc', id: 'infosec/pwn', label: '二进制安全 (PWN)' },
       ],
     },
   ],
+
 
   // 计算机知识库
   csSidebar: [

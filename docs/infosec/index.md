@@ -1,24 +1,30 @@
 ---
-title: 信息安全知识库
+title: 信息安全知识库 (Information Security)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # 信息安全 (Information Security)
 
-在信息时代，安全是所有系统的基石。本库涵盖了从 Web 渗透到二进制底层安全的核心内容。
+本库旨在构建完整的安全思维体系，涵盖 Web 渗透、密码学应用及二进制漏洞挖掘实战。
 
-## 核心支柱 (CIA 三要素)
--   **机密性 (Confidentiality)**：确保信息不被未授权泄露。
--   **完整性 (Integrity)**：确保信息不被未授权篡改。
--   **可用性 (Availability)**：确保授权用户能随时访问服务。
+## 安全概论
+信息安全的本质是**攻防对抗**。只有深刻理解攻击者的手段，才能构建坚不可摧的防御防线。
 
-<KnowledgeCard type="warning" title="法律申明">
-本库提供的所有技术仅供学习与合规安全审计使用。严禁将其用于非法攻击，任何后果由使用者自负。
+<KnowledgeCard type="warning" title="实战原则">
+一切安全研究必须在**合法授权**的环境下进行。本库仅供教育与学术交流。
 </KnowledgeCard>
 
-## 重点板块
-1.  **Web 安全**：OWASP Top 10 (SQLi, XSS, CSRF 等)。
-2.  **密码学**：对称加密 (AES)、非对称加密 (RSA, ECC)、哈希算法。
-3.  **二进制安全**：缓冲区溢出、格式化字符串漏洞、逆向工程。
-4.  **内网渗透**：横向移动、域控攻防。
+## CTF 比赛记录与实战讲解
+*这里汇总了各大会赛（如 Defcon, Google CTF, 巅峰极客）的精彩题解。*
+
+### Web 安全实战
+- [SQL 注入进阶：盲注与报错注入深度解析](#)
+- [XSS 绕过技巧：现代浏览器的防御边界](#)
+
+### 二进制安全 (PWN)
+- [从栈溢出到 Ret2Libc：Linux 二进制提权初探](#)
+- [堆漏洞专题：UAF 漏洞原理与利用](#)
+
+### 密码学挑战
+- [RSA 攻击全集：从低指数到共模攻击](#)

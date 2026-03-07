@@ -6,18 +6,22 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # Codeforces 竞技指南
 
-Codeforces 是全球最顶级的算法竞赛平台，以其高质量的题目和高频率的比赛著称。
+Codeforces 是算法竞赛选手的终极试炼场。
 
-## 比赛类型
-- **Div. 1**: 面向高分选手（Rating >= 1900）。
-- **Div. 2**: 面向中级选手。
-- **Div. 3 / Div. 4**: 面向初学者。
+## 平台介绍
+以其高效的评测系统和极具挑战性的题目风格著称。
 
 <KnowledgeCard type="contest" title="提分建议">
-1. **补题 (Upsolving)**：比赛结束后，务必补出至少一道你没写出来的题目。
-2. **虚拟参赛 (Virtual Contest)**：利用过去比赛的录像进行全真模拟。
+**补题 (Upsolving)** 是进步的唯一捷径。
 </KnowledgeCard>
 
-## 常用工具
-- **CF-Predictor**: 实时预测 Rating 变化。
-- **Codeforces Visualizer**: 分析选手的强项与弱项。
+## 比赛记录与讲解汇总
+*记录每一场比赛的思维跳跃。*
+
+### 2026 赛季
+- [Codeforces Round 999 (Div. 2) A-E 全题解](#)
+- [Global Round 28: 构造题与数论专题](#)
+
+### 经典专题
+- [CF 评分 2000+ 动态规划精选 50 题](#)
+- [Codeforces 常见贪心模型总结](#)
