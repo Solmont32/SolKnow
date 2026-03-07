@@ -58,6 +58,7 @@ export default function Home(){
             <br></br>
             <Link to="/blog">进入导航</Link>
           </div>
+          
         </section>
       </main>
     </Layout>

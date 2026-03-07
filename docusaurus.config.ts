@@ -71,7 +71,24 @@ const config: Config = {
     navbar: {
       title: 'SolKnow（知岛）',
       items: [
-        {to: '/docs/intro', label: '知识库', position: 'left'},
+        {
+          type: 'docSidebar',
+          sidebarId: 'algoSidebar',
+          position: 'left',
+          label: '算法知识库',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'mathSidebar',
+          position: 'left',
+          label: '大学数学',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'resourceSidebar',
+          position: 'left',
+          label: '资源导航',
+        },
         {to: '/blog', label: '博客', position: 'left'},
         {to: '/videos', label: '视频', position: 'left'},
         {
