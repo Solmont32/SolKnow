@@ -1,5 +1,5 @@
 .heroBanner {
-  padding: 6rem 0;
+  padding: 8rem 0;
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -8,7 +8,7 @@
 }
 
 .heroTitle {
-  font-size: 3.5rem;
+  font-size: 4rem;
   font-weight: 800;
   margin-bottom: 1.5rem;
   background: -webkit-linear-gradient(45deg, var(--ifm-color-primary), #0ea5e9);
@@ -17,85 +17,138 @@
 }
 
 .heroSubtitle {
-  font-size: 1.25rem;
+  font-size: 1.4rem;
   color: var(--ifm-color-emphasis-700);
-  max-width: 650px;
-  margin: 0 auto 2.5rem;
-  line-height: 1.7;
+  max-width: 750px;
+  margin: 0 auto 3rem;
+  line-height: 1.8;
 }
 
 .buttons {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1.2rem;
+  gap: 1.5rem;
   flex-wrap: wrap;
 }
 
+.sectionTitle {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.sectionTitle::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: var(--ifm-color-primary);
+  margin: 15px auto 0;
+  border-radius: 2px;
+}
+
 .features {
-  padding: 5rem 0;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 6rem 0;
 }
 
 .featureGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  padding: 0 1.5rem;
+  gap: 2.5rem;
+  margin-bottom: 6rem;
 }
 
 .featureCard {
-  padding: 2.5rem 2rem;
+  padding: 3rem 2rem;
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
 .featureIcon {
-  font-size: 3rem;
-  margin-bottom: 1.2rem;
-  display: inline-block;
-  line-height: 1;
+  font-size: 3.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .featureTitle {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
 }
 
 .featureDesc {
   flex-grow: 1;
   color: var(--ifm-color-emphasis-700);
-  line-height: 1.6;
-  margin-bottom: 1.8rem;
+  line-height: 1.7;
+  margin-bottom: 2rem;
 }
 
 .featureLink {
   font-weight: 600;
-  text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 1.05rem;
 }
 
-.featureLink:hover {
-  text-decoration: none;
-  transform: translateX(4px);
-  transition: transform 0.2s ease;
+/* Roadmap Section */
+.roadmapSection {
+  background: var(--ifm-color-emphasis-100);
+  padding: 4rem 2rem;
+  border-radius: 24px;
+  margin-top: 4rem;
 }
 
-/* 响应式调整 */
+.roadmapGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.roadmapCard {
+  background: var(--solknow-card-bg);
+  padding: 2.5rem;
+  border-radius: 20px;
+  border-left: 6px solid;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.roadmapCard h4 {
+  font-size: 1.4rem;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.roadmapCard ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.roadmapCard li {
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-emphasis-800);
+  font-weight: 500;
+}
+
+.roadmapCard li::before {
+  content: "✦";
+  margin-right: 10px;
+  color: var(--ifm-color-primary);
+}
+
+.homeFooter {
+  padding: 4rem 0;
+  background: var(--ifm-footer-background-color);
+  color: var(--ifm-footer-color);
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
 @media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 4rem 1.5rem;
-  }
-  .heroTitle {
-    font-size: 2.5rem;
-  }
-  .features {
-    padding: 3rem 0;
-  }
+  .heroBanner { padding: 5rem 1.5rem; }
+  .heroTitle { font-size: 2.8rem; }
+  .featureGrid { gap: 1.5rem; }
 }
