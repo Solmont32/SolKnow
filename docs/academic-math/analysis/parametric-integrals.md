@@ -48,17 +48,35 @@ $$\left| \int_A^{+\infty} f(x, y) dx \right| < \epsilon$$
 
 ---
 
-## 三、 核心计算技巧
+## 四、 特殊函数：Beta 函数与 Gamma 函数 (Beta and Gamma Functions)
 
-1. **利用 Leibniz 公式求导**：这是解决含参量积分最常用的方法。通过对参数求导，将被积函数化简，求出导函数后再积分回去（需确定常数 $C$）。
-2. **积分号下积分**：利用 $\int_c^d dy \int_a^b f(x, y) dx = \int_a^b dx \int_c^d f(x, y) dy$ 交换积分顺序。
-3. **利用特殊函数**：
-   - **Gamma 函数**：$\Gamma(s) = \int_0^{+\infty} x^{s-1} e^{-x} dx$
-   - **Beta 函数**：$B(p, q) = \int_0^1 x^{p-1} (1-x)^{q-1} dx$
+在含参量反常积分中，Beta 函数和 Gamma 函数是最具代表性的两类函数，它们在统计学、物理学和工程学中有着极其广泛的应用。
+
+### 1. Gamma 函数 (The Gamma Function)
+**定义**：对于 $s > 0$，定义 Gamma 函数为：
+$$\Gamma(s) = \int_0^{+\infty} x^{s-1} e^{-x} dx$$
+
+**核心性质**：
+- **递推公式**：$\Gamma(s+1) = s\Gamma(s)$。由此可得，对于正整数 $n$，$\Gamma(n+1) = n!$。
+- **特殊值**：$\Gamma(1) = 1$，$\Gamma(1/2) = \sqrt{\pi}$。
+- **余元公式**：$\Gamma(s)\Gamma(1-s) = \frac{\pi}{\sin(\pi s)} \quad (0 < s < 1)$。
+
+### 2. Beta 函数 (The Beta Function)
+**定义**：对于 $p > 0, q > 0$，定义 Beta 函数为：
+$$B(p, q) = \int_0^1 x^{p-1} (1-x)^{q-1} dx$$
+
+**核心性质**：
+- **对称性**：$B(p, q) = B(q, p)$。
+- **三角形式**：令 $x = \sin^2 \theta$，得 $B(p, q) = 2 \int_0^{\pi/2} \sin^{2p-1} \theta \cos^{2q-1} \theta d\theta$。
+
+### 3. 两者的关系 (Relationship)
+Beta 函数可以由 Gamma 函数完全表示：
+$$B(p, q) = \frac{\Gamma(p)\Gamma(q)}{\Gamma(p+q)}$$
+这个公式是计算 Beta 积分最常用的手段。
 
 ---
 
-## 四、 深度例题解析
+## 五、 核心计算技巧
 
 ### 例题 1：Dirichlet 积分的计算
 计算积分：$I = \int_0^{+\infty} \frac{\sin x}{x} dx$。

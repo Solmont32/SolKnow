@@ -29,16 +29,19 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 ### 1. 第一类曲面积分（对面积）
 - **定义**：$\iint_\Sigma f(x, y, z) dS = \lim_{\lambda \to 0} \sum f(\xi_i, \eta_i, \zeta_i) \Delta S_i$。
-- **计算**：若 $\Sigma: z = z(x, y), (x, y) \in D$，则：
-  $$\iint_\Sigma f dS = \iint_D f(x, y, z(x, y)) \sqrt{1 + z_x^2 + z_y^2} dA$$
+- **几何意义**：若 $f=1$，积分为曲面面积；若 $f$ 为面密度，积分为总质量。
+- **计算**：若 $\Sigma$ 在 $xy$ 平面的投影为 $D_{xy}$，且方程为 $z = z(x, y)$，则：
+  $$\iint_\Sigma f dS = \iint_{D_{xy}} f(x, y, z(x, y)) \sqrt{1 + z_x^2 + z_y^2} dxdy$$
 
 ### 2. 第二类曲面积分（对坐标/通量）
-- **定义**：$\iint_\Sigma \mathbf{F} \cdot d\mathbf{S} = \iint_\Sigma \mathbf{F} \cdot \mathbf{n} dS$。
-- **物理意义**：向量场 $\mathbf{F}$ 穿过曲面 $\Sigma$ 的通量。
+- **定义**：$\iint_\Sigma \mathbf{F} \cdot d\mathbf{S} = \iint_\Sigma (P \cos \alpha + Q \cos \beta + R \cos \gamma) dS$，其中 $(\cos \alpha, \cos \beta, \cos \gamma)$ 是 $\Sigma$ 的单位法向量。
+- **物理意义**：流体通过曲面的流量。
+- **注意**：积分结果取决于曲面的侧（Side），即法向量的方向。
 
 ---
 
 ## 三、 三大核心公式：维度的桥梁
+
 
 ### 1. 格林公式 (Green's Theorem) —— 平面的奥秘
 **内容**：设 $D$ 是平面闭区域，$L$ 是 $D$ 的正向边界（逆时针）。若 $P, Q$ 在 $D$ 上有一阶连续偏导数，则：
@@ -138,4 +141,29 @@ $\frac{12}{5}\pi a^5$
 
 #### 答案
 $-3/2$
+</details>
+
+### 例题 4：利用高斯公式计算非闭合曲面的通量
+计算曲面积分 $I = \iint_\Sigma x d y d z + y d z d x + z d x d y$，其中 $\Sigma$ 是抛物面 $z = 1 - x^2 - y^2$ 在 $xy$ 平面上方的部分，方向取上侧。
+
+<details>
+<summary>点击查看解析</summary>
+
+#### 解析过程
+1. **构造闭合曲面**：
+   $\Sigma$ 不是闭合曲面。为了使用高斯公式，我们添加底面 $\Sigma_1: z=0, x^2+y^2 \le 1$，方向取下侧（即 $\mathbf{n} = (0, 0, -1)$）。
+   设由 $\Sigma$ 和 $\Sigma_1$ 围成的闭区域为 $\Omega$。
+2. **应用高斯公式**：
+   $\oiint_{\Sigma \cup \Sigma_1} \mathbf{F} \cdot d\mathbf{S} = \iiint_\Omega \text{div } \mathbf{F} dV = \iiint_\Omega (1 + 1 + 1) dV = 3 \text{Vol}(\Omega)$。
+3. **计算体积**：
+   $\text{Vol}(\Omega) = \iint_{x^2+y^2 \le 1} (1 - x^2 - y^2) dA = \int_0^{2\pi} d\theta \int_0^1 (1-r^2)r dr = 2\pi \cdot [r^2/2 - r^4/4]_0^1 = \frac{\pi}{2}$。
+   故 $\oiint = 3 \cdot \frac{\pi}{2} = \frac{3\pi}{2}$。
+4. **计算底面 $\Sigma_1$ 的通量**：
+   在 $\Sigma_1$ 上，$z=0, \mathbf{n} = (0, 0, -1)$。
+   $\iint_{\Sigma_1} \mathbf{F} \cdot d\mathbf{S} = \iint_{\Sigma_1} (x, y, 0) \cdot (0, 0, -1) dS = \iint_{\Sigma_1} 0 dS = 0$。
+5. **求得结果**：
+   $I = \oiint - \iint_{\Sigma_1} = \frac{3\pi}{2} - 0 = \frac{3\pi}{2}$。
+
+#### 答案
+$3\pi/2$
 </details>

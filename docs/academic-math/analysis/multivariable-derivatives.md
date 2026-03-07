@@ -49,23 +49,35 @@ $$\frac{\partial z}{\partial x} = \frac{\partial z}{\partial u} \frac{\partial u
 $$\frac{\partial^2 f}{\partial x \partial y} = \frac{\partial^2 f}{\partial y \partial x}$$
 
 ---
-
+---
 ## 四、 隐函数定理 (Implicit Function Theorem)
 
-### 1. 单个方程的情形
+隐函数定理是分析学中极其重要的工具，它给出了在什么条件下方程（组）可以局部地解出某个变量，并提供了求导的直接方法。
+
+### 1. 单个方程的情形 (Single Equation)
 设函数 $F(x, y)$ 在点 $P_0(x_0, y_0)$ 的某邻域内具有连续偏导数，且满足：
-1. $F(x_0, y_0) = 0$
-2. $F_y(x_0, y_0) \neq 0$
+1. **零点条件**：$F(x_0, y_0) = 0$
+2. **非退化条件**：$F_y(x_0, y_0) \neq 0$
 
 则在 $x_0$ 的某邻域内，方程 $F(x, y) = 0$ 唯一确定一个连续且具有连续导数的函数 $y = f(x)$，且其导数为：
 $$\frac{dy}{dx} = -\frac{F_x}{F_y}$$
 
-### 2. 方程组的情形
-对于方程组 $\begin{cases} F(x, y, u, v) = 0 \\ G(x, y, u, v) = 0 \end{cases}$，若其雅可比行列式 (Jacobian) $J = \frac{\partial(F, G)}{\partial(u, v)} = \begin{vmatrix} F_u & F_v \\ G_u & G_v \end{vmatrix} \neq 0$，则可以确定隐函数 $u(x, y)$ 和 $v(x, y)$。
+### 2. 方程组的情形与雅可比行列式 (Systems and Jacobians)
+考虑方程组：
+$$\begin{cases} F(x, y, u, v) = 0 \\ G(x, y, u, v) = 0 \end{cases}$$
+若 $F, G$ 在点 $P_0(x_0, y_0, u_0, v_0)$ 处满足 $F=0, G=0$，且在 $P_0$ 的邻域内连续可微，若其**雅可比行列式 (Jacobian)**：
+$$J = \frac{\partial(F, G)}{\partial(u, v)} = \begin{vmatrix} \frac{\partial F}{\partial u} & \frac{\partial F}{\partial v} \\ \frac{\partial G}{\partial u} & \frac{\partial G}{\partial v} \end{vmatrix} \neq 0$$
+则在该点附近可唯一确定隐函数 $u = u(x, y)$ 和 $v = v(x, y)$。其偏导数可通过克莱姆法则或全微分法求得。
+
+### 3. 逆函数定理 (Inverse Function Theorem)
+这是隐函数定理的一个重要推论。设映射 $\mathbf{f}: \mathbb{R}^n \to \mathbb{R}^n$ 在 $\mathbf{x}_0$ 处连续可微。若其雅可比矩阵 $D\mathbf{f}(\mathbf{x}_0)$ 可逆（即行列式不为 0），则：
+1. $\mathbf{f}$ 在 $\mathbf{x}_0$ 附近是**局部微分同胚**（即存在局部逆函数 $\mathbf{g} = \mathbf{f}^{-1}$）。
+2. 逆函数的导数为：$D(\mathbf{f}^{-1})(\mathbf{y}_0) = [D\mathbf{f}(\mathbf{x}_0)]^{-1}$。
 
 ---
 
 ## 五、 多元函数的极值 (Extremum)
+
 
 ### 1. 无条件极值的必要条件
 若 $f(x, y)$ 在点 $(x_0, y_0)$ 处取得极值且在该点可导，则其一阶偏导数必为 0：

@@ -657,22 +657,93 @@ $ab e^{ax} \cos by$
 </details>
 ---
 
-## 练习 32：散度计算
-计算向量场 $\mathbf{F} = (x^2, y^2, z^2)$ 的散度 $\text{div } \mathbf{F}$。
+## 练习 39：隐函数求导（方程组）
+已知方程组 $\begin{cases} u + v = x + y \\ xu + yv = 1 \end{cases}$ 确定了隐函数 $u(x, y)$ 和 $v(x, y)$，求 $\frac{\partial u}{\partial x}$。
 
 <details>
-<summary>点击查看解析与答案</summary>
+<summary>点击查看解析</summary>
 
 #### 解析
-1. **计算**：$\frac{\partial x^2}{\partial x} + \frac{\partial y^2}{\partial y} + \frac{\partial z^2}{\partial z} = 2x + 2y + 2z$。
+1. **全微分法**：对两个方程两边求全微分：
+   $\begin{cases} du + dv = dx + dy \quad (1) \\ u dx + x du + v dy + y dv = 0 \quad (2) \end{cases}$
+2. **消去 $dv$**：由 (1) 得 $dv = dx + dy - du$，代入 (2)：
+   $u dx + x du + v dy + y(dx + dy - du) = 0$
+   $(u+y) dx + (x-y) du + (v+y) dy = 0$
+3. **求偏导数**：令 $dy = 0$：
+   $(u+y) dx + (x-y) du = 0 \implies \frac{\partial u}{\partial x} = \frac{u+y}{y-x}$
 
 #### 答案
-$2(x+y+z)$
+$\frac{u+y}{y-x}$
 </details>
 
 ---
 
-## 连续性专题深度练习 (Continuity Special)
+## 练习 40：Gamma 函数计算
+计算积分 $I = \int_0^{+\infty} x^6 e^{-2x} dx$。
+
+<details>
+<summary>点击查看解析</summary>
+
+#### 解析
+1. **变量替换**：令 $t = 2x$，则 $x = t/2, dx = dt/2$。
+2. **代入积分**：
+   $I = \int_0^{+\infty} (t/2)^6 e^{-t} (dt/2) = \frac{1}{2^7} \int_0^{+\infty} t^6 e^{-t} dt$
+3. **利用 Gamma 函数定义**：
+   $\int_0^{+\infty} t^6 e^{-t} dt = \Gamma(7) = 6! = 720$。
+4. **计算结果**：
+   $I = \frac{720}{128} = \frac{45}{8}$。
+
+#### 答案
+$45/8$
+</details>
+
+---
+
+## 练习 41：Beta 函数与 Gamma 函数结合
+计算积分 $I = \int_0^{\pi/2} \sin^4 \theta \cos^2 \theta d\theta$。
+
+<details>
+<summary>点击查看解析</summary>
+
+#### 解析
+1. **利用 Beta 函数的三角形式**：
+   $B(p, q) = 2 \int_0^{\pi/2} \sin^{2p-1} \theta \cos^{2q-1} \theta d\theta$。
+   对比得 $2p-1 = 4 \implies p = 5/2$，$2q-1 = 2 \implies q = 3/2$。
+2. **代入公式**：
+   $I = \frac{1}{2} B(5/2, 3/2)$。
+3. **转化为 Gamma 函数**：
+   $I = \frac{1}{2} \frac{\Gamma(5/2)\Gamma(3/2)}{\Gamma(4)}$。
+4. **计算特殊值**：
+   $\Gamma(5/2) = \frac{3}{2} \cdot \frac{1}{2} \sqrt{\pi} = \frac{3\sqrt{\pi}}{4}$
+   $\Gamma(3/2) = \frac{1}{2} \sqrt{\pi}$
+   $\Gamma(4) = 3! = 6$
+5. **最终结果**：
+   $I = \frac{1}{2} \cdot \frac{\frac{3\pi}{8}}{6} = \frac{1}{2} \cdot \frac{\pi}{16} = \frac{\pi}{32}$。
+
+#### 答案
+$\pi/32$
+</details>
+
+---
+
+## 练习 42：利用高斯公式求穿过封闭曲面的通量
+计算 $\oiint_\Sigma x^2 dy dz + y^2 dz dx + z^2 dx dy$，其中 $\Sigma$ 是立方体 $0 \le x, y, z \le a$ 的整个外表面。
+
+<details>
+<summary>点击查看解析</summary>
+
+#### 解析
+1. **应用高斯公式**：
+   $I = \iiint_\Omega (\frac{\partial x^2}{\partial x} + \frac{\partial y^2}{\partial y} + \frac{\partial z^2}{\partial z}) dV = \iiint_\Omega 2(x+y+z) dV$。
+2. **利用对称性计算**：
+   $\iiint_\Omega x dV = \int_0^a x dx \int_0^a dy \int_0^a dz = \frac{1}{2}a^2 \cdot a \cdot a = \frac{a^4}{2}$。
+   同理，$\iiint y dV = \iiint z dV = \frac{a^4}{2}$。
+3. **求和**：
+   $I = 2 (\frac{a^4}{2} + \frac{a^4}{2} + \frac{a^4}{2}) = 3a^4$。
+
+#### 答案
+$3a^4$
+</details>
 
 ### 练习 33：复合函数连续性与间断点
 讨论函数 $f(x) = \lim_{n \to \infty} \frac{x^n - 1}{x^n + 1}$ ($x \ge 0$) 的连续性。
