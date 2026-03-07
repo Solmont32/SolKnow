@@ -1,6 +1,6 @@
 # 资源导航 (Resource Navigation)
 
-这里收集了优秀的学习资源、竞赛平台和实用工具，旨在为算法竞赛和数学学习提供一站式支持。
+这里收集了优秀的学习资源、竞赛平台、AI 工具和实用插件，旨在为算法竞赛和数学学习提供一站式支持。
 
 ## 🏆 算法竞赛平台 (Competitive Programming)
 - [Codeforces](https://codeforces.com/) - 全球最知名的算法竞赛平台，包含 Div.1 - Div.4 不同难度的比赛。
@@ -8,6 +8,15 @@
 - [LeetCode](https://leetcode.cn/) - 职场面试刷题首选，支持多种编程语言。
 - [LuoGu (洛谷)](https://www.luogu.com.cn/) - 国内最大的算法竞赛社区，题库极其丰富。
 - [Virtual Judge](https://vjudge.net/) - 集成全球各大平台题库的练习系统。
+
+## 🤖 AI 工具与生产力 (AI Tools & Productivity)
+- [Google Gemini](https://gemini.google.com/) - 谷歌推出的多模态大模型，具备超长上下文理解能力。
+- [ChatGPT (OpenAI)](https://chatgpt.com/) - 目前最流行、综合能力最强的 AI 对话助手。
+- [Claude (Anthropic)](https://claude.ai/) - 以长文本处理和高质量代码生成著称的 AI。
+- [DeepSeek](https://www.deepseek.com/) - 国内顶尖的开源大模型，逻辑推理能力极其出色。
+- [Kimi.ai](https://kimi.moonshot.cn/) - 支持超长文件分析的国产 AI。
+- [Cursor](https://www.cursor.com/) - 集成 AI 的下一代代码编辑器，大幅提升编程效率。
+- [Perplexity](https://www.perplexity.ai/) - 基于 AI 的对话式搜索引擎，提供精准的信源标注。
 
 ## 📚 学习资源与笔记 (Learning Resources)
 - [OI Wiki](https://oi-wiki.org/) - 算法竞赛领域最权威的中文知识库。
