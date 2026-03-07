@@ -59,7 +59,12 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: '竞赛数学',
       link: {type: 'doc', id: 'math/index'},
-      items: ['math/modint'],
+      items: [
+        'math/number-theory',
+        'math/combinatorics',
+        'math/modint',
+        'math/matrix-fast-pow',
+      ],
     },
     {
       type: 'category',
