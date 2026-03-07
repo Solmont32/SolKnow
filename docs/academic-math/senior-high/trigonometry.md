@@ -1,5 +1,4 @@
-﻿---
-id: trigonometry
+---
 title: 涓夎鍑芥暟 (Trigonometry)
 ---
 

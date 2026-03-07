@@ -1,5 +1,4 @@
-﻿---
-id: matrix
+---
 title: 鐭╅樀 (Matrices)
 ---
 

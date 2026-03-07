@@ -1,5 +1,4 @@
-﻿---
-id: set-theory
+---
 title: 闆嗗悎璁?(Set Theory)
 ---
 

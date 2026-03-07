@@ -1,4 +1,8 @@
-﻿# 姒傜巼璁?(Probability Theory)
+---
+title: 姒傜巼璁?(Probability Theory)
+---
+
+# 姒傜巼璁?(Probability Theory)
 
 鐮旂┒闅忔満鐜拌薄瑙勫緥鎬х殑鏁板鍒嗘敮銆?
 

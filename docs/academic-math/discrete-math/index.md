@@ -1,4 +1,8 @@
-﻿# 绂绘暎鏁板 (Discrete Mathematics)
+---
+title: 绂绘暎鏁板 (Discrete Mathematics)
+---
+
+# 绂绘暎鏁板 (Discrete Mathematics)
 
 绂绘暎鏁板鏄幇浠ｆ暟瀛︾殑涓€涓噸瑕佸垎鏀紝鏄绠楁満绉戝鐨勬暟瀛﹀熀纭€銆?
 

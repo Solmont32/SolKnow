@@ -1,7 +1,7 @@
 ---
-id: fractions
-title: 分数与比例
+title: 分数与比例 (Fractions and Ratios)
 ---
+
 # 分数与比例 (Fractions and Ratios)
 
 ## 分数定义

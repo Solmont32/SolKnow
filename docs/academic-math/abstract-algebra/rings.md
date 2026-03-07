@@ -1,5 +1,4 @@
-﻿---
-id: rings
+---
 title: 鐜 (Rings)
 ---
 

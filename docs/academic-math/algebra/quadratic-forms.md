@@ -1,5 +1,4 @@
-﻿---
-id: quadratic-forms
+---
 title: 浜屾鍨?(Quadratic Forms)
 ---
 

@@ -1,4 +1,8 @@
-﻿# 灏忓鏁板 (Elementary School Math)
+---
+title: 灏忓鏁板 (Elementary School Math)
+---
+
+# 灏忓鏁板 (Elementary School Math)
 
 鍩瑰吇瀵规暟瀛︾殑鍏磋叮锛屽缓绔嬪熀纭€鐨勮绠椾笌閫昏緫鎬濈淮銆?
 

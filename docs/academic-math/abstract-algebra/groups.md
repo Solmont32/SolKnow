@@ -1,5 +1,4 @@
-﻿---
-id: groups
+---
 title: 缇よ (Groups)
 ---
 

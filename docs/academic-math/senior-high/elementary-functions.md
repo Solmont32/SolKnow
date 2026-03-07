@@ -1,5 +1,4 @@
-﻿---
-id: elementary-functions
+---
 title: 鍩烘湰鍒濈瓑鍑芥暟 (Elementary Functions)
 ---
 

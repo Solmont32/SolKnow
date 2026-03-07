@@ -1,5 +1,4 @@
-﻿---
-id: continuity
+---
 title: 杩炵画鎬?(Continuity)
 ---
 

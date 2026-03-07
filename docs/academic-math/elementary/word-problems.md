@@ -1,7 +1,7 @@
 ---
-id: word-problems
-title: 简单的应用题
+title: 简单的应用题 (Word Problems)
 ---
+
 # 简单的应用题 (Word Problems)
 
 ## 常见类型

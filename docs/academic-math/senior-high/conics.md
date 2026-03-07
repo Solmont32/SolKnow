@@ -1,5 +1,4 @@
-﻿---
-id: conics
+---
 title: 鍦嗛敟鏇茬嚎 (Conic Sections)
 ---
 

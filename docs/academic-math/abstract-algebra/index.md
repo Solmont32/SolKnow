@@ -1,4 +1,8 @@
-﻿# 鎶借薄浠ｆ暟 (Abstract Algebra)
+---
+title: 鎶借薄浠ｆ暟 (Abstract Algebra)
+---
+
+# 鎶借薄浠ｆ暟 (Abstract Algebra)
 
 鐮旂┒缇ゃ€佺幆銆佸煙绛変唬鏁扮粨鏋勭殑鏁板鍒嗘敮銆?
 

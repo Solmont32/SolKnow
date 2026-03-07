@@ -1,7 +1,7 @@
 ---
-id: arithmetic
-title: 四则运算
+title: 四则运算 (Arithmetic)
 ---
+
 # 四则运算 (Arithmetic)
 
 ## 基础运算

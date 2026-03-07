@@ -1,4 +1,8 @@
-﻿# 鍒濅腑鏁板 (Junior High School Math)
+---
+title: 鍒濅腑鏁板 (Junior High School Math)
+---
+
+# 鍒濅腑鏁板 (Junior High School Math)
 
 浠庡叿浣撴€濈淮鍚戞娊璞℃€濈淮杩囨浮锛屽缓绔嬩唬鏁颁笌骞抽潰鍑犱綍浣撶郴銆?
 

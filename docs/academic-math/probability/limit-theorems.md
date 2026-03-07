@@ -1,5 +1,4 @@
-﻿---
-id: limit-theorems
+---
 title: 澶ф暟瀹氬緥涓庝腑蹇冩瀬闄愬畾鐞?(Limit Theorems)
 ---
 

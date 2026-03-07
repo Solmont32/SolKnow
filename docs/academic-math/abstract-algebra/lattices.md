@@ -1,5 +1,4 @@
-﻿---
-id: lattices
+---
 title: 鏍?(Lattices)
 ---
 

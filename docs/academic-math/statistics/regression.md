@@ -1,5 +1,4 @@
-﻿---
-id: regression
+---
 title: 鍥炲綊鍒嗘瀽 (Regression)
 ---
 

@@ -1,5 +1,4 @@
-﻿---
-id: derivatives
+---
 title: 瀵兼暟 (Derivatives)
 ---
 

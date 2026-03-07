@@ -1,4 +1,8 @@
-﻿# 楂樼瓑浠ｆ暟 (Advanced Algebra)
+---
+title: 楂樼瓑浠ｆ暟 (Advanced Algebra)
+---
+
+# 楂樼瓑浠ｆ暟 (Advanced Algebra)
 
 楂樼瓑浠ｆ暟鍖呮嫭绾挎€т唬鏁板拰澶氶」寮忎唬鏁颁袱閮ㄥ垎銆?
 

@@ -1,5 +1,4 @@
-﻿---
-id: combinatorics
+---
 title: 缁勫悎鏁板 (Combinatorics)
 ---
 

@@ -1,5 +1,4 @@
-﻿---
-id: determinant
+---
 title: 琛屽垪寮?(Determinant)
 ---
 

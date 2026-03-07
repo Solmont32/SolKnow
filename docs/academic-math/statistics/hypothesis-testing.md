@@ -1,5 +1,4 @@
-﻿---
-id: hypothesis-testing
+---
 title: 鍋囪妫€楠?(Hypothesis Testing)
 ---
 

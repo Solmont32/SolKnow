@@ -1,5 +1,4 @@
-﻿---
-id: polynomial
+---
 title: 澶氶」寮?(Polynomials)
 ---
 

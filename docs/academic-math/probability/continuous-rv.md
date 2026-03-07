@@ -1,5 +1,4 @@
-﻿---
-id: continuous-rv
+---
 title: 杩炵画鍨嬮殢鏈哄彉閲?(Continuous Random Variables)
 ---
 

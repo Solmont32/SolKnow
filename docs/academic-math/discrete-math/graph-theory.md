@@ -1,5 +1,4 @@
-﻿---
-id: graph-theory
+---
 title: 鍥捐 (Graph Theory)
 ---
 

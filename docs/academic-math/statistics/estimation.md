@@ -1,5 +1,4 @@
-﻿---
-id: estimation
+---
 title: 浼拌 (Estimation)
 ---
 

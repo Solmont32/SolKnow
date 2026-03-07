@@ -1,5 +1,4 @@
-﻿---
-id: discrete-rv
+---
 title: 绂绘暎鍨嬮殢鏈哄彉閲?(Discrete Random Variables)
 ---
 

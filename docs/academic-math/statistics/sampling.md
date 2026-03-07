@@ -1,5 +1,4 @@
-﻿---
-id: sampling
+---
 title: 鎶芥牱 (Sampling)
 ---
 

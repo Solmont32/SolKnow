@@ -1,4 +1,8 @@
-﻿# 鏁扮悊缁熻 (Mathematical Statistics)
+---
+title: 鏁扮悊缁熻 (Mathematical Statistics)
+---
+
+# 鏁扮悊缁熻 (Mathematical Statistics)
 
 鏁扮悊缁熻鏄爺绌跺浣曟湁鏁堝湴鏀堕泦銆佹暣鐞嗗拰鍒嗘瀽甯︽湁闅忔満鎬х殑鏁版嵁锛屽苟瀵规墍鑰冨療鐨勯棶棰樹綔鍑烘帹鏂垨棰勬祴銆?
 

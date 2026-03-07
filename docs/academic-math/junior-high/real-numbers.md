@@ -1,6 +1,6 @@
 ---
-id: real-numbers
-title: 有理数与实数
+title: 有理数与实数 (Real Numbers)
 ---
+
 # 有理数与实数 (Real Numbers)
 ...内容略...

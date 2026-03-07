@@ -1,7 +1,7 @@
 ---
-id: geometry-basic
-title: 图形与几何基础
+title: 图形与几何基础 (Geometry Basic)
 ---
+
 # 图形与几何基础 (Geometry Basic)
 
 ## 基本图形

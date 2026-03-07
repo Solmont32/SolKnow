@@ -1,5 +1,4 @@
-﻿---
-id: linear-equations
+---
 title: 绾挎€ф柟绋嬬粍 (Linear Equations)
 ---
 

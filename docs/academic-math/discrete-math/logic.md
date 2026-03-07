@@ -1,5 +1,4 @@
-﻿---
-id: logic
+---
 title: 閫昏緫 (Logic)
 ---
 

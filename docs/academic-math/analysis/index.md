@@ -1,4 +1,8 @@
-﻿# 鏁板鍒嗘瀽 (Mathematical Analysis)
+---
+title: 鏁板鍒嗘瀽 (Mathematical Analysis)
+---
+
+# 鏁板鍒嗘瀽 (Mathematical Analysis)
 
 鏁板鍒嗘瀽鏄爺绌跺疄鏁板強鍏跺嚱鏁板湪鏋侀檺杩囩▼涓嬬殑琛屼负鐨勬暟瀛﹀垎鏀€?
 

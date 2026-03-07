@@ -1,5 +1,4 @@
-﻿---
-id: series
+---
 title: 鏁板垪鏋侀檺 (Limits of Sequences)
 ---
 

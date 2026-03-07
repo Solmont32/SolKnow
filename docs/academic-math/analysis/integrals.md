@@ -1,5 +1,4 @@
-﻿---
-id: integrals
+---
 title: 绉垎 (Integrals)
 ---
 

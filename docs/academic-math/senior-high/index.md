@@ -1,4 +1,8 @@
-﻿# 楂樹腑鏁板 (Senior High School Math)
+---
+title: 楂樹腑鏁板 (Senior High School Math)
+---
+
+# 楂樹腑鏁板 (Senior High School Math)
 
 娣卞叆鎺㈢储鍑芥暟銆佷唬鏁颁笌绔嬩綋鍑犱綍锛屼负楂樼瓑鏁板鎵撲笅鍧氬疄鍩虹銆?
 

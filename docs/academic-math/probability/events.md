@@ -1,5 +1,4 @@
-﻿---
-id: events
+---
 title: 浜嬩欢涓庢鐜?(Events and Probability)
 ---
 

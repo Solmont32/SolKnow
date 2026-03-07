@@ -1,5 +1,4 @@
-﻿---
-id: calculus-intro
+---
 title: 寰Н鍒嗗垵姝?(Calculus Introduction)
 ---
 

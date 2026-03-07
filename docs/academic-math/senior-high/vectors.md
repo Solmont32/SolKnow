@@ -1,5 +1,4 @@
-﻿---
-id: vectors
+---
 title: 鍚戦噺 (Vectors)
 ---
 

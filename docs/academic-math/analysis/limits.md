@@ -1,5 +1,4 @@
-﻿---
-id: limits
+---
 title: 鏋侀檺 (Limits)
 ---
 

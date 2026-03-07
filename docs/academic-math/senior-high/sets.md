@@ -1,5 +1,4 @@
-﻿---
-id: sets
+---
 title: 闆嗗悎涓庨€昏緫 (Sets and Logic)
 ---
 

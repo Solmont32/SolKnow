@@ -1,5 +1,4 @@
-﻿---
-id: stats-basic
+---
 title: 缁熻鍩虹 (Basic Statistics)
 ---
 
