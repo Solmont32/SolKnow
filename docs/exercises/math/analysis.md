@@ -2221,3 +2221,235 @@ $\phi = e^x \sin y + z^2 + C$
 
 
 
+
+---
+
+## 练习 105：[提高] Hermite-Ostrogradsky 方法练习
+利用 Hermite-Ostrogradsky 方法计算不定积分 $\int \frac{dx}{(x^2+1)^2}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **分解分母**：$Q(x) = (x^2+1)^2$。
+2. **计算 $Q_1, Q_2$**：
+   $Q_1 = \gcd(Q, Q^\prime) = x^2+1$，$Q_2 = Q/Q_1 = x^2+1$。
+3. **设定形式**：
+   $\int \frac{1}{(x^2+1)^2} dx = \frac{Ax+B}{x^2+1} + \int \frac{Cx+D}{x^2+1} dx$。
+4. **求导待定系数**：
+   两边对 $x$ 求导：
+   $\frac{1}{(x^2+1)^2} = \frac{A(x^2+1) - (Ax+B)(2x)}{(x^2+1)^2} + \frac{Cx+D}{x^2+1}$
+   $1 = A(x^2+1) - 2Ax^2 - 2Bx + (Cx+D)(x^2+1)$
+   $1 = (C)x^3 + (D-A)x^2 + (C-2B)x + (A+D)$
+5. **解方程组**：
+   $C=0, D-A=0, C-2B=0, A+D=1 \implies A=1/2, B=0, C=0, D=1/2$。
+6. **最终结果**：
+   $I = \frac{x}{2(x^2+1)} + \frac{1}{2} \int \frac{dx}{x^2+1} = \frac{x}{2(x^2+1)} + \frac{1}{2}\arctan x + C$。
+
+#### 答案
+$\frac{x}{2(x^2+1)} + \frac{1}{2}\arctan x + C$
+</details>
+
+---
+
+## 练习 106：[提高] 万能公式深度应用
+计算不定积分 $\int \frac{dx}{1+2\sin x + 3\cos x}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **万能代换**：令 $t = \tan(x/2)$。
+2. **代入公式**：
+   $I = \int \frac{1}{1 + \frac{4t}{1+t^2} + \frac{3-3t^2}{1+t^2}} \cdot \frac{2 dt}{1+t^2} = \int \frac{2 dt}{1+t^2+4t+3-3t^2} = \int \frac{2 dt}{4+4t-2t^2} = \int \frac{dt}{2+2t-t^2}$。
+3. **配方积分**：
+   $\int \frac{dt}{3-(t-1)^2} = \frac{1}{2\sqrt{3}} \ln \left| \frac{\sqrt{3}+t-1}{\sqrt{3}-(t-1)} \right| + C$。
+4. **回代**：代入 $t = \tan(x/2)$。
+
+#### 答案
+$\frac{1}{2\sqrt{3}} \ln \left| \frac{\sqrt{3}-1+\tan(x/2)}{\sqrt{3}+1-\tan(x/2)} \right| + C$
+</details>
+
+---
+
+## 练习 107：[提高] 定积分对称性实战
+计算定积分 $I = \int_0^{\pi} \frac{x \sin x}{1+\cos^2 x} dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **利用性质**：$\int_0^a f(x) dx = \int_0^a f(a-x) dx$。
+   $I = \int_0^\pi \frac{(\pi-x) \sin(\pi-x)}{1+\cos^2(\pi-x)} dx = \int_0^\pi \frac{(\pi-x) \sin x}{1+\cos^2 x} dx$。
+   $I = \pi \int_0^\pi \frac{\sin x}{1+\cos^2 x} dx - I \implies 2I = \pi \int_0^\pi \frac{\sin x}{1+\cos^2 x} dx$。
+2. **换元**：令 $u = \cos x, du = -\sin x dx$。
+   $2I = \pi \int_{1}^{-1} \frac{-du}{1+u^2} = \pi \int_{-1}^1 \frac{du}{1+u^2} = \pi [\arctan u]_{-1}^1 = \pi(\pi/4 - (-\pi/4)) = \pi^2/2$。
+3. **结论**：$I = \pi^2/4$。
+
+#### 答案
+$\pi^2/4$
+</details>
+
+---
+
+## 练习 108：[提高] Wallis 公式（点火公式）应用
+计算 $I = \int_0^{\pi/2} \sin^8 x dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **直接套用 Wallis 公式**：
+   $I = \frac{7}{8} \cdot \frac{5}{6} \cdot \frac{3}{4} \cdot \frac{1}{2} \cdot \frac{\pi}{2}$。
+2. **计算**：
+   $I = \frac{105}{384} \pi = \frac{35}{128} \pi$。
+
+#### 答案
+$\frac{35\pi}{128}$
+</details>
+
+---
+
+## 练习 109：[提高] 变限积分与极值判定
+设 $F(x) = \int_0^x (t-1)(t-2) dt$，求 $F(x)$ 的极大值点与极小值点。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **求导**：$F^\prime(x) = (x-1)(x-2)$。
+2. **找驻点**：$x=1, x=2$。
+3. **判定**：
+   - $x < 1$ 时，$F^\prime > 0$；$1 < x < 2$ 时，$F^\prime < 0$；$x > 2$ 时，$F^\prime > 0$。
+   - 故 $x=1$ 为极大值点，$x=2$ 为极小值点。
+
+#### 答案
+极大值点 $x=1$，极小值点 $x=2$。
+</details>
+
+---
+
+## 练习 110：[挑战] 积分不等式的证明
+证明对于任意正整数 $n$，恒有 $\int_0^{\pi/2} \sin^{n+1} x dx < \int_0^{\pi/2} \sin^n x dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **被积函数比较**：在区间 $(0, \pi/2)$ 上，$0 < \sin x < 1$。
+2. **不等式构造**：因此对于任何 $x \in (0, \pi/2)$，都有 $\sin^{n+1} x = \sin^n x \cdot \sin x < \sin^n x$。
+3. **积分保序性**：由定积分的性质，函数值小则积分值小（此处由于是严格不等式且函数连续，积分值也严格小）。
+4. **结论**：不等式成立。
+
+#### 答案
+证毕。
+</details>
+
+---
+
+## 练习 111：[挑战] 特殊换元技巧
+计算不定积分 $\int \frac{dx}{(1+x^2)\sqrt{1-x^2}}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **三角代换**：令 $x = \sin \theta, dx = \cos \theta d\theta$。
+2. **代入**：
+   $I = \int \frac{\cos \theta d\theta}{(1+\sin^2 \theta)\cos \theta} = \int \frac{d\theta}{1+\sin^2 \theta}$。
+3. **同除以 $\cos^2 \theta$**：
+   $I = \int \frac{\sec^2 \theta d\theta}{\sec^2 \theta + \tan^2 \theta} = \int \frac{d(\tan \theta)}{1+2\tan^2 \theta}$。
+4. **积分**：
+   $I = \frac{1}{\sqrt{2}} \arctan(\sqrt{2} \tan \theta) + C$。
+5. **回代**：$\tan \theta = \frac{x}{\sqrt{1-x^2}}$。
+   $I = \frac{1}{\sqrt{2}} \arctan \frac{\sqrt{2}x}{\sqrt{1-x^2}} + C$。
+
+#### 答案
+$\frac{1}{\sqrt{2}} \arctan \frac{\sqrt{2}x}{\sqrt{1-x^2}} + C$
+</details>
+
+---
+
+## 练习 112：[提高] 周期性与定积分
+计算 $\int_0^{n\pi} |\sin x| dx$，其中 $n$ 为正整数。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **周期性分析**：$|\sin x|$ 的周期为 $\pi$。
+2. **区间分解**：$\int_0^{n\pi} |\sin x| dx = n \int_0^\pi |\sin x| dx$。
+3. **计算单周期积分**：
+   $\int_0^\pi \sin x dx = [-\cos x]_0^\pi = 1 - (-1) = 2$。
+4. **结论**：$n \cdot 2 = 2n$。
+
+#### 答案
+$2n$
+</details>
+
+---
+
+## 练习 113：[提高] 有理函数高次幂处理
+计算不定积分 $\int \frac{x^2}{(x^2+1)^3} dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **分部积分构造**：
+   $I = \int x \cdot \frac{x}{(x^2+1)^3} dx$。
+2. **设定 $u, v$**：
+   $u = x, dv = \frac{x}{(x^2+1)^3} dx \implies du = dx, v = -\frac{1}{4(x^2+1)^2}$。
+3. **套用公式**：
+   $I = -\frac{x}{4(x^2+1)^2} + \frac{1}{4} \int \frac{dx}{(x^2+1)^2}$。
+4. **利用已知结果**：
+   $\int \frac{dx}{(x^2+1)^2} = \frac{x}{2(x^2+1)} + \frac{1}{2}\arctan x$（见练习 105）。
+5. **最终结果**：
+   $I = -\frac{x}{4(x^2+1)^2} + \frac{x}{8(x^2+1)} + \frac{1}{8}\arctan x + C$。
+
+#### 答案
+$-\frac{x}{4(x^2+1)^2} + \frac{x}{8(x^2+1)} + \frac{1}{8}\arctan x + C$
+</details>
+
+---
+
+## 练习 114：[挑战] 积分与级数的交叉应用
+证明 $\int_0^1 \frac{\ln(1+x)}{x} dx = \sum_{n=1}^\infty \frac{(-1)^{n-1}}{n^2}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **级数展开**：$\ln(1+x) = \sum_{n=1}^\infty (-1)^{n-1} \frac{x^n}{n}$（在 $(-1, 1]$ 上一致收敛）。
+2. **逐项积分**：
+   $\int_0^1 \frac{1}{x} \sum_{n=1}^\infty (-1)^{n-1} \frac{x^n}{n} dx = \int_0^1 \sum_{n=1}^\infty (-1)^{n-1} \frac{x^{n-1}}{n} dx$。
+3. **交换号**：由一致收敛性保证。
+   $\sum_{n=1}^\infty \frac{(-1)^{n-1}}{n} \int_0^1 x^{n-1} dx = \sum_{n=1}^\infty \frac{(-1)^{n-1}}{n} \cdot \frac{1}{n} = \sum_{n=1}^\infty \frac{(-1)^{n-1}}{n^2}$。
+4. **结论**：证毕。（该常数约等于 $\pi^2/12$）
+
+#### 答案
+证毕。
+</details>
+
+---
+
+## 练习 115：[提高] 复杂凑微分应用
+计算不定积分 $\int \frac{\sec^2 x}{\sqrt{\tan^2 x + 4\tan x + 1}} dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **凑微分**：注意到 $\sec^2 x dx = d(\tan x)$。
+2. **换元**：令 $u = \tan x$。
+   $I = \int \frac{du}{\sqrt{u^2 + 4u + 1}}$。
+3. **配方**：
+   $I = \int \frac{du}{\sqrt{(u+2)^2 - 3}}$。
+4. **利用标准公式**：
+   $I = \ln |u+2 + \sqrt{u^2+4u+1}| + C$。
+5. **回代**：代入 $u = \tan x$。
+
+#### 答案
+$\ln |\tan x + 2 + \sqrt{\tan^2 x + 4\tan x + 1}| + C$
+</details>
+

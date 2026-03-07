@@ -66,9 +66,22 @@ $$\int u dv = uv - \int v du$$
    - $\frac{1}{(x-a)^k} \to \frac{A_1}{x-a} + \dots + \frac{A_k}{(x-a)^k}$
    - $\frac{Mx+N}{(x^2+px+q)^k} \to$ 利用配方化为 $\int \frac{dt}{(t^2+1)^k}$ 类型。
 
-### 2. 三角函数有理式 (Universal Substitution)
-对于 $\int R(\sin x, \cos x) dx$，引入**万能代换** $t = \tan \frac{x}{2}$：
-- $\sin x = \frac{2t}{1+t^2}, \cos x = \frac{1-t^2}{1+t^2}, dx = \frac{2 dt}{1+t^2}$
+3. **Hermite-Ostrogradsky 方法**：
+   当分母 $Q(x)$ 含有高次重根时，部分分式分解极其繁琐。利用此方法可将积分写为：
+   $$\int \frac{P(x)}{Q(x)} dx = \frac{P_1(x)}{Q_1(x)} + \int \frac{P_2(x)}{Q_2(x)} dx$$
+   其中：
+   - $Q_1(x) = \gcd(Q(x), Q'(x))$（包含所有重因式，但次数减1）。
+   - $Q_2(x) = Q(x) / Q_1(x)$（包含所有因式，但均为单因式）。
+   - $P_1(x), P_2(x)$ 为待定系数多项式，$\deg(P_1) < \deg(Q_1), \deg(P_2) < \deg(Q_2)$。
+   **步骤**：对等式两边求导，利用待定系数法求解 $P_1, P_2$。这避免了对高次幂部分的直接积分。
+
+### 2. 三角函数有理式技巧 (Trigonometric Rational Expressions)
+对于 $\int R(\sin x, \cos x) dx$：
+1. **万能代换 (Universal Substitution)**：令 $t = \tan \frac{x}{2}$，则 $\sin x = \frac{2t}{1+t^2}, \cos x = \frac{1-t^2}{1+t^2}, dx = \frac{2 dt}{1+t^2}$。适用于所有情况，但计算量往往最大。
+2. **特殊对称代换**：
+   - 若 $R(-\sin x, \cos x) = -R(\sin x, \cos x)$（关于 $\sin x$ 奇），令 $u = \cos x$。
+   - 若 $R(\sin x, -\cos x) = -R(\sin x, \cos x)$（关于 $\cos x$ 奇），令 $u = \sin x$。
+   - 若 $R(-\sin x, -\cos x) = R(\sin x, \cos x)$（关于 $\sin x, \cos x$ 均奇或均偶），令 $u = \tan x$。
 
 ### 3. 无理函数积分 (Euler Substitutions)
 对于 $\int R(x, \sqrt{ax^2+bx+c}) dx$，利用 **Euler 代换**：
@@ -314,6 +327,156 @@ $2\sqrt{\frac{x}{x+1}} + C$
 
 #### 答案
 $2\sqrt{1+e^x} + \ln\frac{\sqrt{1+e^x}-1}{\sqrt{1+e^x}+1} + C$
+</details>
+
+### 深度例题 13：Hermite-Ostrogradsky 方法实战
+求不定积分：$I = \int \frac{dx}{(x^3+1)^2}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+分母 $Q(x) = (x+1)^2(x^2-x+1)^2$，直接部分分式极其痛苦。
+1. **分解分母**：$Q_1 = \gcd(Q, Q') = (x+1)(x^2-x+1) = x^3+1$。
+   $Q_2 = Q/Q_1 = x^3+1$。
+2. **设定形式**：
+   $$\int \frac{1}{(x^3+1)^2} dx = \frac{Ax^2+Bx+C}{x^3+1} + \int \frac{Dx^2+Ex+F}{x^3+1} dx$$
+3. **求导待定系数**：两边求导并整理得 $A=0, B=1/3, C=0, D=0, E=2/3, F=0$。
+   $$I = \frac{x}{3(x^3+1)} + \frac{2}{3} \int \frac{x}{x^3+1} dx$$
+4. **后续积分**：利用部分分式分解 $\frac{x}{x^3+1}$。
+   $\frac{x}{x^3+1} = \frac{-1/3}{x+1} + \frac{x/3+1/3}{x^2-x+1}$。
+   积分得 $\frac{1}{6} \ln \frac{x^2-x+1}{(x+1)^2} + \frac{1}{\sqrt{3}} \arctan \frac{2x-1}{\sqrt{3}} + C$。
+
+#### 答案
+$\frac{x}{3(x^3+1)} + \frac{1}{9} \ln \frac{x^2-x+1}{(x+1)^2} + \frac{2}{3\sqrt{3}} \arctan \frac{2x-1}{\sqrt{3}} + C$
+</details>
+
+### 深度例题 14：三角对称代换 ($u = \tan x$)
+求不定积分：$\int \frac{dx}{\sin^2 x + 2\sin x \cos x + 3\cos^2 x}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+被积函数满足 $R(-\sin x, - \cos x) = R(\sin x, \cos x)$。
+1. **分子分母同除以 $\cos^2 x$**：
+   $I = \int \frac{\sec^2 x dx}{\tan^2 x + 2\tan x + 3}$。
+2. **换元**：令 $u = \tan x, du = \sec^2 x dx$。
+   $I = \int \frac{du}{u^2 + 2u + 3} = \int \frac{du}{(u+1)^2 + 2}$。
+3. **结果**：
+   $\frac{1}{\sqrt{2}} \arctan \frac{\tan x + 1}{\sqrt{2}} + C$。
+
+#### 答案
+$\frac{1}{\sqrt{2}} \arctan \frac{\tan x + 1}{\sqrt{2}} + C$
+</details>
+
+### 深度例题 15：复数域分解视角的简化（选读）
+求不定积分：$\int \frac{dx}{x^4+1}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+1. **分母配方**：$x^4+1 = (x^2+1)^2 - 2x^2 = (x^2+\sqrt{2}x+1)(x^2-\sqrt{2}x+1)$。
+2. **部分分式分解**：
+   $\frac{1}{x^4+1} = \frac{1}{2\sqrt{2}} \left( \frac{x+\sqrt{2}}{x^2+\sqrt{2}x+1} - \frac{x-\sqrt{2}}{x^2-\sqrt{2}x+1} \right)$。
+3. **分项积分**：利用配方与凑微分。
+   结果包含 $\ln$ 项与 $\arctan$ 项。
+
+#### 答案
+$\frac{1}{4\sqrt{2}} \ln \frac{x^2+\sqrt{2}x+1}{x^2-\sqrt{2}x+1} + \frac{1}{2\sqrt{2}} (\arctan(\sqrt{2}x+1) + \arctan(\sqrt{2}x-1)) + C$
+</details>
+
+### 深度例题 16：分部积分与代数构造的巅峰
+求不定积分：$\int \frac{x^2 dx}{(x\sin x + \cos x)^2}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+这是一道经典的竞赛/考研高阶题。
+1. **观察分母导数**：$(x\sin x + \cos x)' = \sin x + x\cos x - \sin x = x\cos x$。
+2. **构造分部积分**：
+   $I = \int \frac{x}{\cos x} \cdot \frac{x\cos x}{(x\sin x + \cos x)^2} dx$。
+   设 $u = \frac{x}{\cos x}, dv = \frac{x\cos x}{(x\sin x + \cos x)^2} dx$。
+   则 $du = \frac{\cos x + x\sin x}{\cos^2 x} dx, v = -\frac{1}{x\sin x + \cos x}$。
+3. **套用公式**：
+   $I = -\frac{x}{\cos x (x\sin x + \cos x)} + \int \frac{\cos x + x\sin x}{\cos^2 x} \cdot \frac{1}{x\sin x + \cos x} dx$。
+   $I = -\frac{x}{\cos x (x\sin x + \cos x)} + \int \sec^2 x dx$。
+4. **整理**：
+   $I = \tan x - \frac{x}{\cos x (x\sin x + \cos x)} + C$。
+
+#### 答案
+$\frac{\sin x - x\cos x}{x\sin x + \cos x} + C$
+</details>
+
+### 深度例题 17：反代换与根式处理
+求不定积分：$\int \frac{dx}{x \sqrt{1+x+x^2}}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+1. **倒代换**：令 $x = 1/t, dx = -1/t^2 dt$。
+   $I = \int \frac{-1/t^2 dt}{1/t \sqrt{1 + 1/t + 1/t^2}} = -\int \frac{dt}{\sqrt{t^2+t+1}}$。
+2. **配方积分**：
+   $-\int \frac{dt}{\sqrt{(t+1/2)^2 + 3/4}} = -\ln|t + 1/2 + \sqrt{t^2+t+1}| + C$。
+3. **回代 x**：
+   $-\ln|\frac{1}{x} + \frac{1}{2} + \frac{\sqrt{x^2+x+1}}{x}| + C$。
+
+#### 答案
+$-\ln|\frac{2+x+2\sqrt{x^2+x+1}}{2x}| + C$
+</details>
+
+### 深度例题 18：万能代换的“暴力”与美学
+求不定积分：$\int \frac{dx}{2+\cos x}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+令 $t = \tan \frac{x}{2}$。
+1. **代入公式**：
+   $I = \int \frac{1}{2 + \frac{1-t^2}{1+t^2}} \cdot \frac{2 dt}{1+t^2} = \int \frac{2 dt}{2+2t^2+1-t^2} = \int \frac{2 dt}{t^2+3}$。
+2. **积分**：
+   $I = \frac{2}{\sqrt{3}} \arctan \frac{t}{\sqrt{3}} + C$。
+
+#### 答案
+$\frac{2}{\sqrt{3}} \arctan (\frac{1}{\sqrt{3}} \tan \frac{x}{2}) + C$
+</details>
+
+### 深度例题 19：对数与根式的综合
+求不定积分：$\int \frac{\ln(x+\sqrt{1+x^2})}{\sqrt{1+x^2}} dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+1. **观察导数关系**：注意到 $(\ln(x+\sqrt{1+x^2}))' = \frac{1}{\sqrt{1+x^2}}$。
+2. **凑微分**：
+   $I = \int \ln(x+\sqrt{1+x^2}) d(\ln(x+\sqrt{1+x^2}))$。
+3. **换元积分**：设 $u = \ln(x+\sqrt{1+x^2})$，则 $I = \int u du = \frac{1}{2} u^2 + C$。
+
+#### 答案
+$\frac{1}{2} [\ln(x+\sqrt{1+x^2})]^2 + C$
+</details>
+
+### 深度例题 20：有理分母的巧妙凑微分
+求不定积分：$\int \frac{dx}{x(x^n+1)}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+1. **分子分母同乘 $x^{n-1}$**：
+   $I = \int \frac{x^{n-1} dx}{x^n(x^n+1)}$。
+2. **换元**：令 $u = x^n, du = n x^{n-1} dx$。
+   $I = \frac{1}{n} \int \frac{du}{u(u+1)} = \frac{1}{n} \int (\frac{1}{u} - \frac{1}{u+1}) du$。
+3. **结果**：
+   $\frac{1}{n} \ln |\frac{u}{u+1}| + C = \frac{1}{n} \ln \frac{x^n}{x^n+1} + C$。
+
+#### 答案
+$\frac{1}{n} \ln \frac{x^n}{x^n+1} + C$
 </details>
 
 ---

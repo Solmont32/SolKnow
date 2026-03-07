@@ -140,7 +140,7 @@ $2I = \int_0^{\pi/2} \frac{\sin x + \cos x}{\sin x + \cos x} dx = \int_0^{\pi/2}
 </details>
 
 ### 例题 5：周期函数的积分
-设 $f(x)$ 是以 $T$ 为周期的连续函数，证明 $\int_a^{a+T} f(x) dx = \int_0^T f(x) dx$。
+设 $f(x)$ 是以 $T$ 为周期的连续函数，证明 $\int_a^{a+T} f(x) dx = \int_0^{T} f(x) dx$。
 
 <details>
 <summary>解析</summary>
@@ -151,26 +151,129 @@ $\int_T^{a+T} f(x) dx = \int_0^a f(u+T) du$。
 首尾两项抵消，得证。
 </details>
 
+### 例题 6：Wallis 公式与点火公式的深度应用
+计算 $I = \int_0^\pi x \sin^6 x dx$。
+
+<details>
+<summary>解析</summary>
+1. **利用对称性消去 x**：
+   利用性质 $\int_0^a f(x) dx = \int_0^a f(a-x) dx$，
+   $I = \int_0^\pi (\pi-x) \sin^6(\pi-x) dx = \pi \int_0^\pi \sin^6 x dx - I$。
+   $2I = \pi \int_0^\pi \sin^6 x dx = 2\pi \int_0^{\pi/2} \sin^6 x dx$。
+   $I = \pi \int_0^{\pi/2} \sin^6 x dx$。
+2. **套用 Wallis 公式 (点火公式)**：
+   $I = \pi \cdot \frac{5}{6} \cdot \frac{3}{4} \cdot \frac{1}{2} \cdot \frac{\pi}{2} = \frac{5\pi^2}{32}$。
+</details>
+
+### 例题 7：Euler 积分 $\int_0^{\pi/2} \ln(\sin x) dx$
+计算 $I = \int_0^{\pi/2} \ln(\sin x) dx$。
+
+<details>
+<summary>解析</summary>
+1. **对称性**：$I = \int_0^{\pi/2} \ln(\cos x) dx$。
+2. **合并**：$2I = \int_0^{\pi/2} \ln(\sin x \cos x) dx = \int_0^{\pi/2} \ln(\frac{\sin 2x}{2}) dx$。
+   $2I = \int_0^{\pi/2} \ln(\sin 2x) dx - \int_0^{\pi/2} \ln 2 dx = \int_0^{\pi/2} \ln(\sin 2x) dx - \frac{\pi}{2} \ln 2$。
+3. **换元**：令 $2x = u$，则 $\int_0^{\pi/2} \ln(\sin 2x) dx = \frac{1}{2} \int_0^{\pi} \ln(\sin u) du = \int_0^{\pi/2} \ln(\sin u) du = I$。
+4. **解方程**：$2I = I - \frac{\pi}{2} \ln 2 \implies I = -\frac{\pi}{2} \ln 2$。
+</details>
+
+### 例题 8：区间平移与对称性的妙用
+计算 $I = \int_0^{\pi} \frac{x \sin x}{1 + \cos^2 x} dx$。
+
+<details>
+<summary>解析</summary>
+1. **消去 x**：令 $x = \pi - t$，则 $I = \int_0^\pi \frac{(\pi-t)\sin t}{1+\cos^2 t} dt = \pi \int_0^\pi \frac{\sin t}{1+\cos^2 t} dt - I$。
+   $2I = \pi \int_0^\pi \frac{\sin t}{1+\cos^2 t} dt$。
+2. **凑微分积分**：令 $u = \cos t, du = -\sin t dt$。
+   $2I = \pi \int_1^{-1} \frac{-du}{1+u^2} = \pi \int_{-1}^1 \frac{du}{1+u^2} = \pi [\arctan u]_{-1}^1 = \pi (\frac{\pi}{4} - (-\frac{\pi}{4})) = \frac{\pi^2}{2}$。
+   $I = \pi^2/4$。
+</details>
+
+### 例题 9：分段函数的定积分
+计算 $\int_0^2 f(x) dx$，其中 $f(x) = \min\{x, x^2\}$。
+
+<details>
+<summary>解析</summary>
+1. **比较大小**：
+   在 $[0, 1]$ 上，$x^2 \le x$，故 $f(x) = x^2$。
+   在 $[1, 2]$ 上，$x \le x^2$，故 $f(x) = x$。
+2. **分段积分**：
+   $I = \int_0^1 x^2 dx + \int_1^2 x dx = [\frac{1}{3}x^3]_0^1 + [\frac{1}{2}x^2]_1^2 = \frac{1}{3} + (2 - \frac{1}{2}) = \frac{1}{3} + \frac{3}{2} = \frac{11}{6}$。
+</details>
+
+### 例题 10：利用导数定义的积分构造
+计算 $I = \int_0^{\pi/2} \frac{\sin^n x}{\sin^n x + \cos^n x} dx$。
+
+<details>
+<summary>解析</summary>
+利用余元公式 $x \to \pi/2-x$：
+$I = \int_0^{\pi/2} \frac{\cos^n x}{\cos^n x + \sin^n x} dx$。
+$2I = \int_0^{\pi/2} \frac{\sin^n x + \cos^n x}{\sin^n x + \cos^n x} dx = \pi/2 \implies I = \pi/4$。
+注意：结果与 $n$ 无关。
+</details>
+
+### 例题 11：黎曼引理 (Riemann-Lebesgue Lemma) 的初步应用
+证明 $\lim_{n \to \infty} \int_a^b f(x) \sin(nx) dx = 0$ ($f$ 在 $[a, b]$ 上可积)。
+
+<details>
+<summary>解析（概要）</summary>
+1. **阶梯函数逼近**：先对常数函数证明，再推广到阶梯函数。
+2. **逼近定理**：利用连续函数或可积函数可用阶梯函数一致逼近的性质。
+这是傅里叶级数收敛性的理论基础。
+</details>
+
+### 例题 12：含参变量积分的简单应用（Lebesgue 控制收敛预览）
+计算 $\lim_{n \to \infty} \int_0^1 \frac{nx^{n-1}}{1+x} dx$。
+
+<details>
+<summary>解析</summary>
+1. **分部积分**：
+   $\int_0^1 \frac{1}{1+x} d(x^n) = [\frac{x^n}{1+x}]_0^1 + \int_0^1 \frac{x^n}{(1+x)^2} dx = \frac{1}{2} + \int_0^1 \frac{x^n}{(1+x)^2} dx$。
+2. **夹逼准则**：
+   $0 < \int_0^1 \frac{x^n}{(1+x)^2} dx < \int_0^1 x^n dx = \frac{1}{n+1} \to 0$。
+3. **结论**：极限为 $1/2$。
+</details>
+
 ---
 
 ## 五、 练习库同步 (Analysis Exercise Sync)
 
 ### 练习 1：Wallis 公式应用
 计算 $\int_0^{\pi} \sin^6 x dx$。
-<details><summary>提示</summary>利用对称性等于 $2 \int_0^{\pi/2} \sin^6 x dx$，再应用点火公式：$2 \cdot \frac{5}{6} \cdot \frac{3}{4} \cdot \frac{1}{2} \cdot \frac{\pi}{2} = \frac{5\pi}{16}$。</details>
+<details><summary>答案</summary>$5\pi/16$</details>
 
 ### 练习 2：导数关系辨析
 设 $f(x)$ 连续，证明 $F(x) = \int_a^x f(t)(x-t) dt$ 的二阶导数 $F''(x) = f(x)$。
-<details><summary>提示</summary>$F(x) = x \int_a^x f(t) dt - \int_a^x tf(t) dt$。求一阶导得 $\int_a^x f(t) dt + xf(x) - xf(x) = \int_a^x f(t) dt$。再求导即得 $f(x)$。</details>
+<details><summary>答案</summary>利用变限积分求导公式直接计算即可。</details>
 
 ### 练习 3：Dirichlet 函数的可积性
 证明 Dirichlet 函数 $D(x) = \begin{cases} 1, & x \in \mathbb{Q} \\ 0, & x \notin \mathbb{Q} \end{cases}$ 在 $[0, 1]$ 上不可积。
-<details><summary>提示</summary>对任一划分 $P$，$M_i = 1$，$m_i = 0$。故 $\overline{S}(P) = 1, \underline{S}(P) = 0$。上积分与下积分不相等。</details>
+<details><summary>答案</summary>上、下达布和恒为 1 和 0，不相等。</details>
 
 ### 练习 4：绝对值函数积分
 计算 $\int_{-2}^3 |x(x-1)| dx$。
-<details><summary>提示</summary>分段积分：$[-2, 0]$ 上为 $x^2-x$，$[0, 1]$ 上为 $x-x^2$，$[1, 3]$ 上为 $x^2-x$。计算各段并求和。</details>
+<details><summary>答案</summary>$11/2$</details>
 
 ### 练习 5：积分中值定理的应用
 证明 $\lim_{n \to \infty} \int_0^1 \frac{x^n}{1+x} dx = 0$。
-<details><summary>提示</summary>$0 < \int_0^1 \frac{x^n}{1+x} dx < \int_0^1 x^n dx = \frac{1}{n+1}$。利用夹逼定理。</details>
+<details><summary>答案</summary>利用放大法 $\int_0^1 x^n dx$ 结合夹逼定理。</details>
+
+### 练习 6：高阶换元法
+计算 $\int_0^{\pi/2} \frac{dx}{1+\tan^3 x}$。
+<details><summary>答案</summary>$\pi/4$ (提示：利用 $x \to \pi/2-x$ 对称性)</details>
+
+### 练习 7：特殊常数积分
+证明 $\int_0^\infty \frac{dx}{1+x^4} = \frac{\pi}{2\sqrt{2}}$。
+<details><summary>答案</summary>提示：令 $x=1/t$ 后合并，化为 $\int_0^\infty \frac{1+x^2}{1+x^4} dx$。</details>
+
+### 练习 8：分部积分数列
+设 $I_n = \int_0^1 (1-x^2)^n dx$，求 $I_n$ 的递推关系。
+<details><summary>答案</summary>$I_n = \frac{2n}{2n+1} I_{n-1}$</details>
+
+### 练习 9：含绝对值与三角函数的定积分
+计算 $\int_0^{2\pi} \sqrt{1-\cos 2x} dx$。
+<details><summary>答案</summary>$4\sqrt{2}$ (提示：$\sqrt{2\sin^2 x} = \sqrt{2}|\sin x|$)</details>
+
+### 练习 10：积分不等式证明
+证明 $\int_0^{\pi/2} \sin^n x dx < \int_0^{\pi/2} \sin^{n-1} x dx$。
+<details><summary>答案</summary>在 $(0, \pi/2)$ 上 $0 < \sin x < 1$，故 $\sin^n x < \sin^{n-1} x$，利用积分保序性。</details>
