@@ -8,7 +8,7 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: '基础算法',
       link: {type: 'doc', id: 'basic/index'},
-      items: ['basic/io', 'basic/complexity'], // 暂时保留已有文件，新章节可在创建文件后补充
+      items: ['basic/io', 'basic/complexity', 'basic/binary-search', 'basic/sorting'],
     },
     {
       type: 'category',
@@ -23,6 +23,7 @@ const sidebars: SidebarsConfig = {
         },
         'ds/fenwick',
         'ds/segtree',
+        'ds/dsu',
       ],
     },
     {
@@ -51,47 +52,75 @@ const sidebars: SidebarsConfig = {
     },
   ],
 
-  // 大学数学知识库
+  // 数学知识库
   mathSidebar: [
     {
       type: 'category',
-      label: '大学数学',
+      label: '数学知识库',
       items: [
         {
           type: 'category',
-          label: '数学分析',
-          link: {type: 'doc', id: 'academic-math/analysis/index'},
-          items: [], // 可以在此处添加具体章节
+          label: '基础教育 (K-12)',
+          items: [
+            {
+              type: 'doc',
+              id: 'academic-math/elementary/index',
+              label: '小学数学',
+            },
+            {
+              type: 'doc',
+              id: 'academic-math/junior-high/index',
+              label: '初中数学',
+            },
+            {
+              type: 'category',
+              label: '高中数学',
+              link: {type: 'doc', id: 'academic-math/senior-high/index'},
+              items: ['academic-math/senior-high/sets'],
+            },
+          ],
         },
         {
           type: 'category',
-          label: '高等代数',
-          link: {type: 'doc', id: 'academic-math/algebra/index'},
-          items: [],
-        },
-        {
-          type: 'category',
-          label: '概率论',
-          link: {type: 'doc', id: 'academic-math/probability/index'},
-          items: [],
-        },
-        {
-          type: 'category',
-          label: '数理统计',
-          link: {type: 'doc', id: 'academic-math/statistics/index'},
-          items: [],
-        },
-        {
-          type: 'category',
-          label: '抽象代数',
-          link: {type: 'doc', id: 'academic-math/abstract-algebra/index'},
-          items: [],
-        },
-        {
-          type: 'category',
-          label: '离散数学',
-          link: {type: 'doc', id: 'academic-math/discrete-math/index'},
-          items: [],
+          label: '大学数学',
+          items: [
+            {
+              type: 'category',
+              label: '数学分析',
+              link: {type: 'doc', id: 'academic-math/analysis/index'},
+              items: ['academic-math/analysis/series'],
+            },
+            {
+              type: 'category',
+              label: '高等代数',
+              link: {type: 'doc', id: 'academic-math/algebra/index'},
+              items: ['academic-math/algebra/determinant'],
+            },
+            {
+              type: 'category',
+              label: '概率论',
+              link: {type: 'doc', id: 'academic-math/probability/index'},
+              items: [],
+            },
+            {
+              type: 'category',
+              label: '数理统计',
+              link: {type: 'doc', id: 'academic-math/statistics/index'},
+              items: [],
+            },
+            {
+              type: 'category',
+              label: '抽象代数',
+              link: {type: 'doc', id: 'academic-math/abstract-algebra/index'},
+              items: [],
+            },
+            {
+              type: 'category',
+              label: '离散数学',
+              link: {type: 'doc', id: 'academic-math/discrete-math/index'},
+              items: [],
+            },
+          ],
         },
       ],
     },

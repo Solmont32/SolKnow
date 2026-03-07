@@ -81,7 +81,7 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'mathSidebar',
           position: 'left',
-          label: '大学数学',
+          label: '数学知识库',
         },
         {
           type: 'docSidebar',
