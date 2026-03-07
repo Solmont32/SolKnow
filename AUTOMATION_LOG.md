@@ -192,3 +192,4 @@
 [2026-03-08 02:58:54] [ OK ] Mission Accomplished: 强化『幂级数与傅里叶级数』边界性质与收敛论 (2026-03-08)：对标 Ch 14-15，深化 Abel 第二定理（边界收敛性）、Gibbs 现象的数学刻画，补充 5 道关于级数求和与周期延拓的教科书级例题。
 [2026-03-08 02:59:12] [ OK ] Batch queue cleared.
 [2026-03-08 03:00:13] [PLAN] No pending tasks. Initiating audit-first planning...
+[2026-03-08 03:02:41] [EXE ] Target Locked: 深度开发『含参量积分』(2026-03-08)：对标 Ch 19，深化含参量正常/反常积分的一致收敛性判定（M-判别法、Dirichlet/Abel），引入 Beta 与 Gamma 函数的严格定义、性质及计算技巧，补充 5 道进阶例题与配套练习。
