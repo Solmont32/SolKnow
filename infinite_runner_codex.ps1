@@ -13,6 +13,9 @@ param(
 if ($IsWindows) { chcp 65001 | Out-Null }
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $ErrorActionPreference = "Stop"
+if ($null -ne (Get-Variable -Name PSNativeCommandUseErrorActionPreference -ErrorAction SilentlyContinue)) {
+    $PSNativeCommandUseErrorActionPreference = $false
+}
 
 $global:LAST_CHECKED_RUN_ID = ""
 $global:WORKSPACE_ROOT = (Get-Location).Path
