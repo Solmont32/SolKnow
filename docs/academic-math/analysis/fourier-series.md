@@ -74,13 +74,15 @@ $$f(x) \sim \frac{a_0}{2} + \sum_{n=1}^\infty a_n \cos nx, \quad a_n = \frac{2}{
 
 当 $f(x)$ 存在跳变间断点时，Fourier 级数的部分和 $S_N(x)$ 在间断点附近会产生“振荡”和“过冲”。
 
-### 4.1 数学本质
-即使 $N \to \infty$，过冲的幅度也不会消失，而是稳定在跳变高度的约 **8.95%** (约 9%)。
-- **原因**：这是由于 Fourier 级数在包含间断点的区间内 **不具备一致收敛性**。
-- **表现**：在间断点两侧，级数会先剧烈上升/下降，再迅速回到函数值附近。
+### 4.1 数学刻画
+设 $f(x)$ 在 $x_0$ 处有一个跳变间断点，跳变高度为 $h = |f(x_0+0) - f(x_0-0)|$。其第 $N$ 阶部分和 $S_N(x)$ 在 $x_0$ 附近的第一个极大值与函数值之差趋于：
+$$\lim_{N \to \infty} S_N(x_{max}) = f(x_0+0) + \frac{h}{2} \left[ \frac{2}{\pi} \int_0^\pi \frac{\sin t}{t} dt - 1 \right]$$
+其中常量 $G = \frac{2}{\pi} \text{Si}(\pi) \approx 1.17897 \dots$。
+- **过冲百分比**：$(G - 1) / 2 \approx 0.08949 \dots \approx 9\%$。
+- **本质分析**：Gibbs 现象揭示了用光滑正交基逼近非光滑信号时的能量分布特性。即使增加谐波项数，过冲幅度也不会消失，仅是过冲点向间断点无限靠拢。这体现了 $L^2$ 空间均方收敛并不保证点态一致收敛。
 
 <KnowledgeCard type="info" title="工程视角">
-在图像处理中，Gibbs 现象表现为“振铃效应”(Ringing artifacts)。在 JPEG 压缩等频域算法中，必须通过窗函数 (Windowing) 或滤波来抑制这种由于截断引起的伪影。
+在图像处理中，Gibbs 现象表现为“振铃效应”(Ringing artifacts)。在 JPEG 压缩等频域算法中，必须通过窗函数 (Windowing) 或低通滤波来抑制这种由于频谱截断引起的伪影。
 </KnowledgeCard>
 
 ---
@@ -127,6 +129,40 @@ $$\sum_{n=1}^\infty \frac{1}{n^4} = \frac{\pi^4}{90}$$
 右边：$a_0 = \frac{2\pi^2}{3}, a_n = \frac{4(-1)^n}{n^2}$。
 $\frac{2\pi^4}{5} = \frac{1}{2}(\frac{2\pi^2}{3})^2 + \sum_{n=1}^\infty \frac{16}{n^4} = \frac{2\pi^4}{9} + 16 \sum_{n=1}^\infty \frac{1}{n^4}$。
 整理得：$16 \sum \frac{1}{n^4} = \frac{18\pi^4 - 10\pi^4}{45} = \frac{8\pi^4}{45} \implies \sum \frac{1}{n^4} = \frac{\pi^4}{90}$。
+
+### 例题 3：利用 Dirichlet 定理求数项级数和
+设 $f(x) = x$, $x \in (-\pi, \pi)$ 且 $f(x+2\pi) = f(x)$。
+1. 求其 Fourier 展开式。
+2. 利用结果计算 $\sum_{n=1}^\infty \frac{\sin n}{n}$。
+
+**解析**：
+1. $f(x)$ 是奇函数，故 $a_n = 0$。
+   $b_n = \frac{2}{\pi} \int_0^\pi x \sin nx dx = \frac{2}{\pi} \left[ -\frac{x \cos nx}{n} + \frac{\sin nx}{n^2} \right]_0^\pi = \frac{2(-1)^{n+1}}{n}$。
+   展开式为：$x \sim 2 \sum_{n=1}^\infty \frac{(-1)^{n+1}}{n} \sin nx, \quad x \in (-\pi, \pi)$。
+2. 令 $x=1$。由于 $x=1$ 是 $f(x)$ 的连续点，由 Dirichlet 定理：
+   $1 = 2 \sum_{n=1}^\infty \frac{(-1)^{n+1} \sin n}{n} \implies \sum_{n=1}^\infty \frac{(-1)^{n+1} \sin n}{n} = \frac{1}{2}$。
+> **注意**：若要求 $\sum \frac{\sin n}{n}$，通常考虑 $f(x) = \frac{\pi-x}{2}$ 的展开。
+
+### 例题 4：非对称区间与分段函数的展开
+设 $f(x) = \begin{cases} 1, & 0 < x < \pi \\ 0, & -\pi < x < 0 \end{cases}$。求其 Fourier 级数，并讨论 $x=0$ 处的收敛值。
+**解析**：
+$a_0 = \frac{1}{\pi} \int_0^\pi 1 dx = 1$。
+$a_n = \frac{1}{\pi} \int_0^\pi \cos nx dx = 0$ ($n \ge 1$)。
+$b_n = \frac{1}{\pi} \int_0^\pi \sin nx dx = \frac{1}{\pi n} (1 - \cos n\pi) = \frac{1 - (-1)^n}{\pi n}$。
+- $n$ 为偶数时，$b_n = 0$；
+- $n$ 为奇数时，$b_n = \frac{2}{\pi n}$。
+展开式：$f(x) \sim \frac{1}{2} + \frac{2}{\pi} \sum_{k=1}^\infty \frac{\sin(2k-1)x}{2k-1}$。
+**收敛性**：在 $x=0$ 处，$f(x)$ 有第一类间断点。
+收敛值 $S(0) = \frac{f(0+0) + f(0-0)}{2} = \frac{1+0}{2} = \frac{1}{2}$。
+
+### 例题 5：高阶 Parseval 实战
+利用 $f(x) = x(\pi-x)$ 在 $[0, \pi]$ 上的正弦级数展开，计算 $\sum_{n=1}^\infty \frac{1}{(2n-1)^6}$。
+**解析**：
+1. 奇延拓后 $b_n = \frac{2}{\pi} \int_0^\pi (x\pi - x^2) \sin nx dx = \frac{8}{\pi n^3}$ ($n$ 为奇数)，$b_n=0$ ($n$ 为偶数)。
+2. 应用 Parseval 等式：$\frac{2}{\pi} \int_0^\pi |x(\pi-x)|^2 dx = \sum b_n^2$。
+   左边：$\frac{2}{\pi} \int_0^\pi (x^2\pi^2 - 2x^3\pi + x^4) dx = \frac{2}{\pi} [\frac{\pi^5}{3} - \frac{\pi^5}{2} + \frac{\pi^5}{5}] = \frac{\pi^4}{15}$。
+   右边：$\sum_{k=1}^\infty (\frac{8}{\pi(2k-1)^3})^2 = \frac{64}{\pi^2} \sum_{k=1}^\infty \frac{1}{(2k-1)^6}$。
+   整理得：$\sum_{k=1}^\infty \frac{1}{(2k-1)^6} = \frac{\pi^6}{960}$。
 
 ---
 

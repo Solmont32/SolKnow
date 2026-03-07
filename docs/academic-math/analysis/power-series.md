@@ -52,10 +52,17 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 3. **微分方程法**：对于复杂的递推系数，建立 $S(x)$ 满足的微分方程并求解。
 </KnowledgeCard>
 
-<KnowledgeCard type="warning" title="端点的一致收敛性：Abel 第二定理">
-若级数 $\sum a_n x^n$ 在端点 $x=R$ 处收敛，则级数在 $[0, R]$ 上一致收敛，且和函数 $S(x)$ 在 $x=R$ 处 **左连续**：
-$$\lim_{x \to R^-} S(x) = \sum_{n=0}^\infty a_n R^n$$
+<KnowledgeCard type="warning" title="Abel 第二定理 (边界收敛性与左连续性)">
+**定理内容**：设幂级数 $\sum_{n=0}^\infty a_n x^n$ 的收敛半径为 $R > 0$。若该级数在右端点 $x=R$ 处收敛，则级数在闭区间 $[0, R]$ 上一致收敛。
+由此可得，其和函数 $S(x)$ 在 $x=R$ 处是 **左连续** 的，即：
+$$\lim_{x \to R^-} \sum_{n=0}^\infty a_n x^n = \sum_{n=0}^\infty a_n R^n$$
+*(同理，若在 $x=-R$ 处收敛，则在 $[-R, 0]$ 上一致收敛且在该点右连续。)*
 </KnowledgeCard>
+
+### 2.3 Abel 第二定理的深度理解
+1. **核心价值**：该定理建立了“幂级数在开区间内的分析性质”与“边界处项级数的收敛性”之间的桥梁。它允许我们通过取极限的方式计算数项级数的和。
+2. **证明思路 (Abel 变换)**：利用分部求和法（Abel 变换），将级数的部分和表示为与边界收敛项相关的形式，结合控制收敛的技巧证明一致收敛。
+3. **注意项**：若级数在 $x=R$ 处 **发散**，则和函数 $S(x)$ 当 $x \to R^-$ 时必然趋于无穷（Frobenius 定理的逆性质）。
 
 ---
 
@@ -140,6 +147,33 @@ $f(x) = (x + \frac{x^2}{2} + \frac{x^3}{3} + \dots) - (\frac{x^3}{1} + \frac{x^6
 $= x + \frac{x^2}{2} - \frac{2}{3}x^3 + \frac{x^4}{4} + \frac{x^5}{5} - \frac{2}{6}x^6 + \dots$
 **通项公式**：$a_k = \begin{cases} \frac{1}{k} & k \neq 3n \\ -\frac{2}{k} & k = 3n \end{cases}$
 收敛区间为 $[-1, 1)$。
+
+### 例题 6：结合分式分解与 Abel 定理求特定数项级数和
+计算级数 $\sum_{n=0}^\infty \frac{(-1)^n}{3n+1}$ 的值。
+**解析**：
+考虑幂级数 $f(x) = \sum_{n=0}^\infty \frac{(-1)^n x^{3n+1}}{3n+1}$。
+在收敛区间 $(-1, 1)$ 内，逐项求导：
+$f'(x) = \sum_{n=0}^\infty (-1)^n x^{3n} = \sum_{n=0}^\infty (-x^3)^n = \frac{1}{1+x^3}$。
+利用分式分解：
+$\frac{1}{1+x^3} = \frac{1}{(x+1)(x^2-x+1)} = \frac{1}{3} \left[ \frac{1}{x+1} - \frac{x-2}{x^2-x+1} \right]$
+积分得：
+$f(x) = \frac{1}{3} \ln(1+x) - \frac{1}{6} \ln(x^2-x+1) + \frac{1}{\sqrt{3}} \arctan \frac{2x-1}{\sqrt{3}} + C$
+由 $f(0)=0$ 代入得 $C = \frac{\pi}{6\sqrt{3}}$。
+原级数即为 $f(1)$。由于原级数满足 Leibniz 判别法，在 $x=1$ 处收敛，由 Abel 第二定理：
+$\sum_{n=0}^\infty \frac{(-1)^n}{3n+1} = \lim_{x \to 1^-} f(x) = \frac{1}{3} \ln 2 + \frac{\pi}{3\sqrt{3}}$。
+
+### 例题 7：高阶算子法求和函数及其边界行为
+求幂级数 $\sum_{n=1}^\infty n^2 x^n$ 的和函数，并讨论其在 $x=1$ 与 $x=-1$ 处的行为。
+**解析**：
+已知 $\sum_{n=0}^\infty x^n = \frac{1}{1-x}, \quad |x| < 1$。
+1. 第一次作用算子 $x \frac{d}{dx}$：
+   $\sum_{n=1}^\infty n x^n = x \left( \frac{1}{1-x} \right)' = \frac{x}{(1-x)^2}$
+2. 第二次作用算子 $x \frac{d}{dx}$：
+   $\sum_{n=1}^\infty n^2 x^n = x \left( \frac{x}{(1-x)^2} \right)' = x \frac{(1-x)^2 + 2x(1-x)}{(1-x)^4} = \frac{x(1+x)}{(1-x)^3}$
+**边界讨论**：
+- 在 $x=1$ 处，和函数 $\lim_{x \to 1^-} \frac{x(1+x)}{(1-x)^3} = +\infty$，级数发散。
+- 在 $x=-1$ 处，级数项为 $(-1)^n n^2$，通项不趋于 0，级数发散。
+> **总结**：$x \frac{d}{dx}$ 算子是处理含有 $n^k$ 系数的幂级数的强力工具。
 
 ---
 
