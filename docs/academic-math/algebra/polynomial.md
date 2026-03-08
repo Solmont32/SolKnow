@@ -2,21 +2,115 @@
 title: 多项式 (Polynomial)
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+# 多项式
 
-# 多项式 (Polynomial)
+本章面向高等代数核心内容：整除理论、最大公因式、根与重根、插值与分解思路。
 
-形如 $P(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_0$ 的代数式。
+## 1. 除法算法与整除
 
-## 多项式除法
-对于多项式 $f(x)$ 和 $g(x)$，存在唯一的 $q(x)$（商）和 $r(x)$（余式）使得：
-$$f(x) = q(x)g(x) + r(x), \quad deg(r) < deg(g)$$
+对任意 $f(x),g(x)\in\mathbb{F}[x]$ 且 $g(x)\neq0$，存在唯一 $q(x),r(x)$ 使
+$$
+f(x)=q(x)g(x)+r(x),\quad \deg r<\deg g.
+$$
 
-## 韦达定理 (Vieta's Formulas)
-对于 $n$ 次方程 $\sum a_i x^i = 0$，根 $x_1, \dots, x_n$ 满足：
-- $\sum x_i = -\frac{a_{n-1}}{a_n}$
-- $\prod x_i = (-1)^n \frac{a_0}{a_n}$
+- 若 $r(x)=0$，称 $g(x)\mid f(x)$。
+- 可据此定义多项式的最大公因式并执行欧几里得算法。
 
-<KnowledgeCard type="contest" title="算法关联">
-在算法竞赛中，**快速傅里叶变换 (FFT)** 可以在 $O(N \log N)$ 时间内完成多项式乘法。
-</KnowledgeCard>
+### 例题 1：多项式除法
+求 $(x^3+2x^2-1)\div(x+1)$。
+
+解：
+$$
+x^3+2x^2-1=(x+1)(x^2+x-1)+0.
+$$
+故商为 $x^2+x-1$，余式为 0。
+
+## 2. 因式定理与重根判别
+
+- 因式定理：$f(a)=0 \Leftrightarrow (x-a)\mid f(x)$。
+- 若 $(x-a)^k\mid f(x)$ 且 $(x-a)^{k+1}\nmid f(x)$，则 $a$ 为 $k$ 重根。
+- $a$ 为重根当且仅当 $f(a)=f'(a)=0$（至少二重）。
+
+### 例题 2：判断重根
+设
+$$
+f(x)=x^3-3x^2+3x-1.
+$$
+
+解：
+$$
+f(x)=(x-1)^3.
+$$
+所以 $x=1$ 是三重根。也可检验
+$$
+f(1)=0,\ f'(x)=3(x-1)^2,\ f'(1)=0.
+$$
+
+## 3. Vieta 公式与构造问题
+
+对首一二次多项式
+$$
+x^2-sx+p=0
+$$
+其根 $\alpha,\beta$ 满足
+$$
+\alpha+\beta=s,\quad \alpha\beta=p.
+$$
+高次情形同理可由系数构造对称式。
+
+### 例题 3：由根的关系反求多项式
+设二次多项式有根 $\alpha,\beta$，且
+$$
+\alpha+\beta=5,\quad \alpha\beta=6.
+$$
+求该首一多项式。
+
+解：由 Vieta 公式，所求为
+$$
+x^2-5x+6.
+$$
+
+## 4. 配套练习（折叠答案）
+
+### 练习 1
+用因式定理判断 $x=2$ 是否为
+$$
+f(x)=x^3-3x^2+4
+$$
+的根。
+
+<details>
+<summary>点击查看过程与答案</summary>
+
+$$
+f(2)=8-12+4=0.
+$$
+所以 $x=2$ 是该多项式的根，且 $(x-2)\mid f(x)$。
+</details>
+
+### 练习 2
+求 $\gcd(x^3-1,\ x^2-1)$。
+
+<details>
+<summary>点击查看过程与答案</summary>
+
+分解：
+$$
+x^3-1=(x-1)(x^2+x+1),\quad x^2-1=(x-1)(x+1).
+$$
+公共因子为 $x-1$（取首一），故
+$$
+\gcd(x^3-1,x^2-1)=x-1.
+$$
+</details>
+
+### 练习 3
+已知三次首一多项式的三个根为 $1,2,3$，写出该多项式。
+
+<details>
+<summary>点击查看过程与答案</summary>
+
+$$
+f(x)=(x-1)(x-2)(x-3)=x^3-6x^2+11x-6.
+$$
+</details>
