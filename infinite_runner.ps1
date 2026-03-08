@@ -1,4 +1,4 @@
-# SolKnow Autonomous Pulse Runner (V15.2 - HUD-FIX / CONTEXT-LINKED)
+﻿# SolKnow Autonomous Pulse Runner (V15.2 - HUD-FIX / CONTEXT-LINKED)
 # Usage: powershell -ExecutionPolicy Bypass -File infinite_runner.ps1
 
 if ($IsWindows) { 
@@ -18,11 +18,11 @@ function Get-SafeLabel([string]$b64) {
 $global:LBL_GOAL = Get-SafeLabel "IyMg5oC75Lu75Yqh"
 $global:LBL_TODO = Get-SafeLabel "IyMg5b6F5Yqe5a2Q5Lu75Yqh"
 $global:LBL_DONE = Get-SafeLabel "IyMg5bey5a6M5oiQ5Lu75Yqh"
-$global:STR_EXEC = Get-SafeLabel "IOato+WcqOaJp+ihjC4uLik="
-$global:UI_GOAL = Get-SafeLabel "WyMg5oC755uu5標X"
-$global:UI_TODO = Get-SafeLabel "Wysg5b6F5Yqe5Lu75YqhX"
-$global:UI_ACTIVE = Get-SafeLabel "Wz4g5q2j5Zyo5omn6KGMX"
-$global:UI_HISTORY = Get-SafeLabel "W09LIOW3suWunj1d"
+$global:STR_EXEC = Get-SafeLabel "ICjmraPlnKjmiafooYwuLi4p"
+$global:UI_GOAL = Get-SafeLabel "WyMg5oC755uu5qCHXQ=="
+$global:UI_TODO = Get-SafeLabel "Wysg5b6F5Yqe5Lu75YqhXQ=="
+$global:UI_ACTIVE = Get-SafeLabel "Wz4g5q2j5Zyo5omn6KGMXQ=="
+$global:UI_HISTORY = Get-SafeLabel "W09LIOW3suWujOaIkF0="
 
 # --- 3. CONTEXT GATHERER ---
 function Get-StrategicContext {
@@ -108,7 +108,7 @@ while($true) {
             if ($todoMatch -notmatch '- \[ \]') {
                 Show-Dashboard "PLANNING"
                 $ctx = Get-StrategicContext
-                $planPrompt = "ROLE: Architect`nMISSION: Decompose the 'CORE GOAL' into 3-5 sub-tasks.`nCONTEXT:`n" + $ctx + "`nACTION: Provide ONLY tasks as '- [ ] Task (YYYY-MM-DD)'.`n"
+                $planPrompt = "ROLE: Architect`nMISSION: Decompose the 'CORE GOAL' into 3-5 sub-tasks.`nCONTEXT:`n" + $ctx + "`nACTION: Provide ONLY tasks as '- [ ] Task (YYYY-MM-DD)\n'.`n"
                 $newTasks = & gemini -y -p $planPrompt
                 $insertPattern = "(" + [regex]::Escape($global:LBL_TODO) + "\s*)"
                 Set-Content $global:CFG_TASKS ($content -replace $insertPattern, ('$1' + "`n" + $newTasks + "`n")) -Encoding UTF8
