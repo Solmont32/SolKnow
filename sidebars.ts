@@ -325,7 +325,7 @@ const sidebars: SidebarsConfig = {
             { type: 'doc', id: 'exercises/math/analysis-foundations', label: 'Ch 1-4: 实数极限与连续专题' },
             { type: 'doc', id: 'exercises/math/analysis-derivatives-mean-value', label: 'Ch 5-7: 导数与中值定理专题' },
             { type: 'doc', id: 'exercises/math/analysis-integral-calculus', label: 'Ch 8-11: 一元积分学专题' },
-            { type: 'doc', id: 'exercises/math/analysis-series-fourier', label: 'Ch 12-15: 级数论与 Fourier 分析' },
+            { type: 'doc', id: 'exercises/math/analysis-series-fourier', label: 'Ch 12-15: 级数论与 Fourier 分析专题' },
             { type: 'doc', id: 'exercises/math/analysis-multivariable-calculus', label: 'Ch 16-23: 多元微积分与矢量分析' },
             { type: 'doc', id: 'exercises/math/analysis-function-sequences', label: '进阶：函数列与函数项级数' },
             { type: 'doc', id: 'exercises/math/analysis-differential-geometry', label: '进阶：微分几何专题练习' },

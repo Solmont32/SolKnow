@@ -201,11 +201,10 @@ $f_n'(x)=\cos(nx)/n$。在 $x=0$ 处退化为调和级数，故导数级数不�
 
 <SupportingExercises
 topic="函数列与函数项级数"
-fileId="analysis-function-sequences"
+fileId="analysis-series-fourier"
 exercises={[
-{ index: 1, title: "点收敛与一致收敛辨析", slug: "练习-1基础-点收敛与一致收敛" },
-{ index: 4, title: "Dini 定理应用", slug: "练习-4提高-dini-定理应用" },
-{ index: 6, title: "积分与极限交换", slug: "练习-6提高-积分与极限交换" }
+{ index: 13.1, title: "一致收敛的判别 (M-判别法)", slug: "练习-131一致收敛的判别-m-判别法" },
+{ index: 13.2, title: "Dini 定理与紧致性", slug: "练习-132dini-定理与紧致性" }
 ]}
 />
 

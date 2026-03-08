@@ -223,8 +223,8 @@ $\sum_{n=0}^\infty \frac{(-1)^n}{3n+1} = \lim_{x \to 1^-} f(x) = \frac{1}{3} \ln
 topic="幂级数"
 fileId="analysis-series-fourier"
 exercises={[
-{ index: 14.1, title: "收敛半径与求和", slug: "练习-141收敛半径与求和" },
-{ index: 14.2, title: "利用幂级数计算数项级数", slug: "练习-142利用幂级数计算数项级数" }
+{ index: 14.1, title: "收敛半径与边界行为", slug: "练习-141收敛半径与边界行为" },
+{ index: 14.2, title: "利用幂级数求数项级数和", slug: "练习-142利用幂级数求数项级数和" }
 ]}
 />
 

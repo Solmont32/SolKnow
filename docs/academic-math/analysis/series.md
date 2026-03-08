@@ -391,9 +391,8 @@ $a > 1$ 收敛，$a \leq 1$ 发散。
 topic="数项级数"
 fileId="analysis-series-fourier"
 exercises={[
-{ index: 12.1, title: "比值与根值判别法进阶", slug: "练习-121比值判别法与根值判别法的极限情形" },
-{ index: 12.2, title: "Raabe 判别法的应用", slug: "练习-122raabe-判别法的应用" },
-{ index: 12.3, title: "Gauss 判别法的威力", slug: "练习-123gauss-判别法的威力" }
+{ index: 12.1, title: "Kummer/Raabe 判别法的应用", slug: "练习-121kummerraabe-判别法的应用" },
+{ index: 12.2, title: "绝对收敛与条件收敛", slug: "练习-122绝对收敛与条件收敛" }
 ]}
 />
 
