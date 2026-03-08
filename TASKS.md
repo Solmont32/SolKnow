@@ -1,10 +1,15 @@
 # SolKnow 自动化任务清单 (TASKS.md)
 ## 总任务
 - 数学知识库初中数学竞赛教程（对标教科书）：知识点详细，一个知识点对应多道例题，同时增加练习库中的练习，练习需要有多道，答案折叠，点击才显示过程和答案；
+
 ## 待办子任务
 - （暂无，已清空）
 
 ## 已完成任务
+- [x] 重构『离散数学总览与学习路径』(2026-03-08)：重写 docs/academic-math/discrete-math/index.md，按教材化顺序整理逻辑-集合-关系-图论-组合并补充练习闭环入口。
+- [x] 深化『集合论：集合代数与基数』章节 (2026-03-08)：重写 docs/academic-math/discrete-math/set-theory.md，补全集合运算律、笛卡尔积、可数性与 3 道例题 + 3 道折叠练习。
+- [x] 新增『关系与函数』章节并接入侧边栏 (2026-03-08)：新增 docs/academic-math/discrete-math/relations-and-functions.md，系统化等价关系、偏序关系、映射性质并补充例题练习。
+- [x] 新增『离散数学练习库』并完成导航联动 (2026-03-08)：新增 docs/exercises/math/discrete-math.md（12 题，全部折叠解析），同步更新 sidebars.ts。
 - [x] 深度重构『行列式』教材页并形成“性质-展开-应用”闭环 (2026-03-08)：重写 docs/academic-math/algebra/determinant.md，补全定义、基本性质、Laplace 展开、伴随矩阵与克拉默法则，新增 2 道例题与 3 道配套练习。 (2026-03-08)
 - [x] 深化『线性方程组』章节并补全“判定-通解”体系 (2026-03-08)：重写 docs/academic-math/algebra/linear-equations.md，系统化 Rouché-Capelli 定理、齐次解空间维数、高斯消元流程，新增参数讨论与基础解系例题。 (2026-03-08)
 - [x] 完备『二次型』与『高等代数练习库』联动 (2026-03-08)：重写 docs/academic-math/algebra/quadratic-forms.md 与 docs/exercises/math/algebra.md，补全合同标准形、惯性定理、正定判别，并扩容基础/提高/挑战多题折叠解析。 (2026-03-08)
@@ -87,6 +92,10 @@
 - [x] 为知识图谱 (Knowledge Graph) 实现深度下钻 (Deep-Dive) 交互模式与文档联动系统，增强全站导航的结构化视觉体验 (2026-03-07)
 - [x] 实现自动化脚本心跳系统与画面，符合人类审美。 
 - [x] 实现全站‘知识图谱’ (Knowledge Graph) 可视化交互系统，深度展现算法与数学的结构化联结 (2026-03-07)
+
+
+
+
 
 
 
