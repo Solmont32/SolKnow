@@ -206,6 +206,84 @@ $\frac{\pi}{n \sin(a\pi/n)}$
 
 ---
 
+## 五、 章内专题练习 (In-Chapter Exercises)
+
+:::tip 练习说明
+含参量积分的关键在于积分号下求导与一致收敛性的判定。
+:::
+
+### 练习 1：积分号下求导法
+求 $I(\alpha) = \int_0^\pi \ln(1 - 2\alpha \cos x + \alpha^2) dx \quad (|\alpha| < 1)$。
+
+<details>
+<summary>点击查看解析</summary>
+
+**解析**：
+1. **求导**：
+   $I'(\alpha) = \int_0^\pi \frac{-2\cos x + 2\alpha}{1 - 2\alpha \cos x + \alpha^2} dx$。
+2. **利用恒等式或换元**：
+   由复变函数知识或三角换元：
+   $\int_0^\pi \frac{\alpha - \cos x}{1 - 2\alpha \cos x + \alpha^2} dx = 0 \quad (|\alpha| < 1)$。
+   故 $I'(\alpha) = 2 \int_0^\pi \frac{\alpha - \cos x}{1 - 2\alpha \cos x + \alpha^2} dx = 0$。
+3. **积分还原**：
+   $I(\alpha) = C$。令 $\alpha = 0$，得 $I(0) = \int_0^\pi \ln(1) dx = 0$。
+**结论**：$I(\alpha) = 0$。
+
+</details>
+
+### 练习 2：Weierstrass 判别法的应用
+证明 $I(y) = \int_0^\infty \frac{\cos(xy)}{1+x^2} dx$ 在 $\mathbb{R}$ 上一致收敛。
+
+<details>
+<summary>点击查看解析</summary>
+
+**解析**：
+1. 观察被积函数：$|f(x, y)| = \left| \frac{\cos(xy)}{1+x^2} \right| \le \frac{1}{1+x^2}$。
+2. 设置控制函数：令 $M(x) = \frac{1}{1+x^2}$。
+3. 验证收敛性：反常积分 $\int_0^\infty \frac{1}{1+x^2} dx = \pi/2$ 收敛。
+**结论**：由 Weierstrass 判别法（M-判别法），原积分在全实数域上**一致收敛**。
+
+</details>
+
+
+### 练习 3：利用 Beta 函数计算三角积分
+求 $\int_0^{\pi/2} \sin^6 x \cos^4 x dx$。
+
+<details>
+<summary>点击查看解析</summary>
+
+**解析**：
+1. **转化为 Beta 函数**：
+   $\int_0^{\pi/2} \sin^{2p-1} x \cos^{2q-1} x dx = \frac{1}{2} B(p, q)$。
+   此处 $2p-1=6 \implies p=7/2$，$2q-1=4 \implies q=5/2$。
+2. **计算 $B(7/2, 5/2)$**：
+   $B(7/2, 5/2) = \frac{\Gamma(7/2)\Gamma(5/2)}{\Gamma(6)} = \frac{\frac{15\sqrt{\pi}}{8} \cdot \frac{3\sqrt{\pi}}{4}}{120}$
+   $= \frac{45\pi/32}{120} = \frac{3\pi}{256}$。
+3. **结果**：
+   原式 $= \frac{1}{2} \cdot \frac{3\pi}{256} = \frac{3\pi}{512}$。
+
+</details>
+
+### 练习 4：一致收敛性的反例判定
+讨论 $I(y) = \int_0^\infty y e^{-xy} dx$ 在 $y \in (0, 1]$ 上的收敛性。
+
+<details>
+<summary>点击查看解析</summary>
+
+**解析**：
+1. **逐点收敛性**：
+   对 $y > 0$，$I(y) = \int_0^\infty y e^{-xy} dx = [-e^{-xy}]_0^\infty = 1$。
+2. **一致收敛性判定**：
+   计算余项 $R(A, y) = \int_A^\infty y e^{-xy} dx = e^{-Ay}$。
+   要一致收敛，需对任意 $\epsilon > 0$，存在 $A_0$ 使得当 $A > A_0$ 时，对于所有 $y \in (0, 1]$ 有 $e^{-Ay} < \epsilon$。
+   然而，对于固定的 $A$，当 $y \to 0^+$ 时，$e^{-Ay} \to 1$。
+   故不存在统一的 $A_0$。
+**结论**：在 $(0, 1]$ 上**非一致收敛**。
+
+</details>
+
+---
+
 <SupportingExercises
 topic="含参量积分"
 exercises={[

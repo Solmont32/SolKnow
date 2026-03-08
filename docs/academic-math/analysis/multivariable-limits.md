@@ -195,6 +195,77 @@ $$\frac{r^3\cos^3\theta + r^3\sin^3\theta}{r^2} = r(\cos^3\theta + \sin^3\theta)
 
 ---
 
+## 五、 章内专题练习 (In-Chapter Exercises)
+
+:::tip 练习说明
+以下练习旨在巩固多元极限与连续的核心概念。建议先独立思考，再点击展开查看详细解析。
+:::
+
+### 练习 1：利用夹逼准则求极限
+求 $\lim_{(x, y) \to (0, 0)} \frac{x^2 y^2}{x^2 + y^2}$。
+
+<details>
+<summary>点击查看解析</summary>
+
+**解析**：
+观察被积函数的形式。由于 $x^2 \le x^2 + y^2$，故有 $0 \le \frac{x^2}{x^2 + y^2} \le 1$。
+因此：
+$$0 \le \left| \frac{x^2 y^2}{x^2 + y^2} \right| = \left| \frac{x^2}{x^2 + y^2} \right| \cdot y^2 \le y^2$$
+当 $(x, y) \to (0, 0)$ 时，$y^2 \to 0$。
+由夹逼准则（Squeeze Theorem），原极限为 **0**。
+
+</details>
+
+### 练习 2：累次极限与重极限的辨析
+设 $f(x, y) = \frac{x^2-y^2}{x^2+y^2}$，求其在 $(0,0)$ 处的累次极限与重极限。
+
+<details>
+<summary>点击查看解析</summary>
+
+**解析**：
+1. **累次极限**：
+   - $\lim_{x \to 0} (\lim_{y \to 0} \frac{x^2-y^2}{x^2+y^2}) = \lim_{x \to 0} \frac{x^2}{x^2} = 1$。
+   - $\lim_{y \to 0} (\lim_{x \to 0} \frac{x^2-y^2}{x^2+y^2}) = \lim_{y \to 0} \frac{-y^2}{y^2} = -1$。
+2. **重极限**：
+   由于两个累次极限存在且不相等（$1 \neq -1$），由重极限与累次极限的关系定理，**重极限必不存在**。
+
+</details>
+
+### 练习 3：极坐标在极限证明中的应用
+证明 $\lim_{(x, y) \to (0, 0)} (x^2 + y^2) \ln(x^2 + y^2) = 0$。
+
+<details>
+<summary>点击查看解析</summary>
+
+**解析**：
+令 $x = r \cos \theta, y = r \sin \theta$，则 $x^2 + y^2 = r^2$。
+当 $(x, y) \to (0, 0)$ 时，$r \to 0^+$。
+原极限转化为一元极限：
+$$\lim_{r \to 0^+} r^2 \ln(r^2) = 2 \lim_{r \to 0^+} r^2 \ln r$$
+利用洛必达法则：
+$$\lim_{r \to 0^+} \frac{\ln r}{1/r^2} = \lim_{r \to 0^+} \frac{1/r}{-2/r^3} = \lim_{r \to 0^+} -\frac{r^2}{2} = 0$$
+由于极限结果与 $\theta$ 无关，故原重极限为 **0**。
+
+</details>
+
+### 练习 4：二元函数的连续性判定
+讨论函数 $f(x, y) = \begin{cases} \frac{\sin(xy)}{x} & x \neq 0 \\ y & x = 0 \end{cases}$ 在 $(0, y_0)$ 点的连续性。
+
+<details>
+<summary>点击查看解析</summary>
+
+**解析**：
+要判定在 $(0, y_0)$ 点的连续性，需计算重极限 $\lim_{(x, y) \to (0, y_0)} f(x, y)$ 并与 $f(0, y_0) = y_0$ 比较。
+当 $x \neq 0$ 时：
+$$\lim_{(x, y) \to (0, y_0)} \frac{\sin(xy)}{x} = \lim_{(x, y) \to (0, y_0)} \frac{\sin(xy)}{xy} \cdot y$$
+由于 $\lim_{u \to 0} \frac{\sin u}{u} = 1$ 且 $\lim_{(x, y) \to (0, y_0)} y = y_0$，故：
+$$\lim_{(x, y) \to (0, y_0)} f(x, y) = 1 \cdot y_0 = y_0$$
+因为极限值等于函数值 $f(0, y_0)$，故函数在 $(0, y_0)$ 点**连续**。
+
+</details>
+
+---
+
 <SupportingExercises
 topic="多元函数极限与连续"
 exercises={[

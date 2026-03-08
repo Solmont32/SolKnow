@@ -150,6 +150,99 @@ $$\oint_L P dx + Q dy = \iint_D \left( \frac{\partial Q}{\partial x} - \frac{\pa
 
 **答案**：3
 
+### 例题 5：格林公式在面积计算中的应用
+利用曲线积分计算由摆线一拱 $x = a(t - \sin t), y = a(1 - \cos t)$ ($0 \le t \le 2\pi$) 与 $x$ 轴所围图形的面积。
+
+<details>
+
+<summary>解析过程</summary>
+
+1. **面积公式**：$A = \oint_L x dy = \iint_D 1 dA$。
+2. **分解边界**：
+   - 摆线弧 $C_1$：$t$ 从 0 到 $2\pi$。
+   - $x$ 轴段 $C_2$：从 $x=2\pi a$ 回到 $x=0$。在 $C_2$ 上 $y=0 \implies dy=0$。
+3. **计算 $C_1$ 积分**：
+   $dx = a(1 - \cos t) dt, dy = a \sin t dt$。
+   $A = \int_{C_1} x dy = \int_0^{2\pi} a(t - \sin t) (a \sin t) dt$
+   $= a^2 \int_0^{2\pi} (t \sin t - \sin^2 t) dt$
+4. **分项计算**：
+   - $\int_0^{2\pi} t \sin t dt = [-t \cos t]_0^{2\pi} + \int_0^{2\pi} \cos t dt = -2\pi$。
+   - $\int_0^{2\pi} \sin^2 t dt = \pi$。
+   注意闭曲线方向：摆线弧从左向右，连同 $x$ 轴形成顺时针方向。格林公式要求正向（逆时针）。
+   $A = - \oint_{C_1+C_2} = -(-2\pi a^2 - \pi a^2) = 3\pi a^2$。
+
+**答案**：$3\pi a^2$
+
+</details>
+
+---
+
+## 五、 章内专题练习 (In-Chapter Exercises)
+
+:::tip 练习说明
+曲线积分的解题核心在于参数化曲线以及选择合适的积分类型（路径无关性判别）。
+:::
+
+### 练习 1：第一类曲线积分计算
+计算 $\int_L (x+y) ds$，其中 $L$ 为连接 $(0,0)$ 与 $(1,1)$ 的直线段。
+
+<details>
+<summary>点击查看解析</summary>
+
+**解析**：
+1. **参数化**：$x=t, y=t, t \in [0, 1]$。
+2. **弧长元素**：$ds = \sqrt{x'^2+y'^2} dt = \sqrt{1^2+1^2} dt = \sqrt{2} dt$。
+3. **积分计算**：
+   $\int_0^1 (t+t) \sqrt{2} dt = 2\sqrt{2} \int_0^1 t dt = 2\sqrt{2} \cdot \frac{1}{2} = \sqrt{2}$。
+
+</details>
+
+### 练习 2：格林公式直接应用
+计算 $\oint_L (x+y) dx + (y-x) dy$，其中 $L$ 为圆 $x^2+y^2=a^2$。
+
+<details>
+<summary>点击查看解析</summary>
+
+**解析**：
+1. **计算偏导**：$P=x+y, Q=y-x$。
+   $\frac{\partial Q}{\partial x} = -1, \frac{\partial P}{\partial y} = 1$。
+2. **应用格林公式**：
+   $\iint_D (-1 - 1) dA = -2 \iint_D dA = -2 \pi a^2$。
+
+</details>
+
+### 练习 3：路径无关性判定
+验证 $\int_{(0,0)}^{(1,1)} (3x^2+y) dx + (x+2y) dy$ 是否与路径无关，并求值。
+
+<details>
+<summary>点击查看解析</summary>
+
+**解析**：
+1. **验证**：$P=3x^2+y, Q=x+2y \implies \frac{\partial P}{\partial y} = 1, \frac{\partial Q}{\partial x} = 1$。
+   偏导相等且定义域 $\mathbb{R}^2$ 单连通，故**与路径无关**。
+2. **求势函数**：
+   $u = \int P dx = x^3 + xy + \phi(y)$
+   $u_y = x + \phi'(y) = x+2y \implies \phi(y) = y^2$
+   $u(x, y) = x^3 + xy + y^2$。
+3. **计算**：$u(1,1) - u(0,0) = 1+1+1 - 0 = 3$。
+
+</details>
+
+### 练习 4：利用格林公式计算椭圆面积
+已知椭圆 $L: x = a \cos t, y = b \sin t$，求其面积。
+
+<details>
+<summary>点击查看解析</summary>
+
+**解析**：
+1. **公式**：$A = \frac{1}{2} \oint_L x dy - y dx$。
+2. **代入参数**：
+   $x = a \cos t, dx = -a \sin t dt$
+   $y = b \sin t, dy = b \cos t dt$
+   $x dy - y dx = (a \cos t)(b \cos t) - (b \sin t)(-a \sin t) = ab(\cos^2 t + \sin^2 t) = ab$。
+3. **积分**：
+   $A = \frac{1}{2} \int_0^{2\pi} ab dt = \frac{1}{2} \cdot 2\pi ab = \pi ab$。
+
 </details>
 
 ---

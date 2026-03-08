@@ -42,73 +42,42 @@ $$\lim_{(\Delta x, \Delta y) \to (0, 0)} \frac{\Delta z - [f_x(x_0, y_0)\Delta x
 > - **充分条件**：偏导数在点 $(x, y)$ 连续 $\Rightarrow$ 函数在该点可微。
 > - **注意**：偏导数存在并不意味着函数连续，更不意味着可微。
 
-#### **经典反例：偏导数存在但不可微**
+### 深度例题 1：全微分存在性的严格判定
+判定 $f(x, y) = \sqrt{|xy|}$ 在 $(0, 0)$ 处的可微性。
 
-考虑函数：
+<details>
+<summary>点击查看解析</summary>
 
-$$f(x, y) = \begin{cases} \frac{xy}{\sqrt{x^2+y^2}}, & (x, y) \neq (0, 0) \\ 0, & (x, y) = (0, 0) \end{cases}$$
+1. **连续性**：显然 $\lim_{(x, y) \to (0, 0)} \sqrt{|xy|} = 0 = f(0, 0)$，函数连续。
+2. **偏导数**：
+   $$f_x(0, 0) = \lim_{x \to 0} \frac{\sqrt{|x \cdot 0|} - 0}{x} = 0$$
+   $$f_y(0, 0) = \lim_{y \to 0} \frac{\sqrt{|0 \cdot y|} - 0}{y} = 0$$
+3. **极限判定**：
+   $$\lim_{(\Delta x, \Delta y) \to (0, 0)} \frac{\Delta z - [0 \cdot \Delta x + 0 \cdot \Delta y]}{\sqrt{\Delta x^2 + \Delta y^2}} = \lim_{\rho \to 0} \frac{\sqrt{|\rho \cos \theta \rho \sin \theta|}}{\rho} = \lim_{\rho \to 0} \sqrt{|\cos \theta \sin \theta|}$$
+   由于极限结果与 $\theta$ 有关（当 $\theta = \pi/4$ 时为 $1/\sqrt{2} \neq 0$），故在该点**不可微**。
 
-- **偏导数**：利用定义可算得 $f_x(0,0)=0, f_y(0,0)=0$。
-- **全微分判定**：
+</details>
 
-$$\lim_{(\Delta x, \Delta y) \to (0, 0)} \frac{\frac{\Delta x \Delta y}{\sqrt{(\Delta x)^2+(\Delta y)^2}} - 0}{\sqrt{(\Delta x)^2+(\Delta y)^2}} = \lim_{\rho \to 0} \frac{\rho^2 \cos \theta \sin \theta}{\rho^2} = \cos \theta \sin \theta$$
+### 深度例题 2：多元复合函数的高阶偏导
+设 $z = f(x+y, xy)$，其中 $f$ 具有二阶连续偏导数，求 $\frac{\partial^2 z}{\partial x \partial y}$。
 
-极限随角度 $\theta$ 变化而不为 $0$，故在该点不可微。
+<details>
+<summary>点击查看解析</summary>
 
----
+令 $u = x+y, v = xy$。
+1. **一阶偏导**：
+   $$\frac{\partial z}{\partial x} = f_u \cdot 1 + f_v \cdot y = f_u + yf_v$$
+2. **二阶偏导**（对 $y$ 求导）：
+   $$\frac{\partial^2 z}{\partial y \partial x} = \frac{\partial}{\partial y}(f_u + yf_v) = \frac{\partial f_u}{\partial y} + f_v + y \frac{\partial f_v}{\partial y}$$
+   其中：
+   $$\frac{\partial f_u}{\partial y} = f_{uu} \cdot 1 + f_{uv} \cdot x$$
+   $$\frac{\partial f_v}{\partial y} = f_{vu} \cdot 1 + f_{vv} \cdot x$$
+3. **代入并化简**（利用 $f_{uv} = f_{vu}$）：
+   $$\frac{\partial^2 z}{\partial y \partial x} = f_{uu} + x f_{uv} + f_v + y (f_{uv} + x f_{vv}) = f_{uu} + (x+y)f_{uv} + xy f_{vv} + f_v$$
 
-## 二、 复合函数求导与高阶导数
+</details>
 
-### 1. 链式法则 (Chain Rule)
-
-设 $z = f(u, v)$，$u = \phi(x, y)$，$v = \psi(x, y)$，则：
-
-$$\frac{\partial z}{\partial x} = \frac{\partial z}{\partial u} \frac{\partial u}{\partial x} + \frac{\partial z}{\partial v} \frac{\partial v}{\partial x}$$
-
-### 2. 高阶偏导数与 Clairaut 定理
-
-若混合偏导数 $f_{xy}$ 与 $f_{yx}$ 连续，则它们相等：$f_{xy} = f_{yx}$。
-
----
-
-## 三、 方向导数与梯度 (Directional Derivative & Gradient)
-
-### 1. 方向导数
-
-函数 $f$ 沿方向 $\mathbf{l} = (\cos \alpha, \cos \beta)$ 的变化率：
-
-$$\frac{\partial f}{\partial l} = f_x \cos \alpha + f_y \cos \beta$$
-
-### 2. 梯度 (Gradient)
-
-向量 $\nabla f = (f_x, f_y)$ 称为梯度。
-
-- **物理意义**：梯度方向是函数增加最快的方向，其模长是最大变化率。
-
----
-
-## 四、 多元 Taylor 公式 (Taylor's Formula)
-
-多元 Taylor 公式是局部多项式逼近的基础。
-
-### 1. 二元函数的 Taylor 公式
-
-设 $f(x, y)$ 在点 $(x_0, y_0)$ 的某邻域内具有 $(n+1)$ 阶连续偏导数。则对于该邻域内的点 $(x_0+h, y_0+k)$，有：
-
-$$f(x_0+h, y_0+k) = f(x_0, y_0) + (h \frac{\partial}{\partial x} + k \frac{\partial}{\partial y})f(x_0, y_0) + \frac{1}{2!} (h \frac{\partial}{\partial x} + k \frac{\partial}{\partial y})^2 f(x_0, y_0) + \dots + R_n$$
-
-其中微分算子展开为：
-$(h \frac{\partial}{\partial x} + k \frac{\partial}{\partial y})^2 f = h^2 f_{xx} + 2hk f_{xy} + k^2 f_{yy}$。
-
-### 2. 带有 Lagrange 余项的形式
-
-$R_n = \frac{1}{(n+1)!} (h \frac{\partial}{\partial x} + k \frac{\partial}{\partial y})^{n+1} f(x_0 + \theta h, y_0 + \theta k)$，$0 < \theta < 1$。
-
----
-
-## 五、 深度实战解析
-
-### 深度例题 1：利用 Taylor 展开求极值
+### 深度例题 3：利用 Taylor 展开求极值
 
 利用二阶 Taylor 展开，分析函数 $f(x, y)$ 在驻点附近的行为。
 
@@ -122,6 +91,110 @@ $$f(x_0+h, y_0+k) - f(x_0, y_0) \approx \frac{1}{2} (Ah^2 + 2Bhk + Ck^2)$$
 
 其中 $A=f_{xx}, B=f_{xy}, C=f_{yy}$。
 右侧是一个二次型。其性质（正定、负定、不定）直接决定了该驻点是极小值点、极大值点还是鞍点。这正是 Hessian 矩阵判别法的理论来源。
+
+</details>
+
+### 深度例题 4：方向导数的最值性质
+已知函数 $f(x, y) = x^2 + 2y^2$，求在点 $(1, 1)$ 处沿什么方向的方向导数最大，并求出该最大值。
+
+<details>
+<summary>点击查看解析</summary>
+
+1. **计算梯度**：
+   $\nabla f = (2x, 4y)$。在点 $(1, 1)$ 处，$\nabla f(1, 1) = (2, 4)$。
+2. **判定最大方向**：
+   方向导数在梯度方向 $\mathbf{l} = \frac{\nabla f}{\|\nabla f\|}$ 处取得最大值。
+   方向为 $(2, 4)$ 或单位化后的 $(\frac{1}{\sqrt{5}}, \frac{2}{\sqrt{5}})$。
+3. **计算最大值**：
+   最大值即为梯度的模长：
+   $\|\nabla f\| = \sqrt{2^2 + 4^2} = \sqrt{20} = 2\sqrt{5}$。
+
+</details>
+
+### 深度例题 5：隐函数的全微分计算
+设由方程 $x^2 + y^2 + z^2 - 3xyz = 0$ 确定的隐函数为 $z = z(x, y)$，求 $dz$。
+
+<details>
+<summary>点击查看解析</summary>
+
+令 $F(x, y, z) = x^2 + y^2 + z^2 - 3xyz$。
+1. **计算偏导**：
+   $F_x = 2x - 3yz, F_y = 2y - 3xz, F_z = 2z - 3xy$。
+2. **求隐函数偏导**：
+   $\frac{\partial z}{\partial x} = -\frac{F_x}{F_z} = -\frac{2x - 3yz}{2z - 3xy}$
+   $\frac{\partial z}{\partial y} = -\frac{F_y}{F_z} = -\frac{2y - 3xz}{2z - 3xy}$
+3. **写出全微分**：
+   $dz = \frac{\partial z}{\partial x} dx + \frac{\partial z}{\partial y} dy = \frac{(3yz - 2x) dx + (3xz - 2y) dy}{2z - 3xy}$。
+
+</details>
+
+---
+
+## 六、 章内专题练习 (In-Chapter Exercises)
+
+:::tip 练习说明
+以下练习覆盖了多元微分的核心计算与判定技巧。
+:::
+
+### 练习 1：全微分定义的应用
+证明 $f(x, y) = x^2 + y^2$ 在原点 $(0, 0)$ 可微。
+
+<details>
+<summary>点击查看解析</summary>
+
+**解析**：
+1. $f(0, 0) = 0, f_x(0, 0) = 0, f_y(0, 0) = 0$。
+2. 构造极限：
+   $$\lim_{(\Delta x, \Delta y) \to (0, 0)} \frac{f(\Delta x, \Delta y) - f(0, 0) - (0 \cdot \Delta x + 0 \cdot \Delta y)}{\sqrt{\Delta x^2 + \Delta y^2}}$$
+   $$= \lim_{\rho \to 0} \frac{\rho^2}{\rho} = \lim_{\rho \to 0} \rho = 0$$
+3. 结论：极限为 0，符合全微分定义，故在该点**可微**。
+
+</details>
+
+### 练习 2：链式法则的高阶应用
+设 $z = f(x^2 - y^2)$，$f$ 可导，求 $y \frac{\partial z}{\partial x} + x \frac{\partial z}{\partial y}$。
+
+<details>
+<summary>点击查看解析</summary>
+
+**解析**：
+1. $\frac{\partial z}{\partial x} = f'(x^2 - y^2) \cdot (2x)$。
+2. $\frac{\partial z}{\partial y} = f'(x^2 - y^2) \cdot (-2y)$。
+3. 代入：
+   $y(2x f') + x(-2y f') = 2xy f' - 2xy f' = 0$。
+**结论**：该表达式的值恒为 **0**。
+
+</details>
+
+### 练习 3：切平面方程计算
+求曲面 $z = x^2 + y^2$ 在点 $(1, 2, 5)$ 处的切平面方程。
+
+<details>
+<summary>点击查看解析</summary>
+
+**解析**：
+1. 偏导数：$z_x = 2x, z_y = 2y$。
+2. 在点 $(1, 2)$ 处：$z_x = 2, z_y = 4$。
+3. 切平面方程：$z - z_0 = f_x(x-x_0) + f_y(y-y_0)$。
+   $z - 5 = 2(x - 1) + 4(y - 2)$
+   $2x + 4y - z - 5 = 0$。
+
+</details>
+
+### 练习 4：拉格朗日乘数法基础
+求函数 $f(x, y) = xy$ 在约束条件 $x + y = 2$ 下的极值。
+
+<details>
+<summary>点击查看解析</summary>
+
+**解析**：
+1. 构造拉格朗日函数：$L(x, y, \lambda) = xy + \lambda(x + y - 2)$。
+2. 求偏导方程组：
+   - $L_x = y + \lambda = 0 \implies y = -\lambda$
+   - $L_y = x + \lambda = 0 \implies x = -\lambda$
+   - $L_\lambda = x + y - 2 = 0$
+3. 解得 $x=1, y=1, \lambda=-1$。
+4. 判定：由于区域是紧致的，且这是唯一的驻点，比较边界易知 $f(1, 1) = 1$ 为最大值。
 
 </details>
 

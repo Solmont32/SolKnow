@@ -196,6 +196,84 @@ $$u_x = \frac{\begin{vmatrix} 1 & 1 \\ -u & y \end{vmatrix}}{y - x} = \frac{y + 
 
 ---
 
+## 六、 章内专题练习 (In-Chapter Exercises)
+
+:::tip 练习说明
+隐函数定理的应用重点在于偏导数的求法与行列式的计算。
+:::
+
+### 练习 1：单个方程的隐函数求导
+设 $x + y + z + \sin z = 0$，求 $\frac{\partial z}{\partial x}$ 和 $\frac{\partial z}{\partial y}$。
+
+<details>
+<summary>点击查看解析</summary>
+
+**解析**：
+令 $F(x, y, z) = x + y + z + \sin z$。
+1. 计算偏导：
+   $F_x = 1, F_y = 1, F_z = 1 + \cos z$。
+2. 应用公式：
+   $\frac{\partial z}{\partial x} = -\frac{F_x}{F_z} = -\frac{1}{1 + \cos z}$
+   $\frac{\partial z}{\partial y} = -\frac{F_y}{F_z} = -\frac{1}{1 + \cos z}$。
+
+</details>
+
+### 练习 2：雅可比行列式的计算
+计算极坐标变换 $x = r \cos \theta, y = r \sin \theta$ 的雅可比行列式 $J = \frac{\partial(x, y)}{\partial(r, \theta)}$。
+
+<details>
+<summary>点击查看解析</summary>
+
+**解析**：
+构造雅可比矩阵：
+$$J = \det \begin{pmatrix} \frac{\partial x}{\partial r} & \frac{\partial x}{\partial \theta} \\ \frac{\partial y}{\partial r} & \frac{\partial y}{\partial \theta} \end{pmatrix} = \det \begin{pmatrix} \cos \theta & -r \sin \theta \\ \sin \theta & r \cos \theta \end{pmatrix}$$
+$$J = r \cos^2 \theta - (-r \sin^2 \theta) = r(\cos^2 \theta + \sin^2 \theta) = r$$
+**结论**：雅可比行列式为 $r$。
+
+</details>
+
+### 练习 3：隐函数方程组的二阶导数
+设 $u+v=x+y, \frac{\sin u}{\sin v} = \frac{x}{y}$，求在 $u=v, x=y$ 处的 $du$。
+
+<details>
+<summary>点击查看解析</summary>
+
+**解析**：
+对两方程微分：
+1. $du + dv = dx + dy$
+2. $\frac{\cos u \sin v du - \sin u \cos v dv}{\sin^2 v} = \frac{y dx - x dy}{y^2}$
+在 $u=v, x=y$ 处，第二式简化为：
+$\frac{\sin u \cos u (du - dv)}{\sin^2 u} = \frac{x(dx - dy)}{x^2} \implies \cot u (du - dv) = \frac{1}{x}(dx - dy)$
+联立 (1) 和 (2) 解 $du$：
+由 (1) $dv = dx + dy - du$，代入 (2)：
+$\cot u (du - (dx + dy - du)) = \frac{1}{x}(dx - dy)$
+$2 \cot u du = \cot u (dx + dy) + \frac{1}{x}(dx - dy)$
+$du = \frac{1}{2}(dx + dy) + \frac{1}{2x \cot u}(dx - dy)$。
+
+</details>
+
+### 练习 4：拉格朗日乘数法的几何应用
+在平面 $x+y+z=1$ 上求一点，使其到原点的距离最短。
+
+<details>
+<summary>点击查看解析</summary>
+
+**解析**：
+目标函数：$f(x, y, z) = x^2 + y^2 + z^2$（距离平方）。
+约束条件：$g(x, y, z) = x + y + z - 1 = 0$。
+1. 构造 $L = x^2 + y^2 + z^2 + \lambda(x+y+z-1)$。
+2. 求偏导：
+   $L_x = 2x + \lambda = 0 \implies x = -\lambda/2$
+   $L_y = 2y + \lambda = 0 \implies y = -\lambda/2$
+   $L_z = 2z + \lambda = 0 \implies z = -\lambda/2$
+3. 代入约束：$-3\lambda/2 = 1 \implies \lambda = -2/3$。
+4. 结果：$x=1/3, y=1/3, z=1/3$。
+**结论**：最短距离点为 $(1/3, 1/3, 1/3)$。
+
+</details>
+
+---
+
 <SupportingExercises
 topic="隐函数与极值"
 exercises={[
