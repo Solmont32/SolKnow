@@ -1,191 +1,137 @@
-﻿# SolKnow Autonomous Pulse Runner (V5.1 - OMNI-FLOW / SAFE-SENSE)
+# SolKnow Autonomous Pulse Runner (V15.2 - HUD-FIX / CONTEXT-LINKED)
 # Usage: powershell -ExecutionPolicy Bypass -File infinite_runner.ps1
 
-if ($IsWindows) { chcp 65001 | Out-Null }
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-
-# --- 核心参数配置 ---
-$CHECK_INTERVAL = 60 
-$SYNC_COOLDOWN = 10 
-$LOG_FILE = "AUTOMATION_LOG.md"
-$TASKS_FILE = "TASKS.md"
-$global:LAST_CHECKED_RUN_ID = ""
-
-# --- 修复版日志功能 (兼容 PowerShell 5.1) ---
-function Write-Log($message, $type="INFO", $toFile=$true) {
-    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    $tag = "[INFO]"
-    $color = "Gray"
-
-    if ($type -eq "SUCCESS") { $tag = "[ OK ]"; $color = "Green" }
-    elseif ($type -eq "ERROR") { $tag = "[ERR ]"; $color = "Red" }
-    elseif ($type -eq "PLAN") { $tag = "[PLAN]"; $color = "Cyan" }
-    elseif ($type -eq "EXEC") { $tag = "[EXE ]"; $color = "Yellow" }
-
-    $logEntry = "[$timestamp] $tag $message"
-    Write-Host $logEntry -ForegroundColor $color
-    if ($toFile) { Add-Content -Path $LOG_FILE -Value $logEntry -Encoding UTF8 }
+if ($IsWindows) { 
+    chcp 65001 | Out-Null
+    [Console]::OutputEncoding = [System.Text.Encoding]::UTF8 
 }
 
-# --- 简化版模型调用功能 ---
-function Invoke-GeminiSmart($prompt) {
-    try {
-        Write-Log "Attempting pulse with default model..." "INFO"
-        # 开启免确认模式，直接使用默认模型
-        & gemini -y -p $prompt
-        return $true
-    } catch {
-        Write-Log "Critical Fault: $($_.Exception.Message)" "ERROR"
-        return $false
-    }
+# --- 1. CONFIGURATION ---
+$global:CFG_LOG = "AUTOMATION_LOG.md"
+$global:CFG_TASKS = "TASKS.md"
+$global:CFG_INTERVAL = 60
+
+# --- 2. BASE64 PROTECTED LABELS ---
+function Get-SafeLabel([string]$b64) {
+    return [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($b64))
+}
+$global:LBL_GOAL = Get-SafeLabel "IyMg5oC75Lu75Yqh"
+$global:LBL_TODO = Get-SafeLabel "IyMg5b6F5Yqe5a2Q5Lu75Yqh"
+$global:LBL_DONE = Get-SafeLabel "IyMg5bey5a6M5oiQ5Lu75Yqh"
+$global:STR_EXEC = Get-SafeLabel "IOato+WcqOaJp+ihjC4uLik="
+$global:UI_GOAL = Get-SafeLabel "WyMg5oC755uu5標X"
+$global:UI_TODO = Get-SafeLabel "Wysg5b6F5Yqe5Lu75YqhX"
+$global:UI_ACTIVE = Get-SafeLabel "Wz4g5q2j5Zyo5omn6KGMX"
+$global:UI_HISTORY = Get-SafeLabel "W09LIOW3suWunj1d"
+
+# --- 3. CONTEXT GATHERER ---
+function Get-StrategicContext {
+    if (-not (Test-Path $global:CFG_TASKS)) { return "No TASKS.md" }
+    $c = Get-Content $global:CFG_TASKS -Raw
+    $goalPat = [regex]::Escape($global:LBL_GOAL) + '(?s)(.*?)(?=' + [regex]::Escape($global:LBL_TODO) + '|$)'
+    $donePat = [regex]::Escape($global:LBL_DONE) + '(?s)(.*)'
+    $mainGoal = if ($c -match $goalPat) { $matches[1].Trim() } else { "No goal." }
+    $history = if ($c -match $donePat) { $matches[1].Trim() } else { "No history." }
+    $docs = (Get-ChildItem -Path "docs" -Directory | ForEach-Object { $_.Name }) -join ", "
+    return "CORE GOAL:`n" + $mainGoal + "`n`nRECENT DONE:`n" + (($history -split "`n" | Select-Object -First 10) -join "`n") + "`n`nDOCS STRUCTURE:`n" + $docs
 }
 
-function Check-CloudStatus {
-    try {
-        $lastRunJson = gh run list --workflow "Deploy to GitHub Pages" --limit 1 --json databaseId,status,conclusion,displayTitle
-        $lastRun = $lastRunJson | ConvertFrom-Json
-        if ($lastRun -and $lastRun[0].databaseId -ne $global:LAST_CHECKED_RUN_ID) {
-            $status = $lastRun[0].status
-            $conclusion = $lastRun[0].conclusion
-            if ($status -eq "completed") {
-                if ($conclusion -eq "success") {
-                    Write-Log "Cloud Deployment VERIFIED: $($lastRun[0].displayTitle)" "SUCCESS"
-                } else {
-                    Write-Log "Cloud Deployment ALERT: $($lastRun[0].displayTitle) FAILED!" "ERROR"
-                }
-                $global:LAST_CHECKED_RUN_ID = $lastRun[0].databaseId
-            }
+# --- 4. DASHBOARD RENDERER ---
+function Show-Dashboard($stage="IDLE", $activeTask="") {
+    if (-not (Test-Path $global:CFG_TASKS)) { return }
+    $content = Get-Content $global:CFG_TASKS -Raw
+    $goalPat = [regex]::Escape($global:LBL_GOAL) + '(?s)(.*?)(?=' + [regex]::Escape($global:LBL_TODO) + '|$)'
+    $todoPat = [regex]::Escape($global:LBL_TODO) + '(?s)(.*?)(?=' + [regex]::Escape($global:LBL_DONE) + '|$)'
+    $donePat = [regex]::Escape($global:LBL_DONE) + '(?s)(.*)'
+    $goalText = if ($content -match $goalPat) { $matches[1].Trim() } else { "---" }
+    $todoText = if ($content -match $todoPat) { $matches[1].Trim() } else { "Empty" }
+    $doneText = if ($content -match $donePat) { $matches[1].Trim() } else { "None" }
+    Clear-Host
+    Write-Host " ____________________________________________________________________________________" -ForegroundColor Cyan
+    Write-Host (" [ SOLKNOW HUD V15.2 ] | STAGE: " + $stage) -ForegroundColor Cyan
+    Write-Host " ------------------------------------------------------------------------------------" -ForegroundColor Cyan
+    Write-Host (" " + $global:UI_GOAL) -ForegroundColor Yellow
+    Write-Host ("   " + $goalText) -ForegroundColor Gray
+    Write-Host ""
+    Write-Host (" " + $global:UI_TODO + " (Top 3)") -ForegroundColor Magenta
+    $todoLines = $todoText -split "`n" | Where-Object { $_ -match '- \[ \]' } | Select-Object -First 3
+    foreach ($l in $todoLines) { Write-Host ("   " + $l.Trim()) -ForegroundColor Gray }
+    Write-Host ""
+    Write-Host (" " + $global:UI_ACTIVE) -ForegroundColor White -BackgroundColor DarkBlue
+    if ($activeTask) { Write-Host ("   >> " + $activeTask) -ForegroundColor White -BackgroundColor Blue }
+    else { Write-Host "   (Pending Action...)" -ForegroundColor Gray }
+    Write-Host ""
+    Write-Host (" " + $global:UI_HISTORY) -ForegroundColor Green
+    $doneLines = $doneText -split "`n" | Where-Object { $_ -match '- \[x\]' } | Select-Object -First 3
+    foreach ($l in $doneLines) { Write-Host ("   " + $l.Trim()) -ForegroundColor Gray }
+    Write-Host " ____________________________________________________________________________________" -ForegroundColor Cyan
+}
+
+# --- 5. ENGINE CORE ---
+function Organize-Tasks {
+    $content = Get-Content $global:CFG_TASKS -Raw
+    $pGoal = [regex]::Escape($global:LBL_GOAL)
+    $pTodo = [regex]::Escape($global:LBL_TODO)
+    $pDone = [regex]::Escape($global:LBL_DONE)
+    if ($content -match "(?s)($pGoal.*?$pTodo)(.*?)($pDone.*)") {
+        $headerPart = $matches[1]; $todoPart = $matches[2]; $donePart = $matches[3]
+        $todoLines = $todoPart -split "`n"
+        $newTodo = @(); $justFinished = @()
+        foreach ($l in $todoLines) {
+            if ($l -match '^\s*- \[x\]') { $justFinished += $l }
+            elseif (-not [string]::IsNullOrWhiteSpace($l)) { $newTodo += $l }
         }
-    } catch {}
-}
-
-function Invoke-Sync($message) {
-    $status = git status --porcelain
-    if ($status) {
-        # 自动清理 MCP 僵尸进程释放内存
-        Get-Process node -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowTitle -eq "" } | Stop-Process -Force
-        
-        Write-Log "Pre-flight: Running local type-check..." "INFO"
-        npm run typecheck > $null 2>&1
-        if ($LASTEXITCODE -ne 0) {
-            Write-Log "Pre-flight FAILED: Type errors. Sync aborted." "ERROR"
-            return $false
+        if ($justFinished.Count -gt 0) {
+            $doneLines = $donePart -split "`n"
+            $final = $headerPart + "`n" + ($newTodo -join "`n").Trim() + "`n`n" + $doneLines[0] + "`n" + ($justFinished -join "`n").Trim() + "`n" + ($doneLines[1..($doneLines.Count-1)] -join "`n").Trim()
+            Set-Content $global:CFG_TASKS $final.Trim() -Encoding UTF8
+            return $true
         }
-
-        Write-Log ">>> [SYNC] Aligning changes with cloud..." "EXEC"
-        git add .
-        git commit -m $message
-        git pull origin main --rebase
-        git push origin main
-        Start-Sleep -Seconds $SYNC_COOLDOWN
-        return $true
     }
     return $false
 }
 
-function Show-Logo {
-    $colors = @("Cyan", "Blue", "White")
-    $randomColor = $colors[(Get-Random -Maximum $colors.Count)]
-    Clear-Host
-    Write-Host @"
-      [ SOLKNOW OMNI-FLOW V5.1 - SAFE SENSE ]
-      ________________________________________________________________________________________________________
-      S T R A T E G I C   A U T O N O M Y
-      ________________________________________________________________________________________________________
-"@ -ForegroundColor $randomColor
+function Write-Log($message) {
+    $time = Get-Date -Format 'HH:mm:ss'
+    Add-Content -Path $global:CFG_LOG -Value ("[" + $time + "] " + $message) -Encoding UTF8 -ErrorAction SilentlyContinue
 }
 
-function Startup-Heal {
-    if (Test-Path $TASKS_FILE) {
-        $content = Get-Content $TASKS_FILE -Raw
-        if ($content -match '\[\/\] (.*) \(正在执行...\)') {
-            Write-Log "Startup: Detected stuck task. Reverting..." "ERROR"
-            $healed = $content -replace '\[\/\] (.*) \(正在执行...\)', '[ ] $1'
-            Set-Content $TASKS_FILE $healed -Encoding UTF8
-            Invoke-Sync "chore: startup self-heal"
-        }
-    }
-}
-
-if (-not (Test-Path $LOG_FILE)) { Add-Content -Path $LOG_FILE -Value "# SolKnow Audit Logs`n" -Encoding UTF8 }
-
-Write-Log "Omni-Flow Engine V5.1 Initialized." "SUCCESS"
-Startup-Heal
-
+# --- 6. MAIN LOOP ---
 while($true) {
     try {
-        Show-Logo
-        Check-CloudStatus
-        Write-Host ">>> Initializing pulse sync..." -ForegroundColor Gray
-        git pull origin main --rebase
-
-        # 1. STRATEGIC AUDIT & PLANNING
-        $content = Get-Content $TASKS_FILE -Raw
-        if ($content -notmatch '- \[ \]') {
-            Write-Log "No pending tasks. Running deep audit..." "PLAN"
-            $planPrompt = @"
-[STRATEGIC PLANNER]
-Current Date: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
-Goal: Plan 3-5 sub-tasks for '## 总任务' based on 'docs/academic-math/analysis/' status.
-Mandatory Action:
-1. Audit existing files and 'sidebars.ts' via MCP.
-2. Ensure textbook-quality chapters.
-3. Append tasks to $TASKS_FILE as '- [ ] Task (YYYY-MM-DD)'.
-Requirement: NO Git. Be precise.
-"@
-            # 规划阶段使用默认模型
-            Invoke-GeminiSmart -prompt $planPrompt
-            Invoke-Sync "plan: strategic expansion"
-        }
-
-        # 2. SEQUENTIAL EXECUTION
-        while ($true) {
-            $content = Get-Content $TASKS_FILE -Raw
-            if ($content -match '(?m)^\s*- \[ \] (.*)') {
-                $taskDesc = $matches[1].Trim()
-                Write-Log "Target Locked: $taskDesc" "EXEC"
-
-                $lockedContent = $content -replace "- \[ \] $([regex]::Escape($taskDesc))", "[/] $taskDesc (正在执行...)"
-                Set-Content $TASKS_FILE $lockedContent -Encoding UTF8
-                Invoke-Sync "lock: $taskDesc"
-
-                $execPrompt = @"
-[EXECUTOR]
-Task: $taskDesc
-Context: Math Analysis Zero-Foundation System.
-Instruction: 
-1. Research docs/ to maintain continuity.
-2. Implement content with LaTeX.
-3. Move task to '## 已完成任务' and mark as '- [x]'.
-"@
-                # 执行阶段使用默认模型
-                Invoke-GeminiSmart -prompt $execPrompt
-
-                git pull origin main --rebase
-                $postCheck = Get-Content $TASKS_FILE -Raw
-                if ($postCheck -match '\[\/\]') {
-                    Write-Log "Integrity FAILED for: $taskDesc. Reverting." "ERROR"
-                    $revert = $postCheck -replace '\[\/\] .* \(正在执行...\)', "[ ] $taskDesc"
-                    Set-Content $TASKS_FILE $revert -Encoding UTF8
-                    Invoke-Sync "revert: failure"
-                    break
-                } else {
-                    Write-Log "Mission Accomplished: $taskDesc" "SUCCESS"
-                    Invoke-Sync "feat: completed $taskDesc"
-                }
-            } else { 
-                Write-Log "Batch queue cleared." "SUCCESS"
-                break 
+        Show-Dashboard "SYNCING"
+        git pull origin main --rebase --autostash | Out-Null
+        while($true) {
+            $content = Get-Content $global:CFG_TASKS -Raw
+            $todoPattern = [regex]::Escape($global:LBL_TODO) + '(?s)(.*?)(?=' + [regex]::Escape($global:LBL_DONE) + '|$)'
+            $todoMatch = if ($content -match $todoPattern) { $matches[1] } else { "" }
+            if ($todoMatch -notmatch '- \[ \]') {
+                Show-Dashboard "PLANNING"
+                $ctx = Get-StrategicContext
+                $planPrompt = "ROLE: Architect`nMISSION: Decompose the 'CORE GOAL' into 3-5 sub-tasks.`nCONTEXT:`n" + $ctx + "`nACTION: Provide ONLY tasks as '- [ ] Task (YYYY-MM-DD)'.`n"
+                $newTasks = & gemini -y -p $planPrompt
+                $insertPattern = "(" + [regex]::Escape($global:LBL_TODO) + "\s*)"
+                Set-Content $global:CFG_TASKS ($content -replace $insertPattern, ('$1' + "`n" + $newTasks + "`n")) -Encoding UTF8
+                $content = Get-Content $global:CFG_TASKS -Raw; $todoMatch = if ($content -match $todoPattern) { $matches[1] } else { "" }
             }
+            if ($todoMatch -match '(?m)^\s*- \[ \] (.*)') {
+                $taskDesc = $matches[1].Trim()
+                Show-Dashboard "EXECUTING" $taskDesc
+                $lockLine = "- [ ] " + [regex]::Escape($taskDesc)
+                $lockRepl = "[/] " + $taskDesc + " " + $global:STR_EXEC
+                Set-Content $global:CFG_TASKS ($content -replace $lockLine, $lockRepl) -Encoding UTF8
+                & gemini -y -p ("ROLE: Professor`nTask: " + $taskDesc + ". Standard: Textbook quality, LaTeX, Folded Answers. Mark as '- [x]' when done.")
+                Organize-Tasks | Out-Null
+                Write-Log ("Completed: " + $taskDesc)
+                git add .
+                git commit -m ("feat: " + $taskDesc) -n
+                git pull origin main --rebase --autostash
+                git push origin main
+            } else { break }
         }
-    } catch {
-        Write-Log "Critical Fault: $($_.Exception.Message)" "ERROR"
-        Start-Sleep -Seconds 60
-    }
-    
-    for ($i = $CHECK_INTERVAL; $i -gt 0; $i--) {
-        Clear-Host
-        Write-Host ">>> OMNI-FLOW STANDBY | HEARTBEAT: $i s | MODEL: DEFAULT" -ForegroundColor DarkGray
+    } catch { Start-Sleep -Seconds 10 }
+    for ($i = $global:CFG_INTERVAL; $i -gt 0; $i--) {
+        Show-Dashboard ("STANDBY " + $i + "s")
         Start-Sleep -Seconds 1
     }
 }

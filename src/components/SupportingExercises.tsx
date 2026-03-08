@@ -12,6 +12,7 @@ interface ExerciseItem {
 interface SupportingExercisesProps {
   exercises: ExerciseItem[];
   topic?: string;
+  fileId?: string;
 }
 
 /**
@@ -21,7 +22,9 @@ interface SupportingExercisesProps {
 export default function SupportingExercises({
   exercises,
   topic = '数学分析',
+  fileId = 'analysis',
 }: SupportingExercisesProps) {
+  const basePath = `/docs/exercises/math/${fileId}`;
   return (
     <div
       className="supporting-exercises-container"
@@ -78,7 +81,7 @@ export default function SupportingExercises({
         {exercises.map((ex, i) => (
           <Link
             key={i}
-            to={`/docs/exercises/math/analysis#${ex.slug || `练习-${ex.index}`}`}
+            to={`${basePath}#${ex.slug || `练习-${ex.index}`}`}
             style={{ textDecoration: 'none', color: 'inherit' }}
           >
             <div
@@ -126,7 +129,7 @@ export default function SupportingExercises({
         }}
       >
         <Link
-          to="/docs/exercises/math/analysis"
+          to={basePath}
           style={{
             fontSize: '0.85rem',
             display: 'flex',

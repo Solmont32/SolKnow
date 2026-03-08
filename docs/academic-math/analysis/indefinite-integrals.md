@@ -629,9 +629,10 @@ $\frac{1}{n} \ln \frac{x^n}{x^n+1} + C$
 
 <SupportingExercises
 topic="不定积分"
+fileId="analysis-integral-calculus"
 exercises={[
-{ index: 22, title: "不定积分基础", slug: "练习-22不定积分换元法" },
-{ index: 73, title: "不定积分深度技巧", slug: "练习-73不定积分深度技巧" }
+{ index: 8.1, title: "换元法与分部积分综合", slug: "练习-81换元法与分部积分的综合应用" },
+{ index: 8.2, title: "有理函数积分递归技巧", slug: "练习-82有理函数积分的递归技巧" }
 ]}
 />
 

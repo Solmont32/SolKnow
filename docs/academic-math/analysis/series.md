@@ -389,11 +389,9 @@ $a > 1$ 收敛，$a \leq 1$ 发散。
 
 <SupportingExercises
 topic="数项级数"
+fileId="analysis-series-fourier"
 exercises={[
-{ index: 116, title: "正项级数比较判别", slug: "练习-116正项级数比较判别" },
-{ index: 117, title: "交错级数误差估计", slug: "练习-117交错级数误差估计" },
-{ index: 121, title: "Abel 定理求和", slug: "练习-121abel定理求和" },
-{ index: 123, title: "级数与积分交换辨析", slug: "练习-123级数与积分交换" }
+{ index: 12.1, title: "比值与根值判别法进阶", slug: "练习-121比值判别法与根值判别法的极限情形" }
 ]}
 />
 

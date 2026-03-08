@@ -268,11 +268,9 @@ $$\lim_{(x, y) \to (0, y_0)} f(x, y) = 1 \cdot y_0 = y_0$$
 
 <SupportingExercises
 topic="多元函数极限与连续"
+fileId="analysis-multivariable-calculus"
 exercises={[
-{ index: 124, title: "多元极限路径判别", slug: "练习-124多元极限路径判别" },
-{ index: 125, title: "多元连续性判定", slug: "练习-125多元连续性判定" },
-{ index: 127, title: "全微分与可微性的预备训练", slug: "练习-127全微分与可微性" },
-{ index: 129, title: "二元函数极值基础", slug: "练习-129二元函数极值" }
+{ index: 16.1, title: "二重极限不存在证明", slug: "练习-161二重极限不存在的证明" }
 ]}
 />
 
