@@ -669,11 +669,58 @@ function Get-CodexFailureCooldownSeconds($modeLabel) {
     return 300
 }
 
+function Get-CodexTimeoutSeconds($modeLabel) {
+    if ($modeLabel -eq "planning") {
+        return 420
+    }
+    return 1200
+}
+
+function Invoke-CodexProcessWithTimeout([string[]]$args, [int]$timeoutSeconds) {
+    $stamp = Get-Date -Format "yyyyMMddHHmmssfff"
+    $tmpOut = Join-Path $env:TEMP "codex_runner_${PID}_${stamp}.out.log"
+    $tmpErr = Join-Path $env:TEMP "codex_runner_${PID}_${stamp}.err.log"
+
+    $proc = $null
+    try {
+        $proc = Start-Process -FilePath $global:CODEX_LAUNCHER -ArgumentList $args -NoNewWindow -PassThru -RedirectStandardOutput $tmpOut -RedirectStandardError $tmpErr
+        $finished = $proc.WaitForExit($timeoutSeconds * 1000)
+
+        if (-not $finished) {
+            try {
+                Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
+            } catch {}
+            return [PSCustomObject]@{
+                ExitCode = 124
+                Output = @("Codex process timed out after ${timeoutSeconds}s.")
+            }
+        }
+
+        $all = @()
+        if (Test-Path $tmpOut) {
+            $all += @(Get-Content -Path $tmpOut -ErrorAction SilentlyContinue)
+        }
+        if (Test-Path $tmpErr) {
+            $all += @(Get-Content -Path $tmpErr -ErrorAction SilentlyContinue)
+        }
+
+        return [PSCustomObject]@{
+            ExitCode = $proc.ExitCode
+            Output = $all
+        }
+    } finally {
+        Remove-Item $tmpOut -Force -ErrorAction SilentlyContinue
+        Remove-Item $tmpErr -Force -ErrorAction SilentlyContinue
+    }
+}
+
 function Invoke-CodexSmart($prompt, [string[]]$models, $modeLabel) {
+    $timeoutSeconds = Get-CodexTimeoutSeconds $modeLabel
+
     foreach ($model in $models) {
         try {
             $displayModel = if ([string]::IsNullOrWhiteSpace($model)) { "<default>" } else { $model }
-            Write-Log "Attempting pulse with Codex [$displayModel] for $modeLabel..." "INFO"
+            Write-Log "Attempting pulse with Codex [$displayModel] for $modeLabel (timeout: ${timeoutSeconds}s)..." "INFO"
 
             if (Test-Path $CodexOutputFile) {
                 Remove-Item $CodexOutputFile -Force -ErrorAction SilentlyContinue
@@ -695,8 +742,9 @@ function Invoke-CodexSmart($prompt, [string[]]$models, $modeLabel) {
 
             $args += $prompt
 
-            $cmdOutput = & $global:CODEX_LAUNCHER @args 2>&1
-            $exitCode = $LASTEXITCODE
+            $execResult = Invoke-CodexProcessWithTimeout -args $args -timeoutSeconds $timeoutSeconds
+            $cmdOutput = $execResult.Output
+            $exitCode = $execResult.ExitCode
 
             if ($exitCode -eq 0) {
                 if (Test-Path $CodexOutputFile) {
