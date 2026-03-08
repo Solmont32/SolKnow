@@ -300,6 +300,7 @@ const sidebars: SidebarsConfig = {
           label: '大学数学练习',
           items: [
             { type: 'doc', id: 'exercises/math/analysis', label: '数学分析练习' },
+            { type: 'doc', id: 'exercises/math/real-analysis-lp', label: '实变函数练习（Lp）' },
             { type: 'doc', id: 'exercises/math/algebra', label: '高等代数练习' },
           ],
         },
