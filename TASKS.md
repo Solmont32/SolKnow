@@ -6,7 +6,17 @@
 - （暂无，已清空）
 
 ## 已完成任务
-- [x] 新增『小学奥数逻辑推理：列表-假设-排除』教材化章节 (2026-03-08)：新增 `docs/academic-math/competition/elementary/logic.md`，补全方法体系并提供 4 道例题与 3 道章内折叠练习。 (2026-03-08)
+- [x] 新增『高等代数：向量空间与线性变换』教材化章节 (2026-03-08)：新增 docs/academic-math/algebra/vector-spaces-and-linear-transformations.md，系统化子空间/维数公式/核与像/基变换，补充 4 道例题与 4 道折叠练习。 (2026-03-08)
+- [x] 扩容『高等代数练习库』向量空间与线性变换题组 (2026-03-08)：更新 docs/exercises/math/algebra.md 新增练习 E1-E5，全部支持点击展开过程与答案。 (2026-03-08)
+- [x] 打通『高等代数章节-首页-侧边栏』联动闭环 (2026-03-08)：更新 docs/academic-math/algebra/index.md 与 sidebars.ts，新增向量空间专题入口并保持学习路径连续。 (2026-03-08)
+- [x] 新增『离散数学：关系闭包与 Warshall 算法』教材化章节 (2026-03-08)：新增 `docs/academic-math/discrete-math/relation-closures-and-warshall.md`，系统覆盖自反/对称/传递闭包、关系矩阵与 Warshall，补充 5 道例题与 4 道折叠练习。 (2026-03-08)
+- [x] 扩容『离散数学练习库』关系闭包与可达性题组 (2026-03-08)：更新 `docs/exercises/math/discrete-math.md` 新增练习 27-34，全部支持点击展开过程与答案。 (2026-03-08)
+- [x] 打通『离散数学章节-侧边栏-学习路径』闭环 (2026-03-08)：更新 `docs/academic-math/discrete-math/index.md` 与 `sidebars.ts`，接入“关系闭包与 Warshall 算法”专题。 (2026-03-08  )`r`n- [x] 新增『初中竞赛几何：平移对称与最短路径构造』教材化专题 (2026-03-08)：新增 `docs/academic-math/competition/junior/transform-and-shortest-path.md`，系统讲解折线拉直、轴对称最短路与平移替换，补充 4 道例题与 4 道折叠练习。 (2026-03-08)
+- [x] 扩容『初中数学竞赛练习库』平移对称题组 (2026-03-08)：更新 `docs/exercises/math/competition/junior.md` 新增练习 25-28，全部支持点击展开过程与答案。 (2026-03-08)
+- [x] 打通『初中竞赛平移专题-导航-练习』联动闭环 (2026-03-08)：更新 `docs/academic-math/competition/junior/index.md` 与 `sidebars.ts`，新增专题入口并同步学习路径。 (2026-03-08)
+- [x] 新增『强连通分量（Tarjan / SCC）』教材化专题 (2026-03-08)：新增 `docs/graph/tarjan.md`，系统化 low/dfn 原理、缩点 DAG 性质与 5 道例题，配套 3 道章内折叠练习。 (2026-03-08)
+- [x] 新增『算法竞赛练习库：强连通分量专题』(2026-03-08)：新增 `docs/exercises/cs/algorithm-scc.md`，提供 6 道分层练习并全部采用“点击展开过程与答案”的折叠格式。 (2026-03-08)
+- [x] 打通『图论教程-SCC练习-侧边栏』联动 (2026-03-08)：更新 `docs/graph/index.md` 与 `sidebars.ts`，新增 SCC 教程和练习入口，形成章节到训练闭环。 (2026-03-08 )`r`n- [x] 新增『小学奥数逻辑推理：列表-假设-排除』教材化章节 (2026-03-08)：新增 `docs/academic-math/competition/elementary/logic.md`，补全方法体系并提供 4 道例题与 3 道章内折叠练习。 (2026-03-08)
 - [x] 扩容『小学奥数练习库』至 40 题并新增逻辑推理题组 (2026-03-08)：更新 `docs/exercises/math/competition/elementary.md` 新增练习 33-40，全部支持点击展开过程与答案。 (2026-03-08)
 - [x] 打通『小学奥数逻辑专题-导航-侧边栏』联动闭环 (2026-03-08)：更新 `docs/academic-math/competition/elementary/index.md` 与 `sidebars.ts`，新增逻辑专题入口并同步题量文案。 (2026-03-08)
 - [x] 深化『抽象代数：模论与域扩张（教材化精修）』(2026-03-08)：补全模的定义、子模/商模、自由模结构与域扩张次数计算，统一例题驱动叙述。 (2026-03-08)
@@ -231,6 +241,13 @@
 - [x] 新增『初中竞赛几何：面积法与相似构造』教材化专题 (2026-03-08)：新增 `docs/academic-math/competition/junior/geometry-area-method.md`，系统讲解同高同底面积比、平行线相似模型，补充 4 道例题与 4 道折叠练习。 (2026-03-08)
 - [x] 扩容『初中数学竞赛练习库』面积法题组 (2026-03-08)：更新 `docs/exercises/math/competition/junior.md` 新增练习 21-24，全部支持点击展开过程与答案。 (2026-03-08)
 - [x] 打通『初中竞赛面积法专题-导航-练习』联动闭环 (2026-03-08)：更新 `docs/academic-math/competition/junior/index.md` 与 `sidebars.ts`，新增专题入口并同步学习路径。 (2026-03-08)
+
+
+
+
+
+
+
 
 
 
