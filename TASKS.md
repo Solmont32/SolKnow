@@ -1,17 +1,20 @@
 # SolKnow 自动化任务清单 (TASKS.md)
 ## 总任务
-- 数学知识库高中数学竞赛教程（对标教科书）：知识点详细，一个知识点对应多道例题，同时增加练习库中的练习，练习需要有多道，答案折叠，点击才显示过程和答案；
+- 数学知识库小学奥数教程（对标教科书）：知识点详细，一个知识点对应多道例题，同时增加练习库中的练习，练习需要有多道，答案折叠，点击才显示过程和答案；
 
 ## 待办子任务
 - （暂无，已清空）
 
 ## 已完成任务
-- [x] 深化『抽象代数：模论与域扩张（教材化精修）』(2026-03-08)：补全模的定义、子模/商模、自由模结构与域扩张次数计算，统一例题驱动叙述。 (2026-03-08)
+- [x] 新增『小学奥数逻辑推理：列表-假设-排除』教材化章节 (2026-03-08)：新增 `docs/academic-math/competition/elementary/logic.md`，补全方法体系并提供 4 道例题与 3 道章内折叠练习。 (2026-03-08)
+- [x] 扩容『小学奥数练习库』至 40 题并新增逻辑推理题组 (2026-03-08)：更新 `docs/exercises/math/competition/elementary.md` 新增练习 33-40，全部支持点击展开过程与答案。 (2026-03-08)
+- [x] 打通『小学奥数逻辑专题-导航-侧边栏』联动闭环 (2026-03-08)：更新 `docs/academic-math/competition/elementary/index.md` 与 `sidebars.ts`，新增逻辑专题入口并同步题量文案。 (2026-03-08)- [x] 深化『抽象代数：模论与域扩张（教材化精修）』(2026-03-08)：补全模的定义、子模/商模、自由模结构与域扩张次数计算，统一例题驱动叙述。 (2026-03-08)
 - [x] 扩容『抽象代数练习库』模与域扩张题组 (2026-03-08)：新增 5 道分层练习（16-20），全部采用点击折叠展示解析与答案。 (2026-03-08)
 - [x] 完成『抽象代数章节-练习-导航』闭环接入 (2026-03-08)：更新抽象代数首页学习顺序并接入新章节入口，强化学习路径闭环。 (2026-03-08)
 - [x] 深化『第一章 实数集与函数』教材化结构 (2026-03-08)：重写 `docs/academic-math/analysis/real-numbers-and-functions.md`，补充 4 道例题与 4 道折叠练习，并接入前四章专题练习入口。 (2026-03-08)
 - [x] 深化『第二章 数列极限』教材化结构 (2026-03-08)：重写 `docs/academic-math/analysis/limits.md`，完善定义法/单调有界/Stolz/Cauchy 主线，新增 4 道例题与 4 道折叠练习。 (2026-03-08)
-- [x] 新增『前四章基础专题练习库』并打通导航 (2026-03-08)：新增 `docs/exercises/math/analysis-foundations.md`（10 题，全部折叠解析），同步更新 `docs/academic-math/analysis/index.md` 与 `sidebars.ts`。 (2026-03-08)`r`n- [x] 新增『离散数学：布尔代数与逻辑电路』教材化章节 (2026-03-08)：新增 docs/academic-math/discrete-math/boolean-algebra-and-logic-circuits.md，系统化布尔定律、标准形、卡诺图最小化与门级实现，补充 5 道例题与 4 道折叠练习。 (2026-03-08)
+- [x] 新增『前四章基础专题练习库』并打通导航 (2026-03-08)：新增 `docs/exercises/math/analysis-foundations.md`（10 题，全部折叠解析），同步更新 `docs/academic-math/analysis/index.md` 与 `sidebars.ts`。 (2026-03-08)
+- [x] 新增『离散数学：布尔代数与逻辑电路』教材化章节 (2026-03-08)：新增 docs/academic-math/discrete-math/boolean-algebra-and-logic-circuits.md，系统化布尔定律、标准形、卡诺图最小化与门级实现，补充 5 道例题与 4 道折叠练习。 (2026-03-08)
 - [x] 新增『离散数学：递推关系与生成函数』教材化章节 (2026-03-08)：新增 docs/academic-math/discrete-math/recurrence-and-generating-functions.md，补全一阶/二阶递推、非齐次解法与 OGF 方法，补充 5 道例题与 4 道折叠练习。 (2026-03-08)
 - [x] 扩容『离散数学练习库』至 26 题并打通新章节导航 (2026-03-08)：重写 docs/exercises/math/discrete-math.md 新增布尔代数与递推题组，更新 docs/academic-math/discrete-math/index.md 与 sidebars.ts 接入新专题。 (2026-03-08)
 - [x] 深化『线性 DP』教材化结构 (2026-03-08)：重写 docs/dp/linear-dp.md，补全状态设计、LIS/LCS/编辑距离三大模型、模板代码与多道章内折叠练习。 (2026-03-08)
@@ -227,6 +230,8 @@
 - [x] 新增『初中竞赛几何：面积法与相似构造』教材化专题 (2026-03-08)：新增 `docs/academic-math/competition/junior/geometry-area-method.md`，系统讲解同高同底面积比、平行线相似模型，补充 4 道例题与 4 道折叠练习。 (2026-03-08)
 - [x] 扩容『初中数学竞赛练习库』面积法题组 (2026-03-08)：更新 `docs/exercises/math/competition/junior.md` 新增练习 21-24，全部支持点击展开过程与答案。 (2026-03-08)
 - [x] 打通『初中竞赛面积法专题-导航-练习』联动闭环 (2026-03-08)：更新 `docs/academic-math/competition/junior/index.md` 与 `sidebars.ts`，新增专题入口并同步学习路径。 (2026-03-08)
+
+
 
 
 

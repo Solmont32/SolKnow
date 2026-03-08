@@ -8,4 +8,5 @@
 - [区间 DP](range-dp)
 - [树形 DP](tree-dp)
 - [状态压缩 DP](state-compression-dp)
+- [算法竞赛练习：线性 DP 专题](/exercises/cs/algorithm-linear-dp)
 - <!-- [数位 DP](digit-dp) --> <!-- 待补充 -->
