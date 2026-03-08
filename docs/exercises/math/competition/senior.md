@@ -555,3 +555,114 @@ x_n\equiv1.
 $$
 这体现了“先找不动点，再看初值是否落在不动点上”的竞赛思路。
 </details>
+
+## 练习 31：和角公式应用（基础）
+已知 $\sin x=\frac35,\cos x=\frac45$（$x$ 为第一象限角），求 $\sin 2x$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+$$
+\sin2x=2\sin x\cos x=2\cdot\frac35\cdot\frac45=\frac{24}{25}.
+$$
+</details>
+
+## 练习 32：三角方程（提高）
+解方程
+$$
+\sin x+\sin2x=0,\quad x\in[0,2\pi).
+$$
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+提取公因式：
+$$
+\sin x(1+2\cos x)=0.
+$$
+故
+$$
+\sin x=0 \Rightarrow x=0,\pi;
+$$
+或
+$$
+\cos x=-\frac12 \Rightarrow x=\frac{2\pi}{3},\frac{4\pi}{3}.
+$$
+综上解为
+$$
+x=0,\frac{2\pi}{3},\pi,\frac{4\pi}{3}.
+$$
+</details>
+
+## 练习 33：半角换元（挑战）
+设 $t=\tan\frac x2$，把
+$$
+\frac{1-\cos x}{\sin x}
+$$
+化为 $t$ 的有理式。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+半角公式：
+$$
+\sin x=\frac{2t}{1+t^2},\quad \cos x=\frac{1-t^2}{1+t^2}.
+$$
+故
+$$
+\frac{1-\cos x}{\sin x}
+=\frac{1-\frac{1-t^2}{1+t^2}}{\frac{2t}{1+t^2}}
+=\frac{\frac{2t^2}{1+t^2}}{\frac{2t}{1+t^2}}=t.
+$$
+</details>
+
+## 练习 34：复数运算（基础）
+设 $z=2-3i$，求 $\frac{1}{z}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+$$
+\frac1z=\frac{\bar z}{|z|^2}=\frac{2+3i}{2^2+(-3)^2}=\frac{2+3i}{13}.
+$$
+</details>
+
+## 练习 35：复数模与不等式（提高）
+设 $|z-1|=2$，求 $|z|$ 的取值范围。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+几何上，$z$ 在以 $1$ 为圆心、半径 2 的圆上。
+到原点距离满足三角不等式：
+$$
+||z-1|-|1||\le|z|\le|z-1|+|1|.
+$$
+代入得
+$$
+1\le|z|\le3.
+$$
+</details>
+
+## 练习 36：单位根方程（挑战）
+解方程
+$$
+z^3=8i.
+$$
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+写成极形式：
+$$
+8i=8\left(\cos\frac\pi2+i\sin\frac\pi2\right).
+$$
+三次根为
+$$
+z_k=2\left(\cos\frac{\pi/2+2k\pi}{3}+i\sin\frac{\pi/2+2k\pi}{3}\right),\ k=0,1,2.
+$$
+即幅角分别为
+$$
+\frac\pi6,\ \frac{5\pi}6,\ \frac{3\pi}2.
+$$
+</details>

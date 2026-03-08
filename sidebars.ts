@@ -114,6 +114,7 @@ const sidebars: SidebarsConfig = {
                 'academic-math/competition/junior/transform-and-shortest-path',
                 'academic-math/competition/junior/number-theory-basic',
                 'academic-math/competition/junior/combinatorics',
+                'academic-math/competition/junior/invariant-and-coloring',
                 'academic-math/competition/junior/inequalities-and-equations',
               ]
             },
@@ -127,6 +128,7 @@ const sidebars: SidebarsConfig = {
                 'academic-math/competition/senior/inequalities',
                 'academic-math/competition/senior/polynomials-and-equations',
                 'academic-math/competition/senior/recurrence-and-fixed-points',
+                'academic-math/competition/senior/trigonometry-and-complex',
                 'academic-math/competition/senior/geometry-theorems',
                 'academic-math/competition/senior/number-theory-advanced',
                 'academic-math/competition/senior/combinatorics-advanced',
@@ -233,8 +235,8 @@ const sidebars: SidebarsConfig = {
                 },
               ]
             },
-            { type: 'category', collapsible: true, collapsed: true, label: '高等代数', link: {type: 'doc', id: 'academic-math/algebra/index'}, items: ['academic-math/algebra/polynomial', 'academic-math/algebra/determinant', 'academic-math/algebra/linear-equations', 'academic-math/algebra/vector-spaces-and-linear-transformations', 'academic-math/algebra/matrix', 'academic-math/algebra/quadratic-forms'] },
-            { type: 'category', collapsible: true, collapsed: true, label: '抽象代数', link: {type: 'doc', id: 'academic-math/abstract-algebra/index'}, items: ['academic-math/abstract-algebra/groups', 'academic-math/abstract-algebra/rings', 'academic-math/abstract-algebra/modules-and-field-extensions', 'academic-math/abstract-algebra/lattices'] },
+            { type: 'category', collapsible: true, collapsed: true, label: '高等代数', link: {type: 'doc', id: 'academic-math/algebra/index'}, items: ['academic-math/algebra/polynomial', 'academic-math/algebra/determinant', 'academic-math/algebra/linear-equations', 'academic-math/algebra/vector-spaces-and-linear-transformations', 'academic-math/algebra/eigenvalues-and-jordan-form', 'academic-math/algebra/matrix', 'academic-math/algebra/quadratic-forms'] },
+            { type: 'category', collapsible: true, collapsed: true, label: '抽象代数', link: {type: 'doc', id: 'academic-math/abstract-algebra/index'}, items: ['academic-math/abstract-algebra/groups', 'academic-math/abstract-algebra/group-actions-and-sylow', 'academic-math/abstract-algebra/rings', 'academic-math/abstract-algebra/modules-and-field-extensions', 'academic-math/abstract-algebra/lattices'] },
             { type: 'category', collapsible: true, collapsed: true, label: '离散数学', link: {type: 'doc', id: 'academic-math/discrete-math/index'}, items: ['academic-math/discrete-math/logic', 'academic-math/discrete-math/set-theory', 'academic-math/discrete-math/relations-and-functions', 'academic-math/discrete-math/relation-closures-and-warshall', 'academic-math/discrete-math/boolean-algebra-and-logic-circuits', 'academic-math/discrete-math/graph-theory', 'academic-math/discrete-math/combinatorics', 'academic-math/discrete-math/recurrence-and-generating-functions'] },
           ],
         },
@@ -321,6 +323,7 @@ const sidebars: SidebarsConfig = {
           items: [
             { type: 'doc', id: 'exercises/math/analysis', label: '数学分析练习' },
             { type: 'doc', id: 'exercises/math/analysis-foundations', label: '前四章基础专题练习' },
+            { type: 'doc', id: 'exercises/math/analysis-function-sequences', label: '函数列与函数项级数专题练习' },
             { type: 'doc', id: 'exercises/math/analysis-derivatives-mean-value', label: '导数与中值定理专题练习' },
             { type: 'doc', id: 'exercises/math/analysis-differential-geometry', label: '微分几何专题练习' },
             { type: 'doc', id: 'exercises/math/real-analysis', label: '实变函数练习' },
@@ -382,4 +385,9 @@ const sidebars: SidebarsConfig = {
 
 
 export default sidebars;
+
+
+
+
+
 

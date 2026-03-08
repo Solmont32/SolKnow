@@ -370,3 +370,131 @@ A=\begin{pmatrix}2&1\\4&2\end{pmatrix},\quad \det A=2\cdot2-4\cdot1=0.
 $$
 行向量线性相关，秩为 1，不满秩，故 $T$ 不可逆。
 </details>
+
+## F. 特征值与 Jordan 标准形专题加练
+
+### 练习 F1：特征值与特征子空间
+设
+$$
+A=\begin{pmatrix}
+2&0&0\\
+0&2&1\\
+0&0&2
+\end{pmatrix}.
+$$
+求特征值及 $\dim E_2$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+唯一特征值为 2（代数重数 3）。
+$$
+A-2I=\begin{pmatrix}
+0&0&0\\
+0&0&1\\
+0&0&0
+\end{pmatrix}
+$$
+方程 $(A-2I)x=0$ 给出 $x_3=0$，$x_1,x_2$ 自由。
+故
+$$
+\dim E_2=2.
+$$
+</details>
+
+### 练习 F2：可对角化判定
+设
+$$
+A=\begin{pmatrix}
+1&1&0\\
+0&1&0\\
+0&0&3
+\end{pmatrix}.
+$$
+判断是否可对角化。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+特征值为 1（代数重数 2）与 3（代数重数 1）。
+对 $\lambda=1$：
+$$
+A-I=\begin{pmatrix}
+0&1&0\\
+0&0&0\\
+0&0&2
+\end{pmatrix},
+$$
+故特征子空间维数为 1。于是总特征向量数不足 3，
+矩阵不可对角化。
+</details>
+
+### 练习 F3：最小多项式识别
+设
+$$
+A=\begin{pmatrix}
+0&1\\
+0&0
+\end{pmatrix}.
+$$
+求 $m_A(x)$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+有
+$$
+A^2=0,\ A\neq0.
+$$
+因此最低次首一湮灭多项式为
+$$
+m_A(x)=x^2.
+$$
+</details>
+
+### 练习 F4：Jordan 块与核维数
+设 5 阶矩阵 $A$ 的唯一特征值为 4，且
+$$
+\dim\ker(A-4I)=2,
+\quad \dim\ker((A-4I)^2)=4,
+\quad \dim\ker((A-4I)^3)=5.
+$$
+写出 Jordan 块大小。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+块个数是 $\dim\ker(A-4I)=2$。核维数增长量依次为 $2,2,1$，说明两块中一块长度至少 3，另一块长度至少 2，总和为 5。
+故块大小为
+$$
+3+2.
+$$
+即 Jordan 形为 $\operatorname{diag}(J_3(4),J_2(4))$。
+</details>
+
+### 练习 F5：Jordan 块幂计算
+设
+$$
+J=\begin{pmatrix}
+\lambda&1\\
+0&\lambda
+\end{pmatrix}.
+$$
+求 $J^n$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+记 $J=\lambda I+N$，其中
+$$
+N=\begin{pmatrix}0&1\\0&0\end{pmatrix},\ N^2=0.
+$$
+则
+$$
+J^n=(\lambda I+N)^n=\lambda^n I+n\lambda^{n-1}N
+=\begin{pmatrix}
+\lambda^n&n\lambda^{n-1}\\
+0&\lambda^n
+\end{pmatrix}.
+$$
+</details>

@@ -1,11 +1,26 @@
 # SolKnow 自动化任务清单 (TASKS.md)
 ## 总任务
-- 数学知识库数学分析教程（对标教科书）：知识点详细，一个知识点对应多道例题，同时增加练习库中的练习，练习需要有多道，答案折叠，点击才显示过程和答案；
+- 数学知识库高中数学竞赛教程（对标教科书）：知识点详细，一个知识点对应多道例题，同时增加练习库中的练习，练习需要有多道，答案折叠，点击才显示过程和答案；
 
 ## 待办子任务
 - （暂无，已清空）
 
 ## 已完成任务
+- [x] 新增『高中竞赛代数：三角与复数方法』教材化专题 (2026-03-08)：新增 docs/academic-math/competition/senior/trigonometry-and-complex.md，补全恒等变形、三角方程、复数模幅角与单位圆方法，提供 5 道例题 + 4 道折叠练习。 (2026-03-08)
+- [x] 扩容『高中数学竞赛练习库（综合）』三角与复数题组 (2026-03-08)：更新 docs/exercises/math/competition/senior.md 新增练习 31-36，全部支持点击展开过程与答案。 (2026-03-08)
+- [x] 打通『高中数学竞赛学习路径』三角复数专题联动 (2026-03-08)：更新 docs/academic-math/competition/senior/index.md 与 sidebars.ts，新增三角复数专题入口并同步学习提示。 (2026-03-08)
+- [x] 新增『初中竞赛组合：不变量与染色构造』教材化专题 (2026-03-08)：新增 `docs/academic-math/competition/junior/invariant-and-coloring.md`，系统覆盖奇偶/模不变量、棋盘染色与可达性构造，提供 4 道例题 + 4 道折叠练习。 (2026-03-08)
+- [x] 扩容『初中数学竞赛练习库』不变量与染色题组 (2026-03-08)：更新 `docs/exercises/math/competition/junior.md` 新增练习 29-32，全部支持点击展开过程与答案。 (2026-03-08)
+- [x] 打通『初中竞赛不变量专题-导航-练习』联动闭环 (2026-03-08)：更新 `docs/academic-math/competition/junior/index.md` 与 `sidebars.ts`，新增专题入口并同步学习路径。 (2026-03-08)
+- [x] 完成『函数列与函数项级数章节教材化精修』(2026-03-08)：重写 docs/academic-math/analysis/function-sequences.md，补全一致收敛判别主线并新增 5 道例题与 5 道章内折叠练习。 (2026-03-08)
+- [x] 新增『函数列与函数项级数专题练习库』(2026-03-08)：新增 docs/exercises/math/analysis-function-sequences.md，提供 10 道分层练习并统一“点击展开过程与答案”格式。 (2026-03-08)
+- [x] 打通『分析学第十三章-练习库-侧边栏』联动闭环 (2026-03-08)：更新 docs/academic-math/analysis/index.md 与 sidebars.ts，接入专题练习入口。 (2026-03-08)
+- [x] 新增『抽象代数：群作用与 Sylow 定理』教材化章节 (2026-03-08)：完善 docs/academic-math/abstract-algebra/group-actions-and-sylow.md，系统覆盖轨道稳定子、类方程、Sylow 计数，新增 6 道例题与 6 道折叠练习。 (2026-03-08)
+- [x] 扩容『抽象代数练习库』群作用与 Sylow 专题 (2026-03-08)：更新 docs/exercises/math/abstract-algebra.md 新增练习 21-26，全部支持点击展开过程与答案。 (2026-03-08)
+- [x] 打通『抽象代数章节-首页-侧边栏』群作用专题联动 (2026-03-08)：更新 docs/academic-math/abstract-algebra/index.md 与 sidebars.ts，新增群作用与 Sylow 专题入口并同步学习顺序。 (2026-03-08)
+- [x] 新增『高等代数：特征值、特征向量与 Jordan 标准形』教材化章节 (2026-03-08)：新增 docs/academic-math/algebra/eigenvalues-and-jordan-form.md，系统覆盖特征值计算、可对角化判定、最小多项式与 Jordan 形，补充 5 道例题 + 4 道折叠练习。 (2026-03-08)
+- [x] 扩容『高等代数练习库』特征值与 Jordan 题组 (2026-03-08)：更新 docs/exercises/math/algebra.md 新增练习 F1-F5，全部支持点击展开过程与答案。 (2026-03-08)
+- [x] 打通『高等代数章节-首页-侧边栏』Jordan 专题联动 (2026-03-08)：更新 docs/academic-math/algebra/index.md 与 sidebars.ts，新增专题入口并保持学习路径连续。 (2026-03-08)
 - [x] 新增『高中竞赛代数：递推、函数迭代与不动点』教材化专题 (2026-03-08)：新增 docs/academic-math/competition/senior/recurrence-and-fixed-points.md，补全递推解法、不动点稳定性与 5 道例题 + 4 道折叠练习。 (2026-03-08)
 - [x] 扩容『高中数学竞赛练习库（综合）』递推与迭代题组 (2026-03-08)：更新 docs/exercises/math/competition/senior.md 新增练习 25-30，全部支持点击展开过程与答案。 (2026-03-08)
 - [x] 打通『高中数学竞赛学习路径』递推专题联动 (2026-03-08)：更新 docs/academic-math/competition/senior/index.md 与 sidebars.ts，新增递推专题入口并同步学习提示。 (2026-03-08)
@@ -250,6 +265,17 @@
 - [x] 新增『初中竞赛几何：面积法与相似构造』教材化专题 (2026-03-08)：新增 `docs/academic-math/competition/junior/geometry-area-method.md`，系统讲解同高同底面积比、平行线相似模型，补充 4 道例题与 4 道折叠练习。 (2026-03-08)
 - [x] 扩容『初中数学竞赛练习库』面积法题组 (2026-03-08)：更新 `docs/exercises/math/competition/junior.md` 新增练习 21-24，全部支持点击展开过程与答案。 (2026-03-08)
 - [x] 打通『初中竞赛面积法专题-导航-练习』联动闭环 (2026-03-08)：更新 `docs/academic-math/competition/junior/index.md` 与 `sidebars.ts`，新增专题入口并同步学习路径。 (2026-03-08)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
