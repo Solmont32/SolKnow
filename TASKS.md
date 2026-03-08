@@ -1,6 +1,6 @@
 # SolKnow 自动化任务清单 (TASKS.md)
 ## 总任务
-- 数学知识库数学分析教程（对标教科书）：知识点详细，一个知识点对应多道例题，同时增加练习库中的练习，练习需要有多道，答案折叠，点击才显示过程和答案；
+- 数学知识库高等代数教程（对标教科书）：知识点详细，一个知识点对应多道例题，同时增加练习库中的练习，练习需要有多道，答案折叠，点击才显示过程和答案；
 
 ## 待办子任务
 - （暂无，已清空）
@@ -11,7 +11,8 @@
 - [x] 打通『图论教程-MST练习』联动 (2026-03-08)：更新 `docs/graph/index.md` 与 `sidebars.ts`，新增最小生成树练习入口，形成教程到练习闭环。 (2026-03-08)
 - [x] 深度重构『离散数学：命题逻辑与谓词逻辑』章节 (2026-03-08)：重写 docs/academic-math/discrete-math/logic.md，补全命题等值、推理规则、CNF/DNF 与量词否定，新增 6 道例题与 4 道折叠练习。 (2026-03-08)
 - [x] 深度重构『离散数学：图论基础与组合数学』章节 (2026-03-08)：重写 docs/academic-math/discrete-math/graph-theory.md 与 docs/academic-math/discrete-math/combinatorics.md，系统化树/二分图/欧拉路与计数原理/容斥/递推，并补充多道教材化例题和折叠练习。 (2026-03-08)
-- [x] 扩容『离散数学练习库』并统一折叠答案规范 (2026-03-08)：重写 docs/exercises/math/discrete-math.md，按逻辑/集合关系/图论/组合扩展为 18 题，全部支持“点击查看解析与答案”。 (2026-03-08)`r`n- [x] 深化『小学奥数计数专题：分类-容斥-抽屉-递推』(2026-03-08)：重写 `docs/academic-math/competition/elementary/counting.md`，补全 7 道教材化例题与 4 道章内折叠练习。 (2026-03-08)
+- [x] 扩容『离散数学练习库』并统一折叠答案规范 (2026-03-08)：重写 docs/exercises/math/discrete-math.md，按逻辑/集合关系/图论/组合扩展为 18 题，全部支持“点击查看解析与答案”。 (2026-03-08)
+- [x] 深化『小学奥数计数专题：分类-容斥-抽屉-递推』(2026-03-08)：重写 `docs/academic-math/competition/elementary/counting.md`，补全 7 道教材化例题与 4 道章内折叠练习。 (2026-03-08)
 - [x] 深化『小学奥数几何专题：等积-比例-割补』(2026-03-08)：重写 `docs/academic-math/competition/elementary/geometry.md`，补全 7 道教材化例题与 4 道章内折叠练习。 (2026-03-08)
 - [x] 扩容『小学奥数练习库』至 24 题并同步导航文案 (2026-03-08)：扩展 `docs/exercises/math/competition/elementary.md` 新增 8 道折叠练习，并更新 `docs/academic-math/competition/elementary/index.md`。 (2026-03-08)
 - [x] 深化『矩阵与线性变换』教材页 (2026-03-08)：重写 docs/academic-math/algebra/matrix.md，补全矩阵运算、秩与可逆性、特征值与相似对角化，新增 3 道例题与 3 道折叠练习。 (2026-03-08)
@@ -19,7 +20,7 @@
 - [x] 扩容『高等代数练习库』矩阵与多项式专题 (2026-03-08)：扩展 docs/exercises/math/algebra.md，新增 D1-D4 四道专题练习并统一折叠解析。 (2026-03-08)
 - [x] 深化『第五章 导数与微分』教材化结构 (2026-03-08)：重写 docs/academic-math/analysis/derivatives.md，补充定义法/对数求导/高阶导数/微分近似共 4 道例题，并新增 4 道折叠练习。 (2026-03-08)
 - [x] 深化『第六章 微分中值定理及其应用』教材化内容 (2026-03-08)：重写 docs/academic-math/analysis/mean-value-theorems.md，扩展中值定理、L'Hopital、Taylor 余项与 4 道例题 + 4 道折叠练习。 (2026-03-08)
-- [x] 新增『导数与中值定理专题练习库』并打通导航 (2026-03-08)：新增 docs/exercises/math/analysis-derivatives-mean-value.md（10 题，全部折叠解析），同步更新 docs/academic-math/analysis/index.md 与 sidebars.ts。 (2026-03-08)
+- [x] 新增『导数与中值定理专题练习库』并打通导航 (2026-03-08)：新增 docs/exercises/math/analysis-derivatives-mean-value.md（10 题，全部折叠解析），同步更新 docs/academic-math/analysis/index.md。 (2026-03-08)
 - [x] 深度重构『抽象代数：格与布尔代数』教材页 (2026-03-08)：重写 `docs/academic-math/abstract-algebra/lattices.md`，补全偏序-格-分配格-布尔代数主线，新增 4 道例题与 3 道折叠练习。 (2026-03-08)
 - [x] 扩容『抽象代数练习库』格论专题 (2026-03-08)：扩展 `docs/exercises/math/abstract-algebra.md`，新增 5 道格与布尔代数分层练习，全部支持点击展开过程与答案。 (2026-03-08)
 - [x] 强化『抽象代数首页学习路径』与练习闭环 (2026-03-08)：更新 `docs/academic-math/abstract-algebra/index.md` 学习顺序，明确格论专题的学习位置与训练目标。 (2026-03-08)
