@@ -96,3 +96,37 @@ $= \frac{2}{L} [0 + (\frac{L}{n\pi})^2 \cos \frac{n\pi x}{L} \Big|_0^L] = \frac{
 #### 答案
 $|x| = \frac{L}{2} - \frac{4L}{\pi^2} \sum_{k=0}^\infty \frac{1}{(2k+1)^2} \cos \frac{(2k+1)\pi x}{L}$
 </details>
+
+### 练习 15.4：Parseval 等式与 Basel 问题
+利用 $f(x) = x$ 在 $(-\pi, \pi)$ 上的 Fourier 展开，计算 $\sum_{n=1}^\infty \frac{1}{n^2}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **Fourier 展开**：
+   $f(x) = x$ 是奇函数，$a_n = 0$。
+   $b_n = \frac{2}{\pi} \int_0^\pi x \sin nx dx = \frac{2}{\pi} [-\frac{x}{n} \cos nx \Big|_0^\pi + \int_0^\pi \frac{1}{n} \cos nx dx]$
+   $= \frac{2}{\pi} [-\frac{\pi}{n} (-1)^n + 0] = \frac{2(-1)^{n+1}}{n}$。
+   故 $x = 2 \sum_{n=1}^\infty \frac{(-1)^{n+1}}{n} \sin nx$。
+2. **利用 Parseval 等式**：
+   $\frac{1}{\pi} \int_{-\pi}^\pi |f(x)|^2 dx = \frac{a_0^2}{2} + \sum_{n=1}^\infty (a_n^2 + b_n^2)$
+   左边 $= \frac{1}{\pi} \int_{-\pi}^\pi x^2 dx = \frac{1}{\pi} [\frac{x^3}{3}]_{-\pi}^\pi = \frac{2\pi^2}{3}$。
+   右边 $= 0 + \sum_{n=1}^\infty (\frac{2(-1)^{n+1}}{n})^2 = 4 \sum_{n=1}^\infty \frac{1}{n^2}$。
+   故 $4 \sum_{n=1}^\infty \frac{1}{n^2} = \frac{2\pi^2}{3} \implies \sum_{n=1}^\infty \frac{1}{n^2} = \frac{\pi^2}{6}$。
+
+#### 答案
+$\pi^2/6$
+</details>
+
+---
+
+## 延伸入口
+
+- [第十二章 数项级数](/docs/academic-math/analysis/series)
+- [第十三章 函数列与函数项级数](/docs/academic-math/analysis/function-sequences)
+- [第十四章 幂级数](/docs/academic-math/analysis/power-series)
+- [第十五章 傅里叶级数](/docs/academic-math/analysis/fourier-series)
+- [数学分析综合练习库](/docs/exercises/math/analysis)
+
+

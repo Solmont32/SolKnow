@@ -89,6 +89,29 @@ $-\ln|\frac{1}{x+1}-\frac{1}{2} + \sqrt{(\frac{1}{x+1})^2-\frac{1}{x+1}+1}| + C$
 证毕。
 </details>
 
+### 练习 9.4：Wallis 积分的递推与极限
+设 $I_n = \int_0^{\pi/2} \sin^n x dx$。
+1. 证明 $I_n = \frac{n-1}{n} I_{n-2}$。
+2. 求 $\lim_{n \to \infty} \frac{I_n}{I_{n-1}}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **递推公式**：
+   $I_n = \int_0^{\pi/2} \sin^{n-1} x d(-\cos x) = [-\sin^{n-1} x \cos x]_0^{\pi/2} + (n-1) \int_0^{\pi/2} \sin^{n-2} x \cos^2 x dx$
+   $= 0 + (n-1) \int_0^{\pi/2} \sin^{n-2} x (1 - \sin^2 x) dx = (n-1)I_{n-2} - (n-1)I_n$
+   解得 $I_n = \frac{n-1}{n} I_{n-2}$。
+2. **极限**：
+   由于 $0 \le \sin x \le 1$ 在 $[0, \pi/2]$ 上成立，故 $I_n \le I_{n-1} \le I_{n-2}$。
+   由递推式知 $\frac{I_n}{I_{n-2}} = \frac{n-1}{n} \to 1$ ($n \to \infty$)。
+   根据夹逼定理，$1 \ge \frac{I_{n-1}}{I_n} \ge \frac{I_{n-2}}{I_n} \to 1$。
+   故 $\lim_{n \to \infty} \frac{I_n}{I_{n-1}} = 1$。
+
+#### 答案
+1. $I_n = \frac{n-1}{n} I_{n-2}$；2. 1
+</details>
+
 ---
 
 ## 第十章：定积分的应用 (Applications of Definite Integrals)
@@ -131,3 +154,14 @@ $\int_{\epsilon}^2 \frac{1}{x} dx = [\ln|x|]_{\epsilon}^2 = \ln 2 - \ln \epsilon
 #### 答案
 $\ln 2$
 </details>
+
+---
+
+## 延伸入口
+
+- [第八章 不定积分](/docs/academic-math/analysis/indefinite-integrals)
+- [第九章 定积分](/docs/academic-math/analysis/integrals)
+- [第十章 定积分的应用](/docs/academic-math/analysis/definite-integral-applications)
+- [第十一章 反常积分](/docs/academic-math/analysis/improper-integrals)
+- [数学分析综合练习库](/docs/exercises/math/analysis)
+

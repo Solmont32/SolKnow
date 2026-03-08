@@ -75,6 +75,29 @@ title: 多元微积分与矢量分析专题练习库 (Ch 16-23)
 $\kappa = \frac{a}{a^2+b^2}$，$\tau = \frac{b}{a^2+b^2}$。
 </details>
 
+### 练习 17.3：多元函数的 Taylor 展开
+求 $f(x, y) = e^x \sin y$ 在 $(0, 0)$ 处的二阶 Taylor 展开式。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+计算在 $(0, 0)$ 处的各阶偏导数：
+1. $f(0, 0) = e^0 \sin 0 = 0$。
+2. $f_x = e^x \sin y \implies f_x(0, 0) = 0$。
+3. $f_y = e^x \cos y \implies f_y(0, 0) = 1$。
+4. $f_{xx} = e^x \sin y \implies f_{xx}(0, 0) = 0$。
+5. $f_{xy} = e^x \cos y \implies f_{xy}(0, 0) = 1$。
+6. $f_{yy} = -e^x \sin y \implies f_{yy}(0, 0) = 0$。
+二阶 Taylor 公式：
+$f(x, y) = f(0, 0) + [f_x x + f_y y] + \frac{1}{2!} [f_{xx} x^2 + 2f_{xy} xy + f_{yy} y^2] + o(\rho^2)$
+$= 0 + [0 \cdot x + 1 \cdot y] + \frac{1}{2} [0 \cdot x^2 + 2(1)xy + 0 \cdot y^2] + o(x^2+y^2)$
+$= y + xy + o(x^2+y^2)$。
+
+#### 答案
+$y + xy + o(x^2+y^2)$
+</details>
+
 ---
 
 ## 第十八章：隐函数定理及其应用 (Implicit Function Theorem)
@@ -277,3 +300,16 @@ $-3/2$
 #### 答案
 是保守场，势函数 $\Phi = x^2y + xz^2 + C$。
 </details>
+
+---
+
+## 延伸入口
+
+- [第十六章 多元函数极限与连续](/docs/academic-math/analysis/multivariable-limits)
+- [第十七章 多元函数微分学](/docs/academic-math/analysis/multivariable-differentiation)
+- [第十八章 隐函数定理及其应用](/docs/academic-math/analysis/implicit-function-theorem)
+- [第二十章 重积分](/docs/academic-math/analysis/multiple-integrals)
+- [第二十一章 曲线积分](/docs/academic-math/analysis/line-integrals)
+- [第二十二章 曲面积分](/docs/academic-math/analysis/surface-integrals)
+- [数学分析综合练习库](/docs/exercises/math/analysis)
+

@@ -45,7 +45,37 @@ $$|f(x) - A| < \epsilon$$
 
 ---
 
-## 二、 极限存在的深度判别准则
+## 二、 函数极限的性质 (Basic Properties)
+
+理解极限的内在性质，是进行复杂证明和计算的基石。
+
+### 1. 唯一性 (Uniqueness)
+若 $\lim_{x \to x_0} f(x)$ 存在，则该极限是唯一的。
+
+### 2. 局部有界性 (Local Boundedness)
+若 $\lim_{x \to x_0} f(x) = A$，则存在 $x_0$ 的某个去心邻域 $\mathring{U}(x_0, \delta)$，使得 $f(x)$ 在该邻域内有界。
+
+### 3. 局部保号性 (Local Sign-Preserving Property)
+若 $\lim_{x \to x_0} f(x) = A > 0$（或 $< 0$），则对于任何满足 $0 < r < A$ 的正数 $r$，存在 $\mathring{U}(x_0, \delta)$，使得对于该邻域内的一切 $x$，恒有 $f(x) > r > 0$（或 $f(x) < -r < 0$）。
+- **推论**：若在 $x_0$ 的去心邻域内 $f(x) \ge 0$ 且极限存在，则 $\lim_{x \to x_0} f(x) \ge 0$。
+
+### 4. 四则运算法则
+设 $\lim f(x) = A, \lim g(x) = B$，则：
+- $\lim [f(x) \pm g(x)] = A \pm B$
+- $\lim [f(x) \cdot g(x)] = A \cdot B$
+- $\lim \frac{f(x)}{g(x)} = \frac{A}{B}$ （前提 $B \neq 0$）
+
+<KnowledgeCard type="warning" title="常见陷阱：复合函数极限">
+若 $\lim_{x \to x_0} g(x) = u_0$ 且 $\lim_{u \to u_0} f(u) = A$，**不能直接推导**出 $\lim_{x \to x_0} f(g(x)) = A$。
+**必须满足以下条件之一**：
+1. $f(u)$ 在 $u_0$ 处连续（即 $f(u_0) = A$）。
+2. 在 $x_0$ 的某个去心邻域内，$g(x) \neq u_0$。
+*典型反例：$g(x) = 0$，$f(u) = 0 (u \neq 0)$ 且 $f(0) = 1$。*
+</KnowledgeCard>
+
+---
+
+## 三、 极限存在的深度判别准则
 
 ### 1. 海涅定理 (Heine's Theorem) - 归结原则
 **定理**：$\lim_{x \to x_0} f(x) = A$ 的充要条件是对于任何以 $x_0$ 为极限的数列 $\{x_n\}$ ($x_n \neq x_0$)，都有 $\lim_{n \to \infty} f(x_n) = A$。

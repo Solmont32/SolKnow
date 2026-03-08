@@ -15,15 +15,18 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 函数 $f(x)$ 在点 $x_0$ 连续 $\iff \lim_{x \to x_0} f(x) = f(x_0)$。
 用 $\epsilon-\delta$ 语言描述：$\forall \epsilon > 0, \exists \delta > 0, \text{ s.t. } |x - x_0| < \delta \implies |f(x) - f(x_0)| < \epsilon$。
 
-**间断点的精细分类**：
-- **第一类间断点**：左右极限均存在。
-  - **可去**：$\lim_{x \to x_0} f(x)$ 存在但不等于 $f(x_0)$。
-  - **跳跃**：$f(x_0^+) \neq f(x_0^-)$。
-- **第二类间断点**：左右极限至少有一个不存在。
-  - **无穷间断点**：极限为 $\infty$。
-  - **震荡间断点**：如 $\sin(1/x)$ 在 $x=0$ 处。
+### 2. 连续函数的局部性质
+- **局部有界性**：若 $f$ 在 $x_0$ 连续，则存在 $\delta > 0$，使得 $f$ 在 $U(x_0, \delta)$ 上有界。
+- **局部保号性**：若 $f(x_0) > 0$，则存在 $\delta > 0$，使得 $\forall x \in U(x_0, \delta), f(x) > 0$。
+- **连续函数的四则运算**：两个连续函数的和、差、积、商（分母不为 0）在定义点处依然连续。
 
-### 2. 闭区间连续函数的全局性质（核心定理）
+<KnowledgeCard type="warning" title="常见陷阱：间断点的误区">
+1. **$1/x$ 在 $x=0$ 是否连续？** 严格来说，由于 $0$ 不在定义域内，讨论该点连续性无意义，但 $x=0$ 是其**无穷间断点**。
+2. **狄利克雷函数 $D(x)$**：在任何点都不连续（处处间断）。
+3. **黎曼函数 $R(x)$**：在一切无理数点处连续，在一切有理数点处间断（且为可去间断点）。
+</KnowledgeCard>
+
+### 3. 闭区间连续函数的全局性质（核心定理）
 这些性质是基于实数完备性的深刻结论：
 
 1. **有界性定理 (Boundedness Theorem)**：
@@ -35,6 +38,10 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
    - **零点定理**：若 $f(a)f(b) < 0$，则至少存在一个零点 $\xi \in (a,b)$。
 4. **一致连续性定理 (Heine-Cantor Theorem)**：
    若 $f \in C[a,b]$，则 $f$ 在 $[a,b]$ 上一致连续。
+
+### 4. 高阶视野：Weierstrass 逼近定理 (初步)
+虽然本章不涉及级数，但连续函数的一个核心价值是其可被逼近性。
+**第一逼近定理**：闭区间上的连续函数可以被多项式一致逼近。这意味着连续函数是“良好”的函数。
 
 ---
 
