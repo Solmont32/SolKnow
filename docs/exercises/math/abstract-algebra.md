@@ -109,3 +109,65 @@ $0^2+1=1$，$1^2+1=2$，$2^2+1=5\equiv2$，均非 0，故不可约。
 循环群 $C_{12}=\langle g\rangle$ 的子群与 12 的正因子一一对应。每个因子 $d\mid12$ 对应唯一 $d$ 阶子群 $\langle g^{12/d}\rangle$。
 故 3 阶、4 阶子群各唯一。
 </details>
+
+## 四、格与布尔代数专题
+
+### 练习 11：幂集格中的并与交
+设 $X=\{1,2,3\}$，令 $A=\{1,2\}, B=\{2,3\}$。在 $(\mathcal{P}(X),\subseteq)$ 中求 $A\vee B$ 与 $A\wedge B$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+在幂集格中，$\vee=\cup,\ \wedge=\cap$，故
+$A\vee B=A\cup B=\{1,2,3\}$，
+$A\wedge B=A\cap B=\{2\}$。
+</details>
+
+### 练习 12：整除格计算
+在“12 的正因子按整除排序”的格中，求 $4\vee 6$ 与 $4\wedge 6$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+整除格满足 $\vee=\operatorname{lcm},\ \wedge=\gcd$，故
+$4\vee 6=\operatorname{lcm}(4,6)=12$，
+$4\wedge 6=\gcd(4,6)=2$。
+</details>
+
+### 练习 13：链是否是布尔代数
+考虑三元链 $0<a<1$（有界格）。判断它是否为布尔代数。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+元素 $a$ 需要补元 $a'$ 使 $a\wedge a'=0,\ a\vee a'=1$。  
+链中只有 $0,1,a$，逐一代入均不满足，故 $a$ 无补元。  
+因此该格不是布尔代数。
+</details>
+
+### 练习 14：分配律验证
+在幂集格中验证恒等式
+$A\cap(B\cup C)=(A\cap B)\cup(A\cap C)$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+取任意 $x$：
+$x\in A\cap(B\cup C)$
+$\Leftrightarrow x\in A$ 且 $(x\in B$ 或 $x\in C)$
+$\Leftrightarrow (x\in A\cap B)$ 或 $(x\in A\cap C)$
+$\Leftrightarrow x\in (A\cap B)\cup(A\cap C)$。
+故等式成立。
+</details>
+
+### 练习 15：格同态反例
+定义 $f:\mathcal{P}(\{1,2\})\to\{0,1\}$，$f(\varnothing)=0$，其余集合都映为 1。判断 $f$ 是否保持 $\wedge=\cap$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+取 $A=\{1\},B=\{2\}$，则
+$f(A)=f(B)=1$，所以 $\min(f(A),f(B))=1$；
+但 $A\cap B=\varnothing$，$f(A\cap B)=0$。
+两者不等，故不保持交运算，不是格同态。
+</details>
