@@ -8,7 +8,8 @@
 ## 已完成任务
 - [x] 深度重构『拓扑排序与 DAG DP』教程页 (2026-03-08)：重写 `docs/graph/topo-sort.md`，补全 Kahn/DFS 判环、字典序最小拓扑序、DAG 动态规划模型，新增多道例题与折叠练习。 (2026-03-08)
 - [x] 新增『算法竞赛练习库：拓扑排序专题』(2026-03-08)：新增 `docs/exercises/cs/algorithm-topo-sort.md`，提供 6 道分层练习并全部采用“点击展开过程与答案”的折叠格式。 (2026-03-08)
-- [x] 打通『图论教程-拓扑排序练习』联动 (2026-03-08)：更新 `docs/graph/index.md` 与 `sidebars.ts`，新增拓扑排序练习入口，形成教程到练习闭环。 (2026-03-08)- [x] 新增『初中竞赛不等式与函数方程』教材化专题 (2026-03-08)：新增 docs/academic-math/competition/junior/inequalities-and-equations.md，补全核心方法并提供 4 道例题与 4 道折叠练习。 (2026-03-08)
+- [x] 打通『图论教程-拓扑排序练习』联动 (2026-03-08)：更新 `docs/graph/index.md` 与 `sidebars.ts`，新增拓扑排序练习入口，形成教程到练习闭环。 (2026-03-08)
+- [x] 新增『初中竞赛不等式与函数方程』教材化专题 (2026-03-08)：新增 docs/academic-math/competition/junior/inequalities-and-equations.md，补全核心方法并提供 4 道例题与 4 道折叠练习。 (2026-03-08)
 - [x] 扩容『初中数学竞赛练习库』不等式与函数方程题组 (2026-03-08)：更新 docs/exercises/math/competition/junior.md 新增练习 17-20，全部支持点击展开过程与答案。 (2026-03-08)
 - [x] 打通『初中竞赛专题-导航-练习』联动闭环 (2026-03-08)：更新 docs/academic-math/competition/junior/index.md 与 sidebars.ts，新增专题入口并同步学习路径。 (2026-03-08)
 - [x] 深化『小学奥数代数：巧算-数列-裂项-逆推』教材化章节 (2026-03-08)：重写 `docs/academic-math/competition/elementary/algebra.md`，补全 7 道教材化例题与 3 道章内折叠练习。 (2026-03-08)
@@ -172,6 +173,7 @@
 - [x] 深化『初中竞赛几何：四点共圆、方幂与圆中比例』(2026-03-08)：重写 `docs/academic-math/competition/junior/circle-geometry.md`，补全判定体系与方幂三形态，扩展为 4 道例题 + 4 道折叠练习。 (2026-03-08)
 - [x] 深化『初中竞赛组合：计数、抽屉与构造』(2026-03-08)：重写 `docs/academic-math/competition/junior/combinatorics.md`，补全加乘原理、隔板法、抽屉与染色不变量，扩展为 4 道例题 + 4 道折叠练习。 (2026-03-08)
 - [x] 扩容『初中数学竞赛练习库与学习路径页』(2026-03-08)：更新 `docs/exercises/math/competition/junior.md` 新增 4 道综合题（合计 16 题，均折叠解析），并重写 `docs/academic-math/competition/junior/index.md` 打通章节与练习入口。 (2026-03-08)
+
 
 
 

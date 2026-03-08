@@ -110,6 +110,7 @@ const sidebars: SidebarsConfig = {
                 'academic-math/competition/junior/circle-geometry',
                 'academic-math/competition/junior/number-theory-basic',
                 'academic-math/competition/junior/combinatorics',
+                'academic-math/competition/junior/inequalities-and-equations',
               ]
             },
             {
@@ -335,6 +336,7 @@ const sidebars: SidebarsConfig = {
         { type: 'doc', id: 'exercises/cs/algorithm-knapsack', label: '算法竞赛：背包练习' },
         { type: 'doc', id: 'exercises/cs/algorithm-shortest-path', label: '算法竞赛：最短路练习' },
         { type: 'doc', id: 'exercises/cs/algorithm-mst', label: '算法竞赛：最小生成树练习' },
+        { type: 'doc', id: 'exercises/cs/algorithm-topo-sort', label: '算法竞赛：拓扑排序练习' },
         { type: 'doc', id: 'exercises/cs/linux', label: 'Linux 实操练习' },
         { type: 'doc', id: 'exercises/cs/cpp', label: 'C++ 编程练习' },
         { type: 'doc', id: 'exercises/cs/os', label: '操作系统练习' },
@@ -371,6 +373,8 @@ const sidebars: SidebarsConfig = {
 
 
 export default sidebars;
+
+
 
 
 

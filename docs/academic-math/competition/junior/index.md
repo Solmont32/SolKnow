@@ -13,6 +13,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 2. **数论初步**：同余、整除、不定方程与构造。
 3. **几何证明**：四点共圆、方幂定理、相似与长度关系。
 4. **组合基础**：加乘原理、抽屉原理、隔板法与染色不变量。
+5. **不等式与函数方程**：均值不等式、分式不等式、函数方程取值与构造。
 
 ## 学习路径建议
 1. 先学代数与数论，提升算术与同余基础。
@@ -25,8 +26,11 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 - [竞赛几何：四点共圆、方幂与圆中比例](./circle-geometry.md)
 - [竞赛数论：整除、同余与不定方程](./number-theory-basic.md)
 - [竞赛组合：计数、抽屉与构造](./combinatorics.md)
+- [竞赛专题：不等式与函数方程](./inequalities-and-equations.md)
 - [初中数学竞赛练习库（折叠答案）](/docs/exercises/math/competition/junior)
 
 <KnowledgeCard type="info" title="学习要点">
 初中数竞非常强调运算准确性与证明严谨性。建议每道例题至少完成“独立重做一次 + 口述关键步骤一次”。
 </KnowledgeCard>
+
+
