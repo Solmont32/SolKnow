@@ -1,11 +1,26 @@
 # SolKnow 自动化任务清单 (TASKS.md)
 ## 总任务
-- 算法知识库算法竞赛教程（对标教科书）：知识点详细，一个知识点对应多道例题，同时增加练习库中的练习，练习需要有多道，答案折叠，点击才显示过程和答案；
+- 数学知识库高等代数教程（对标教科书）：知识点详细，一个知识点对应多道例题，同时增加练习库中的练习，练习需要有多道，答案折叠，点击才显示过程和答案；
 
 ## 待办子任务
 - （暂无，已清空）
 
 ## 已完成任务
+- [x] 深化『小学奥数计数专题：分类-容斥-抽屉-递推』(2026-03-08)：重写 `docs/academic-math/competition/elementary/counting.md`，补全 7 道教材化例题与 4 道章内折叠练习。 (2026-03-08)
+- [x] 深化『小学奥数几何专题：等积-比例-割补』(2026-03-08)：重写 `docs/academic-math/competition/elementary/geometry.md`，补全 7 道教材化例题与 4 道章内折叠练习。 (2026-03-08)
+- [x] 扩容『小学奥数练习库』至 24 题并同步导航文案 (2026-03-08)：扩展 `docs/exercises/math/competition/elementary.md` 新增 8 道折叠练习，并更新 `docs/academic-math/competition/elementary/index.md`。 (2026-03-08)
+- [x] 深化『矩阵与线性变换』教材页 (2026-03-08)：重写 docs/academic-math/algebra/matrix.md，补全矩阵运算、秩与可逆性、特征值与相似对角化，新增 3 道例题与 3 道折叠练习。 (2026-03-08)
+- [x] 深化『多项式』教材页 (2026-03-08)：重写 docs/academic-math/algebra/polynomial.md，补全除法算法、因式定理、重根判别与 Vieta 构造，新增 3 道例题与 3 道折叠练习。 (2026-03-08)
+- [x] 扩容『高等代数练习库』矩阵与多项式专题 (2026-03-08)：扩展 docs/exercises/math/algebra.md，新增 D1-D4 四道专题练习并统一折叠解析。 (2026-03-08)
+- [x] 深化『第五章 导数与微分』教材化结构 (2026-03-08)：重写 docs/academic-math/analysis/derivatives.md，补充定义法/对数求导/高阶导数/微分近似共 4 道例题，并新增 4 道折叠练习。 (2026-03-08)
+- [x] 深化『第六章 微分中值定理及其应用』教材化内容 (2026-03-08)：重写 docs/academic-math/analysis/mean-value-theorems.md，扩展中值定理、L'Hopital、Taylor 余项与 4 道例题 + 4 道折叠练习。 (2026-03-08)
+- [x] 新增『导数与中值定理专题练习库』并打通导航 (2026-03-08)：新增 docs/exercises/math/analysis-derivatives-mean-value.md（10 题，全部折叠解析），同步更新 docs/academic-math/analysis/index.md 与 sidebars.ts。 (2026-03-08)
+- [x] 深度重构『抽象代数：格与布尔代数』教材页 (2026-03-08)：重写 `docs/academic-math/abstract-algebra/lattices.md`，补全偏序-格-分配格-布尔代数主线，新增 4 道例题与 3 道折叠练习。 (2026-03-08)
+- [x] 扩容『抽象代数练习库』格论专题 (2026-03-08)：扩展 `docs/exercises/math/abstract-algebra.md`，新增 5 道格与布尔代数分层练习，全部支持点击展开过程与答案。 (2026-03-08)
+- [x] 强化『抽象代数首页学习路径』与练习闭环 (2026-03-08)：更新 `docs/academic-math/abstract-algebra/index.md` 学习顺序，明确格论专题的学习位置与训练目标。 (2026-03-08)
+- [x] 深度重构『高中竞赛组合：母函数、图论与递推』章节 (2026-03-08)：重写 `docs/academic-math/competition/senior/combinatorics-advanced.md`，补全双计数、抽屉原理、递推与图论模型，新增 4 道例题与 4 道折叠练习。 (2026-03-08)
+- [x] 扩容『高中数学竞赛练习库（综合）』组合与图论题组 (2026-03-08)：在 `docs/exercises/math/competition/senior.md` 新增 3 道分层练习（双计数、平面图、同余抽屉），全部支持点击展开过程与答案。 (2026-03-08)
+- [x] 完善『高中数学竞赛学习路径』章节联动 (2026-03-08)：更新 `docs/academic-math/competition/senior/index.md`，补充组合专题学习入口并打通“章节-练习”闭环。 (2026-03-08)
 - [x] 深度重构『抽象代数：群论』教材页 (2026-03-08)：重写 docs/academic-math/abstract-algebra/groups.md，补全子群判别、拉格朗日定理、陪集/正规子群、同态同构定理，新增 4 道例题与 3 道折叠练习。 (2026-03-08)
 - [x] 深度重构『抽象代数：环论』教材页 (2026-03-08)：重写 docs/academic-math/abstract-algebra/rings.md，补全理想、商环、同态、多项式环与有限域构造，新增 4 道例题与 4 道折叠练习。 (2026-03-08)
 - [x] 新增『抽象代数练习库』并打通导航 (2026-03-08)：新增 docs/exercises/math/abstract-algebra.md（10 题，全部折叠解析），同步更新 sidebars.ts 与 docs/academic-math/abstract-algebra/index.md。 (2026-03-08)
@@ -129,6 +144,17 @@
 
 
 
+
+
+
+
+
+
+
+
+- [x] 深化『初中竞赛几何：四点共圆、方幂与圆中比例』(2026-03-08)：重写 `docs/academic-math/competition/junior/circle-geometry.md`，补全判定体系与方幂三形态，扩展为 4 道例题 + 4 道折叠练习。 (2026-03-08)
+- [x] 深化『初中竞赛组合：计数、抽屉与构造』(2026-03-08)：重写 `docs/academic-math/competition/junior/combinatorics.md`，补全加乘原理、隔板法、抽屉与染色不变量，扩展为 4 道例题 + 4 道折叠练习。 (2026-03-08)
+- [x] 扩容『初中数学竞赛练习库与学习路径页』(2026-03-08)：更新 `docs/exercises/math/competition/junior.md` 新增 4 道综合题（合计 16 题，均折叠解析），并重写 `docs/academic-math/competition/junior/index.md` 打通章节与练习入口。 (2026-03-08)
 
 
 
