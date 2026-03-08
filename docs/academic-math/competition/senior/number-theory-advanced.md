@@ -47,3 +47,54 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 #### 答案
 有解。
 </details>
+
+---
+
+## 三、进阶例题补充（本轮新增）
+
+### 例题 2：阶的应用
+求 $2^{100}\pmod{13}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+由 $2^{12}\equiv1\pmod{13}$，且 $100\equiv4\pmod{12}$，
+故 $2^{100}\equiv2^4\equiv3\pmod{13}$。
+
+</details>
+
+### 例题 3：Wilson 定理应用
+证明：若 $p$ 为素数，则 $(p-1)!\equiv-1\pmod p$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+模 $p$ 的非零元中，除 $1,-1$ 外其余元素可按逆元成对，乘积均为 1，故全积为 $-1$。
+
+</details>
+
+## 四、配套练习（本轮新增）
+
+### 练习 2（基础）
+求解同余组：
+$$
+x\equiv1\pmod4,\quad x\equiv2\pmod5.
+$$
+
+<details>
+<summary>点击查看过程与答案</summary>
+
+设 $x=1+4t$，代入得 $4t\equiv1\pmod5$，故 $t\equiv4\pmod5$。
+最小解 $x=17$，通解 $x\equiv17\pmod{20}$。
+
+</details>
+
+### 练习 3（提高）
+判断 $x^2\equiv5\pmod{11}$ 是否可解。
+
+<details>
+<summary>点击查看过程与答案</summary>
+
+平方剩余集合含 5（例如 $4^2\equiv5\pmod{11}$），故有解。
+
+</details>

@@ -17,3 +17,9 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 <KnowledgeCard type="contest" title="竞赛秘籍">
 在处理不等式时，熟练掌握 **Cauchy 不等式** 和 **Jensen 不等式** 是提分的关键。
 </KnowledgeCard>
+
+## 四、本轮新增学习提示（2026-03-08）
+
+- 先做 [竞赛代数：经典不等式与函数方程](inequalities) 的基础题，再做挑战题。
+- 再做 [竞赛数论：原根、剩余与构造](number-theory-advanced) 的 CRT 与阶专题。
+- 每学完一章立即到 [高中数学竞赛练习库](/docs/exercises/math/competition/senior) 完成对应专题训练。

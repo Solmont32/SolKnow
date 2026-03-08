@@ -67,3 +67,64 @@ $$f(\frac{\sum x_i}{n}) \le \frac{\sum f(x_i)}{n}$$
 #### 答案
 $f(x) = cx$
 </details>
+
+---
+
+## 三、进阶例题补充（本轮新增）
+
+### 例题 3：Jensen 直接应用
+设 $x,y,z>0$ 且 $x+y+z=3$，证明
+$$
+\frac{1}{1+x}+\frac{1}{1+y}+\frac{1}{1+z}\ge 1.
+$$
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+取 $f(t)=\frac1{1+t}$，有 $f''(t)=\frac{2}{(1+t)^3}>0$，故为凸函数。
+由 Jensen 可得
+$$
+\frac{f(x)+f(y)+f(z)}3\ge f\!\left(\frac{x+y+z}3\right)=f(1)=\frac12.
+$$
+因此左式 $\ge\frac32>1$，命题成立。
+
+</details>
+
+### 例题 4：函数方程线性化
+求满足 $f(x+y)=f(x)+f(y)$ 且在 $\mathbb R$ 上单调的函数。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+加法方程在单调条件下只能是线性函数，故 $f(x)=cx$。
+
+</details>
+
+## 四、配套练习（本轮新增）
+
+### 练习 5（提高）
+设 $a,b,c>0$，证明
+$$
+\sum_{cyc}\frac{a^2}{b+c}\ge\frac{a+b+c}{2}.
+$$
+
+<details>
+<summary>点击查看过程与答案</summary>
+
+由 Titu 不等式直接得到结论。
+
+</details>
+
+### 练习 6（挑战）
+设 $a,b,c>0,abc=1$，证明
+$$
+\sum_{cyc}\frac1{a^3(b+c)}\ge\frac32.
+$$
+
+<details>
+<summary>点击查看过程与答案</summary>
+
+利用 $abc=1$ 化为 $\sum \frac{(bc)^2}{b+c}$，再用 Titu 与
+$(ab+bc+ca)^2\ge3abc(a+b+c)$ 即得。
+
+</details>
