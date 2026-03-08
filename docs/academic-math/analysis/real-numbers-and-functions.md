@@ -1,104 +1,176 @@
 ---
-title: 实数集与函数 (Real Number System & Functions)
-description: 从公理化视角深度理解数学分析的基石
+title: 第一章 实数集与函数 (Real Number System & Functions)
+description: 对标教材的实数完备性与函数基础方法论
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import SupportingExercises from '@site/src/components/SupportingExercises';
 
-# 第一章 实数集与函数：数学分析的基石
+# 第一章 实数集与函数
 
-> **零基础视角**：如果数学是一座大厦，实数系就是地基。没有实数的“连续性”，极限和导数将失去意义。本章将从严格的公理化视角，重新审视我们在初等数学中习以为常的数集与映射。
+本章聚焦数学分析的语言基础：实数完备性、确界思想、函数复合与反函数。目标不是“会用结论”，而是建立后续极限与连续理论所需的严格表达习惯。
 
-## 1. 核心理论：确界原理 (The Supremum Principle)
+## 一、核心定义与定理
 
-实数系与有理数系最本质的区别在于**完备性**（即没有“缝隙”）。确界原理是描述这种完备性的核心命题。
+### 1. 上下确界与完备性
+设非空集合 $A\subset\mathbb{R}$。
+- 若存在 $M\in\mathbb{R}$ 使得对任意 $x\in A$ 都有 $x\le M$，称 $A$ 有上界。
+- 若 $\beta$ 是 $A$ 的上界且任意上界 $M$ 都满足 $\beta\le M$，称 $\beta=\sup A$。
 
-### 1.1 定义与基本性质
-设 $S$ 为一个非空数集。
-- **上确界 (Supremum)**：若数 $\beta$ 满足：
-  1. 对任意 $x \in S$，有 $x \leq \beta$（$\beta$ 是上界）。
-  2. 对任意 $\epsilon > 0$，存在 $x_0 \in S$，使得 $x_0 > \beta - \epsilon$（$\beta$ 是最小上界）。
-  记作 $\beta = \sup S$。
-- **下确界 (Infimum)**：同理定义 $\alpha = \inf S$。
-
-### 1.2 确界存在定理的严格证明 (Strict Proof)
-
-<KnowledgeCard type="warning" title="定理 (确界存在定理)">
-非空有上界的数集必有上确界。
+<KnowledgeCard type="warning" title="确界存在定理">
+任一非空有上界实数集必有上确界；任一非空有下界实数集必有下确界。
 </KnowledgeCard>
 
-**证明思路 (基于戴德金分割公理)：**
-设 $S$ 是非空有上界的数集。我们构造一个实数集的分割 $(A, B)$：
-1. 令 $B = \{ y \in \mathbb{R} \mid y \text{ 是 } S \text{ 的一个上界} \}$。由于 $S$ 有上界，故 $B \neq \emptyset$。
-2. 令 $A = \{ x \in \mathbb{R} \mid x \text{ 不是 } S \text{ 的上界} \}$。由于 $S$ 非空，取 $s \in S$，则 $s-1 \in A$，故 $A \neq \emptyset$。
-3. 易证 $A \cup B = \mathbb{R}$ 且对任意 $a \in A, b \in B$ 有 $a < b$。
+该定理本质上等价于实数完备性，后续单调有界定理、闭区间套、Bolzano-Weierstrass 都以此为基础。
 
-根据 **戴德金定理**，存在唯一的实数 $\xi$，使得对任意 $a \in A, b \in B$，有 $a \leq \xi \leq b$。
-- **验证 $\xi$ 是上确界**：
-  - 对任意 $s \in S$，由于 $s$ 的任何上界 $b$ 满足 $s \leq b$，根据 $\xi$ 的定义，$\xi$ 是 $B$ 的下界，即 $\xi \leq b$。实际上可以证明 $\xi$ 也是 $S$ 的一个上界（若存在 $s_0 > \xi$，则可在 $(\xi, s_0)$ 中取一数 $a \in A$，产生矛盾）。
-  - 对任意 $\epsilon > 0$，$\xi - \epsilon < \xi$，故 $\xi - \epsilon \in A$。根据 $A$ 的定义，$\xi - \epsilon$ 不是 $S$ 的上界，即存在 $x_0 \in S$ 使得 $x_0 > \xi - \epsilon$。
-  
-证毕。$\square$
+### 2. 阿基米德性质与稠密性
+- **阿基米德性质**：对任意 $x\in\mathbb{R}$，存在 $n\in\mathbb{N}$ 使 $n>x$。
+- **有理数稠密性**：任意 $a<b$，存在 $q\in\mathbb{Q}$ 使 $a<q<b$。
 
----
+这两个性质保证了“离散量可逼近连续量”，是 $\epsilon$-语言可操作的关键。
 
-## 2. 复合函数：分解、判定与应用
-
-在复杂系统的建模中，函数往往不是单一的，而是多个环节的嵌套。
-
-### 2.1 复合的判定准则
-设 $y = f(u), u = g(x)$。要使复合函数 $f \circ g$ 有意义，必须满足：
-**$g$ 的值域 $R_g$ 与 $f$ 的定义域 $D_f$ 的交集非空**，即 $R_g \cap D_f \neq \emptyset$。
-
-<KnowledgeCard type="info" title="工业实战：函数分解">
-将复杂函数分解为初等函数，是求导、求极限的第一步。
-例：$y = \sqrt{\ln(\sin x)}$
-1. $y = \sqrt{u}$
-2. $u = \ln v$
-3. $v = \sin x$
-判定：需满足 $\sin x > 0$（使 $\ln v$ 有意义）且 $\ln(\sin x) \geq 0$（使 $\sqrt{u}$ 有意义）。
-</KnowledgeCard>
+### 3. 函数复合与反函数判定
+设 $u=g(x)$，$y=f(u)$。
+- 复合 $f\circ g$ 有定义的必要条件：$g(D_g)\subseteq D_f$。
+- 反函数 $f^{-1}$ 存在的充分条件：$f$ 在区间上严格单调且值域可确定。
 
 ---
 
-## 3. 反函数：存在性与严格单调性
+## 二、教材化例题（4 题）
 
-### 3.1 存在性定理
-若函数 $f: D \to R$ 是**严格单调**的，则 $f$ 必存在反函数 $f^{-1}: R \to D$，且 $f^{-1}$ 在其定义域上也是严格单调的。
+### 例题 1：确界计算
+设 $A=\{\frac{n-1}{n}:n\in\mathbb{N}_+\}$，求 $\sup A$ 与 $\inf A$。
 
-### 3.2 实战例题：超越函数的反函数
-**例**：证明 $f(x) = x + e^x$ 在 $\mathbb{R}$ 上存在反函数。
-**解析**：
-1. **单调性检查**：由于 $f'(x) = 1 + e^x > 0$，函数在 $\mathbb{R}$ 上严格单调递增。
-2. **值域检查**：当 $x \to -\infty$ 时，$f(x) \to -\infty$；当 $x \to +\infty$ 时，$f(x) \to +\infty$。故 $R_f = \mathbb{R}$。
-3. **结论**：反函数 $f^{-1}$ 存在且定义域为 $\mathbb{R}$。
+<details>
+<summary>点击查看解析与答案</summary>
+
+$\frac{n-1}{n}=1-\frac1n<1$，故 1 是上界。
+
+对任意 $\epsilon>0$，取 $n>1/\epsilon$，则
+$$1-\frac1n>1-\epsilon,$$
+所以 1 是最小上界，即 $\sup A=1$。
+
+当 $n=1$ 时取到最小值 0，且所有项非负，故 $\inf A=0$。
+</details>
+
+### 例题 2：集合运算与确界
+设 $A,B$ 非空有界，证明 $\sup(A+B)=\sup A+\sup B$，其中 $A+B=\{a+b:a\in A,b\in B\}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+先证上界：任意 $a+b\in A+B$，有 $a\le\sup A,b\le\sup B$，故
+$$a+b\le\sup A+\sup B.$$
+
+再证最小性：任意 $\epsilon>0$，取
+$$a_\epsilon>\sup A-\epsilon/2,\quad b_\epsilon>\sup B-\epsilon/2,$$
+则
+$$a_\epsilon+b_\epsilon>\sup A+\sup B-\epsilon.$$
+故 $\sup(A+B)=\sup A+\sup B$。
+</details>
+
+### 例题 3：复合函数定义域
+求函数
+$$h(x)=\sqrt{\ln(1-x^2)}$$
+的定义域。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+条件 1：$\ln(1-x^2)$ 有意义，需 $1-x^2>0$，即 $|x|<1$。
+
+条件 2：根号内非负，需 $\ln(1-x^2)\ge0$，即 $1-x^2\ge1$，得 $x^2\le0$。
+
+两条件合并得 $x=0$。
+
+定义域为 $\{0\}$。
+</details>
+
+### 例题 4：反函数存在性
+证明 $f(x)=x+e^x$ 在 $\mathbb{R}$ 上可逆。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+$$f'(x)=1+e^x>0,$$
+故 $f$ 严格递增，从而单射。
+
+又
+$$\lim_{x\to-\infty}(x+e^x)=-\infty,\qquad \lim_{x\to+\infty}(x+e^x)=+\infty,$$
+值域为 $\mathbb{R}$，故满射。
+
+因此 $f:\mathbb{R}\to\mathbb{R}$ 双射，反函数存在。
+</details>
 
 ---
 
-## 4. 典型例题 (Mastery Examples)
+## 三、章内练习（折叠答案）
 
-### 例 1：确界定义的灵活应用
-设 $A, B$ 为有界非空数集，定义 $A + B = \{ a+b \mid a \in A, b \in B \}$。
-证明：$\sup(A+B) = \sup A + \sup B$。
+### 练习 1：上确界
+求集合 $E=(0,2)\cap\mathbb{Q}$ 的上确界与下确界。
 
-**证明：**
-1. **上界证明**：对任意 $a+b \in A+B$，由 $a \leq \sup A, b \leq \sup B \implies a+b \leq \sup A + \sup B$。
-2. **最小性证明**：对任意 $\epsilon > 0$，存在 $a_0 \in A, b_0 \in B$ 使得 $a_0 > \sup A - \epsilon/2, b_0 > \sup B - \epsilon/2$。
-   则 $a_0 + b_0 > (\sup A + \sup B) - \epsilon$。
-   得证。$\square$
+<details>
+<summary>点击查看过程与答案</summary>
+
+有 $E\subset(0,2)$，任意元都小于 2；对任意 $\epsilon>0$，区间 $(2-\epsilon,2)$ 内存在有理数，所以可逼近 2。
+
+同理可逼近 0 且不取到 0。
+
+答案：$\sup E=2,\inf E=0$。
+</details>
+
+### 练习 2：绝对值不等式
+证明：$\big|\sup A-\sup B\big|\le\sup\{|a-b|:a\in A,b\in B\}$（假设两边存在）。
+
+<details>
+<summary>点击查看过程与答案</summary>
+
+令 $M=\sup\{|a-b|\}$。对任意 $a\in A,b\in B$，有 $a\le b+M$，取上确界得
+$$\sup A\le\sup B+M.$$
+交换 $A,B$ 得 $\sup B\le\sup A+M$，合并即
+$$|\sup A-\sup B|\le M.$$
+</details>
+
+### 练习 3：复合函数定义域
+求
+$$g(x)=\ln\!\left(\sqrt{\frac{x-1}{x+2}}\right)$$
+的定义域。
+
+<details>
+<summary>点击查看过程与答案</summary>
+
+根号内需严格大于 0（因为外层有对数）：
+$$\frac{x-1}{x+2}>0.$$
+解不等式得 $x\in(-\infty,-2)\cup(1,+\infty)$。
+</details>
+
+### 练习 4：反函数导数
+设 $f(x)=x^3+x$，记其反函数为 $f^{-1}$，求 $(f^{-1})'(0)$。
+
+<details>
+<summary>点击查看过程与答案</summary>
+
+先求 $f(x_0)=0$，得 $x_0=0$。
+
+由反函数求导公式
+$$(f^{-1})'(0)=\frac1{f'(0)}=\frac1{3\cdot0^2+1}=1.$$
+</details>
 
 ---
 
-## 5. 练习库入口 (Exercises)
+<SupportingExercises
+  topic="第一章：实数集与函数"
+  exercises={[
+    { index: 37, title: '实数完备性（闭区间套定理）', slug: '练习-37实数完备性闭区间套定理' },
+    { index: 38, title: '确界原理应用', slug: '练习-38确界原理的应用' },
+    { index: 39, title: '柯西收敛准则辨析', slug: '练习-39柯西收敛准则' }
+  ]}
+/>
 
-本章相关的深度练习已同步至练习库：
-- [实数系完备性深度推导](/docs/exercises/math/real-analysis-basic)
-- [复合函数定义域判定专项](/docs/exercises/math/composition-practice)
-- [反函数与初等函数性质实战](/docs/exercises/math/inverse-functions)
+## 四、练习库入口
+
+- [前四章基础专题练习（新）](/docs/exercises/math/analysis-foundations)
+- [数学分析综合练习库](/docs/exercises/math/analysis)
 
 ---
-
-## 🚀 延伸思考
-- **阿基米德性质**：为什么实数集里没有“无穷大”的数？
-- **有理数的稠密性**：任意两个实数之间是否一定存在有理数？
-- **复合函数的陷阱**：为什么 $\sqrt{x^2}$ 和 $(\sqrt{x})^2$ 不是同一个函数？
+*编者注：第一章最重要的能力是“把直觉翻译成定义”，尤其是对“上界”和“最小上界”的区分。*

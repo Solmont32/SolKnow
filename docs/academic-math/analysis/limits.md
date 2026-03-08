@@ -7,138 +7,158 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 
 # 第二章：数列极限
 
-数列极限是数学分析最基础、最核心的概念之一。本章基于华东师范大学版《数学分析》第五版的严密逻辑体系，从 $\epsilon-N$ 定义出发，深入探讨数列收敛的性质、判定准则以及高阶计算技巧。
+本章围绕 $\epsilon$-$N$ 定义、收敛判别与经典计算模板展开，重点训练“定义证明 + 判别工具 + 计算技巧”三条主线。
 
-## 一、 数列极限的严格定义论
+## 一、定义与基本性质
 
-数列可以看作是定义在正整数集 $\mathbb{N}_+$ 上的函数。数列极限研究的是当自变量 $n$ 趋于无穷大时，函数值 $a_n$ 的变化趋势。
+### 1. $\epsilon$-$N$ 定义
+若对任意 $\epsilon>0$，存在 $N\in\mathbb{N}_+$，使得当 $n>N$ 时恒有
+$$|a_n-A|<\epsilon,$$
+则称 $\lim_{n\to\infty}a_n=A$。
 
-### 1. $\epsilon-N$ 定义
-设 $\{a_n\}$ 为一数列，$A$ 为一常数。如果对于任意给定的 $\epsilon > 0$，总存在正整数 $N$，使得当 $n > N$ 时，不等式
-$$|a_n - A| < \epsilon$$
-恒成立，则称常数 $A$ 为数列 $\{a_n\}$ 的**极限**，或称数列 $\{a_n\}$ **收敛**于 $A$，记作 $\lim_{n \to \infty} a_n = A$。
+<KnowledgeCard type="info" title="学习要点">
+定义中的量词顺序必须严格：先“任意 $\epsilon$”，再“存在 $N$”。证明题中交换顺序通常会导致错误结论。
+</KnowledgeCard>
 
-**定义剖析**：
-- **$\epsilon$ 的任意性**：代表了误差可以无限小。
-- **$N$ 的存在性**：代表了这种接近最终必然发生。
-- **实质**：从第 $N+1$ 项起，数列的所有项都落入了 $A$ 的 $\epsilon$-邻域 $(A-\epsilon, A+\epsilon)$ 之内。
+### 2. 基本定理
+- 收敛极限唯一。
+- 收敛数列必有界。
+- 四则运算与夹逼定理成立。
+- 收敛数列任意子列收敛到同一极限。
 
-### 2. 性质深论
-除了唯一性、有界性、保号性和迫敛性外，收敛数列还具有：
-- **子列收敛性**：若数列 $\{a_n\}$ 收敛于 $A$，则其任何子列 $\{a_{n_k}\}$ 也收敛于 $A$。
-- **Bolzano-Weierstrass 定理**：任一有界数列必有收敛子列。这是实数系完备性的核心体现。
-
----
-
-## 二、 极限存在的判定准则（核心工具）
-
-在处理复杂的递推数列或和式极限时，定义法往往失效，我们必须依赖以下三大准则。
-
-### 1. 单调有界原理
-**表述**：单调增加（减少）且有上界（下界）的数列必有极限。
-- 该准则在证明自然对数底 $e$ 的存在性中发挥了核心作用：$\lim_{n \to \infty} (1 + \frac{1}{n})^n = e$。
-
-### 2. 柯西收敛准则（Cauchy Criterion）
-**表述**：数列 $\{a_n\}$ 收敛的充要条件是：对于任意 $\epsilon > 0$，存在正整数 $N$，使得当 $n, m > N$ 时，恒有：
-$$|a_n - a_m| < \epsilon$$
-- **学术意义**：它将“收敛”这一涉及外部常数 $A$ 的性质，转化为了数列“内部项”之间的演化性质。这是判定一个数列是否收敛而不必知道其极限值的唯一方法。
-- **完备性联系**：在有理数集 $\mathbb{Q}$ 中，满足 Cauchy 条件的数列未必收敛（如趋向 $\sqrt{2}$ 的有理数列），而在实数集 $\mathbb{R}$ 中必收敛，这定义了实数系的**完备性**。
-
-### 3. 斯托尔茨 (Stolz) 定理
-处理 $\frac{\infty}{\infty}$ 型（或 $\frac{0}{0}$ 型）数列极限的利器。
-**定理 ($\frac{\infty}{\infty}$ 型)**：设 $\{y_n\}$ 严格单调增加且 $\lim y_n = +\infty$。若
-$$\lim_{n \to \infty} \frac{x_n - x_{n-1}}{y_n - y_{n-1}} = L$$
-则 $\lim_{n \to \infty} \frac{x_n}{y_n} = L$（$L$ 可以是有限数或 $\infty$）。
+### 3. 三个核心判别工具
+- **单调有界定理**：单调且有界 $\Rightarrow$ 收敛。
+- **柯西收敛准则**：在实数域中，柯西列充要等价于收敛。
+- **Stolz 定理**：处理离散型 $\frac{\infty}{\infty}$ 与平均值极限的关键工具。
 
 ---
 
-## 三、 深度实战解析（华师大经典例题）
+## 二、教材化例题（4 题）
 
-### 练习 1：利用 Stolz 定理计算求和极限
-求极限：$\lim_{n \to \infty} \frac{1^k + 2^k + \dots + n^k}{n^{k+1}}$ ($k \in \mathbb{N}_+$)。
+### 例题 1：定义法证明极限
+证明 $\lim_{n\to\infty}\frac{3n-1}{2n+5}=\frac32$。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
-#### 解析过程
-1. **设项**：令 $x_n = \sum_{i=1}^n i^k$，$y_n = n^{k+1}$。显然 $y_n$ 严格单调增且趋于 $+\infty$。
-2. **应用 Stolz 定理**：
-   $$\lim_{n \to \infty} \frac{x_n - x_{n-1}}{y_n - y_{n-1}} = \lim_{n \to \infty} \frac{n^k}{n^{k+1} - (n-1)^{k+1}}$$
-3. **二项式展开**：
-   $n^{k+1} - (n-1)^{k+1} = n^{k+1} - [n^{k+1} - (k+1)n^k + \binom{k+1}{2}n^{k-1} - \dots]$
-   $= (k+1)n^k - \binom{k+1}{2}n^{k-1} + \dots$
-4. **求极限**：
-   $$\lim_{n \to \infty} \frac{n^k}{(k+1)n^k - \dots} = \frac{1}{k+1}$$
+有
+$$\left|\frac{3n-1}{2n+5}-\frac32\right|=\frac{17}{4n+10}<\frac{17}{4n}.$$
+给定 $\epsilon>0$，取
+$$N>\frac{17}{4\epsilon},$$
+当 $n>N$ 时即有误差小于 $\epsilon$。
 
-#### 答案
-$1/(k+1)$
+故极限为 $\frac32$。
 </details>
 
-### 练习 2：单调有界原理与递推数列
-设 $x_1 = \sqrt{2}, x_{n+1} = \sqrt{2 + x_n}$。证明数列收敛并求其极限。
+### 例题 2：单调有界定理求递推极限
+设 $x_1=1,\ x_{n+1}=\frac12\left(x_n+\frac{2}{x_n}\right)$，求极限。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
-#### 解析过程
-1. **证明有界性**：利用归纳法易证 $x_n < 2$。
-2. **证明单调性**：
-   $x_{n+1}^2 - x_n^2 = (2 + x_n) - x_n^2 = -(x_n - 2)(x_n + 1)$。
-   因为 $x_n < 2$ 且 $x_n > 0$，故 $x_{n+1}^2 - x_n^2 > 0$，即 $x_{n+1} > x_n$。数列单调递增。
-3. **求极限**：由准则知极限 $A$ 存在。令 $n \to \infty$ 对递推式取极限：
-   $A = \sqrt{2 + A} \implies A^2 - A - 2 = 0$。
-   解得 $A=2$ (负根舍去)。
+先证下界：由 AM-GM，
+$$x_{n+1}=\frac12\left(x_n+\frac{2}{x_n}\right)\ge\sqrt2.$$
+再证单调：当 $x_n\ge\sqrt2$ 时
+$$x_{n+1}-x_n=\frac{2-x_n^2}{2x_n}\le0,$$
+故从第二项起单调递减且下有界，故收敛。
 
-#### 答案
-收敛，极限为 $2$。
+设极限为 $L>0$，代入递推式：
+$$L=\frac12\left(L+\frac2L\right)\Rightarrow L^2=2\Rightarrow L=\sqrt2.$$
 </details>
 
-### 练习 3：Cauchy 准则判定级数收敛性初步
-证明调和级数部分和 $S_n = 1 + \frac{1}{2} + \dots + \frac{1}{n}$ 发散。
+### 例题 3：Stolz 定理计算和式极限
+求
+$$\lim_{n\to\infty}\frac{1^2+2^2+\cdots+n^2}{n^3}.$$
 
 <details>
 <summary>点击查看解析与答案</summary>
 
-#### 解析过程
-1. **构造差值**：考虑 $|S_{2n} - S_n|$。
-2. **计算**：
-   $|S_{2n} - S_n| = \frac{1}{n+1} + \frac{1}{n+2} + \dots + \frac{1}{2n}$
-3. **放大缩小**：
-   $|S_{2n} - S_n| > \underbrace{\frac{1}{2n} + \dots + \frac{1}{2n}}_{n \text{ 项}} = n \cdot \frac{1}{2n} = \frac{1}{2}$。
-4. **结论**：取 $\epsilon_0 = 1/2$，无论 $N$ 多大，总能取 $m=2n, n > N$ 使得 $|S_m - S_n| > \epsilon_0$。
-   由 Cauchy 准则，该数列发散。
-
-#### 答案
-发散。
+令
+$$X_n=\sum_{k=1}^n k^2,\quad Y_n=n^3.$$
+由 Stolz：
+$$\lim\frac{X_n}{Y_n}=\lim\frac{X_n-X_{n-1}}{Y_n-Y_{n-1}}=\lim\frac{n^2}{n^3-(n-1)^3}
+=\lim\frac{n^2}{3n^2-3n+1}=\frac13.$$
 </details>
 
-### 练习 4：Stolz 定理的进阶应用 (算术平均值极限)
-若 $\lim_{n \to \infty} a_n = A$，证明 $\lim_{n \to \infty} \frac{a_1 + a_2 + \dots + a_n}{n} = A$。
+### 例题 4：柯西准则判定发散
+证明调和级数部分和 $H_n=\sum_{k=1}^n\frac1k$ 不收敛。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
-#### 解析过程
-1. **设项**：$x_n = \sum_{i=1}^n a_i$，$y_n = n$。
-2. **验证条件**：$y_n$ 严格单调增且趋向 $+\infty$。
-3. **应用 Stolz**：
-   $$\lim_{n \to \infty} \frac{x_n - x_{n-1}}{y_n - y_{n-1}} = \lim_{n \to \infty} \frac{a_n}{1} = A$$
-4. **结论**：原式极限为 $A$。该定理被称为 **Cesàro 平均值定理**。
+取 $m=2n$，则
+$$H_{2n}-H_n=\frac1{n+1}+\cdots+\frac1{2n}>n\cdot\frac1{2n}=\frac12.$$
+故存在固定正数 $\epsilon_0=\frac12$，使任意大下标仍可找到两项差值超过 $\epsilon_0$，违背柯西准则。
 
-#### 答案
-证毕。
+因此 $H_n$ 发散。
 </details>
 
 ---
 
-<SupportingExercises 
-  topic="数列极限" 
+## 三、章内练习（折叠答案）
+
+### 练习 1：定义法
+用 $\epsilon$-$N$ 定义证明 $\lim\limits_{n\to\infty}\frac{n+1}{n}=1$。
+
+<details>
+<summary>点击查看过程与答案</summary>
+
+$$\left|\frac{n+1}{n}-1\right|=\frac1n.$$
+给定 $\epsilon>0$，取 $N>1/\epsilon$ 即可。
+</details>
+
+### 练习 2：夹逼定理
+求极限
+$$\lim_{n\to\infty}\frac{\sin n}{n}.$$
+
+<details>
+<summary>点击查看过程与答案</summary>
+
+由 $-1\le\sin n\le1$，得
+$$-\frac1n\le\frac{\sin n}{n}\le\frac1n.$$
+两端趋于 0，故极限为 0。
+</details>
+
+### 练习 3：Stolz 平均值
+设 $a_n\to a$，证明
+$$\frac{a_1+\cdots+a_n}{n}\to a.$$
+
+<details>
+<summary>点击查看过程与答案</summary>
+
+设 $X_n=\sum_{k=1}^n a_k,\ Y_n=n$，用 Stolz：
+$$\lim\frac{X_n}{Y_n}=\lim\frac{X_n-X_{n-1}}{Y_n-Y_{n-1}}=\lim a_n=a.$$
+</details>
+
+### 练习 4：递推极限
+设 $u_1>0$，$u_{n+1}=\frac{u_n+3}{u_n+1}$。证明其收敛并求极限。
+
+<details>
+<summary>点击查看过程与答案</summary>
+
+极限候选由不动点方程
+$$L=\frac{L+3}{L+1}\Rightarrow L^2=3\Rightarrow L=\sqrt3\ (>0).$$
+
+考察映射 $\varphi(x)=\frac{x+3}{x+1}$ 在 $(0,+\infty)$ 上，
+$$\varphi'(x)=\frac{-2}{(x+1)^2}<0,$$
+并可验证迭代保持正且逐步逼近不动点，故收敛到 $\sqrt3$。
+</details>
+
+---
+
+<SupportingExercises
+  topic="第二章：数列极限"
   exercises={[
-    { index: 13, title: "数列极限 (迫敛定理)", slug: "练习-13数列极限迫敛定理" },
-    { index: 1, title: "函数极限求法", slug: "练习-1求极限" },
-    { index: 14, title: "等价无穷小综合", slug: "练习-14函数极限利用等价无穷小" }
-  ]} 
+    { index: 13, title: '迫敛定理应用', slug: '练习-13数列极限迫敛定理' },
+    { index: 39, title: '柯西收敛准则', slug: '练习-39柯西收敛准则' },
+    { index: 116, title: '正项级数极限比较判别', slug: '练习-116正项级数极限比较判别' }
+  ]}
 />
 
+## 四、练习库入口
+
+- [前四章基础专题练习（新）](/docs/exercises/math/analysis-foundations)
+- [数学分析综合练习库](/docs/exercises/math/analysis)
+
 ---
-*编者注：数列极限是进入无穷世界的门票。理解 $\epsilon-N$ 语言不仅是为了证明，更是为了建立对“无限”过程的有限控制能力。*
+*编者注：数列极限训练要形成“先判别后计算”的习惯，避免直接硬算导致方向错误。*
