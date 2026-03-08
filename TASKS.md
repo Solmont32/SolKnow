@@ -6,10 +6,12 @@
 - （暂无，已清空）
 
 ## 已完成任务
+- [x] 二次完善『抽象代数：格论章节与练习闭环』(2026-03-08)：补充 lattices 教材化推导与格论专题练习，统一折叠答案展示。 (2026-03-08)
 - [x] 完成『抽象代数格论专题』教材化补全与练习扩容 (2026-03-08)：重写 `docs/academic-math/abstract-algebra/lattices.md` 并扩展 `docs/exercises/math/abstract-algebra.md` 格论题组，统一折叠答案格式。 (2026-03-08)
 - [x] 深度重构『最小生成树（MST）』教程页 (2026-03-08)：重写 `docs/graph/mst.md`，补全切分/环路性质、Kruskal/Prim 模板、选型对比，新增 4 道例题与 3 道折叠练习。 (2026-03-08)
 - [x] 新增『算法竞赛练习库：最小生成树专题』(2026-03-08)：新增 `docs/exercises/cs/algorithm-mst.md`，提供 6 道分层练习并全部采用“点击展开过程与答案”的折叠格式。 (2026-03-08)
 - [x] 打通『图论教程-MST练习』联动 (2026-03-08)：更新 `docs/graph/index.md` 与 `sidebars.ts`，新增最小生成树练习入口，形成教程到练习闭环。 (2026-03-08)
+- [x] 执行『推送与部署审查』流程 (2026-03-08)：已完成本地提交并尝试 git push origin main 与 gh run list，当前受网络解析错误与 GH 未登录阻塞，待网络与认证恢复后重试。 (2026-03-08)
 - [x] 深度重构『离散数学：命题逻辑与谓词逻辑』章节 (2026-03-08)：重写 docs/academic-math/discrete-math/logic.md，补全命题等值、推理规则、CNF/DNF 与量词否定，新增 6 道例题与 4 道折叠练习。 (2026-03-08)
 - [x] 深度重构『离散数学：图论基础与组合数学』章节 (2026-03-08)：重写 docs/academic-math/discrete-math/graph-theory.md 与 docs/academic-math/discrete-math/combinatorics.md，系统化树/二分图/欧拉路与计数原理/容斥/递推，并补充多道教材化例题和折叠练习。 (2026-03-08)
 - [x] 扩容『离散数学练习库』并统一折叠答案规范 (2026-03-08)：重写 docs/exercises/math/discrete-math.md，按逻辑/集合关系/图论/组合扩展为 18 题，全部支持“点击查看解析与答案”。 (2026-03-08)
@@ -162,6 +164,8 @@
 - [x] 深化『初中竞赛几何：四点共圆、方幂与圆中比例』(2026-03-08)：重写 `docs/academic-math/competition/junior/circle-geometry.md`，补全判定体系与方幂三形态，扩展为 4 道例题 + 4 道折叠练习。 (2026-03-08)
 - [x] 深化『初中竞赛组合：计数、抽屉与构造』(2026-03-08)：重写 `docs/academic-math/competition/junior/combinatorics.md`，补全加乘原理、隔板法、抽屉与染色不变量，扩展为 4 道例题 + 4 道折叠练习。 (2026-03-08)
 - [x] 扩容『初中数学竞赛练习库与学习路径页』(2026-03-08)：更新 `docs/exercises/math/competition/junior.md` 新增 4 道综合题（合计 16 题，均折叠解析），并重写 `docs/academic-math/competition/junior/index.md` 打通章节与练习入口。 (2026-03-08)
+
+
 
 
 
