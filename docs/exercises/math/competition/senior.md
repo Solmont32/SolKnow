@@ -319,3 +319,101 @@ $$
 
 </details>
 
+
+## 练习 19：Vieta 结构（基础）
+已知二次方程 $x^2-sx+p=0$ 的两根为 $2,5$，求 $s,p$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+由 Vieta：
+$$
+s=2+5=7,\quad p=2\cdot5=10.
+$$
+</details>
+
+## 练习 20：整系数根筛选（提高）
+求方程
+$$
+x^3-2x^2-5x+6=0
+$$
+的所有整数根。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+整数根候选为 $\pm1,\pm2,\pm3,\pm6$。
+代入得 $P(1)=0$，故有因子 $(x-1)$。
+继续分解：
+$$
+x^3-2x^2-5x+6=(x-1)(x^2-x-6)=(x-1)(x-3)(x+2).
+$$
+整数根为 $1,3,-2$。
+</details>
+
+## 练习 21：重根参数（提高）
+求参数 $a$，使
+$$
+x^2-2ax+a^2+a-2=0
+$$
+有重根。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+重根条件是判别式为 0：
+$$
+\Delta=(2a)^2-4(a^2+a-2)=8-4a.
+$$
+令 $\Delta=0$，得 $a=2$。
+</details>
+
+## 练习 22：四次方程代换（挑战）
+解方程
+$$
+x^4-10x^2+9=0.
+$$
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+设 $u=x^2$，得
+$$
+u^2-10u+9=0\Rightarrow (u-1)(u-9)=0.
+$$
+故 $u=1$ 或 $u=9$，于是
+$$
+x=\pm1,\pm3.
+$$
+</details>
+
+## 练习 23：倒数型方程（挑战）
+解方程
+$$
+x+\frac{4}{x}=5,\quad x\ne0.
+$$
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+乘以 $x$：
+$$
+x^2-5x+4=0=(x-1)(x-4).
+$$
+故解为 $x=1$ 或 $x=4$。
+</details>
+
+## 练习 24：根的幂和（挑战）
+设 $\alpha,\beta$ 是方程 $x^2-3x+1=0$ 的两根，求
+$$
+\alpha^2+\beta^2.
+$$
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+由 Vieta：$\alpha+\beta=3,\ \alpha\beta=1$。
+$$
+\alpha^2+\beta^2=(\alpha+\beta)^2-2\alpha\beta=9-2=7.
+$$
+</details>

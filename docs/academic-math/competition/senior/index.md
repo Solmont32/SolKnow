@@ -21,7 +21,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## 四、本轮新增学习提示（2026-03-08）
 
 - 先做 [竞赛代数：经典不等式与函数方程](inequalities) 的基础题，再做挑战题。
+- 再做 [竞赛代数：多项式与代数方程](polynomials-and-equations) 的 Vieta 与重根判别题组。
 - 再做 [竞赛数论：原根、剩余与构造](number-theory-advanced) 的 CRT 与阶专题。
 - 补上 [竞赛组合：母函数、图论与递推](combinatorics-advanced) 的双计数与抽屉原理题组。
 - 每学完一章立即到 [高中数学竞赛练习库](/docs/exercises/math/competition/senior) 完成对应专题训练。
-
