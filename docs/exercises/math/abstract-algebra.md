@@ -171,3 +171,60 @@ $f(A)=f(B)=1$，所以 $\min(f(A),f(B))=1$；
 但 $A\cap B=\varnothing$，$f(A\cap B)=0$。
 两者不等，故不保持交运算，不是格同态。
 </details>
+
+## 五、模与域扩张专题
+
+### 练习 16：\(\mathbb{Z}\)-模视角
+说明为什么任意有限生成阿贝尔群都可看作有限生成 \(\mathbb{Z}\)-模。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+阿贝尔群天然带有整数倍作用 \(k\cdot a\)，因此是 \(\mathbb{Z}\)-模。若群有有限生成元集合，在模意义下同样是有限生成，故命题成立。
+</details>
+
+### 练习 17：商模计算
+在 \(\mathbb{Z}^2\) 中取子模 \(N=\langle(4,0),(0,6)\rangle\)。求 \(\mathbb{Z}^2/N\) 的同构类型。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+\(N=4\mathbb{Z}\times 6\mathbb{Z}\)，故
+\[
+\mathbb{Z}^2/N\cong \mathbb{Z}_4\times \mathbb{Z}_6.
+\]
+若按不变因子形式，还可写成 \(\mathbb{Z}_2\times\mathbb{Z}_{12}\)。
+</details>
+
+### 练习 18：最小多项式
+求 \(\alpha=\sqrt{5}\) 在 \(\mathbb{Q}\) 上的最小多项式，并给出 \([\mathbb{Q}(\alpha):\mathbb{Q}]\)。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+\(\alpha\) 满足 \(x^2-5=0\)，且 \(x^2-5\) 在 \(\mathbb{Q}\) 上不可约，故最小多项式是 \(x^2-5\)，扩张次数为 2。
+</details>
+
+### 练习 19：复合扩张次数
+求 \([\mathbb{Q}(\sqrt{2},\sqrt{3}):\mathbb{Q}]\)。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+先有 \([\mathbb{Q}(\sqrt{2}):\mathbb{Q}]=2\)。且 \(\sqrt{3}\notin \mathbb{Q}(\sqrt{2})\)，因此
+\[
+[\mathbb{Q}(\sqrt{2},\sqrt{3}):\mathbb{Q}(\sqrt{2})]=2.
+\]
+由塔式定理得总次数 \(2\times 2=4\)。
+</details>
+
+### 练习 20：有限域构造判定
+判断 \(\mathbb{F}_2[x]/(x^3+x^2+1)\) 是否为域。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+检查 \(x^3+x^2+1\) 在 \(\mathbb{F}_2\) 上是否有根：
+代入 \(0\) 得 1，代入 \(1\) 得 1，均非 0，故三次多项式无一次因子，因而不可约。
+所以商环是域，元素个数为 \(2^3=8\)。
+</details>
