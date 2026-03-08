@@ -780,7 +780,25 @@ function Invoke-CodexProcessWithTimeout([string[]]$args, [int]$timeoutSeconds) {
 
     $proc = $null
     try {
-        $proc = Start-Process -FilePath $global:CODEX_LAUNCHER -ArgumentList $args -NoNewWindow -PassThru -RedirectStandardOutput $tmpOut -RedirectStandardError $tmpErr
+        $safeArgs = @()
+        foreach ($arg in @($args)) {
+            if ($null -eq $arg) {
+                continue
+            }
+            $s = [string]$arg
+            if ($s.Length -eq 0) {
+                continue
+            }
+            $safeArgs += $s
+        }
+        if (-not $safeArgs -or $safeArgs.Count -eq 0) {
+            return [PSCustomObject]@{
+                ExitCode = 2
+                Output = @("Codex invocation failed: empty argument list after sanitization.")
+            }
+        }
+
+        $proc = Start-Process -FilePath $global:CODEX_LAUNCHER -ArgumentList $safeArgs -NoNewWindow -PassThru -RedirectStandardOutput $tmpOut -RedirectStandardError $tmpErr
         $finished = $proc.WaitForExit($timeoutSeconds * 1000)
 
         if (-not $finished) {
@@ -821,6 +839,15 @@ function Invoke-CodexSmart($prompt, [string[]]$models, $modeLabel) {
 
             if (Test-Path $CodexOutputFile) {
                 Remove-Item $CodexOutputFile -Force -ErrorAction SilentlyContinue
+            }
+
+            if ([string]::IsNullOrWhiteSpace([string]$prompt)) {
+                Write-Log "Codex prompt was empty; injecting fallback prompt." "WARN"
+                $prompt = "[AUTOMATION] Continue execution according to current task and workspace."
+            }
+
+            if ([string]::IsNullOrWhiteSpace($CodexOutputFile)) {
+                $CodexOutputFile = ".codex_last_message.txt"
             }
 
             $args = @(
