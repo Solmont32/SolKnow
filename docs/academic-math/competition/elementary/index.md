@@ -16,7 +16,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 5. **应用题建模**：和差倍、鸡兔同笼、行程、工程。
 
 ## 推荐学习顺序
-- 第一轮：先完成 `数论 -> 应用题` 两个主线章节。
+- 第一轮：先完成 `数论 -> 计数 -> 应用题` 三个主线章节。
 - 第二轮：将每章例题重做一遍并口述“为什么这样列式”。
 - 第三轮：进入练习库做分层训练并复盘错题。
 
@@ -26,8 +26,9 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 - [`几何专题：面积与比例`](/docs/academic-math/competition/elementary/geometry)
 - [`代数专题：巧算与数列`](/docs/academic-math/competition/elementary/algebra)
 - [`应用题专题：建模方法`](/docs/academic-math/competition/elementary/word-problems)
-- [`小学奥数练习库（16 题）`](/docs/exercises/math/competition/elementary)
+- [`小学奥数练习库（24 题）`](/docs/exercises/math/competition/elementary)
 
 <KnowledgeCard type="info" title="学习建议">
 每道题都要写出“模型识别 -> 列式理由 -> 验算结论”三步，而不是只给最终答案。
 </KnowledgeCard>
+
