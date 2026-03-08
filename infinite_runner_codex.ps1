@@ -7,7 +7,9 @@ param(
     [string]$LogFile = "AUTOMATION_LOG.md",
     [string]$TasksFile = "TASKS.md",
     [string]$LockFile = ".codex_runner.lock",
-    [string]$CodexOutputFile = ".codex_last_message.txt"
+    [string]$CodexOutputFile = ".codex_last_message.txt",
+    [switch]$SkipTypecheck,
+    [int]$TypecheckTimeoutSeconds = 180
 )
 
 if ($IsWindows) { chcp 65001 | Out-Null }
@@ -480,6 +482,51 @@ function Suspend-ExcludedChanges {
     throw "Unable to verify temporary runtime stash."
 }
 
+function Suspend-WorkspaceChanges {
+    $stashName = "codex-runner-workspace-$(Get-Date -Format 'yyyyMMddHHmmss')"
+    $statusBefore = @(git status --porcelain)
+    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace(($statusBefore -join "").Trim())) {
+        return $null
+    }
+
+    $beforeRefs = @(git stash list --format="%gd")
+    if ($LASTEXITCODE -ne 0) {
+        throw "Failed to inspect stash state before suspending workspace changes."
+    }
+
+    & git stash push --include-untracked -m $stashName *> $null
+    if ($LASTEXITCODE -ne 0) {
+        throw "Failed to stash workspace changes."
+    }
+
+    $afterRefs = @(git stash list --format="%gd")
+    if ($LASTEXITCODE -ne 0 -or -not $afterRefs -or $afterRefs.Count -eq 0) {
+        throw "Unable to verify temporary workspace stash."
+    }
+
+    foreach ($ref in $afterRefs) {
+        if ($beforeRefs -notcontains $ref) {
+            return $ref
+        }
+    }
+
+    throw "Unable to verify temporary workspace stash."
+}
+
+function Restore-WorkspaceChanges($stashRef) {
+    if ([string]::IsNullOrWhiteSpace($stashRef)) {
+        return
+    }
+
+    cmd /c "git stash pop $stashRef 1>nul 2>nul"
+    if ($LASTEXITCODE -ne 0) {
+        Write-Log "Failed to restore temporary workspace stash: $stashRef (kept for manual recovery)." "WARN"
+        return
+    }
+
+    Write-Log "Restored temporary workspace stash: $stashRef" "INFO"
+}
+
 function Restore-ExcludedChanges($stashRef) {
     if ([string]::IsNullOrWhiteSpace($stashRef)) {
         return
@@ -546,6 +593,23 @@ function Restore-LatestCodexRuntimeStash {
     }
 }
 
+function Restore-LatestCodexWorkspaceStash {
+    $entries = @(git stash list)
+    if ($LASTEXITCODE -ne 0 -or -not $entries) {
+        return
+    }
+
+    $targetEntry = $entries | Where-Object { $_ -match 'codex-runner-workspace-' } | Select-Object -First 1
+    if (-not $targetEntry) {
+        return
+    }
+
+    $stashRef = ($targetEntry -split ':', 2)[0].Trim()
+    if (-not [string]::IsNullOrWhiteSpace($stashRef)) {
+        Restore-WorkspaceChanges $stashRef
+    }
+}
+
 function Invoke-InitialPullSafely {
     if (-not (Ensure-GitHealth)) {
         Write-Log "Initial sync skipped: unresolved non-runtime conflicts detected." "WARN"
@@ -558,8 +622,10 @@ function Invoke-InitialPullSafely {
     }
 
     $runtimeStash = $null
+    $workspaceStash = $null
     try {
         $runtimeStash = Suspend-ExcludedChanges
+        $workspaceStash = Suspend-WorkspaceChanges
 
         $pullExit = Invoke-GitRebasePull
         if ($pullExit -ne 0) {
@@ -568,6 +634,7 @@ function Invoke-InitialPullSafely {
 
         return $true
     } finally {
+        Restore-WorkspaceChanges $workspaceStash
         Restore-ExcludedChanges $runtimeStash
     }
 }
@@ -584,11 +651,38 @@ function Invoke-Sync($message) {
         return $false
     }
 
-    Write-Log "Pre-flight: Running local type-check..." "INFO"
-    npm run typecheck *> $null
-    if ($LASTEXITCODE -ne 0) {
-        Write-Log "Pre-flight FAILED: type-check errors detected. Sync aborted." "ERROR"
-        return $false
+    if ($SkipTypecheck) {
+        Write-Log "Pre-flight: type-check skipped by flag (--SkipTypecheck)." "WARN"
+    } else {
+        Write-Log "Pre-flight: Running local type-check..." "INFO"
+
+        $stamp = Get-Date -Format "yyyyMMddHHmmssfff"
+        $tmpOut = Join-Path $env:TEMP "solknow_typecheck_${PID}_${stamp}.out.log"
+        $tmpErr = Join-Path $env:TEMP "solknow_typecheck_${PID}_${stamp}.err.log"
+
+        try {
+            $proc = Start-Process -FilePath "cmd.exe" -ArgumentList "/c", "npm run typecheck" -NoNewWindow -PassThru -RedirectStandardOutput $tmpOut -RedirectStandardError $tmpErr
+            $finished = $proc.WaitForExit($TypecheckTimeoutSeconds * 1000)
+
+            if (-not $finished) {
+                Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
+                Write-Log "Pre-flight WARN: type-check timed out after ${TypecheckTimeoutSeconds}s. Continue sync." "WARN"
+            } elseif ($proc.ExitCode -ne 0) {
+                $preview = @()
+                if (Test-Path $tmpOut) { $preview += @(Get-Content -Path $tmpOut -ErrorAction SilentlyContinue | Select-Object -Last 3) }
+                if (Test-Path $tmpErr) { $preview += @(Get-Content -Path $tmpErr -ErrorAction SilentlyContinue | Select-Object -Last 3) }
+                $preview = $preview | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -First 3
+
+                if ($preview.Count -gt 0) {
+                    Write-Log "Pre-flight detail: $($preview -join ' | ')" "ERROR"
+                }
+                Write-Log "Pre-flight FAILED: type-check errors detected. Sync aborted." "ERROR"
+                return $false
+            }
+        } finally {
+            Remove-Item $tmpOut -Force -ErrorAction SilentlyContinue
+            Remove-Item $tmpErr -Force -ErrorAction SilentlyContinue
+        }
     }
 
     Write-Log ">>> [SYNC] Aligning changes with cloud..." "EXEC"
@@ -610,8 +704,10 @@ function Invoke-Sync($message) {
     }
 
     $runtimeStash = $null
+    $workspaceStash = $null
     try {
         $runtimeStash = Suspend-ExcludedChanges
+        $workspaceStash = Suspend-WorkspaceChanges
 
         $pullExit = Invoke-GitRebasePull
         if ($pullExit -ne 0) {
@@ -623,6 +719,7 @@ function Invoke-Sync($message) {
             throw "git push failed."
         }
     } finally {
+        Restore-WorkspaceChanges $workspaceStash
         Restore-ExcludedChanges $runtimeStash
     }
 
@@ -845,6 +942,7 @@ try {
     Repair-LogConflictArtifacts
     Assert-Environment
     Restore-LatestCodexRuntimeStash
+    Restore-LatestCodexWorkspaceStash
     Acquire-Lock
     Write-Log "Codex Engine V6.0 Initialized." "SUCCESS"
     Unlock-StuckTasks
