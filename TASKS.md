@@ -11,7 +11,7 @@
 - [x] 新增『抽象代数练习库』并打通导航 (2026-03-08)：新增 docs/exercises/math/abstract-algebra.md（10 题，全部折叠解析），同步更新 sidebars.ts 与 docs/academic-math/abstract-algebra/index.md。 (2026-03-08)
 - [x] 深度重写『最短路算法』教程页 (2026-03-08)：重构 `docs/graph/shortest-path.md`，补全 Dijkstra/Bellman-Ford/SPFA/Floyd 的选型、代码模板、多道例题与折叠练习。 (2026-03-08)
 - [x] 新增『算法竞赛练习库：最短路专题』(2026-03-08)：新增 `docs/exercises/cs/algorithm-shortest-path.md`，提供 6 道分层练习并全部采用“点击展开过程与答案”的折叠格式。 (2026-03-08)
-- [x] 打通『图论教程-练习-侧边栏』联动 (2026-03-08)：在 `docs/graph/index.md` 增加练习入口，并在 `sidebars.ts` 接入最短路练习页。 (2026-03-08)
+- [x] 打通『图论教程-练习』联动 (2026-03-08)：在 `docs/graph/index.md` 增加最短路专题练习入口，形成教程到练习闭环。 (2026-03-08)
 - [x] 重构『离散数学总览与学习路径』(2026-03-08)：重写 docs/academic-math/discrete-math/index.md，按教材化顺序整理逻辑-集合-关系-图论-组合并补充练习闭环入口。
 - [x] 深化『集合论：集合代数与基数』章节 (2026-03-08)：重写 docs/academic-math/discrete-math/set-theory.md，补全集合运算律、笛卡尔积、可数性与 3 道例题 + 3 道折叠练习。
 - [x] 新增『关系与函数』章节并接入侧边栏 (2026-03-08)：新增 docs/academic-math/discrete-math/relations-and-functions.md，系统化等价关系、偏序关系、映射性质并补充例题练习。
@@ -98,6 +98,7 @@
 - [x] 为知识图谱 (Knowledge Graph) 实现深度下钻 (Deep-Dive) 交互模式与文档联动系统，增强全站导航的结构化视觉体验 (2026-03-07)
 - [x] 实现自动化脚本心跳系统与画面，符合人类审美。 
 - [x] 实现全站‘知识图谱’ (Knowledge Graph) 可视化交互系统，深度展现算法与数学的结构化联结 (2026-03-07)
+
 
 
 
