@@ -4,7 +4,7 @@ title: 初中数学竞赛练习
 
 # 初中数学竞赛练习
 
-按“代数-几何-数论-组合”分层练习。每题都可点击查看过程与答案。
+按“代数-几何-数论-组合-面积法”分层练习。每题都可点击查看过程与答案。
 
 ---
 
@@ -346,4 +346,76 @@ $$f(4)=5.$$
 
 #### 答案
 $5$。
+</details>
+
+
+---
+
+## G. 面积法与相似构造
+
+### 练习 21
+在 $\triangle ABC$ 中，点 $D$ 在 $BC$ 上，且 $BD:DC=3:2$。求
+$$S_{ABD}:S_{ACD}.$$
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+$\triangle ABD$ 与 $\triangle ACD$ 同高，面积比等于底边比：
+$$S_{ABD}:S_{ACD}=BD:DC=3:2.$$
+
+#### 答案
+$3:2$。
+</details>
+
+### 练习 22
+在 $\triangle ABC$ 中，点 $D$ 在 $BC$ 上。若
+$$S_{ABD}=20,\quad S_{ACD}=30,\quad BC=25,$$
+求 $BD$ 与 $DC$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+同高面积比得
+$$BD:DC=20:30=2:3.$$
+设 $BD=2k,DC=3k$，则 $5k=25$，$k=5$。
+故 $BD=10,DC=15$。
+
+#### 答案
+$BD=10,\ DC=15$。
+</details>
+
+### 练习 23
+在 $\triangle ABC$ 中，$D\in AB$，过 $D$ 作 $DE\parallel BC$ 交 $AC$ 于 $E$。若
+$$AD:AB=1:2,\quad S_{ABC}=40,$$
+求 $S_{ADE}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+$\triangle ADE\sim\triangle ABC$，面积比为相似比平方：
+$$\frac{S_{ADE}}{S_{ABC}}=\left(\frac{1}{2}\right)^2=\frac14.$$
+故
+$$S_{ADE}=40\cdot\frac14=10.$$
+
+#### 答案
+$10$。
+</details>
+
+### 练习 24
+在 $\triangle ABC$ 中，点 $D$ 在 $BC$ 上，且
+$$S_{ABD}:S_{ABC}=2:7.$$
+求 $BD:BC$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+$\triangle ABD$ 与 $\triangle ABC$ 共享从 $A$ 到 $BC$ 的高，面积比等于底边比：
+$$\frac{S_{ABD}}{S_{ABC}}=\frac{BD}{BC}=\frac27.$$
+
+#### 答案
+$BD:BC=2:7$。
 </details>

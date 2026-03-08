@@ -94,6 +94,7 @@ const sidebars: SidebarsConfig = {
               items: [
                 'academic-math/competition/elementary/number-theory',
                 'academic-math/competition/elementary/counting',
+                'academic-math/competition/elementary/logic',
                 'academic-math/competition/elementary/geometry',
                 'academic-math/competition/elementary/algebra',
                 'academic-math/competition/elementary/word-problems',
@@ -108,6 +109,7 @@ const sidebars: SidebarsConfig = {
               items: [
                 'academic-math/competition/junior/algebra-skills',
                 'academic-math/competition/junior/circle-geometry',
+                'academic-math/competition/junior/geometry-area-method',
                 'academic-math/competition/junior/number-theory-basic',
                 'academic-math/competition/junior/combinatorics',
                 'academic-math/competition/junior/inequalities-and-equations',
@@ -121,6 +123,7 @@ const sidebars: SidebarsConfig = {
               link: { type: 'doc', id: 'academic-math/competition/senior/index' },
               items: [
                 'academic-math/competition/senior/inequalities',
+                'academic-math/competition/senior/polynomials-and-equations',
                 'academic-math/competition/senior/geometry-theorems',
                 'academic-math/competition/senior/number-theory-advanced',
                 'academic-math/competition/senior/combinatorics-advanced',
@@ -228,8 +231,8 @@ const sidebars: SidebarsConfig = {
               ]
             },
             { type: 'category', collapsible: true, collapsed: true, label: '高等代数', link: {type: 'doc', id: 'academic-math/algebra/index'}, items: ['academic-math/algebra/polynomial', 'academic-math/algebra/determinant', 'academic-math/algebra/linear-equations', 'academic-math/algebra/matrix', 'academic-math/algebra/quadratic-forms'] },
-            { type: 'category', collapsible: true, collapsed: true, label: '抽象代数', link: {type: 'doc', id: 'academic-math/abstract-algebra/index'}, items: ['academic-math/abstract-algebra/groups', 'academic-math/abstract-algebra/rings', 'academic-math/abstract-algebra/lattices'] },
-            { type: 'category', collapsible: true, collapsed: true, label: '离散数学', link: {type: 'doc', id: 'academic-math/discrete-math/index'}, items: ['academic-math/discrete-math/logic', 'academic-math/discrete-math/set-theory', 'academic-math/discrete-math/relations-and-functions', 'academic-math/discrete-math/graph-theory', 'academic-math/discrete-math/combinatorics'] },
+            { type: 'category', collapsible: true, collapsed: true, label: '抽象代数', link: {type: 'doc', id: 'academic-math/abstract-algebra/index'}, items: ['academic-math/abstract-algebra/groups', 'academic-math/abstract-algebra/rings', 'academic-math/abstract-algebra/modules-and-field-extensions', 'academic-math/abstract-algebra/lattices'] },
+            { type: 'category', collapsible: true, collapsed: true, label: '离散数学', link: {type: 'doc', id: 'academic-math/discrete-math/index'}, items: ['academic-math/discrete-math/logic', 'academic-math/discrete-math/set-theory', 'academic-math/discrete-math/relations-and-functions', 'academic-math/discrete-math/boolean-algebra-and-logic-circuits', 'academic-math/discrete-math/graph-theory', 'academic-math/discrete-math/combinatorics', 'academic-math/discrete-math/recurrence-and-generating-functions'] },
           ],
         },
       ],
@@ -314,6 +317,7 @@ const sidebars: SidebarsConfig = {
           label: '大学数学练习',
           items: [
             { type: 'doc', id: 'exercises/math/analysis', label: '数学分析练习' },
+            { type: 'doc', id: 'exercises/math/analysis-foundations', label: '前四章基础专题练习' },
             { type: 'doc', id: 'exercises/math/analysis-derivatives-mean-value', label: '导数与中值定理专题练习' },
             { type: 'doc', id: 'exercises/math/analysis-differential-geometry', label: '微分几何专题练习' },
             { type: 'doc', id: 'exercises/math/real-analysis', label: '实变函数练习' },
@@ -333,6 +337,7 @@ const sidebars: SidebarsConfig = {
       collapsed: true,
       label: '计算机练习库',
       items: [
+        { type: 'doc', id: 'exercises/cs/algorithm-linear-dp', label: '算法竞赛：线性 DP 练习' },
         { type: 'doc', id: 'exercises/cs/algorithm-knapsack', label: '算法竞赛：背包练习' },
         { type: 'doc', id: 'exercises/cs/algorithm-shortest-path', label: '算法竞赛：最短路练习' },
         { type: 'doc', id: 'exercises/cs/algorithm-mst', label: '算法竞赛：最小生成树练习' },
@@ -373,6 +378,12 @@ const sidebars: SidebarsConfig = {
 
 
 export default sidebars;
+
+
+
+
+
+
 
 
 
