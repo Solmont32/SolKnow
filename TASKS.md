@@ -4,7 +4,7 @@
 
 ## 待办子任务
 - [x] 深度开发『Lebesgue 测度』章节 (2026-03-08)：在 `docs/academic-math/real-analysis/` 新增 `measure-theory.md`，系统化补充外测度、可测集、零测集、Borel 集及 Cantor 集案例，并配置教材级例题与折叠练习。 (2026-03-08)
-[/] 深度开发『$L^p$ 空间』章节 (2026-03-08)：在 `docs/academic-math/real-analysis/` 新增 `lp-spaces.md`，完整梳理范数、完备性、Hölder/Minkowski 不等式、收敛方式辨析，并补充 3-5 道分析型例题。 (姝ｅ湪鎵ц...)
+- [ ] 深度开发『$L^p$ 空间』章节 (2026-03-08)：在 `docs/academic-math/real-analysis/` 新增 `lp-spaces.md`，完整梳理范数、完备性、Hölder/Minkowski 不等式、收敛方式辨析，并补充 3-5 道分析型例题。
 - [ ] 完备化『实变函数』专题导航闭环 (2026-03-08)：同步重构 `docs/academic-math/real-analysis/index.md` 与 `sidebars.ts`，将测度论、Lebesgue 积分、$L^p$ 空间组织为连续学习路径，消除当前缺失页面与坏链。
 - [ ] 构建『实变函数』配套练习与文档联动 (2026-03-08)：在 `docs/exercises/math/` 中新增实变函数练习页，围绕可测性、收敛定理、$L^p$ 估计补充分梯度习题，并为相关章节接入练习同步组件。
 - [ ] 深度审核『数学分析/实变函数』索引页与章节跳转 (2026-03-08)：排查 `docs/academic-math/analysis/index.md`、`docs/academic-math/real-analysis/index.md` 及相关章节中的错误链接、重复入口与卷册映射问题，统一导航文案与跳转目标。

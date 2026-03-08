@@ -798,7 +798,7 @@ function Get-CodexTimeoutSeconds($modeLabel) {
     return 1200
 }
 
-function Invoke-CodexProcessWithTimeout([string[]]$args, [int]$timeoutSeconds) {
+function Invoke-CodexProcessWithTimeout([string[]]$CliArgs, [int]$timeoutSeconds) {
     $stamp = Get-Date -Format "yyyyMMddHHmmssfff"
     $tmpOut = Join-Path $env:TEMP "codex_runner_${PID}_${stamp}.out.log"
     $tmpErr = Join-Path $env:TEMP "codex_runner_${PID}_${stamp}.err.log"
@@ -806,7 +806,7 @@ function Invoke-CodexProcessWithTimeout([string[]]$args, [int]$timeoutSeconds) {
     $proc = $null
     try {
         $safeArgs = @()
-        foreach ($arg in @($args)) {
+        foreach ($arg in @($CliArgs)) {
             if ($null -eq $arg) {
                 continue
             }
@@ -875,7 +875,7 @@ function Invoke-CodexSmart($prompt, [string[]]$models, $modeLabel) {
                 $CodexOutputFile = ".codex_last_message.txt"
             }
 
-            $args = @(
+            $cliArgs = @(
                 "exec",
                 "--dangerously-bypass-approvals-and-sandbox",
                 "--cd", ".",
@@ -886,12 +886,12 @@ function Invoke-CodexSmart($prompt, [string[]]$models, $modeLabel) {
             )
 
             if (-not [string]::IsNullOrWhiteSpace($model)) {
-                $args += @("--model", $model)
+                $cliArgs += @("--model", $model)
             }
 
-            $args += $prompt
+            $cliArgs += $prompt
 
-            $execResult = Invoke-CodexProcessWithTimeout -args $args -timeoutSeconds $timeoutSeconds
+            $execResult = Invoke-CodexProcessWithTimeout -CliArgs $cliArgs -timeoutSeconds $timeoutSeconds
             $cmdOutput = $execResult.Output
             $exitCode = $execResult.ExitCode
 
