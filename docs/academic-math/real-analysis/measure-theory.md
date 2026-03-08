@@ -370,3 +370,12 @@ Lebesgue 测度论的主线可以压缩为：
 5. 以 Cantor 集为代表理解“点很多”与“测度很大”是两回事。
 
 掌握本章后，阅读 Lebesgue 积分、$L^p$ 空间和概率论中的随机变量积分都会顺畅很多。
+
+---
+
+## 十、配套练习跳转
+
+- [进入实变函数专题练习总页](/docs/exercises/math/real-analysis)
+- [A 组：可测性与零测集（建议对应本章）](/docs/exercises/math/real-analysis#ra-a1)
+- [返回实变函数学习路径首页](/docs/academic-math/real-analysis)
+

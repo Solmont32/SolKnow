@@ -168,3 +168,12 @@ Lebesgue 积分不仅是纯数学的基石，在概率论（期望即积分）�
 *参考资料：*
 - *《实变函数论》周民强*
 - *《Real and Complex Analysis》Walter Rudin*
+
+---
+
+## 七、配套练习跳转
+
+- [进入实变函数专题练习总页](/docs/exercises/math/real-analysis)
+- [B 组：收敛定理与积分交换（建议对应本章）](/docs/exercises/math/real-analysis#ra-b1)
+- [返回实变函数学习路径首页](/docs/academic-math/real-analysis)
+

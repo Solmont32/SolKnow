@@ -205,13 +205,25 @@ const sidebars: SidebarsConfig = {
             {
               type: 'category',
               collapsible: true,
-              collapsed: true,
-              label: '实变函数',
+              collapsed: false,
+              label: '实变函数（学习路径）',
               link: { type: 'doc', id: 'academic-math/real-analysis/index' },
               items: [
-                'academic-math/real-analysis/measure-theory',
-                'academic-math/real-analysis/lebesgue-integral',
-                'academic-math/real-analysis/lp-spaces',
+                {
+                  type: 'doc',
+                  id: 'academic-math/real-analysis/measure-theory',
+                  label: '第 1 站：Lebesgue 测度',
+                },
+                {
+                  type: 'doc',
+                  id: 'academic-math/real-analysis/lebesgue-integral',
+                  label: '第 2 站：Lebesgue 积分',
+                },
+                {
+                  type: 'doc',
+                  id: 'academic-math/real-analysis/lp-spaces',
+                  label: '第 3 站：L^p 空间',
+                },
               ]
             },
             { type: 'category', collapsible: true, collapsed: true, label: '高等代数', link: {type: 'doc', id: 'academic-math/algebra/index'}, items: ['academic-math/algebra/polynomial', 'academic-math/algebra/determinant', 'academic-math/algebra/linear-equations', 'academic-math/algebra/matrix', 'academic-math/algebra/quadratic-forms'] },
@@ -300,7 +312,7 @@ const sidebars: SidebarsConfig = {
           label: '大学数学练习',
           items: [
             { type: 'doc', id: 'exercises/math/analysis', label: '数学分析练习' },
-            { type: 'doc', id: 'exercises/math/real-analysis-lp', label: '实变函数练习（Lp）' },
+            { type: 'doc', id: 'exercises/math/real-analysis', label: '实变函数练习' },
             { type: 'doc', id: 'exercises/math/algebra', label: '高等代数练习' },
           ],
         },
@@ -315,6 +327,7 @@ const sidebars: SidebarsConfig = {
       collapsed: true,
       label: '计算机练习库',
       items: [
+        { type: 'doc', id: 'exercises/cs/algorithm-knapsack', label: '算法竞赛：背包练习' },
         { type: 'doc', id: 'exercises/cs/linux', label: 'Linux 实操练习' },
         { type: 'doc', id: 'exercises/cs/cpp', label: 'C++ 编程练习' },
         { type: 'doc', id: 'exercises/cs/os', label: '操作系统练习' },
@@ -351,3 +364,6 @@ const sidebars: SidebarsConfig = {
 
 
 export default sidebars;
+
+
+

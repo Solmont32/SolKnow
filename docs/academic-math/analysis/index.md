@@ -46,7 +46,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ### 第四部分：级数理论 (Chapters 12-15)
 - **[第十二章 数项级数](series)**：正项级数判别法、交错级数。
 - **[第十三章 函数列与函数项级数](function-sequences)**：**一致收敛性**、分析性质。
-- **[第十四章 幂级数](series)**：收敛半径、Taylor 展开、解析性。
+- **[第十四章 幂级数](power-series)**：收敛半径、Taylor 展开、解析性。
 - **[第十五章 傅里叶级数](fourier-series)**：Fourier 展开、收敛定理、Parseval 等式。
 
 ### 第五部分：多元微积分 (Chapters 16-22)
@@ -66,6 +66,8 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 ## 🚀 进阶与专题补充 (Supplements)
 
+- **[实变函数学习路径](/docs/academic-math/real-analysis)**：Lebesgue 测度、Lebesgue 积分与 $L^p$ 空间的连续进阶。
+
 为了满足更高阶的学习需求，本库额外提供了以下专题：
 
 - **[分析学不等式全书](inequalities)**：系统化梳理 Young, Hölder, Minkowski 等核心工具。
@@ -81,3 +83,4 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 每个章节末尾均关联了配套练习，你也可以直接进入 **[数学分析练习库](/docs/exercises/math/analysis)** 进行针对性强化。
 
 > **学习建议**：分析学的严密性需要通过大量的 $\epsilon$ 练习来磨练。建议在阅读理论时，务必亲手推导一遍核心定理的证明。
+

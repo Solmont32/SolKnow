@@ -301,6 +301,15 @@ $$
 ## 八、章节衔接
 
 - 前置章节：[Lebesgue 测度](./measure-theory) 与 [Lebesgue 积分](./lebesgue-integral)
-- 配套练习：[实变函数 $L^p$ 空间练习](../../exercises/math/real-analysis-lp)
+- 配套练习：[实变函数专题练习（C 组）](/docs/exercises/math/real-analysis#ra-c1)
 
 掌握本章后，可以继续进入 Sobolev 空间、Fourier 分析与偏微分方程弱解理论。
+
+---
+
+## 十、配套练习跳转
+
+- [进入实变函数专题练习总页](/docs/exercises/math/real-analysis)
+- [C 组：^p$ 空间与估计（建议对应本章）](/docs/exercises/math/real-analysis#ra-c1)
+- [返回实变函数学习路径首页](/docs/academic-math/real-analysis)
+
