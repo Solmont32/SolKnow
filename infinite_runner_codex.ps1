@@ -69,9 +69,36 @@ function Write-Log($message, $type = "INFO", $toFile = $true) {
     }
 }
 
+function Clear-HostSafe {
+    try {
+        if ($Host -and $Host.UI -and $Host.UI.RawUI) {
+            Clear-Host
+        }
+    } catch {
+        # Ignore non-interactive host clear failures.
+    }
+}
+
 function Ensure-LogFile {
     if (-not (Test-Path $LogFile)) {
         Add-Content -Path $LogFile -Value "# SolKnow Audit Logs`n" -Encoding UTF8
+    }
+}
+
+function Repair-LogConflictArtifacts {
+    if (-not (Test-Path $LogFile)) {
+        return
+    }
+
+    try {
+        $lines = Get-Content -Path $LogFile
+        $filtered = @($lines | Where-Object { $_ -notmatch '^(<<<<<<< .+|=======|>>>>>>> .+)$' })
+        if ($filtered.Count -ne $lines.Count) {
+            Set-Content -Path $LogFile -Value $filtered -Encoding UTF8
+            Write-Log "Startup: removed merge-marker artifacts from automation log." "WARN"
+        }
+    } catch {
+        Write-Log "Startup: unable to sanitize automation log: $($_.Exception.Message)" "WARN" $false
     }
 }
 
@@ -277,7 +304,7 @@ function Release-Lock {
 function Show-Logo {
     $colors = @("Cyan", "Blue", "White")
     $randomColor = $colors[(Get-Random -Maximum $colors.Count)]
-    Clear-Host
+    Clear-HostSafe
     Write-Host @"
       [ SOLKNOW OMNI-FLOW V6.0 - CODEX EDITION ]
       ________________________________________________________________________________________________________
@@ -746,6 +773,7 @@ function Run-ExecutionCycle {
 
 try {
     Ensure-LogFile
+    Repair-LogConflictArtifacts
     Assert-Environment
     Restore-LatestCodexRuntimeStash
     Acquire-Lock
@@ -768,7 +796,7 @@ try {
         }
 
         for ($i = $CheckInterval; $i -gt 0; $i--) {
-            Clear-Host
+            Clear-HostSafe
             Write-Host ">>> CODEX-FLOW STANDBY | HEARTBEAT: $i s | MODE: PLAN -> EXECUTE -> SYNC" -ForegroundColor DarkGray
             Start-Sleep -Seconds 1
         }

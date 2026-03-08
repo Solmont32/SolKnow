@@ -408,19 +408,12 @@
 [2026-03-08 06:39:13] [EXE ] Target Locked: 全量扩充『数学分析练习库』Volume 2 专题 (2026-03-08)：针对级数、多元微积分、重积分、曲线曲面积分补充 40 道分梯度实战习题，严格执行“答案折叠”，实现与文档的双向联动。
 [2026-03-08 06:39:13] [INFO] Pre-flight: Running local type-check...
 [2026-03-08 06:39:18] [EXE ] >>> [SYNC] Aligning changes with cloud...
-[2026-03-08 07:40:46] [INFO] git pull: From https://github.com/Solmont32/SolKnow
-[2026-03-08 07:40:46] [INFO] git pull:  * branch            main       -> FETCH_HEAD
-[2026-03-08 07:40:46] [INFO] git pull: Already up to date.
-[2026-03-08 07:40:46] [WARN] Skipped restoring temporary runtime stash stash@{3} due to local changes in: AUTOMATION_LOG.md
-[2026-03-08 07:40:46] [INFO] Dropped stale temporary runtime stash: stash@{3}
-[2026-03-08 07:40:46] [EXE ] Target Locked: 全量扩充『数学分析练习库』Volume 2 专题 (2026-03-08)：针对级数、多元微积分、重积分、曲线曲面积分补充 40 道分梯度实战习题，严格执行“答案折叠”，实现与文档的双向联动。
-[2026-03-08 07:40:46] [INFO] Pre-flight: Running local type-check...
-[2026-03-08 07:40:50] [EXE ] >>> [SYNC] Aligning changes with cloud...
-[2026-03-08 07:52:18] [WARN] Skipped restoring temporary runtime stash stash@{0} due to local changes in: AUTOMATION_LOG.md
-[2026-03-08 07:52:18] [INFO] Dropped stale temporary runtime stash: stash@{0}
-[2026-03-08 07:52:18] [WARN] Detected stale runner lock. Reclaiming .codex_runner.lock.
-[2026-03-08 07:52:18] [ OK ] Codex Engine V6.0 Initialized.
-[2026-03-08 07:52:20] [ERR ] Cloud Deployment ALERT: v3 FAILED!
-[2026-03-08 07:52:20] [WARN] Initial sync skipped: workspace has local syncable changes.
-[2026-03-08 07:52:20] [PLAN] No pending tasks. Running deep audit...
-[2026-03-08 07:52:20] [ERR ] All Codex model attempts failed for planning. Cooling down for 5 minutes...
+[2026-03-08 07:40:24] [INFO] git pull: From https://github.com/Solmont32/SolKnow
+[2026-03-08 07:40:24] [INFO] git pull:  * branch            main       -> FETCH_HEAD
+[2026-03-08 07:40:24] [INFO] git pull: Current branch main is up to date.
+[2026-03-08 07:40:28] [WARN] Skipped restoring temporary runtime stash stash@{3} due to local changes in: AUTOMATION_LOG.md
+[2026-03-08 07:40:28] [INFO] Dropped stale temporary runtime stash: stash@{3}
+[2026-03-08 08:12:19] [INFO] Runtime merge conflicts resolved automatically.
+[2026-03-08 08:12:19] [WARN] Initial sync skipped: workspace has local syncable changes.
+[2026-03-08 08:12:19] [PLAN] No pending tasks. Running deep audit...
+[2026-03-08 08:12:19] [INFO] Attempting pulse with Codex [gpt-5.4] for planning...
