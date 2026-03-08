@@ -211,6 +211,7 @@ const sidebars: SidebarsConfig = {
               items: [
                 'academic-math/real-analysis/measure-theory',
                 'academic-math/real-analysis/lebesgue-integral',
+                'academic-math/real-analysis/lp-spaces',
               ]
             },
             { type: 'category', collapsible: true, collapsed: true, label: '高等代数', link: {type: 'doc', id: 'academic-math/algebra/index'}, items: ['academic-math/algebra/polynomial', 'academic-math/algebra/determinant', 'academic-math/algebra/linear-equations', 'academic-math/algebra/matrix', 'academic-math/algebra/quadratic-forms'] },
