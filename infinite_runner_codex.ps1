@@ -67,7 +67,20 @@ function Write-Log($message, $type = "INFO", $toFile = $true) {
     $logEntry = "[$timestamp] $tag $message"
     Write-Host $logEntry -ForegroundColor $color
     if ($toFile) {
-        Add-Content -Path $LogFile -Value $logEntry -Encoding UTF8
+        $written = $false
+        for ($attempt = 1; $attempt -le 5; $attempt++) {
+            try {
+                Add-Content -Path $LogFile -Value $logEntry -Encoding UTF8
+                $written = $true
+                break
+            } catch {
+                Start-Sleep -Milliseconds (120 * $attempt)
+            }
+        }
+
+        if (-not $written) {
+            [Console]::Error.WriteLine("[$timestamp] [WARN] Log write skipped due to file lock: $LogFile")
+        }
     }
 }
 
@@ -83,7 +96,19 @@ function Clear-HostSafe {
 
 function Ensure-LogFile {
     if (-not (Test-Path $LogFile)) {
-        Add-Content -Path $LogFile -Value "# SolKnow Audit Logs`n" -Encoding UTF8
+        $ok = $false
+        for ($attempt = 1; $attempt -le 3; $attempt++) {
+            try {
+                Add-Content -Path $LogFile -Value "# SolKnow Audit Logs`n" -Encoding UTF8
+                $ok = $true
+                break
+            } catch {
+                Start-Sleep -Milliseconds (100 * $attempt)
+            }
+        }
+        if (-not $ok) {
+            [Console]::Error.WriteLine("[WARN] Unable to initialize log file (locked): $LogFile")
+        }
     }
 }
 
