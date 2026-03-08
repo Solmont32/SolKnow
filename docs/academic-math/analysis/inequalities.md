@@ -139,8 +139,13 @@ $$
 
 ## ✍️ 实战练习 (Exercises)
 
-<SupportingExercises 
-  ids={['analysis-ineq-1', 'analysis-ineq-2', 'analysis-ineq-3']} 
+<SupportingExercises
+  topic="不等式专题"
+  exercises={[
+    { index: 1, title: "基础不等式：$(a+b)(b+c)(c+a) \\ge 8abc$" },
+    { index: 2, title: "Jensen 不等式加权 AM-GM 推导" },
+    { index: 3, title: "Integral Minkowski 不等式证明" }
+  ]}
 />
 
 1. **[基础]** 证明：对于 $a, b, c > 0$，$(a+b)(b+c)(c+a) \ge 8abc$。
@@ -151,3 +156,4 @@ $$ \left[ \int \left( \int f(x, y) dy \right)^p dx \right]^{1/p} \le \int \left(
 ---
 
 > **结语**：不等式不是死记硬背的公式，而是对函数形态（凸性、单调性）的深刻理解。掌握了 Hölder 与 Jensen，你就掌握了半个分析学。
+

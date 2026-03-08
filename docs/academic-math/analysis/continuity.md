@@ -65,11 +65,11 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 
 | 函数 $f(x)$ | 区间 $I$ | 是否一致连续 | 深度辨析（Why?） |
 | :--- | :--- | :--- | :--- |
-| $f(x) = \frac{1}{x}$ | $(0, 1]$ | **否** | 当 $x \to 0^+$ 时，函数变化剧烈。取 $x_n = 1/n, y_n = 1/2n$，虽然 $|x_n - y_n| = 1/2n \to 0$，但 $|f(x_n) - f(y_n)| = n \to \infty$。 |
-| $f(x) = x^2$ | $[0, +\infty)$ | **否** | 斜率无限增大。取 $x_n = \sqrt{n+1}, y_n = \sqrt{n}$，虽然 $|x_n - y_n| = \frac{1}{\sqrt{n+1}+\sqrt{n}} \to 0$，但 $|f(x_n) - f(y_n)| = 1$。 |
+| $f(x) = \frac{1}{x}$ | $(0, 1]$ | **否** | 当 $x \to 0^+$ 时，函数变化剧烈。取 $x_n = 1/n, y_n = 1/2n$，虽然 $\lvert x_n - y_n \rvert = 1/2n \to 0$，但 $\lvert f(x_n) - f(y_n) \rvert = n \to \infty$。 |
+| $f(x) = x^2$ | $[0, +\infty)$ | **否** | 斜率无限增大。取 $x_n = \sqrt{n+1}, y_n = \sqrt{n}$，虽然 $\lvert x_n - y_n \rvert = \frac{1}{\sqrt{n+1}+\sqrt{n}} \to 0$，但 $\lvert f(x_n) - f(y_n) \rvert = 1$。 |
 | $f(x) = \sin\frac{1}{x}$ | $(0, 1]$ | **否** | 在 $x=0$ 附近无限震荡。取 $x_n = \frac{1}{2n\pi+\pi/2}, y_n = \frac{1}{2n\pi}$，距离趋于 0 但函数值差恒为 1。 |
-| $f(x) = \sqrt{x}$ | $[0, +\infty)$ | **是** | 虽然在 $x=0$ 处导数不存在，但在 $[0, 1]$ 上由于连续性一致连续，在 $[1, +\infty)$ 上导数有界 ($f' \le 1/2$) 故一致连续。 |
-| $f(x) = \sin x$ | $\mathbb{R}$ | **是** | 导数绝对值 $|\cos x| \le 1$ 全域有界。由中值定理 $|f(x_1) - f(x_2)| \le |x_1 - x_2|$，取 $\delta = \epsilon$ 即可。 |
+| $f(x) = \sqrt{x}$ | $[0, +\infty)$ | **是** | 虽然在 $x=0$ 处导数不存在，但在 $[0, 1]$ 上由于连续性一致连续，在 $[1, +\infty)$ 上导数有界（$f' \le 1/2$）故一致连续。 |
+| $f(x) = \sin x$ | $\mathbb{R}$ | **是** | 导数绝对值 $\lvert \cos x \rvert \le 1$ 全域有界。由中值定理 $\lvert f(x_1) - f(x_2) \rvert \le \lvert x_1 - x_2 \rvert$，取 $\delta = \epsilon$ 即可。 |
 
 ---
 

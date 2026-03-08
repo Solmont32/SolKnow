@@ -14,25 +14,25 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## 1. 七大基本定理 (The Seven Fundamental Theorems)
 
 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-  <KnowledgeCard type="algorithm" title="1. 确界原理 (Supremum Principle)">
+  <KnowledgeCard type="info" title="1. 确界原理 (Supremum Principle)">
     非空有上界的数集必有上确界；非空有下界的数集必有下确界。
   </KnowledgeCard>
-  <KnowledgeCard type="algorithm" title="2. 单调有界原理 (Monotone Convergence)">
+  <KnowledgeCard type="info" title="2. 单调有界原理 (Monotone Convergence)">
     任何单调有界数列必有极限。
   </KnowledgeCard>
-  <KnowledgeCard type="algorithm" title="3. 闭区间套定理 (Nested Intervals)">
+  <KnowledgeCard type="info" title="3. 闭区间套定理 (Nested Intervals)">
     若一列闭区间 $[a_n, b_n]$ 满足嵌套关系且长度趋于 0，则其交集有且仅有一个点。
   </KnowledgeCard>
-  <KnowledgeCard type="algorithm" title="4. 聚点定理 (Bolzano-Weierstrass)">
+  <KnowledgeCard type="info" title="4. 聚点定理 (Bolzano-Weierstrass)">
     有界无限点集至少有一个聚点；或有界序列必有收敛子列。
   </KnowledgeCard>
-  <KnowledgeCard type="algorithm" title="5. 有限覆盖定理 (Heine-Borel)">
+  <KnowledgeCard type="info" title="5. 有限覆盖定理 (Heine-Borel)">
     闭区间 $[a, b]$ 的任何开覆盖必存在有限子覆盖。
   </KnowledgeCard>
-  <KnowledgeCard type="algorithm" title="6. 柯西收敛准则 (Cauchy Criterion)">
+  <KnowledgeCard type="info" title="6. 柯西收敛准则 (Cauchy Criterion)">
     数列收敛的充要条件是其为柯西序列。
   </KnowledgeCard>
-  <KnowledgeCard type="algorithm" title="7. 戴德金分割定理 (Dedekind Cut)">
+  <KnowledgeCard type="info" title="7. 戴德金分割定理 (Dedekind Cut)">
     实数集的任何分割必产生一个确定的实数边界。
   </KnowledgeCard>
 </div>
@@ -147,3 +147,4 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## 🚀 延伸思考
 - **拓扑视角**：有限覆盖定理在现代拓扑学中被定义为“紧致性”(Compactness)。
 - **公理化**：在不同的数学公理体系中，可以选择不同的定理作为初始公理（如 Tarski 实数公理）。
+

@@ -47,9 +47,9 @@ $global:EXCLUDED_SYNC_PATHS = @(
     $CodexOutputFile
 )
 
-# 模型优先级：优先使用指定主模型，再回退到 Codex 专用模型。
-$MODEL_CANDIDATES_PRIMARY = @("gpt-5.4", "gpt-5.3-codex")
-$MODEL_CANDIDATES_EXECUTOR = @("gpt-5.4", "gpt-5.3-codex")
+# 模型优先级：优先指定模型，最后回退到 Codex 默认模型（不传 --model）。
+$MODEL_CANDIDATES_PRIMARY = @("gpt-5.4", "gpt-5.3-codex", "")
+$MODEL_CANDIDATES_EXECUTOR = @("gpt-5.4", "gpt-5.3-codex", "")
 
 function Write-Log($message, $type = "INFO", $toFile = $true) {
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
@@ -90,9 +90,128 @@ function Test-GitAvailable {
     }
 }
 
+function Remove-StaleGitIndexLock {
+    $indexLock = ".git\index.lock"
+    if (-not (Test-Path $indexLock)) {
+        return $false
+    }
+
+    try {
+        $item = Get-Item $indexLock -ErrorAction Stop
+        $ageSeconds = ((Get-Date) - $item.LastWriteTime).TotalSeconds
+
+        if ($ageSeconds -ge 20) {
+            Remove-Item $indexLock -Force -ErrorAction Stop
+            Write-Log "Removed stale git index lock: $indexLock" "WARN"
+            return $true
+        }
+
+        Write-Log "git index lock exists and appears active: $indexLock" "WARN"
+        return $false
+    } catch {
+        Write-Log "Failed to process git index lock: $($_.Exception.Message)" "WARN"
+        return $false
+    }
+}
+
+function Invoke-GitCommandWithRetry {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Command,
+        [Parameter(Mandatory = $true)]
+        [string]$Label,
+        [int]$MaxAttempts = 3
+    )
+
+    for ($attempt = 1; $attempt -le $MaxAttempts; $attempt++) {
+        $output = cmd /c "$Command 2>&1"
+        $exitCode = $LASTEXITCODE
+        $outputText = (@($output) -join "`n")
+
+        if ($exitCode -eq 0) {
+            return [PSCustomObject]@{
+                ExitCode = 0
+                Output = @($output)
+            }
+        }
+
+        $hitIndexIssue = ($outputText -match '(?i)could not write index|index\.lock|unable to create.*index\.lock')
+        if ($hitIndexIssue -and $attempt -lt $MaxAttempts) {
+            Write-Log "$Label failed due to index lock/write issue (attempt $attempt/$MaxAttempts). Retrying..." "WARN"
+            $null = Remove-StaleGitIndexLock
+            Start-Sleep -Seconds 2
+            continue
+        }
+
+        return [PSCustomObject]@{
+            ExitCode = $exitCode
+            Output = @($output)
+        }
+    }
+
+    return [PSCustomObject]@{
+        ExitCode = 1
+        Output = @("$Label failed unexpectedly.")
+    }
+}
+
+function Get-UnmergedPaths {
+    $unmerged = @(git ls-files -u)
+    if ($LASTEXITCODE -ne 0 -or -not $unmerged) {
+        return @()
+    }
+
+    $paths = @()
+    foreach ($line in $unmerged) {
+        $parts = $line -split '\s+'
+        if ($parts.Length -ge 4) {
+            $paths += $parts[3]
+        }
+    }
+    return $paths | Select-Object -Unique
+}
+
+function Resolve-ExcludedUnmergedPaths {
+    $unmergedPaths = Get-UnmergedPaths
+    if (-not $unmergedPaths -or $unmergedPaths.Count -eq 0) {
+        return $true
+    }
+
+    $nonExcluded = @($unmergedPaths | Where-Object { $global:EXCLUDED_SYNC_PATHS -notcontains $_ })
+    if ($nonExcluded.Count -gt 0) {
+        Write-Log "Detected non-runtime merge conflicts: $($nonExcluded -join ', ')" "ERROR"
+        return $false
+    }
+
+    foreach ($path in $unmergedPaths) {
+        Write-Log "Auto-resolving runtime conflict for $path (prefer local runner copy)." "WARN"
+        cmd /c "git checkout --theirs -- `"$path`" 1>nul 2>nul"
+        if ($LASTEXITCODE -ne 0) {
+            cmd /c "git checkout --ours -- `"$path`" 1>nul 2>nul"
+        }
+        & git add -- $path *> $null
+        & git reset -- $path *> $null
+    }
+
+    $remaining = Get-UnmergedPaths
+    if ($remaining.Count -gt 0) {
+        Write-Log "Runtime conflict auto-resolve incomplete: $($remaining -join ', ')" "ERROR"
+        return $false
+    }
+
+    Write-Log "Runtime merge conflicts resolved automatically." "INFO"
+    return $true
+}
+
+function Ensure-GitHealth {
+    $null = Remove-StaleGitIndexLock
+    return (Resolve-ExcludedUnmergedPaths)
+}
+
 function Invoke-GitRebasePull {
-    $pullOutput = cmd /c "git pull origin main --rebase 2>&1"
-    $pullExit = $LASTEXITCODE
+    $pullResult = Invoke-GitCommandWithRetry -Command "git pull origin main --rebase" -Label "git pull --rebase"
+    $pullOutput = $pullResult.Output
+    $pullExit = $pullResult.ExitCode
 
     if ($pullOutput) {
         $logType = if ($pullExit -eq 0) { "INFO" } else { "WARN" }
@@ -230,7 +349,7 @@ function Unlock-StuckTasks {
     }
 
     $content = Get-TasksRaw
-    $updated = [regex]::Replace($content, '(?m)^\s*\[\/\]\s+(.*?)\s+\((正在执行\.\.\.|姝ｅ湪鎵ц\.\.\.)\)\s*$', '- [ ] $1')
+    $updated = [regex]::Replace($content, '(?m)^\s*\[\/\]\s+(.*?)\s+\(正在执行\.\.\.\)\s*$', '- [ ] $1')
     if ($updated -ne $content) {
         Write-Log "Startup: detected stuck task marker and reverted it." "WARN"
         Replace-FileContent -path $TasksFile -content $updated
@@ -380,6 +499,11 @@ function Restore-LatestCodexRuntimeStash {
 }
 
 function Invoke-InitialPullSafely {
+    if (-not (Ensure-GitHealth)) {
+        Write-Log "Initial sync skipped: unresolved non-runtime conflicts detected." "WARN"
+        return $false
+    }
+
     if (Test-HasSyncableChanges) {
         Write-Log "Initial sync skipped: workspace has local syncable changes." "WARN"
         return $false
@@ -401,6 +525,11 @@ function Invoke-InitialPullSafely {
 }
 
 function Invoke-Sync($message) {
+    if (-not (Ensure-GitHealth)) {
+        Write-Log "Sync aborted: unresolved non-runtime conflicts detected." "ERROR"
+        return $false
+    }
+
     $paths = Get-ChangedPaths
     if (-not $paths -or $paths.Count -eq 0) {
         Write-Log "No syncable changes detected." "INFO"
@@ -415,8 +544,8 @@ function Invoke-Sync($message) {
     }
 
     Write-Log ">>> [SYNC] Aligning changes with cloud..." "EXEC"
-    & git add -- $paths
-    if ($LASTEXITCODE -ne 0) {
+    $addResult = Invoke-GitCommandWithRetry -Command ("git add -- " + (($paths | ForEach-Object { '"' + $_ + '"' }) -join " ")) -Label "git add"
+    if ($addResult.ExitCode -ne 0) {
         throw "git add failed."
     }
 
@@ -426,8 +555,9 @@ function Invoke-Sync($message) {
         return $false
     }
 
-    git commit -m $message
-    if ($LASTEXITCODE -ne 0) {
+    $safeMessage = $message.Replace('"', '\"')
+    $commitResult = Invoke-GitCommandWithRetry -Command "git commit -m `"$safeMessage`"" -Label "git commit"
+    if ($commitResult.ExitCode -ne 0) {
         throw "git commit failed."
     }
 
@@ -440,8 +570,8 @@ function Invoke-Sync($message) {
             throw "git pull --rebase failed."
         }
 
-        git push origin main
-        if ($LASTEXITCODE -ne 0) {
+        $pushResult = Invoke-GitCommandWithRetry -Command "git push origin main" -Label "git push"
+        if ($pushResult.ExitCode -ne 0) {
             throw "git push failed."
         }
     } finally {
@@ -484,6 +614,13 @@ Instruction:
 "@
 }
 
+function Get-CodexFailureCooldownSeconds($modeLabel) {
+    if ($modeLabel -eq "planning") {
+        return 60
+    }
+    return 300
+}
+
 function Invoke-CodexSmart($prompt, [string[]]$models, $modeLabel) {
     foreach ($model in $models) {
         try {
@@ -510,7 +647,7 @@ function Invoke-CodexSmart($prompt, [string[]]$models, $modeLabel) {
 
             $args += $prompt
 
-            & $global:CODEX_LAUNCHER @args
+            $cmdOutput = & $global:CODEX_LAUNCHER @args 2>&1
             $exitCode = $LASTEXITCODE
 
             if ($exitCode -eq 0) {
@@ -525,13 +662,18 @@ function Invoke-CodexSmart($prompt, [string[]]$models, $modeLabel) {
             }
 
             Write-Log "Codex call failed with exit code $exitCode on model [$displayModel]" "ERROR"
+            $preview = @($cmdOutput) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -First 3
+            if ($preview -and $preview.Count -gt 0) {
+                Write-Log "Codex failure detail [$displayModel]: $($preview -join ' | ')" "WARN"
+            }
         } catch {
             Write-Log "Codex error on model [$displayModel]: $($_.Exception.Message)" "ERROR"
         }
     }
 
-    Write-Log "All Codex model attempts failed for $modeLabel. Cooling down for 5 minutes..." "ERROR"
-    Start-Sleep -Seconds 300
+    $cooldown = Get-CodexFailureCooldownSeconds $modeLabel
+    Write-Log "All Codex model attempts failed for $modeLabel. Cooling down for $cooldown seconds..." "ERROR"
+    Start-Sleep -Seconds $cooldown
     return $false
 }
 
@@ -539,7 +681,7 @@ function Assert-TaskIntegrity($expectedTask) {
     $content = Get-TasksRaw
     if ($content -match '\[\/\]') {
         Write-Log "Integrity FAILED for: $expectedTask. Reverting lock marker." "ERROR"
-        $updated = [regex]::Replace($content, '(?m)^\s*\[\/\]\s+(.*?)\s+\((正在执行\.\.\.|姝ｅ湪鎵ц\.\.\.)\)\s*$', '- [ ] $1')
+        $updated = [regex]::Replace($content, '(?m)^\s*\[\/\]\s+(.*?)\s+\(正在执行\.\.\.\)\s*$', '- [ ] $1')
         Replace-FileContent -path $TasksFile -content $updated
         $null = Invoke-Sync "revert: failure"
         return $false

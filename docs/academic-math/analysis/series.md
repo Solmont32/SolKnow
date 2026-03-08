@@ -77,7 +77,7 @@ $$\frac{a_n}{a_{n+1}} = 1 + \frac{\mu}{n} + \frac{\theta_n}{n^{1+\lambda}} \quad
 - **绝对收敛**：$\sum |a_n|$ 收敛。绝对收敛级数具有类似于有限和的优良性质（如可交换性、乘法性质）。
 - **条件收敛**：$\sum a_n$ 收敛但 $\sum |a_n|$ 发散。
 
-<KnowledgeCard type="danger" title="Riemann 重排定理 (Riemann Rearrangement Theorem)">
+<KnowledgeCard type="warning" title="Riemann 重排定理 (Riemann Rearrangement Theorem)">
 若级数 $\sum a_n$ 条件收敛，则对于任意实数 $S$（包括 $\pm\infty$），必存在一种重排方式，使得重排后的级数和为 $S$。
 </KnowledgeCard>
 
@@ -327,3 +327,4 @@ $a > 1$ 收敛，$a \leq 1$ 发散。
 
 ---
 *编者注：数项级数是处理无穷小量与无限逼近的基石。掌握 Raabe 与 Gauss 判别法，能让你在面对复杂极限时游刃有余。*
+
