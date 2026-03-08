@@ -49,129 +49,85 @@ $$I_n = \frac{1}{2(n-1)a^2} \frac{x}{(x^2+a^2)^{n-1}} + \frac{2n-3}{2(n-1)a^2} I
 $I_n = \frac{x}{2(n-1)a^2(x^2+a^2)^{n-1}} + \frac{2n-3}{2(n-1)a^2} I_{n-1}$
 </details>
 
-### 练习 8.3：第二类 Euler 换元
-计算 $\int \frac{dx}{x + \sqrt{x^2+x+1}}$。
+### 练习 8.4：无理函数积分的典型变换
+计算 $\int \frac{dx}{(x+1)\sqrt{x^2+x+1}}$。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
-令 $\sqrt{x^2+x+1} = t - x$，两边平方：
-$x^2+x+1 = t^2 - 2tx + x^2 \implies x(1+2t) = t^2-1 \implies x = \frac{t^2-1}{2t+1}$。
-求导：$dx = \frac{2t(2t+1) - 2(t^2-1)}{(2t+1)^2} dt = \frac{2t^2+2t+2}{(2t+1)^2} dt$。
-分母 $x + \sqrt{x^2+x+1} = t$。
-原式 $= \int \frac{1}{t} \cdot \frac{2(t^2+t+1)}{(2t+1)^2} dt$。
-利用部分分式展开：
-$\frac{2t^2+2t+2}{t(2t+1)^2} = \frac{A}{t} + \frac{B}{2t+1} + \frac{C}{(2t+1)^2}$
-经计算得 $A=2, B=-3, C=-3$。
-原式 $= 2\ln|t| - \frac{3}{2}\ln|2t+1| + \frac{3}{2(2t+1)} + C$。
-最后代回 $t = x + \sqrt{x^2+x+1}$。
+令 $t = \frac{1}{x+1}$，则 $x = \frac{1}{t}-1, dx = -\frac{1}{t^2} dt$。
+$x^2+x+1 = (\frac{1}{t}-1)^2 + (\frac{1}{t}-1) + 1 = \frac{1}{t^2} - \frac{2}{t} + 1 + \frac{1}{t} - 1 + 1 = \frac{1-t+t^2}{t^2}$。
+原式 $= \int t \cdot \frac{t}{\sqrt{1-t+t^2}} \cdot (-\frac{1}{t^2}) dt = -\int \frac{dt}{\sqrt{(t-1/2)^2 + 3/4}}$。
+这是一个标准积分形式：$-\ln|t-1/2 + \sqrt{t^2-t+1}| + C$。
+代回 $t = \frac{1}{x+1}$ 即可。
 
 #### 答案
-$2\ln|x+\sqrt{x^2+x+1}| - \frac{3}{2}\ln|2(x+\sqrt{x^2+x+1})+1| + \frac{3}{2(2(x+\sqrt{x^2+x+1})+1)} + C$
+$-\ln|\frac{1}{x+1}-\frac{1}{2} + \sqrt{(\frac{1}{x+1})^2-\frac{1}{x+1}+1}| + C$
 </details>
 
 ---
 
 ## 第九章：定积分 (Definite Integrals)
 
-### 练习 9.1：利用对称性简化定积分
-计算 $I = \int_0^{\pi} \frac{x \sin x}{1 + \cos^2 x} dx$。
+### 练习 9.3：第一中值定理的推广应用
+设 $f \in C[a,b]$，证明 $\lim_{n \to \infty} (\int_a^b |f(x)|^n dx)^{1/n} = \max_{x \in [a,b]} |f(x)|$。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
-令 $x = \pi - t$，则 $dx = -dt$：
-$I = \int_{\pi}^0 \frac{(\pi-t) \sin(\pi-t)}{1 + \cos^2(\pi-t)} (-dt) = \int_0^{\pi} \frac{\pi \sin t - t \sin t}{1 + \cos^2 t} dt = \pi \int_0^{\pi} \frac{\sin t}{1 + \cos^2 t} dt - I$
-$2I = \pi \int_0^{\pi} \frac{\sin t}{1 + \cos^2 t} dt$。
-令 $u = \cos t, du = -\sin t dt$：
-$2I = \pi \int_1^{-1} \frac{-du}{1+u^2} = \pi \int_{-1}^1 \frac{du}{1+u^2} = \pi [\arctan u]_{-1}^1 = \pi(\frac{\pi}{4} - (-\frac{\pi}{4})) = \frac{\pi^2}{2}$。
-故 $I = \frac{\pi^2}{4}$。
+设 $M = \max_{x \in [a,b]} |f(x)|$。
+1. **上界**：$(\int_a^b |f(x)|^n dx)^{1/n} \le (\int_a^b M^n dx)^{1/n} = M (b-a)^{1/n}$。
+   当 $n \to \infty$ 时，$M (b-a)^{1/n} \to M \cdot 1 = M$。
+2. **下界**：由于 $f$ 连续，对于 $\forall \epsilon > 0$，存在区间 $[\alpha, \beta] \subset [a,b]$ 使得在该区间内 $|f(x)| > M - \epsilon$。
+   则 $(\int_a^b |f(x)|^n dx)^{1/n} \ge (\int_\alpha^\beta (M-\epsilon)^n dx)^{1/n} = (M-\epsilon) (\beta-\alpha)^{1/n}$。
+   当 $n \to \infty$ 时，该项趋于 $M-\epsilon$。
+3. **结论**：由夹逼定理，极限值为 $M$。
 
 #### 答案
-$\frac{\pi^2}{4}$
-</details>
-
-### 练习 9.2：Wallis 公式与极限
-计算 $L = \lim_{n \to \infty} \int_0^{\pi/2} \sin^n x dx$。
-
-<details>
-<summary>点击查看解析与答案</summary>
-
-#### 解析
-记 $I_n = \int_0^{\pi/2} \sin^n x dx$。
-利用分部积分可得递推公式：$I_n = \frac{n-1}{n} I_{n-2}$。
-当 $n \to \infty$ 时，由于 $0 < \sin x < 1$ 在 $(0, \pi/2)$ 上成立，且 $\sin^n x \to 0$ 几乎处处成立。
-由控制收敛定理（或对于连续函数的手动分割区间法）：
-对 $\forall \epsilon > 0$，取 $\delta$ 使 $\int_{\pi/2-\delta}^{\pi/2} 1 dx = \delta < \epsilon/2$。
-在 $[0, \pi/2-\delta]$ 上，$\sin x \le \sin(\pi/2-\delta) = k < 1$。
-故 $\int_0^{\pi/2-\delta} \sin^n x dx \le \frac{\pi}{2} k^n \to 0$。
-从而 $\lim_{n \to \infty} I_n = 0$。
-
-#### 答案
-$0$
+证毕。
 </details>
 
 ---
 
 ## 第十章：定积分的应用 (Applications of Definite Integrals)
 
-### 练习 10.1：旋转体的体积
-求由曲线 $y = \sin x$ ($0 \le x \le \pi$) 与 $x$ 轴围成的图形绕 $y$ 轴旋转所得旋转体的体积。
+### 练习 10.2：旋转曲面的面积
+计算曲线 $y = \frac{1}{2}x^2$ ($0 \le x \le \sqrt{3}$) 绕 $y$ 轴旋转所得旋转曲面的面积。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
-使用 **柱壳法 (Shell Method)**：
-体积 $V = \int_a^b 2\pi x f(x) dx$。
-$V = \int_0^{\pi} 2\pi x \sin x dx$。
-使用分部积分：
-$V = 2\pi [-x \cos x + \sin x]_0^{\pi} = 2\pi [(\pi + 0) - (0 + 0)] = 2\pi^2$。
+绕 $y$ 轴旋转，公式为 $S = \int_a^b 2\pi x \sqrt{1 + (y')^2} dx$。
+$y' = x$。
+$S = \int_0^{\sqrt{3}} 2\pi x \sqrt{1 + x^2} dx$。
+令 $u = 1 + x^2, du = 2x dx$：
+$S = \pi \int_1^4 \sqrt{u} du = \pi [\frac{2}{3} u^{3/2}]_1^4 = \frac{2\pi}{3} (4^{3/2} - 1) = \frac{2\pi}{3} (8 - 1) = \frac{14\pi}{3}$。
 
 #### 答案
-$2\pi^2$
+$14\pi/3$
 </details>
 
 ---
 
 ## 第十一章：反常积分 (Improper Integrals)
 
-### 练习 11.1：Dirichlet 判别法的应用
-判定 $\int_1^{+\infty} \frac{\sin x}{x^p} dx$ ($p > 0$) 的收敛性。
+### 练习 11.3：Cauchy 主值 (Principal Value)
+求 $P.V. \int_{-1}^2 \frac{1}{x} dx$。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
-1. **收敛性**：设 $f(x) = \sin x, g(x) = \frac{1}{x^p}$。
-   - $F(x) = \int_1^x \sin t dt = \cos 1 - \cos x$ 有界。
-   - $g(x) = \frac{1}{x^p}$ 当 $p > 0$ 时单调趋于 0。
-   由 Dirichlet 判别法，该反常积分收敛。
-2. **绝对收敛性**：考察 $\int_1^{+\infty} \frac{|\sin x|}{x^p} dx$。
-   - 当 $p > 1$ 时，由比较判别法，绝对收敛。
-   - 当 $0 < p \le 1$ 时，由于 $|\sin x| \ge \sin^2 x = \frac{1 - \cos 2x}{2}$，$\int \frac{1}{2x^p}$ 发散而 $\int \frac{\cos 2x}{2x^p}$ 收敛，故原式发散。
-   此时为条件收敛。
+Cauchy 主值定义为 $\lim_{\epsilon \to 0^+} (\int_{-1}^{-\epsilon} \frac{1}{x} dx + \int_{\epsilon}^2 \frac{1}{x} dx)$。
+$\int_{-1}^{-\epsilon} \frac{1}{x} dx = [\ln|x|]_{-1}^{-\epsilon} = \ln \epsilon - 0 = \ln \epsilon$。
+$\int_{\epsilon}^2 \frac{1}{x} dx = [\ln|x|]_{\epsilon}^2 = \ln 2 - \ln \epsilon$。
+两者相加：$\ln \epsilon + \ln 2 - \ln \epsilon = \ln 2$。
+故 $P.V. \int_{-1}^2 \frac{1}{x} dx = \ln 2$。
+注意：该积分作为通常意义的反常积分是发散的。
 
 #### 答案
-当 $p > 1$ 时绝对收敛；当 $0 < p \le 1$ 时条件收敛。
-</details>
-
-### 练习 11.2：含参反常积分与 Beta 函数
-证明 $\int_0^{\pi/2} \sin^p x \cos^q x dx = \frac{1}{2} B(\frac{p+1}{2}, \frac{q+1}{2})$ ($p, q > -1$)。
-
-<details>
-<summary>点击查看解析与答案</summary>
-
-#### 解析
-利用 Beta 函数的定义：$B(m, n) = \int_0^1 t^{m-1} (1-t)^{n-1} dt$。
-令 $t = \sin^2 x$，则 $dt = 2\sin x \cos x dx$。
-当 $x=0, t=0$；当 $x=\pi/2, t=1$。
-则原式 $= \int_0^1 (\sqrt{t})^p (\sqrt{1-t})^q \frac{dt}{2\sqrt{t}\sqrt{1-t}}$
-$= \frac{1}{2} \int_0^1 t^{\frac{p-1}{2}} (1-t)^{\frac{q-1}{2}} dt$
-根据定义，这正是 $\frac{1}{2} B(\frac{p+1}{2}, \frac{q+1}{2})$。
-
-#### 答案
-证毕。
+$\ln 2$
 </details>

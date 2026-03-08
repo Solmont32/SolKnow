@@ -214,6 +214,20 @@ $b_n = \frac{1}{\pi} \int_0^\pi \sin nx dx = \frac{1}{\pi n} (1 - \cos n\pi) = \
 Fourier 级数不仅仅是一个数学公式，它代表了从**时间域**到**频率域**的视角转换。掌握它的关键在于深刻理解 Dirichlet 条件下的点收敛特性，以及 Parseval 等式所揭示的能量守恒本质。
 </KnowledgeCard>
 
+---
+
+<SupportingExercises
+topic="Fourier 级数"
+fileId="analysis-series-fourier"
+exercises={[
+{ index: 15.1, title: "周期延拓与 Fourier 展开", slug: "练习-151周期延拓与-fourier-展开" },
+{ index: 15.2, title: "Parseval 等式与级数求和", slug: "练习-152parseval-等式与级数求和" },
+{ index: 15.3, title: "一般周期函数的展开", slug: "练习-153一般周期函数的-fourier-展开" }
+]}
+/>
+
+---
+
 <div className="bilibili-embed-inner">
   <iframe 
     src="//player.bilibili.com/player.html?bvid=BV18t411p734&page=1" 

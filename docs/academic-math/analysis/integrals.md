@@ -309,124 +309,16 @@ $2I = \int_0^{\pi/2} \frac{\sin^n x + \cos^n x}{\sin^n x + \cos^n x} dx = \pi/2 
 
 ---
 
-## 五、 练习库同步 (Analysis Exercise Sync)
+<SupportingExercises
+topic="定积分"
+fileId="analysis-integral-calculus"
+exercises={[
+{ index: 9.1, title: "利用对称性简化定积分", slug: "练习-91利用对称性简化定积分" },
+{ index: 9.2, title: "Wallis 公式与极限", slug: "练习-92wallis-公式与极限" },
+{ index: 9.3, title: "第一中值定理应用", slug: "练习-93第一中值定理的推广应用" }
+]}
+/>
 
-### 练习 1：Wallis 公式应用
+---
 
-计算 $\int_0^{\pi} \sin^6 x dx$。
-
-<details>
-
-<summary>答案</summary>
-
-$5\pi/16$
-
-</details>
-
-### 练习 2：导数关系辨析
-
-设 $f(x)$ 连续，证明 $F(x) = \int_a^x f(t)(x-t) dt$ 的二阶导数 $F''(x) = f(x)$。
-
-<details>
-
-<summary>答案</summary>
-
-利用变限积分求导公式直接计算即可。
-
-</details>
-
-### 练习 3：Dirichlet 函数的可积性
-
-证明 Dirichlet 函数 $D(x) = \begin{cases} 1, & x \in \mathbb{Q} \\ 0, & x \notin \mathbb{Q} \end{cases}$ 在 $[0, 1]$ 上不可积。
-
-<details>
-
-<summary>答案</summary>
-
-上、下达布和恒为 1 和 0，不相等。
-
-</details>
-
-### 练习 4：绝对值函数积分
-
-计算 $\int_{-2}^3 |x(x-1)| dx$。
-
-<details>
-
-<summary>答案</summary>
-
-$11/2$
-
-</details>
-
-### 练习 5：积分中值定理的应用
-
-证明 $\lim_{n \to \infty} \int_0^1 \frac{x^n}{1+x} dx = 0$。
-
-<details>
-
-<summary>答案</summary>
-
-利用放大法 $\int_0^1 x^n dx$ 结合夹逼定理。
-
-</details>
-
-### 练习 6：高阶换元法
-
-计算 $\int_0^{\pi/2} \frac{dx}{1+\tan^3 x}$。
-
-<details>
-
-<summary>答案</summary>
-
-$\pi/4$ (提示：利用 $x \to \pi/2-x$ 对称性)
-
-</details>
-
-### 练习 7：特殊常数积分
-
-证明 $\int_0^\infty \frac{dx}{1+x^4} = \frac{\pi}{2\sqrt{2}}$。
-
-<details>
-
-<summary>答案</summary>
-
-提示：令 $x=1/t$ 后合并，化为 $\int_0^\infty \frac{1+x^2}{1+x^4} dx$。
-
-</details>
-
-### 练习 8：分部积分数列
-
-设 $I_n = \int_0^1 (1-x^2)^n dx$，求 $I_n$ 的递推关系。
-
-<details>
-
-<summary>答案</summary>
-
-$I_n = \frac{2n}{2n+1} I_{n-1}$
-
-</details>
-
-### 练习 9：含绝对值与三角函数的定积分
-
-计算 $\int_0^{2\pi} \sqrt{1-\cos 2x} dx$。
-
-<details>
-
-<summary>答案</summary>
-
-$4\sqrt{2}$ (提示：$\sqrt{2\sin^2 x} = \sqrt{2}|\sin x|$)
-
-</details>
-
-### 练习 10：积分不等式证明
-
-证明 $\int_0^{\pi/2} \sin^n x dx < \int_0^{\pi/2} \sin^{n-1} x dx$。
-
-<details>
-
-<summary>答案</summary>
-
-在 $(0, \pi/2)$ 上 $0 < \sin x < 1$，故 $\sin^n x < \sin^{n-1} x$，利用积分保序性。
-
-</details>
+_编者注：定积分是寻找黎曼和极限的过程。掌握了微积分基本定理，你就掌握了连接导数与积分的桥梁。_

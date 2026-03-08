@@ -89,6 +89,12 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 针对第 5-6 章，新增 **[导数与中值定理专题练习](/docs/exercises/math/analysis-derivatives-mean-value)**（多题分层 + 折叠解析）。
 
+针对第 8-11 章，新增 **[一元积分学专题练习](/docs/exercises/math/analysis-integral-calculus)**（多题分层 + 折叠解析）。
+
+针对第 12-15 章，新增 **[级数论与 Fourier 分析专题练习](/docs/exercises/math/analysis-series-fourier)**（多题分层 + 折叠解析）。
+
+针对第 16-23 章，新增 **[多元微积分与矢量分析专题练习](/docs/exercises/math/analysis-multivariable-calculus)**（多题分层 + 折叠解析）。
+
 针对第十七章续内容，新增 **[微分几何专题练习](/docs/exercises/math/analysis-differential-geometry)**（多题分层 + 折叠解析）。
 
 针对第一至第四章，新增 **[前四章基础专题练习](/docs/exercises/math/analysis-foundations)**（10 题分层 + 折叠解析）。

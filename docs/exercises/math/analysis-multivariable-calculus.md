@@ -52,6 +52,29 @@ title: 多元微积分与矢量分析专题练习库 (Ch 16-23)
 在 $(0, 0)$ 处偏导数存在但不可微。
 </details>
 
+### 练习 17.2：空间曲线的曲率与挠率
+求螺旋线 $\mathbf{r}(t) = (a \cos t, a \sin t, bt)$ ($a, b > 0$) 的曲率 $\kappa$ 与挠率 $\tau$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **一阶导与二阶导**：
+   $\mathbf{r}'(t) = (-a \sin t, a \cos t, b)$，其模 $|\mathbf{r}'| = \sqrt{a^2+b^2}$。
+   $\mathbf{r}''(t) = (-a \cos t, -a \sin t, 0)$。
+   $\mathbf{r}'''(t) = (a \sin t, -a \cos t, 0)$。
+2. **曲率 $\kappa$**：
+   $\mathbf{r}' \times \mathbf{r}'' = \begin{vmatrix} \mathbf{i} & \mathbf{j} & \mathbf{k} \\ -a \sin t & a \cos t & b \\ -a \cos t & -a \sin t & 0 \end{vmatrix} = (ab \sin t, -ab \cos t, a^2)$。
+   $|\mathbf{r}' \times \mathbf{r}''| = \sqrt{a^2b^2 + a^4} = a\sqrt{a^2+b^2}$。
+   $\kappa = \frac{|\mathbf{r}' \times \mathbf{r}''|}{|\mathbf{r}'|^3} = \frac{a\sqrt{a^2+b^2}}{(a^2+b^2)^{3/2}} = \frac{a}{a^2+b^2}$。
+3. **挠率 $\tau$**：
+   混合积 $(\mathbf{r}', \mathbf{r}'', \mathbf{r}''') = (\mathbf{r}' \times \mathbf{r}'') \cdot \mathbf{r}''' = (ab \sin t, -ab \cos t, a^2) \cdot (a \sin t, -a \cos t, 0) = a^2b \sin^2 t + a^2b \cos^2 t = a^2b$。
+   $\tau = \frac{(\mathbf{r}', \mathbf{r}'', \mathbf{r}''')}{|\mathbf{r}' \times \mathbf{r}''|^2} = \frac{a^2b}{a^2(a^2+b^2)} = \frac{b}{a^2+b^2}$。
+
+#### 答案
+$\kappa = \frac{a}{a^2+b^2}$，$\tau = \frac{b}{a^2+b^2}$。
+</details>
+
 ---
 
 ## 第十八章：隐函数定理及其应用 (Implicit Function Theorem)
@@ -74,6 +97,28 @@ $\sin(u+v) \frac{\partial u}{\partial x} = \frac{\sin^2 v}{y} + \sin u \cos v$
 
 #### 答案
 $\frac{\partial u}{\partial x} = \frac{\sin^2 v + y \sin u \cos v}{y \sin(x+y)}$
+</details>
+
+### 练习 18.2：带约束的极值 (Lagrange Multipliers)
+在椭圆 $\frac{x^2}{a^2} + \frac{y^2}{b^2} = 1$ 上求一点，使其到直线 $Ax+By+C=0$ 的距离最短。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+点到直线的距离公式为 $d = \frac{|Ax+By+C|}{\sqrt{A^2+B^2}}$。
+最小化 $d$ 等价于最小化 $f(x, y) = Ax+By+C$（或其绝对值）。
+构造 Lagrange 函数：$L(x, y, \lambda) = Ax+By+C + \lambda(\frac{x^2}{a^2} + \frac{y^2}{b^2} - 1)$。
+求偏导：
+1. $L_x = A + \frac{2\lambda x}{a^2} = 0 \implies x = -\frac{Aa^2}{2\lambda}$
+2. $L_y = B + \frac{2\lambda y}{b^2} = 0 \implies y = -\frac{Bb^2}{2\lambda}$
+代入约束条件：
+$\frac{1}{a^2} (-\frac{Aa^2}{2\lambda})^2 + \frac{1}{b^2} (-\frac{Bb^2}{2\lambda})^2 = 1 \implies \frac{A^2a^2 + B^2b^2}{4\lambda^2} = 1$
+$\lambda = \pm \frac{1}{2} \sqrt{A^2a^2 + B^2b^2}$。
+代回 $x, y$ 得两个驻点。通过几何意义判定哪个是最小值点。
+
+#### 答案
+点坐标为 $(\mp \frac{Aa^2}{\sqrt{A^2a^2+B^2b^2}}, \mp \frac{Bb^2}{\sqrt{A^2a^2+B^2b^2}})$。
 </details>
 
 ---
@@ -121,6 +166,29 @@ $I = 2\pi \cdot \frac{1}{2} \int_0^{R^2} e^u du = \pi [e^u]_0^{R^2} = \pi(e^{R^2
 
 #### 答案
 $\pi(e^{R^2} - 1)$
+</details>
+
+### 练习 20.2：球坐标下的三重积分
+计算 $\iiint_V \sqrt{x^2+y^2+z^2} dV$，其中 $V$ 是由 $z = \sqrt{x^2+y^2}$ 与 $z=1$ 围成的区域。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+区域 $V$ 是一个顶点在原点、开口向上的圆锥。
+转球坐标：
+$x^2+y^2+z^2 = r^2$。
+圆锥面 $z = \sqrt{x^2+y^2} \implies r \cos \theta = r \sin \theta \implies \theta = \pi/4$。
+顶面 $z = 1 \implies r \cos \theta = 1 \implies r = \frac{1}{\cos \theta}$。
+积分范围：$0 \le \phi \le 2\pi, 0 \le \theta \le \pi/4, 0 \le r \le \sec \theta$。
+$I = \int_0^{2\pi} d\phi \int_0^{\pi/4} d\theta \int_0^{\sec \theta} r \cdot r^2 \sin \theta dr$
+$= 2\pi \int_0^{\pi/4} \sin \theta [\frac{r^4}{4}]_0^{\sec \theta} d\theta = \frac{\pi}{2} \int_0^{\pi/4} \frac{\sin \theta}{\cos^4 \theta} d\theta$
+令 $u = \cos \theta, du = -\sin \theta d\theta$：
+$I = \frac{\pi}{2} \int_1^{\sqrt{2}/2} \frac{-du}{u^4} = \frac{\pi}{2} [\frac{1}{3u^3}]_{\sqrt{2}/2}^1 = \frac{\pi}{6} (1 - \frac{1}{(\sqrt{2}/2)^3}) = \frac{\pi}{6} (1 - 2\sqrt{2})$。
+(注意符号，结果应为正，这里计算上限时需仔细：$1/(\sqrt{2}/2)^3 = 2\sqrt{2}$，故结果为 $\frac{\pi}{6}(2\sqrt{2}-1)$)。
+
+#### 答案
+$\frac{\pi}{6}(2\sqrt{2}-1)$
 </details>
 
 ---
@@ -188,4 +256,24 @@ $D_{xy}$ 是由 $x=0, y=0, x+y=1$ 围成的三角形，面积为 $1/2$。
 
 #### 答案
 $-3/2$
+</details>
+
+### 练习 23.2：保守场与势函数
+判定向量场 $\mathbf{F} = (2xy+z^2, x^2, 2xz)$ 是否为保守场，若是，求其势函数 $\Phi$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **判定旋度**：
+   $\nabla \times \mathbf{F} = \begin{vmatrix} \mathbf{i} & \mathbf{j} & \mathbf{k} \\ \partial_x & \partial_y & \partial_z \\ 2xy+z^2 & x^2 & 2xz \end{vmatrix} = (0 - 0, 2z - 2z, 2x - 2x) = (0, 0, 0)$。
+   由于旋度为 0 且定义域为 $\mathbb{R}^3$（全平面单连通），故 $\mathbf{F}$ 是保守场。
+2. **求势函数**：
+   $\frac{\partial \Phi}{\partial x} = 2xy+z^2 \implies \Phi = x^2y + xz^2 + g(y, z)$。
+   $\frac{\partial \Phi}{\partial y} = x^2 + g_y(y, z) = x^2 \implies g_y = 0 \implies g = h(z)$。
+   $\frac{\partial \Phi}{\partial z} = 2xz + h'(z) = 2xz \implies h'(z) = 0 \implies h = C$。
+   故 $\Phi(x, y, z) = x^2y + xz^2 + C$。
+
+#### 答案
+是保守场，势函数 $\Phi = x^2y + xz^2 + C$。
 </details>

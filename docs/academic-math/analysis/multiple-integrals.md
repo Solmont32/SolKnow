@@ -449,15 +449,10 @@ $3/4$
 
 <SupportingExercises
 topic="重积分"
+fileId="analysis-multivariable-calculus"
 exercises={[
-{ index: 132, title: "二重积分换序", slug: "练习-132二重积分换序" },
-{ index: 133, title: "极坐标面积积分", slug: "练习-133极坐标面积积分" },
-{ index: 134, title: "三重积分柱坐标", slug: "练习-134三重积分柱坐标" },
-{ index: 135, title: "对称性求质心", slug: "练习-135对称性求质心" },
-{ index: 136, title: "变量代换与 Jacobian", slug: "练习-136变量代换jacobian" },
-{ index: 137, title: "球坐标积分", slug: "练习-137球坐标积分" },
-{ index: 138, title: "变密度质量计算", slug: "练习-138变密度质量计算" },
-{ index: 139, title: "三重积分综合应用", slug: "练习-139三重积分综合应用" }
+{ index: 20.1, title: "极坐标下的二重积分", slug: "练习-201极坐标下的二重积分" },
+{ index: 20.2, title: "球坐标下的三重积分", slug: "练习-202球坐标下的三重积分" }
 ]}
 />
 

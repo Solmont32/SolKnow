@@ -317,133 +317,16 @@ $$I = \int_0^1 \frac{\ln x}{1+x^2} dx - \int_0^1 \frac{\ln x}{1+x^2} dx = 0$$
 
 ---
 
-## 六、 练习库同步 (Analysis Exercise Sync)
+<SupportingExercises
+topic="反常积分"
+fileId="analysis-integral-calculus"
+exercises={[
+{ index: 11.1, title: "Dirichlet 判别法应用", slug: "练习-111dirichlet-判别法的应用" },
+{ index: 11.2, title: "Beta 函数与反常积分", slug: "练习-112含参反常积分与-beta-函数" },
+{ index: 11.3, title: "Cauchy 主值计算", slug: "练习-113cauchy-主值-principal-value" }
+]}
+/>
 
-### 练习 1：敛散性综合判别
+---
 
-判别 $\int_2^{+\infty} \frac{\ln x}{x^p} dx$ 的敛散性。
-
-<details>
-
-<summary>点击查看解析与答案</summary>
-
-- 若 $p > 1$：取 $\epsilon > 0$ 使得 $p - \epsilon > 1$。由于 $\lim_{x \to +\infty} \frac{\ln x}{x^\epsilon} = 0$，存在 $M$ 使得 $x > M$ 时 $\ln x < x^\epsilon$。则 $\frac{\ln x}{x^p} < \frac{1}{x^{p-\epsilon}}$，收敛。
-- 若 $p \le 1$：由于 $\frac{\ln x}{x^p} > \frac{1}{x}$ (对于足够大的 $x$)，而 $\int \frac{1}{x}$ 发散，故发散。
-  **答案**：$p > 1$ 时收敛，$p \le 1$ 时发散。
-
-</details>
-
-### 练习 2：Cauchy 主值的性质
-
-讨论 $\int_{-\infty}^{+\infty} \frac{1+x}{1+x^2} dx$ 的收敛性及 Cauchy 主值。
-
-<details>
-
-<summary>点击查看解析与答案</summary>
-
-1. **敛散性**：被积函数 $\sim \frac{x}{x^2} = \frac{1}{x}$，积分发散。
-2. **Cauchy 主值**：
-   $P.V. \int_{-A}^A \frac{1+x}{1+x^2} dx = \int_{-A}^A \frac{1}{1+x^2} dx + \int_{-A}^A \frac{x}{1+x^2} dx$
-   奇函数部分积分为 0。
-   $= [\arctan x]_{-A}^A = 2 \arctan A \to \pi$。
-   **答案**：积分发散，但 Cauchy 主值为 $\pi$。
-
-</details>
-
-### 练习 3：Abel 判别法的实战
-
-判别 $\int_0^{+\infty} \frac{\sin x \arctan x}{x} dx$ 的敛散性。
-
-<details>
-
-<summary>点击查看解析与答案</summary>
-
-1. **拆分函数**：令 $f(x) = \frac{\sin x}{x}$，$g(x) = \arctan x$。
-2. **验证 Abel 条件**：
-   - $\int_0^{+\infty} \frac{\sin x}{x} dx$ 收敛（Dirichlet 积分）。
-   - $g(x) = \arctan x$ 在 $[0, +\infty)$ 上单调递增且有界（极限为 $\pi/2$）。
-3. **结论**：由 Abel 判别法，原积分收敛。
-
-</details>
-
-### 练习 4：Frullani 积分
-
-计算 $\int_0^{+\infty} \frac{\cos(ax) - \cos(bx)}{x} dx$ ($a, b > 0$)。
-
-<details>
-
-<summary>点击查看解析与答案</summary>
-
-这是一个经典的 Frullani 积分。
-
-$$\int_0^{+\infty} \frac{f(ax) - f(bx)}{x} dx = (f(0) - f(+\infty)) \ln \frac{b}{a}$$
-
-此处 $f(x) = \cos x$。
-
-- $f(0) = \cos 0 = 1$。
-- $f(+\infty)$：在积分意义下（通过震荡衰减或含参量积分处理），其有效值为 0（或者直接观察此积分在 $x \to +\infty$ 时的行为）。
-  实际上 $\lim_{A \to +\infty} \int_0^A \frac{\cos(ax) - \cos(bx)}{x} dx = \ln \frac{b}{a}$。
-  **答案**：$\ln \frac{b}{a}$。
-
-</details>
-
-### 练习 5：瑕积分的判定
-
-判别 $\int_0^1 \frac{dx}{\sqrt{x(1-x)}}$ 的收敛性并计算。
-
-<details>
-
-<summary>点击查看解析与答案</summary>
-
-1. **瑕点**：$x=0$ 和 $x=1$。
-2. **收敛性**：在 $x \to 0$ 时，$\sim x^{-1/2}$，收敛；在 $x \to 1$ 时，$\sim (1-x)^{-1/2}$，收敛。
-3. **计算**：令 $x = \sin^2 \theta$，$dx = 2 \sin \theta \cos \theta d\theta$。
-
-$$\int_0^{\pi/2} \frac{2 \sin \theta \cos \theta d\theta}{\sqrt{\sin^2 \theta (1 - \sin^2 \theta)}} = \int_0^{\pi/2} \frac{2 \sin \theta \cos \theta}{\sin \theta \cos \theta} d\theta = \int_0^{\pi/2} 2 d\theta = \pi$$
-
-**答案**：收敛，值为 $\pi$。
-
-</details>
-
-### 练习 6：高阶 Cauchy 主值
-
-计算 $P.V. \int_{-1}^1 \frac{1}{x^3} dx$。
-
-<details>
-
-<summary>点击查看解析与答案</summary>
-
-$$P.V. \int_{-1}^1 \frac{1}{x^3} dx = \lim_{\epsilon \to 0^+} \left( \int_{-1}^{-\epsilon} \frac{1}{x^3} dx + \int_{\epsilon}^1 \frac{1}{x^3} dx \right)$$
-
-由于 $f(x) = \frac{1}{x^3}$ 是奇函数，且积分区间关于原点对称：
-$\int_{-1}^{-\epsilon} \frac{1}{x^3} dx = -\int_{\epsilon}^1 \frac{1}{x^3} dx$。
-因此，各项抵消，结果为 0。
-**答案**：0。
-
-</details>
-
-### 练习 7：有理函数反常积分
-
-判别并计算 $\int_0^{+\infty} \frac{1}{1+x^4} dx$。
-
-<details>
-
-<summary>点击查看解析与答案</summary>
-
-1. **敛散性**：被积函数 $\sim 1/x^4$，在 $+\infty$ 处收敛。
-2. **计算方法**（分式分解）：
-   $x^4 + 1 = (x^2+1)^2 - 2x^2 = (x^2 + \sqrt{2}x + 1)(x^2 - \sqrt{2}x + 1)$。
-   利用部分分式或待定系数法较为繁琐。
-3. **对称性代换**：
-   令 $x = 1/t$，则 $I = \int_0^{+\infty} \frac{1}{1+x^4} dx = \int_0^{+\infty} \frac{t^2}{1+t^4} dt$。
-   因此 $2I = \int_0^{+\infty} \frac{1+x^2}{1+x^4} dx = \int_0^{+\infty} \frac{1+1/x^2}{x^2+1/x^2} dx$。
-   令 $u = x - 1/x$，则 $du = (1+1/x^2)dx$。
-   当 $x \to 0, u \to -\infty$；当 $x \to +\infty, u \to +\infty$。
-   $x^2 + 1/x^2 = u^2 + 2$。
-
-$$2I = \int_{-\infty}^{+\infty} \frac{du}{u^2+2} = \left[ \frac{1}{\sqrt{2}} \arctan \frac{u}{\sqrt{2}} \right]_{-\infty}^{+\infty} = \frac{1}{\sqrt{2}}(\frac{\pi}{2} - (-\frac{\pi}{2})) = \frac{\pi}{\sqrt{2}}$$
-
-故 $I = \frac{\pi}{2\sqrt{2}}$。
-**答案**：收敛，值为 $\frac{\sqrt{2}\pi}{4}$。
-
-</details>
+_编者注：反常积分的敛散性判别是分析学的核心。掌握了 Dirichlet 与 Abel 判别法，你就掌握了处理震荡积分的利器。_

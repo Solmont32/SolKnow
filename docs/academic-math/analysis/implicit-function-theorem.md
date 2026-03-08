@@ -275,12 +275,11 @@ $du = \frac{1}{2}(dx + dy) + \frac{1}{2x \cot u}(dx - dy)$。
 ---
 
 <SupportingExercises
-topic="隐函数与极值"
+topic="隐函数定理及其应用"
+fileId="analysis-multivariable-calculus"
 exercises={[
-{ index: 128, title: "切平面与法线", slug: "练习-128切平面与法线" },
-{ index: 130, title: "隐函数求导进阶", slug: "练习-130隐函数求导进阶" },
-{ index: 131, title: "Lagrange 乘数法", slug: "练习-131lagrange乘数法" },
-{ index: 129, title: "二元函数极值", slug: "练习-129二元函数极值" }
+{ index: 18.1, title: "隐函数组求导", slug: "练习-181隐函数组求导" },
+{ index: 18.2, title: "带约束的极值 (Lagrange)", slug: "练习-182带约束的极值-lagrange-multipliers" }
 ]}
 />
 

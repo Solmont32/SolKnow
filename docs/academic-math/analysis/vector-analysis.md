@@ -147,10 +147,11 @@ $$\mathbf{A} = \nabla \times \mathbf{B}$$
 ---
 
 <SupportingExercises
-topic="矢量分析与场论"
+topic="矢量分析与场论初步"
+fileId="analysis-multivariable-calculus"
 exercises={[
-{ index: 114, title: "哈密顿算子恒等式证明", slug: "练习-114哈密顿算子恒等式证明" },
-{ index: 115, title: "势函数与保守场判定", slug: "练习-115势函数与保守场判定" }
+{ index: 23.1, title: "斯托克斯公式应用", slug: "练习-231斯托克斯公式-stokess-theorem" },
+{ index: 23.2, title: "保守场与势函数", slug: "练习-232保守场与势函数" }
 ]}
 />
 

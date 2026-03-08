@@ -199,18 +199,16 @@ $f_n'(x)=\cos(nx)/n$。在 $x=0$ 处退化为调和级数，故导数级数不�
 
 ---
 
-## 7. 专题练习入口
+<SupportingExercises
+topic="函数列与函数项级数"
+fileId="analysis-function-sequences"
+exercises={[
+{ index: 1, title: "点收敛与一致收敛辨析", slug: "练习-1基础-点收敛与一致收敛" },
+{ index: 4, title: "Dini 定理应用", slug: "练习-4提高-dini-定理应用" },
+{ index: 6, title: "积分与极限交换", slug: "练习-6提高-积分与极限交换" }
+]}
+/>
 
-- [函数列与函数项级数专题练习](/docs/exercises/math/analysis-function-sequences)
+---
 
-<div className="bilibili-embed-inner">
-  <iframe 
-    src="//player.bilibili.com/player.html?aid=710813214&bvid=BV1BQ4y1P7vE&cid=210323924&page=1" 
-    scrolling="no" 
-    border="0" 
-    frameborder="no" 
-    framespacing="0" 
-    allowfullscreen="true"
-    loading="lazy">
-  </iframe>
-</div>
+_编者注：一致收敛是分析学中处理函数极限的核心工具。掌握了它，你就掌握了交换运算次序的通行证。_

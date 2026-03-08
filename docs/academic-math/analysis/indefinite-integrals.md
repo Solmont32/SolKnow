@@ -632,7 +632,9 @@ topic="不定积分"
 fileId="analysis-integral-calculus"
 exercises={[
 { index: 8.1, title: "换元法与分部积分综合", slug: "练习-81换元法与分部积分的综合应用" },
-{ index: 8.2, title: "有理函数积分递归技巧", slug: "练习-82有理函数积分的递归技巧" }
+{ index: 8.2, title: "有理函数积分递归技巧", slug: "练习-82有理函数积分的递归技巧" },
+{ index: 8.3, title: "第二类 Euler 换元", slug: "练习-83第二类-euler-换元" },
+{ index: 8.4, title: "无理函数典型变换", slug: "练习-84无理函数积分的典型变换" }
 ]}
 />
 

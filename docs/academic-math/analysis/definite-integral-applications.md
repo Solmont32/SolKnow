@@ -110,86 +110,15 @@ $$F = \frac{G m M}{L} \int_a^{a+L} x^{-2} dx = \frac{G m M}{L} \left[-\frac{1}{x
 
 ---
 
-## 三、 高阶实战解析
+<SupportingExercises
+topic="定积分的应用"
+fileId="analysis-integral-calculus"
+exercises={[
+{ index: 10.1, title: "旋转体体积计算", slug: "练习-101旋转体的体积" },
+{ index: 10.2, title: "旋转曲面积分", slug: "练习-102旋转曲面的面积" }
+]}
+/>
 
-### 练习 1：旋转曲面侧面积
+---
 
-求半径为 $R$ 的圆 $x^2 + y^2 = R^2$ 绕 $x$ 轴旋转一周所得球面的表面积。
-
-<details>
-
-<summary>点击查看解析与答案</summary>
-
-#### 解析过程
-
-1. **参数化**：取上半圆 $y = \sqrt{R^2 - x^2}$，$x \in [-R, R]$。
-2. **计算导数**：$y' = \frac{-x}{\sqrt{R^2 - x^2}}$。
-3. **弧长微元**：$ds = \sqrt{1 + (y')^2} dx = \sqrt{1 + \frac{x^2}{R^2-x^2}} dx = \sqrt{\frac{R^2}{R^2-x^2}} dx = \frac{R}{\sqrt{R^2-x^2}} dx$。
-4. **建立积分**：
-
-$$A = 2\pi \int_{-R}^R y ds = 2\pi \int_{-R}^R \sqrt{R^2-x^2} \cdot \frac{R}{\sqrt{R^2-x^2}} dx$$
-
-5. **求解**：
-
-$$A = 2\pi \int_{-R}^R R dx = 2\pi R \cdot [x]_{-R}^R = 4\pi R^2$$
-
-#### 答案
-
-$4\pi R^2$
-
-</details>
-
-### 练习 2：功的变式——逃逸功
-
-已知地球质量为 $M$，半径为 $R$，引力常量为 $G$。求将质量为 $m$ 的物体从地面移动到无穷远处所需做的功（忽略空气阻力）。
-
-<details>
-
-<summary>点击查看解析与答案</summary>
-
-#### 解析过程
-
-1. **力函数**：引力 $F(r) = G\frac{Mm}{r^2}$。要克服引力做功，外力 $F_{ext} = F(r)$。
-2. **建立积分**：从 $r=R$ 到 $r=\infty$。
-
-$$W = \int_R^\infty G\frac{Mm}{r^2} dr$$
-
-3. **计算反常积分**：
-
-$$W = GMm \left[-\frac{1}{r}\right]_R^\infty = GMm (0 - (-\frac{1}{R})) = \frac{GMm}{R}$$
-
-注意：若令 $g = \frac{GM}{R^2}$，则 $W = mgR$。
-
-#### 答案
-
-$\frac{GMm}{R}$
-
-</details>
-
-### 练习 3：引力叠加——环形对质点的引力
-
-一匀质细圆环，半径为 $R$，质量为 $M$。在圆环轴线上距离中心 $h$ 处有一质量为 $m$ 的质点。求圆环对该质点的引力。
-
-<details>
-
-<summary>点击查看解析与答案</summary>
-
-#### 解析过程
-
-1. **对称性分析**：由于圆环的对称性，质点受到的垂直于轴线方向的力相互抵消，合力沿轴线方向。
-2. **建立微元**：在圆环上取质量为 $dM$ 的小段。它与质点的距离为 $r = \sqrt{R^2 + h^2}$。
-3. **分力计算**：该段对质点的引力为 $dF' = G\frac{m dM}{r^2}$。
-   沿轴线的分力为 $dF = dF' \cos \alpha$，其中 $\cos \alpha = \frac{h}{r} = \frac{h}{\sqrt{R^2+h^2}}$。
-4. **建立积分**：
-
-$$dF = G \frac{m dM}{R^2+h^2} \cdot \frac{h}{\sqrt{R^2+h^2}} = \frac{G m h}{(R^2+h^2)^{3/2}} dM$$
-
-5. **积分全环**：$\int dM = M$。
-
-$$F = \frac{G M m h}{(R^2+h^2)^{3/2}}$$
-
-#### 答案
-
-$\frac{G M m h}{(R^2 + h^2)^{3/2}}$
-
-</details>
+_编者注：定积分的应用核心在于“微元法”。掌握了如何重构微元，你就掌握了将微积分应用于现实世界的钥匙。_

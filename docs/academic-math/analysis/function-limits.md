@@ -28,49 +28,72 @@ $$|f(x) - A| < \epsilon$$
 
 <EpsilonDeltaVisualizer />
 
-**深度点评**：
-- **去心邻域**的本质：极限描述的是点周围的“势头”，而非点本身的“状态”。
-- **$\delta$ 的选取**：$\delta$ 通常取决于 $\epsilon$。在证明题中，寻找 $\delta(\epsilon)$ 的过程本质上是建立自变量误差与函数值误差之间的映射。
+### 2. 左极限与右极限 (One-sided Limits)
 
-### 2. 极限存在的深度判别准则
+在某些情况下，函数从左侧趋近与从右侧趋近的结果不同（如跳跃间断点）。
+- **右极限**：$\lim_{x \to x_0^+} f(x) = A \iff \forall \epsilon > 0, \exists \delta > 0, \text{ s.t. } x_0 < x < x_0 + \delta \implies |f(x) - A| < \epsilon$。
+- **左极限**：$\lim_{x \to x_0^-} f(x) = A \iff \forall \epsilon > 0, \exists \delta > 0, \text{ s.t. } x_0 - \delta < x < x_0 \implies |f(x) - A| < \epsilon$。
 
-#### (1) 海涅定理 (Heine's Theorem) - 归结原则
-**定理**：$\lim_{x \to x_0} f(x) = A$ 的充要条件是对于任何以 $x_0$ 为极限的数列 $\{x_n\}$ ($x_n \neq x_0$)，都有 $\lim_{n \to \infty} f(x_n) = A$。
-- **意义**：它是离散与连续之间的桥梁。
-- **应用**：证明极限不存在的最佳武器（只需找两个数列使函数值趋向不同极限）。
+**重要结论**：$\lim_{x \to x_0} f(x) = A$ 的充要条件是 $f(x_0^+) = f(x_0^-) = A$。
 
-#### (2) 柯西收敛准则 (Cauchy Criterion)
-**内容**：$\lim_{x \to x_0} f(x)$ 存在的充要条件是：$\forall \epsilon > 0, \exists \delta > 0$，使得 $\forall x_1, x_2 \in \mathring{U}(x_0, \delta)$，恒有 $|f(x_1) - f(x_2)| < \epsilon$。
-- **价值**：无需预先知道极限值 $A$ 即可判定极限存在性。
+### 3. 无穷大极限与趋于无穷时的极限
 
-#### (3) 单调有界准则 (Monotone Limit Theorem)
-若 $f(x)$ 在 $x_0$ 的某个左（右）邻域内单调且有界，则其左（右）极限必存在。
+- **趋于无穷时的极限** ($x \to \infty$)：
+  $\lim_{x \to \infty} f(x) = A \iff \forall \epsilon > 0, \exists X > 0, \text{ s.t. } |x| > X \implies |f(x) - A| < \epsilon$。
+- **无穷大极限** (垂直渐近线)：
+  $\lim_{x \to x_0} f(x) = \infty \iff \forall M > 0, \exists \delta > 0, \text{ s.t. } 0 < |x - x_0| < \delta \implies |f(x)| > M$。
 
 ---
 
-## 二、 极限计算的高阶武器库
+## 二、 极限存在的深度判别准则
+
+### 1. 海涅定理 (Heine's Theorem) - 归结原则
+**定理**：$\lim_{x \to x_0} f(x) = A$ 的充要条件是对于任何以 $x_0$ 为极限的数列 $\{x_n\}$ ($x_n \neq x_0$)，都有 $\lim_{n \to \infty} f(x_n) = A$。
+- **应用**：证明极限不存在的最佳武器（只需找两个数列使函数值趋向不同极限）。
+
+### 2. 柯西收敛准则 (Cauchy Criterion)
+**内容**：$\lim_{x \to x_0} f(x)$ 存在的充要条件是：$\forall \epsilon > 0, \exists \delta > 0$，使得 $\forall x_1, x_2 \in \mathring{U}(x_0, \delta)$，恒有 $|f(x_1) - f(x_2)| < \epsilon$。
+
+---
+
+## 三、 极限计算的高阶武器库
 
 ### 1. 无穷小的阶与等价替换
 当 $x \to x_0$ 时，若 $f(x) \to 0$，称其为无穷小量。
+- **高阶无穷小**：$f(x) = o(g(x))$，即 $\lim \frac{f(x)}{g(x)} = 0$。
+- **同阶无穷小**：$\lim \frac{f(x)}{g(x)} = C \neq 0$。若 $C=1$，则称**等价无穷小**，记作 $f(x) \sim g(x)$。
 
 <KnowledgeCard type="info" title="常见等价无穷小 ($x \to 0$)">
-- $\sin x \sim x$
-- $\ln(1+x) \sim x$
-- $e^x - 1 \sim x$
+- $\sin x \sim x, \tan x \sim x, \arcsin x \sim x, \arctan x \sim x$
+- $\ln(1+x) \sim x, e^x - 1 \sim x$
 - $1 - \cos x \sim \frac{1}{2}x^2$
 - $(1+x)^\alpha - 1 \sim \alpha x$
 </KnowledgeCard>
 
 ### 2. 泰勒公式：未定式的终极杀手
-当洛必达法则求导过于繁琐，或等价无穷小代换精度不够（如在加减法中）时，直接对函数进行泰勒展开。
 **例**：求 $\lim_{x \to 0} \frac{x - \sin x}{x^3}$。
 解：$\sin x = x - \frac{x^3}{6} + o(x^3)$，故原式 $= \lim \frac{x - (x - x^3/6)}{x^3} = \frac{1}{6}$。
 
 ---
 
-## 三、 高阶极限实战解析 (Expanded Examples)
+## 四、 深度例题精讲 (Expanded Examples)
 
-### 练习 1：利用海涅定理证明极限不存在
+### 练习 1：$\epsilon-\delta$ 定义的正式证明
+证明 $\lim_{x \to 2} x^2 = 4$。
+<details>
+<summary>点击查看解析</summary>
+**分析**：我们需要控制 $|x^2 - 4| = |x-2||x+2| < \epsilon$。
+限制 $x$ 在 $2$ 的邻域内，例如 $|x-2| < 1$，则 $1 < x < 3 \implies 3 < x+2 < 5$，故 $|x+2| < 5$。
+**证明**：
+对于任意 $\epsilon > 0$，取 $\delta = \min(1, \frac{\epsilon}{5})$。
+当 $0 < |x - 2| < \delta$ 时，有：
+1. $|x-2| < 1 \implies |x+2| < 5$。
+2. $|x-2| < \frac{\epsilon}{5}$。
+则 $|x^2 - 4| = |x-2||x+2| < \frac{\epsilon}{5} \cdot 5 = \epsilon$。
+证毕。
+</details>
+
+### 练习 2：利用海涅定理证明极限不存在
 证明 $\lim_{x \to 0} \sin \frac{1}{x}$ 不存在。
 <details>
 <summary>点击查看解析</summary>
@@ -79,7 +102,7 @@ $$|f(x) - A| < \epsilon$$
 由于两个子列极限不同，由海涅定理知原极限不存在。
 </details>
 
-### 练习 2：$1^\infty$ 型极限的统一处理
+### 练习 3：$1^\infty$ 型极限的统一处理
 求 $\lim_{x \to 0} (\frac{a^x+b^x+c^x}{3})^{1/x}$ ($a,b,c > 0$)。
 <details>
 <summary>点击查看解析</summary>
@@ -90,17 +113,23 @@ $\ln y \sim \frac{1}{x} (\frac{a^x+b^x+c^x}{3} - 1) = \frac{(a^x-1) + (b^x-1) + 
 故原极限为 $\sqrt[3]{abc}$。
 </details>
 
-### 练习 3：柯西准则的理论应用
-证明：若 $f(x)$ 满足 $\lim_{x \to \infty} (f(x+1) - f(x)) = A$，则 $\lim_{x \to \infty} \frac{f(x)}{x} = A$。
+### 练习 4：无穷小的阶的比较
+当 $x \to 0$ 时，求 $f(x) = \sqrt{1+x \sin x} - \cos x$ 关于 $x$ 的阶。
 <details>
 <summary>点击查看解析</summary>
-由 Stolz 定理（离散形式）可知，若 $\lim_{n \to \infty} (f(n+1) - f(n)) = A$，则 $\lim_{n \to \infty} \frac{f(n)}{n} = A$。
-对于函数形式，利用 $[x] \le x < [x]+1$ 以及极限的受控性可证。
+利用 Taylor 展开：
+$\sqrt{1+u} = 1 + \frac{1}{2}u - \frac{1}{8}u^2 + o(u^2)$
+$\cos x = 1 - \frac{1}{2}x^2 + \frac{1}{24}x^4 + o(x^4)$
+当 $x \to 0$，$u = x \sin x = x(x - \frac{x^3}{6}) = x^2 - \frac{x^4}{6} + o(x^4)$。
+$f(x) = [1 + \frac{1}{2}(x^2 - \frac{x^4}{6}) - \frac{1}{8}(x^2)^2] - [1 - \frac{1}{2}x^2 + \frac{1}{24}x^4] + o(x^4)$
+$= (1 + \frac{1}{2}x^2 - \frac{1}{12}x^4 - \frac{1}{8}x^4) - (1 - \frac{1}{2}x^2 + \frac{1}{24}x^4) + o(x^4)$
+$= x^2 - (\frac{1}{12} + \frac{1}{8} + \frac{1}{24})x^4 = x^2 - \frac{1}{4}x^4 + o(x^4)$。
+因此 $f(x) \sim x^2$，是关于 $x$ 的二阶无穷小。
 </details>
 
 ---
 
-## 四、 练习库同步 (Analysis Exercise Sync)
+## 五、 练习库同步 (Analysis Exercise Sync)
 
 本章知识点对应练习库中的以下强化题目：
 
