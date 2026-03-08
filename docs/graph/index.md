@@ -8,7 +8,9 @@
 - [最小生成树 (MST)](mst)
 - [拓扑排序 (Topological Sort)](topo-sort)
 - [算法竞赛练习：最短路专题](/exercises/cs/algorithm-shortest-path)
+- [算法竞赛练习：最小生成树专题](/exercises/cs/algorithm-mst)
 - <!-- [强连通分量 (Tarjan/SCC)](tarjan) --> <!-- 待补充 -->
+
 
 
 

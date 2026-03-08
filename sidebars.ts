@@ -313,6 +313,7 @@ const sidebars: SidebarsConfig = {
           label: '大学数学练习',
           items: [
             { type: 'doc', id: 'exercises/math/analysis', label: '数学分析练习' },
+            { type: 'doc', id: 'exercises/math/analysis-derivatives-mean-value', label: '导数与中值定理专题练习' },
             { type: 'doc', id: 'exercises/math/analysis-differential-geometry', label: '微分几何专题练习' },
             { type: 'doc', id: 'exercises/math/real-analysis', label: '实变函数练习' },
             { type: 'doc', id: 'exercises/math/algebra', label: '高等代数练习' },
@@ -333,6 +334,7 @@ const sidebars: SidebarsConfig = {
       items: [
         { type: 'doc', id: 'exercises/cs/algorithm-knapsack', label: '算法竞赛：背包练习' },
         { type: 'doc', id: 'exercises/cs/algorithm-shortest-path', label: '算法竞赛：最短路练习' },
+        { type: 'doc', id: 'exercises/cs/algorithm-mst', label: '算法竞赛：最小生成树练习' },
         { type: 'doc', id: 'exercises/cs/linux', label: 'Linux 实操练习' },
         { type: 'doc', id: 'exercises/cs/cpp', label: 'C++ 编程练习' },
         { type: 'doc', id: 'exercises/cs/os', label: '操作系统练习' },
@@ -369,6 +371,8 @@ const sidebars: SidebarsConfig = {
 
 
 export default sidebars;
+
+
 
 
 
