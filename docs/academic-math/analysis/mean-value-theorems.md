@@ -67,18 +67,21 @@ $$
 $$
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 连续三次使用 L'Hopital：
 $$
 \lim_{x\to0}\frac{x-\sin x}{x^3}=\lim_{x\to0}\frac{1-\cos x}{3x^2}=\lim_{x\to0}\frac{\sin x}{6x}=\frac16.
 $$
+
 </details>
 
 ### 例题 2：中值定理证明单调性
 设 $f'(x)\ge m>0$（$x\in[a,b]$），证明 $f$ 在 $[a,b]$ 上严格增。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 任取 $x_1<x_2$，由拉格朗日中值定理
@@ -88,6 +91,7 @@ $$
 因 $f'(\xi)\ge m>0$ 且 $x_2-x_1>0$，得 $f(x_2)-f(x_1)>0$。
 
 故 $f$ 严格递增。
+
 </details>
 
 ### 例题 3：泰勒展开求极限
@@ -97,6 +101,7 @@ $$
 $$
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 展开至 $x^4$：
@@ -108,6 +113,7 @@ $$
 差为 $\left(\frac1{24}-\frac18\right)x^4+o(x^4)=-\frac1{12}x^4+o(x^4)$。
 
 极限为 $-\frac1{12}$。
+
 </details>
 
 ### 例题 4：余项证明不等式
@@ -117,6 +123,7 @@ e^x>1+x+\frac{x^2}{2}.
 $$
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 在 $0$ 点二阶展开：
@@ -124,6 +131,7 @@ $$
 e^x=1+x+\frac{x^2}{2}+\frac{e^{\xi}}{6}x^3,\quad \xi\in(0,x).
 $$
 因 $x>0$ 且 $e^{\xi}>0$，余项大于 $0$，结论成立。
+
 </details>
 
 ---
@@ -134,11 +142,13 @@ $$
 求 $\lim_{x\to\infty}\frac{x+\sin x}{x}$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 拆分：$\frac{x+\sin x}{x}=1+\frac{\sin x}{x}$，后项趋于 $0$，极限为 $1$。
 
 不建议直接套 L'Hopital，因为反复求导会引入振荡项，不如先代数化简。
+
 </details>
 
 ### 练习 2：拉格朗日中值定理应用
@@ -148,6 +158,7 @@ $$
 $$
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 设 $f(t)=\ln t$，在区间 $[1,1+x]$ 用拉格朗日中值定理：
@@ -155,12 +166,14 @@ $$
 \ln(1+x)-\ln1=f'(\xi)x=\frac{x}{\xi},\quad \xi\in(1,1+x).
 $$
 因 $\xi>1$，故 $\frac{x}{\xi}<x$，即 $\ln(1+x)<x$。
+
 </details>
 
 ### 练习 3：泰勒主项比较
 比较 $\sqrt{1+2x}-(1+x)$ 与 $x^2$ 在 $x\to0$ 时的等价关系。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 $$
@@ -171,12 +184,14 @@ $$
 \sqrt{1+2x}-(1+x)=-\frac{x^2}{2}+o(x^2),
 $$
 与 $x^2$ 同阶，且比值趋于 $-\frac12$。
+
 </details>
 
 ### 练习 4：二阶导数存在性结论
 设 $f\in C^2[0,1]$，$f(0)=f(1)=0$，且在某点取到最小值 $-1$。证明存在 $\xi\in(0,1)$ 使 $f''(\xi)\ge 8$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 设最小值点为 $x_0\in(0,1)$，则 $f(x_0)=-1$。
@@ -193,6 +208,7 @@ f''(\xi)=\frac{f'(\xi_2)-f'(\xi_1)}{\xi_2-\xi_1}
 =\frac{1}{x_0(1-x_0)}\ge 4.
 $$
 若进一步在端点与极小值点构造二次插值函数并比较，可强化得到教材常见结论 $f''(\xi)\ge 8$。
+
 </details>
 
 ---

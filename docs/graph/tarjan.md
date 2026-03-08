@@ -139,10 +139,12 @@ Tarjan 是 2-SAT 判定核心工具。
 若有向图缩点后仍有环，原命题哪里错误？
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 命题错误在“缩点后可能有环”。正确结论是：SCC 缩点图一定是 DAG。
 若缩点后有环，意味着这些 SCC 之间互相可达，应合并为同一 SCC，矛盾。
+
 </details>
 
 ### 练习 2
@@ -150,9 +152,11 @@ Tarjan 是 2-SAT 判定核心工具。
 为何 Tarjan 每个点只会入栈一次、出栈一次？
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 每点首次 DFS 访问时入栈；所属 SCC 被确定时弹出。`dfn` 防止重复访问，`inSt` 标记在栈状态，因此不会重复入栈或重复出栈。
+
 </details>
 
 ### 练习 3
@@ -160,7 +164,10 @@ Tarjan 是 2-SAT 判定核心工具。
 设缩点图入度 0 SCC 数为 4，出度 0 SCC 数为 2，且 `sccCnt > 1`，最少加几条边可使原图强连通？
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 答案为 `max(4, 2) = 4`。
+
 </details>
+

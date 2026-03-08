@@ -94,6 +94,7 @@ $$\frac{a_n}{a_{n+1}} = 1 + \frac{\mu}{n} + \frac{\theta_n}{n^{1+\lambda}} \quad
 判定级数 $\sum_{n=1}^\infty \left[ \frac{(2n-1)!!}{(2n)!!} \right]^p$ 的敛散性。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -110,12 +111,14 @@ $$\frac{a_n}{a_{n+1}} = 1 + \frac{\mu}{n} + \frac{\theta_n}{n^{1+\lambda}} \quad
 
 #### 答案
 $p > 2$ 收敛，$p \leq 2$ 发散。
+
 </details>
 
 ### 案例 2：积分判别法判定 $\ln$ 相关级数
 判定级数 $\sum_{n=2}^\infty \frac{1}{n (\ln n)^p}$ 的敛散性。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -129,12 +132,14 @@ $p > 2$ 收敛，$p \leq 2$ 发散。
 
 #### 答案
 $p > 1$ 收敛，$p \leq 1$ 发散。
+
 </details>
 
 ### 案例 3：变号级数辨析 (Dirichlet/Abel 预热)
 讨论 $\sum_{n=1}^\infty \frac{\sin n}{n^p}$ ($p > 0$) 的敛散性。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -147,12 +152,14 @@ $p > 1$ 收敛，$p \leq 1$ 发散。
 
 #### 答案
 $p > 1$ 绝对收敛，$0 < p \leq 1$ 条件收敛。
+
 </details>
 
 ### 案例 4：Gauss 判别法的实战
 判定级数 $\sum_{n=1}^\infty a_n$，其中 $a_n = \frac{n! e^n}{n^n \sqrt{n}}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -169,6 +176,7 @@ $p > 1$ 绝对收敛，$0 < p \leq 1$ 条件收敛。
 
 #### 答案
 发散。
+
 </details>
 
 ### 案例 5：Riemann 重排定理的直观理解
@@ -176,6 +184,7 @@ $p > 1$ 绝对收敛，$0 < p \leq 1$ 条件收敛。
 $1 - \frac{1}{2} - \frac{1}{4} + \frac{1}{3} - \frac{1}{6} - \frac{1}{8} + \dots$ 求其新和。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -189,12 +198,14 @@ $1 - \frac{1}{2} - \frac{1}{4} + \frac{1}{3} - \frac{1}{6} - \frac{1}{8} + \dots
 
 #### 答案
 $\frac{1}{2} \ln 2$
+
 </details>
 
 ### 案例 6：Cauchy 乘积计算
 求级数 $\sum_{n=0}^\infty \frac{x^n}{n!}$ 与自身的 Cauchy 乘积。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -207,12 +218,14 @@ $\frac{1}{2} \ln 2$
 
 #### 答案
 $\sum_{n=0}^\infty \frac{(2x)^n}{n!}$
+
 </details>
 
 ### 案例 7：必要条件判定的陷阱
 判定级数 $\sum_{n=1}^\infty \frac{1}{n^{1+1/n}}$ 的敛散性。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -229,12 +242,14 @@ $\sum_{n=0}^\infty \frac{(2x)^n}{n!}$
 
 #### 答案
 发散。
+
 </details>
 
 ### 案例 8：结合积分判别法的误差估计
 级数 $\sum_{n=1}^\infty \frac{1}{n^2}$ 收敛于 $\pi^2/6$。若取前 100 项求和，误差 $R_{100}$ 范围是多少？
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -248,6 +263,7 @@ $\sum_{n=0}^\infty \frac{(2x)^n}{n!}$
 
 #### 答案
 $0.0099 \leq R_{100} \leq 0.01$
+
 </details>
 
 ---
@@ -269,6 +285,7 @@ $0.0099 \leq R_{100} \leq 0.01$
 5.  **挑战 (Gauss)**：判定 $\sum_{n=1}^\infty \frac{n!}{(a+1)(a+2)\dots(a+n)}$ ($a > 0$) 的敛散性。
 
 <details>
+
 <summary>点击查看练习 3 解析与答案</summary>
 
 #### 解析过程
@@ -281,9 +298,11 @@ $0.0099 \leq R_{100} \leq 0.01$
 
 #### 答案
 $1/2$
+
 </details>
 
 <details>
+
 <summary>点击查看练习 4 解析与答案</summary>
 
 #### 解析过程
@@ -295,9 +314,11 @@ $1/2$
 
 #### 答案
 是，必收敛。
+
 </details>
 
 <details>
+
 <summary>点击查看练习 5 解析与答案</summary>
 
 #### 解析过程
@@ -312,6 +333,7 @@ $1/2$
 
 #### 答案
 $a > 1$ 收敛，$a \leq 1$ 发散。
+
 </details>
 
 ---

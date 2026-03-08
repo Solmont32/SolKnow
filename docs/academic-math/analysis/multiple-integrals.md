@@ -95,6 +95,7 @@ $$\mathbf{F} = G m \iiint_\Omega \frac{\rho(x, y, z)}{r^3} (\mathbf{r} - \mathbf
 求半径为 $R$ 的均匀半圆盘 $x^2 + y^2 \le R^2, y \ge 0$ 的质心。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析过程
@@ -107,12 +108,14 @@ $$\mathbf{F} = G m \iiint_\Omega \frac{\rho(x, y, z)}{r^3} (\mathbf{r} - \mathbf
 
 #### 答案
 质心坐标为 $(0, \frac{4R}{3\pi})$。
+
 </details>
 
 ### 例题 6：均匀球体的质心（三重积分）
 求均匀半球体 $x^2 + y^2 + z^2 \le R^2, z \ge 0$ 的质心。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析过程
@@ -130,12 +133,14 @@ $$\mathbf{F} = G m \iiint_\Omega \frac{\rho(x, y, z)}{r^3} (\mathbf{r} - \mathbf
 
 #### 答案
 质心坐标为 $(0, 0, \frac{3}{8}R)$。
+
 </details>
 
 ### 例题 7：矩形薄板的转动惯量
 长为 $a$ 宽为 $b$ 的均匀矩形薄板，求其对中心且垂直于板面的轴的转动惯量。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析过程
@@ -148,12 +153,14 @@ $$\mathbf{F} = G m \iiint_\Omega \frac{\rho(x, y, z)}{r^3} (\mathbf{r} - \mathbf
 
 #### 答案
 $I = \frac{1}{12} M (a^2 + b^2)$
+
 </details>
 
 ### 例题 8：均匀圆柱体的转动惯量
 求底面半径为 $R$、高为 $h$、质量为 $M$ 的均匀圆柱体对其中心轴（$z$ 轴）的转动惯量。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析过程
@@ -166,12 +173,14 @@ $I = \frac{1}{12} M (a^2 + b^2)$
 
 #### 答案
 $I_z = \frac{1}{2} M R^2$
+
 </details>
 
 ### 例题 9：球壳对质点的引力（壳层定理证明基础）
 计算质量为 $M$、半径为 $R$ 的均匀球体对位于球外距离球心 $d$ 处质量为 $m$ 的质点的引力。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析过程
@@ -184,6 +193,7 @@ $I_z = \frac{1}{2} M R^2$
 
 #### 答案
 $F = \frac{G M m}{d^2}$，方向指向球心。
+
 </details>
 
 ---
@@ -194,6 +204,7 @@ $F = \frac{G M m}{d^2}$，方向指向球心。
 计算 $\iint_D e^{-(x^2 + y^2)} dx dy$，其中 $D$ 是全平面 $\mathbb{R}^2$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析过程
@@ -206,12 +217,14 @@ $F = \frac{G M m}{d^2}$，方向指向球心。
 
 #### 答案
 $\pi$
+
 </details>
 
 ### 例题 2：柱坐标下的复杂边界（Viviani 曲线）
 计算由圆柱面 $x^2 + y^2 = Rx$ 割球体 $x^2 + y^2 + z^2 \le R^2$ 所成的部分（位于第一卦限）的体积。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析过程
@@ -226,12 +239,14 @@ $\pi$
 
 #### 答案
 $R^3 \left( \frac{\pi}{6} - \frac{2}{9} \right)$
+
 </details>
 
 ### 例题 3：球坐标下的“球内挖圆锥”
 计算三重积分 $\iiint_\Omega z^2 dV$，其中 $\Omega$ 是由球面 $x^2 + y^2 + z^2 = a^2$ 与圆锥面 $z = \sqrt{x^2 + y^2}$ 围成的上部区域。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析过程
@@ -250,12 +265,14 @@ $R^3 \left( \frac{\pi}{6} - \frac{2}{9} \right)$
 
 #### 答案
 $\frac{\pi a^5}{15} (2 - \frac{\sqrt{2}}{2})$
+
 </details>
 
 ### 例题 4：广义坐标变换
 计算 $\iint_D (x+y) dx dy$，其中 $D$ 是由 $x+y=1, x+y=2, x-y=0, x-y=1$ 围成的区域。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析过程
@@ -270,6 +287,7 @@ $\frac{\pi a^5}{15} (2 - \frac{\sqrt{2}}{2})$
 
 #### 答案
 $3/4$
+
 </details>
 
 ---

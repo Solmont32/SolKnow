@@ -40,6 +40,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 在 $\triangle ABC$ 中，$D$ 是 $BC$ 中点。已知 $S_{ABC}=24$，求 $S_{ABD}$ 与 $S_{ACD}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -51,6 +52,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 #### 答案
 $$S_{ABD}=12,\quad S_{ACD}=12.$$
+
 </details>
 
 ### 例题 2：已知面积比求分点比
@@ -59,6 +61,7 @@ $$S_{ABD}:S_{ACD}=3:5,$$
 求 $BD:DC$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -68,6 +71,7 @@ $$S_{ABD}:S_{ACD}=3:5,$$
 
 #### 答案
 $$BD:DC=3:5.$$
+
 </details>
 
 ### 例题 3：平行线模型中的面积关系
@@ -76,6 +80,7 @@ $$AD:DB=2:1,\quad S_{ABC}=27,$$
 求 $S_{ADE}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -88,6 +93,7 @@ $$AD:DB=2:1,\quad S_{ABC}=27,$$
 
 #### 答案
 $$S_{ADE}=12.$$
+
 </details>
 
 ### 例题 4：面积比反推边长比
@@ -96,6 +102,7 @@ $$S_{ABD}=8,\quad S_{ADC}=12,$$
 已知 $BC=10$，求 $BD,DC$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -107,6 +114,7 @@ $$S_{ABD}=8,\quad S_{ADC}=12,$$
 
 #### 答案
 $$BD=4,\quad DC=6.$$
+
 </details>
 
 ---
@@ -118,6 +126,7 @@ $$BD=4,\quad DC=6.$$
 $$S_{ABD}:S_{ACD}.$$
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 #### 过程
@@ -126,6 +135,7 @@ $$S_{ABD}:S_{ACD}=BD:DC=4:7.$$
 
 #### 答案
 $4:7$。
+
 </details>
 
 ### 练习 2
@@ -135,6 +145,7 @@ $$S_{ABD}:S_{ACD}=5:3,
 求 $BD,DC$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 #### 过程
@@ -144,6 +155,7 @@ $$S_{ABD}:S_{ACD}=5:3,
 
 #### 答案
 $BD=15,\ DC=9$。
+
 </details>
 
 ### 练习 3
@@ -151,6 +163,7 @@ $BD=15,\ DC=9$。
 若 $AD:AB=3:5$，且 $S_{ABC}=50$，求 $S_{ADE}$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 #### 过程
@@ -161,6 +174,7 @@ $$S_{ADE}=50\cdot\frac{9}{25}=18.$$
 
 #### 答案
 $18$。
+
 </details>
 
 ### 练习 4
@@ -169,6 +183,7 @@ $$S_{ABD}=18,\quad S_{ACD}=27.$$
 求 $BD:BC$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 #### 过程
@@ -177,4 +192,6 @@ $$S_{ABD}=18,\quad S_{ACD}=27.$$
 
 #### 答案
 $2:5$。
+
 </details>
+

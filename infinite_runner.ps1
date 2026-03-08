@@ -11,10 +11,6 @@ $LOG_FILE = "AUTOMATION_LOG.md"
 $TASKS_FILE = "TASKS.md"
 $global:LAST_CHECKED_RUN_ID = ""
 
-# 模型偏好配置
-$MODEL_PRO = "gemini-3.1-pro-preview"
-$MODEL_FLASH = "gemini-2.0-flash"
-
 # --- 修复版日志功能 (兼容 PowerShell 5.1) ---
 function Write-Log($message, $type="INFO", $toFile=$true) {
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
@@ -31,31 +27,17 @@ function Write-Log($message, $type="INFO", $toFile=$true) {
     if ($toFile) { Add-Content -Path $LOG_FILE -Value $logEntry -Encoding UTF8 }
 }
 
-# --- 智能模型切换功能 (应对 429 和 14小时封禁) ---
-function Invoke-GeminiSmart($prompt, $forceFlash=$false) {
-    $models = @($MODEL_PRO, $MODEL_FLASH)
-    if ($forceFlash) { $models = @($MODEL_FLASH) }
-
-    foreach ($model in $models) {
-        try {
-            Write-Log "Attempting pulse with [$model]..." "INFO"
-            # 开启免确认模式，并赋予当前目录读写权限供 MCP 使用
-            & gemini -y --model $model --include-directories "." -p $prompt
-            return $true
-        } catch {
-            $err = $_.Exception.Message
-            if ($err -match "429" -or $err -match "RESOURCE_EXHAUSTED") {
-                Write-Log "Model [$model] Quota Exhausted (429). Switching..." "ERROR"
-                continue # 尝试降级到下一个模型
-            } else {
-                throw $_
-            }
-        }
+# --- 简化版模型调用功能 ---
+function Invoke-GeminiSmart($prompt) {
+    try {
+        Write-Log "Attempting pulse with default model..." "INFO"
+        # 开启免确认模式，直接使用默认模型
+        & gemini -y -p $prompt
+        return $true
+    } catch {
+        Write-Log "Critical Fault: $($_.Exception.Message)" "ERROR"
+        return $false
     }
-    # 如果两个模型都挂了，强制进入深度休眠保护 IP
-    Write-Log "CRITICAL: All models exhausted (14H cooling). Deep Sleep for 30 mins..." "ERROR"
-    Start-Sleep -Seconds 1800
-    return $false
 }
 
 function Check-CloudStatus {
@@ -108,7 +90,7 @@ function Show-Logo {
     Write-Host @"
       [ SOLKNOW OMNI-FLOW V5.1 - SAFE SENSE ]
       ________________________________________________________________________________________________________
-      S T R A T E G I C   A U T O N O M Y (AUTO-FALLBACK: ON)
+      S T R A T E G I C   A U T O N O M Y
       ________________________________________________________________________________________________________
 "@ -ForegroundColor $randomColor
 }
@@ -151,8 +133,8 @@ Mandatory Action:
 3. Append tasks to $TASKS_FILE as '- [ ] Task (YYYY-MM-DD)'.
 Requirement: NO Git. Be precise.
 "@
-            # 规划阶段优先尝试用 Pro 模型推导
-            Invoke-GeminiSmart -prompt $planPrompt -forceFlash $false
+            # 规划阶段使用默认模型
+            Invoke-GeminiSmart -prompt $planPrompt
             Invoke-Sync "plan: strategic expansion"
         }
 
@@ -176,8 +158,8 @@ Instruction:
 2. Implement content with LaTeX.
 3. Move task to '## 已完成任务' and mark as '- [x]'.
 "@
-                # 执行阶段直接使用 Flash 节省 Pro 配额
-                Invoke-GeminiSmart -prompt $execPrompt -forceFlash $true 
+                # 执行阶段使用默认模型
+                Invoke-GeminiSmart -prompt $execPrompt
 
                 git pull origin main --rebase
                 $postCheck = Get-Content $TASKS_FILE -Raw
@@ -203,7 +185,7 @@ Instruction:
     
     for ($i = $CHECK_INTERVAL; $i -gt 0; $i--) {
         Clear-Host
-        Write-Host ">>> OMNI-FLOW STANDBY | HEARTBEAT: $i s | MODELS: PRO -> FLASH" -ForegroundColor DarkGray
+        Write-Host ">>> OMNI-FLOW STANDBY | HEARTBEAT: $i s | MODEL: DEFAULT" -ForegroundColor DarkGray
         Start-Sleep -Seconds 1
     }
 }

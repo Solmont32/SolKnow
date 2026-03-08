@@ -103,43 +103,58 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## 4. 进阶练习库 (Exercises)
 
 <details>
+
 <summary><b>练习 1：区间套的变体</b></summary>
+
 设 $\{[a_n, b_n]\}$ 是闭区间套，但长度 $b_n - a_n$ 不趋于 0。证明其交集仍非空，并描述其形状。
 <br/>
 **答案解析**：
 由单调有界原理，$a_n \to a, b_n \to b$。由于 $a_n \leq b_n$，必有 $a \leq b$。交集为闭区间 $[a, b]$。若长度不趋于 0，则该区间退化为一个点以外的线段。
+
 </details>
 
 <details>
+
 <summary><b>练习 2：开覆盖的构造</b></summary>
+
 给出 $[0, \infty)$ 的一个开覆盖，使其不包含有限子覆盖。
 <br/>
 **答案解析**：
 令 $G_n = (-1, n)$。则 $\bigcup_{n=1}^\infty G_n = [0, \infty)$。任何有限子覆盖的最大范围是 $(-1, \max n)$，无法覆盖大于 $\max n$ 的实数。这说明**有界性**对 Heine-Borel 至关重要。
+
 </details>
 
 <details>
+
 <summary><b>练习 3：聚点定理应用</b></summary>
+
 证明序列 $a_n = \sin(n)$ 必有一个收敛子列。
 <br/>
 **答案解析**：
 由于 $|\sin(n)| \leq 1$，数列 $\{a_n\}$ 有界。根据 Bolzano-Weierstrass 聚点定理，有界序列必有收敛子列。注意：该序列并不收敛。
+
 </details>
 
 <details>
+
 <summary><b>练习 4：Cauchy 准则判定</b></summary>
+
 判定序列 $x_n = 1 + \frac{1}{2} + \dots + \frac{1}{n}$ 是否收敛。
 <br/>
 **答案解析**：
 取 $m=2n$，则 $|x_{2n} - x_n| = \frac{1}{n+1} + \dots + \frac{1}{2n} > n \cdot \frac{1}{2n} = \frac{1}{2}$。由于存在 $\epsilon = 1/2$ 使得无论 $N$ 多大，总能找到 $n, m > N$ 满足差值大于 $\epsilon$，故该序列不是 Cauchy 序列，不收敛（发散至无穷）。
+
 </details>
 
 <details>
+
 <summary><b>练习 5：完备性与有理数</b></summary>
+
 在有理数集 $\mathbb{Q}$ 中，构造一个闭区间套其交集为空集。
 <br/>
 **答案解析**：
 利用 $\pi$ 或 $\sqrt{2}$ 的小数展开。例如 $a_n$ 为 $\sqrt{2}$ 的前 $n$ 位不足近似，$b_n$ 为过剩近似。在 $\mathbb{R}$ 中交集为 $\{\sqrt{2}\}$，但在 $\mathbb{Q}$ 中该点不存在，故交集为空。这证明了 $\mathbb{Q}$ 不完备。
+
 </details>
 
 ---

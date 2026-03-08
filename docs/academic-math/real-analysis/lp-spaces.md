@@ -115,6 +115,7 @@ $$
 讨论 $f(x)=x^{-\alpha}$ 属于 $L^p(0,1)$ 的充要条件。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 $$
@@ -125,6 +126,7 @@ $$
 \alpha < \frac1p.
 $$
 所以 $x^{-\alpha}\in L^p(0,1)\iff \alpha<1/p$。
+
 </details>
 
 ### 例 2：应用 Hölder 估计乘积
@@ -132,6 +134,7 @@ $$
 设 $f\in L^4(0,1),\, g\in L^{4/3}(0,1)$，证明 $fg\in L^1(0,1)$ 且给出估计。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 取共轭指数 $p=4,\ q=4/3$，应用 Hölder：
@@ -143,6 +146,7 @@ $$
 $$
 \|fg\|_1\le \|f\|_4\|g\|_{4/3}.
 $$
+
 </details>
 
 ### 例 3：用 Minkowski 证明 $L^p$ 三角不等式
@@ -153,6 +157,7 @@ $$
 $$
 
 <details>
+
 <summary>点击查看解析</summary>
 
 这是 Minkowski 不等式本身。证明通常从
@@ -160,6 +165,7 @@ $$
 |f+g|^p = |f+g||f+g|^{p-1}
 $$
 出发，再对 $|f||f+g|^{p-1}$、$|g||f+g|^{p-1}$ 分别使用 Hölder，即得结论。
+
 </details>
 
 ### 例 4：a.e. 收敛但不 $L^1$ 收敛
@@ -167,6 +173,7 @@ $$
 在 $(0,1)$ 上令 $f_n(x)=n\mathbf{1}_{(0,1/n)}(x)$。判断 $f_n\to0$ 的收敛类型。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 对任意 $x>0$，当 $n>1/x$ 时 $x\notin(0,1/n)$，故 $f_n(x)\to0$ a.e.  
@@ -175,6 +182,7 @@ $$
 \|f_n\|_1=\int_0^{1/n}n\,dx=1,
 $$
 所以不收敛到 0 于 $L^1$。
+
 </details>
 
 ### 例 5：$L^p$ 收敛推出测度收敛
@@ -182,6 +190,7 @@ $$
 设 $\mu(X)<\infty$ 且 $\|f_n-f\|_p\to0$，证明 $f_n\to f$ in measure。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 由 Markov 不等式：
@@ -191,6 +200,7 @@ $$
 =\frac{\|f_n-f\|_p^p}{\varepsilon^p}\to0.
 $$
 故得测度收敛。
+
 </details>
 
 ---
@@ -202,6 +212,7 @@ $$
 证明：若 $\mu(X)<\infty$ 且 $q>p\ge1$，则 $L^q(X)\subset L^p(X)$，并给出范数估计。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 由 Hölder：
@@ -215,6 +226,7 @@ $$
 \|f\|_p \le \mu(X)^{\frac1p-\frac1q}\|f\|_q.
 $$
 所以 $L^q(X)\subset L^p(X)$。
+
 </details>
 
 ### 练习 2（基础）
@@ -222,12 +234,14 @@ $$
 设 $f_n=\mathbf{1}_{(0,1/n)}$，判定其在 $L^2(0,1)$ 中是否收敛到 0。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 $$
 \|f_n\|_2^2=\int_0^{1/n}1\,dx=\frac1n\to0.
 $$
 故 $f_n\to0$ 于 $L^2(0,1)$。
+
 </details>
 
 ### 练习 3（提高）
@@ -235,6 +249,7 @@ $$
 在 $(0,1)$ 上判定 $f(x)=\frac1{\sqrt{x}}$ 属于哪些 $L^p$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 $$
@@ -242,6 +257,7 @@ $$
 $$
 收敛当且仅当 $p/2<1$，即 $p<2$。  
 故 $f\in L^p(0,1)$ 当且仅当 $1\le p<2$；不属于 $L^2$ 与更高指数空间。
+
 </details>
 
 ### 练习 4（提高）
@@ -249,6 +265,7 @@ $$
 设 $f_n\to f$ 于 $L^p(X)$，证明存在子列 $f_{n_k}$ 使得 $f_{n_k}\to f$ a.e.。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 取子列使
@@ -261,6 +278,7 @@ $$
 \le 2^k\|f_{n_k}-f\|_p^p<1.
 $$
 进一步按标准 Borel-Cantelli 型构造可得：除去零测集后，$f_{n_k}(x)\to f(x)$。
+
 </details>
 
 ### 练习 5（挑战）
@@ -268,6 +286,7 @@ $$
 设 $f_n\to f$ in measure，且存在 $g\in L^1$ 使 $|f_n|\le g$ a.e.。证明 $f_n\to f$ 于 $L^1$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 这是受控收敛思想在测度收敛版本下的结论（Vitali/DCT 路径）。  
@@ -276,6 +295,7 @@ $$
 \|f_{n_k}-f\|_1\to0.
 $$
 结合反证法可推出原序列也满足 $\|f_n-f\|_1\to0$。
+
 </details>
 
 ### 练习 6（挑战）
@@ -283,6 +303,7 @@ $$
 证明：在 Hilbert 空间 $L^2(X)$ 中，若 $f_n\rightharpoonup f$（弱收敛）且 $\|f_n\|_2\to\|f\|_2$，则 $f_n\to f$ 强收敛。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 用恒等式
@@ -294,6 +315,7 @@ $$
 \|f_n-f\|_2^2\to 0.
 $$
 故强收敛成立。
+
 </details>
 
 ---
@@ -307,9 +329,9 @@ $$
 
 ---
 
-## 十、配套练习跳转
+## 九、配套练习跳转
 
 - [进入实变函数专题练习总页](/docs/exercises/math/real-analysis)
-- [C 组：^p$ 空间与估计（建议对应本章）](/docs/exercises/math/real-analysis#ra-c1)
+- [C 组：$L^p$ 空间与估计（建议对应本章）](/docs/exercises/math/real-analysis#ra-c1)
 - [返回实变函数学习路径首页](/docs/academic-math/real-analysis)
 

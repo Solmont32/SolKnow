@@ -29,4 +29,3 @@ title: 离散数学 (Discrete Mathematics)
 ## 配套练习
 - [离散数学练习库（含折叠解析）](/docs/exercises/math/discrete-math)
 
-

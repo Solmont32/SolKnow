@@ -42,6 +42,7 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 设 $A=\{\frac{n-1}{n}:n\in\mathbb{N}_+\}$，求 $\sup A$ 与 $\inf A$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $\frac{n-1}{n}=1-\frac1n<1$，故 1 是上界。
@@ -51,12 +52,14 @@ $$1-\frac1n>1-\epsilon,$$
 所以 1 是最小上界，即 $\sup A=1$。
 
 当 $n=1$ 时取到最小值 0，且所有项非负，故 $\inf A=0$。
+
 </details>
 
 ### 例题 2：集合运算与确界
 设 $A,B$ 非空有界，证明 $\sup(A+B)=\sup A+\sup B$，其中 $A+B=\{a+b:a\in A,b\in B\}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 先证上界：任意 $a+b\in A+B$，有 $a\le\sup A,b\le\sup B$，故
@@ -67,6 +70,7 @@ $$a_\epsilon>\sup A-\epsilon/2,\quad b_\epsilon>\sup B-\epsilon/2,$$
 则
 $$a_\epsilon+b_\epsilon>\sup A+\sup B-\epsilon.$$
 故 $\sup(A+B)=\sup A+\sup B$。
+
 </details>
 
 ### 例题 3：复合函数定义域
@@ -75,6 +79,7 @@ $$h(x)=\sqrt{\ln(1-x^2)}$$
 的定义域。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 条件 1：$\ln(1-x^2)$ 有意义，需 $1-x^2>0$，即 $|x|<1$。
@@ -84,12 +89,14 @@ $$h(x)=\sqrt{\ln(1-x^2)}$$
 两条件合并得 $x=0$。
 
 定义域为 $\{0\}$。
+
 </details>
 
 ### 例题 4：反函数存在性
 证明 $f(x)=x+e^x$ 在 $\mathbb{R}$ 上可逆。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $$f'(x)=1+e^x>0,$$
@@ -100,6 +107,7 @@ $$\lim_{x\to-\infty}(x+e^x)=-\infty,\qquad \lim_{x\to+\infty}(x+e^x)=+\infty,$$
 值域为 $\mathbb{R}$，故满射。
 
 因此 $f:\mathbb{R}\to\mathbb{R}$ 双射，反函数存在。
+
 </details>
 
 ---
@@ -110,6 +118,7 @@ $$\lim_{x\to-\infty}(x+e^x)=-\infty,\qquad \lim_{x\to+\infty}(x+e^x)=+\infty,$$
 求集合 $E=(0,2)\cap\mathbb{Q}$ 的上确界与下确界。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 有 $E\subset(0,2)$，任意元都小于 2；对任意 $\epsilon>0$，区间 $(2-\epsilon,2)$ 内存在有理数，所以可逼近 2。
@@ -117,18 +126,21 @@ $$\lim_{x\to-\infty}(x+e^x)=-\infty,\qquad \lim_{x\to+\infty}(x+e^x)=+\infty,$$
 同理可逼近 0 且不取到 0。
 
 答案：$\sup E=2,\inf E=0$。
+
 </details>
 
 ### 练习 2：绝对值不等式
 证明：$\big|\sup A-\sup B\big|\le\sup\{|a-b|:a\in A,b\in B\}$（假设两边存在）。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 令 $M=\sup\{|a-b|\}$。对任意 $a\in A,b\in B$，有 $a\le b+M$，取上确界得
 $$\sup A\le\sup B+M.$$
 交换 $A,B$ 得 $\sup B\le\sup A+M$，合并即
 $$|\sup A-\sup B|\le M.$$
+
 </details>
 
 ### 练习 3：复合函数定义域
@@ -137,23 +149,27 @@ $$g(x)=\ln\!\left(\sqrt{\frac{x-1}{x+2}}\right)$$
 的定义域。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 根号内需严格大于 0（因为外层有对数）：
 $$\frac{x-1}{x+2}>0.$$
 解不等式得 $x\in(-\infty,-2)\cup(1,+\infty)$。
+
 </details>
 
 ### 练习 4：反函数导数
 设 $f(x)=x^3+x$，记其反函数为 $f^{-1}$，求 $(f^{-1})'(0)$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 先求 $f(x_0)=0$，得 $x_0=0$。
 
 由反函数求导公式
 $$(f^{-1})'(0)=\frac1{f'(0)}=\frac1{3\cdot0^2+1}=1.$$
+
 </details>
 
 ---

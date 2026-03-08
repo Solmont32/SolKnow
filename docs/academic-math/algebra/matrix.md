@@ -102,6 +102,7 @@ $$
 的秩。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 行变换：
@@ -111,6 +112,7 @@ R_3\leftarrow R_3+R_1=(0,1,1).
 $$
 再 $R_3\leftarrow R_3-R_2$ 得零行。
 故非零行有 2 行，$\operatorname{rank}(A)=2$。
+
 </details>
 
 ### 练习 2
@@ -121,15 +123,18 @@ $$
 是否可对角化，并说明理由。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 $B=4I$ 本身就是对角矩阵，当然可对角化。其特征值只有 4，但特征子空间维数为 2（任意非零向量都是特征向量）。
+
 </details>
 
 ### 练习 3
 若 $A$ 可逆，证明 $A^{-1}$ 的特征值为 $A$ 的特征值的倒数。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 若 $Av=\lambda v$（$v\neq0$，且 $\lambda\neq0$），两侧左乘 $A^{-1}$：
@@ -137,4 +142,6 @@ $$
 v=\lambda A^{-1}v\Rightarrow A^{-1}v=\frac1\lambda v.
 $$
 故 $1/\lambda$ 是 $A^{-1}$ 的特征值。
+
 </details>
+

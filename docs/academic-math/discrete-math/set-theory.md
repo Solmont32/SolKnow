@@ -102,6 +102,7 @@ $$
 设 $U=\{1,2,3,4,5,6\}$，$A=\{1,2,3,4\}$，$B=\{3,4,5\}$，求 $(A\cap B)^c$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $A\cap B=\{3,4\}$，故
@@ -115,6 +116,7 @@ $$
 证明：$A\cup(B\cap C)=(A\cup B)\cap(A\cup C)$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 使用元素法双向证明：
@@ -133,6 +135,7 @@ $$
 设 $|A|=7$，问有多少个 3 元子集？
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $$

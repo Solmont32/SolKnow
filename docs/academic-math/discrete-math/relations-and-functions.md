@@ -90,6 +90,7 @@ $f:\mathbb{R}\to\mathbb{R},f(x)=x^2$。
 在整数集上定义 $aRb\iff a-b$ 为偶数。证明 $R$ 为等价关系。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 - 自反：$a-a=0$ 为偶数。
@@ -103,6 +104,7 @@ $f:\mathbb{R}\to\mathbb{R},f(x)=x^2$。
 设 $A=\{1,2,3\}$，$B=\{a,b\}$，从 $A$ 到 $B$ 的函数共有多少个？其中满射有多少个？
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 总函数数为 $2^3=8$。
@@ -115,6 +117,7 @@ $f:\mathbb{R}\to\mathbb{R},f(x)=x^2$。
 在偏序集 $(\{1,2,3,6\},\mid)$ 中找最大元。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 按整除关系：$1\mid2\mid6$，且 $3\mid6$。

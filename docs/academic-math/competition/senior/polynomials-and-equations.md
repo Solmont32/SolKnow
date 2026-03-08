@@ -53,6 +53,7 @@ $$
 求以 $x,y$ 为根的首一二次多项式。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 设所求为
@@ -74,6 +75,7 @@ $$
 的所有有理根。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 候选有理根为 $\pm1,\pm2,\pm3,\pm6$。代入得
@@ -96,6 +98,7 @@ $$
 有重根。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 重根 $\alpha$ 满足
@@ -121,6 +124,7 @@ x^4-5x^2+4=0.
 $$
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 设 $u=x^2$，得
@@ -141,6 +145,7 @@ x+\frac1x=3,\quad x\ne0.
 $$
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 两边乘 $x$：
@@ -162,6 +167,7 @@ $$
 设方程 $t^2-7t+10=0$ 的两根为 $\alpha,\beta$，求 $\alpha+\beta,\alpha\beta$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 由 Vieta：
@@ -175,6 +181,7 @@ $$
 判断 $x^3+x+1=0$ 是否有整数根。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 整数根只能是 $\pm1$。代入：
@@ -189,6 +196,7 @@ $$
 求参数 $m$，使 $x^2-2mx+m^2-1=0$ 有重根。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 判别式
@@ -206,6 +214,7 @@ x^2+\frac1{x^2}=7,\quad x\ne0.
 $$
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 设 $y=x+\frac1x$，则

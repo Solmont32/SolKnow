@@ -38,6 +38,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 在平面内，点 $A,B$ 位于直线 $l$ 同侧。点 $P$ 在 $l$ 上变化，求 $AP+PB$ 的最小值。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -49,12 +50,14 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 #### 答案
 最小值为 $AB'$，其中 $B'$ 是 $B$ 关于 $l$ 的对称点。
+
 </details>
 
 ### 例题 2：矩形边界最短路
 矩形 $ABCD$ 中，$AB=8,BC=6$。点 $P$ 在边 $BC$ 上，求 $AP+PD$ 的最小值。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -67,12 +70,14 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 #### 答案
 最小值为 $2\sqrt{73}$。
+
 </details>
 
 ### 例题 3：平移等长替换
 已知 $\overrightarrow{MN}=\overrightarrow{PQ}$，求证：$MP+NQ$ 的最小值为 $MQ$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -84,12 +89,14 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 #### 答案
 最小值为 $MQ$。
+
 </details>
 
 ### 例题 4：经过定点的折线路径
 点 $A(0,2),B(6,5)$，点 $P$ 在 $x$ 轴上，求 $AP+PB$ 的最小值。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -102,6 +109,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 #### 答案
 最小值为 $\sqrt{85}$。
+
 </details>
 
 ---
@@ -112,6 +120,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 点 $A(1,3),B(7,1)$，点 $P$ 在 $x$ 轴上。求 $AP+PB$ 的最小值。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 #### 过程
@@ -120,12 +129,14 @@ $$A'B=\sqrt{(7-1)^2+(1+3)^2}=\sqrt{36+16}=\sqrt{52}=2\sqrt{13}.$$
 
 #### 答案
 $2\sqrt{13}$。
+
 </details>
 
 ### 练习 2
 矩形 $ABCD$ 中，$AB=5,BC=12$。点 $P$ 在边 $BC$ 上，求 $AP+PD$ 的最小值。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 #### 过程
@@ -135,12 +146,14 @@ $$AD'=\sqrt{10^2+12^2}=\sqrt{244}=2\sqrt{61}.$$
 
 #### 答案
 $2\sqrt{61}$。
+
 </details>
 
 ### 练习 3
 点 $A,B$ 在直线 $l$ 同侧，点 $P$ 在 $l$ 上。若 $B$ 关于 $l$ 的对称点为 $B'$，写出 $AP+PB$ 最小值表达式。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 #### 过程
@@ -150,12 +163,14 @@ $$AP+PB=AP+PB'\ge AB'.$$
 
 #### 答案
 最小值为 $AB'$。
+
 </details>
 
 ### 练习 4
 点 $A(-2,4),B(4,1)$，点 $P$ 在直线 $y=0$ 上。求 $AP+PB$ 的最小值。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 #### 过程
@@ -165,4 +180,6 @@ $$A'B=\sqrt{(4+2)^2+(1+4)^2}=\sqrt{36+25}=\sqrt{61}.$$
 
 #### 答案
 $\sqrt{61}$。
+
 </details>
+

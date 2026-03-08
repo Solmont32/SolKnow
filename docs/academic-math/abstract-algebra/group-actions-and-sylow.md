@@ -99,55 +99,68 @@ $$
 设有限群 $G$ 传递作用在集合 $X$ 上，且 $|G|=96$、某点稳定子阶为 12。求 $|X|$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 由轨道-稳定子定理：
 $$
 |X|=[G:G_x]=96/12=8.
 $$
+
 </details>
 
 ### 练习 2
 设 $|G|=45=3^2\cdot 5$，求 Sylow 5-子群个数并判断是否正规。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $n_5\mid 9$ 且 $n_5\equiv 1\pmod 5$。9 的因子为 $1,3,9$，仅 1 满足同余，故 $n_5=1$，必正规。
+
 </details>
 
 ### 练习 3
 设 $|G|=20=2^2\cdot 5$。证明 $G$ 一定有正规 Sylow 5-子群。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $n_5\mid 4$ 且 $n_5\equiv 1\pmod 5$。4 的因子为 $1,2,4$，只有 1 同余于 1（模 5），故 $n_5=1$，正规。
+
 </details>
 
 ### 练习 4
 设 $|G|=18=2\cdot 3^2$。求 Sylow 3-子群个数可能值。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $n_3\mid 2$ 且 $n_3\equiv 1\pmod 3$。可选值 1 或 2，只有 1 满足同余，故 $n_3=1$。
+
 </details>
 
 ### 练习 5
 设 $G=S_3$ 在自身上按共轭作用，求 3-轮换 $(123)$ 的共轭类大小。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $S_3$ 中 3-轮换只有 $(123),(132)$ 两个，且同循环类型必共轭，因此该共轭类大小为 2。
+
 </details>
 
 ### 练习 6
 证明：若有限群 $G$ 的 Sylow $p$-子群唯一，则它是正规子群。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 任取 $g\in G$，共轭子群 $gPg^{-1}$ 仍是 Sylow $p$-子群。唯一性迫使 $gPg^{-1}=P$，故 $P\trianglelefteq G$。
+
 </details>
+

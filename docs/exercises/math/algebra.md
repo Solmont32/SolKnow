@@ -19,6 +19,7 @@ $$
 的秩。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 行变换 $R_2\leftarrow R_2-2R_1$，得
@@ -29,15 +30,18 @@ $$
 \end{pmatrix}.
 $$
 非零行数为 1，故 $\operatorname{rank}(A)=1$。
+
 </details>
 
 ### 练习 A2：行列式性质
 已知 $|A|=-3$，求 $|2A^T|$（$A$ 为 3 阶矩阵）。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $|A^T|=|A|=-3$，且 $|2A^T|=2^3|A^T|=8\times(-3)=-24$。
+
 </details>
 
 ### 练习 A3：克拉默法则
@@ -50,6 +54,7 @@ x-y=1
 $$
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 系数行列式
@@ -64,6 +69,7 @@ $$
 $$
 x=D_x/D=2,\ y=D_y/D=1.
 $$
+
 </details>
 
 ## B. 提高题
@@ -80,6 +86,7 @@ $$
 的解的情况。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 增广矩阵消元：
@@ -88,6 +95,7 @@ $$
 - $R_3\leftarrow R_3-R_2\Rightarrow(0,0,0|0)$。
 
 故始终有解，且秩为 2。未知数 3 个，故总是无穷多解（1 个自由变量）。
+
 </details>
 
 ### 练习 B2：基础解系
@@ -101,6 +109,7 @@ $$
 的基础解系。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 由第一式 $x_1=-x_2-x_4$，代入第二式得
@@ -115,6 +124,7 @@ $$
 $$
 \left\{(-1,1,1,0)^T,\ (-1,0,-1,1)^T\right\}.
 $$
+
 </details>
 
 ### 练习 B3：二次型定性
@@ -125,6 +135,7 @@ $$
 的定性。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 对应矩阵
@@ -136,6 +147,7 @@ $$
 \Delta_1=3>0,\quad \Delta_2=6-1=5>0.
 $$
 故 $Q$ 正定。
+
 </details>
 
 ## C. 挑战题
@@ -152,6 +164,7 @@ $$
 求对应二次型的秩与惯性指数 $(p,q)$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 前两维部分对应矩阵
@@ -164,12 +177,14 @@ $$
 结论：
 - 秩 $r=2$；
 - 惯性指数 $(p,q)=(1,1)$。
+
 </details>
 
 ### 练习 C2：行列式与逆矩阵
 已知 3 阶矩阵 $A$ 满足 $|A|=4$，求 $|A^*|$ 与 $|A^{-1}|$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 对 $n$ 阶矩阵有 $|A^*|=|A|^{n-1}$。这里 $n=3$，故
@@ -180,6 +195,7 @@ $$
 $$
 |A^{-1}|=\frac{1}{|A|}=\frac14.
 $$
+
 </details>
 
 ## D. 矩阵与多项式专题加练
@@ -188,6 +204,7 @@ $$
 设 $A$ 为 4 阶可逆矩阵，且 $|A|=-2$，求 $|A^*|$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $n$ 阶矩阵满足 $|A^*|=|A|^{n-1}$。
@@ -195,6 +212,7 @@ $n$ 阶矩阵满足 $|A^*|=|A|^{n-1}$。
 $$
 |A^*|=(-2)^3=-8.
 $$
+
 </details>
 
 ### 练习 D2：特征多项式
@@ -205,12 +223,14 @@ $$
 的特征多项式与特征值。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $$
 p_A(\lambda)=\det(\lambda I-A)=\begin{vmatrix}\lambda-1&-2\\0&\lambda-3\end{vmatrix}=(\lambda-1)(\lambda-3).
 $$
 故特征值为 $1,3$。
+
 </details>
 
 ### 练习 D3：重根与导数
@@ -221,6 +241,7 @@ $$
 的重根。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 先算
@@ -239,6 +260,7 @@ $$
 f^{(3)}(x)=24x-12,\ f^{(3)}(1)=12\neq0,
 $$
 故为三重根。
+
 </details>
 
 ### 练习 D4：插值构造
@@ -248,6 +270,7 @@ p(0)=1,\ p(1)=3,\ p(2)=7.
 $$
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 设 $p(x)=ax^2+bx+c$。
@@ -259,6 +282,7 @@ $$
 $$
 p(x)=x^2+x+1.
 $$
+
 </details>
 
 ## E. 向量空间与线性变换专题加练
@@ -271,6 +295,7 @@ $$
 判断 $U$ 是否为子空间，并求其维数。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $U$ 由齐次线性方程组给出，必为子空间。由约束得
@@ -285,6 +310,7 @@ $$
 $$
 \{(-1,1,0,0),(0,0,1,1)\}.
 $$
+
 </details>
 
 ### 练习 E2：线性映射核与像
@@ -295,6 +321,7 @@ $$
 求 $\ker T$ 与 $\operatorname{rank}(T)$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 核满足
@@ -309,12 +336,14 @@ $$
 $$
 \operatorname{rank}(T)=3-1=2.
 $$
+
 </details>
 
 ### 练习 E3：基下矩阵表示
 在 $P_2(\mathbb{R})$ 上定义 $T(p)=xp'(x)$。取标准基 $\mathcal{B}=\{1,x,x^2\}$，求 $[T]_{\mathcal{B}}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $$
@@ -332,6 +361,7 @@ $$
 0&0&2
 \end{pmatrix}.
 $$
+
 </details>
 
 ### 练习 E4：维数公式综合
@@ -342,6 +372,7 @@ $$
 求 $\dim(U+W)$，并判断是否必有 $U+W=V$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 由维数公式：
@@ -352,6 +383,7 @@ $$
 $$
 U+W=V.
 $$
+
 </details>
 
 ### 练习 E5：线性变换可逆性判定
@@ -362,6 +394,7 @@ $$
 判断 $T$ 是否可逆。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 对应矩阵
@@ -369,6 +402,7 @@ $$
 A=\begin{pmatrix}2&1\\4&2\end{pmatrix},\quad \det A=2\cdot2-4\cdot1=0.
 $$
 行向量线性相关，秩为 1，不满秩，故 $T$ 不可逆。
+
 </details>
 
 ## F. 特征值与 Jordan 标准形专题加练
@@ -385,6 +419,7 @@ $$
 求特征值及 $\dim E_2$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 唯一特征值为 2（代数重数 3）。
@@ -400,6 +435,7 @@ $$
 $$
 \dim E_2=2.
 $$
+
 </details>
 
 ### 练习 F2：可对角化判定
@@ -414,6 +450,7 @@ $$
 判断是否可对角化。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 特征值为 1（代数重数 2）与 3（代数重数 1）。
@@ -427,6 +464,7 @@ A-I=\begin{pmatrix}
 $$
 故特征子空间维数为 1。于是总特征向量数不足 3，
 矩阵不可对角化。
+
 </details>
 
 ### 练习 F3：最小多项式识别
@@ -440,6 +478,7 @@ $$
 求 $m_A(x)$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 有
@@ -450,6 +489,7 @@ $$
 $$
 m_A(x)=x^2.
 $$
+
 </details>
 
 ### 练习 F4：Jordan 块与核维数
@@ -462,6 +502,7 @@ $$
 写出 Jordan 块大小。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 块个数是 $\dim\ker(A-4I)=2$。核维数增长量依次为 $2,2,1$，说明两块中一块长度至少 3，另一块长度至少 2，总和为 5。
@@ -470,6 +511,7 @@ $$
 3+2.
 $$
 即 Jordan 形为 $\operatorname{diag}(J_3(4),J_2(4))$。
+
 </details>
 
 ### 练习 F5：Jordan 块幂计算
@@ -483,6 +525,7 @@ $$
 求 $J^n$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 记 $J=\lambda I+N$，其中
@@ -497,4 +540,83 @@ J^n=(\lambda I+N)^n=\lambda^n I+n\lambda^{n-1}N
 0&\lambda^n
 \end{pmatrix}.
 $$
+
 </details>
+
+## G. Cayley-Hamilton 与有理标准形专题加练
+
+### 练习 G1：CH 定理降幂
+已知矩阵 $A$ 满足
+$$
+A^2-2A-I=0,
+$$
+求 $A^3$（用 $A,I$ 表示）。
+
+<details>
+
+<summary>点击查看解析与答案</summary>
+
+由 $A^2=2A+I$，
+$$
+A^3=A(2A+I)=2A^2+A=2(2A+I)+A=5A+2I.
+$$
+
+</details>
+
+### 练习 G2：最小多项式与可对角化
+设
+$$
+m_A(x)=(x-1)^2(x+1).
+$$
+判断 $A$ 是否可对角化（在 $\mathbb{R}$ 上）。
+
+<details>
+
+<summary>点击查看解析与答案</summary>
+
+最小多项式含重因子 $(x-1)^2$，因此 $A$ 不可对角化。
+
+</details>
+
+### 练习 G3：不变因子到特征多项式
+设不变因子为
+$$
+d_1(x)=x^2+1,\quad d_2(x)=(x^2+1)^2.
+$$
+求 $p_A(x)$ 与 $m_A(x)$。
+
+<details>
+
+<summary>点击查看解析与答案</summary>
+
+$$
+m_A(x)=d_2(x)=(x^2+1)^2,
+$$
+$$
+p_A(x)=d_1(x)d_2(x)=(x^2+1)^3.
+$$
+
+</details>
+
+### 练习 G4：CH 定理求逆表达
+若 $A$ 可逆且满足
+$$
+A^3-3A^2+2A-I=0,
+$$
+求 $A^{-1}$ 关于 $A$ 的表达。
+
+<details>
+
+<summary>点击查看解析与答案</summary>
+
+两边右乘 $A^{-1}$：
+$$
+A^2-3A+2I-A^{-1}=0,
+$$
+故
+$$
+A^{-1}=A^2-3A+2I.
+$$
+
+</details>
+

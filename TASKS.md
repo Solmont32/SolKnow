@@ -1,11 +1,13 @@
 # SolKnow 自动化任务清单 (TASKS.md)
 ## 总任务
-- 数学知识库数学分析教程（对标教科书）：知识点详细，一个知识点对应多道例题，同时增加练习库中的练习，练习需要有多道，答案折叠，点击才显示过程和答案；
+- 数学知识库数学分析（对标教科书）：知识点详细，一个知识点对应多道例题，同时增加练习库中的练习，练习需要有多道，答案折叠，点击才显示过程和答案；
 
 ## 待办子任务
-- （暂无，已清空）
 
 ## 已完成任务
+- [x] 新增『高等代数：Cayley-Hamilton 定理与有理标准形』教材化章节 (2026-03-08)：新增 docs/academic-math/algebra/cayley-hamilton-and-rational-canonical-form.md，系统覆盖 CH 定理、最小多项式、不变因子与有理标准形，补充 4 道例题 + 4 道折叠练习。 (2026-03-08)
+- [x] 扩容『高等代数练习库』CH 与有理标准形题组 (2026-03-08)：更新 docs/exercises/math/algebra.md 新增练习 G1-G4，全部支持点击展开过程与答案。 (2026-03-08)
+- [x] 打通『高等代数章节-首页-侧边栏』CH 专题联动 (2026-03-08)：更新 docs/academic-math/algebra/index.md 与 sidebars.ts，新增专题入口并保持学习路径连续。 (2026-03-08)
 - [x] 新增『高中竞赛代数：三角与复数方法』教材化专题 (2026-03-08)：新增 docs/academic-math/competition/senior/trigonometry-and-complex.md，补全恒等变形、三角方程、复数模幅角与单位圆方法，提供 5 道例题 + 4 道折叠练习。 (2026-03-08)
 - [x] 扩容『高中数学竞赛练习库（综合）』三角与复数题组 (2026-03-08)：更新 docs/exercises/math/competition/senior.md 新增练习 31-36，全部支持点击展开过程与答案。 (2026-03-08)
 - [x] 打通『高中数学竞赛学习路径』三角复数专题联动 (2026-03-08)：更新 docs/academic-math/competition/senior/index.md 与 sidebars.ts，新增三角复数专题入口并同步学习提示。 (2026-03-08)
@@ -189,45 +191,6 @@
 - [x] 为知识图谱 (Knowledge Graph) 实现深度下钻 (Deep-Dive) 交互模式与文档联动系统，增强全站导航的结构化视觉体验 (2026-03-07)
 - [x] 实现自动化脚本心跳系统与画面，符合人类审美。 
 - [x] 实现全站‘知识图谱’ (Knowledge Graph) 可视化交互系统，深度展现算法与数学的结构化联结 (2026-03-07)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 - [x] 深化『初中竞赛几何：四点共圆、方幂与圆中比例』(2026-03-08)：重写 `docs/academic-math/competition/junior/circle-geometry.md`，补全判定体系与方幂三形态，扩展为 4 道例题 + 4 道折叠练习。 (2026-03-08)
 - [x] 深化『初中竞赛组合：计数、抽屉与构造』(2026-03-08)：重写 `docs/academic-math/competition/junior/combinatorics.md`，补全加乘原理、隔板法、抽屉与染色不变量，扩展为 4 道例题 + 4 道折叠练习。 (2026-03-08)
 - [x] 扩容『初中数学竞赛练习库与学习路径页』(2026-03-08)：更新 `docs/exercises/math/competition/junior.md` 新增 4 道综合题（合计 16 题，均折叠解析），并重写 `docs/academic-math/competition/junior/index.md` 打通章节与练习入口。 (2026-03-08)
@@ -265,6 +228,8 @@
 - [x] 新增『初中竞赛几何：面积法与相似构造』教材化专题 (2026-03-08)：新增 `docs/academic-math/competition/junior/geometry-area-method.md`，系统讲解同高同底面积比、平行线相似模型，补充 4 道例题与 4 道折叠练习。 (2026-03-08)
 - [x] 扩容『初中数学竞赛练习库』面积法题组 (2026-03-08)：更新 `docs/exercises/math/competition/junior.md` 新增练习 21-24，全部支持点击展开过程与答案。 (2026-03-08)
 - [x] 打通『初中竞赛面积法专题-导航-练习』联动闭环 (2026-03-08)：更新 `docs/academic-math/competition/junior/index.md` 与 `sidebars.ts`，新增专题入口并同步学习路径。 (2026-03-08)
+
+
 
 
 

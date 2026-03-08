@@ -76,6 +76,7 @@ $$\cos \pi z = \prod_{n=1}^\infty \left( 1 - \frac{z^2}{(n-1/2)^2} \right) = \pr
 判断 $\prod_{n=1}^\infty (1 + \frac{(-1)^n}{n^p})$ 在 $p > 0$ 时的敛散性。
 
 <details>
+
 <summary>点击查看详细解析</summary>
 
 #### 解析过程
@@ -90,12 +91,14 @@ $$\cos \pi z = \prod_{n=1}^\infty \left( 1 - \frac{z^2}{(n-1/2)^2} \right) = \pr
 
 #### 答案
 $p > 1/2$ 时收敛。
+
 </details>
 
 ### 例题 2：特殊无穷乘积的计算
 计算 $\prod_{n=2}^\infty \frac{n^3-1}{n^3+1}$。
 
 <details>
+
 <summary>点击查看详细解析</summary>
 
 #### 解析过程
@@ -112,12 +115,14 @@ $p > 1/2$ 时收敛。
 
 #### 答案
 $2/3$
+
 </details>
 
 ### 例题 3：Gamma 函数与余元公式
 利用 Weierstrass 乘积公式证明 $\Gamma(z)\Gamma(-z) = -\frac{\pi}{z \sin \pi z}$。
 
 <details>
+
 <summary>点击查看详细解析</summary>
 
 #### 解析过程
@@ -135,6 +140,7 @@ $2/3$
 
 #### 答案
 证毕。
+
 </details>
 
 ---
@@ -142,30 +148,62 @@ $2/3$
 ## 5. 配套进阶练习
 
 1.  **收敛性判定**：讨论 $\prod_{n=1}^\infty \left[ 1 + \frac{(-1)^n}{n} + \frac{1}{n} \right]$ 的收敛性。
-    <details>
-    <summary>显示答案与提示</summary>
+    
+
+<details>
+
+    
+
+<summary>显示答案与提示</summary>
+
     **提示**：令 $a_n = \frac{(-1)^n+1}{n}$。级数 $\sum a_n$ 发散，且 $a_n \ge 0$。因此乘积发散至 $+\infty$。
-    </details>
+    
+
+</details>
 
 2.  **Wallis 公式的推广**：证明 $\frac{1}{2} \cdot \frac{3}{4} \cdot \frac{5}{6} \dots = 0$，即 $\prod_{n=1}^\infty \frac{2n-1}{2n} = 0$。
-    <details>
-    <summary>显示答案与提示</summary>
+    
+
+<details>
+
+    
+
+<summary>显示答案与提示</summary>
+
     **提示**：取对数得 $\sum \ln(1 - \frac{1}{2n})$。由于 $\ln(1 - \frac{1}{2n}) \approx -\frac{1}{2n}$ 且 $\sum \frac{1}{2n}$ 发散，原乘积发散于 0。
-    </details>
+    
+
+</details>
 
 3.  **求值**：计算 $\prod_{n=1}^\infty (1 + \frac{1}{n(n+2)})$。
-    <details>
-    <summary>显示答案与提示</summary>
+    
+
+<details>
+
+    
+
+<summary>显示答案与提示</summary>
+
     **解析**：项可以写为 $\frac{n^2+2n+1}{n(n+2)} = \frac{(n+1)^2}{n(n+2)}$。
     $P_N = \frac{2^2}{1 \cdot 3} \cdot \frac{3^2}{2 \cdot 4} \cdot \dots \cdot \frac{(N+1)^2}{N(N+2)} = \frac{N+1}{1} \cdot \frac{2}{N+2} \to 2$。
     **答案**：2
-    </details>
+    
+
+</details>
 
 4.  **Gamma 函数应用**：证明 $\prod_{n=1}^\infty \frac{n(n+a+b)}{(n+a)(n+b)} = \frac{\Gamma(a+1)\Gamma(b+1)}{\Gamma(a+b+1)}$。
-    <details>
-    <summary>显示答案与提示</summary>
+    
+
+<details>
+
+    
+
+<summary>显示答案与提示</summary>
+
     **提示**：利用 $\Gamma(z)$ 的 Euler 乘积定义。将每一项拆分为与 Gamma 函数对应的形式即可。
-    </details>
+    
+
+</details>
 
 ---
 

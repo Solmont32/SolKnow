@@ -38,6 +38,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 求具有 12 个约数的最小正整数。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -52,12 +53,14 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 #### 答案
 $60$。
+
 </details>
 
 ### 例题 2：周期法求幂同余
 求 $2^{2026}\pmod 7$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -67,12 +70,14 @@ $60$。
 
 #### 答案
 余数为 $2$。
+
 </details>
 
 ### 例题 3：一次不定方程求正整数解
 求方程 $35x+22y=1$ 的整数解。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -86,12 +91,14 @@ $60$。
 
 #### 答案
 所有整数解为 $x=-5+22k,\ y=8-35k$。
+
 </details>
 
 ### 例题 4：同余方程线性化
 解同余方程 $14x\equiv8\pmod{26}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -105,4 +112,6 @@ $60$。
 
 #### 答案
 $x\equiv8,21\pmod{26}$。
+
 </details>
+

@@ -46,6 +46,7 @@ $$
 求 $f'(0)$，并判断 $f'$ 在 $0$ 点连续性。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $$
@@ -59,12 +60,14 @@ $$
 第一项趋于 $0$，第二项振荡无极限，因此 $\lim_{x\to0}f'(x)$ 不存在。
 
 答案：$f'(0)=0$，但 $f'$ 在 $0$ 处不连续。
+
 </details>
 
 ### 例题 2：对数求导与参数函数
 设 $y=(x^2+1)^x$（$x>-1$），求 $y'$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 取对数：$\ln y=x\ln(x^2+1)$。
@@ -77,12 +80,14 @@ $$
 $$
 y'=(x^2+1)^x\left[\ln(x^2+1)+\frac{2x^2}{x^2+1}\right].
 $$
+
 </details>
 
 ### 例题 3：高阶导数模板
 求 $y=x^2e^{2x}$ 的 $n$ 阶导数。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 令 $u=e^{2x},v=x^2$，由莱布尼茨公式：
@@ -93,12 +98,14 @@ $$
 $$
 y^{(n)}=2^{n-2}e^{2x}[4x^2+4nx+n(n-1)].
 $$
+
 </details>
 
 ### 例题 4：微分近似与误差阶
 估算 $\sqrt{4.1}$，并给出一阶线性近似。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 设 $f(x)=\sqrt{x}$，在 $x_0=4$ 处：
@@ -113,6 +120,7 @@ $$
 $$
 \sqrt{4.1}=f(4.1)\approx f(4)+dy=2.025.
 $$
+
 </details>
 
 ---
@@ -130,6 +138,7 @@ $$
 求 $a,b$ 使得 $f$ 在 $x=1$ 处可导。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 连续给出 $a+b=\ln1=0$，故 $b=-a$。
@@ -137,12 +146,14 @@ $$
 左右导数相等：左导数 $1/x|_{x=1}=1$，右导数为 $a$，故 $a=1$。
 
 因此 $b=-1$。
+
 </details>
 
 ### 练习 2：反函数求导
 设 $y=x+\ln x$（$x>0$）定义反函数 $x=\varphi(y)$，求 $\varphi'(0)$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 先解 $y=0$ 对应点：$x+\ln x=0$，显然 $x=1$。
@@ -155,12 +166,14 @@ $$
 $$
 \varphi'(0)=\frac{1}{1+1}=\frac12.
 $$
+
 </details>
 
 ### 练习 3：高阶导数
 求 $y=e^{x}\sin x$ 的 $n$ 阶导数通项。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 用复数法：$e^x\sin x=\Im\,e^{(1+i)x}$。
@@ -168,12 +181,14 @@ $$
 $$
 y^{(n)}=\Im\,(1+i)^n e^{(1+i)x}=2^{n/2}e^x\sin\left(x+\frac{n\pi}{4}\right).
 $$
+
 </details>
 
 ### 练习 4：微分近似
 用微分估算 $\sqrt[3]{8.2}$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 设 $f(x)=x^{1/3}$，取 $x_0=8$，$f(8)=2$，$f'(x)=\frac{1}{3x^{2/3}}$，故 $f'(8)=\frac1{12}$。
@@ -181,6 +196,7 @@ $$
 $\Delta x=0.2$，则 $dy\approx\frac1{12}\cdot0.2=\frac1{60}\approx0.01667$。
 
 所以 $\sqrt[3]{8.2}\approx2.01667$。
+
 </details>
 
 ---

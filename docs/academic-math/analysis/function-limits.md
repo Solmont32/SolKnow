@@ -72,6 +72,7 @@ $$\lim \frac{f(x)}{g(x)} = \lim \frac{f'(x)}{g'(x)}$$
 用 $\epsilon-\delta$ 语言证明：$\lim_{x \to 2} (x^2 - 4x + 5) = 1$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -89,12 +90,14 @@ $$\lim \frac{f(x)}{g(x)} = \lim \frac{f'(x)}{g'(x)}$$
 
 #### 答案
 证明如上，核心在于选取 $\delta = \sqrt{\epsilon}$。
+
 </details>
 
 ### 练习 2：等价无穷小代换（加减法防坑）
 求极限：$\lim_{x \to 0} \frac{x - \sin x}{x^3}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -115,12 +118,14 @@ $$\lim \frac{f(x)}{g(x)} = \lim \frac{f'(x)}{g'(x)}$$
 
 #### 答案
 $1/6$
+
 </details>
 
 ### 练习 3：$1^\infty$ 型极限的处理
 求极限：$\lim_{x \to 0} (\cos x)^{\frac{1}{x^2}}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -141,12 +146,14 @@ $1/6$
 
 #### 答案
 $e^{-1/2}$ (或 $\frac{1}{\sqrt{e}}$)
+
 </details>
 
 ### 练习 4：洛必达法则失效的陷阱
 求极限：$\lim_{x \to \infty} \frac{x + \sin x}{x - \cos x}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -167,6 +174,7 @@ $\lim \frac{1 + \cos x}{1 + \sin x}$
 
 #### 答案
 $1$。本题揭示了洛必达法则第三条件的不可违背性。
+
 </details>
 
 ### 练习 5：分段函数与单侧极限判定连续性
@@ -175,6 +183,7 @@ $f(x) = \begin{cases} \frac{e^{ax} - 1}{x}, & x < 0 \\ b, & x = 0 \\ \frac{\sqrt
 求 $a, b$ 的值，使得 $f(x)$ 在 $x=0$ 处连续。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -193,12 +202,14 @@ $f(x) = \begin{cases} \frac{e^{ax} - 1}{x}, & x < 0 \\ b, & x = 0 \\ \frac{\sqrt
 
 #### 答案
 $a = 1/2, b = 1/2$
+
 </details>
 
 ### 练习 6：利用极限的保号性证明不等式 (Sign-Preserving Property)
 设 $\lim_{x \to x_0} f(x) = A > 0$，证明：存在 $x_0$ 的某个去心邻域 $\mathring{U}(x_0, \delta)$，使得在该邻域内 $f(x) > 0$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -217,6 +228,7 @@ $a = 1/2, b = 1/2$
 
 #### 答案
 证明核心在于取 $\epsilon = A/2$ 并应用 $\epsilon-\delta$ 定义。
+
 </details>
 
 ---

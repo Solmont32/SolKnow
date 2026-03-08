@@ -40,6 +40,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 从数字 $1,2,3,4,5$ 中选 3 个不同数字组成三位数，能组成多少个？
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -50,12 +51,14 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 #### 答案
 $60$ 个。
+
 </details>
 
 ### 例题 2：隔板法
 求非负整数解个数：$x+y+z=10$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -65,12 +68,14 @@ $60$ 个。
 
 #### 答案
 $66$。
+
 </details>
 
 ### 例题 3：抽屉原理
 在任意 13 个整数中，证明必有两个数同余于模 12。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -80,12 +85,14 @@ $66$。
 
 #### 答案
 命题成立。
+
 </details>
 
 ### 例题 4：染色法判不可覆盖
 标准 $8\times8$ 棋盘去掉两个同色角格，能否被 $1\times2$ 多米诺完全覆盖？
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -96,6 +103,7 @@ $66$。
 
 #### 答案
 不能覆盖。
+
 </details>
 
 ---
@@ -106,6 +114,7 @@ $66$。
 从 6 名同学中选班长、学习委员（两职不同人），有多少种选法？
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 #### 过程
@@ -113,12 +122,14 @@ $66$。
 
 #### 答案
 $30$。
+
 </details>
 
 ### 练习 2
 求正整数解个数：$a+b+c=12$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 #### 过程
@@ -129,12 +140,14 @@ $$\binom{9+3-1}{3-1}=\binom{11}{2}=55.$$
 
 #### 答案
 $55$。
+
 </details>
 
 ### 练习 3
 任取 9 个整数，证明必有两个整数差是 8 的倍数。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 #### 过程
@@ -142,12 +155,14 @@ $55$。
 
 #### 答案
 命题成立。
+
 </details>
 
 ### 练习 4
 把 8 个相同小球放入 4 个不同盒子（盒子可空），有多少种放法？
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 #### 过程
@@ -158,4 +173,6 @@ $$\binom{8+4-1}{4-1}=\binom{11}{3}=165.$$
 
 #### 答案
 $165$。
+
 </details>
+

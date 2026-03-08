@@ -97,6 +97,7 @@ $$\int u dv = uv - \int v du$$
 求不定积分：$I = \int \frac{x^2+1}{x^4+1} dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -115,12 +116,14 @@ $$\int u dv = uv - \int v du$$
 
 #### 答案
 $\frac{1}{\sqrt{2}} \arctan \frac{x^2-1}{\sqrt{2}x} + C$
+
 </details>
 
 ### 深度例题 2：分部积分与方程法结合（无理函数）
 求不定积分：$I = \int \sqrt{a^2 - x^2} dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -140,12 +143,14 @@ $\frac{1}{\sqrt{2}} \arctan \frac{x^2-1}{\sqrt{2}x} + C$
 
 #### 答案
 $\frac{x}{2}\sqrt{a^2 - x^2} + \frac{a^2}{2} \arcsin \frac{x}{a} + C$
+
 </details>
 
 ### 深度例题 3：分部积分的嵌套与循环
 求不定积分：$\int \sin(\ln x) dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -164,12 +169,14 @@ $\int \cos(\ln x) dx = x\cos(\ln x) + \int \sin(\ln x) dx = x\cos(\ln x) + I$。
 
 #### 答案
 $\frac{x}{2} [\sin(\ln x) - \cos(\ln x)] + C$
+
 </details>
 
 ### 深度例题 4：有理函数的高阶配方技巧
 求不定积分：$\int \frac{dx}{(x^2+1)^2}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -185,12 +192,14 @@ $\frac{x}{2} [\sin(\ln x) - \cos(\ln x)] + C$
 
 #### 答案
 $\frac{1}{2}\arctan x + \frac{x}{2(x^2+1)} + C$
+
 </details>
 
 ### 深度例题 5：欧拉代换实战
 求不定积分：$\int \frac{dx}{x + \sqrt{x^2+x+1}}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -210,12 +219,14 @@ $\frac{1}{2}\arctan x + \frac{x}{2(x^2+1)} + C$
 
 #### 答案
 $2\ln|x+\sqrt{x^2+x+1}| - \frac{3}{2}\ln|2(x+\sqrt{x^2+x+1})+1| + \frac{3}{2[2(x+\sqrt{x^2+x+1})+1]} + C$
+
 </details>
 
 ### 深度例题 6：万能代换的精简应用
 求不定积分：$\int \frac{dx}{1+\sin x + \cos x}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -227,12 +238,14 @@ $2\ln|x+\sqrt{x^2+x+1}| - \frac{3}{2}\ln|2(x+\sqrt{x^2+x+1})+1| + \frac{3}{2[2(x
 
 #### 答案
 $\ln|1 + \tan \frac{x}{2}| + C$
+
 </details>
 
 ### 深度例题 7：配方法消去交叉项
 求不定积分：$\int \frac{dx}{\sin^4 x + \cos^4 x}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -245,12 +258,14 @@ $\ln|1 + \tan \frac{x}{2}| + C$
 
 #### 答案
 $\frac{1}{\sqrt{2}}\arctan \frac{\tan x - \cot x}{\sqrt{2}} + C$
+
 </details>
 
 ### 深度例题 8：指数函数代换技巧
 求不定积分：$\int \frac{dx}{e^{2x} + e^x - 2}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -262,12 +277,14 @@ $\frac{1}{\sqrt{2}}\arctan \frac{\tan x - \cot x}{\sqrt{2}} + C$
 
 #### 答案
 $-\frac{1}{2}x + \frac{1}{6}\ln(e^x+2) + \frac{1}{3}\ln|e^x-1| + C$
+
 </details>
 
 ### 深度例题 9：递推公式的推导（分部积分）
 求 $I_n = \int \sin^n x dx$ 的递推公式。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -280,12 +297,14 @@ $(n) I_n = -\sin^{n-1} x \cos x + (n-1) I_{n-2}$。
 
 #### 答案
 $I_n = -\frac{1}{n} \sin^{n-1} x \cos x + \frac{n-1}{n} I_{n-2}$
+
 </details>
 
 ### 深度例题 10：特殊凑微分技巧（反比例项）
 求不定积分：$\int \frac{dx}{x\sqrt{x^{2n}+1}}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -297,12 +316,14 @@ $I_n = -\frac{1}{n} \sin^{n-1} x \cos x + \frac{n-1}{n} I_{n-2}$
 
 #### 答案
 $-\frac{\sqrt{x^{2n}+1}}{nx^n} + C$
+
 </details>
 
 ### 深度例题 11：分母含二次根式的倒代换
 求不定积分：$\int \frac{dx}{(x+1)\sqrt{x^2+x}}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -312,12 +333,14 @@ $-\frac{\sqrt{x^{2n}+1}}{nx^n} + C$
 
 #### 答案
 $2\sqrt{\frac{x}{x+1}} + C$
+
 </details>
 
 ### 深度例题 12：分部积分的隐蔽应用
 求不定积分：$\int \sqrt{1+e^x} dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -327,12 +350,14 @@ $2\sqrt{\frac{x}{x+1}} + C$
 
 #### 答案
 $2\sqrt{1+e^x} + \ln\frac{\sqrt{1+e^x}-1}{\sqrt{1+e^x}+1} + C$
+
 </details>
 
 ### 深度例题 13：Hermite-Ostrogradsky 方法实战
 求不定积分：$I = \int \frac{dx}{(x^3+1)^2}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -349,12 +374,14 @@ $2\sqrt{1+e^x} + \ln\frac{\sqrt{1+e^x}-1}{\sqrt{1+e^x}+1} + C$
 
 #### 答案
 $\frac{x}{3(x^3+1)} + \frac{1}{9} \ln \frac{x^2-x+1}{(x+1)^2} + \frac{2}{3\sqrt{3}} \arctan \frac{2x-1}{\sqrt{3}} + C$
+
 </details>
 
 ### 深度例题 14：三角对称代换 ($u = \tan x$)
 求不定积分：$\int \frac{dx}{\sin^2 x + 2\sin x \cos x + 3\cos^2 x}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -368,12 +395,14 @@ $\frac{x}{3(x^3+1)} + \frac{1}{9} \ln \frac{x^2-x+1}{(x+1)^2} + \frac{2}{3\sqrt{
 
 #### 答案
 $\frac{1}{\sqrt{2}} \arctan \frac{\tan x + 1}{\sqrt{2}} + C$
+
 </details>
 
 ### 深度例题 15：复数域分解视角的简化（选读）
 求不定积分：$\int \frac{dx}{x^4+1}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -385,12 +414,14 @@ $\frac{1}{\sqrt{2}} \arctan \frac{\tan x + 1}{\sqrt{2}} + C$
 
 #### 答案
 $\frac{1}{4\sqrt{2}} \ln \frac{x^2+\sqrt{2}x+1}{x^2-\sqrt{2}x+1} + \frac{1}{2\sqrt{2}} (\arctan(\sqrt{2}x+1) + \arctan(\sqrt{2}x-1)) + C$
+
 </details>
 
 ### 深度例题 16：分部积分与代数构造的巅峰
 求不定积分：$\int \frac{x^2 dx}{(x\sin x + \cos x)^2}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -408,12 +439,14 @@ $\frac{1}{4\sqrt{2}} \ln \frac{x^2+\sqrt{2}x+1}{x^2-\sqrt{2}x+1} + \frac{1}{2\sq
 
 #### 答案
 $\frac{\sin x - x\cos x}{x\sin x + \cos x} + C$
+
 </details>
 
 ### 深度例题 17：反代换与根式处理
 求不定积分：$\int \frac{dx}{x \sqrt{1+x+x^2}}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -426,12 +459,14 @@ $\frac{\sin x - x\cos x}{x\sin x + \cos x} + C$
 
 #### 答案
 $-\ln|\frac{2+x+2\sqrt{x^2+x+1}}{2x}| + C$
+
 </details>
 
 ### 深度例题 18：万能代换的“暴力”与美学
 求不定积分：$\int \frac{dx}{2+\cos x}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -443,12 +478,14 @@ $-\ln|\frac{2+x+2\sqrt{x^2+x+1}}{2x}| + C$
 
 #### 答案
 $\frac{2}{\sqrt{3}} \arctan (\frac{1}{\sqrt{3}} \tan \frac{x}{2}) + C$
+
 </details>
 
 ### 深度例题 19：对数与根式的综合
 求不定积分：$\int \frac{\ln(x+\sqrt{1+x^2})}{\sqrt{1+x^2}} dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -459,12 +496,14 @@ $\frac{2}{\sqrt{3}} \arctan (\frac{1}{\sqrt{3}} \tan \frac{x}{2}) + C$
 
 #### 答案
 $\frac{1}{2} [\ln(x+\sqrt{1+x^2})]^2 + C$
+
 </details>
 
 ### 深度例题 20：有理分母的巧妙凑微分
 求不定积分：$\int \frac{dx}{x(x^n+1)}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -477,6 +516,7 @@ $\frac{1}{2} [\ln(x+\sqrt{1+x^2})]^2 + C$
 
 #### 答案
 $\frac{1}{n} \ln \frac{x^n}{x^n+1} + C$
+
 </details>
 
 ---

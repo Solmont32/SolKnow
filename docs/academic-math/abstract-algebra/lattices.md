@@ -110,15 +110,18 @@ $$
 证明任意链（全序集）都是格。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 对任意 $a,b$，全序保证 $a\le b$ 或 $b\le a$。较大者即最小上界，较小者即最大下界，因此并与交总存在，故为格。
+
 </details>
 
 ### 练习 2
 在幂集格 $\mathcal{P}(X)$ 中证明分配律。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 由集合恒等式
@@ -126,13 +129,17 @@ $A\cap(B\cup C)=(A\cap B)\cup(A\cap C)$
 及其对偶式
 $A\cup(B\cap C)=(A\cup B)\cap(A\cup C)$
 直接成立，故幂集格是分配格。
+
 </details>
 
 ### 练习 3
 在整除格 $(D,\mid)$（$D$ 为 30 的正因子集）中求 $6\vee10$ 与 $6\wedge10$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $6\vee10=\operatorname{lcm}(6,10)=30$，$6\wedge10=\gcd(6,10)=2$。
+
 </details>
+

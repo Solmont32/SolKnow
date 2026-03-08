@@ -87,6 +87,7 @@ $$L_{12} = \lim_{x \to x_0} \left( \lim_{y \to y_0} f(x, y) \right), \quad L_{21
 />
 
 <details>
+
 <summary>点击查看解析</summary>
 
 1. **沿直线 $y = kx$**：
@@ -95,6 +96,7 @@ $$L_{12} = \lim_{x \to x_0} \left( \lim_{y \to y_0} f(x, y) \right), \quad L_{21
 2. **沿抛物线 $x = y^2$**：
    $$\lim_{y \to 0} \frac{y^2 \cdot y^2}{(y^2)^2 + y^4} = \lim_{y \to 0} \frac{y^4}{2y^4} = \frac{1}{2}$$
 3. **结论**：虽然所有直线路径结果一致，但特殊曲线路径结果不同，故重极限不存在。**注意：$y=kx$ 齐次判定法不总是足够的。**
+
 </details>
 
 <KnowledgeCard 
@@ -104,6 +106,7 @@ $$L_{12} = \lim_{x \to x_0} \left( \lim_{y \to y_0} f(x, y) \right), \quad L_{21
 />
 
 <details>
+
 <summary>点击查看解析</summary>
 
 1. **累次极限**：
@@ -113,6 +116,7 @@ $$L_{12} = \lim_{x \to x_0} \left( \lim_{y \to y_0} f(x, y) \right), \quad L_{21
 2. **重极限**：
    沿 $y = x$ 趋近：$\lim_{x \to 0} \frac{x^2}{x^2 + x^2} = \frac{1}{2} \neq 0$。
 3. **结论**：累次极限相等是重极限存在的必要不充分条件。
+
 </details>
 
 <KnowledgeCard 
@@ -122,6 +126,7 @@ $$L_{12} = \lim_{x \to x_0} \left( \lim_{y \to y_0} f(x, y) \right), \quad L_{21
 />
 
 <details>
+
 <summary>点击查看解析</summary>
 
 1. **重极限**：
@@ -131,6 +136,7 @@ $$L_{12} = \lim_{x \to x_0} \left( \lim_{y \to y_0} f(x, y) \right), \quad L_{21
 2. **累次极限**：
    内层极限 $\lim_{y \to 0} f(x, y)$ 不存在（因为 $\sin\frac{1}{y}$ 在 0 附近剧烈震荡）。
 3. **结论**：重极限存在时，累次极限不一定存在。
+
 </details>
 
 <KnowledgeCard 
@@ -140,12 +146,14 @@ $$L_{12} = \lim_{x \to x_0} \left( \lim_{y \to y_0} f(x, y) \right), \quad L_{21
 />
 
 <details>
+
 <summary>点击查看解析</summary>
 
 1. **固定 $y=0$**：$f(x, 0) = 0$，对 $x$ 连续。
 2. **固定 $x=0$**：$f(0, y) = 0$，对 $y$ 连续。
 3. **联合连续性**：由辨析 2 知，$\lim_{(x, y) \to (0, 0)} f(x, y)$ 不存在（沿 $y=x$ 为 1/2）。
 4. **结论**：在一个点处对每个变量分别连续，**不能**推导出在该点联合连续。
+
 </details>
 
 <KnowledgeCard 
@@ -155,6 +163,7 @@ $$L_{12} = \lim_{x \to x_0} \left( \lim_{y \to y_0} f(x, y) \right), \quad L_{21
 />
 
 <details>
+
 <summary>点击查看解析</summary>
 
 1. **令 $x = r\cos\theta, y = r\sin\theta$**：
@@ -163,6 +172,7 @@ $$L_{12} = \lim_{x \to x_0} \left( \lim_{y \to y_0} f(x, y) \right), \quad L_{21
    $|r(\cos^3\theta + \sin^3\theta)| \le r(|\cos^3\theta| + |\sin^3\theta|) \le 2r$。
    由于 $2r \to 0$（当 $r \to 0$ 时），且该估计与 $\theta$ 无关（一致趋于 0）。
 3. **结论**：极限存在且为 0。**注意：必须证明极限过程与 $\theta$ 无关方可使用极坐标。**
+
 </details>
 
 ---

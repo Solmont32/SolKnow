@@ -99,27 +99,34 @@ $$
 在 $S_3$ 中写出由换位 $(12)$ 生成的子群，并求其阶。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $(12)^2=e$，故 $\langle(12)\rangle=\{e,(12)\}$，阶为 $2$。
+
 </details>
 
 ### 练习 2
 证明有限群中，阶为最小素数 $p$ 的子群必为循环群。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 取 $a\neq e$，则 $o(a)\mid p$ 且 $o(a)\neq 1$，故 $o(a)=p$。于是 $\langle a\rangle$ 有 $p$ 个元素，等于整个子群，故循环。
+
 </details>
 
 ### 练习 3
 设 $\varphi:G\to K$ 为群同态，证明 $\ker\varphi\trianglelefteq G$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 先证 $\ker\varphi\le G$：若 $a,b\in\ker\varphi$，则 $\varphi(ab^{-1})=\varphi(a)\varphi(b)^{-1}=e$，故 $ab^{-1}\in\ker\varphi$。  
 再证正规性：任取 $g\in G,\ x\in\ker\varphi$，有
 $\varphi(gxg^{-1})=\varphi(g)\varphi(x)\varphi(g)^{-1}=e$，故 $gxg^{-1}\in\ker\varphi$。
+
 </details>
+

@@ -49,10 +49,6 @@ $global:EXCLUDED_SYNC_PATHS = @(
     $CodexOutputFile
 )
 
-# 模型优先级：优先指定模型，最后回退到 Codex 默认模型（不传 --model）。
-$MODEL_CANDIDATES_PRIMARY = @("gpt-5.4", "gpt-5.3-codex", "")
-$MODEL_CANDIDATES_EXECUTOR = @("gpt-5.4", "gpt-5.3-codex", "")
-
 function Write-Log($message, $type = "INFO", $toFile = $true) {
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     $tag = "[INFO]"
@@ -356,7 +352,7 @@ function Show-Logo {
     Write-Host @"
       [ SOLKNOW OMNI-FLOW V6.0 - CODEX EDITION ]
       ________________________________________________________________________________________________________
-      S T R A T E G I C   A U T O N O M Y (CODEX EXEC / SAFE SYNC / LOCKED SINGLETON)
+      S T R A T E G I C   A U T O N O M Y
       ________________________________________________________________________________________________________
 "@ -ForegroundColor $randomColor
 }
@@ -882,72 +878,44 @@ function Invoke-CodexProcessWithTimeout(
     }
 }
 
-function Invoke-CodexSmart($prompt, [string[]]$models, $modeLabel) {
+function Invoke-CodexSmart($prompt, $modeLabel) {
     $timeoutSeconds = Get-CodexTimeoutSeconds $modeLabel
+    try {
+        Write-Log "Attempting pulse with default Codex model for $modeLabel..." "INFO"
 
-    foreach ($model in $models) {
-        try {
-            $displayModel = if ([string]::IsNullOrWhiteSpace($model)) { "<default>" } else { $model }
-            Write-Log "Attempting pulse with Codex [$displayModel] for $modeLabel (timeout: ${timeoutSeconds}s)..." "INFO"
-
-            if (Test-Path $CodexOutputFile) {
-                Remove-Item $CodexOutputFile -Force -ErrorAction SilentlyContinue
-            }
-
-            if ([string]::IsNullOrWhiteSpace([string]$prompt)) {
-                Write-Log "Codex prompt was empty; injecting fallback prompt." "WARN"
-                $prompt = "[AUTOMATION] Continue execution according to current task and workspace."
-            }
-
-            if ([string]::IsNullOrWhiteSpace($CodexOutputFile)) {
-                $CodexOutputFile = ".codex_last_message.txt"
-            }
-
-            $cliArgs = @(
-                "exec",
-                "--dangerously-bypass-approvals-and-sandbox",
-                "--cd", ".",
-                "--output-last-message", $CodexOutputFile,
-                "--skip-git-repo-check",
-                "--color", "never",
-                "--add-dir", "."
-            )
-
-            if (-not [string]::IsNullOrWhiteSpace($model)) {
-                $cliArgs += @("--model", $model)
-            }
-
-            $cliArgs += $prompt
-
-            $execResult = Invoke-CodexProcessWithTimeout -CliArgs $cliArgs -timeoutSeconds $timeoutSeconds -heartbeatSeconds 30 -modeLabel $modeLabel -displayModel $displayModel
-            $cmdOutput = $execResult.Output
-            $exitCode = $execResult.ExitCode
-
-            if ($exitCode -eq 0) {
-                if (Test-Path $CodexOutputFile) {
-                    $lastMessage = Get-Content -Path $CodexOutputFile -Raw -ErrorAction SilentlyContinue
-                    if (-not [string]::IsNullOrWhiteSpace($lastMessage)) {
-                        Write-Log "Codex summary: $($lastMessage.Trim())" "INFO"
-                    }
-                }
-                Write-Log "Codex execution completed successfully with model [$displayModel]" "SUCCESS"
-                return $true
-            }
-
-            Write-Log "Codex call failed with exit code $exitCode on model [$displayModel]" "ERROR"
-            $preview = @($cmdOutput) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -First 3
-            if ($preview -and $preview.Count -gt 0) {
-                Write-Log "Codex failure detail [$displayModel]: $($preview -join ' | ')" "WARN"
-            }
-        } catch {
-            Write-Log "Codex error on model [$displayModel]: $($_.Exception.Message)" "ERROR"
+        if (Test-Path $CodexOutputFile) {
+            Remove-Item $CodexOutputFile -Force -ErrorAction SilentlyContinue
         }
-    }
 
-    $cooldown = Get-CodexFailureCooldownSeconds $modeLabel
-    Write-Log "All Codex model attempts failed for $modeLabel. Cooling down for $cooldown seconds..." "ERROR"
-    Start-Sleep -Seconds $cooldown
-    return $false
+        $cliArgs = @(
+            "exec",
+            "--dangerously-bypass-approvals-and-sandbox",
+            "--cd", ".",
+            "--output-last-message", $CodexOutputFile,
+            "--skip-git-repo-check",
+            "--color", "never",
+            "--add-dir", ".",
+            $prompt
+        )
+
+        $execResult = Invoke-CodexProcessWithTimeout -CliArgs $cliArgs -timeoutSeconds $timeoutSeconds -heartbeatSeconds 30 -modeLabel $modeLabel -displayModel "DEFAULT"
+        
+        if ($execResult.ExitCode -eq 0) {
+            if (Test-Path $CodexOutputFile) {
+                $lastMessage = Get-Content -Path $CodexOutputFile -Raw -ErrorAction SilentlyContinue
+                if (-not [string]::IsNullOrWhiteSpace($lastMessage)) {
+                    Write-Log "Codex summary: $($lastMessage.Trim())" "INFO"
+                }
+            }
+            return $true
+        }
+
+        Write-Log "Codex execution failed with exit code $($execResult.ExitCode)" "ERROR"
+        return $false
+    } catch {
+        Write-Log "Codex error: $($_.Exception.Message)" "ERROR"
+        return $false
+    }
 }
 
 function Assert-TaskIntegrity($expectedTask) {
@@ -984,7 +952,7 @@ function Run-PlanningCycle {
     }
 
     Write-Log "No pending tasks. Running deep audit..." "PLAN"
-    $planned = Invoke-CodexSmart -prompt (Build-PlanPrompt) -models $MODEL_CANDIDATES_PRIMARY -modeLabel "planning"
+    $planned = Invoke-CodexSmart -prompt (Build-PlanPrompt) -modeLabel "planning"
     if ($planned) {
         $null = Invoke-Sync "plan: strategic expansion via Codex"
     }
@@ -1002,7 +970,7 @@ function Run-ExecutionCycle {
         Lock-Task $taskDesc
         $null = Invoke-Sync "lock: $taskDesc"
 
-        $executed = Invoke-CodexSmart -prompt (Build-ExecPrompt $taskDesc) -models $MODEL_CANDIDATES_EXECUTOR -modeLabel "execution"
+        $executed = Invoke-CodexSmart -prompt (Build-ExecPrompt $taskDesc) -modeLabel "execution"
         if (-not $executed) {
             Assert-TaskIntegrity $taskDesc *> $null
             break
@@ -1044,7 +1012,7 @@ try {
 
         for ($i = $CheckInterval; $i -gt 0; $i--) {
             Clear-HostSafe
-            Write-Host ">>> CODEX-FLOW STANDBY | HEARTBEAT: $i s | MODE: PLAN -> EXECUTE -> SYNC" -ForegroundColor DarkGray
+            Write-Host ">>> CODEX-FLOW STANDBY | HEARTBEAT: $i s | MODEL: DEFAULT" -ForegroundColor DarkGray
             Start-Sleep -Seconds 1
         }
     }

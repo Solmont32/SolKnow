@@ -50,6 +50,7 @@ $$\int_a^b f(x) dx = \lim_{\epsilon \to 0^+} \int_{a+\epsilon}^b f(x) dx$$
 2. $g(x)$ 在 $[a, +\infty)$ 上单调，且 $\lim_{x \to +\infty} g(x) = 0$。
 
 <details>
+
 <summary>点击查看【严格证明】</summary>
 
 **证明**：
@@ -72,6 +73,7 @@ $$\int_a^A f(x)g(x) dx = [F(x)g(x)]_a^A - \int_a^A F(x)g'(x) dx = F(A)g(A) - F(a
 2. $g(x)$ 在 $[a, +\infty)$ 上单调且有界。
 
 <details>
+
 <summary>点击查看【严格证明】</summary>
 
 **证明**：
@@ -110,6 +112,7 @@ $$P.V. \int_{-\infty}^{+\infty} f(x) dx = \lim_{A \to +\infty} \int_{-A}^A f(x) 
 证明 Dirichlet 积分 $\int_0^{+\infty} \frac{\sin x}{x} dx$ 收敛。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析过程
@@ -127,6 +130,7 @@ $$P.V. \int_{-\infty}^{+\infty} f(x) dx = \lim_{A \to +\infty} \int_{-A}^A f(x) 
 计算 $P.V. \int_{-1}^2 \frac{1}{x} dx$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析过程
@@ -142,6 +146,7 @@ $$= \ln 2$$
 讨论 $\int_0^{+\infty} \sin(x^2) dx$ 的收敛性。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析过程
@@ -162,6 +167,7 @@ $$= \ln 2$$
 计算 $\int_0^1 \ln x dx$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析过程
@@ -179,6 +185,7 @@ $$= -1$$
 计算 $P.V. \int_0^{+\infty} \frac{1}{1-x^2} dx$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析过程
@@ -201,6 +208,7 @@ $$\int_2^{+\infty} \frac{1}{1-x^2} dx = \frac{1}{2} [\ln |\frac{1+x}{1-x}|]_2^{+
 证明 $\int_0^{+\infty} \frac{\sin^2 x}{x^2} dx$ 收敛。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析过程
@@ -223,6 +231,7 @@ $$\int_2^{+\infty} \frac{1}{1-x^2} dx = \frac{1}{2} [\ln |\frac{1+x}{1-x}|]_2^{+
 计算 $\int_0^{+\infty} \frac{\ln x}{1+x^2} dx$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析过程
@@ -243,17 +252,20 @@ $$\int_2^{+\infty} \frac{1}{1-x^2} dx = \frac{1}{2} [\ln |\frac{1+x}{1-x}|]_2^{+
 判别 $\int_2^{+\infty} \frac{\ln x}{x^p} dx$ 的敛散性。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 - 若 $p > 1$：取 $\epsilon > 0$ 使得 $p - \epsilon > 1$。由于 $\lim_{x \to +\infty} \frac{\ln x}{x^\epsilon} = 0$，存在 $M$ 使得 $x > M$ 时 $\ln x < x^\epsilon$。则 $\frac{\ln x}{x^p} < \frac{1}{x^{p-\epsilon}}$，收敛。
 - 若 $p \le 1$：由于 $\frac{\ln x}{x^p} > \frac{1}{x}$ (对于足够大的 $x$)，而 $\int \frac{1}{x}$ 发散，故发散。
 **答案**：$p > 1$ 时收敛，$p \le 1$ 时发散。
+
 </details>
 
 ### 练习 2：Cauchy 主值的性质
 讨论 $\int_{-\infty}^{+\infty} \frac{1+x}{1+x^2} dx$ 的收敛性及 Cauchy 主值。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 1. **敛散性**：被积函数 $\sim \frac{x}{x^2} = \frac{1}{x}$，积分发散。
@@ -262,12 +274,14 @@ $P.V. \int_{-A}^A \frac{1+x}{1+x^2} dx = \int_{-A}^A \frac{1}{1+x^2} dx + \int_{
 奇函数部分积分为 0。
 $= [\arctan x]_{-A}^A = 2 \arctan A \to \pi$。
 **答案**：积分发散，但 Cauchy 主值为 $\pi$。
+
 </details>
 
 ### 练习 3：Abel 判别法的实战
 判别 $\int_0^{+\infty} \frac{\sin x \arctan x}{x} dx$ 的敛散性。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 1. **拆分函数**：令 $f(x) = \frac{\sin x}{x}$，$g(x) = \arctan x$。
@@ -275,12 +289,14 @@ $= [\arctan x]_{-A}^A = 2 \arctan A \to \pi$。
    - $\int_0^{+\infty} \frac{\sin x}{x} dx$ 收敛（Dirichlet 积分）。
    - $g(x) = \arctan x$ 在 $[0, +\infty)$ 上单调递增且有界（极限为 $\pi/2$）。
 3. **结论**：由 Abel 判别法，原积分收敛。
+
 </details>
 
 ### 练习 4：Frullani 积分
 计算 $\int_0^{+\infty} \frac{\cos(ax) - \cos(bx)}{x} dx$ ($a, b > 0$)。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 这是一个经典的 Frullani 积分。
@@ -290,12 +306,14 @@ $$\int_0^{+\infty} \frac{f(ax) - f(bx)}{x} dx = (f(0) - f(+\infty)) \ln \frac{b}
 - $f(+\infty)$：在积分意义下（通过震荡衰减或含参量积分处理），其有效值为 0（或者直接观察此积分在 $x \to +\infty$ 时的行为）。
 实际上 $\lim_{A \to +\infty} \int_0^A \frac{\cos(ax) - \cos(bx)}{x} dx = \ln \frac{b}{a}$。
 **答案**：$\ln \frac{b}{a}$。
+
 </details>
 
 ### 练习 5：瑕积分的判定
 判别 $\int_0^1 \frac{dx}{\sqrt{x(1-x)}}$ 的收敛性并计算。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 1. **瑕点**：$x=0$ 和 $x=1$。
@@ -303,12 +321,14 @@ $$\int_0^{+\infty} \frac{f(ax) - f(bx)}{x} dx = (f(0) - f(+\infty)) \ln \frac{b}
 3. **计算**：令 $x = \sin^2 \theta$，$dx = 2 \sin \theta \cos \theta d\theta$。
 $$\int_0^{\pi/2} \frac{2 \sin \theta \cos \theta d\theta}{\sqrt{\sin^2 \theta (1 - \sin^2 \theta)}} = \int_0^{\pi/2} \frac{2 \sin \theta \cos \theta}{\sin \theta \cos \theta} d\theta = \int_0^{\pi/2} 2 d\theta = \pi$$
 **答案**：收敛，值为 $\pi$。
+
 </details>
 
 ### 练习 6：高阶 Cauchy 主值
 计算 $P.V. \int_{-1}^1 \frac{1}{x^3} dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $$P.V. \int_{-1}^1 \frac{1}{x^3} dx = \lim_{\epsilon \to 0^+} \left( \int_{-1}^{-\epsilon} \frac{1}{x^3} dx + \int_{\epsilon}^1 \frac{1}{x^3} dx \right)$$
@@ -316,12 +336,14 @@ $$P.V. \int_{-1}^1 \frac{1}{x^3} dx = \lim_{\epsilon \to 0^+} \left( \int_{-1}^{
 $\int_{-1}^{-\epsilon} \frac{1}{x^3} dx = -\int_{\epsilon}^1 \frac{1}{x^3} dx$。
 因此，各项抵消，结果为 0。
 **答案**：0。
+
 </details>
 
 ### 练习 7：有理函数反常积分
 判别并计算 $\int_0^{+\infty} \frac{1}{1+x^4} dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 1. **敛散性**：被积函数 $\sim 1/x^4$，在 $+\infty$ 处收敛。
@@ -337,6 +359,6 @@ $\int_{-1}^{-\epsilon} \frac{1}{x^3} dx = -\int_{\epsilon}^1 \frac{1}{x^3} dx$�
    $$2I = \int_{-\infty}^{+\infty} \frac{du}{u^2+2} = \left[ \frac{1}{\sqrt{2}} \arctan \frac{u}{\sqrt{2}} \right]_{-\infty}^{+\infty} = \frac{1}{\sqrt{2}}(\frac{\pi}{2} - (-\frac{\pi}{2})) = \frac{\pi}{\sqrt{2}}$$
    故 $I = \frac{\pi}{2\sqrt{2}}$。
 **答案**：收敛，值为 $\frac{\sqrt{2}\pi}{4}$。
-</details>
 
+</details>
 

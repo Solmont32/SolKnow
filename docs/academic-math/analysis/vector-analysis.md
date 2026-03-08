@@ -86,6 +86,7 @@ $$\mathbf{A} = \nabla \times \mathbf{B}$$
 验证向量场 $\mathbf{A} = (2xy + z^3) \mathbf{i} + x^2 \mathbf{j} + 3xz^2 \mathbf{k}$ 是保守场，并求其势函数。
 
 <details>
+
 <summary>解析过程</summary>
 
 1. **验证无旋性**：
@@ -98,12 +99,14 @@ $$\mathbf{A} = \nabla \times \mathbf{B}$$
 3. **结论**：势函数为 $\phi(x, y, z) = x^2y + xz^3 + C$。
 
 **答案**：$x^2y + xz^3 + C$
+
 </details>
 
 ### 例题 2：拉普拉斯算子的计算
 设 $r = \sqrt{x^2+y^2+z^2}$，求 $\nabla^2 (\frac{1}{r})$。
 
 <details>
+
 <summary>解析过程</summary>
 
 1. **计算梯度**：$\nabla (\frac{1}{r}) = -\frac{1}{r^2} \nabla r = -\frac{\mathbf{r}}{r^3}$。
@@ -113,6 +116,7 @@ $$\mathbf{A} = \nabla \times \mathbf{B}$$
 3. **物理意义**：点电荷产生的电势满足拉普拉斯方程（除源点外）。
 
 **答案**：0 ($r \neq 0$)
+
 </details>
 
 ---

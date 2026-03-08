@@ -39,6 +39,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 已知 $x>0$，求 $x+\dfrac{4}{x}$ 的最小值。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -48,6 +49,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 #### 答案
 最小值为 $4$，在 $x=2$ 时取得。
+
 </details>
 
 ### 例题 2：分式不等式
@@ -55,6 +57,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 $$\frac{x-1}{x+2}\ge \frac12,\quad x\ne -2.$$
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -67,6 +70,7 @@ $$\frac{x-1}{x+2}\ge \frac12,\quad x\ne -2.$$
 
 #### 答案
 $x\in(-\infty,-2)\cup[4,+\infty)$。
+
 </details>
 
 ### 例题 3：函数方程（整数域）
@@ -75,6 +79,7 @@ $$f(x+y)=f(x)+f(y),\quad f(1)=3.$$
 求 $f(n)$（$n\in\mathbb Z$）。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -87,6 +92,7 @@ $$f(x+y)=f(x)+f(y),\quad f(1)=3.$$
 
 #### 答案
 $$f(n)=3n\quad (n\in\mathbb Z).$$
+
 </details>
 
 ### 例题 4：对称替换法
@@ -95,6 +101,7 @@ $$f(x)+f(2-x)=x^2-2x+5.$$
 求 $f(1)$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -105,6 +112,7 @@ $$f(x)+f(2-x)=x^2-2x+5.$$
 
 #### 答案
 $2$。
+
 </details>
 
 ---
@@ -115,6 +123,7 @@ $2$。
 若 $a,b>0$ 且 $a+b=6$，求 $ab$ 的最大值。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 #### 过程
@@ -126,6 +135,7 @@ $$ab\le\frac{(a+b)^2}{4}=\frac{36}{4}=9.$$
 
 #### 答案
 最大值是 $9$。
+
 </details>
 
 ### 练习 2
@@ -133,6 +143,7 @@ $$ab\le\frac{(a+b)^2}{4}=\frac{36}{4}=9.$$
 $$\frac{2x+1}{x-3}<1,\quad x\ne3.$$
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 #### 过程
@@ -143,12 +154,14 @@ $$-4<x<3.$$
 
 #### 答案
 $x\in(-4,3)$。
+
 </details>
 
 ### 练习 3
 设 $f:\mathbb Z\to\mathbb Z$，满足 $f(x+y)=f(x)+f(y)$ 且 $f(2)=10$，求 $f(7)$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 #### 过程
@@ -159,12 +172,14 @@ $$f(7)=7f(1)=35.$$
 
 #### 答案
 $35$。
+
 </details>
 
 ### 练习 4
 已知函数满足 $f(x)+f(6-x)=x^2-6x+20$，求 $f(3)$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 #### 过程
@@ -175,4 +190,6 @@ $$f(3)=\frac{11}{2}.$$
 
 #### 答案
 $\dfrac{11}{2}$。
+
 </details>
+

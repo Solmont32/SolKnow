@@ -40,6 +40,7 @@ $\frac12[(a-b)^2+(b-c)^2+(c-a)^2]$，用于非负性与最值判断。
 分解因式：$a(b-c)^3+b(c-a)^3+c(a-b)^3$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -50,12 +51,14 @@ $\frac12[(a-b)^2+(b-c)^2+(c-a)^2]$，用于非负性与最值判断。
 
 #### 答案
 $(a+b+c)(a-b)(b-c)(c-a)$。
+
 </details>
 
 ### 例题 2：根式的巧妙化简
 化简：$\sqrt{7-4\sqrt3}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -65,6 +68,7 @@ $(a+b+c)(a-b)(b-c)(c-a)$。
 
 #### 答案
 $2-\sqrt3$。
+
 </details>
 
 ### 例题 3：分式恒等变形
@@ -72,6 +76,7 @@ $2-\sqrt3$。
 $$\frac{x^2+3x+2}{x^2-1}-\frac{2}{x-1},\quad x\ne\pm1.$$
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -82,12 +87,14 @@ $$\frac{x^2+3x+2}{x^2-1}-\frac{2}{x-1},\quad x\ne\pm1.$$
 
 #### 答案
 $\dfrac{x}{x-1}$（或 $1+\dfrac1{x-1}$）。
+
 </details>
 
 ### 例题 4：换元降次
 已知 $x+\frac1x=3$，求 $x^2+\frac1{x^2}$ 与 $x^3+\frac1{x^3}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -100,4 +107,6 @@ $\dfrac{x}{x-1}$（或 $1+\dfrac1{x-1}$）。
 
 #### 答案
 $x^2+\frac1{x^2}=7$，$x^3+\frac1{x^3}=18$。
+
 </details>
+

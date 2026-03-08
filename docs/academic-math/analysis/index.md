@@ -92,7 +92,3 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 > **学习建议**：分析学的严密性需要通过大量的 $\epsilon$ 练习来磨练。建议在阅读理论时，务必亲手推导一遍核心定理的证明。
 
-
-
-
-

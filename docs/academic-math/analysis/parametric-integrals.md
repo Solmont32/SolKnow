@@ -101,6 +101,7 @@ $$B(p, q) = \frac{\Gamma(p)\Gamma(q)}{\Gamma(p+q)}$$
 计算 $I = \int_0^{\pi/2} \ln(\sin x) dx$。
 
 <details>
+
 <summary>点击查看详细解析</summary>
 
 #### 解析过程
@@ -122,12 +123,14 @@ $$B(p, q) = \frac{\Gamma(p)\Gamma(q)}{\Gamma(p+q)}$$
 
 #### 答案
 $-\frac{\pi}{2} \ln 2$
+
 </details>
 
 ### 例题 4：Frullani 积分公式的应用
 计算 $I = \int_0^{+\infty} \frac{e^{-ax} - e^{-bx}}{x} dx \quad (a, b > 0)$。
 
 <details>
+
 <summary>点击查看详细解析</summary>
 
 #### 解析过程
@@ -141,12 +144,14 @@ $-\frac{\pi}{2} \ln 2$
 
 #### 答案
 $\ln(b/a)$
+
 </details>
 
 ### 例题 5：结合 Gamma 函数的复杂反常积分
 计算 $I = \int_0^{+\infty} \frac{x^{a-1}}{1+x^n} dx \quad (n > a > 0)$。
 
 <details>
+
 <summary>点击查看详细解析</summary>
 
 #### 解析过程
@@ -163,6 +168,7 @@ $\ln(b/a)$
 
 #### 答案
 $\frac{\pi}{n \sin(a\pi/n)}$
+
 </details>
 
 ---

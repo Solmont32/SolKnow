@@ -48,6 +48,7 @@ $$
 $$
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 利用和差化积：
@@ -69,6 +70,7 @@ $$
 $$
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 令 $s=\sin x$，得
@@ -91,6 +93,7 @@ $$
 求 $|z|$ 与 $\arg z$（主值）。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 有理化：
@@ -115,6 +118,7 @@ z^3+\bar z^3=2\cos3\theta.
 $$
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 由 De Moivre：
@@ -136,6 +140,7 @@ z^2=1+i\sqrt3.
 $$
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 写成极形式：
@@ -165,6 +170,7 @@ $$
 $$
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 由积化和差：
@@ -181,6 +187,7 @@ $$
 $$
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 有
@@ -198,6 +205,7 @@ $$
 设 $z=1-\sqrt3\,i$，求 $|z|$ 与主辐角。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 $$
@@ -214,6 +222,7 @@ $$
 求方程 $z^4=16$ 的所有复根。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 写为

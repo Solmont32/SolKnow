@@ -10,8 +10,11 @@ title: 机器学习练习
 为什么要引入 L1 或 L2 正则化？
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 答案
 为了防止模型 **过拟合 (Overfitting)**，通过惩罚过大的权重参数，提高模型的泛化能力。
+
 </details>
+

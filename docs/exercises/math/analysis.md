@@ -10,6 +10,7 @@ title: 数学分析精选练习
 计算 $\lim_{x \to 0} \frac{\sin 5x}{3x}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -21,6 +22,7 @@ title: 数学分析精选练习
 
 #### 答案
 $5/3$
+
 </details>
 
 ---
@@ -29,6 +31,7 @@ $5/3$
 求 $y = x \ln x$ 的导数。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -38,6 +41,7 @@ $5/3$
 
 #### 答案
 $\ln x + 1$
+
 </details>
 
 ---
@@ -46,6 +50,7 @@ $\ln x + 1$
 判断 $f(x) = \frac{1}{x}$ 在区间 $(0, 1)$ 上是否一致连续。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -56,6 +61,7 @@ $\ln x + 1$
 
 #### 答案
 不一致连续。
+
 </details>
 
 ---
@@ -64,6 +70,7 @@ $\ln x + 1$
 证明方程 $x^3 - 4x + 1 = 0$ 在区间 $[0, 1]$ 内至少有一个实根。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -76,6 +83,7 @@ $\ln x + 1$
 
 #### 答案
 在区间 $[0, 1]$ 内至少有一个实根。
+
 </details>
 
 ---
@@ -84,6 +92,7 @@ $\ln x + 1$
 计算 $\iint_D (x + y) dA$，其中 $D$ 是由 $y = \sqrt{x}$ 和 $y = x^2$ 围成的区域。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -100,6 +109,7 @@ $\ln x + 1$
 
 #### 答案
 $3/10$
+
 </details>
 
 ---
@@ -108,6 +118,7 @@ $3/10$
 计算 $\iiint_\Omega z dV$，其中 $\Omega$ 是由柱面 $x^2 + y^2 = 1$ 和平面 $z = 0, z = 1$ 围成的区域。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -120,6 +131,7 @@ $3/10$
 
 #### 答案
 $\pi/2$
+
 </details>
 
 ---
@@ -128,6 +140,7 @@ $\pi/2$
 计算 $\int_\Gamma (x+y) ds$，其中 $\Gamma$ 是连接 $(0,0)$ 和 $(1,1)$ 的直线段。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -140,6 +153,7 @@ $\pi/2$
 
 #### 答案
 $\sqrt{2}$
+
 </details>
 
 ---
@@ -148,6 +162,7 @@ $\sqrt{2}$
 计算向量场 $\mathbf{F} = (y^2, x^2)$ 沿逆时针方向圆周 $x^2 + y^2 = 1$ 所做的功。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -164,6 +179,7 @@ $\sqrt{2}$
 
 #### 答案
 0
+
 </details>
 
 ---
@@ -172,6 +188,7 @@ $\sqrt{2}$
 计算向量场 $\mathbf{F} = (x, y, z)$ 穿过单位球面 $x^2 + y^2 + z^2 = 1$ 向外侧的通量。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -186,6 +203,7 @@ $\sqrt{2}$
 
 #### 答案
 $4\pi$
+
 </details>
 
 ---
@@ -194,6 +212,7 @@ $4\pi$
 计算 $\oint_\Gamma z dx + x dy + y dz$，其中 $\Gamma$ 为平面 $x+y=1$ 与柱面 $x^2+y^2=1$ 的交线（从 $z$ 轴正向看为逆时针）。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -215,6 +234,7 @@ $4\pi$
 
 #### 答案
 $\sqrt{2} \times \text{Area}(\Sigma)$
+
 </details>
 
 ---
@@ -223,6 +243,7 @@ $\sqrt{2} \times \text{Area}(\Sigma)$
 求函数 $f(x, y) = x^4 + y^4 - 4xy + 1$ 的极值点并判别其类型。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -239,6 +260,7 @@ $\sqrt{2} \times \text{Area}(\Sigma)$
 
 #### 答案
 极小值点为 $(1, 1)$ 和 $(-1, -1)$；鞍点为 $(0, 0)$。
+
 </details>
 
 ---
@@ -247,6 +269,7 @@ $\sqrt{2} \times \text{Area}(\Sigma)$
 求函数 $f(x, y) = xy$ 在约束条件 $x + y = 1$ 下的极值。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -256,6 +279,7 @@ $\sqrt{2} \times \text{Area}(\Sigma)$
 
 #### 答案
 在 $(1/2, 1/2)$ 处取得极大值 $1/4$。
+
 </details>
 
 ---
@@ -264,6 +288,7 @@ $\sqrt{2} \times \text{Area}(\Sigma)$
 计算 $\lim_{n \to \infty} (\frac{1}{\sqrt{n^2+1}} + \frac{1}{\sqrt{n^2+2}} + \dots + \frac{1}{\sqrt{n^2+n}})$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -273,6 +298,7 @@ $\sqrt{2} \times \text{Area}(\Sigma)$
 
 #### 答案
 1
+
 </details>
 
 ---
@@ -281,6 +307,7 @@ $\sqrt{2} \times \text{Area}(\Sigma)$
 计算 $\lim_{x \to 0} \frac{e^x - 1 - x}{x^2}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -289,6 +316,7 @@ $\sqrt{2} \times \text{Area}(\Sigma)$
 
 #### 答案
 $1/2$
+
 </details>
 
 ---
@@ -297,6 +325,7 @@ $1/2$
 设 $f(x) = |x| \sin x$，问 $f(x)$ 在 $x=0$ 处是否可导？
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -305,6 +334,7 @@ $1/2$
 
 #### 答案
 可导，$f'(0) = 0$。
+
 </details>
 
 ---
@@ -313,6 +343,7 @@ $1/2$
 求 $y = x^x$ 的导数。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -321,6 +352,7 @@ $1/2$
 
 #### 答案
 $x^x(1 + \ln x)$
+
 </details>
 
 ---
@@ -329,6 +361,7 @@ $x^x(1 + \ln x)$
 由方程 $x^2 + y^2 = a^2$ 确定的隐函数 $y(x)$，求 $y''$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -337,6 +370,7 @@ $x^x(1 + \ln x)$
 
 #### 答案
 $-a^2/y^3$
+
 </details>
 
 ---
@@ -345,6 +379,7 @@ $-a^2/y^3$
 已知 $\begin{cases} x = a(t - \sin t) \\ y = a(1 - \cos t) \end{cases}$，求 $\frac{dy}{dx}$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析
@@ -352,6 +387,7 @@ $-a^2/y^3$
 
 #### 答案
 $\cot(t/2)$
+
 </details>
 
 ---
@@ -360,6 +396,7 @@ $\cot(t/2)$
 证明：$x^3 - 3x + c = 0$ 在 $[-1, 1]$ 上最多有两个实根。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析
@@ -368,6 +405,7 @@ $\cot(t/2)$
 
 #### 答案
 通过 Rolle 定理证毕。
+
 </details>
 
 ---
@@ -376,6 +414,7 @@ $\cot(t/2)$
 本练习涵盖 Taylor 公式的基本展开、数值近似计算以及高阶不等式证明。
 
 <details>
+
 <summary>点击查看详情与解析</summary>
 
 ### (1) 基础展开
@@ -410,6 +449,7 @@ $\sqrt{e} \approx 1 + 0.5 + \frac{0.5^2}{2!} + \frac{0.5^3}{3!} + \frac{0.5^4}{4
 讨论 $f(x) = x e^{-x}$ 的性质。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析
@@ -418,6 +458,7 @@ $\sqrt{e} \approx 1 + 0.5 + \frac{0.5^2}{2!} + \frac{0.5^3}{3!} + \frac{0.5^4}{4
 
 #### 答案
 极大值为 $1/e$。
+
 </details>
 
 ---
@@ -426,10 +467,12 @@ $\sqrt{e} \approx 1 + 0.5 + \frac{0.5^2}{2!} + \frac{0.5^3}{3!} + \frac{0.5^4}{4
 计算 $\int \frac{dx}{x \ln x}$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 答案
 $\ln|\ln x| + C$
+
 </details>
 
 ---
@@ -438,6 +481,7 @@ $\ln|\ln x| + C$
 证明 $\lim_{(x,y) \to (0,0)} \frac{xy}{x^2+y^2}$ 不存在。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析
@@ -445,6 +489,7 @@ $\ln|\ln x| + C$
 
 #### 答案
 不存在。
+
 </details>
 
 ---
@@ -453,10 +498,12 @@ $\ln|\ln x| + C$
 已知 $z = \arctan \frac{y}{x}$，求偏导。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 答案
 $z_x = -y/(x^2+y^2), z_y = x/(x^2+y^2)$
+
 </details>
 
 ---
@@ -465,10 +512,12 @@ $z_x = -y/(x^2+y^2), z_y = x/(x^2+y^2)$
 设 $z = f(x^2 - y^2, xy)$，求 $\partial z / \partial x$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 答案
 $2x f_1' + y f_2'$
+
 </details>
 
 ---
@@ -477,10 +526,12 @@ $2x f_1' + y f_2'$
 求 $u = x^y$ 的全微分。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 答案
 $du = y x^{y-1} dx + x^y \ln x dy$
+
 </details>
 
 ---
@@ -489,10 +540,12 @@ $du = y x^{y-1} dx + x^y \ln x dy$
 求 $f(x, y) = x^2 + 2y^2$ 在 $(1, 1)$ 沿 $(1, 1)$ 方向的方向导数。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 答案
 $3\sqrt{2}$
+
 </details>
 
 ---
@@ -501,10 +554,12 @@ $3\sqrt{2}$
 求 $z = x^2 + y^2$ 在 $(1, 2, 5)$ 的切平面。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 答案
 $2x + 4y - z - 5 = 0$
+
 </details>
 
 ---
@@ -513,10 +568,12 @@ $2x + 4y - z - 5 = 0$
 设 $x^2 + y^2 + z^2 - 3xyz = 0$，求 $\partial z / \partial x$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 答案
 $\frac{3yz - 2x}{2z - 3xy}$
+
 </details>
 
 ---
@@ -525,10 +582,12 @@ $\frac{3yz - 2x}{2z - 3xy}$
 求 $f(x, y) = x^3 + y^3 - 3xy$ 的极值。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 答案
 极小值 $-1$（在 $(1, 1)$ 处）。
+
 </details>
 
 ---
@@ -537,10 +596,12 @@ $\frac{3yz - 2x}{2z - 3xy}$
 设 $z = e^{ax} \sin by$，求 $z_{xy}$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 答案
 $ab e^{ax} \cos by$
+
 </details>
 
 ---
@@ -549,10 +610,12 @@ $ab e^{ax} \cos by$
 已知方程组 $\begin{cases} u + v = x + y \\ xu + yv = 1 \end{cases}$，求 $\frac{\partial u}{\partial x}$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 答案
 $\frac{u+y}{y-x}$
+
 </details>
 
 ---
@@ -561,10 +624,12 @@ $\frac{u+y}{y-x}$
 计算 $I = \int_0^{+\infty} x^6 e^{-2x} dx$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 答案
 $45/8$
+
 </details>
 
 ---
@@ -573,10 +638,12 @@ $45/8$
 计算 $I = \int_0^{\pi/2} \sin^4 \theta \cos^2 \theta d\theta$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 答案
 $\pi/32$
+
 </details>
 
 ---
@@ -585,10 +652,12 @@ $\pi/32$
 计算穿过立方体 $0 \le x, y, z \le a$ 表面的通量。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 答案
 $3a^4$
+
 </details>
 
 ---
@@ -597,10 +666,12 @@ $3a^4$
 讨论 $f(x) = \lim_{n \to \infty} \frac{x^n - 1}{x^n + 1}$ 的连续性。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 答案
 $x=1$ 为跳跃间断点。
+
 </details>
 
 ---
@@ -610,10 +681,12 @@ $x=1$ 为跳跃间断点。
 证明：$\cap_{n=1}^\infty [a_n, b_n]$ 包含且仅包含一个点（在给定条件下）。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析
 利用单调有界原理证明端点极限相等，再利用反证法证唯一性。
+
 </details>
 
 ---
@@ -622,10 +695,12 @@ $x=1$ 为跳跃间断点。
 证明：$\sup(A+B) = \sup A + \sup B$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析
 两步走：证明 $\sup A + \sup B$ 是上界；证明其为最小上界。
+
 </details>
 
 ---
@@ -635,11 +710,13 @@ $x=1$ 为跳跃间断点。
 证明数列 $a_n = 1 + 1/2 + \dots + 1/n$ 发散。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析
 取 $m = 2n$，则 $|a_{2n} - a_n| = \frac{1}{n+1} + \dots + \frac{1}{2n} > n \cdot \frac{1}{2n} = 1/2$。
 违反柯西准则，故发散。
+
 </details>
 
 ---
@@ -667,6 +744,7 @@ $x=1$ 为跳跃间断点。
 求曲线 $x = t, y = t^2, z = t^3$ 在点 $(1, 1, 1)$ 处的切线与法平面方程。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -679,6 +757,7 @@ $x=1$ 为跳跃间断点。
 
 #### 答案
 切线：$\frac{x-1}{1} = \frac{y-1}{2} = \frac{z-1}{3}$；法平面：$x + 2y + 3z - 6 = 0$。
+
 </details>
 
 ---
@@ -687,6 +766,7 @@ $x=1$ 为跳跃间断点。
 计算螺旋线 $\mathbf{r}(t) = (3\cos t, 3\sin t, 4t)$ 的曲率 $\kappa$ 与挠率 $\tau$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -697,6 +777,7 @@ $x=1$ 为跳跃间断点。
 
 #### 答案
 $\kappa = 0.12, \tau = 0.16$。
+
 </details>
 
 ---
@@ -705,6 +786,7 @@ $\kappa = 0.12, \tau = 0.16$。
 求曲线 $\mathbf{r}(t) = (t, t^2, \frac{2}{3}t^3)$ 在 $t=1$ 处的单位切向量 $\mathbf{T}$ 和单位副法向量 $\mathbf{B}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -717,6 +799,7 @@ $\kappa = 0.12, \tau = 0.16$。
 
 #### 答案
 $\mathbf{T} = (\frac{1}{3}, \frac{2}{3}, \frac{2}{3}), \mathbf{B} = (\frac{2}{3}, -\frac{2}{3}, \frac{1}{3})$。
+
 </details>
 
 ---
@@ -725,6 +808,7 @@ $\mathbf{T} = (\frac{1}{3}, \frac{2}{3}, \frac{2}{3}), \mathbf{B} = (\frac{2}{3}
 计算向量场 $\mathbf{F} = (x^3, y^3, z^3)$ 穿过整个球面 $x^2 + y^2 + z^2 = a^2$ 向外侧的通量 $\Phi$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -741,6 +825,7 @@ $\mathbf{T} = (\frac{1}{3}, \frac{2}{3}, \frac{2}{3}), \mathbf{B} = (\frac{2}{3}
 
 #### 答案
 $\frac{12}{5}\pi a^5$
+
 </details>
 
 ---
@@ -749,6 +834,7 @@ $\frac{12}{5}\pi a^5$
 计算积分 $I = \oiint_S (x^2 \cos \alpha + y^2 \cos \beta + z^2 \cos \gamma) dS$，其中 $S$ 是立方体 $0 \le x, y, z \le a$ 的整个表面，$(\cos \alpha, \cos \beta, \cos \gamma)$ 为其外法向方向余弦。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -764,6 +850,7 @@ $\frac{12}{5}\pi a^5$
 
 #### 答案
 $3a^4$
+
 </details>
 
 ---
@@ -772,6 +859,7 @@ $3a^4$
 设 $\mathbf{F} = \frac{\mathbf{r}}{r^3} = \frac{(x, y, z)}{(x^2+y^2+z^2)^{3/2}}$。证明：对于任何包围原点的光滑封闭曲面 $S$，通量均为 $4\pi$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -788,6 +876,7 @@ $3a^4$
 
 #### 答案
 证毕。
+
 </details>
 
 ---
@@ -796,6 +885,7 @@ $3a^4$
 计算 $\iint_S x^2 dy dz + y^2 dz dx + z^2 dx dy$，其中 $S$ 是由抛物面 $x^2 + y^2 = z$ 与平面 $z = 1$ 所围成的区域的整个表面（取外侧）。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -812,6 +902,7 @@ $3a^4$
 
 #### 答案
 $\frac{2}{3}\pi$
+
 </details>
 
 ---
@@ -820,6 +911,7 @@ $\frac{2}{3}\pi$
 证明格林第一恒等式：$\iiint_\Omega (u \Delta v + \nabla u \cdot \nabla v) dV = \oiint_S u \frac{\partial v}{\partial n} dS$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -834,6 +926,7 @@ $\frac{2}{3}\pi$
 
 #### 答案
 证毕。
+
 </details>
 
 ---
@@ -842,6 +935,7 @@ $\frac{2}{3}\pi$
 计算 $I = \oint_C (y-z)dx + (z-x)dy + (x-y)dz$，其中 $C$ 是圆柱面 $x^2 + y^2 = 1$ 与平面 $x+z=1$ 的交线，从 $z$ 轴正向看为逆时针方向。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -862,6 +956,7 @@ $\frac{2}{3}\pi$
 
 #### 答案
 $-4\pi$
+
 </details>
 
 ---
@@ -870,6 +965,7 @@ $-4\pi$
 计算 $\oint_C y^2 dx + z^2 dy + x^2 dz$，其中 $C$ 是以 $(a,0,0), (0,a,0), (0,0,a)$ 为顶点的三角形边界，按上述顶点顺序。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -887,6 +983,7 @@ $-4\pi$
 
 #### 答案
 $-a^3$
+
 </details>
 
 ---
@@ -895,6 +992,7 @@ $-a^3$
 计算 $\oint_C (y^2-z^2)dx + (z^2-x^2)dy + (x^2-y^2)dz$，其中 $C$ 为球面 $x^2+y^2+z^2=a^2$ 在第一卦限部分的边界（由三段圆弧组成），方向与外法向符合右手系。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -911,6 +1009,7 @@ $-a^3$
 
 #### 答案
 $-4a^3$
+
 </details>
 
 ---
@@ -919,6 +1018,7 @@ $-4a^3$
 计算 $I(a) = \int_0^{+\infty} \frac{1-e^{-ax^2}}{xe^{x^2}} dx \quad (a > -1)$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -934,6 +1034,7 @@ $-4a^3$
 
 #### 答案
 $\frac{1}{2} \ln(a+1)$
+
 </details>
 
 ---
@@ -942,6 +1043,7 @@ $\frac{1}{2} \ln(a+1)$
 利用含参量积分 $I(y) = \int_0^{+\infty} e^{-yx} \frac{\sin x}{x} dx$ 证明 $\int_0^{+\infty} \frac{\sin x}{x} dx = \frac{\pi}{2}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -957,6 +1059,7 @@ $\frac{1}{2} \ln(a+1)$
 
 #### 答案
 证毕。
+
 </details>
 
 ---
@@ -965,6 +1068,7 @@ $\frac{1}{2} \ln(a+1)$
 计算 $I(a, b) = \int_0^{+\infty} \frac{\arctan ax - \arctan bx}{x} dx \quad (a, b > 0)$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -979,6 +1083,7 @@ $\frac{1}{2} \ln(a+1)$
 
 #### 答案
 $\frac{\pi}{2} \ln \frac{a}{b}$
+
 </details>
 
 ---
@@ -987,6 +1092,7 @@ $\frac{\pi}{2} \ln \frac{a}{b}$
 计算 $\int_0^{+\infty} \frac{\ln(1+a^2x^2)}{x^2} dx \quad (a > 0)$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1000,6 +1106,7 @@ $\frac{\pi}{2} \ln \frac{a}{b}$
 
 #### 答案
 $\pi a$
+
 </details>
 
 ---
@@ -1008,6 +1115,7 @@ $\pi a$
 计算 $\oint_C (x+y) dx + (y+z) dy + (z+x) dz$，其中 $C$ 为球面 $x^2+y^2+z^2=R^2$ 与平面 $x+y+z=0$ 的交线，从 $z$ 轴正向看为逆时针。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1018,6 +1126,7 @@ $\pi a$
 
 #### 答案
 $-\sqrt{3}\pi R^2$
+
 </details>
 
 ---
@@ -1026,6 +1135,7 @@ $-\sqrt{3}\pi R^2$
 计算 $\oiint_S x^2 dy dz + y^2 dz dx + z^2 dx dy$，其中 $S$ 是椭球面 $\frac{x^2}{a^2} + \frac{y^2}{b^2} + \frac{z^2}{c^2} = 1$ 的外侧。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1035,6 +1145,7 @@ $-\sqrt{3}\pi R^2$
 
 #### 答案
 0
+
 </details>
 
 ---
@@ -1043,6 +1154,7 @@ $-\sqrt{3}\pi R^2$
 计算极限 $\lim_{n \to \infty} \int_0^{+\infty} \frac{dx}{1+x^n}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1055,6 +1167,7 @@ $-\sqrt{3}\pi R^2$
 
 #### 答案
 1
+
 </details>
 
 ---
@@ -1063,6 +1176,7 @@ $-\sqrt{3}\pi R^2$
 判定函数 $f(x, y) = \sqrt[3]{x^3+y^3}$ 在 $(0, 0)$ 处的可微性。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1078,6 +1192,7 @@ $-\sqrt{3}\pi R^2$
 
 #### 答案
 在 $(0, 0)$ 处不可微。
+
 </details>
 
 ---
@@ -1086,6 +1201,7 @@ $-\sqrt{3}\pi R^2$
 已知 $u + v = x + y$ 且 $uv = xy$，求 $d^2 u$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1106,6 +1222,7 @@ $-\sqrt{3}\pi R^2$
 
 #### 答案
 $d^2 u = \frac{2(du dv - dx dy)}{u-v}$。
+
 </details>
 
 ---
@@ -1114,6 +1231,7 @@ $d^2 u = \frac{2(du dv - dx dy)}{u-v}$。
 求原点到曲线 $\begin{cases} x^2 + y^2 = 1 \\ x + y + z = 1 \end{cases}$ 的最短距离。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1135,6 +1253,7 @@ $d^2 u = \frac{2(du dv - dx dy)}{u-v}$。
 
 #### 答案
 最短距离为 $\sqrt{4-2\sqrt{2}}$。
+
 </details>
 
 ---
@@ -1143,6 +1262,7 @@ $d^2 u = \frac{2(du dv - dx dy)}{u-v}$。
 在信息论与统计物理中，**熵 (Entropy)** 是系统无序度的度量。设一个离散系统有 $n$ 个可能状态，各状态发生的概率为 $p_i \ge 0$。求在满足概率归一化条件 $\sum_{i=1}^n p_i = 1$ 的约束下，使得信息熵 $H(p_1, p_2, \dots, p_n) = -\sum_{i=1}^n p_i \ln p_i$ 达到最大的概率分布。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1162,6 +1282,7 @@ $d^2 u = \frac{2(du dv - dx dy)}{u-v}$。
 
 #### 答案
 当 $p_1 = p_2 = \dots = p_n = 1/n$ 时，熵达到极大值。
+
 </details>
 
 ---
@@ -1170,6 +1291,7 @@ $d^2 u = \frac{2(du dv - dx dy)}{u-v}$。
 计算积分 $I = \int_0^{+\infty} \frac{dx}{1+x^4}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1182,6 +1304,7 @@ $d^2 u = \frac{2(du dv - dx dy)}{u-v}$。
 
 #### 答案
 $\frac{\sqrt{2}\pi}{4}$
+
 </details>
 
 ---
@@ -1190,6 +1313,7 @@ $\frac{\sqrt{2}\pi}{4}$
 判定含参量反常积分 $I(y) = \int_0^{+\infty} e^{-xy} \frac{\sin x}{x} dx$ 在 $y \in [0, +\infty)$ 上的收敛性。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1206,6 +1330,7 @@ $\frac{\sqrt{2}\pi}{4}$
 
 #### 答案
 在 $y \in [0, +\infty)$ 上一致收敛。
+
 </details>
 
 ---
@@ -1214,6 +1339,7 @@ $\frac{\sqrt{2}\pi}{4}$
 已知 $I(a) = \int_0^{\pi/2} \frac{\ln(1+a \cos x)}{\cos x} dx \quad (|a| < 1)$，求 $I(a)$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1236,6 +1362,7 @@ $\frac{\sqrt{2}\pi}{4}$
 
 #### 答案
 $\frac{\pi^2}{8} - \frac{1}{2}(\arccos a)^2$
+
 </details>
 
 ---
@@ -1244,6 +1371,7 @@ $\frac{\pi^2}{8} - \frac{1}{2}(\arccos a)^2$
 证明 $\Gamma(1/2) = \sqrt{\pi}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1257,6 +1385,7 @@ $\frac{\pi^2}{8} - \frac{1}{2}(\arccos a)^2$
 
 #### 答案
 证毕。
+
 </details>
 
 ---
@@ -1265,6 +1394,7 @@ $\frac{\pi^2}{8} - \frac{1}{2}(\arccos a)^2$
 计算 $\int_0^1 \frac{x^a-1}{\ln x} dx \quad (a > 0)$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1280,6 +1410,7 @@ $\frac{\pi^2}{8} - \frac{1}{2}(\arccos a)^2$
 
 #### 答案
 $\ln(a+1)$
+
 </details>
 
 ---
@@ -1288,6 +1419,7 @@ $\ln(a+1)$
 求由曲线 $y^2 = x$ 和直线 $x = 1$ 围成的均匀薄板的质心。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1300,6 +1432,7 @@ $\ln(a+1)$
 
 #### 答案
 质心坐标为 $(3/5, 0)$。
+
 </details>
 
 ---
@@ -1308,6 +1441,7 @@ $\ln(a+1)$
 计算质量为 $M$、半径为 $R$ 的均匀球体对其直径的转动惯量。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1324,6 +1458,7 @@ $\ln(a+1)$
 
 #### 答案
 $I = \frac{2}{5} M R^2$。
+
 </details>
 
 ---
@@ -1332,6 +1467,7 @@ $I = \frac{2}{5} M R^2$。
 长为 $L$、质量为 $M$ 的均匀细杆放置在 $x$ 轴上（端点为 $(0,0)$ 和 $(L,0)$）。求其对位于 $(0, a)$ 处质量为 $m$ 的质点的引力的 $y$ 分量。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1349,6 +1485,7 @@ $I = \frac{2}{5} M R^2$。
 
 #### 答案
 $F_y = \frac{G m M}{a \sqrt{L^2 + a^2}}$。
+
 </details>
 
 ---
@@ -1357,6 +1494,7 @@ $F_y = \frac{G m M}{a \sqrt{L^2 + a^2}}$。
 利用变换 $u = x+y, v = y/x$ 计算 $\iint_D (x+y)^2 dx dy$，其中 $D$ 是由 $x=0, y=0, x+y=1$ 围成的三角形。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1372,6 +1510,7 @@ $F_y = \frac{G m M}{a \sqrt{L^2 + a^2}}$。
 
 #### 答案
 $1/4$。
+
 </details>
 
 ---
@@ -1380,6 +1519,7 @@ $1/4$。
 求中心在原点、半径为 $R$ 的球体 $\Omega$ 的质量，其密度函数为 $\rho(x, y, z) = \sqrt{x^2 + y^2 + z^2} \cdot e^{-(x^2+y^2+z^2)}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1395,6 +1535,7 @@ $1/4$。
 
 #### 答案
 $M = 2\pi (1 - (R^2+1)e^{-R^2})$。
+
 </details>
 
 ---
@@ -1403,6 +1544,7 @@ $M = 2\pi (1 - (R^2+1)e^{-R^2})$。
 计算 $\int \frac{x^2-1}{x^4+1} dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1416,6 +1558,7 @@ $M = 2\pi (1 - (R^2+1)e^{-R^2})$。
 
 #### 答案
 $\frac{1}{2\sqrt{2}} \ln|\frac{x^2-\sqrt{2}x+1}{x^2+\sqrt{2}x+1}| + C$
+
 </details>
 
 ---
@@ -1424,6 +1567,7 @@ $\frac{1}{2\sqrt{2}} \ln|\frac{x^2-\sqrt{2}x+1}{x^2+\sqrt{2}x+1}| + C$
 利用递推公式计算 $I_4 = \int \sin^4 x dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1435,6 +1579,7 @@ $\frac{1}{2\sqrt{2}} \ln|\frac{x^2-\sqrt{2}x+1}{x^2+\sqrt{2}x+1}| + C$
 
 #### 答案
 $\frac{3}{8}x - \frac{1}{4}\sin^3 x \cos x - \frac{3}{8}\sin x \cos x + C$
+
 </details>
 
 ---
@@ -1443,6 +1588,7 @@ $\frac{3}{8}x - \frac{1}{4}\sin^3 x \cos x - \frac{3}{8}\sin x \cos x + C$
 计算 $\int \frac{dx}{x\sqrt{x^2+2x-1}}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1452,6 +1598,7 @@ $\frac{3}{8}x - \frac{1}{4}\sin^3 x \cos x - \frac{3}{8}\sin x \cos x + C$
 
 #### 答案
 $2\arctan(\sqrt{x^2+2x-1}+x) + C$
+
 </details>
 
 ---
@@ -1460,6 +1607,7 @@ $2\arctan(\sqrt{x^2+2x-1}+x) + C$
 计算 $\int \frac{dx}{2+\cos x}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1470,6 +1618,7 @@ $2\arctan(\sqrt{x^2+2x-1}+x) + C$
 
 #### 答案
 $\frac{2}{\sqrt{3}} \arctan(\frac{\tan(x/2)}{\sqrt{3}}) + C$
+
 </details>
 
 ---
@@ -1478,6 +1627,7 @@ $\frac{2}{\sqrt{3}} \arctan(\frac{\tan(x/2)}{\sqrt{3}}) + C$
 计算 $\int \frac{dx}{x^2\sqrt{1+x^2}}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1489,6 +1639,7 @@ $\frac{2}{\sqrt{3}} \arctan(\frac{\tan(x/2)}{\sqrt{3}}) + C$
 
 #### 答案
 $-\frac{\sqrt{x^2+1}}{x} + C$
+
 </details>
 
 ---
@@ -1497,6 +1648,7 @@ $-\frac{\sqrt{x^2+1}}{x} + C$
 计算 $\int e^{-x} \cos 2x dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1509,6 +1661,7 @@ $-\frac{\sqrt{x^2+1}}{x} + C$
 
 #### 答案
 $\frac{e^{-x}}{5}(2\sin 2x - \cos 2x) + C$
+
 </details>
 
 ---
@@ -1517,6 +1670,7 @@ $\frac{e^{-x}}{5}(2\sin 2x - \cos 2x) + C$
 计算 $\int \sqrt{\frac{1-x}{1+x}} dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1528,6 +1682,7 @@ $\frac{e^{-x}}{5}(2\sin 2x - \cos 2x) + C$
 
 #### 答案
 $\sqrt{1-x^2} - \arccos x + C$
+
 </details>
 
 ---
@@ -1536,6 +1691,7 @@ $\sqrt{1-x^2} - \arccos x + C$
 计算 $\int \frac{dx}{\sqrt{x^2+a^2}}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1544,6 +1700,7 @@ $\sqrt{1-x^2} - \arccos x + C$
 
 #### 答案
 $\ln(x + \sqrt{x^2+a^2}) + C$
+
 </details>
 
 ---
@@ -1552,6 +1709,7 @@ $\ln(x + \sqrt{x^2+a^2}) + C$
 计算 $\int \frac{dx}{x^3+1}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1561,6 +1719,7 @@ $\ln(x + \sqrt{x^2+a^2}) + C$
 
 #### 答案
 $\frac{1}{3}\ln|x+1| - \frac{1}{6}\ln(x^2-x+1) + \frac{1}{\sqrt{3}}\arctan\frac{2x-1}{\sqrt{3}} + C$
+
 </details>
 
 ---
@@ -1569,6 +1728,7 @@ $\frac{1}{3}\ln|x+1| - \frac{1}{6}\ln(x^2-x+1) + \frac{1}{\sqrt{3}}\arctan\frac{
 计算 $\int x \arctan x dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1578,6 +1738,7 @@ $\frac{1}{3}\ln|x+1| - \frac{1}{6}\ln(x^2-x+1) + \frac{1}{\sqrt{3}}\arctan\frac{
 
 #### 答案
 $\frac{x^2+1}{2}\arctan x - \frac{x}{2} + C$
+
 </details>
 
 ---
@@ -1586,6 +1747,7 @@ $\frac{x^2+1}{2}\arctan x - \frac{x}{2} + C$
 计算 $\int \frac{\ln x}{x(1+\ln^2 x)} dx$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析
@@ -1594,6 +1756,7 @@ $\frac{x^2+1}{2}\arctan x - \frac{x}{2} + C$
 
 #### 答案
 $\frac{1}{2}\ln(1+\ln^2 x) + C$
+
 </details>
 
 ---
@@ -1607,6 +1770,7 @@ $\frac{1}{2}\ln(1+\ln^2 x) + C$
 计算 $\int_1^2 (3x^2 - 2x + 1) dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1619,6 +1783,7 @@ $\frac{1}{2}\ln(1+\ln^2 x) + C$
 
 #### 答案
 5
+
 </details>
 
 ---
@@ -1627,6 +1792,7 @@ $\frac{1}{2}\ln(1+\ln^2 x) + C$
 计算 $\int \frac{e^x}{1+e^x} dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1637,6 +1803,7 @@ $\frac{1}{2}\ln(1+\ln^2 x) + C$
 
 #### 答案
 $\ln(1+e^x) + C$
+
 </details>
 
 ---
@@ -1645,6 +1812,7 @@ $\ln(1+e^x) + C$
 计算 $\int x \sin x dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1655,6 +1823,7 @@ $\ln(1+e^x) + C$
 
 #### 答案
 $\sin x - x \cos x + C$
+
 </details>
 
 ---
@@ -1663,6 +1832,7 @@ $\sin x - x \cos x + C$
 求曲线 $y = x^2$ 与直线 $y = x$ 在第一象限围成的图形面积。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1673,6 +1843,7 @@ $\sin x - x \cos x + C$
 
 #### 答案
 $1/6$
+
 </details>
 
 ---
@@ -1681,6 +1852,7 @@ $1/6$
 判断反常积分 $\int_1^{+\infty} \frac{1}{x^2} dx$ 是否收敛，若收敛则计算其值。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1693,6 +1865,7 @@ $1/6$
 
 #### 答案
 收敛，值为 1。
+
 </details>
 
 ---
@@ -1701,6 +1874,7 @@ $1/6$
 计算级数 $\sum_{n=0}^\infty (\frac{2}{3})^n$ 的和。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1712,6 +1886,7 @@ $1/6$
 
 #### 答案
 3
+
 </details>
 
 ---
@@ -1720,6 +1895,7 @@ $1/6$
 判定级数 $\sum_{n=1}^\infty \frac{1}{n\sqrt{n}}$ 的敛散性。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1730,6 +1906,7 @@ $1/6$
 
 #### 答案
 收敛
+
 </details>
 
 ---
@@ -1738,6 +1915,7 @@ $1/6$
 判定级数 $\sum_{n=1}^\infty \frac{\sin^2 n}{n^2}$ 的敛散性。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1747,6 +1925,7 @@ $1/6$
 
 #### 答案
 收敛
+
 </details>
 
 ---
@@ -1755,6 +1934,7 @@ $1/6$
 判定级数 $\sum_{n=1}^\infty \frac{n!}{n^n}$ 的敛散性。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1767,6 +1947,7 @@ $1/6$
 
 #### 答案
 收敛
+
 </details>
 
 ---
@@ -1775,6 +1956,7 @@ $1/6$
 判定级数 $\sum_{n=1}^\infty (\frac{n}{2n+1})^n$ 的敛散性。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1785,6 +1967,7 @@ $1/6$
 
 #### 答案
 收敛
+
 </details>
 
 ---
@@ -1793,6 +1976,7 @@ $1/6$
 计算 $\int \frac{1}{x^2-5x+6} dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1806,6 +1990,7 @@ $1/6$
 
 #### 答案
 $\ln|\frac{x-3}{x-2}| + C$
+
 </details>
 
 ---
@@ -1814,6 +1999,7 @@ $\ln|\frac{x-3}{x-2}| + C$
 计算 $\int_0^a \sqrt{a^2-x^2} dx \quad (a>0)$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1827,6 +2013,7 @@ $\ln|\frac{x-3}{x-2}| + C$
 
 #### 答案
 $\frac{\pi a^2}{4}$
+
 </details>
 
 ---
@@ -1835,6 +2022,7 @@ $\frac{\pi a^2}{4}$
 求由曲线 $y = \sin x$（$0 \le x \le \pi$）与 $x$ 轴围成的图形绕 $x$ 轴旋转一周所成的体积。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1846,6 +2034,7 @@ $\frac{\pi a^2}{4}$
 
 #### 答案
 $\pi^2/2$
+
 </details>
 
 ---
@@ -1854,6 +2043,7 @@ $\pi^2/2$
 计算曲线 $y = \frac{2}{3}x^{3/2}$ 从 $x=0$ 到 $x=3$ 的弧长。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1866,6 +2056,7 @@ $\pi^2/2$
 
 #### 答案
 $14/3$
+
 </details>
 
 ---
@@ -1874,6 +2065,7 @@ $14/3$
 判定级数 $\sum_{n=1}^\infty (-1)^n \frac{1}{\sqrt{n}}$ 的敛散性，并说明是绝对收敛还是条件收敛。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1888,6 +2080,7 @@ $14/3$
 
 #### 答案
 条件收敛
+
 </details>
 
 ---
@@ -1896,6 +2089,7 @@ $14/3$
 求幂级数 $\sum_{n=1}^\infty \frac{x^n}{n \cdot 2^n}$ 的收敛域。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1908,6 +2102,7 @@ $14/3$
 
 #### 答案
 $[-2, 2)$
+
 </details>
 
 ---
@@ -1916,6 +2111,7 @@ $[-2, 2)$
 将 $f(x) = \frac{1}{1+x^2}$ 在 $x=0$ 处展开为幂级数，并指出收敛区间。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1927,6 +2123,7 @@ $[-2, 2)$
 
 #### 答案
 $\sum_{n=0}^\infty (-1)^n x^{2n}$，收敛区间 $(-1, 1)$。
+
 </details>
 
 ---
@@ -1935,6 +2132,7 @@ $\sum_{n=0}^\infty (-1)^n x^{2n}$，收敛区间 $(-1, 1)$。
 计算 $\lim_{n \to \infty} \frac{1}{n} (\sin \frac{\pi}{n} + \sin \frac{2\pi}{n} + \dots + \sin \frac{n\pi}{n})$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1945,6 +2143,7 @@ $\sum_{n=0}^\infty (-1)^n x^{2n}$，收敛区间 $(-1, 1)$。
 
 #### 答案
 $2/\pi$
+
 </details>
 
 ---
@@ -1953,6 +2152,7 @@ $2/\pi$
 判定 $\int_1^{+\infty} \frac{\sqrt{x}}{1+x^2} dx$ 的敛散性。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1964,6 +2164,7 @@ $2/\pi$
 
 #### 答案
 收敛
+
 </details>
 
 ---
@@ -1972,6 +2173,7 @@ $2/\pi$
 求 $F(x) = \int_{x^2}^{x^3} \sqrt{1+t^2} dt$ 的导数 $F'(x)$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -1982,6 +2184,7 @@ $2/\pi$
 
 #### 答案
 $3x^2\sqrt{1+x^6} - 2x\sqrt{1+x^4}$
+
 </details>
 
 ---
@@ -1990,6 +2193,7 @@ $3x^2\sqrt{1+x^6} - 2x\sqrt{1+x^4}$
 证明 $I = \int_0^{+\infty} \frac{\sin x}{x} dx = \frac{\pi}{2}$。（本题要求简述思路）
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2001,6 +2205,7 @@ $3x^2\sqrt{1+x^6} - 2x\sqrt{1+x^4}$
 
 #### 答案
 $\pi/2$
+
 </details>
 
 ---
@@ -2009,6 +2214,7 @@ $\pi/2$
 计算 $\int_0^{\pi/2} \ln(\sin x) dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2021,6 +2227,7 @@ $\pi/2$
 
 #### 答案
 $-\frac{\pi}{2} \ln 2$
+
 </details>
 
 ---
@@ -2029,6 +2236,7 @@ $-\frac{\pi}{2} \ln 2$
 计算级数 $\sum_{n=1}^\infty \frac{1}{n \cdot 2^n}$ 的和。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2040,6 +2248,7 @@ $-\frac{\pi}{2} \ln 2$
 
 #### 答案
 $\ln 2$
+
 </details>
 
 ---
@@ -2048,6 +2257,7 @@ $\ln 2$
 判定 $I(y) = \int_0^{+\infty} \frac{\sin xy}{x} dx$ 在 $y \in [a, b] \quad (0 < a < b)$ 上是否一致收敛。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2059,6 +2269,7 @@ $\ln 2$
 
 #### 答案
 一致收敛
+
 </details>
 
 ---
@@ -2067,6 +2278,7 @@ $\ln 2$
 求周期为 $2\pi$ 的函数 $f(x) = \begin{cases} -1, & -\pi < x < 0 \\ 1, & 0 \le x < \pi \end{cases}$ 的傅里叶展开式。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2080,6 +2292,7 @@ $\ln 2$
 
 #### 答案
 $\frac{4}{\pi} \sum_{k=1}^\infty \frac{\sin(2k-1)x}{2k-1}$
+
 </details>
 
 ---
@@ -2088,6 +2301,7 @@ $\frac{4}{\pi} \sum_{k=1}^\infty \frac{\sin(2k-1)x}{2k-1}$
 利用 $I_n = \int_0^{\pi/2} \sin^n x dx$ 的递推关系证明 Wallis 公式。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2099,6 +2313,7 @@ $\frac{4}{\pi} \sum_{k=1}^\infty \frac{\sin(2k-1)x}{2k-1}$
 
 #### 答案
 证毕。
+
 </details>
 
 ---
@@ -2107,6 +2322,7 @@ $\frac{4}{\pi} \sum_{k=1}^\infty \frac{\sin(2k-1)x}{2k-1}$
 计算 $\int_0^{+\infty} \frac{e^{-ax} - e^{-bx}}{x} dx \quad (a, b > 0)$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2116,6 +2332,7 @@ $\frac{4}{\pi} \sum_{k=1}^\infty \frac{\sin(2k-1)x}{2k-1}$
 
 #### 答案
 $\ln(b/a)$
+
 </details>
 
 ---
@@ -2124,6 +2341,7 @@ $\ln(b/a)$
 计算极限 $\lim_{n \to \infty} \frac{1}{n^{k+1}} \int_0^n x^k dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2133,6 +2351,7 @@ $\ln(b/a)$
 
 #### 答案
 $\frac{1}{k+1}$
+
 </details>
 
 ---
@@ -2141,6 +2360,7 @@ $\frac{1}{k+1}$
 计算 $\int_0^1 \frac{\ln(1+x)}{x} dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2152,6 +2372,7 @@ $\frac{1}{k+1}$
 
 #### 答案
 $\pi^2/12$
+
 </details>
 
 ---
@@ -2160,6 +2381,7 @@ $\pi^2/12$
 利用 $\Gamma$ 函数证明 $n! \sim \sqrt{2\pi n} (n/e)^n$ 的阶数（简述思路）。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2170,6 +2392,7 @@ $\pi^2/12$
 
 #### 答案
 证毕。
+
 </details>
 
 ---
@@ -2178,6 +2401,7 @@ $\pi^2/12$
 证明恒等式：$\nabla \cdot (\phi \mathbf{A}) = \phi (\nabla \cdot \mathbf{A}) + \mathbf{A} \cdot (\nabla \phi)$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2191,6 +2415,7 @@ $\pi^2/12$
 
 #### 答案
 证毕。
+
 </details>
 
 ---
@@ -2199,6 +2424,7 @@ $\pi^2/12$
 判定向量场 $\mathbf{A} = (e^x \sin y) \mathbf{i} + (e^x \cos y) \mathbf{j} + 2z \mathbf{k}$ 是否为保守场，若是，求其势函数。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2214,13 +2440,10 @@ $\pi^2/12$
 
 #### 答案
 $\phi = e^x \sin y + z^2 + C$
+
 </details>
 
 ---
-
-
-
-
 
 ---
 
@@ -2228,6 +2451,7 @@ $\phi = e^x \sin y + z^2 + C$
 利用 Hermite-Ostrogradsky 方法计算不定积分 $\int \frac{dx}{(x^2+1)^2}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2248,6 +2472,7 @@ $\phi = e^x \sin y + z^2 + C$
 
 #### 答案
 $\frac{x}{2(x^2+1)} + \frac{1}{2}\arctan x + C$
+
 </details>
 
 ---
@@ -2256,6 +2481,7 @@ $\frac{x}{2(x^2+1)} + \frac{1}{2}\arctan x + C$
 计算不定积分 $\int \frac{dx}{1+2\sin x + 3\cos x}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2268,6 +2494,7 @@ $\frac{x}{2(x^2+1)} + \frac{1}{2}\arctan x + C$
 
 #### 答案
 $\frac{1}{2\sqrt{3}} \ln \left| \frac{\sqrt{3}-1+\tan(x/2)}{\sqrt{3}+1-\tan(x/2)} \right| + C$
+
 </details>
 
 ---
@@ -2276,6 +2503,7 @@ $\frac{1}{2\sqrt{3}} \ln \left| \frac{\sqrt{3}-1+\tan(x/2)}{\sqrt{3}+1-\tan(x/2)
 计算定积分 $I = \int_0^{\pi} \frac{x \sin x}{1+\cos^2 x} dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2288,6 +2516,7 @@ $\frac{1}{2\sqrt{3}} \ln \left| \frac{\sqrt{3}-1+\tan(x/2)}{\sqrt{3}+1-\tan(x/2)
 
 #### 答案
 $\pi^2/4$
+
 </details>
 
 ---
@@ -2296,6 +2525,7 @@ $\pi^2/4$
 计算 $I = \int_0^{\pi/2} \sin^8 x dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2306,6 +2536,7 @@ $\pi^2/4$
 
 #### 答案
 $\frac{35\pi}{128}$
+
 </details>
 
 ---
@@ -2314,6 +2545,7 @@ $\frac{35\pi}{128}$
 设 $F(x) = \int_0^x (t-1)(t-2) dt$，求 $F(x)$ 的极大值点与极小值点。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2325,6 +2557,7 @@ $\frac{35\pi}{128}$
 
 #### 答案
 极大值点 $x=1$，极小值点 $x=2$。
+
 </details>
 
 ---
@@ -2333,6 +2566,7 @@ $\frac{35\pi}{128}$
 证明对于任意正整数 $n$，恒有 $\int_0^{\pi/2} \sin^{n+1} x dx < \int_0^{\pi/2} \sin^n x dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2343,6 +2577,7 @@ $\frac{35\pi}{128}$
 
 #### 答案
 证毕。
+
 </details>
 
 ---
@@ -2351,6 +2586,7 @@ $\frac{35\pi}{128}$
 计算不定积分 $\int \frac{dx}{(1+x^2)\sqrt{1-x^2}}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2366,6 +2602,7 @@ $\frac{35\pi}{128}$
 
 #### 答案
 $\frac{1}{\sqrt{2}} \arctan \frac{\sqrt{2}x}{\sqrt{1-x^2}} + C$
+
 </details>
 
 ---
@@ -2374,6 +2611,7 @@ $\frac{1}{\sqrt{2}} \arctan \frac{\sqrt{2}x}{\sqrt{1-x^2}} + C$
 计算 $\int_0^{n\pi} |\sin x| dx$，其中 $n$ 为正整数。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2385,6 +2623,7 @@ $\frac{1}{\sqrt{2}} \arctan \frac{\sqrt{2}x}{\sqrt{1-x^2}} + C$
 
 #### 答案
 $2n$
+
 </details>
 
 ---
@@ -2393,6 +2632,7 @@ $2n$
 计算不定积分 $\int \frac{x^2}{(x^2+1)^3} dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2409,6 +2649,7 @@ $2n$
 
 #### 答案
 $-\frac{x}{4(x^2+1)^2} + \frac{x}{8(x^2+1)} + \frac{1}{8}\arctan x + C$
+
 </details>
 
 ---
@@ -2417,6 +2658,7 @@ $-\frac{x}{4(x^2+1)^2} + \frac{x}{8(x^2+1)} + \frac{1}{8}\arctan x + C$
 证明 $\int_0^1 \frac{\ln(1+x)}{x} dx = \sum_{n=1}^\infty \frac{(-1)^{n-1}}{n^2}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2429,6 +2671,7 @@ $-\frac{x}{4(x^2+1)^2} + \frac{x}{8(x^2+1)} + \frac{1}{8}\arctan x + C$
 
 #### 答案
 证毕。
+
 </details>
 
 ---
@@ -2437,6 +2680,7 @@ $-\frac{x}{4(x^2+1)^2} + \frac{x}{8(x^2+1)} + \frac{1}{8}\arctan x + C$
 计算不定积分 $\int \frac{\sec^2 x}{\sqrt{\tan^2 x + 4\tan x + 1}} dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2451,6 +2695,7 @@ $-\frac{x}{4(x^2+1)^2} + \frac{x}{8(x^2+1)} + \frac{1}{8}\arctan x + C$
 
 #### 答案
 $\ln |\tan x + 2 + \sqrt{\tan^2 x + 4\tan x + 1}| + C$
+
 </details>
 
 ---
@@ -2466,6 +2711,7 @@ $\ln |\tan x + 2 + \sqrt{\tan^2 x + 4\tan x + 1}| + C$
 判定级数 $\sum_{n=1}^{\infty}\frac{n+1}{n^3+2}$ 的敛散性。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2475,6 +2721,7 @@ $\ln |\tan x + 2 + \sqrt{\tan^2 x + 4\tan x + 1}| + C$
 
 #### 答案
 收敛。
+
 </details>
 
 ---
@@ -2484,6 +2731,7 @@ $\ln |\tan x + 2 + \sqrt{\tan^2 x + 4\tan x + 1}| + C$
 用前 4 项近似交错级数 $\sum_{n=1}^{\infty}(-1)^{n-1}\frac{1}{n}$，并给出误差上界。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2493,6 +2741,7 @@ $\ln |\tan x + 2 + \sqrt{\tan^2 x + 4\tan x + 1}| + C$
 
 #### 答案
 近似值为 $\frac{7}{12}$，误差不超过 $\frac15$。
+
 </details>
 
 ---
@@ -2502,6 +2751,7 @@ $\ln |\tan x + 2 + \sqrt{\tan^2 x + 4\tan x + 1}| + C$
 求幂级数 $\sum_{n=1}^{\infty}\frac{(n+1)x^n}{3^n}$ 的收敛半径与收敛区间。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2513,6 +2763,7 @@ $\ln |\tan x + 2 + \sqrt{\tan^2 x + 4\tan x + 1}| + C$
 
 #### 答案
 收敛半径 $R=3$，收敛区间为 $(-3,3)$。
+
 </details>
 
 ---
@@ -2522,6 +2773,7 @@ $\ln |\tan x + 2 + \sqrt{\tan^2 x + 4\tan x + 1}| + C$
 求 $\sum_{n=1}^{\infty}\frac{x^n}{n(n+1)}$ 的和函数。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2537,6 +2789,7 @@ $\ln |\tan x + 2 + \sqrt{\tan^2 x + 4\tan x + 1}| + C$
 
 #### 答案
 $$\sum_{n=1}^{\infty}\frac{x^n}{n(n+1)}=1+\frac{1-x}{x}\ln(1-x)\quad(|x|<1).$$
+
 </details>
 
 ---
@@ -2546,6 +2799,7 @@ $$\sum_{n=1}^{\infty}\frac{x^n}{n(n+1)}=1+\frac{1-x}{x}\ln(1-x)\quad(|x|<1).$$
 计算 $\lim_{x\to 0}\frac{e^x-\cos x-x}{x^2}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2557,6 +2811,7 @@ $$\sum_{n=1}^{\infty}\frac{x^n}{n(n+1)}=1+\frac{1-x}{x}\ln(1-x)\quad(|x|<1).$$
 
 #### 答案
 $1$
+
 </details>
 
 ---
@@ -2566,6 +2821,7 @@ $1$
 求级数 $\sum_{n=1}^{\infty}\frac{(-1)^{n-1}}{n\cdot 3^n}$ 的和。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2576,6 +2832,7 @@ $1$
 
 #### 答案
 $\ln\frac43$
+
 </details>
 
 ---
@@ -2585,6 +2842,7 @@ $\ln\frac43$
 设 $f(x)=x$ 在 $(-\pi,\pi)$ 上作 $2\pi$ 周期延拓，求其 Fourier 级数。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2596,6 +2854,7 @@ $\ln\frac43$
 
 #### 答案
 $$x\sim 2\sum_{n=1}^{\infty}\frac{(-1)^{n+1}}{n}\sin nx,\quad -\pi<x<\pi.$$
+
 </details>
 
 ---
@@ -2605,6 +2864,7 @@ $$x\sim 2\sum_{n=1}^{\infty}\frac{(-1)^{n+1}}{n}\sin nx,\quad -\pi<x<\pi.$$
 计算 $\int_0^1 \sum_{n=0}^{\infty}x^{2n}\,dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2616,6 +2876,7 @@ $$x\sim 2\sum_{n=1}^{\infty}\frac{(-1)^{n+1}}{n}\sin nx,\quad -\pi<x<\pi.$$
 
 #### 答案
 发散到 $+\infty$。
+
 </details>
 
 ---
@@ -2627,6 +2888,7 @@ $$x\sim 2\sum_{n=1}^{\infty}\frac{(-1)^{n+1}}{n}\sin nx,\quad -\pi<x<\pi.$$
 判定 $\lim_{(x,y)\to(0,0)}\frac{x^2y}{x^4+y^2}$ 是否存在。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2637,6 +2899,7 @@ $$x\sim 2\sum_{n=1}^{\infty}\frac{(-1)^{n+1}}{n}\sin nx,\quad -\pi<x<\pi.$$
 
 #### 答案
 不存在。
+
 </details>
 
 ---
@@ -2651,6 +2914,7 @@ $$f(x,y)=\begin{cases}
 在原点处是否连续。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2662,6 +2926,7 @@ $$f(x,y)=\begin{cases}
 
 #### 答案
 在原点连续。
+
 </details>
 
 ---
@@ -2671,6 +2936,7 @@ $$f(x,y)=\begin{cases}
 设 $f(x,y)=x^2y+y^2$，求其在点 $(1,-1)$ 沿向量 $(3,4)$ 方向的方向导数。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2684,6 +2950,7 @@ $$f(x,y)=\begin{cases}
 
 #### 答案
 $-2$
+
 </details>
 
 ---
@@ -2693,6 +2960,7 @@ $-2$
 设 $f(x,y)=x^2e^y$，求 $df$，并写出点 $(1,0)$ 处的线性主部。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2705,6 +2973,7 @@ $-2$
 
 #### 答案
 $$df=2xe^y\,dx+x^2e^y\,dy,\qquad (1,0)\text{ 处线性主部为 }2\Delta x+\Delta y.$$
+
 </details>
 
 ---
@@ -2714,6 +2983,7 @@ $$df=2xe^y\,dx+x^2e^y\,dy,\qquad (1,0)\text{ 处线性主部为 }2\Delta x+\Delt
 求曲面 $z=x^2+xy+y^2$ 在点 $(1,1,3)$ 处的切平面方程。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2726,6 +2996,7 @@ $$df=2xe^y\,dx+x^2e^y\,dy,\qquad (1,0)\text{ 处线性主部为 }2\Delta x+\Delt
 
 #### 答案
 $$3x+3y-z-3=0.$$
+
 </details>
 
 ---
@@ -2735,6 +3006,7 @@ $$3x+3y-z-3=0.$$
 求函数 $f(x,y)=x^2+y^2-2x-4y$ 的极值。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2745,6 +3017,7 @@ $$3x+3y-z-3=0.$$
 
 #### 答案
 在 $(1,2)$ 处取极小值 $-5$，无极大值。
+
 </details>
 
 ---
@@ -2754,6 +3027,7 @@ $$3x+3y-z-3=0.$$
 由方程 $x^2+xy+y^2=3$ 确定隐函数 $y=y(x)$，求 $\frac{dy}{dx}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2764,6 +3038,7 @@ $$3x+3y-z-3=0.$$
 
 #### 答案
 $$\frac{dy}{dx}=-\frac{2x+y}{x+2y}.$$
+
 </details>
 
 ---
@@ -2773,6 +3048,7 @@ $$\frac{dy}{dx}=-\frac{2x+y}{x+2y}.$$
 求函数 $f(x,y)=x^2+y^2$ 在约束 $x+y=1$ 下的最小值。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2786,6 +3062,7 @@ $$\frac{dy}{dx}=-\frac{2x+y}{x+2y}.$$
 
 #### 答案
 最小值为 $\frac12$，在 $\left(\frac12,\frac12\right)$ 处取得。
+
 </details>
 
 ---
@@ -2797,6 +3074,7 @@ $$\frac{dy}{dx}=-\frac{2x+y}{x+2y}.$$
 计算 $\int_0^1\int_x^1 (x+y)\,dy\,dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2807,6 +3085,7 @@ $$\frac{dy}{dx}=-\frac{2x+y}{x+2y}.$$
 
 #### 答案
 $\frac12$
+
 </details>
 
 ---
@@ -2816,6 +3095,7 @@ $\frac12$
 计算 $\iint_{x^2+y^2\le 4}(x^2+y^2)\,dA$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2825,6 +3105,7 @@ $\frac12$
 
 #### 答案
 $8\pi$
+
 </details>
 
 ---
@@ -2834,6 +3115,7 @@ $8\pi$
 计算圆柱体 $\Omega:\ x^2+y^2\le 1,\ 0\le z\le 2$ 上的积分 $\iiint_\Omega (x^2+y^2)\,dV$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2843,6 +3125,7 @@ $8\pi$
 
 #### 答案
 $\pi$
+
 </details>
 
 ---
@@ -2852,6 +3135,7 @@ $\pi$
 求均匀半圆盘 $x^2+y^2\le a^2,\ y\ge 0$ 的质心纵坐标 $\bar y$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2864,6 +3148,7 @@ $\pi$
 
 #### 答案
 $$\bar y=\frac{4a}{3\pi}.$$
+
 </details>
 
 ---
@@ -2873,6 +3158,7 @@ $$\bar y=\frac{4a}{3\pi}.$$
 令 $u=x+y,\ v=x-y$，计算区域 $D$ 由 $0\le x+y\le 2,\ 0\le x-y\le 1$ 围成时的积分 $\iint_D 1\,dA$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2886,6 +3172,7 @@ $$\bar y=\frac{4a}{3\pi}.$$
 
 #### 答案
 $1$
+
 </details>
 
 ---
@@ -2895,6 +3182,7 @@ $1$
 计算球体 $x^2+y^2+z^2\le a^2$ 的体积。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2906,6 +3194,7 @@ $1$
 
 #### 答案
 $$\frac{4}{3}\pi a^3.$$
+
 </details>
 
 ---
@@ -2915,6 +3204,7 @@ $$\frac{4}{3}\pi a^3.$$
 设薄板 $D=\{(x,y)\mid 0\le x\le 1,\ 0\le y\le x\}$ 的面密度 $\rho(x,y)=x+y$，求总质量。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2927,6 +3217,7 @@ $$\frac{4}{3}\pi a^3.$$
 
 #### 答案
 $\frac12$
+
 </details>
 
 ---
@@ -2936,6 +3227,7 @@ $\frac12$
 计算 $\iiint_\Omega z\,dV$，其中 $\Omega=\{(x,y,z)\mid x^2+y^2+z^2\le a^2,\ z\ge 0\}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2948,6 +3240,7 @@ $\frac12$
 
 #### 答案
 $$\frac{\pi a^4}{4}.$$
+
 </details>
 
 ---
@@ -2959,6 +3252,7 @@ $$\frac{\pi a^4}{4}.$$
 计算 $\int_L y\,ds$，其中 $L$ 为直线段 $x=t,\ y=2t,\ 0\le t\le 1$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2969,6 +3263,7 @@ $$\frac{\pi a^4}{4}.$$
 
 #### 答案
 $\sqrt5$
+
 </details>
 
 ---
@@ -2978,6 +3273,7 @@ $\sqrt5$
 计算 $\int_L (y\,dx+x\,dy)$，其中 $L$ 为从 $(0,0)$ 到 $(1,1)$ 的抛物线段 $y=x^2$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -2988,6 +3284,7 @@ $\sqrt5$
 
 #### 答案
 $1$
+
 </details>
 
 ---
@@ -2997,6 +3294,7 @@ $1$
 计算 $\int_L (2x\,dx+2y\,dy)$，其中 $L$ 为连接 $(0,0)$ 与 $(1,2)$ 的任意分段光滑曲线。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -3006,6 +3304,7 @@ $1$
 
 #### 答案
 $5$
+
 </details>
 
 ---
@@ -3015,6 +3314,7 @@ $5$
 利用格林公式计算单位圆周 $x^2+y^2=1$ 围成区域的面积。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -3026,6 +3326,7 @@ $5$
 
 #### 答案
 $\pi$
+
 </details>
 
 ---
@@ -3035,6 +3336,7 @@ $\pi$
 计算 $\oint_L (-y\,dx+x\,dy)$，其中 $L$ 为逆时针方向单位圆周。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -3045,6 +3347,7 @@ $\pi$
 
 #### 答案
 $2\pi$
+
 </details>
 
 ---
@@ -3054,6 +3357,7 @@ $2\pi$
 计算向量场 $\mathbf{F}=(z,0,x)$ 沿线段 $L:\ \mathbf{r}(t)=(t,t,t),\ 0\le t\le 1$ 的功。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -3064,6 +3368,7 @@ $2\pi$
 
 #### 答案
 $1$
+
 </details>
 
 ---
@@ -3073,6 +3378,7 @@ $1$
 计算 $\oint_{x^2+y^2=4}\frac{-y\,dx+x\,dy}{x^2+y^2}$，方向取逆时针。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -3084,6 +3390,7 @@ $1$
 
 #### 答案
 $2\pi$
+
 </details>
 
 ---
@@ -3093,6 +3400,7 @@ $2\pi$
 设 $L$ 为矩形边界 $0\le x\le 1,\ 0\le y\le 2$ 的正向边界，计算 $\oint_L (x^2y\,dx+xy^2\,dy)$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -3106,6 +3414,7 @@ $2\pi$
 
 #### 答案
 $2$
+
 </details>
 
 ---
@@ -3117,6 +3426,7 @@ $2$
 计算曲面 $\Sigma:\ z=x+y,\ 0\le x\le 1,\ 0\le y\le 1$ 上的积分 $\iint_\Sigma 1\,dS$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -3128,6 +3438,7 @@ $2$
 
 #### 答案
 $\sqrt3$
+
 </details>
 
 ---
@@ -3137,6 +3448,7 @@ $\sqrt3$
 求向量场 $\mathbf{F}=(0,0,1)$ 穿过上侧单位圆盘 $\Sigma:\ z=0,\ x^2+y^2\le 1$ 的通量。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -3146,6 +3458,7 @@ $\sqrt3$
 
 #### 答案
 $\pi$
+
 </details>
 
 ---
@@ -3155,6 +3468,7 @@ $\pi$
 计算 $\iint_\Sigma z\,dS$，其中 $\Sigma:\ z=x^2+y^2,\ x^2+y^2\le 1$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -3170,6 +3484,7 @@ $\pi$
 
 #### 答案
 $$\frac{\pi}{60}(25\sqrt5+1).$$
+
 </details>
 
 ---
@@ -3179,6 +3494,7 @@ $$\frac{\pi}{60}(25\sqrt5+1).$$
 计算向量场 $\mathbf{F}=(x,y,z)$ 穿过半径为 $a$ 的球面 $x^2+y^2+z^2=a^2$ 外侧的通量。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -3189,6 +3505,7 @@ $$\frac{\pi}{60}(25\sqrt5+1).$$
 
 #### 答案
 $4\pi a^3$
+
 </details>
 
 ---
@@ -3198,6 +3515,7 @@ $4\pi a^3$
 计算 $\oint_\Gamma (-y\,dx+x\,dy)$，其中 $\Gamma$ 为平面 $z=0$ 上的单位圆周，方向取从 $z$ 轴正向看为逆时针。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -3209,6 +3527,7 @@ $4\pi a^3$
 
 #### 答案
 $2\pi$
+
 </details>
 
 ---
@@ -3218,6 +3537,7 @@ $2\pi$
 设 $\mathbf{F}=(-y,x,0)$，求它穿过任意封闭曲面外侧的通量。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -3227,6 +3547,7 @@ $2\pi$
 
 #### 答案
 $0$
+
 </details>
 
 ---
@@ -3236,6 +3557,7 @@ $0$
 计算向量场 $\mathbf{F}=\frac{1}{a}(x,y,z)$ 穿过球面 $x^2+y^2+z^2=a^2$ 外侧的通量。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -3248,6 +3570,7 @@ $0$
 
 #### 答案
 $4\pi a^2$
+
 </details>
 
 ---
@@ -3257,6 +3580,7 @@ $4\pi a^2$
 设 $\Gamma$ 为圆周 $x^2+y^2=1,\ z=0$，计算 $\oint_\Gamma z\,dx+x\,dy+y\,dz$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析
@@ -3270,5 +3594,6 @@ $4\pi a^2$
 
 #### 答案
 $\pi$
+
 </details>
 

@@ -223,6 +223,7 @@ $$
 设 $E=\{x_1,x_2,\dots\}$ 为可数集。
 
 <details>
+
 <summary>点击查看证明</summary>
 
 给定任意 $\varepsilon>0$。对每个 $n$，取开区间
@@ -236,6 +237,7 @@ $$
 < \varepsilon.
 $$
 故 $E$ 是零测集。$\square$
+
 </details>
 
 ### 例 2：证明开集都是 Lebesgue 可测
@@ -243,6 +245,7 @@ $$
 这是所有 Borel 集可测的起点。
 
 <details>
+
 <summary>点击查看思路</summary>
 
 设 $G$ 为开集。对任意 $A\subset \mathbb{R}$，由外测度的次可加性总有
@@ -254,11 +257,13 @@ $$
 m^*(A) \ge m^*(A\cap G)+m^*(A\setminus G).
 $$
 因此 $G$ 满足 Carathéodory 条件，所以可测。$\square$
+
 </details>
 
 ### 例 3：证明若 $m^*(E)=0$，则 $E$ 可测
 
 <details>
+
 <summary>点击查看证明</summary>
 
 对任意 $A\subset\mathbb{R}$，有
@@ -278,11 +283,13 @@ $$
 m^*(A)\ge m^*(A\cap E)+m^*(A\setminus E).
 $$
 两边合并即得 Carathéodory 条件，因此 $E$ 可测。$\square$
+
 </details>
 
 ### 例 4：计算 Cantor 集的测度
 
 <details>
+
 <summary>点击查看解析</summary>
 
 第 $n$ 步删去后剩余长度为 $(2/3)^n$。Cantor 集包含在每一步剩余集合中，因此
@@ -292,6 +299,7 @@ $$
 令 $n\to\infty$，右端趋于 0，故 $m(C)=0$。
 
 另一方面，Cantor 集中元素可由三进制只含 $0,2$ 的展开描述，从而与二进制序列一一对应，所以它不可数。
+
 </details>
 
 ---
@@ -303,9 +311,11 @@ $$
 证明有限集是零测集，并说明这与“单点集零测”之间的逻辑关系。
 
 <details>
+
 <summary>点击查看答案</summary>
 
 有限集可写成有限个单点集之并。单点集是零测集，而有限并保持零测，因此有限集零测。逻辑上这是“单点集零测 + 有限可加性/次可加性”的直接推论。
+
 </details>
 
 ### 练习 2
@@ -313,6 +323,7 @@ $$
 设 $E_n=[a_n,b_n]$，证明若 $m(E_n)\to 0$ 且 $E=\bigcap_{n=1}^\infty E_n$，则不一定有 $E=\varnothing$；请给出例子。
 
 <details>
+
 <summary>点击查看答案</summary>
 
 可取 $E_n=[0,1/n]$。则 $m(E_n)=1/n\to 0$，但
@@ -320,6 +331,7 @@ $$
 \bigcap_{n=1}^\infty [0,1/n]=\{0\}\neq \varnothing.
 $$
 这说明“测度趋于零”不代表集合最终为空，只说明几何大小趋于零。
+
 </details>
 
 ### 练习 3
@@ -327,9 +339,11 @@ $$
 证明任意零测集的任意子集都是 Lebesgue 可测。
 
 <details>
+
 <summary>点击查看答案</summary>
 
 若 $N$ 是零测集，$A\subset N$，则由单调性 $m^*(A)\le m^*(N)=0$，故 $m^*(A)=0$。再由“外测度为零的集合必可测”，得 $A$ Lebesgue 可测。
+
 </details>
 
 ### 练习 4
@@ -337,9 +351,11 @@ $$
 说明为什么每个闭集都是 Borel 集，并由此说明每个闭区间都 Lebesgue 可测。
 
 <details>
+
 <summary>点击查看答案</summary>
 
 闭集是开集的补集，而 Borel $\sigma$-代数对补集封闭，所以闭集是 Borel 集。又因为所有 Borel 集都 Lebesgue 可测，因此闭区间必 Lebesgue 可测。
+
 </details>
 
 ---

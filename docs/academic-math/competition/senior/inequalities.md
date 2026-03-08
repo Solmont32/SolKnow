@@ -49,6 +49,7 @@ $$
 $$
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 由 Titu 不等式
@@ -66,6 +67,7 @@ $$
 $$
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 取 $f(t)=\frac1{1+t}$，有
@@ -87,6 +89,7 @@ $$
 $$
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 由 $abc=1$，有 $\frac1{a^3(b+c)}=\frac{(bc)^2}{b+c}$，于是
@@ -110,6 +113,7 @@ $$
 且在 $\mathbb R$ 上单调的函数。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 由加法性得 $f(0)=0,f(-x)=-f(x)$，并可推出 $f(q)=qf(1)$（$q\in\mathbb Q$）。
@@ -128,6 +132,7 @@ $$
 且 $f(1)=1$ 的函数。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 令 $x=y=0$ 得 $f(0)=0$。令 $y=x$ 得 $f(2x)=4f(x)$。再令 $x\mapsto\frac{x+y}{2},y\mapsto\frac{x-y}{2}$ 可化出二次型平行四边形恒等式，说明 $f$ 为二次函数，设 $f(x)=kx^2$。代入原式恒成立，且 $f(1)=1$ 得 $k=1$。
@@ -147,6 +152,7 @@ $$
 $$
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 由 AM-GM：$\frac{a}{b}+\frac{b}{a}\ge2\sqrt{\frac{a}{b}\cdot\frac{b}{a}}=2$。
@@ -160,6 +166,7 @@ $$
 $$
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 三元 AM-GM 直接成立，等号当且仅当 $a=b=c$。
@@ -174,6 +181,7 @@ $$
 且 $f(0)=0$ 的函数。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 令 $g(x)=f(x)-x^2$，则
@@ -194,6 +202,7 @@ $$
 $$
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 取 $f(t)=\frac{t}{1-t}$，$f''(t)=\frac{2}{(1-t)^3}>0$，Jensen 得

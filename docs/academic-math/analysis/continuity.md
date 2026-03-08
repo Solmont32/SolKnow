@@ -93,6 +93,7 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 设 $f(x)$ 是闭区间 $[0, 1]$ 上的连续函数，且 $0 \le f(x) \le 1$。证明：必存在 $\xi \in [0, 1]$，使得 $f(\xi) = \xi$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析过程
@@ -107,12 +108,14 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 
 #### 答案
 通过零点定理证得。
+
 </details>
 
 ### 例题 2：一致连续性的判定与反例
 证明 $f(x) = \sin(x^2)$ 在 $[0, +\infty)$ 上不是一致连续的。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析过程
@@ -127,12 +130,14 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 
 #### 答案
 利用点列法证得不满足一致连续定义。
+
 </details>
 
 ### 例题 3：周期连续函数的一致连续性
 证明：定义在 $\mathbb{R}$ 上的连续周期函数必一致连续。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析过程
@@ -143,12 +148,14 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 
 #### 答案
 利用 Cantor 定理与周期性平移证明。
+
 </details>
 
 ### 例题 4：函数方程与连续性
 设 $f(x)$ 在 $\mathbb{R}$ 上连续，且满足 $f(x+y) = f(x) + f(y)$。证明：$f(x) = cx$（其中 $c = f(1)$）。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析过程
@@ -163,6 +170,7 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 
 #### 答案
 利用有理数集的稠密性与连续性定义证明。
+
 </details>
 
 ---

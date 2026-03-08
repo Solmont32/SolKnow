@@ -48,6 +48,7 @@ $$
 求 $a_n$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 设 $b_n=a_n+3$，则
@@ -73,6 +74,7 @@ $$
 求 $a_n$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 特征方程
@@ -102,6 +104,7 @@ $$
 证明 $\{x_n\}$ 收敛并求极限。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 不动点满足
@@ -129,6 +132,7 @@ $$
 求 $\lim x_n$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 先证有界：若 $x_n<2$，则 $x_{n+1}=\sqrt{2+x_n}<2$，且 $x_1=1<2$，故 $x_n<2$。
@@ -153,6 +157,7 @@ $$
 判断其极限行为。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 不动点方程
@@ -179,6 +184,7 @@ $$
 已知 $a_{n+1}=3a_n-2,\ a_1=2$，求 $a_n$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 设 $b_n=a_n-1$，则 $b_{n+1}=3b_n,\ b_1=1$，
@@ -192,6 +198,7 @@ $$
 设 $x_1>0,\ x_{n+1}=\frac{2x_n+1}{x_n+2}$，求极限。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 设极限为 $L$：
@@ -214,6 +221,7 @@ $$
 的通项。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 特征方程 $(r-2)(r-3)=0$，
@@ -235,6 +243,7 @@ $$
 设 $x_1\in(0,1)$，$x_{n+1}=x_n(2-x_n)$，求 $\lim x_n$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 有

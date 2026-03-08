@@ -122,6 +122,7 @@ $$
 求解 $a_n=3a_{n-1}+2,\ a_0=2$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $$
@@ -134,6 +135,7 @@ $$
 求递推 $a_n=4a_{n-1}-4a_{n-2}$ 的通解。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 特征方程 $(\lambda-2)^2=0$，重根 2：
@@ -147,6 +149,7 @@ $$
 求序列 $1,1,1,\dots$ 的 OGF。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $$
@@ -159,6 +162,7 @@ $$
 设 $a_n=n$，求其 OGF。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 由几何级数求导可得

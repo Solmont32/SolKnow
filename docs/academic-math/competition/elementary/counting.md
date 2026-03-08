@@ -19,6 +19,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 用数字 `0,1,2,3,4,5` 组成没有重复数字的三位数，且是偶数，共多少个？
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 偶数看个位，分三类：个位是 `0/2/4`。
@@ -28,12 +29,14 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 合计 `20+16+16=52`。
 
 **答案：**`52`
+
 </details>
 
 #### 例题 2（限制条件）
 班级里有 4 本不同语文书、3 本不同数学书，从中选 2 本且至少一本数学书，有多少种选法？
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 按数学书本数分类：
@@ -42,6 +45,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 总数 `12+3=15`。
 
 **答案：**`15`
+
 </details>
 
 ### 2. 容斥原理
@@ -52,23 +56,27 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 在 `1~200` 中，能被 `4` 或 `6` 整除的数有多少个？
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 `⌊200/4⌋=50`，`⌊200/6⌋=33`，同时被 `12` 整除有 `⌊200/12⌋=16`。
 所以总数 `50+33-16=67`。
 
 **答案：**`67`
+
 </details>
 
 #### 例题 4（三集合容斥）
 某班 40 人，参加语文/数学/英语兴趣组人数分别为 22、20、18；语数都参加 10 人，语英都参加 8 人，数英都参加 7 人，三组都参加 4 人。至少参加一组的有多少人？
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 `22+20+18-10-8-7+4=39`。
 
 **答案：**`39`
+
 </details>
 
 ### 3. 抽屉原理与最坏情况
@@ -79,23 +87,27 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 从 `1~30` 中任取若干个数，至少取几个数，才能保证有两个数差是 `5`？
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 将数按对分组：`(1,6),(2,7),...,(25,30)`，共 25 组；每组若取 2 个就差 5。
 最坏每组最多取 1 个，可取 25 个仍不保证。再取 1 个必有一组取满。
 
 **答案：**`26`
+
 </details>
 
 #### 例题 6（同余抽屉）
 任取 7 个整数，证明一定有两个数的差能被 6 整除。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 整数除以 6 只有 `0,1,2,3,4,5` 六种余数（6 个抽屉）。任取 7 个数（7 个苹果），至少两个余数相同，它们差被 6 整除。
 
 **答案：**一定成立。
+
 </details>
 
 ### 4. 构造法与递推计数
@@ -106,12 +118,14 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 上台阶问题：每次走 1 级或 2 级，走到第 8 级共有多少种走法？
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 设 `f(n)` 为走到 `n` 级方法数，则 `f(n)=f(n-1)+f(n-2)`，`f(1)=1,f(2)=2`。
 依次得 `f(3)=3,f(4)=5,f(5)=8,f(6)=13,f(7)=21,f(8)=34`。
 
 **答案：**`34`
+
 </details>
 
 ## 二、章内练习（全部折叠答案）
@@ -120,45 +134,53 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 由 `0,1,2,3,4` 组成没有重复数字的三位数，共多少个？
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 百位有 `4` 种（不能是 0），十位 `4` 种，个位 `3` 种，总数 `4×4×3=48`。
 
 **答案：**`48`
+
 </details>
 
 ### 练习 2
 在 `1~120` 中，能被 `8` 或 `10` 整除的数有多少个？
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 `⌊120/8⌋=15`，`⌊120/10⌋=12`，同时被 `40` 整除有 `3` 个。
 总数 `15+12-3=24`。
 
 **答案：**`24`
+
 </details>
 
 ### 练习 3
 至少取多少个两位数，才能保证有两个数个位相同？
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 个位有 10 类。最坏每类取 1 个，共 10 个。再取 1 个必重复。
 
 **答案：**`11`
+
 </details>
 
 ### 练习 4
 每次走 1 级或 2 级，走到第 6 级共有多少种走法？
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 递推得 `f(1)=1,f(2)=2,f(3)=3,f(4)=5,f(5)=8,f(6)=13`。
 
 **答案：**`13`
+
 </details>
 
 <KnowledgeCard type="tip" title="计数检查清单">

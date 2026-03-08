@@ -133,6 +133,7 @@ $$m \ddot{x} + c \dot{x} + kx = 0$$
 求解 $\mathbf{y}' = \begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix} \mathbf{y}$，$\mathbf{y}(0) = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 1. **计算 $A^k$**：$A = \begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix}, A^2 = -I, A^3 = -A, A^4 = I \dots$
@@ -140,18 +141,21 @@ $$m \ddot{x} + c \dot{x} + kx = 0$$
    $e^{At} = I + At - \frac{t^2}{2!}I - \frac{t^3}{3!}A + \dots = (1 - \frac{t^2}{2!} + \dots)I + (t - \frac{t^3}{3!} + \dots)A$
    $e^{At} = (\cos t) I + (\sin t) A = \begin{pmatrix} \cos t & \sin t \\ - \sin t & \cos t \end{pmatrix}$。
 3. **结果**：$\mathbf{y}(t) = e^{At} \begin{pmatrix} 1 \\ 0 \end{pmatrix} = \begin{pmatrix} \cos t \\ - \sin t \end{pmatrix}$。
+
 </details>
 
 ### 例题 2：非线性系统的平衡点稳定性
 分析系统 $\dot{x} = y, \dot{y} = -x + x^3$ 在原点 $(0,0)$ 的稳定性。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 1. **计算 Jacobian 矩阵**：$J(x, y) = \begin{pmatrix} \partial \dot{x}/\partial x & \partial \dot{x}/\partial y \\ \partial \dot{y}/\partial x & \partial \dot{y}/\partial y \end{pmatrix} = \begin{pmatrix} 0 & 1 \\ -1+3x^2 & 0 \end{pmatrix}$。
 2. **原点处 $(0,0)$**：$J(0,0) = \begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix}$。
 3. **特征值**：$\lambda = \pm i$。
 4. **结论**：线性化系统为中心点。对于非线性系统，纯虚根是临界情况，通常需要李雅普诺夫函数或能量法进一步判定。在本例中，该系统为哈密顿系统（能量守恒），原点是稳定的中心点。
+
 </details>
 
 ---
@@ -160,24 +164,37 @@ $$m \ddot{x} + c \dot{x} + kx = 0$$
 
 ### 练习 1：特征向量方法
 求解 $\mathbf{y}' = \begin{pmatrix} 1 & 1 \\ 4 & 1 \end{pmatrix} \mathbf{y}$。
+
 <details>
+
 <summary>答案</summary>
+
 特征值 $\lambda_1 = 3, \lambda_2 = -1$。对应向量 $\mathbf{v}_1 = (1, 2)^T, \mathbf{v}_2 = (1, -2)^T$。
 通解：$\mathbf{y} = C_1 \begin{pmatrix} 1 \\ 2 \end{pmatrix} e^{3t} + C_2 \begin{pmatrix} 1 \\ -2 \end{pmatrix} e^{-t}$。
+
 </details>
 
 ### 练习 2：稳定性分类
 判定系统 $\dot{x} = -2x + y, \dot{y} = x - 2y$ 的平衡点类型。
+
 <details>
+
 <summary>答案</summary>
+
 $A = \begin{pmatrix} -2 & 1 \\ 1 & -2 \end{pmatrix}$，特征值 $\lambda_1 = -1, \lambda_2 = -3$。
 均为负实根，平衡点 $(0,0)$ 是**渐近稳定结点**。
+
 </details>
 
 ### 练习 3：李雅普诺夫稳定性判断
 对于系统 $\dot{x} = -x^3$，证明原点是渐近稳定的。
+
 <details>
+
 <summary>答案</summary>
+
 取 $V(x) = \frac{1}{2}x^2 > 0$。则 $\dot{V} = x \dot{x} = -x^4 < 0$ (当 $x \neq 0$)。
 根据李雅普诺夫第二定理，原点是渐近稳定的。
+
 </details>
+

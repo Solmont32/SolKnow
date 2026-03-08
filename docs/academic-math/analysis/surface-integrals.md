@@ -72,6 +72,7 @@ $$\int_\Omega d\omega = \int_{\partial \Omega} \omega$$
 计算通量 $\oiint_\Sigma x^2 dydz + y^2 dzdx + z^2 dxdy$，其中 $\Sigma$ 是立方体 $0 \le x,y,z \le a$ 的整个外侧。
 
 <details>
+
 <summary>解析过程</summary>
 
 1. **计算散度**：$\text{div } \mathbf{F} = \frac{\partial (x^2)}{\partial x} + \frac{\partial (y^2)}{\partial y} + \frac{\partial (z^2)}{\partial z} = 2x + 2y + 2z$。
@@ -81,12 +82,14 @@ $$\int_\Omega d\omega = \int_{\partial \Omega} \omega$$
 4. **求和**：$I = a^4 + a^4 + a^4 = 3a^4$。
 
 **答案**：$3a^4$
+
 </details>
 
 ### 例题 2：阿基米德浮力定律的数学证明
 证明：浸在液体中的物体所受的浮力等于它排开液体的重量。
 
 <details>
+
 <summary>解析过程</summary>
 
 1. **物理建模**：设液体压力场为 $\mathbf{P} = (0, 0, -\rho g z)$（向下的压力随深度增加）。
@@ -97,12 +100,14 @@ $$\int_\Omega d\omega = \int_{\partial \Omega} \omega$$
 4. **结论**：浮力方向向上，大小等于排开液体的重力 $\rho g V$。
 
 **答案**：得证。
+
 </details>
 
 ### 例题 3：斯托克斯公式计算空间环量
 计算 $\oint_\Gamma y^2 dx + z^2 dy + x^2 dz$，其中 $\Gamma$ 是圆周 $x^2+y^2=a^2, z=0$（逆时针）。
 
 <details>
+
 <summary>解析过程</summary>
 
 1. **计算旋度**：
@@ -114,12 +119,14 @@ $$\int_\Omega d\omega = \int_{\partial \Omega} \omega$$
 5. **计算积分**：由于圆盘 $\Sigma$ 关于 $x$ 轴对称，且函数 $-2y$ 是奇函数，故积分为 0。
 
 **答案**：0
+
 </details>
 
 ### 例题 4：带奇点的高斯公式（高斯定律）
 设 $\mathbf{E} = \frac{Q}{4\pi \epsilon_0 r^3} \mathbf{r}$ 为点电荷电场场强。证明：穿过包围电荷的任意闭曲面 $\Sigma$ 的通量均为 $\frac{Q}{\epsilon_0}$。
 
 <details>
+
 <summary>解析过程</summary>
 
 1. **计算散度**：在 $r \neq 0$ 时，$\text{div } \mathbf{E} = 0$。
@@ -129,6 +136,7 @@ $$\int_\Omega d\omega = \int_{\partial \Omega} \omega$$
    通量 $\Phi = \frac{Q}{4\pi \epsilon_0 \delta^2} \cdot 4\pi \delta^2 = \frac{Q}{\epsilon_0}$。
 
 **答案**：$\frac{Q}{\epsilon_0}$
+
 </details>
 
 ---

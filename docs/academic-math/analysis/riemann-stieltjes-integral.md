@@ -69,6 +69,7 @@ $$E[g(X)] = \int_{-\infty}^{+\infty} g(x) dF(x) = \int_{x \in \text{Cont}} g(x) 
 计算 $\int_0^3 x^2 d\lfloor x \rfloor$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析
@@ -82,6 +83,7 @@ $$= 1^2 \cdot 1 + 2^2 \cdot 1 + 3^2 \cdot 1 = 1 + 4 + 9 = 14$$
 
 #### 答案
 14
+
 </details>
 
 ### 例题 2：混合型分布的期望
@@ -90,6 +92,7 @@ $$F(x) = \begin{cases} 0, & x < 0 \\ \frac{1}{2}x, & 0 \le x < 1 \\ 1, & x \ge 1
 计算 $E[X^2]$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析
@@ -102,12 +105,14 @@ $$F(x) = \begin{cases} 0, & x < 0 \\ \frac{1}{2}x, & 0 \le x < 1 \\ 1, & x \ge 1
 
 #### 答案
 $2/3$
+
 </details>
 
 ### 例题 3：分部积分法的妙用
 计算 $\int_0^\pi x d(\sin x)$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析
@@ -120,12 +125,14 @@ $2/3$
 
 #### 答案
 -2
+
 </details>
 
 ### 例题 4：狄拉克 $\delta$ 函数与 R-S 积分
 设 $\delta_c(x)$ 是在 $c$ 点处的单位阶梯函数（即 $x < c$ 时为 0，$x \ge c$ 时为 1）。计算 $\int_a^b f(x) d\delta_c(x)$，其中 $a < c < b$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析
@@ -136,6 +143,7 @@ $$\int_a^b f(x) d\delta_c(x) = f(c) \cdot \Delta \delta_c(c) = f(c) \cdot 1 = f(
 
 #### 答案
 $f(c)$
+
 </details>
 
 ---
@@ -150,6 +158,7 @@ $f(c)$
 6. **(挑战)** 若 $\alpha(x) = \sum_{n=1}^\infty \frac{1}{2^n} I(x \ge \frac{1}{n})$，其中 $I$ 为指示函数，计算 $\int_0^1 x d\alpha(x)$。
 
 <details>
+
 <summary>点击查看简要提示</summary>
 
 1. 跳跃点在 $x=1, 2, 3, 4$。结果为 $\sqrt{1} + \sqrt{2} + \sqrt{3} + \sqrt{4} = 3 + \sqrt{2} + \sqrt{3}$。
@@ -159,5 +168,6 @@ $f(c)$
    积分 = $\int_0^2 x \cdot 0.4 dx + 1 \cdot 0.2 = [0.2x^2]_0^2 + 0.2 = 0.8 + 0.2 = 1.0$。
 5. $\alpha(x) = [x]^2$ 的跳跃点在 $1, 2, 3$。跳跃量分别为 $1^2-0^2=1, 2^2-1^2=3, 3^2-2^2=5$。积分值为 $1\cdot 1 + 2\cdot 3 + 3\cdot 5 = 22$。
 6. 这是一个离散分布的期望计算，跳跃点 $x_n = 1/n$，权重为 $1/2^n$。求和 $\sum_{n=1}^\infty \frac{1}{n} \cdot \frac{1}{2^n} = \ln 2$。
+
 </details>
 

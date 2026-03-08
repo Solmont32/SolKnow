@@ -78,6 +78,7 @@ $$
 证明：$AD,BE,CF$ 三线共点。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -90,6 +91,7 @@ $$
 
 #### 答案
 三线共点。
+
 </details>
 
 ### 例题 2：梅涅劳斯定理判共线
@@ -100,6 +102,7 @@ $$
 判断 $D,E,F$ 是否共线。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -113,12 +116,14 @@ $$
 
 #### 答案
 $D,E,F$ 共线。
+
 </details>
 
 ### 例题 3：斯图尔特定理计算线段
 在 $\triangle ABC$ 中，$AB=13, AC=15, BC=14$。点 $D$ 为 $BC$ 中点，求 $AD$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -138,12 +143,14 @@ $$
 
 #### 答案
 $AD=2\sqrt{37}$。
+
 </details>
 
 ### 例题 4：切割线与切线长度
 点 $P$ 在圆外，过 $P$ 作割线交圆于 $A,B$，其中 $PA=4, PB=9$；另作切线 $PT$。求 $PT$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
@@ -159,6 +166,7 @@ $$
 
 #### 答案
 $PT=6$。
+
 </details>
 
 ---
@@ -169,6 +177,7 @@ $PT=6$。
 在 $\triangle ABC$ 中，若 $\frac{BD}{DC}=\frac{2}{3},\ \frac{CE}{EA}=\frac{3}{5}$，且 $AD,BE,CF$ 共点，求 $\frac{AF}{FB}$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 由塞瓦定理
@@ -177,12 +186,14 @@ $$
 =\frac{1}{\frac23\cdot\frac35}=\frac52.
 $$
 答案：$\frac{AF}{FB}=\frac52$。
+
 </details>
 
 ### 练习 B（提高）
 在圆外点 $P$ 处作两条割线，第一条交圆于 $A,B$，$PA=3,PB=12$；第二条交圆于 $C,D$，$PC=4$，求 $PD$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 圆幂不变量：
@@ -190,12 +201,14 @@ $$
 PA\cdot PB=PC\cdot PD.
 $$
 代入 $3\cdot12=4\cdot PD$，得 $PD=9$。
+
 </details>
 
 ### 练习 C（挑战）
 设 $\triangle ABC$ 中 $D\in BC$，已知 $AB=10, AC=17, BC=21, BD=9$。求 $AD$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 设 $DC=12$，由斯图尔特定理：
@@ -208,4 +221,6 @@ $$
 AD^2+108=181\Rightarrow AD^2=73.
 $$
 答案：$AD=\sqrt{73}$。
+
 </details>
+

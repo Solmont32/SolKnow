@@ -95,6 +95,7 @@ $$\lim_{n \to \infty} \int_E f_n dx = \int_E f dx$$
 计算 $\int_0^1 D(x) dx$，其中 $D(x) = \chi_{\mathbb{Q}}(x)$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析
@@ -106,12 +107,14 @@ $$\lim_{n \to \infty} \int_E f_n dx = \int_E f dx$$
    $$\int_0^1 D(x) dx = 1 \cdot m(\mathbb{Q} \cap [0, 1]) + 0 \cdot m(\mathbb{Q}^c \cap [0, 1]) = 1 \cdot 0 + 0 \cdot 1 = 0$$
 #### 结论
 在 Lebesgue 意义下，Dirichlet 函数积分为 0。这符合“几乎处处为 0 的函数积分为 0”的直觉。
+
 </details>
 
 ### 练习 2：利用 DCT 交换极限与积分
 计算极限：$\lim_{n \to \infty} \int_0^1 \frac{n \sqrt{x}}{1 + n^2 x^2} dx$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 解析
@@ -126,12 +129,14 @@ $$\lim_{n \to \infty} \int_E f_n dx = \int_E f dx$$
 3. **应用 DCT**：
    由于存在控制函数，极限号可进入积分：
    $$\lim \int = \int \lim = \int_0^1 0 dx = 0$$
+
 </details>
 
 ### 练习 3：单调收敛定理的妙用
 设 $f(x) \ge 0$ 可积，证明：$\int_E f dx = \sum_{n=1}^\infty \int_{E_n} f dx$，其中 $E = \cup_{n=1}^\infty E_n$ 且 $E_n$ 两两不交。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 #### 证明
@@ -142,6 +147,7 @@ $$\lim_{n \to \infty} \int_E f_n dx = \int_E f dx$$
    $$\int_E f dx = \int \lim g_k dx = \lim \int g_k dx$$
    $$= \lim_{k \to \infty} \sum_{n=1}^k \int_{E_n} f dx = \sum_{n=1}^\infty \int_{E_n} f dx$$
 这证明了 Lebesgue 积分具有**项项可加性**。
+
 </details>
 
 ---

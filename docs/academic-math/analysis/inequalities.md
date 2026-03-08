@@ -93,7 +93,9 @@ $$
 
 :::info 例题 1：利用 Hölder 不等式证明算术-几何平均
 试用 Hölder 不等式推导 $n$ 元 AM-GM 不等式。
+
 <details>
+
 <summary>点击查看解析</summary>
 
 **证明**：
@@ -107,13 +109,17 @@ $$
 -\ln\left( \frac{1}{n} \sum x_i \right) \le -\frac{1}{n} \sum \ln x_i = -\ln \left( \prod x_i^{1/n} \right)
 $$
 取指数得：$\frac{1}{n} \sum x_i \ge \sqrt[n]{\prod x_i}$。证毕。
+
 </details>
+
 :::
 
 :::info 例题 2：Hardy 不等式的特殊估计
 设 $f \ge 0$ 且 $f \in L^p(0, \infty)$ ($p > 1$)，定义 $F(x) = \frac{1}{x} \int_0^x f(t) dt$。证明：
 $\|F\|_p \le \frac{p}{p-1} \|f\|_p$。
+
 <details>
+
 <summary>点击查看解析</summary>
 
 **证明要点**：
@@ -132,7 +138,9 @@ $$
 \int F^p \le \frac{p}{p-1} \left( \int f^p \right)^{1/p} \left( \int F^p \right)^{(p-1)/p}
 $$
 两边除以 $\left( \int F^p \right)^{(p-1)/p}$ 即得 $\|F\|_p \le \frac{p}{p-1} \|f\|_p$。
+
 </details>
+
 :::
 
 ---

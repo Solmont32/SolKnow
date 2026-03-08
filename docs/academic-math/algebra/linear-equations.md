@@ -59,6 +59,7 @@ $$
 的解的情况。
 
 <details>
+
 <summary>点击查看解答</summary>
 
 增广矩阵经消元：
@@ -69,6 +70,7 @@ $$
 因此：
 - $k\neq 2$ 时，三主元，唯一解；
 - $k=2$ 时，秩为 2，小于未知数个数 3，有无穷多解。
+
 </details>
 
 ### 例 2：写出通解
@@ -81,6 +83,7 @@ x+2y-z=0\\
 $$
 
 <details>
+
 <summary>点击查看解答</summary>
 
 第二行是第一行 2 倍，秩为 1。设 $y=s, z=t$，则
@@ -89,6 +92,7 @@ $$x=-2s+t.$$
 $$
 \mathbf{x}=s\begin{pmatrix}-2\\1\\0\end{pmatrix}+t\begin{pmatrix}1\\0\\1\end{pmatrix},\quad s,t\in\mathbb{F}.
 $$
+
 </details>
 
 ## 6. 常见误区

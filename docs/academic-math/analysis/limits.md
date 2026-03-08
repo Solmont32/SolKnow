@@ -2,6 +2,7 @@
 title: 第二章：数列极限 (Limits of Sequences)
 ---
 
+import Details from '@theme/Details';
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 import SupportingExercises from '@site/src/components/SupportingExercises';
 
@@ -38,8 +39,7 @@ $$|a_n-A|<\epsilon,$$
 ### 例题 1：定义法证明极限
 证明 $\lim_{n\to\infty}\frac{3n-1}{2n+5}=\frac32$。
 
-<details>
-<summary>点击查看解析与答案</summary>
+:::note[点击查看解析与答案]
 
 有
 $$\left|\frac{3n-1}{2n+5}-\frac32\right|=\frac{17}{4n+10}<\frac{17}{4n}.$$
@@ -48,13 +48,13 @@ $$N>\frac{17}{4\epsilon},$$
 当 $n>N$ 时即有误差小于 $\epsilon$。
 
 故极限为 $\frac32$。
-</details>
+
+:::
 
 ### 例题 2：单调有界定理求递推极限
 设 $x_1=1,\ x_{n+1}=\frac12\left(x_n+\frac{2}{x_n}\right)$，求极限。
 
-<details>
-<summary>点击查看解析与答案</summary>
+:::note[点击查看解析与答案]
 
 先证下界：由 AM-GM，
 $$x_{n+1}=\frac12\left(x_n+\frac{2}{x_n}\right)\ge\sqrt2.$$
@@ -64,34 +64,35 @@ $$x_{n+1}-x_n=\frac{2-x_n^2}{2x_n}\le0,$$
 
 设极限为 $L>0$，代入递推式：
 $$L=\frac12\left(L+\frac2L\right)\Rightarrow L^2=2\Rightarrow L=\sqrt2.$$
-</details>
+
+:::
 
 ### 例题 3：Stolz 定理计算和式极限
 求
 $$\lim_{n\to\infty}\frac{1^2+2^2+\cdots+n^2}{n^3}.$$
 
-<details>
-<summary>点击查看解析与答案</summary>
+:::note[点击查看解析与答案]
 
 令
 $$X_n=\sum_{k=1}^n k^2,\quad Y_n=n^3.$$
 由 Stolz：
 $$\lim\frac{X_n}{Y_n}=\lim\frac{X_n-X_{n-1}}{Y_n-Y_{n-1}}=\lim\frac{n^2}{n^3-(n-1)^3}
 =\lim\frac{n^2}{3n^2-3n+1}=\frac13.$$
-</details>
+
+:::
 
 ### 例题 4：柯西准则判定发散
 证明调和级数部分和 $H_n=\sum_{k=1}^n\frac1k$ 不收敛。
 
-<details>
-<summary>点击查看解析与答案</summary>
+:::note[点击查看解析与答案]
 
 取 $m=2n$，则
 $$H_{2n}-H_n=\frac1{n+1}+\cdots+\frac1{2n}>n\cdot\frac1{2n}=\frac12.$$
 故存在固定正数 $\epsilon_0=\frac12$，使任意大下标仍可找到两项差值超过 $\epsilon_0$，违背柯西准则。
 
 因此 $H_n$ 发散。
-</details>
+
+:::
 
 ---
 
@@ -100,41 +101,40 @@ $$H_{2n}-H_n=\frac1{n+1}+\cdots+\frac1{2n}>n\cdot\frac1{2n}=\frac12.$$
 ### 练习 1：定义法
 用 $\epsilon$-$N$ 定义证明 $\lim\limits_{n\to\infty}\frac{n+1}{n}=1$。
 
-<details>
-<summary>点击查看过程与答案</summary>
+:::note[点击查看过程与答案]
 
 $$\left|\frac{n+1}{n}-1\right|=\frac1n.$$
 给定 $\epsilon>0$，取 $N>1/\epsilon$ 即可。
-</details>
+
+:::
 
 ### 练习 2：夹逼定理
 求极限
 $$\lim_{n\to\infty}\frac{\sin n}{n}.$$
 
-<details>
-<summary>点击查看过程与答案</summary>
+:::note[点击查看过程与答案]
 
 由 $-1\le\sin n\le1$，得
 $$-\frac1n\le\frac{\sin n}{n}\le\frac1n.$$
 两端趋于 0，故极限为 0。
-</details>
+
+:::
 
 ### 练习 3：Stolz 平均值
 设 $a_n\to a$，证明
 $$\frac{a_1+\cdots+a_n}{n}\to a.$$
 
-<details>
-<summary>点击查看过程与答案</summary>
+:::note[点击查看过程与答案]
 
 设 $X_n=\sum_{k=1}^n a_k,\ Y_n=n$，用 Stolz：
 $$\lim\frac{X_n}{Y_n}=\lim\frac{X_n-X_{n-1}}{Y_n-Y_{n-1}}=\lim a_n=a.$$
-</details>
+
+:::
 
 ### 练习 4：递推极限
 设 $u_1>0$，$u_{n+1}=\frac{u_n+3}{u_n+1}$。证明其收敛并求极限。
 
-<details>
-<summary>点击查看过程与答案</summary>
+:::note[点击查看过程与答案]
 
 极限候选由不动点方程
 $$L=\frac{L+3}{L+1}\Rightarrow L^2=3\Rightarrow L=\sqrt3\ (>0).$$
@@ -142,7 +142,8 @@ $$L=\frac{L+3}{L+1}\Rightarrow L^2=3\Rightarrow L=\sqrt3\ (>0).$$
 考察映射 $\varphi(x)=\frac{x+3}{x+1}$ 在 $(0,+\infty)$ 上，
 $$\varphi'(x)=\frac{-2}{(x+1)^2}<0,$$
 并可验证迭代保持正且逐步逼近不动点，故收敛到 $\sqrt3$。
-</details>
+
+:::
 
 ---
 

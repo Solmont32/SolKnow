@@ -63,53 +63,73 @@ $$Dg(\mathbf{y}) = [D\mathbf{f}(\mathbf{x})]^{-1}, \quad \mathbf{y} = \mathbf{f}
 
 **例 1：基本代数相关性**
 判定 $u = x+y+z, v = xy+yz+zx, w = x^2+y^2+z^2$ 的相关性。
+
 <details>
+
 <summary>点击查看解析</summary>
+
 计算雅可比矩阵：
 $$J = \begin{pmatrix} 1 & 1 & 1 \\ y+z & x+z & x+y \\ 2x & 2y & 2z \end{pmatrix}$$
 观察到 $u^2 = (x+y+z)^2 = x^2+y^2+z^2 + 2(xy+yz+zx) = w + 2v$。
 故存在关系 $\Phi(u, v, w) = u^2 - 2v - w = 0$。
 **结论**：函数相关。雅可比行列式 $\det J \equiv 0$。
+
 </details>
 
 **例 2：分式与乘积**
 判定 $u = \frac{x}{y}, v = \frac{y}{z}, w = \frac{x}{z}$ 的相关性。
+
 <details>
+
 <summary>点击查看解析</summary>
+
 显然有 $w = \frac{x}{y} \cdot \frac{y}{z} = u \cdot v$。
 构造函数 $\Phi(u, v, w) = uv - w = 0$。
 **结论**：函数相关。其雅可比矩阵的秩为 2（小于函数个数 3）。
+
 </details>
 
 **例 3：超越函数组合**
 判定 $u = \ln x - \ln y, v = \frac{x^2+y^2}{xy}, w = \frac{x+y}{x-y}$ 的相关性。
+
 <details>
+
 <summary>点击查看解析</summary>
+
 注意到：
 1. $u = \ln(x/y)$，说明 $u$ 仅取决于 $x/y$。
 2. $v = \frac{x}{y} + \frac{y}{x}$，说明 $v$ 也仅取决于 $x/y$。
 3. $w = \frac{x/y + 1}{x/y - 1}$，说明 $w$ 同样仅取决于 $x/y$。
 因为三个函数都由同一个中间变量 $t = x/y$ 确定，它们之间必然存在两个独立的约束关系。
 **结论**：函数相关，秩为 1。
+
 </details>
 
 **例 4：三元复杂结构**
 判定 $u = x+y+z, v = x^2+y^2+z^2, w = x^3+y^3+z^3 - 3xyz$ 的相关性。
+
 <details>
+
 <summary>点击查看解析</summary>
+
 利用恒等式：$x^3+y^3+z^3-3xyz = (x+y+z)(x^2+y^2+z^2 - (xy+yz+zx))$。
 由例 1 知 $xy+yz+zx = \frac{1}{2}(u^2 - v)$。
 代入得：$w = u(v - \frac{1}{2}(u^2 - v)) = \frac{3}{2}uv - \frac{1}{2}u^3$。
 **结论**：函数相关。
+
 </details>
 
 **例 5：指数与对数混合**
 判定 $u = e^{x-y}, v = e^{y-z}, w = e^{x-z}$ 的相关性。
+
 <details>
+
 <summary>点击查看解析</summary>
+
 计算乘积：$u \cdot v = e^{x-y} \cdot e^{y-z} = e^{x-z} = w$。
 关系式：$uv - w = 0$。
 **结论**：函数相关。
+
 </details>
 
 ---
@@ -138,6 +158,7 @@ $$J = \begin{pmatrix} 1 & 1 & 1 \\ y+z & x+z & x+y \\ 2x & 2y & 2z \end{pmatrix}
 设 $u+v=x+y$，$xu+yv=1$，求 $\frac{\partial u}{\partial x}$。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 对两方程关于 $x$ 求偏导（视 $y$ 为常数）：
@@ -148,6 +169,7 @@ $$J = \begin{pmatrix} 1 & 1 & 1 \\ y+z & x+z & x+y \\ 2x & 2y & 2z \end{pmatrix}
 系数行列式 $J = \begin{vmatrix} 1 & 1 \\ x & y \end{vmatrix} = y - x$。
 若 $y \neq x$，则：
 $$u_x = \frac{\begin{vmatrix} 1 & 1 \\ -u & y \end{vmatrix}}{y - x} = \frac{y + u}{y - x}$$
+
 </details>
 
 ---

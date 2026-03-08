@@ -116,45 +116,55 @@ $$\int_0^1 f_n(x)\,dx\to0.$$
 证明 $\sum_{n=1}^{\infty}\frac{\sin nx}{n^2}$ 在 $\mathbb{R}$ 上一致收敛。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 由 $|\sin nx|/n^2\le1/n^2$，且 $\sum 1/n^2$ 收敛，M-判别法得一致收敛。
+
 </details>
 
 ### 练习 2：Dini 定理
 设 $f_n\in C[a,b]$ 且 $f_n(x)\searrow0$，证明 $f_n\rightrightarrows0$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 满足紧集上连续、点收敛到连续函数、点点单调三条件，故由 Dini 定理得一致收敛。
+
 </details>
 
 ### 练习 3：积分极限
 设 $f_n(x)=\frac{x^n}{1+x^n}$，$x\in[0,1]$，判断 $\lim_{n\to\infty}\int_0^1f_n(x)\,dx$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 对 $x\in[0,1)$，$f_n(x)\to0$；端点 $x=1$ 为单点。可算得积分极限为 0。
+
 </details>
 
 ### 练习 4：反例构造
 构造连续函数列，在 $[0,1]$ 点收敛到 0 但不一致收敛。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 取 $f_n(x)=x^n$，有 $\sup_{[0,1]}|f_n-0|=1$，故非一致收敛。
+
 </details>
 
 ### 练习 5：逐项求导辨析
 设 $f_n(x)=\sin(nx)/n^2$，讨论 $\sum f_n'(x)$ 在 $[0,2\pi]$ 是否一致收敛。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $f_n'(x)=\cos(nx)/n$。在 $x=0$ 处退化为调和级数，故导数级数不一致收敛。
+
 </details>
 
 ---

@@ -58,6 +58,7 @@ $$\oint_L P dx + Q dy = \iint_D \left( \frac{\partial Q}{\partial x} - \frac{\pa
 计算向量场 $\mathbf{F} = (-y, x)$ 沿星形线 $L: x = a \cos^3 t, y = a \sin^3 t$ ($0 \le t \le 2\pi$) 的环量。
 
 <details>
+
 <summary>解析过程</summary>
 
 **方法一：直接法**
@@ -72,12 +73,14 @@ $$\oint_L P dx + Q dy = \iint_D \left( \frac{\partial Q}{\partial x} - \frac{\pa
 3. 星形线面积 $A = \frac{3}{8}\pi a^2$，故结果为 $2 \cdot \frac{3}{8}\pi a^2 = \frac{3\pi a^2}{4}$。
 
 **答案**：$\frac{3}{4}\pi a^2$
+
 </details>
 
 ### 例题 2：非单连通区域的路径无关性
 设 $\mathbf{F} = \left( \frac{-y}{x^2+y^2}, \frac{x}{x^2+y^2} \right)$。证明其在除原点外的区域满足 $\frac{\partial Q}{\partial x} = \frac{\partial P}{\partial y}$，并计算沿包围原点的任意正向闭曲线 $L$ 的环量。
 
 <details>
+
 <summary>解析过程</summary>
 
 1. **验证偏导**：经计算，在 $(x,y) \neq (0,0)$ 时，$\frac{\partial Q}{\partial x} = \frac{y^2-x^2}{(x^2+y^2)^2} = \frac{\partial P}{\partial y}$。
@@ -87,12 +90,14 @@ $$\oint_L P dx + Q dy = \iint_D \left( \frac{\partial Q}{\partial x} - \frac{\pa
    $\oint_{C_\epsilon} \frac{-y dx + x dy}{x^2+y^2} = \int_0^{2\pi} \frac{\epsilon^2(\sin^2 t + \cos^2 t)}{\epsilon^2} dt = 2\pi$。
 
 **答案**：$2\pi$（此为复变积分中留数定理的雏形）。
+
 </details>
 
 ### 例题 3：变力沿空间曲线做功
 计算变力 $\mathbf{F} = (y-z, z-x, x-y)$ 沿圆柱螺旋线 $\Gamma: x=a \cos t, y=a \sin t, z=bt$ ($0 \le t \le 2\pi$) 做的功。
 
 <details>
+
 <summary>解析过程</summary>
 
 1. $dx = -a \sin t dt, dy = a \cos t dt, dz = b dt$。
@@ -106,12 +111,14 @@ $$\oint_L P dx + Q dy = \iint_D \left( \frac{\partial Q}{\partial x} - \frac{\pa
 5. 总功 $W = -2\pi a^2 - 2\pi ab = -2\pi a(a+b)$。
 
 **答案**：$-2\pi a(a+b)$
+
 </details>
 
 ### 例题 4：保守场与势函数
 已知 $\mathbf{F} = (2xy+z^2, x^2+2yz, y^2+2xz)$，证明该场为保守场，并求从 $A(0,0,0)$ 到 $B(1,1,1)$ 的线积分。
 
 <details>
+
 <summary>解析过程</summary>
 
 1. **验证旋度**：计算 $\text{curl } \mathbf{F} = (2y-2y, 2z-2z, 2x-2x) = (0,0,0)$。故 $\mathbf{F}$ 是保守场。
@@ -123,6 +130,7 @@ $$\oint_L P dx + Q dy = \iint_D \left( \frac{\partial Q}{\partial x} - \frac{\pa
 3. **计算积分**：$\int_A^B \mathbf{F} \cdot d\mathbf{r} = u(1,1,1) - u(0,0,0) = 1+1+1 = 3$。
 
 **答案**：3
+
 </details>
 
 ---

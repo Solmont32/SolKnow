@@ -140,6 +140,7 @@ $$
 是否为子空间，并给出一组基。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 $S$ 由齐次线性方程刻画，必为子空间。由 $x=2y-z$ 得
@@ -147,6 +148,7 @@ $$
 (x,y,z)=y(2,1,0)+z(-1,0,1),
 $$
 故一组基可取 $\{(2,1,0),(-1,0,1)\}$，维数为 2。
+
 </details>
 
 ### 练习 2
@@ -157,6 +159,7 @@ $$
 求 $\ker T$ 与 $\operatorname{rank}(T)$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 核由
@@ -168,12 +171,14 @@ $$
 \ker T=\{(-2t,t)\mid t\in\mathbb{R}\}=\operatorname{span}\{(-2,1)\}.
 $$
 所以零空间维数为 1，域维数为 2，故 $\operatorname{rank}(T)=1$。
+
 </details>
 
 ### 练习 3
 在线性空间 $P_1(\mathbb{R})$ 中，基 $\mathcal{B}=\{1,x\}$。定义 $T(p)=p+xp'$。求矩阵 $[T]_{\mathcal{B}}$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 $$
@@ -183,12 +188,14 @@ $$
 $$
 [T]_{\mathcal{B}}=\begin{pmatrix}1&0\\0&2\end{pmatrix}.
 $$
+
 </details>
 
 ### 练习 4
 设 $V=\mathbb{R}^3$，$U=\operatorname{span}\{(1,1,0),(0,1,1)\}$，$W=\operatorname{span}\{(1,0,-1),(1,1,0)\}$。求 $\dim(U+W)$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 $U,W$ 各为 2 维。  
@@ -200,6 +207,7 @@ $$
 $$
 \dim(U+W)=2+2-1=3.
 $$
+
 </details>
 
 前往练习库：[/docs/exercises/math/algebra](/docs/exercises/math/algebra)

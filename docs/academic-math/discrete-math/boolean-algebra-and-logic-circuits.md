@@ -101,6 +101,7 @@ $$
 化简：$x+\bar x y$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $$
@@ -113,6 +114,7 @@ $$
 化简：$(x+y)(x+\bar y)$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $$
@@ -125,6 +127,7 @@ $$
 将 $f=\Sigma m(0,2,6,7)$ 写成主析取范式（变量顺序 $x,y,z$）。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $$
@@ -137,6 +140,7 @@ $$
 为什么 NAND 是完备门？
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 因为可先构造 $\bar x=x\uparrow x$，再由德摩根构造与、或，从而实现任意布尔表达式。

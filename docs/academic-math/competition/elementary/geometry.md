@@ -19,6 +19,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 在同一直线上，三角形 `ABC` 与 `ABD` 有公共高，且 `BC:BD=3:5`。若 `S(ABC)=12`，求 `S(ABD)`。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 同高三角形面积比等于底边比：
@@ -26,18 +27,21 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 所以 `S(ABD)=12×5/3=20`。
 
 **答案：**`20`
+
 </details>
 
 #### 例题 2（中点等积）
 在三角形 `ABC` 中，`M` 是 `BC` 中点。若 `S(ABC)=30`，求 `S(ABM)` 与 `S(ACM)`。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 `BM=CM`，且 `ABM` 与 `ACM` 对 `BC` 同高，所以面积相等。
 两者和为 `S(ABC)=30`，各为 `15`。
 
 **答案：**`15` 和 `15`
+
 </details>
 
 ### 2. 比例分割与燕尾模型
@@ -48,18 +52,21 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 在 `△ABC` 中，`D` 在 `BC` 上，已知 `S(ABD)=18`，`S(ACD)=12`，求 `BD:DC`。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 两三角形同高（从 A 到 BC），面积比等于底边比：
 `BD:DC=18:12=3:2`。
 
 **答案：**`3:2`
+
 </details>
 
 #### 例题 4（两层比例）
 在 `△ABC` 中，`D` 在 `BC` 上且 `BD:DC=2:3`。若 `E` 在 `AD` 上且 `AE:ED=1:2`，已知 `S(ABC)=75`，求 `S(AEC)`。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 先求 `S(ADC)=75×3/(2+3)=45`。
@@ -68,6 +75,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 `S(AEC)=S(ADC)×1/3=15`。
 
 **答案：**`15`
+
 </details>
 
 ### 3. 割补法与规则图形
@@ -78,24 +86,28 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 平行四边形底为 `12`，高为 `7`，求面积，并说明为何可用“底×高”。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 将一侧三角形割下平移到另一侧，可拼成同底同高的长方形，面积不变。
 所以面积 `12×7=84`。
 
 **答案：**`84`
+
 </details>
 
 #### 例题 6（扇形拼合）
 半径为 `6` 的圆被平均分成 12 个扇形，取其中 5 个，求总面积。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 整圆面积 `π×6^2=36π`，5 个扇形占 `5/12`：
 `36π×5/12=15π`。
 
 **答案：**`15π`
+
 </details>
 
 ### 4. 周长不变与最值意识
@@ -106,12 +118,14 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 长方形周长 `40`，当长和宽分别为多少时面积最大？最大面积是多少？
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 设长 `a`、宽 `b`，有 `a+b=20`。面积 `ab` 在 `a=b` 时最大，故 `a=b=10`。
 最大面积 `100`。
 
 **答案：**边长 `10`、`10`，最大面积 `100`
+
 </details>
 
 ## 二、章内练习（全部折叠答案）
@@ -120,45 +134,53 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 同高三角形底边比为 `4:7`，若小三角形面积是 `20`，大三角形面积是多少？
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 面积比等于底比，`20:x=4:7`，得 `x=35`。
 
 **答案：**`35`
+
 </details>
 
 ### 练习 2
 `△ABC` 中，`D` 在 `BC` 上，`BD:DC=5:3`，若 `S(ABD)=25`，求 `S(ABC)`。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 `S(ABD):S(ACD)=5:3`，`S(ACD)=15`，总面积 `25+15=40`。
 
 **答案：**`40`
+
 </details>
 
 ### 练习 3
 半径为 `4` 的圆中，圆心角 `135°` 的扇形面积是多少？
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 `S=135/360×π×4^2=6π`。
 
 **答案：**`6π`
+
 </details>
 
 ### 练习 4
 一个长方形周长为 `30`，当长为 `8` 时面积是多少？若要面积最大应取哪组边长？
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 `a+b=15`，当 `a=8` 时 `b=7`，面积 `56`。
 面积最大时 `a,b` 尽量接近，取 `7.5` 与 `7.5`，最大面积 `56.25`。
 
 **答案：**当前面积 `56`；最大时边长 `7.5,7.5`，面积 `56.25`
+
 </details>
 
 <KnowledgeCard type="tip" title="几何三步法">

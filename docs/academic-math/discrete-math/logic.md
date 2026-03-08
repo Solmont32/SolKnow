@@ -125,6 +125,7 @@ $$
 判断 $((p\to q)\land p)\to q$ 是否永真。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 是永真式，对应 MP 规则。
@@ -135,6 +136,7 @@ $$
 化简：$(p\lor q)\land(p\lor\neg q)$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 利用分配与吸收：
@@ -150,6 +152,7 @@ $$
 写出 $\neg(p\leftrightarrow q)$ 的等值形式。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $$
@@ -163,6 +166,7 @@ $$
 将“并非所有程序都无 bug”翻译为谓词逻辑。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 若 $B(x)$ 表示“程序 $x$ 无 bug”，则

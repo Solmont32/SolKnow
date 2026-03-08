@@ -67,6 +67,7 @@ x\equiv1\pmod4,\quad x\equiv2\pmod5,\quad x\equiv3\pmod7.
 $$
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 先由前两式设 $x=1+4t$，代入第二式得 $4t\equiv1\pmod5$，故 $t\equiv4\pmod5$，即
@@ -88,6 +89,7 @@ $$
 求 $2^{100}\pmod{13}$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 因 $\varphi(13)=12$ 且 $2^{12}\equiv1\pmod{13}$，
@@ -101,6 +103,7 @@ $$
 判断 2 是否为模 11 的原根。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $\varphi(11)=10$，检查 $2^{10/d}\not\equiv1\pmod{11}$（$d$ 为 10 的素因子 2,5）：
@@ -115,6 +118,7 @@ $$
 判断同余方程 $x^2\equiv3\pmod{13}$ 是否有解。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 用欧拉判别：
@@ -134,6 +138,7 @@ $$
 $$
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 模 $p$ 的非零剩余类都可逆。除 $1,-1$ 外，其余元素与各自逆元两两配对，配对乘积全为 1，因此
@@ -154,6 +159,7 @@ x\equiv2\pmod3,\quad x\equiv3\pmod5.
 $$
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 设 $x=2+3t$，代入得 $3t\equiv1\pmod5$，故 $t\equiv2\pmod5$。
@@ -165,6 +171,7 @@ $$
 求 $7^{222}\pmod{20}$。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 $7^2=49\equiv9,\ 7^4\equiv81\equiv1\pmod{20}$，
@@ -178,6 +185,7 @@ $$
 判断 3 是否为模 7 的原根。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 $\varphi(7)=6$，检查 $3^2=9\equiv2\not\equiv1$，$3^3=27\equiv6\not\equiv1\pmod7$。
@@ -189,6 +197,7 @@ $\varphi(7)=6$，检查 $3^2=9\equiv2\not\equiv1$，$3^3=27\equiv6\not\equiv1\pm
 判断 $x^2\equiv5\pmod{11}$ 是否可解，并给出全部解。
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 计算平方剩余：$0,1,4,9,5,3$（模 11）。包含 5，故可解。

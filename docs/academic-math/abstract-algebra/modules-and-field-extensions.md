@@ -112,34 +112,43 @@ $$
 证明任意向量空间 $V$ 都是其底域 $F$ 上的 $F$-模。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 向量空间公理本身就是模公理在“标量环是域”时的特例，因此 $V$ 自动是 $F$-模。
+
 </details>
 
 ### 练习 2
 在 $\mathbb{Z}$-模 $\mathbb{Z}$ 中，证明 $n\mathbb{Z}$ 是子模并求商模 $\mathbb{Z}/n\mathbb{Z}$ 的元素个数。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $n\mathbb{Z}$ 对加法与整数倍封闭，故为子模。商模就是模 $n$ 的剩余类，共 $n$ 个元素。
+
 </details>
 
 ### 练习 3
 求 $[\mathbb{Q}(\sqrt{3}):\mathbb{Q}]$ 与一组基。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $\sqrt{3}$ 的最小多项式是 $x^2-3$，次数为 2，故扩张次数是 2，可取基 $\{1,\sqrt{3}\}$。
+
 </details>
 
 ### 练习 4
 设 $\alpha=\sqrt[3]{2}$。说明 $[\mathbb{Q}(\alpha):\mathbb{Q}]=3$。
 
 <details>
+
 <summary>点击查看解析与答案</summary>
 
 $\alpha$ 满足 $x^3-2=0$。由有理根定理，$x^3-2$ 在 $\mathbb{Q}$ 上无一次因子，故不可约。最小多项式次数 3，扩张次数即 3。
+
 </details>
+

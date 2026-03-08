@@ -73,6 +73,7 @@ $$
 可逆。
 
 <details>
+
 <summary>点击查看解答</summary>
 
 沿第一行展开：
@@ -80,6 +81,7 @@ $$
 |A|=(a-1)^2.
 $$
 故 $A$ 可逆当且仅当 $a\neq 1$。
+
 </details>
 
 ### 例 2：利用行变换求值
@@ -93,6 +95,7 @@ D=\begin{vmatrix}
 $$
 
 <details>
+
 <summary>点击查看解答</summary>
 
 作行变换 $R_2\leftarrow R_2-2R_1,\ R_3\leftarrow R_3-R_1$：
@@ -104,6 +107,7 @@ D=\begin{vmatrix}
 \end{vmatrix}=0.
 $$
 结论：$D=0$。
+
 </details>
 
 ## 7. 配套练习

@@ -88,12 +88,14 @@ $R_n = \frac{1}{(n+1)!} (h \frac{\partial}{\partial x} + k \frac{\partial}{\part
 利用二阶 Taylor 展开，分析函数 $f(x, y)$ 在驻点附近的行为。
 
 <details>
+
 <summary>点击查看解析</summary>
 
 在驻点 $(x_0, y_0)$ 处，$f_x = f_y = 0$。Taylor 展开为：
 $$f(x_0+h, y_0+k) - f(x_0, y_0) \approx \frac{1}{2} (Ah^2 + 2Bhk + Ck^2)$$
 其中 $A=f_{xx}, B=f_{xy}, C=f_{yy}$。
 右侧是一个二次型。其性质（正定、负定、不定）直接决定了该驻点是极小值点、极大值点还是鞍点。这正是 Hessian 矩阵判别法的理论来源。
+
 </details>
 
 ---

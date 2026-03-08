@@ -148,11 +148,13 @@ int edit_distance(const string& A, const string& B) {
 序列 `5 1 6 2 3 4` 的 LIS 长度是多少？
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 可取上升子序列 `1,2,3,4`，长度 4。
 
 **答案**：4。
+
 </details>
 
 ### 练习 2（提高）
@@ -160,11 +162,13 @@ int edit_distance(const string& A, const string& B) {
 为什么 LCS 的状态 `f[i][j]` 不能只依赖 `f[i-1][j-1]`？
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 当 `A[i] != B[j]` 时，最优解可能来自“丢掉 `A[i]`”或“丢掉 `B[j]`”，即 `f[i-1][j]` 与 `f[i][j-1]`。
 
 **答案**：因为不匹配时需要比较两种删字符路径，必须保留左右状态。
+
 </details>
 
 ### 练习 3（挑战）
@@ -172,9 +176,12 @@ int edit_distance(const string& A, const string& B) {
 将编辑距离空间优化到一维时，为什么需要额外变量保存左上角旧值？
 
 <details>
+
 <summary>点击查看过程与答案</summary>
 
 `f[i-1][j-1]` 在覆盖前会丢失，而替换转移必须使用它。通常用 `prev` 保存上一轮的左上角值。
 
 **答案**：为保留 `f[i-1][j-1]`，否则替换转移会读取被覆盖后的错误值。
+
 </details>
+
