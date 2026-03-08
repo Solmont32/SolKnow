@@ -7,6 +7,7 @@
 当 $p$ 为质数且 $a \perp p$ 时，根据费马小定理：$a^{p-2} \equiv a^{-1} \pmod p$。
 
 ### 1. 快速幂求逆元
+
 ```cpp
 long long qpow(long long a, long long b, long long p) {
     long long res = 1;
@@ -22,15 +23,18 @@ long long inv(long long a, long long p) { return qpow(a, p - 2, p); }
 ```
 
 ### 2. 线性预处理 1..n 的逆元
+
 用于在 $O(n)$ 时间内处理大量数字的逆元。
 $inv[i] = (p - p/i) \times inv[p\%i] \pmod p$。
 
 ## 组合数 $C_n^k \pmod p$
 
 ### 1. 递推法 ($O(n^2)$)
+
 使用帕斯卡三角形：$C_n^k = C_{n-1}^k + C_{n-1}^{k-1}$。适合 $n \leq 1000$。
 
 ### 2. 阶乘法 ($O(n)$ 预处理)
+
 $C_n^k = \frac{n!}{k!(n-k)!} \pmod p$。
 
 ```cpp

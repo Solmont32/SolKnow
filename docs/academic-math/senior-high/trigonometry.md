@@ -9,12 +9,15 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 三角函数是研究三角形边角关系及周期现象的基础。
 
 ## 任意角的三角函数
+
 在单位圆中，角 $\alpha$ 的终边与圆的交点为 $(x, y)$：
+
 - $\sin \alpha = y$
 - $\cos \alpha = x$
 - $\tan \alpha = \frac{y}{x}$
 
 ## 核心公式库
+
 1.  **同角基本关系**：$\sin^2 \alpha + \cos^2 \alpha = 1$。
 2.  **诱导公式**：奇变偶不变，符号看象限。
 3.  **两角和差公式**：
@@ -29,5 +32,6 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </KnowledgeCard>
 
 ## 正弦定理与余弦定理
--   **正弦定理**：$\frac{a}{\sin A} = \frac{b}{\sin B} = \frac{c}{\sin C} = 2R$。
--   **余弦定理**：$a^2 = b^2 + c^2 - 2bc\cos A$。
+
+- **正弦定理**：$\frac{a}{\sin A} = \frac{b}{\sin B} = \frac{c}{\sin C} = 2R$。
+- **余弦定理**：$a^2 = b^2 + c^2 - 2bc\cos A$。

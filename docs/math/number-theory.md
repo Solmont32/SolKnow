@@ -27,9 +27,11 @@ long long exgcd(long long a, long long b, long long &x, long long &y) {
 ## 素数筛法
 
 ### 1. 埃氏筛 (Eratosthenes)
+
 时间复杂度 $O(n \log \log n)$。
 
 ### 2. 线性筛 (Euler)
+
 时间复杂度 $O(n)$，且每个合数仅被其最小质因子筛去。
 
 ```cpp

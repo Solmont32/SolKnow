@@ -16,18 +16,32 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 设 $(X,\mathcal{M},\mu)$ 为测度空间，$1 \le p < \infty$。
 
 可测函数 $f$ 若满足
+
 $$
+
 \int_X |f|^p \, d\mu < \infty,
+
+
 $$
+
 则称 $f \in L^p(X)$。对应范数定义为
+
 $$
+
 \|f\|_p = \left(\int_X |f|^p\,d\mu\right)^{1/p}.
+
+
 $$
 
 对 $p=\infty$，定义
+
 $$
+
 \|f\|_\infty = \operatorname*{ess\,sup}_{x\in X}|f(x)|.
+
+
 $$
+
 满足 $\|f\|_\infty<\infty$ 的函数构成 $L^\infty(X)$。
 
 <KnowledgeCard type="info" title="等价类视角">
@@ -45,8 +59,12 @@ $L^p$ 中函数按“几乎处处相等”识别为同一个元素：若 $f=g$ a
 3. 三角不等式：$\|f+g\|_p\le \|f\|_p+\|g\|_p$（$p<\infty$ 由 Minkowski 给出）。
 
 由此得到度量
+
 $$
+
 d_p(f,g)=\|f-g\|_p.
+
+
 $$
 
 ---
@@ -56,8 +74,12 @@ $$
 ### 1. Hölder 不等式
 
 若 $1<p,q<\infty$ 且 $\frac1p+\frac1q=1$，则
+
 $$
+
 \int_X |fg|\,d\mu \le \|f\|_p\|g\|_q.
+
+
 $$
 
 这是“乘积可积性”的核心工具，也是 Minkowski、对偶空间和偏微分方程估计的起点。
@@ -65,9 +87,14 @@ $$
 ### 2. Minkowski 不等式
 
 对 $1\le p<\infty$，
+
 $$
+
 \|f+g\|_p \le \|f\|_p+\|g\|_p.
+
+
 $$
+
 这相当于把欧氏空间的三角不等式推广到函数空间。
 
 <KnowledgeCard type="success" title="两条不等式的分工">
@@ -84,9 +111,14 @@ Hölder 负责“乘积估计”，Minkowski 负责“和估计”。实变函�
 - 即每个 $L^p$-Cauchy 列都收敛到某个 $L^p$ 元。
 
 特别地，$p=2$ 时可定义内积
+
 $$
+
 \langle f,g\rangle=\int_X f\overline g\,d\mu,
+
+
 $$
+
 所以 $L^2$ 是 Hilbert 空间。
 
 ---
@@ -119,12 +151,21 @@ $$
 <summary>点击查看解析</summary>
 
 $$
+
 \|f\|_p^p = \int_0^1 x^{-\alpha p}\,dx.
+
+
 $$
+
 积分收敛当且仅当 $-\alpha p>-1$，即
+
 $$
+
 \alpha < \frac1p.
+
+
 $$
+
 所以 $x^{-\alpha}\in L^p(0,1)\iff \alpha<1/p$。
 
 </details>
@@ -138,13 +179,22 @@ $$
 <summary>点击查看解析</summary>
 
 取共轭指数 $p=4,\ q=4/3$，应用 Hölder：
+
 $$
+
 \int_0^1 |fg|
 \le \|f\|_4\|g\|_{4/3}<\infty.
+
+
 $$
+
 故 $fg\in L^1(0,1)$，且
+
 $$
+
 \|fg\|_1\le \|f\|_4\|g\|_{4/3}.
+
+
 $$
 
 </details>
@@ -152,8 +202,12 @@ $$
 ### 例 3：用 Minkowski 证明 $L^p$ 三角不等式
 
 证明 $f,g\in L^p(X)$（$1\le p<\infty$）时，$f+g\in L^p$ 且
+
 $$
+
 \|f+g\|_p\le \|f\|_p+\|g\|_p.
+
+
 $$
 
 <details>
@@ -161,9 +215,14 @@ $$
 <summary>点击查看解析</summary>
 
 这是 Minkowski 不等式本身。证明通常从
+
 $$
+
 |f+g|^p = |f+g||f+g|^{p-1}
+
+
 $$
+
 出发，再对 $|f||f+g|^{p-1}$、$|g||f+g|^{p-1}$ 分别使用 Hölder，即得结论。
 
 </details>
@@ -178,9 +237,14 @@ $$
 
 对任意 $x>0$，当 $n>1/x$ 时 $x\notin(0,1/n)$，故 $f_n(x)\to0$ a.e.  
 但
+
 $$
+
 \|f_n\|_1=\int_0^{1/n}n\,dx=1,
+
+
 $$
+
 所以不收敛到 0 于 $L^1$。
 
 </details>
@@ -194,11 +258,16 @@ $$
 <summary>点击查看解析</summary>
 
 由 Markov 不等式：
+
 $$
+
 \mu\{|f_n-f|>\varepsilon\}
 \le \frac{1}{\varepsilon^p}\int_X|f_n-f|^p\,d\mu
 =\frac{\|f_n-f\|_p^p}{\varepsilon^p}\to0.
+
+
 $$
+
 故得测度收敛。
 
 </details>
@@ -216,15 +285,25 @@ $$
 <summary>点击查看过程与答案</summary>
 
 由 Hölder：
+
 $$
+
 \int |f|^p = \int |f|^p\cdot 1
 \le \left(\int |f|^q\right)^{p/q}
 \left(\int 1^{q/(q-p)}\right)^{(q-p)/q}.
+
+
 $$
+
 即
+
 $$
+
 \|f\|_p \le \mu(X)^{\frac1p-\frac1q}\|f\|_q.
+
+
 $$
+
 所以 $L^q(X)\subset L^p(X)$。
 
 </details>
@@ -238,8 +317,12 @@ $$
 <summary>点击查看过程与答案</summary>
 
 $$
+
 \|f_n\|_2^2=\int_0^{1/n}1\,dx=\frac1n\to0.
+
+
 $$
+
 故 $f_n\to0$ 于 $L^2(0,1)$。
 
 </details>
@@ -253,8 +336,12 @@ $$
 <summary>点击查看过程与答案</summary>
 
 $$
+
 \int_0^1 |f|^p\,dx=\int_0^1 x^{-p/2}\,dx
+
+
 $$
+
 收敛当且仅当 $p/2<1$，即 $p<2$。  
 故 $f\in L^p(0,1)$ 当且仅当 $1\le p<2$；不属于 $L^2$ 与更高指数空间。
 
@@ -269,14 +356,24 @@ $$
 <summary>点击查看过程与答案</summary>
 
 取子列使
+
 $$
+
 \|f_{n_k}-f\|_p^p<2^{-k}.
+
+
 $$
+
 由 Markov 不等式：
+
 $$
+
 \mu\{|f_{n_k}-f|>2^{-k/p}\}
 \le 2^k\|f_{n_k}-f\|_p^p<1.
+
+
 $$
+
 进一步按标准 Borel-Cantelli 型构造可得：除去零测集后，$f_{n_k}(x)\to f(x)$。
 
 </details>
@@ -291,9 +388,14 @@ $$
 
 这是受控收敛思想在测度收敛版本下的结论（Vitali/DCT 路径）。  
 由测度收敛可抽取子列 a.e. 收敛，再由 $|f_{n_k}|\le g$ 与 DCT 得
+
 $$
+
 \|f_{n_k}-f\|_1\to0.
+
+
 $$
+
 结合反证法可推出原序列也满足 $\|f_n-f\|_1\to0$。
 
 </details>
@@ -307,13 +409,23 @@ $$
 <summary>点击查看过程与答案</summary>
 
 用恒等式
+
 $$
+
 \|f_n-f\|_2^2=\|f_n\|_2^2+\|f\|_2^2-2\operatorname{Re}\langle f_n,f\rangle.
+
+
 $$
+
 弱收敛给出 $\langle f_n,f\rangle\to\langle f,f\rangle=\|f\|_2^2$，再结合范数收敛，
+
 $$
+
 \|f_n-f\|_2^2\to 0.
+
+
 $$
+
 故强收敛成立。
 
 </details>
@@ -334,4 +446,3 @@ $$
 - [进入实变函数专题练习总页](/docs/exercises/math/real-analysis)
 - [C 组：$L^p$ 空间与估计（建议对应本章）](/docs/exercises/math/real-analysis#ra-c1)
 - [返回实变函数学习路径首页](/docs/academic-math/real-analysis)
-

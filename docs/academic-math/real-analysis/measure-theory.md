@@ -32,8 +32,12 @@ Lebesgue 测度论回答的是两个基础问题：
 ### 2. Lebesgue 外测度的定义
 
 对任意集合 $E \subset \mathbb{R}$，定义其**外测度**为
+
 $$
+
 m^*(E) = \inf \left\{ \sum_{k=1}^{\infty} l(I_k) \;\middle|\; E \subset \bigcup_{k=1}^{\infty} I_k,\ I_k \text{ 为开区间} \right\}.
+
+
 $$
 
 含义很直接：允许用可数多个开区间覆盖 $E$，所有覆盖方案里总长度的下确界就是 $E$ 的外测度。
@@ -50,8 +54,12 @@ $$
 2. **空集为零**：$m^*(\varnothing)=0$；
 3. **单调性**：若 $E \subset F$，则 $m^*(E) \le m^*(F)$；
 4. **可数次可加性**：
+
 $$
+
 m^*\!\left(\bigcup_{n=1}^{\infty} E_n\right) \le \sum_{n=1}^{\infty} m^*(E_n).
+
+
 $$
 
 其中第 4 条是外测度最关键的结构性质。
@@ -80,8 +88,12 @@ $$
 ### 1. Carathéodory 可测性
 
 称集合 $E \subset \mathbb{R}$ 是 **Lebesgue 可测** 的，如果对任意集合 $A \subset \mathbb{R}$ 都有
+
 $$
+
 m^*(A) = m^*(A \cap E) + m^*(A \setminus E).
+
+
 $$
 
 这就是 Carathéodory 判别准则。
@@ -105,13 +117,21 @@ $$
 ### 3. Lebesgue 测度
 
 对可测集 $E$，定义
+
 $$
+
 m(E) = m^*(E).
+
+
 $$
 
 这时 $m$ 就是 **Lebesgue 测度**。它在可测集上具有真正的可数可加性：若 $E_n$ 两两不交且都可测，则
+
 $$
+
 m\!\left(\bigcup_{n=1}^{\infty} E_n\right) = \sum_{n=1}^{\infty} m(E_n).
+
+
 $$
 
 ---
@@ -121,11 +141,16 @@ $$
 ### 1. 零测集定义
 
 若对任意 $\varepsilon > 0$，都存在开区间列 $\{I_k\}$ 使得
+
 $$
+
 E \subset \bigcup_{k=1}^{\infty} I_k,
 \qquad
 \sum_{k=1}^{\infty} l(I_k) < \varepsilon,
+
+
 $$
+
 则称 $E$ 为 **零测集**，即 $m(E)=0$。
 
 ### 2. 零测集的基本结论
@@ -201,13 +226,23 @@ Cantor 集满足：
 ### 3. 为什么测度为零
 
 第 $n$ 步后剩余 $2^n$ 个区间，每个长度为 $3^{-n}$，总长度为
+
 $$
+
 \left(\frac{2}{3}\right)^n.
+
+
 $$
+
 由于 $C$ 包含在第 $n$ 步剩余集合中，故
+
 $$
+
 m(C) \le \left(\frac{2}{3}\right)^n \quad \forall n.
+
+
 $$
+
 令 $n \to \infty$ 得 $m(C)=0$。
 
 <KnowledgeCard type="success" title="Cantor 集传递的信息">
@@ -227,15 +262,25 @@ $$
 <summary>点击查看证明</summary>
 
 给定任意 $\varepsilon>0$。对每个 $n$，取开区间
+
 $$
+
 I_n = \left(x_n-\frac{\varepsilon}{2^{n+2}},\,x_n+\frac{\varepsilon}{2^{n+2}}\right).
+
+
 $$
+
 则 $E\subset \bigcup_{n=1}^\infty I_n$，且
+
 $$
+
 \sum_{n=1}^\infty l(I_n)
 = \sum_{n=1}^\infty \frac{\varepsilon}{2^{n+1}}
 < \varepsilon.
+
+
 $$
+
 故 $E$ 是零测集。$\square$
 
 </details>
@@ -249,13 +294,23 @@ $$
 <summary>点击查看思路</summary>
 
 设 $G$ 为开集。对任意 $A\subset \mathbb{R}$，由外测度的次可加性总有
+
 $$
+
 m^*(A) \le m^*(A\cap G)+m^*(A\setminus G).
+
+
 $$
+
 难点是反向不等式。利用开集可由可数个互不相交开区间并成，再结合区间上长度与外测度的一致性，可逐段逼近并得到
+
 $$
+
 m^*(A) \ge m^*(A\cap G)+m^*(A\setminus G).
+
+
 $$
+
 因此 $G$ 满足 Carathéodory 条件，所以可测。$\square$
 
 </details>
@@ -267,21 +322,41 @@ $$
 <summary>点击查看证明</summary>
 
 对任意 $A\subset\mathbb{R}$，有
+
 $$
+
 A = (A\cap E)\cup(A\setminus E).
+
+
 $$
+
 由次可加性，
+
 $$
+
 m^*(A)\le m^*(A\cap E)+m^*(A\setminus E).
+
+
 $$
+
 另一方面因 $A\cap E \subset E$ 且 $m^*(E)=0$，得到 $m^*(A\cap E)=0$，再由单调性
+
 $$
+
 m^*(A\setminus E)\le m^*(A).
+
+
 $$
+
 于是
+
 $$
+
 m^*(A)\ge m^*(A\cap E)+m^*(A\setminus E).
+
+
 $$
+
 两边合并即得 Carathéodory 条件，因此 $E$ 可测。$\square$
 
 </details>
@@ -293,9 +368,14 @@ $$
 <summary>点击查看解析</summary>
 
 第 $n$ 步删去后剩余长度为 $(2/3)^n$。Cantor 集包含在每一步剩余集合中，因此
+
 $$
+
 m(C)\le \left(\frac{2}{3}\right)^n,\qquad \forall n\in\mathbb{N}.
+
+
 $$
+
 令 $n\to\infty$，右端趋于 0，故 $m(C)=0$。
 
 另一方面，Cantor 集中元素可由三进制只含 $0,2$ 的展开描述，从而与二进制序列一一对应，所以它不可数。
@@ -327,9 +407,14 @@ $$
 <summary>点击查看答案</summary>
 
 可取 $E_n=[0,1/n]$。则 $m(E_n)=1/n\to 0$，但
+
 $$
+
 \bigcap_{n=1}^\infty [0,1/n]=\{0\}\neq \varnothing.
+
+
 $$
+
 这说明“测度趋于零”不代表集合最终为空，只说明几何大小趋于零。
 
 </details>
@@ -394,4 +479,3 @@ Lebesgue 测度论的主线可以压缩为：
 - [进入实变函数专题练习总页](/docs/exercises/math/real-analysis)
 - [A 组：可测性与零测集（建议对应本章）](/docs/exercises/math/real-analysis#ra-a1)
 - [返回实变函数学习路径首页](/docs/academic-math/real-analysis)
-

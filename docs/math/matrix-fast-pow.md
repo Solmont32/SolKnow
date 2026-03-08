@@ -40,6 +40,7 @@ Matrix qpow(Matrix a, long long b) {
 ## 应用场景：加速递推
 
 ### 斐波那契数列
+
 $F_n = F_{n-1} + F_{n-2}$，可转化为：
 $\begin{bmatrix} F_n \\ F_{n-1} \end{bmatrix} = \begin{bmatrix} 1 & 1 \\ 1 & 0 \end{bmatrix} \times \begin{bmatrix} F_{n-1} \\ F_{n-2} \end{bmatrix}$
 

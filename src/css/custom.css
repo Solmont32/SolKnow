@@ -18,7 +18,8 @@
   --ifm-color-primary-lightest: #93c5fd;
 
   /* 字体优化 */
-  --ifm-font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --ifm-font-family-base:
+    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --ifm-heading-font-family: 'Inter', var(--ifm-font-family-base);
 
   /* 代码块高亮 */
@@ -100,9 +101,19 @@
 }
 
 /* 文档排版优化 */
-.markdown h1 { font-size: 2.8rem; font-weight: 800; margin-bottom: 2rem; }
-.markdown h2 { font-size: 2rem; border-bottom: none; margin-top: 3rem; }
-.markdown h3 { font-size: 1.5rem; }
+.markdown h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+}
+.markdown h2 {
+  font-size: 2rem;
+  border-bottom: none;
+  margin-top: 3rem;
+}
+.markdown h3 {
+  font-size: 1.5rem;
+}
 
 .markdown code {
   border-radius: 6px;
@@ -119,7 +130,9 @@
   border-radius: 16px;
   border: 1px solid var(--ifm-color-emphasis-200);
   box-shadow: var(--solknow-card-shadow);
-  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition:
+    transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+    box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .card:hover {

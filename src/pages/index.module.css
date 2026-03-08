@@ -27,8 +27,15 @@
 }
 
 @keyframes pulseGlow {
-  0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(1); }
-  50% { opacity: 0.8; transform: translateX(-50%) scale(1.1); }
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateX(-50%) scale(1.1);
+  }
 }
 
 .heroTitle {
@@ -201,7 +208,7 @@
 }
 
 .roadmapCard li::before {
-  content: "";
+  content: '';
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -224,7 +231,13 @@
 }
 
 @media screen and (max-width: 996px) {
-  .heroTitle { font-size: 3rem; }
-  .heroSubtitle { font-size: 1.2rem; }
-  .roadmapSection { padding: 3rem 1.5rem; }
+  .heroTitle {
+    font-size: 3rem;
+  }
+  .heroSubtitle {
+    font-size: 1.2rem;
+  }
+  .roadmapSection {
+    padding: 3rem 1.5rem;
+  }
 }

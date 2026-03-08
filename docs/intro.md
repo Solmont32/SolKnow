@@ -4,24 +4,24 @@ title: SolKnow 知识库导览
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 import BilibiliEmbed from '@site/src/components/BilibiliEmbed';
-import { 
-  Code2, 
-  Infinity as InfinityIcon, 
-  Monitor, 
-  Brain, 
-  ShieldCheck, 
-  Youtube, 
-  BookOpen, 
-  ArrowRightCircle,
-  Trophy,
-  Rocket
+import {
+Code2,
+Infinity as InfinityIcon,
+Monitor,
+Brain,
+ShieldCheck,
+Youtube,
+BookOpen,
+ArrowRightCircle,
+Trophy,
+Rocket
 } from 'lucide-react';
 
 # 欢迎来到 SolKnow（知岛）
 
 > **“博观而约取，厚积而薄发。”** —— 致力于打造计算机与数学交叉领域的集成式零基础学习系统。
 
-**SolKnow** 是一个深度整合了**算法竞赛笔记**、**系统化数学体系**与**计算机科学底层原理**的结构化知识库。我们不仅提供高质量的图文教程，更通过 B 站视频讲解与交互式组件，帮助你构建属于自己的结构化数字大脑。
+**SolKnow** 是一个深度整合了**算法竞赛笔记**、**系统化数学体系**与**计算机科学底层原理**的结构化知识库。我们致力于打破学科壁垒，通过极致的现代审美与工业级代码规范，帮助你从零构建属于自己的硬核数字大脑。
 
 ---
 
@@ -111,9 +111,9 @@ import {
 
 SolKnow 是一个开源的教育项目。如果你发现了文档中的错误，或者希望分享自己的学习笔记：
 
-*   点击每页面底部的 **“编辑此页”** 提交 PR。
-*   在 GitHub 上为我们点一个 **Star** 🌟。
-*   关注 B 站频道获取最新的视频动态。
+- 点击每页面底部的 **“编辑此页”** 提交 PR。
+- 在 GitHub 上为我们点一个 **Star** 🌟。
+- 关注 B 站频道获取最新的视频动态。
 
 <div style={{ textAlign: 'center', marginTop: '4rem' }}>
   <a className="button button--primary button--lg" href="basic/">

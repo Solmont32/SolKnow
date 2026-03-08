@@ -11,11 +11,13 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## 一、核心知识点
 
 ### 1. 分类计数与分步计数
+
 - 分类计数（加法原理）：不同路径互斥，总数用加法。
 - 分步计数（乘法原理）：步骤都要完成，总数用乘法。
 - 先判断“是不是同一类事情”，再决定加法还是乘法。
 
 #### 例题 1（分类+分步）
+
 用数字 `0,1,2,3,4,5` 组成没有重复数字的三位数，且是偶数，共多少个？
 
 <details>
@@ -23,16 +25,18 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 <summary>点击查看解析与答案</summary>
 
 偶数看个位，分三类：个位是 `0/2/4`。
+
 - 个位 `0`：百位可选 `1~5` 共 `5` 种，十位剩 `4` 种，得 `20`。
 - 个位 `2`：百位不能 `0,2`，有 `4` 种，十位剩 `4` 种，得 `16`。
 - 个位 `4`：同理 `16`。
-合计 `20+16+16=52`。
+  合计 `20+16+16=52`。
 
 **答案：**`52`
 
 </details>
 
 #### 例题 2（限制条件）
+
 班级里有 4 本不同语文书、3 本不同数学书，从中选 2 本且至少一本数学书，有多少种选法？
 
 <details>
@@ -40,19 +44,22 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 <summary>点击查看解析与答案</summary>
 
 按数学书本数分类：
+
 - 选 1 本数学 + 1 本语文：`3×4=12`。
 - 选 2 本数学：`C(3,2)=3`。
-总数 `12+3=15`。
+  总数 `12+3=15`。
 
 **答案：**`15`
 
 </details>
 
 ### 2. 容斥原理
+
 - 两类重叠：`|A∪B|=|A|+|B|-|A∩B|`。
 - 三类重叠：先“加单项”，再“减两两交”，最后“加三者交”。
 
 #### 例题 3（两集合容斥）
+
 在 `1~200` 中，能被 `4` 或 `6` 整除的数有多少个？
 
 <details>
@@ -67,6 +74,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 #### 例题 4（三集合容斥）
+
 某班 40 人，参加语文/数学/英语兴趣组人数分别为 22、20、18；语数都参加 10 人，语英都参加 8 人，数英都参加 7 人，三组都参加 4 人。至少参加一组的有多少人？
 
 <details>
@@ -80,10 +88,12 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 3. 抽屉原理与最坏情况
+
 - 先找“最坏情况”能拖到哪一步，再 `+1` 达成目标。
 - 常见问法：至少几个才能保证出现某种重复。
 
 #### 例题 5（基础抽屉）
+
 从 `1~30` 中任取若干个数，至少取几个数，才能保证有两个数差是 `5`？
 
 <details>
@@ -98,6 +108,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 #### 例题 6（同余抽屉）
+
 任取 7 个整数，证明一定有两个数的差能被 6 整除。
 
 <details>
@@ -111,10 +122,12 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 4. 构造法与递推计数
+
 - 构造法：先画小规模表找规律，再推广。
 - 递推法：把第 `n` 步拆成由第 `n-1` 步转移而来。
 
 #### 例题 7（递推）
+
 上台阶问题：每次走 1 级或 2 级，走到第 8 级共有多少种走法？
 
 <details>
@@ -131,6 +144,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## 二、章内练习（全部折叠答案）
 
 ### 练习 1
+
 由 `0,1,2,3,4` 组成没有重复数字的三位数，共多少个？
 
 <details>
@@ -144,6 +158,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 练习 2
+
 在 `1~120` 中，能被 `8` 或 `10` 整除的数有多少个？
 
 <details>
@@ -158,6 +173,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 练习 3
+
 至少取多少个两位数，才能保证有两个数个位相同？
 
 <details>
@@ -171,6 +187,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 练习 4
+
 每次走 1 级或 2 级，走到第 6 级共有多少种走法？
 
 <details>

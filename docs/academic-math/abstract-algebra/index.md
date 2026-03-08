@@ -7,11 +7,13 @@ title: 抽象代数 (Abstract Algebra)
 抽象代数研究群、环、域等代数结构及其态射，是现代数学中“结构化思维”的核心训练模块。
 
 ## 学习目标
+
 - 建立“定义-定理-例题-练习”闭环；
 - 能独立完成基本结构判定（子群、理想、商结构）；
 - 能使用同构定理与群作用观点完成结构化化简。
 
 ## 教程目录
+
 - [群论 (Group Theory)](groups)：子群、陪集、正规子群、商群、同态与同构定理。
 - [群作用与 Sylow 定理 (Group Actions and Sylow Theorems)](group-actions-and-sylow)：轨道稳定子、类方程、Sylow 计数与正规性判定。
 - [环论 (Rings and Fields)](rings)：理想、商环、同态、不可约与有限域构造。
@@ -19,9 +21,11 @@ title: 抽象代数 (Abstract Algebra)
 - [格与布尔代数 (Lattices)](lattices)：偏序结构与代数逻辑基础。
 
 ## 练习入口
+
 - [抽象代数练习库](/docs/exercises/math/abstract-algebra)
 
 ## 建议学习顺序
+
 1. 先完成群论的定义与同态主线；
 2. 再学习群作用与 Sylow 定理，掌握有限群计数与正规性判定模板；
 3. 接着进入环论并掌握“理想-商环”语言；

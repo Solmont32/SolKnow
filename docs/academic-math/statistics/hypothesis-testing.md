@@ -9,6 +9,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 假设检验是统计推断的核心，通过样本数据判断对总体的某种假设是否成立。
 
 ## 基本流程
+
 1.  **建立假设**：
     - 原假设 $H_0$（通常是希望推翻的现状）。
     - 备择假设 $H_1$。
@@ -22,6 +23,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </KnowledgeCard>
 
 ## 常见检验
--   **单正态总体均值检验**（$Z$ 检验或 $t$ 检验）。
--   **双总体均值差检验**。
--   **卡方检验**（用于分类变量的独立性判定）。
+
+- **单正态总体均值检验**（$Z$ 检验或 $t$ 检验）。
+- **双总体均值差检验**。
+- **卡方检验**（用于分类变量的独立性判定）。

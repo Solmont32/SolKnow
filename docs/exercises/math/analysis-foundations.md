@@ -9,6 +9,7 @@ title: 数学分析前四章专题练习
 ---
 
 ## 练习 1：[基础] 上下确界
+
 设 $A=\{1-\frac1n:n\in\mathbb{N}_+\}$，求 $\sup A,\inf A$。
 
 <details>
@@ -22,6 +23,7 @@ title: 数学分析前四章专题练习
 ---
 
 ## 练习 2：[基础] 阿基米德性质应用
+
 证明：对任意 $x>0$，存在 $n\in\mathbb{N}$ 使 $\frac1n<x$。
 
 <details>
@@ -35,6 +37,7 @@ title: 数学分析前四章专题练习
 ---
 
 ## 练习 3：[基础] 数列极限定义法
+
 证明 $\lim_{n\to\infty}\frac{2n-3}{n+4}=2$。
 
 <details>
@@ -42,6 +45,7 @@ title: 数学分析前四章专题练习
 <summary>点击查看解析与答案</summary>
 
 $$\left|\frac{2n-3}{n+4}-2\right|=\frac{11}{n+4}<\frac{11}{n}.$$
+
 给定 $\epsilon>0$，取 $N>11/\epsilon$，则当 $n>N$ 时误差小于 $\epsilon$。
 
 </details>
@@ -49,7 +53,9 @@ $$\left|\frac{2n-3}{n+4}-2\right|=\frac{11}{n+4}<\frac{11}{n}.$$
 ---
 
 ## 练习 4：[基础] 函数极限
+
 求
+
 $$\lim_{x\to0}\frac{\sqrt{1+2x}-1}{x}. $$
 
 <details>
@@ -57,6 +63,7 @@ $$\lim_{x\to0}\frac{\sqrt{1+2x}-1}{x}. $$
 <summary>点击查看解析与答案</summary>
 
 有理化：
+
 $$\frac{\sqrt{1+2x}-1}{x}=\frac{2}{\sqrt{1+2x}+1}\to1.$$
 
 </details>
@@ -64,7 +71,9 @@ $$\frac{\sqrt{1+2x}-1}{x}=\frac{2}{\sqrt{1+2x}+1}\to1.$$
 ---
 
 ## 练习 5：[提高] Stolz 定理
+
 求
+
 $$\lim_{n\to\infty}\frac{1+3+\cdots+(2n-1)}{n^2}. $$
 
 <details>
@@ -72,6 +81,7 @@ $$\lim_{n\to\infty}\frac{1+3+\cdots+(2n-1)}{n^2}. $$
 <summary>点击查看解析与答案</summary>
 
 令 $X_n=\sum_{k=1}^n(2k-1),Y_n=n^2$，则
+
 $$\lim\frac{X_n}{Y_n}=\lim\frac{2n-1}{n^2-(n-1)^2}=\lim\frac{2n-1}{2n-1}=1.$$
 
 </details>
@@ -79,11 +89,16 @@ $$\lim\frac{X_n}{Y_n}=\lim\frac{2n-1}{n^2-(n-1)^2}=\lim\frac{2n-1}{2n-1}=1.$$
 ---
 
 ## 练习 6：[提高] 连续性判定
+
 讨论函数
-$$f(x)=\begin{cases}
+
+$$
+f(x)=\begin{cases}
 \frac{\sin x}{x},&x\ne0,\\
 1,&x=0
-\end{cases}$$
+\end{cases}
+$$
+
 在 $x=0$ 处是否连续。
 
 <details>
@@ -97,8 +112,11 @@ $$f(x)=\begin{cases}
 ---
 
 ## 练习 7：[提高] 复合函数定义域
+
 求函数
+
 $$g(x)=\ln\big(1-\sqrt{x-1}\big)$$
+
 的定义域。
 
 <details>
@@ -114,7 +132,9 @@ $$g(x)=\ln\big(1-\sqrt{x-1}\big)$$
 ---
 
 ## 练习 8：[挑战] 夹逼与路径思想
+
 证明：
+
 $$\lim_{x\to0}x\sin\frac1x=0. $$
 
 <details>
@@ -122,7 +142,9 @@ $$\lim_{x\to0}x\sin\frac1x=0. $$
 <summary>点击查看解析与答案</summary>
 
 由 $|\sin(1/x)|\le1$，得
+
 $$-|x|\le x\sin\frac1x\le |x|.$$
+
 两端在 $x\to0$ 时趋于 0，故中间极限为 0。
 
 </details>
@@ -130,6 +152,7 @@ $$-|x|\le x\sin\frac1x\le |x|.$$
 ---
 
 ## 练习 9：[挑战] 一致连续性辨析
+
 判断 $f(x)=x^2$ 在 $(0,+\infty)$ 上是否一致连续，并说明理由。
 
 <details>
@@ -137,9 +160,13 @@ $$-|x|\le x\sin\frac1x\le |x|.$$
 <summary>点击查看解析与答案</summary>
 
 取 $x_n=n,y_n=n+\frac1n$，则
+
 $$|x_n-y_n|=\frac1n\to0,$$
+
 但
+
 $$|f(x_n)-f(y_n)|=\left|n^2-\left(n+\frac1n\right)^2\right|=\left| -2-\frac1{n^2}\right|\to2\ne0.$$
+
 故不一致连续。
 
 </details>
@@ -147,6 +174,7 @@ $$|f(x_n)-f(y_n)|=\left|n^2-\left(n+\frac1n\right)^2\right|=\left| -2-\frac1{n^2
 ---
 
 ## 练习 10：[挑战] 零点存在性
+
 证明方程 $x^5+x-1=0$ 在 $(0,1)$ 内至少有一根。
 
 <details>

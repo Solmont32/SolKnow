@@ -9,6 +9,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 基于人工神经网络的机器学习子集。
 
 ## 核心概念
+
 - **神经元 (Neuron)**
 - **激活函数**：ReLU, Sigmoid, Tanh。
 - **反向传播 (Backpropagation)**

@@ -9,6 +9,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 小学奥数是训练逻辑表达、建模能力和多路径解题意识的关键阶段。
 
 ## 学习路径（对标教材）
+
 1. **数论基础**：整除、余数、质因数分解。
 2. **计数方法**：分类讨论、分步计数、抽屉原理。
 3. **逻辑推理**：列表法、假设法、排除法、逆向验证。
@@ -18,11 +19,13 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 7. **数阵与最值**：固定和最值、位置权重、数阵补全。
 
 ## 推荐学习顺序
+
 - 第一轮：先完成 `数论 -> 计数 -> 逻辑` 三个主线章节。
 - 第二轮：将每章例题重做一遍并口述“为什么这样列式”。
 - 第三轮：进入练习库做分层训练并复盘错题。
 
 ## 章节入口
+
 - [`数论专题：整除与余数`](/docs/academic-math/competition/elementary/number-theory)
 - [`计数专题：分类与构造`](/docs/academic-math/competition/elementary/counting)
 - [`逻辑专题：列表与排除`](/docs/academic-math/competition/elementary/logic)

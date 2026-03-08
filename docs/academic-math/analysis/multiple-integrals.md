@@ -12,8 +12,11 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 ## 一、 重积分的定义与性质
 
 ### 1. 定义
+
 设 $f(\mathbf{x})$ 是定义在 $n$ 维有界闭区域 $\Omega \subset \mathbb{R}^n$ 上的有界函数。通过对 $\Omega$ 进行有限分割 $\Delta = \{ \Delta \Omega_1, \dots, \Delta \Omega_k \}$，并取点 $\xi_i \in \Delta \Omega_i$，构造 Riemann 和：
+
 $$S(f, \Delta) = \sum_{i=1}^k f(\xi_i) \mu(\Delta \Omega_i)$$
+
 其中 $\mu$ 表示测度（面积或体积）。若当分割的模 $\|\Delta\| \to 0$ 时，极限存在且与分割及取点无关，则称 $f$ 在 $\Omega$ 上**可积**，记为 $\int_\Omega f(\mathbf{x}) dV$。
 
 ---
@@ -23,15 +26,22 @@ $$S(f, \Delta) = \sum_{i=1}^k f(\xi_i) \mu(\Delta \Omega_i)$$
 坐标变换是简化重积分计算的关键。本节详细推导雅可比公式。
 
 ### 1. 变量替换公式
+
 设变换 $T: \Omega' \to \Omega$ 由 $x = x(u, v, w), y = y(u, v, w), z = z(u, v, w)$ 给出。若 $T$ 是 $C^1$ 级的且在 $\Omega'$ 内是单射的（雅可比行列式不为零），则：
+
 $$\iiint_\Omega f(x, y, z) dx dy dz = \iiint_{\Omega'} f(x(u, v, w), \dots) \left| \frac{\partial(x, y, z)}{\partial(u, v, w)} \right| du dv dw$$
 
 ### 2. Jacobian 的几何推导
+
 考虑二维变换 $(x, y) = \Phi(u, v)$。在 $u-v$ 平面上的一个小矩形 $\Delta u \times \Delta v$，其顶点为 $(u, v), (u+\Delta u, v), (u, v+\Delta v), (u+\Delta u, v+\Delta v)$。
 变换后的区域在 $x-y$ 平面近似为一个**平行四边形**，其相邻两条边对应的向量为：
+
 $$\mathbf{a} \approx \left( \frac{\partial x}{\partial u}, \frac{\partial y}{\partial u} \right) \Delta u, \quad \mathbf{b} \approx \left( \frac{\partial x}{\partial v}, \frac{\partial y}{\partial v} \right) \Delta v$$
+
 该平行四边形的面积 $\Delta A$ 为：
+
 $$\Delta A = |\mathbf{a} \times \mathbf{b}| = \left| \det \begin{pmatrix} \frac{\partial x}{\partial u} & \frac{\partial x}{\partial v} \\ \frac{\partial y}{\partial u} & \frac{\partial y}{\partial v} \end{pmatrix} \right| \Delta u \Delta v = |J| \Delta u \Delta v$$
+
 因此，面积元素的缩放因子即为 **雅可比行列式的绝对值**。
 
 <KnowledgeCard type="info" title="雅可比矩阵的物理意义">
@@ -43,23 +53,32 @@ $$\Delta A = |\mathbf{a} \times \mathbf{b}| = \left| \det \begin{pmatrix} \frac{
 ## 三、 三重积分的坐标系选择
 
 ### 1. 柱坐标变换 (Cylindrical Coordinates)
+
 - **定义**：$x = \rho \cos \phi, y = \rho \sin \phi, z = z$。
 - **雅可比行列式**：
-  $$J = \frac{\partial(x, y, z)}{\partial(\rho, \phi, z)} = \det \begin{pmatrix} \cos \phi & -\rho \sin \phi & 0 \\ \sin \phi & \rho \cos \phi & 0 \\ 0 & 0 & 1 \end{pmatrix} = \rho$$
+
+$$J = \frac{\partial(x, y, z)}{\partial(\rho, \phi, z)} = \det \begin{pmatrix} \cos \phi & -\rho \sin \phi & 0 \\ \sin \phi & \rho \cos \phi & 0 \\ 0 & 0 & 1 \end{pmatrix} = \rho$$
+
 - **适用场景**：具有旋转对称轴（通常为 $z$ 轴）的区域。
 
 ### 2. 球坐标变换 (Spherical Coordinates)
+
 - **定义**：$x = r \sin \theta \cos \phi, y = r \sin \theta \sin \phi, z = r \cos \theta$。
 - **雅可比行列式**：
-  $$J = \frac{\partial(x, y, z)}{\partial(r, \theta, \phi)} = \det \begin{pmatrix} \sin \theta \cos \phi & r \cos \theta \cos \phi & -r \sin \theta \sin \phi \\ \sin \theta \sin \phi & r \cos \theta \sin \phi & r \sin \theta \cos \phi \\ \cos \theta & -r \sin \theta & 0 \end{pmatrix} = r^2 \sin \theta$$
+
+$$J = \frac{\partial(x, y, z)}{\partial(r, \theta, \phi)} = \det \begin{pmatrix} \sin \theta \cos \phi & r \cos \theta \cos \phi & -r \sin \theta \sin \phi \\ \sin \theta \sin \phi & r \cos \theta \sin \phi & r \sin \theta \cos \phi \\ \cos \theta & -r \sin \theta & 0 \end{pmatrix} = r^2 \sin \theta$$
+
 - **适用场景**：关于原点对称或具有圆锥形边界的区域。
 
 ### 3. 复杂换元与广义雅可比 (Deep Analysis)
+
 在处理非标准区域或具有特定代数结构的被积函数时，雅可比矩阵的构造至关重要。
 
 **案例：非线性坐标变换 $x = u^2 - v^2, y = 2uv$**
 这是一个经典的映射（复平面下的 $w = z^2$）。其雅可比行列式为：
+
 $$J = \frac{\partial(x, y)}{\partial(u, v)} = \det \begin{pmatrix} 2u & -2v \\ 2v & 2u \end{pmatrix} = 4(u^2 + v^2)$$
+
 这种变换常用于处理边界为抛物线的区域。
 
 <KnowledgeCard type="warning" title="雅可比行列式的零点问题">
@@ -73,18 +92,26 @@ $$J = \frac{\partial(x, y)}{\partial(u, v)} = \det \begin{pmatrix} 2u & -2v \\ 2
 重积分不仅是数学抽象，更是经典力学的基础。以下是对标 Ch 20 的核心应用公式与例题。
 
 ### 1. 质量与质心 (Mass and Centroid)
+
 对于密度分布为 $\rho(\mathbf{x})$ 的物体 $\Omega$：
+
 - **总质量**：$M = \iiint_\Omega \rho(x, y, z) dV$
 - **质心坐标** ($\bar{x}, \bar{y}, \bar{z}$)：
-  $$\bar{x} = \frac{1}{M} \iiint_\Omega x \rho dV, \quad \bar{y} = \frac{1}{M} \iiint_\Omega y \rho dV, \quad \bar{z} = \frac{1}{M} \iiint_\Omega z \rho dV$$
+
+$$\bar{x} = \frac{1}{M} \iiint_\Omega x \rho dV, \quad \bar{y} = \frac{1}{M} \iiint_\Omega y \rho dV, \quad \bar{z} = \frac{1}{M} \iiint_\Omega z \rho dV$$
 
 ### 2. 转动惯量 (Moment of Inertia)
+
 物体 $\Omega$ 对某轴 $L$ 的转动惯量 $I_L$：
+
 $$I_L = \iiint_\Omega r^2(x, y, z) \rho(x, y, z) dV$$
+
 其中 $r$ 是点 $(x, y, z)$ 到轴 $L$ 的垂直距离。
 
 ### 3. 引力 (Gravitational Force)
+
 质量为 $M$ 的物体 $\Omega$ 对位于 $(x_0, y_0, z_0)$ 处质量为 $m$ 的质点的引力 $\mathbf{F}$：
+
 $$\mathbf{F} = G m \iiint_\Omega \frac{\rho(x, y, z)}{r^3} (\mathbf{r} - \mathbf{r}_0) dV$$
 
 ---
@@ -92,6 +119,7 @@ $$\mathbf{F} = G m \iiint_\Omega \frac{\rho(x, y, z)}{r^3} (\mathbf{r} - \mathbf
 ## 五、 物理应用典型例题解析
 
 ### 例题 5：半圆盘的质心（二重积分）
+
 求半径为 $R$ 的均匀半圆盘 $x^2 + y^2 \le R^2, y \ge 0$ 的质心。
 
 <details>
@@ -99,19 +127,25 @@ $$\mathbf{F} = G m \iiint_\Omega \frac{\rho(x, y, z)}{r^3} (\mathbf{r} - \mathbf
 <summary>点击查看解析</summary>
 
 #### 解析过程
+
 1. **对称性分析**：由于图形关于 $y$ 轴对称且密度均匀，故 $\bar{x} = 0$。
 2. **计算质量**：$M = \sigma \cdot \frac{1}{2}\pi R^2$（$\sigma$ 为面密度）。
 3. **计算 $y$ 方向矩**：
-   $$M_x = \iint_D y \sigma dA = \sigma \int_0^\pi d\theta \int_0^R (r \sin \theta) r dr$$
-   $$M_x = \sigma \int_0^\pi \sin \theta d\theta \int_0^R r^2 dr = \sigma \cdot 2 \cdot \frac{R^3}{3} = \frac{2}{3} \sigma R^3$$
+
+$$M_x = \iint_D y \sigma dA = \sigma \int_0^\pi d\theta \int_0^R (r \sin \theta) r dr$$
+
+$$M_x = \sigma \int_0^\pi \sin \theta d\theta \int_0^R r^2 dr = \sigma \cdot 2 \cdot \frac{R^3}{3} = \frac{2}{3} \sigma R^3$$
+
 4. **求质心**：$\bar{y} = \frac{M_x}{M} = \frac{2/3 \sigma R^3}{1/2 \sigma \pi R^2} = \frac{4R}{3\pi}$。
 
 #### 答案
+
 质心坐标为 $(0, \frac{4R}{3\pi})$。
 
 </details>
 
 ### 例题 6：均匀球体的质心（三重积分）
+
 求均匀半球体 $x^2 + y^2 + z^2 \le R^2, z \ge 0$ 的质心。
 
 <details>
@@ -119,24 +153,31 @@ $$\mathbf{F} = G m \iiint_\Omega \frac{\rho(x, y, z)}{r^3} (\mathbf{r} - \mathbf
 <summary>点击查看解析</summary>
 
 #### 解析过程
+
 1. **对称性**：$\bar{x} = \bar{y} = 0$。
 2. **建立球坐标**：$0 \le r \le R, 0 \le \theta \le \pi/2, 0 \le \phi \le 2\pi$。
 3. **计算 $z$ 方向矩**：
-   $$M_{xy} = \rho \int_0^{2\pi} d\phi \int_0^{\pi/2} \sin \theta \cos \theta d\theta \int_0^R r^3 dr$$
-   （注意：$z = r \cos \theta$，体积元含 $\sin \theta$）
-   - $r$ 积分：$R^4/4$。
-   - $\theta$ 积分：$1/2$。
-   - $\phi$ 积分：$2\pi$。
-   $M_{xy} = \rho \cdot 2\pi \cdot \frac{1}{2} \cdot \frac{R^4}{4} = \frac{\pi \rho R^4}{4}$。
+
+$$M_{xy} = \rho \int_0^{2\pi} d\phi \int_0^{\pi/2} \sin \theta \cos \theta d\theta \int_0^R r^3 dr$$
+
+（注意：$z = r \cos \theta$，体积元含 $\sin \theta$）
+
+- $r$ 积分：$R^4/4$。
+- $\theta$ 积分：$1/2$。
+- $\phi$ 积分：$2\pi$。
+  $M_{xy} = \rho \cdot 2\pi \cdot \frac{1}{2} \cdot \frac{R^4}{4} = \frac{\pi \rho R^4}{4}$。
+
 4. **体积与质量**：$V = \frac{2}{3}\pi R^3, M = \rho V$。
 5. **求质心**：$\bar{z} = \frac{M_{xy}}{M} = \frac{\pi \rho R^4 / 4}{2/3 \pi \rho R^3} = \frac{3}{8}R$。
 
 #### 答案
+
 质心坐标为 $(0, 0, \frac{3}{8}R)$。
 
 </details>
 
 ### 例题 7：矩形薄板的转动惯量
+
 长为 $a$ 宽为 $b$ 的均匀矩形薄板，求其对中心且垂直于板面的轴的转动惯量。
 
 <details>
@@ -144,19 +185,25 @@ $$\mathbf{F} = G m \iiint_\Omega \frac{\rho(x, y, z)}{r^3} (\mathbf{r} - \mathbf
 <summary>点击查看解析</summary>
 
 #### 解析过程
+
 1. **建立坐标系**：矩形中心在原点，$-a/2 \le x \le a/2, -b/2 \le y \le b/2$。
 2. **距离平方**：$r^2 = x^2 + y^2$。
 3. **积分计算**：
-   $$I = \sigma \int_{-a/2}^{a/2} dx \int_{-b/2}^{b/2} (x^2 + y^2) dy$$
-   $$I = \sigma \int_{-a/2}^{a/2} (x^2 b + \frac{1}{12}b^3) dx = \sigma (b \cdot \frac{1}{12}a^3 + a \cdot \frac{1}{12}b^3) = \frac{1}{12} \sigma ab (a^2 + b^2)$$
+
+$$I = \sigma \int_{-a/2}^{a/2} dx \int_{-b/2}^{b/2} (x^2 + y^2) dy$$
+
+$$I = \sigma \int_{-a/2}^{a/2} (x^2 b + \frac{1}{12}b^3) dx = \sigma (b \cdot \frac{1}{12}a^3 + a \cdot \frac{1}{12}b^3) = \frac{1}{12} \sigma ab (a^2 + b^2)$$
+
 4. **利用总质量 $M = \sigma ab$**：$I = \frac{1}{12} M (a^2 + b^2)$。
 
 #### 答案
+
 $I = \frac{1}{12} M (a^2 + b^2)$
 
 </details>
 
 ### 例题 8：均匀圆柱体的转动惯量
+
 求底面半径为 $R$、高为 $h$、质量为 $M$ 的均匀圆柱体对其中心轴（$z$ 轴）的转动惯量。
 
 <details>
@@ -164,19 +211,25 @@ $I = \frac{1}{12} M (a^2 + b^2)$
 <summary>点击查看解析</summary>
 
 #### 解析过程
+
 1. **采用柱坐标**：$0 \le \rho \le R, 0 \le \phi \le 2\pi, 0 \le z \le h$。
 2. **距离平方**：到 $z$ 轴距离为 $\rho$，故 $r^2 = \rho^2$。
 3. **积分计算**：
-   $$I_z = \iiint_\Omega \rho^2 \sigma dV = \sigma \int_0^h dz \int_0^{2\pi} d\phi \int_0^R \rho^2 \cdot \rho d\rho$$
-   $$I_z = \sigma \cdot h \cdot 2\pi \cdot \frac{R^4}{4} = \frac{1}{2} \sigma (\pi R^2 h) R^2$$
+
+$$I_z = \iiint_\Omega \rho^2 \sigma dV = \sigma \int_0^h dz \int_0^{2\pi} d\phi \int_0^R \rho^2 \cdot \rho d\rho$$
+
+$$I_z = \sigma \cdot h \cdot 2\pi \cdot \frac{R^4}{4} = \frac{1}{2} \sigma (\pi R^2 h) R^2$$
+
 4. **利用质量 $M = \sigma \pi R^2 h$**：$I_z = \frac{1}{2} M R^2$。
 
 #### 答案
+
 $I_z = \frac{1}{2} M R^2$
 
 </details>
 
 ### 例题 9：球壳对质点的引力（壳层定理证明基础）
+
 计算质量为 $M$、半径为 $R$ 的均匀球体对位于球外距离球心 $d$ 处质量为 $m$ 的质点的引力。
 
 <details>
@@ -184,14 +237,17 @@ $I_z = \frac{1}{2} M R^2$
 <summary>点击查看解析</summary>
 
 #### 解析过程
+
 1. **设置坐标**：将球心置于原点，质点置于 $z$ 轴上的 $(0, 0, d)$。
 2. **对称性**：引力仅有 $z$ 方向分量。
 3. **引力公式**（仅 $z$ 分量）：
-   $$F_z = Gm\rho \iiint_\Omega \frac{z - d}{(x^2 + y^2 + (z-d)^2)^{3/2}} dV$$
-   （通常利用球坐标或分层法计算。根据高斯定理或牛顿壳层定理，结果等效于质量集中于球心）
-4. **结论**：$F = \frac{G M m}{d^2}$。
+
+$$F_z = Gm\rho \iiint_\Omega \frac{z - d}{(x^2 + y^2 + (z-d)^2)^{3/2}} dV$$
+
+（通常利用球坐标或分层法计算。根据高斯定理或牛顿壳层定理，结果等效于质量集中于球心）4. **结论**：$F = \frac{G M m}{d^2}$。
 
 #### 答案
+
 $F = \frac{G M m}{d^2}$，方向指向球心。
 
 </details>
@@ -201,6 +257,7 @@ $F = \frac{G M m}{d^2}$，方向指向球心。
 ## 六、 教材经典例题解析
 
 ### 例题 1：极坐标计算二重积分
+
 计算 $\iint_D e^{-(x^2 + y^2)} dx dy$，其中 $D$ 是全平面 $\mathbb{R}^2$。
 
 <details>
@@ -208,19 +265,23 @@ $F = \frac{G M m}{d^2}$，方向指向球心。
 <summary>点击查看解析</summary>
 
 #### 解析过程
+
 1. **识别特征**：被积函数含 $x^2 + y^2$，且区域为全平面，适合极坐标。
 2. **极坐标范围**：$0 \le r < +\infty, 0 \le \theta \le 2\pi$。
 3. **变换与计算**：
-   $$I = \int_0^{2\pi} d\theta \int_0^{+\infty} e^{-r^2} r dr$$
-   内层积分：$\int_0^{+\infty} e^{-r^2} r dr = [-\frac{1}{2} e^{-r^2}]_0^{+\infty} = \frac{1}{2}$。
-4. **得出结论**：$I = \int_0^{2\pi} \frac{1}{2} d\theta = \pi$。
+
+$$I = \int_0^{2\pi} d\theta \int_0^{+\infty} e^{-r^2} r dr$$
+
+内层积分：$\int_0^{+\infty} e^{-r^2} r dr = [-\frac{1}{2} e^{-r^2}]_0^{+\infty} = \frac{1}{2}$。4. **得出结论**：$I = \int_0^{2\pi} \frac{1}{2} d\theta = \pi$。
 
 #### 答案
+
 $\pi$
 
 </details>
 
 ### 例题 2：柱坐标下的复杂边界（Viviani 曲线）
+
 计算由圆柱面 $x^2 + y^2 = Rx$ 割球体 $x^2 + y^2 + z^2 \le R^2$ 所成的部分（位于第一卦限）的体积。
 
 <details>
@@ -228,21 +289,27 @@ $\pi$
 <summary>点击查看解析</summary>
 
 #### 解析过程
+
 1. **确定区域**：圆柱面在极坐标下为 $\rho = R \cos \phi$（注意第一卦限中 $0 \le \phi \le \frac{\pi}{2}$）。
 2. **确定 $z$ 范围**：$0 \le z \le \sqrt{R^2 - \rho^2}$。
 3. **建立柱坐标积分**：
-   $$V = \int_0^{\pi/2} d\phi \int_0^{R \cos \phi} \rho d\rho \int_0^{sqrt{R^2 - \rho^2}} dz$$
+
+$$V = \int_0^{\pi/2} d\phi \int_0^{R \cos \phi} \rho d\rho \int_0^{sqrt{R^2 - \rho^2}} dz$$
+
 4. **计算内层**：$\int_0^{sqrt{R^2 - \rho^2}} dz = \sqrt{R^2 - \rho^2}$。
 5. **计算中层**：$\int_0^{R \cos \phi} \rho \sqrt{R^2 - \rho^2} d\rho = [-\frac{1}{3}(R^2 - \rho^2)^{3/2}]_0^{R \cos \phi} = \frac{1}{3} R^3 (1 - \sin^3 \phi)$。
 6. **计算外层**：
-   $$V = \frac{R^3}{3} \int_0^{\pi/2} (1 - \sin^3 \phi) d\phi = \frac{R^3}{3} \left[ \frac{\pi}{2} - \frac{2}{3} \right] = R^3 \left( \frac{\pi}{6} - \frac{2}{9} \right)$$
+
+$$V = \frac{R^3}{3} \int_0^{\pi/2} (1 - \sin^3 \phi) d\phi = \frac{R^3}{3} \left[ \frac{\pi}{2} - \frac{2}{3} \right] = R^3 \left( \frac{\pi}{6} - \frac{2}{9} \right)$$
 
 #### 答案
+
 $R^3 \left( \frac{\pi}{6} - \frac{2}{9} \right)$
 
 </details>
 
 ### 例题 3：球坐标下的“球内挖圆锥”
+
 计算三重积分 $\iiint_\Omega z^2 dV$，其中 $\Omega$ 是由球面 $x^2 + y^2 + z^2 = a^2$ 与圆锥面 $z = \sqrt{x^2 + y^2}$ 围成的上部区域。
 
 <details>
@@ -250,13 +317,16 @@ $R^3 \left( \frac{\pi}{6} - \frac{2}{9} \right)$
 <summary>点击查看解析</summary>
 
 #### 解析过程
+
 1. **确定球坐标范围**：
    - 球面对应 $r = a$。
    - 圆锥面 $z = \rho$ 对应 $\theta = \frac{\pi}{4}$。
    - 因此 $\Omega$ 范围：$0 \le r \le a, 0 \le \theta \le \frac{\pi}{4}, 0 \le \phi \le 2\pi$。
 2. **被积函数变换**：$z^2 = (r \cos \theta)^2 = r^2 \cos^2 \theta$。
 3. **建立积分**：
-   $$I = \int_0^{2\pi} d\phi \int_0^{\pi/4} \sin \theta \cdot \cos^2 \theta d\theta \int_0^a r^2 \cdot r^2 dr$$
+
+$$I = \int_0^{2\pi} d\phi \int_0^{\pi/4} \sin \theta \cdot \cos^2 \theta d\theta \int_0^a r^2 \cdot r^2 dr$$
+
 4. **分步计算**：
    - $r$ 积分：$\int_0^a r^4 dr = \frac{a^5}{5}$。
    - $\theta$ 积分：$\int_0^{\pi/4} \cos^2 \theta \sin \theta d\theta = [-\frac{1}{3} \cos^3 \theta]_0^{\pi/4} = \frac{1}{3}(1 - \frac{\sqrt{2}}{4})$。
@@ -264,11 +334,13 @@ $R^3 \left( \frac{\pi}{6} - \frac{2}{9} \right)$
 5. **得出结果**：$I = 2\pi \cdot \frac{1}{3}(1 - \frac{\sqrt{2}}{4}) \cdot \frac{a^5}{5} = \frac{\pi a^5}{15} (2 - \frac{\sqrt{2}}{2})$。
 
 #### 答案
+
 $\frac{\pi a^5}{15} (2 - \frac{\sqrt{2}}{2})$
 
 </details>
 
 ### 例题 4：广义坐标变换
+
 计算 $\iint_D (x+y) dx dy$，其中 $D$ 是由 $x+y=1, x+y=2, x-y=0, x-y=1$ 围成的区域。
 
 <details>
@@ -276,35 +348,40 @@ $\frac{\pi a^5}{15} (2 - \frac{\sqrt{2}}{2})$
 <summary>点击查看解析</summary>
 
 #### 解析过程
+
 1. **令 $u = x+y, v = x-y$**。
 2. **确定新范围**：$1 \le u \le 2, 0 \le v \le 1$。
 3. **计算 Jacobian**：
    解得 $x = \frac{u+v}{2}, y = \frac{u-v}{2}$。
-   $$J = \frac{\partial(x, y)}{\partial(u, v)} = \det \begin{pmatrix} 1/2 & 1/2 \\ 1/2 & -1/2 \end{pmatrix} = -\frac{1}{2}$$
-   取绝对值 $|J| = \frac{1}{2}$。
-4. **计算积分**：
-   $$\iint_D (x+y) dx dy = \int_1^2 du \int_0^1 u \cdot \frac{1}{2} dv = \frac{1}{2} \int_1^2 u du = \frac{1}{2} [\frac{1}{2}u^2]_1^2 = \frac{3}{4}$$
+
+$$J = \frac{\partial(x, y)}{\partial(u, v)} = \det \begin{pmatrix} 1/2 & 1/2 \\ 1/2 & -1/2 \end{pmatrix} = -\frac{1}{2}$$
+
+取绝对值 $|J| = \frac{1}{2}$。4. **计算积分**：
+
+$$\iint_D (x+y) dx dy = \int_1^2 du \int_0^1 u \cdot \frac{1}{2} dv = \frac{1}{2} \int_1^2 u du = \frac{1}{2} [\frac{1}{2}u^2]_1^2 = \frac{3}{4}$$
 
 #### 答案
+
 $3/4$
 
 </details>
 
 ---
 
-<SupportingExercises 
-  topic="重积分" 
-  exercises={[
-    { index: 132, title: "二重积分换序", slug: "练习-132二重积分换序" },
-    { index: 133, title: "极坐标面积积分", slug: "练习-133极坐标面积积分" },
-    { index: 134, title: "三重积分柱坐标", slug: "练习-134三重积分柱坐标" },
-    { index: 135, title: "对称性求质心", slug: "练习-135对称性求质心" },
-    { index: 136, title: "变量代换与 Jacobian", slug: "练习-136变量代换jacobian" },
-    { index: 137, title: "球坐标积分", slug: "练习-137球坐标积分" },
-    { index: 138, title: "变密度质量计算", slug: "练习-138变密度质量计算" },
-    { index: 139, title: "三重积分综合应用", slug: "练习-139三重积分综合应用" }
-  ]} 
+<SupportingExercises
+topic="重积分"
+exercises={[
+{ index: 132, title: "二重积分换序", slug: "练习-132二重积分换序" },
+{ index: 133, title: "极坐标面积积分", slug: "练习-133极坐标面积积分" },
+{ index: 134, title: "三重积分柱坐标", slug: "练习-134三重积分柱坐标" },
+{ index: 135, title: "对称性求质心", slug: "练习-135对称性求质心" },
+{ index: 136, title: "变量代换与 Jacobian", slug: "练习-136变量代换jacobian" },
+{ index: 137, title: "球坐标积分", slug: "练习-137球坐标积分" },
+{ index: 138, title: "变密度质量计算", slug: "练习-138变密度质量计算" },
+{ index: 139, title: "三重积分综合应用", slug: "练习-139三重积分综合应用" }
+]}
 />
 
 ---
-*编者注：雅可比行列式是高维微积分中“局部缩放”的代数表达，掌握它意味着你掌握了跨越坐标系的通证。*
+
+_编者注：雅可比行列式是高维微积分中“局部缩放”的代数表达，掌握它意味着你掌握了跨越坐标系的通证。_

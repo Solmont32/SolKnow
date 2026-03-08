@@ -11,11 +11,13 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## 一、核心知识点
 
 ### 1. 等底同高与同高比底
+
 - 三角形面积公式：`S=底×高÷2`。
 - 等底同高，面积相等。
 - 同高三角形面积比等于底边比；同底三角形面积比等于高比。
 
 #### 例题 1（同高比底）
+
 在同一直线上，三角形 `ABC` 与 `ABD` 有公共高，且 `BC:BD=3:5`。若 `S(ABC)=12`，求 `S(ABD)`。
 
 <details>
@@ -31,6 +33,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 #### 例题 2（中点等积）
+
 在三角形 `ABC` 中，`M` 是 `BC` 中点。若 `S(ABC)=30`，求 `S(ABM)` 与 `S(ACM)`。
 
 <details>
@@ -45,10 +48,12 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 2. 比例分割与燕尾模型
+
 - 在三角形中，若同顶点连到底边分点，面积比等于底边分段比。
 - 常用于“已知两块面积，反求线段比”题型。
 
 #### 例题 3（面积反推线段比）
+
 在 `△ABC` 中，`D` 在 `BC` 上，已知 `S(ABD)=18`，`S(ACD)=12`，求 `BD:DC`。
 
 <details>
@@ -63,6 +68,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 #### 例题 4（两层比例）
+
 在 `△ABC` 中，`D` 在 `BC` 上且 `BD:DC=2:3`。若 `E` 在 `AD` 上且 `AE:ED=1:2`，已知 `S(ABC)=75`，求 `S(AEC)`。
 
 <details>
@@ -79,10 +85,12 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 3. 割补法与规则图形
+
 - 复杂图形常通过“平移、旋转、拼接”转成矩形、三角形、扇形。
 - 面积守恒：割补前后总面积不变。
 
 #### 例题 5（割补成长方形）
+
 平行四边形底为 `12`，高为 `7`，求面积，并说明为何可用“底×高”。
 
 <details>
@@ -97,6 +105,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 #### 例题 6（扇形拼合）
+
 半径为 `6` 的圆被平均分成 12 个扇形，取其中 5 个，求总面积。
 
 <details>
@@ -111,10 +120,12 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 4. 周长不变与最值意识
+
 - 同面积图形中，形状越“接近圆”周长越短（小学阶段用直观比较）。
 - 同周长下，长方形越接近正方形面积越大。
 
 #### 例题 7（固定周长求面积）
+
 长方形周长 `40`，当长和宽分别为多少时面积最大？最大面积是多少？
 
 <details>
@@ -131,6 +142,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## 二、章内练习（全部折叠答案）
 
 ### 练习 1
+
 同高三角形底边比为 `4:7`，若小三角形面积是 `20`，大三角形面积是多少？
 
 <details>
@@ -144,6 +156,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 练习 2
+
 `△ABC` 中，`D` 在 `BC` 上，`BD:DC=5:3`，若 `S(ABD)=25`，求 `S(ABC)`。
 
 <details>
@@ -157,6 +170,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 练习 3
+
 半径为 `4` 的圆中，圆心角 `135°` 的扇形面积是多少？
 
 <details>
@@ -170,6 +184,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 练习 4
+
 一个长方形周长为 `30`，当长为 `8` 时面积是多少？若要面积最大应取哪组边长？
 
 <details>

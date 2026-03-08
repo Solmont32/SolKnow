@@ -12,19 +12,28 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 ## 一、 含参量常义积分 (Proper Parametric Integrals)
 
 设函数 $f(x, y)$ 定义在矩形区域 $R = [a, b] \times [c, d]$ 上。称
+
 $$I(y) = \int_a^b f(x, y) dx, \quad y \in [c, d]$$
+
 为由 $f(x, y)$ 确定的含参量常义积分。
 
 ### 1. 分析性质
+
 若 $f(x, y)$ 在 $R$ 上连续，则有：
+
 - **连续性**：$I(y)$ 在 $[c, d]$ 上连续。
 - **可积性**：$I(y)$ 在 $[c, d]$ 上可积，且积分顺序可以交换：
-  $$\int_c^d I(y) dy = \int_c^d \left( \int_a^b f(x, y) dx \right) dy = \int_a^b \left( \int_c^d f(x, y) dy \right) dx$$
+
+$$\int_c^d I(y) dy = \int_c^d \left( \int_a^b f(x, y) dx \right) dy = \int_a^b \left( \int_c^d f(x, y) dy \right) dx$$
+
 - **可微性 (Leibniz 公式)**：若 $\frac{\partial f}{\partial y}$ 在 $R$ 上连续，则 $I(y)$ 在 $(c, d)$ 内可导，且：
-  $$I'(y) = \frac{d}{dy} \int_a^b f(x, y) dx = \int_a^b \frac{\partial f(x, y)}{\partial y} dx$$
+
+$$I'(y) = \frac{d}{dy} \int_a^b f(x, y) dx = \int_a^b \frac{\partial f(x, y)}{\partial y} dx$$
 
 ### 2. 积分边界含参量的情形
+
 若边界 $a(y)$ 和 $b(y)$ 也是 $y$ 的函数且可导，则 Leibniz 公式推广为：
+
 $$\frac{d}{dy} \int_{a(y)}^{b(y)} f(x, y) dx = f(b(y), y) b'(y) - f(a(y), y) a'(y) + \int_{a(y)}^{b(y)} \frac{\partial f(x, y)}{\partial y} dx$$
 
 ---
@@ -32,57 +41,68 @@ $$\frac{d}{dy} \int_{a(y)}^{b(y)} f(x, y) dx = f(b(y), y) b'(y) - f(a(y), y) a'(
 ## 二、 含参量反常积分的一致收敛性 (Uniform Convergence)
 
 设 $f(x, y)$ 定义在 $a \le x < +\infty, c \le y \le d$ 上。若对每个固定的 $y$，反常积分 $\int_a^{+\infty} f(x, y) dx$ 都收敛，则定义了含参量反常积分：
+
 $$I(y) = \int_a^{+\infty} f(x, y) dx$$
 
 ### 1. 定义与 Cauchy 准则
+
 **定义**：称 $I(y)$ 在 $[c, d]$ 上**一致收敛**，如果对于任意 $\epsilon > 0$，存在一个只与 $\epsilon$ 有关而与 $y$ 无关的 $A_0 > a$，使得当 $A > A_0$ 时，对所有 $y \in [c, d]$ 均有：
+
 $$\left| \int_A^{+\infty} f(x, y) dx \right| < \epsilon$$
 
 **Cauchy 准则**：$I(y)$ 在 $[c, d]$ 上一致收敛的充要条件是：对于任意 $\epsilon > 0$，存在 $A_0 > a$，使得对于任意 $A_1, A_2 > A_0$ 及所有 $y \in [c, d]$，均有：
+
 $$\left| \int_{A_1}^{A_2} f(x, y) dx \right| < \epsilon$$
 
 ### 2. 判定判定法
+
 - **Weierstrass 判别法 (M-判别法)**：
   若存在函数 $M(x)$ 满足：
   1. $|f(x, y)| \le M(x)$ 对于所有 $x \in [a, +\infty)$ 和 $y \in [c, d]$ 成立；
   2. 反常积分 $\int_a^{+\infty} M(x) dx$ 收敛。
-  则 $\int_a^{+\infty} f(x, y) dx$ 在 $[c, d]$ 上绝对一致收敛。
+     则 $\int_a^{+\infty} f(x, y) dx$ 在 $[c, d]$ 上绝对一致收敛。
 
 - **Dirichlet 判别法**：
   若满足以下条件：
   1. $\int_a^A f(x, y) dx$ 对 $A \ge a$ 和 $y \in [c, d]$ 一致有界；
   2. $g(x, y)$ 当 $x$ 固定时关于 $y$ 一致，且对每个 $y$，$g(x, y)$ 关于 $x$ 单调；
   3. 当 $x \to +\infty$ 时，$g(x, y)$ 对 $y \in [c, d]$ 一致趋于 0。
-  则 $\int_a^{+\infty} f(x, y) g(x, y) dx$ 一致收敛。
+     则 $\int_a^{+\infty} f(x, y) g(x, y) dx$ 一致收敛。
 
 - **Abel 判别法**：
   若满足以下条件：
   1. $\int_a^{+\infty} f(x, y) dx$ 在 $[c, d]$ 上一致收敛；
   2. $g(x, y)$ 关于 $x$ 单调，且对 $x \in [a, +\infty), y \in [c, d]$ 一致有界。
-  则 $\int_a^{+\infty} f(x, y) g(x, y) dx$ 一致收敛。
+     则 $\int_a^{+\infty} f(x, y) g(x, y) dx$ 一致收敛。
 
 ---
 
 ## 三、 Beta 函数与 Gamma 函数 (Beta and Gamma Functions)
 
 ### 1. Gamma 函数 (The Gamma Function)
+
 **严格定义**：对于 $s > 0$，$\Gamma(s) = \int_0^{+\infty} x^{s-1} e^{-x} dx$。该积分在 $(0, +\infty)$ 的任何闭子区间上一致收敛。
 
 **进阶性质**：
+
 - **递推性质**：$\Gamma(s+1) = s\Gamma(s)$，且 $\Gamma(n+1) = n!$。
 - **余元公式 (Reflection Formula)**：$\Gamma(s)\Gamma(1-s) = \frac{\pi}{\sin(\pi s)} \quad (0 < s < 1)$。
 - **倍元公式 (Duplication Formula)**：$\Gamma(2s) = \frac{2^{2s-1}}{\sqrt{\pi}} \Gamma(s)\Gamma(s+\frac{1}{2})$。
 - **Stirling 公式 (渐近展开)**：当 $x \to +\infty$ 时，$\Gamma(x+1) \sim \sqrt{2\pi x} (\frac{x}{e})^x$。
 
 ### 2. Beta 函数 (The Beta Function)
+
 **严格定义**：对于 $p > 0, q > 0$，$B(p, q) = \int_0^1 x^{p-1} (1-x)^{q-1} dx$。
 
 **不同表达形式**：
+
 - **三角形式**：$B(p, q) = 2 \int_0^{\pi/2} \sin^{2p-1} \theta \cos^{2q-1} \theta d\theta$。
 - **无穷限形式**：$B(p, q) = \int_0^{+\infty} \frac{y^{p-1}}{(1+y)^{p+q}} dy$。
 
 ### 3. 两者的纽带
+
 $$B(p, q) = \frac{\Gamma(p)\Gamma(q)}{\Gamma(p+q)}$$
+
 利用此公式，可将大量三角积分和分式反常积分转化为 Gamma 函数计算。
 
 ---
@@ -90,14 +110,17 @@ $$B(p, q) = \frac{\Gamma(p)\Gamma(q)}{\Gamma(p+q)}$$
 ## 四、 进阶例题详析
 
 ### 例题 1：Dirichlet 积分的构造证明
+
 计算 $I = \int_0^{+\infty} \frac{\sin x}{x} dx$。
 （解析略，见前文，保持经典地位）
 
 ### 例题 2：概率积分的参数扩展
+
 计算 $I(a) = \int_0^{+\infty} e^{-x^2} \cos(2ax) dx = \frac{\sqrt{\pi}}{2} e^{-a^2}$。
 （解析略，见前文）
 
 ### 例题 3：对数三角积分与 Beta 函数
+
 计算 $I = \int_0^{\pi/2} \ln(\sin x) dx$。
 
 <details>
@@ -105,7 +128,9 @@ $$B(p, q) = \frac{\Gamma(p)\Gamma(q)}{\Gamma(p+q)}$$
 <summary>点击查看详细解析</summary>
 
 #### 解析过程
+
 利用含参量积分求导法。考虑 $J(\alpha) = \int_0^{\pi/2} \sin^\alpha x dx$。
+
 1. **转化为 Beta 函数**：
    $J(\alpha) = \frac{1}{2} B(\frac{\alpha+1}{2}, \frac{1}{2}) = \frac{\Gamma(\frac{\alpha+1}{2})\Gamma(\frac{1}{2})}{2\Gamma(\frac{\alpha}{2}+1)}$。
 2. **两端取对数并对 $\alpha$ 求导**：
@@ -122,11 +147,13 @@ $$B(p, q) = \frac{\Gamma(p)\Gamma(q)}{\Gamma(p+q)}$$
    $I = J'(0) = -\frac{\pi}{2} \ln 2$。
 
 #### 答案
+
 $-\frac{\pi}{2} \ln 2$
 
 </details>
 
 ### 例题 4：Frullani 积分公式的应用
+
 计算 $I = \int_0^{+\infty} \frac{e^{-ax} - e^{-bx}}{x} dx \quad (a, b > 0)$。
 
 <details>
@@ -134,7 +161,9 @@ $-\frac{\pi}{2} \ln 2$
 <summary>点击查看详细解析</summary>
 
 #### 解析过程
+
 这是一个典型的 Frullani 积分。一般形式为 $\int_0^\infty \frac{f(ax) - f(bx)}{x} dx = (f(0) - f(\infty)) \ln(b/a)$。
+
 1. **构造含参量积分**：
    设 $f(x) = e^{-x}$，则 $f(0) = 1$，$f(+\infty) = 0$。
 2. **应用公式**：
@@ -143,11 +172,13 @@ $-\frac{\pi}{2} \ln 2$
    $I = \int_0^\infty \int_a^b e^{-yx} dy dx = \int_a^b \int_0^\infty e^{-yx} dx dy = \int_a^b \frac{1}{y} dy = \ln(b/a)$。
 
 #### 答案
+
 $\ln(b/a)$
 
 </details>
 
 ### 例题 5：结合 Gamma 函数的复杂反常积分
+
 计算 $I = \int_0^{+\infty} \frac{x^{a-1}}{1+x^n} dx \quad (n > a > 0)$。
 
 <details>
@@ -155,6 +186,7 @@ $\ln(b/a)$
 <summary>点击查看详细解析</summary>
 
 #### 解析过程
+
 1. **变量替换**：
    令 $t = \frac{1}{1+x^n}$，则 $x = (\frac{1-t}{t})^{1/n}$，$dx = \frac{1}{n} (\frac{1-t}{t})^{\frac{1}{n}-1} (-\frac{1}{t^2}) dt$。
    当 $x=0 \to t=1$，$x=\infty \to t=0$。
@@ -167,22 +199,24 @@ $\ln(b/a)$
    $I = \frac{1}{n} \Gamma(1-\frac{a}{n})\Gamma(\frac{a}{n}) = \frac{1}{n} \frac{\pi}{\sin(\frac{a\pi}{n})}$。
 
 #### 答案
+
 $\frac{\pi}{n \sin(a\pi/n)}$
 
 </details>
 
 ---
 
-<SupportingExercises 
-  topic="含参量积分" 
-  exercises={[
-    { index: 52, title: "含参量广义积分 - 微分法计算", slug: "练习-52含参量广义积分" },
-    { index: 53, title: "Dirichlet 积分推导", slug: "练习-53dirichlet积分" },
-    { index: 54, title: "积分号下积分法 (Frullani 推广)", slug: "练习-54积分号下积分" },
-    { index: 63, title: "Beta 函数与余元公式应用", slug: "练习-63beta函数余元公式" },
-    { index: 64, title: "Weierstrass 一致收敛判定", slug: "练习-64一致收敛判定" }
-  ]} 
+<SupportingExercises
+topic="含参量积分"
+exercises={[
+{ index: 52, title: "含参量广义积分 - 微分法计算", slug: "练习-52含参量广义积分" },
+{ index: 53, title: "Dirichlet 积分推导", slug: "练习-53dirichlet积分" },
+{ index: 54, title: "积分号下积分法 (Frullani 推广)", slug: "练习-54积分号下积分" },
+{ index: 63, title: "Beta 函数与余元公式应用", slug: "练习-63beta函数余元公式" },
+{ index: 64, title: "Weierstrass 一致收敛判定", slug: "练习-64一致收敛判定" }
+]}
 />
 
 ---
-*编者注：含参量积分是通往高等分析（如复变函数、泛函分析）的桥梁。掌握它，意味着你掌握了通过“构造参数”来降维打击复杂问题的核心数学思想。*
+
+_编者注：含参量积分是通往高等分析（如复变函数、泛函分析）的桥梁。掌握它，意味着你掌握了通过“构造参数”来降维打击复杂问题的核心数学思想。_

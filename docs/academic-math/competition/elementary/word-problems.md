@@ -11,10 +11,12 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## 一、核心模型与多例题
 
 ### 1. 和差倍问题
+
 - 和差关系：`大数=(和+差)÷2`，`小数=(和-差)÷2`
 - 倍数关系：先把“大数=倍数×小数”代入总量方程。
 
 #### 例题 1（和差）
+
 两数和是 `86`，差是 `14`，求两数。
 
 <details>
@@ -28,6 +30,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 #### 例题 2（和倍）
+
 甲乙两数和为 `84`，甲是乙的 `3` 倍，求甲乙。
 
 <details>
@@ -41,10 +44,12 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 2. 鸡兔同笼模型
+
 - 设全是鸡（或全是兔），用“脚数差”回推替换数量。
 - 每替换 1 只鸡为兔，脚数增加 `2`。
 
 #### 例题 3（标准型）
+
 头共 `40` 个，脚共 `112` 只，求鸡兔只数。
 
 <details>
@@ -58,6 +63,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 #### 例题 4（反向型）
+
 鸡比兔多 `8` 只，鸡兔共 `52` 只，求脚数总和。
 
 <details>
@@ -71,10 +77,12 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 3. 行程问题（相遇与追及）
+
 - 相遇：`路程和=速度和×时间`
 - 追及：`路程差=速度差×时间`
 
 #### 例题 5（相遇）
+
 甲乙两地相距 `360` 千米，两车同时相向而行，速度分别是 `48` 和 `42` 千米/时。几小时相遇？
 
 <details>
@@ -88,6 +96,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 #### 例题 6（追及）
+
 同向行驶，前车每小时 `60` 千米，后车每小时 `75` 千米。前车先行 `2` 小时，后车几小时追上？
 
 <details>
@@ -101,10 +110,12 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 4. 工程问题
+
 - 常设总量为 `1`。
 - 效率 = `1/时间`，合作效率相加。
 
 #### 例题 7（合作完成）
+
 甲单独 `12` 天完成，乙单独 `18` 天完成。两人合作需要几天？
 
 <details>
@@ -118,6 +129,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 #### 例题 8（先后合作）
+
 一项工程，甲单独做 `10` 天完成。先由甲做 `4` 天，剩下由乙单独做 `9` 天完成。求乙单独做需要几天。
 
 <details>
@@ -131,6 +143,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ## 二、解题流程
+
 1. 画线段图或列表，先把量关系看清。
 2. 选一个主变量（份数、总量 1、路程差等）。
 3. 用一个方程闭合，再代回验证条件。
@@ -140,5 +153,6 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </KnowledgeCard>
 
 ## 三、配套练习
+
 - 基础训练：[`练习 9-12：和差倍与鸡兔`](/docs/exercises/math/competition/elementary)
 - 提高训练：[`练习 13-16：行程与工程综合`](/docs/exercises/math/competition/elementary)

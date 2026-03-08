@@ -13,7 +13,9 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 ## 一、核心定义与定理
 
 ### 1. 上下确界与完备性
+
 设非空集合 $A\subset\mathbb{R}$。
+
 - 若存在 $M\in\mathbb{R}$ 使得对任意 $x\in A$ 都有 $x\le M$，称 $A$ 有上界。
 - 若 $\beta$ 是 $A$ 的上界且任意上界 $M$ 都满足 $\beta\le M$，称 $\beta=\sup A$。
 
@@ -24,13 +26,16 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 该定理本质上等价于实数完备性，后续单调有界定理、闭区间套、Bolzano-Weierstrass 都以此为基础。
 
 ### 2. 阿基米德性质与稠密性
+
 - **阿基米德性质**：对任意 $x\in\mathbb{R}$，存在 $n\in\mathbb{N}$ 使 $n>x$。
 - **有理数稠密性**：任意 $a<b$，存在 $q\in\mathbb{Q}$ 使 $a<q<b$。
 
 这两个性质保证了“离散量可逼近连续量”，是 $\epsilon$-语言可操作的关键。
 
 ### 3. 函数复合与反函数判定
+
 设 $u=g(x)$，$y=f(u)$。
+
 - 复合 $f\circ g$ 有定义的必要条件：$g(D_g)\subseteq D_f$。
 - 反函数 $f^{-1}$ 存在的充分条件：$f$ 在区间上严格单调且值域可确定。
 
@@ -39,6 +44,7 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 ## 二、教材化例题（4 题）
 
 ### 例题 1：确界计算
+
 设 $A=\{\frac{n-1}{n}:n\in\mathbb{N}_+\}$，求 $\sup A$ 与 $\inf A$。
 
 <details>
@@ -48,7 +54,9 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 $\frac{n-1}{n}=1-\frac1n<1$，故 1 是上界。
 
 对任意 $\epsilon>0$，取 $n>1/\epsilon$，则
+
 $$1-\frac1n>1-\epsilon,$$
+
 所以 1 是最小上界，即 $\sup A=1$。
 
 当 $n=1$ 时取到最小值 0，且所有项非负，故 $\inf A=0$。
@@ -56,6 +64,7 @@ $$1-\frac1n>1-\epsilon,$$
 </details>
 
 ### 例题 2：集合运算与确界
+
 设 $A,B$ 非空有界，证明 $\sup(A+B)=\sup A+\sup B$，其中 $A+B=\{a+b:a\in A,b\in B\}$。
 
 <details>
@@ -63,19 +72,27 @@ $$1-\frac1n>1-\epsilon,$$
 <summary>点击查看解析与答案</summary>
 
 先证上界：任意 $a+b\in A+B$，有 $a\le\sup A,b\le\sup B$，故
+
 $$a+b\le\sup A+\sup B.$$
 
 再证最小性：任意 $\epsilon>0$，取
+
 $$a_\epsilon>\sup A-\epsilon/2,\quad b_\epsilon>\sup B-\epsilon/2,$$
+
 则
+
 $$a_\epsilon+b_\epsilon>\sup A+\sup B-\epsilon.$$
+
 故 $\sup(A+B)=\sup A+\sup B$。
 
 </details>
 
 ### 例题 3：复合函数定义域
+
 求函数
+
 $$h(x)=\sqrt{\ln(1-x^2)}$$
+
 的定义域。
 
 <details>
@@ -93,6 +110,7 @@ $$h(x)=\sqrt{\ln(1-x^2)}$$
 </details>
 
 ### 例题 4：反函数存在性
+
 证明 $f(x)=x+e^x$ 在 $\mathbb{R}$ 上可逆。
 
 <details>
@@ -100,10 +118,13 @@ $$h(x)=\sqrt{\ln(1-x^2)}$$
 <summary>点击查看解析与答案</summary>
 
 $$f'(x)=1+e^x>0,$$
+
 故 $f$ 严格递增，从而单射。
 
 又
+
 $$\lim_{x\to-\infty}(x+e^x)=-\infty,\qquad \lim_{x\to+\infty}(x+e^x)=+\infty,$$
+
 值域为 $\mathbb{R}$，故满射。
 
 因此 $f:\mathbb{R}\to\mathbb{R}$ 双射，反函数存在。
@@ -115,6 +136,7 @@ $$\lim_{x\to-\infty}(x+e^x)=-\infty,\qquad \lim_{x\to+\infty}(x+e^x)=+\infty,$$
 ## 三、章内练习（折叠答案）
 
 ### 练习 1：上确界
+
 求集合 $E=(0,2)\cap\mathbb{Q}$ 的上确界与下确界。
 
 <details>
@@ -130,6 +152,7 @@ $$\lim_{x\to-\infty}(x+e^x)=-\infty,\qquad \lim_{x\to+\infty}(x+e^x)=+\infty,$$
 </details>
 
 ### 练习 2：绝对值不等式
+
 证明：$\big|\sup A-\sup B\big|\le\sup\{|a-b|:a\in A,b\in B\}$（假设两边存在）。
 
 <details>
@@ -137,15 +160,21 @@ $$\lim_{x\to-\infty}(x+e^x)=-\infty,\qquad \lim_{x\to+\infty}(x+e^x)=+\infty,$$
 <summary>点击查看过程与答案</summary>
 
 令 $M=\sup\{|a-b|\}$。对任意 $a\in A,b\in B$，有 $a\le b+M$，取上确界得
+
 $$\sup A\le\sup B+M.$$
+
 交换 $A,B$ 得 $\sup B\le\sup A+M$，合并即
+
 $$|\sup A-\sup B|\le M.$$
 
 </details>
 
 ### 练习 3：复合函数定义域
+
 求
+
 $$g(x)=\ln\!\left(\sqrt{\frac{x-1}{x+2}}\right)$$
+
 的定义域。
 
 <details>
@@ -153,12 +182,15 @@ $$g(x)=\ln\!\left(\sqrt{\frac{x-1}{x+2}}\right)$$
 <summary>点击查看过程与答案</summary>
 
 根号内需严格大于 0（因为外层有对数）：
+
 $$\frac{x-1}{x+2}>0.$$
+
 解不等式得 $x\in(-\infty,-2)\cup(1,+\infty)$。
 
 </details>
 
 ### 练习 4：反函数导数
+
 设 $f(x)=x^3+x$，记其反函数为 $f^{-1}$，求 $(f^{-1})'(0)$。
 
 <details>
@@ -168,6 +200,7 @@ $$\frac{x-1}{x+2}>0.$$
 先求 $f(x_0)=0$，得 $x_0=0$。
 
 由反函数求导公式
+
 $$(f^{-1})'(0)=\frac1{f'(0)}=\frac1{3\cdot0^2+1}=1.$$
 
 </details>
@@ -175,12 +208,12 @@ $$(f^{-1})'(0)=\frac1{f'(0)}=\frac1{3\cdot0^2+1}=1.$$
 ---
 
 <SupportingExercises
-  topic="第一章：实数集与函数"
-  exercises={[
-    { index: 37, title: '实数完备性（闭区间套定理）', slug: '练习-37实数完备性闭区间套定理' },
-    { index: 38, title: '确界原理应用', slug: '练习-38确界原理的应用' },
-    { index: 39, title: '柯西收敛准则辨析', slug: '练习-39柯西收敛准则' }
-  ]}
+topic="第一章：实数集与函数"
+exercises={[
+{ index: 37, title: '实数完备性（闭区间套定理）', slug: '练习-37实数完备性闭区间套定理' },
+{ index: 38, title: '确界原理应用', slug: '练习-38确界原理的应用' },
+{ index: 39, title: '柯西收敛准则辨析', slug: '练习-39柯西收敛准则' }
+]}
 />
 
 ## 四、练习库入口
@@ -189,4 +222,5 @@ $$(f^{-1})'(0)=\frac1{f'(0)}=\frac1{3\cdot0^2+1}=1.$$
 - [数学分析综合练习库](/docs/exercises/math/analysis)
 
 ---
-*编者注：第一章最重要的能力是“把直觉翻译成定义”，尤其是对“上界”和“最小上界”的区分。*
+
+_编者注：第一章最重要的能力是“把直觉翻译成定义”，尤其是对“上界”和“最小上界”的区分。_

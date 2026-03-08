@@ -11,21 +11,25 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## 一、知识点总览
 
 ### 1. 巧算的三条主线
+
 - 凑整与拆分：把复杂式子改写成接近整十、整百的形式。
 - 乘法分配与提取公因数：先观察能否提同因子，再决定计算顺序。
 - 基准数法：把多个数看成“基准数 + 偏差”。
 
 ### 2. 等差数列与周期规律
+
 - 等差数列通项：`a_n=a_1+(n-1)d`。
 - 等差数列求和：`S_n=(a_1+a_n)n/2`。
 - 周期问题：先找最小循环节，再用“除以周期取余”。
 
 ### 3. 裂项求和
+
 - 基本裂项：`1/[n(n+1)]=1/n-1/(n+1)`。
 - 变式裂项：`k/[n(n+k)]=1/n-1/(n+k)`。
 - 使用条件：分母是两项相乘且两项差为常数时优先尝试。
 
 ### 4. 和差倍与逆推思想（代数化）
+
 - 和差问题：`大=(和+差)/2`，`小=(和-差)/2`。
 - 倍比问题：把未知量写成“每份 x”。
 - 逆推：从最后一步倒推到初始状态。
@@ -37,6 +41,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## 二、教材化例题
 
 ### 例题 1：凑整与拆分
+
 计算：`398+497+602+503`。
 
 <details>
@@ -50,6 +55,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 例题 2：基准数法
+
 计算：`49×51`。
 
 <details>
@@ -64,6 +70,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 例题 3：提取公因数
+
 计算：`125×48+75×48`。
 
 <details>
@@ -78,6 +85,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 例题 4：等差数列求和
+
 求和：`3+7+11+...+99`。
 
 <details>
@@ -94,6 +102,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 例题 5：裂项求和
+
 计算：`1/(2×3)+1/(3×4)+...+1/(20×21)`。
 
 <details>
@@ -109,6 +118,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 例题 6：周期规律
+
 求 `7^2026` 的个位数。
 
 <details>
@@ -123,6 +133,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 例题 7：和差倍综合
+
 甲乙两数和为 `144`，甲比乙的 `2` 倍少 `6`，求甲乙。
 
 <details>
@@ -140,6 +151,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## 三、本章小练习
 
 ### 练习 A1
+
 计算：`999×37+37`。
 
 <details>
@@ -153,6 +165,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 练习 A2
+
 求和：`1+4+7+...+88`。
 
 <details>
@@ -168,6 +181,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 练习 A3
+
 计算：`1/(5×6)+1/(6×7)+...+1/(14×15)`。
 
 <details>

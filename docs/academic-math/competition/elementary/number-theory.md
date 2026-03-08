@@ -11,12 +11,14 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## 一、核心知识点与方法模板
 
 ### 1. 整除特征与快速判定
+
 - 被 `2,5` 整除：看末一位。
 - 被 `4,25` 整除：看末两位。
 - 被 `8,125` 整除：看末三位。
 - 被 `3,9` 整除：看各位数字和。
 
 #### 例题 1（整除双条件）
+
 求最小的三位数 `N`，满足 `N` 同时被 `6` 和 `9` 整除。
 
 <details>
@@ -30,6 +32,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 #### 例题 2（数字构造）
+
 四位数 `3x5y` 能被 `9` 整除，且能被 `5` 整除。求 `x+y` 的最小值。
 
 <details>
@@ -43,11 +46,13 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 2. 余数运算与同余化简
+
 - 加减法：`(a±b) mod m = [(a mod m) ± (b mod m)] mod m`
 - 乘法：`(ab) mod m = [(a mod m)(b mod m)] mod m`
 - 周期思想：幂次取模常有循环节。
 
 #### 例题 3（幂的末位）
+
 求 `7^2026` 的个位数字。
 
 <details>
@@ -61,6 +66,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 #### 例题 4（同余构造）
+
 一个数除以 `4` 余 `3`，除以 `5` 余 `3`。在 `100` 以内这样的数有多少个？
 
 <details>
@@ -74,11 +80,13 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### 3. 质数与质因数分解
+
 - 质数：只有 `1` 和自身两个正因数。
 - 算术基本定理：每个大于 `1` 的整数都能唯一分解为质数乘积。
 - 常见应用：求因数个数、判断平方数/立方数、最小倍数构造。
 
 #### 例题 5（因数个数）
+
 已知 `N=2^3×3^2×5`，求 `N` 的正因数个数。
 
 <details>
@@ -92,6 +100,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 #### 例题 6（最小平方倍）
+
 最小的正整数 `k` 使 `72k` 成为完全平方数，求 `k`。
 
 <details>
@@ -105,6 +114,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ## 二、易错点总结
+
 - 看到“同时被 a,b 整除”，先找最小公倍数。
 - 数字构造题中，优先用“末位规则 + 数位和规则”联立。
 - 余数题先判断是否能写成“公倍数 + 常数”的形式。
@@ -114,5 +124,6 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </KnowledgeCard>
 
 ## 三、配套练习
+
 - 基础巩固：[`练习 1-4：整除与余数`](/docs/exercises/math/competition/elementary)
 - 进阶提升：[`练习 5-8：质因数与构造`](/docs/exercises/math/competition/elementary)

@@ -8,6 +8,7 @@ title: 离散数学 (Discrete Mathematics)
 与数学分析侧重连续对象不同，离散数学更关注逻辑、集合、关系、布尔代数、图和组合。
 
 ## 学习路径（对标教材）
+
 1. 命题逻辑与谓词逻辑基础：命题等值、推理规则、范式化。
 2. 集合与运算：集合代数、笛卡尔积、幂集与基数。
 3. 关系与函数：等价关系、偏序关系、映射性质与逆像。
@@ -17,6 +18,7 @@ title: 离散数学 (Discrete Mathematics)
 7. 递推关系与生成函数：从状态转移到闭式与计数工具。
 
 ## 目录
+
 - [命题逻辑与逻辑计算 (Logic)](logic)
 - [集合论：集合代数与基数 (Set Theory)](set-theory)
 - [关系与函数 (Relations and Functions)](relations-and-functions)
@@ -27,5 +29,5 @@ title: 离散数学 (Discrete Mathematics)
 - [递推关系与生成函数 (Recurrence and Generating Functions)](recurrence-and-generating-functions)
 
 ## 配套练习
-- [离散数学练习库（含折叠解析）](/docs/exercises/math/discrete-math)
 
+- [离散数学练习库（含折叠解析）](/docs/exercises/math/discrete-math)

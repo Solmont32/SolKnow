@@ -15,6 +15,7 @@ title: 拓扑排序
 - 若图中存在有向环，则不存在拓扑序。
 
 判定图是否有环的常见方式：
+
 - Kahn 算法中，若最终出队顶点数 `< n`，说明有环。
 - DFS 染色法中，若出现回边（访问到“正在递归栈中”的点），说明有环。
 
@@ -63,6 +64,7 @@ vector<int> topo_kahn(int n, const vector<vector<int>>& g, vector<int> indeg) {
 思想：对每个点做 DFS，回溯时把顶点压入序列，最后反转序列得到拓扑序。
 
 染色约定：
+
 - `0`：未访问
 - `1`：访问中（在递归栈）
 - `2`：已完成
@@ -96,6 +98,7 @@ bool dfs(int u, const vector<vector<int>>& g, vector<int>& color, vector<int>& o
 2. 按 `order` 顺序转移状态。
 
 典型题型：
+
 - DAG 最长路（边权可正可负，但不能有环）。
 - 路径计数（从起点到终点的方案数）。
 - 任务调度最早完成时间（关键路径）。
@@ -108,7 +111,10 @@ bool dfs(int u, const vector<vector<int>>& g, vector<int>& color, vector<int>& o
 按拓扑序遍历 `u`，对每条边 `u -> v (w)` 执行：
 
 $$
+
 dp[v] = \max(dp[v], dp[u] + w)
+
+
 $$
 
 复杂度仍为 $O(n+m)$。
@@ -118,7 +124,10 @@ $$
 设 `cnt[s]=1`，其余 `0`，按拓扑序转移：
 
 $$
+
 cnt[v] += cnt[u], \quad \forall (u \to v)
+
+
 $$
 
 若题目有模数，转移时取模即可。
@@ -126,6 +135,7 @@ $$
 ### 例题 C：课程安排判定
 
 课程依赖关系即有向边 `先修 -> 后修`。
+
 - 若存在拓扑序：可完成全部课程。
 - 若不存在拓扑序：依赖中有环，无法完成。
 
@@ -183,4 +193,3 @@ $$
 时间复杂度从 $O(n+m)$ 变为 $O((n+m)\log n)$。
 
 </details>
-

@@ -5,6 +5,7 @@ title: 高中数学 (Senior High Math)
 # 高中数学 (Senior High Math)
 
 ## 目录
+
 - [集合与常用逻辑 (Sets)](sets)
 - [基本初等函数 (Functions)](elementary-functions)
 - [三角函数 (Trigonometry)](trigonometry)

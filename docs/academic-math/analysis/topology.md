@@ -69,6 +69,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ### 定义 4.1 (收敛性)
 
 序列 $\{p_n\}$ 在度量空间 $X$ 中**收敛**于 $p \in X$，记作 $p_n \to p$，如果：
+
 $$\forall \epsilon > 0, \exists N \in \mathbb{N}, \text{ 使得当 } n > N \text{ 时, } d(p_n, p) < \epsilon$$
 
 ### 定义 4.2 (拓扑连续性)
@@ -157,6 +158,7 @@ $$\forall \epsilon > 0, \exists N \in \mathbb{N}, \text{ 使得当 } n > N \text
 **定理**：设 $(X, d)$ 是一个完备度量空间，$F_n$ 是 $X$ 中的一列非空闭集，满足 $F_{n+1} \subset F_n$ 且其直径 $\text{diam}(F_n) \to 0$。则 $\cap_{n=1}^\infty F_n$ 恰好包含一个点。
 
 **分析学意义**：
+
 - **存在性证明**：该定理是证明某些数学对象（如分形、极限点）存在的有力工具。
 - **逐段逼近**：在数值分析中，只要我们能构造一系列不断收缩且闭的候选集，完备性就保证了最终解的“收敛性”。
 
@@ -171,6 +173,7 @@ $$\forall \epsilon > 0, \exists N \in \mathbb{N}, \text{ 使得当 } n > N \text
 ### C. 进阶：函数空间 $C[a, b]$ 的拓扑
 
 分析学的终极战场通常不是 $\mathbb{R}^n$，而是函数空间。
+
 - **完备性**：$C[a, b]$ 在最大值范数 $d(f, g) = \max |f(x) - g(x)|$ 下是完备的。这意味着一致收敛的连续函数序列，其极限依然是连续函数。
 - **紧致性 (Arzelà–Ascoli 定理)**：在函数空间中，什么样的集合是紧的？仅有“有界闭”是不够的（无限维空间的特性）。Arzelà–Ascoli 定理指出，还需要**等度连续性 (Equicontinuity)**。这是常微分方程解的存在性理论（Peano 定理）的核心支撑。
 

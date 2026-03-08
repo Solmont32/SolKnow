@@ -12,12 +12,15 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 ## 一、 欧几里得空间与拓扑基础
 
 ### 1. 欧几里得空间 $\mathbb{R}^n$
+
 $n$ 维欧几里得空间是所有 $n$ 元有序实数组 $\mathbf{x} = (x_1, x_2, \dots, x_n)$ 的集合。
+
 - **内积与范数**：$\langle \mathbf{x}, \mathbf{y} \rangle = \sum x_i y_i$，$\|\mathbf{x}\| = \sqrt{\langle \mathbf{x}, \mathbf{x} \rangle}$。
 - **距离 (Distance)**：$d(\mathbf{x}, \mathbf{y}) = \|\mathbf{x} - \mathbf{y}\| = \sqrt{\sum_{i=1}^n (x_i - y_i)^2}$。
 - **邻域 (Neighborhood)**：点 $\mathbf{x}_0$ 的 $\delta$ 邻域为 $U(\mathbf{x}_0, \delta) = \{ \mathbf{x} \in \mathbb{R}^n \mid d(\mathbf{x}, \mathbf{x}_0) < \delta \}$。
 
 ### 2. 点集的分类
+
 - **内点 (Interior Point)**：存在邻域 $U(\mathbf{x}_0) \subset E$。
 - **界点 (Boundary Point)**：任一邻域既含有 $E$ 的点，也含有 $E^c$ 的点。
 - **聚点 (Accumulation Point)**：任一去心邻域 $\mathring{U}(\mathbf{x}_0)$ 内含有 $E$ 的无穷多个点。
@@ -28,23 +31,30 @@ $n$ 维欧几里得空间是所有 $n$ 元有序实数组 $\mathbf{x} = (x_1, x_
 ## 二、 多元函数的极限 (Limits)
 
 ### 1. 重极限 (Double Limit) 的严谨定义
+
 设 $f(\mathbf{x})$ 在点 $\mathbf{x}_0$ 的某去心邻域 $\mathring{U}(\mathbf{x}_0)$ 内有定义（$\mathbf{x}_0$ 为定义域的聚点）。
 
 **$\epsilon-\delta$ 定义**：
 若对于任意给定的 $\epsilon > 0$，总存在 $\delta > 0$，使得当 $0 < d(\mathbf{x}, \mathbf{x}_0) < \delta$ 且 $\mathbf{x} \in D_f$ 时，恒有：
+
 $$|f(\mathbf{x}) - L| < \epsilon$$
+
 则称 $L$ 为 $f(\mathbf{x})$ 当 $\mathbf{x} \to \mathbf{x}_0$ 时的**重极限**，记作 $\lim_{\mathbf{x} \to \mathbf{x}_0} f(\mathbf{x}) = L$。
 
 > **深度理解**：一元极限 $\lim_{x \to x_0}$ 只有两个方向（左、右）；而在 $\mathbb{R}^n$ 中，点 $\mathbf{x}$ 可以沿着**无数条**曲线趋于 $\mathbf{x}_0$。重极限存在的条件极其苛刻：必须要求**无论以何种方式、从何种方向**趋近，函数值都趋于同一个常数 $L$。
 
 ### 2. 累次极限 (Iterated Limits)
+
 以二元函数 $f(x, y)$ 为例，若先对 $y$ 取极限，再对 $x$ 取极限，称为累次极限：
+
 $$L_{12} = \lim_{x \to x_0} \left( \lim_{y \to y_0} f(x, y) \right), \quad L_{21} = \lim_{y \to y_0} \left( \lim_{x \to x_0} f(x, y) \right)$$
 
 #### 重极限与累次极限的关系 (重要定理)
+
 **定理**：若重极限 $\lim_{(x, y) \to (x_0, y_0)} f(x, y) = L$ 存在，且对每个固定的 $x$，单变量极限 $\lim_{y \to y_0} f(x, y)$ 存在，则累次极限 $L_{12}$ 必存在且 $L_{12} = L$。
 
 **推论**：
+
 1. 若两个累次极限均存在且不相等，则重极限必不存在。
 2. 若重极限存在，且两个累次极限也都存在，则三者必相等。
 3. **警示**：累次极限相等 $\not\Rightarrow$ 重极限存在；重极限存在 $\not\Rightarrow$ 累次极限存在（可能内层极限不存在）。
@@ -54,11 +64,13 @@ $$L_{12} = \lim_{x \to x_0} \left( \lim_{y \to y_0} f(x, y) \right), \quad L_{21
 ## 三、 多元函数的连续性 (Continuity)
 
 ### 1. 连续性的定义
+
 若 $\lim_{\mathbf{x} \to \mathbf{x}_0} f(\mathbf{x}) = f(\mathbf{x}_0)$，则称 $f$ 在点 $\mathbf{x}_0$ 处连续。
 
 ### 2. 有界闭区域上连续函数的性质及证明
 
 #### (1) 有界性定理
+
 **定理**：若 $f(\mathbf{x})$ 在有界闭区域 $D \subset \mathbb{R}^n$ 上连续，则 $f(\mathbf{x})$ 在 $D$ 上有界。
 
 **证明（反证法 + Bolzano-Weierstrass 定理）**：
@@ -68,6 +80,7 @@ $$L_{12} = \lim_{x \to x_0} \left( \lim_{y \to y_0} f(x, y) \right), \quad L_{21
 由于 $f$ 在 $\mathbf{x}^*$ 连续，应有 $\lim_{j \to \infty} f(\mathbf{x}_{k_j}) = f(\mathbf{x}^*)$，这与 $|f(\mathbf{x}_{k_j})| > k_j \to \infty$ 矛盾。故原命题成立。
 
 #### (2) 介值定理
+
 **定理**：若 $f(\mathbf{x})$ 在连通集 $D$ 上连续，且 $f(\mathbf{A}) = a, f(\mathbf{B}) = b$。对任意介于 $a, b$ 之间的数 $\mu$，必存在 $\mathbf{C} \in D$ 使得 $f(\mathbf{C}) = \mu$。
 
 **证明思路**：
@@ -91,10 +104,13 @@ $$L_{12} = \lim_{x \to x_0} \left( \lim_{y \to y_0} f(x, y) \right), \quad L_{21
 <summary>点击查看解析</summary>
 
 1. **沿直线 $y = kx$**：
-   $$\lim_{x \to 0} \frac{x(kx)^2}{x^2 + (kx)^4} = \lim_{x \to 0} \frac{k^2x^3}{x^2 + k^4x^4} = \lim_{x \to 0} \frac{k^2x}{1 + k^4x^2} = 0$$
-   所有直线路径极限均为 0。
-2. **沿抛物线 $x = y^2$**：
-   $$\lim_{y \to 0} \frac{y^2 \cdot y^2}{(y^2)^2 + y^4} = \lim_{y \to 0} \frac{y^4}{2y^4} = \frac{1}{2}$$
+
+$$\lim_{x \to 0} \frac{x(kx)^2}{x^2 + (kx)^4} = \lim_{x \to 0} \frac{k^2x^3}{x^2 + k^4x^4} = \lim_{x \to 0} \frac{k^2x}{1 + k^4x^2} = 0$$
+
+所有直线路径极限均为 0。2. **沿抛物线 $x = y^2$**：
+
+$$\lim_{y \to 0} \frac{y^2 \cdot y^2}{(y^2)^2 + y^4} = \lim_{y \to 0} \frac{y^4}{2y^4} = \frac{1}{2}$$
+
 3. **结论**：虽然所有直线路径结果一致，但特殊曲线路径结果不同，故重极限不存在。**注意：$y=kx$ 齐次判定法不总是足够的。**
 
 </details>
@@ -112,7 +128,7 @@ $$L_{12} = \lim_{x \to x_0} \left( \lim_{y \to y_0} f(x, y) \right), \quad L_{21
 1. **累次极限**：
    - $\lim_{x \to 0} (\lim_{y \to 0} \frac{xy}{x^2 + y^2}) = \lim_{x \to 0} (0) = 0$
    - $\lim_{y \to 0} (\lim_{x \to 0} \frac{xy}{x^2 + y^2}) = \lim_{y \to 0} (0) = 0$
-   两个累次极限存在且相等。
+     两个累次极限存在且相等。
 2. **重极限**：
    沿 $y = x$ 趋近：$\lim_{x \to 0} \frac{x^2}{x^2 + x^2} = \frac{1}{2} \neq 0$。
 3. **结论**：累次极限相等是重极限存在的必要不充分条件。
@@ -167,7 +183,9 @@ $$L_{12} = \lim_{x \to x_0} \left( \lim_{y \to y_0} f(x, y) \right), \quad L_{21
 <summary>点击查看解析</summary>
 
 1. **令 $x = r\cos\theta, y = r\sin\theta$**：
-   $$\frac{r^3\cos^3\theta + r^3\sin^3\theta}{r^2} = r(\cos^3\theta + \sin^3\theta)$$
+
+$$\frac{r^3\cos^3\theta + r^3\sin^3\theta}{r^2} = r(\cos^3\theta + \sin^3\theta)$$
+
 2. **判定**：
    $|r(\cos^3\theta + \sin^3\theta)| \le r(|\cos^3\theta| + |\sin^3\theta|) \le 2r$。
    由于 $2r \to 0$（当 $r \to 0$ 时），且该估计与 $\theta$ 无关（一致趋于 0）。
@@ -177,15 +195,16 @@ $$L_{12} = \lim_{x \to x_0} \left( \lim_{y \to y_0} f(x, y) \right), \quad L_{21
 
 ---
 
-<SupportingExercises 
-  topic="多元函数极限与连续" 
-  exercises={[
-    { index: 124, title: "多元极限路径判别", slug: "练习-124多元极限路径判别" },
-    { index: 125, title: "多元连续性判定", slug: "练习-125多元连续性判定" },
-    { index: 127, title: "全微分与可微性的预备训练", slug: "练习-127全微分与可微性" },
-    { index: 129, title: "二元函数极值基础", slug: "练习-129二元函数极值" }
-  ]} 
+<SupportingExercises
+topic="多元函数极限与连续"
+exercises={[
+{ index: 124, title: "多元极限路径判别", slug: "练习-124多元极限路径判别" },
+{ index: 125, title: "多元连续性判定", slug: "练习-125多元连续性判定" },
+{ index: 127, title: "全微分与可微性的预备训练", slug: "练习-127全微分与可微性" },
+{ index: 129, title: "二元函数极值基础", slug: "练习-129二元函数极值" }
+]}
 />
 
 ---
-*编者注：掌握多元极限的关键在于跳出一元思维的束缚。要时刻警惕“沿直线极限相等”这一假象，多尝试非线性路径或极坐标估计。*
+
+_编者注：掌握多元极限的关键在于跳出一元思维的束缚。要时刻警惕“沿直线极限相等”这一假象，多尝试非线性路径或极坐标估计。_

@@ -9,6 +9,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 应用题考察将实际问题抽象为数学模型的能力。
 
 ## 典型题型
+
 1.  **行程问题**：路程 = 速度 $\times$ 时间。
     - 追及问题、相遇问题。
 2.  **工程问题**：工作总量 = 工作效率 $\times$ 工作时间。

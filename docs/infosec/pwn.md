@@ -9,11 +9,13 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 PWN 指的是通过利用程序漏洞（如溢出）获取系统控制权的艺术。
 
 ## 常见漏洞
+
 - **栈溢出 (Stack Overflow)**
 - **堆漏洞 (Heap Exploitation)**
 - **格式化字符串漏洞**
 
 ## 防御机制
+
 - **ASLR**：地址空间布局随机化。
 - **DEP/NX**：数据执行保护。
 - **Stack Canary**：栈金丝雀。

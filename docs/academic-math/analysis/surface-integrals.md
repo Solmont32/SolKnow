@@ -12,19 +12,26 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 ## 一、 第一类曲面积分：对面积的积分
 
 ### 1. 定义与性质
+
 设 $f(x, y, z)$ 为定义在光滑曲面 $\Sigma$ 上的连续函数。其对面积的积分为：
+
 $$\iint_\Sigma f(x, y, z) dS = \lim_{\|\Delta S_i\| \to 0} \sum_{i=1}^n f(P_i) \Delta S_i$$
+
 - **物理意义**：面密度之于总质量。
 - **计算公式**：若 $\Sigma: z = z(x, y)$ 在 $xy$ 平面投影为 $D$，则：
-  $$\iint_\Sigma f dS = \iint_D f(x, y, z(x,y)) \sqrt{1+z_x^2+z_y^2} dA$$
+
+$$\iint_\Sigma f dS = \iint_D f(x, y, z(x,y)) \sqrt{1+z_x^2+z_y^2} dA$$
 
 ---
 
 ## 二、 第二类曲面积分：通量 (Flux)
 
 ### 1. 物理背景：流量
+
 设流速场 $\mathbf{v}(P) = (P, Q, R)$。单位时间内穿过有向曲面 $\Sigma$ 的流体体积即为**通量**：
+
 $$\Phi = \iint_\Sigma \mathbf{v} \cdot d\mathbf{S} = \iint_\Sigma (P dydz + Q dzdx + R dxdy)$$
+
 - **法向量方向**：积分值取决于曲面的“侧”（由单位法向量 $\mathbf{n}$ 决定）。$\iint_\Sigma \mathbf{v} \cdot d\mathbf{S} = \iint_\Sigma (\mathbf{v} \cdot \mathbf{n}) dS$。
 
 ---
@@ -34,10 +41,13 @@ $$\Phi = \iint_\Sigma \mathbf{v} \cdot d\mathbf{S} = \iint_\Sigma (P dydz + Q dz
 高斯公式建立了体积分与面积分之间的纽带，是电磁学和流体力学的基础。
 
 ### 1. 高斯公式 (Gauss's Theorem)
+
 $$\iiint_\Omega (\nabla \cdot \mathbf{F}) dV = \oiint_{\partial \Omega} \mathbf{F} \cdot d\mathbf{S}$$
 
 ### 2. 散度的物理意义
+
 散度 $\text{div } \mathbf{F} = \frac{\partial P}{\partial x} + \frac{\partial Q}{\partial y} + \frac{\partial R}{\partial z}$ 描述了场在某点处的**源强**。
+
 - $\text{div } \mathbf{F} > 0$：该点有“正源”（流体流出）。
 - $\text{div } \mathbf{F} < 0$：该点有“汇”（流体吸入）。
 - **高斯公式直观理解**：整个区域内的净流量产生（总散度）等于穿过边界的总通量。
@@ -49,10 +59,13 @@ $$\iiint_\Omega (\nabla \cdot \mathbf{F}) dV = \oiint_{\partial \Omega} \mathbf{
 斯托克斯公式是格林公式在三维空间的推广，它联系了面积分与线积分。
 
 ### 1. 斯托克斯公式 (Stokes's Theorem)
+
 $$\iint_\Sigma (\nabla \times \mathbf{F}) \cdot d\mathbf{S} = \oint_{\partial \Sigma} \mathbf{F} \cdot d\mathbf{r}$$
 
 ### 2. 旋度的物理意义
+
 旋度 $\text{curl } \mathbf{F} = \nabla \times \mathbf{F}$ 描述了向量场在某点附近的**微观旋转**。
+
 - 其方向为旋转轴方向，大小为单位面积的最大环量。
 - **斯托克斯公式直观理解**：曲面上所有微小面元的旋转之和，抵消后仅剩下边界线上的宏观环量。
 
@@ -61,7 +74,9 @@ $$\iint_\Sigma (\nabla \times \mathbf{F}) \cdot d\mathbf{S} = \oint_{\partial \S
 ## 五、 广义 Stokes 公式：大一统的数学之美
 
 在现代数学（微分形式）语言中，上述所有公式（牛顿-莱布尼茨、格林、高斯、斯托克斯）均可统一为：
+
 $$\int_\Omega d\omega = \int_{\partial \Omega} \omega$$
+
 这揭示了微积分的一个根本真理：**在某个区域上的某种微分运算的积累，完全取决于该区域边界上的值。**
 
 ---
@@ -69,6 +84,7 @@ $$\int_\Omega d\omega = \int_{\partial \Omega} \omega$$
 ## 六、 综合例题：通量与环量 (Textbook Level)
 
 ### 例题 1：利用高斯公式计算复杂通量
+
 计算通量 $\oiint_\Sigma x^2 dydz + y^2 dzdx + z^2 dxdy$，其中 $\Sigma$ 是立方体 $0 \le x,y,z \le a$ 的整个外侧。
 
 <details>
@@ -86,6 +102,7 @@ $$\int_\Omega d\omega = \int_{\partial \Omega} \omega$$
 </details>
 
 ### 例题 2：阿基米德浮力定律的数学证明
+
 证明：浸在液体中的物体所受的浮力等于它排开液体的重量。
 
 <details>
@@ -104,6 +121,7 @@ $$\int_\Omega d\omega = \int_{\partial \Omega} \omega$$
 </details>
 
 ### 例题 3：斯托克斯公式计算空间环量
+
 计算 $\oint_\Gamma y^2 dx + z^2 dy + x^2 dz$，其中 $\Gamma$ 是圆周 $x^2+y^2=a^2, z=0$（逆时针）。
 
 <details>
@@ -123,6 +141,7 @@ $$\int_\Omega d\omega = \int_{\partial \Omega} \omega$$
 </details>
 
 ### 例题 4：带奇点的高斯公式（高斯定律）
+
 设 $\mathbf{E} = \frac{Q}{4\pi \epsilon_0 r^3} \mathbf{r}$ 为点电荷电场场强。证明：穿过包围电荷的任意闭曲面 $\Sigma$ 的通量均为 $\frac{Q}{\epsilon_0}$。
 
 <details>
@@ -141,19 +160,20 @@ $$\int_\Omega d\omega = \int_{\partial \Omega} \omega$$
 
 ---
 
-<SupportingExercises 
-  topic="曲面积分" 
-  exercises={[
-    { index: 148, title: "第一类曲面积分", slug: "练习-148第一类曲面积分" },
-    { index: 149, title: "平面通量计算", slug: "练习-149平面通量计算" },
-    { index: 150, title: "图形曲面的面积元", slug: "练习-150图形曲面的面积元" },
-    { index: 151, title: "高斯公式基础", slug: "练习-151高斯公式基础" },
-    { index: 152, title: "斯托克斯公式基础", slug: "练习-152斯托克斯公式基础" },
-    { index: 153, title: "闭曲面通量零判定", slug: "练习-153闭曲面通量零判定" },
-    { index: 154, title: "球面通量直接法", slug: "练习-154球面通量直接法" },
-    { index: 155, title: "斯托克斯与曲面无关性", slug: "练习-155斯托克斯与曲面无关性" }
-  ]} 
+<SupportingExercises
+topic="曲面积分"
+exercises={[
+{ index: 148, title: "第一类曲面积分", slug: "练习-148第一类曲面积分" },
+{ index: 149, title: "平面通量计算", slug: "练习-149平面通量计算" },
+{ index: 150, title: "图形曲面的面积元", slug: "练习-150图形曲面的面积元" },
+{ index: 151, title: "高斯公式基础", slug: "练习-151高斯公式基础" },
+{ index: 152, title: "斯托克斯公式基础", slug: "练习-152斯托克斯公式基础" },
+{ index: 153, title: "闭曲面通量零判定", slug: "练习-153闭曲面通量零判定" },
+{ index: 154, title: "球面通量直接法", slug: "练习-154球面通量直接法" },
+{ index: 155, title: "斯托克斯与曲面无关性", slug: "练习-155斯托克斯与曲面无关性" }
+]}
 />
 
 ---
-*编者注：如果说格林公式是平面的诗篇，那么高斯和斯托克斯公式就是空间的交响乐。它们将宇宙中原本散乱的向量场，归结为简单的源（散度）与涡（旋度）。*
+
+_编者注：如果说格林公式是平面的诗篇，那么高斯和斯托克斯公式就是空间的交响乐。它们将宇宙中原本散乱的向量场，归结为简单的源（散度）与涡（旋度）。_

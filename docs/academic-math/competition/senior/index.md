@@ -9,10 +9,11 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 高中数竞是选拔顶尖数学人才的重要途径（如 CMO, IMO）。
 
 ## 四大模块
--   **代数 (Algebra)**：不等式、函数方程、多项式、递推迭代、三角与复数方法。
--   **平面几何 (Geometry)**：纯几何推导、塞瓦定理、梅涅劳斯定理。
--   **数论 (Number Theory)**：同余、不定方程、原根与离散对数。
--   **组合 (Combinatorics)**：双计数、图论、生成函数。
+
+- **代数 (Algebra)**：不等式、函数方程、多项式、递推迭代、三角与复数方法。
+- **平面几何 (Geometry)**：纯几何推导、塞瓦定理、梅涅劳斯定理。
+- **数论 (Number Theory)**：同余、不定方程、原根与离散对数。
+- **组合 (Combinatorics)**：双计数、图论、生成函数。
 
 <KnowledgeCard type="contest" title="竞赛秘籍">
 在处理不等式时，熟练掌握 **Cauchy 不等式** 和 **Jensen 不等式** 是提分的关键。

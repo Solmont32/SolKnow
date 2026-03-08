@@ -14,7 +14,9 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 ## 一、 哈密顿算子 (Hamilton Operator)
 
 哈密顿算子 $\nabla$（读作 "Nabla" 或 "Del"）是矢量分析的核心工具：
+
 $$\nabla = \frac{\partial}{\partial x} \mathbf{i} + \frac{\partial}{\partial y} \mathbf{j} + \frac{\partial}{\partial z} \mathbf{k}$$
+
 它既具有微分算子的属性，也具有矢量的代数属性。
 
 ---
@@ -22,10 +24,13 @@ $$\nabla = \frac{\partial}{\partial x} \mathbf{i} + \frac{\partial}{\partial y} 
 ## 二、 标量场的梯度 (Gradient)
 
 ### 1. 定义
+
 设标量函数 $\phi(x, y, z)$ 在区域 $V$ 内可微，则其**梯度**定义为：
+
 $$\text{grad } \phi = \nabla \phi = \frac{\partial \phi}{\partial x} \mathbf{i} + \frac{\partial \phi}{\partial y} \mathbf{j} + \frac{\partial \phi}{\partial z} \mathbf{k}$$
 
 ### 2. 几何与物理意义
+
 - **最大变化率**：梯度方向是函数增加最快的方向，其模 $|\nabla \phi|$ 等于该方向的方向导数。
 - **等值面正交性**：梯度向量 $\nabla \phi$ 垂直于经过该点的等值面 $\phi(x, y, z) = C$。
 
@@ -36,13 +41,19 @@ $$\text{grad } \phi = \nabla \phi = \frac{\partial \phi}{\partial x} \mathbf{i} 
 设向量场 $\mathbf{A}(x, y, z) = P \mathbf{i} + Q \mathbf{j} + R \mathbf{k}$。
 
 ### 1. 散度 (Divergence)
+
 散度描述了向量场在某点处的**通量源强度**：
+
 $$\text{div } \mathbf{A} = \nabla \cdot \mathbf{A} = \frac{\partial P}{\partial x} + \frac{\partial Q}{\partial y} + \frac{\partial R}{\partial z}$$
+
 - **通量形式**：由高斯公式，$\iiint_V (\nabla \cdot \mathbf{A}) dV = \oiint_{\partial V} \mathbf{A} \cdot d\mathbf{S}$。
 
 ### 2. 旋度 (Curl)
+
 旋度描述了向量场在某点附近的**微观旋转**：
+
 $$\text{curl } \mathbf{A} = \nabla \times \mathbf{A} = \begin{vmatrix} \mathbf{i} & \mathbf{j} & \mathbf{k} \\ \partial_x & \partial_y & \partial_z \\ P & Q & R \end{vmatrix}$$
+
 - **环量形式**：由斯托克斯公式，$\iint_\Sigma (\nabla \times \mathbf{A}) \cdot d\mathbf{S} = \oint_{\partial \Sigma} \mathbf{A} \cdot d\mathbf{r}$。
 
 ---
@@ -50,14 +61,20 @@ $$\text{curl } \mathbf{A} = \nabla \times \mathbf{A} = \begin{vmatrix} \mathbf{i
 ## 四、 二阶算子与恒等式
 
 ### 1. 拉普拉斯算子 (Laplacian)
+
 标量场的拉普拉斯算子定义为梯度的散度：
+
 $$\Delta \phi = \nabla^2 \phi = \nabla \cdot (\nabla \phi) = \frac{\partial^2 \phi}{\partial x^2} + \frac{\partial^2 \phi}{\partial y^2} + \frac{\partial^2 \phi}{\partial z^2}$$
 
 ### 2. 重要恒等式
+
 1. **无旋场**：梯度的旋度恒为零。
-   $$\nabla \times (\nabla \phi) = 0$$
+
+$$\nabla \times (\nabla \phi) = 0$$
+
 2. **无源场**：旋度的散度恒为零。
-   $$\nabla \cdot (\nabla \times \mathbf{A}) = 0$$
+
+$$\nabla \cdot (\nabla \times \mathbf{A}) = 0$$
 
 <KnowledgeCard type="tip" title="记忆技巧">
 - $\nabla \times \nabla = 0$（平行向量叉乘为 0）
@@ -69,13 +86,19 @@ $$\Delta \phi = \nabla^2 \phi = \nabla \cdot (\nabla \phi) = \frac{\partial^2 \p
 ## 五、 特殊向量场
 
 ### 1. 保守场 (Conservative Field) / 有势场
+
 若向量场 $\mathbf{A}$ 满足 $\nabla \times \mathbf{A} = 0$，则称其为**无旋场**。在单连通区域内，必存在标量势 $\phi$ 使得：
+
 $$\mathbf{A} = \nabla \phi$$
+
 此时，曲线积分与路径无关：$\int_a^b \mathbf{A} \cdot d\mathbf{r} = \phi(b) - \phi(a)$。
 
 ### 2. 管源场 (Solenoidal Field) / 无源场
+
 若向量场 $\mathbf{A}$ 满足 $\nabla \cdot \mathbf{A} = 0$，则称其为**无源场**。必存在向量势 $\mathbf{B}$ 使得：
+
 $$\mathbf{A} = \nabla \times \mathbf{B}$$
+
 此时，穿过任意闭曲面的通量恒为零。
 
 ---
@@ -83,6 +106,7 @@ $$\mathbf{A} = \nabla \times \mathbf{B}$$
 ## 六、 综合例题 (Textbook Level)
 
 ### 例题 1：势函数的求解
+
 验证向量场 $\mathbf{A} = (2xy + z^3) \mathbf{i} + x^2 \mathbf{j} + 3xz^2 \mathbf{k}$ 是保守场，并求其势函数。
 
 <details>
@@ -103,6 +127,7 @@ $$\mathbf{A} = \nabla \times \mathbf{B}$$
 </details>
 
 ### 例题 2：拉普拉斯算子的计算
+
 设 $r = \sqrt{x^2+y^2+z^2}$，求 $\nabla^2 (\frac{1}{r})$。
 
 <details>
@@ -121,13 +146,14 @@ $$\mathbf{A} = \nabla \times \mathbf{B}$$
 
 ---
 
-<SupportingExercises 
-  topic="矢量分析与场论" 
-  exercises={[
-    { index: 114, title: "哈密顿算子恒等式证明", slug: "练习-114哈密顿算子恒等式证明" },
-    { index: 115, title: "势函数与保守场判定", slug: "练习-115势函数与保守场判定" }
-  ]} 
+<SupportingExercises
+topic="矢量分析与场论"
+exercises={[
+{ index: 114, title: "哈密顿算子恒等式证明", slug: "练习-114哈密顿算子恒等式证明" },
+{ index: 115, title: "势函数与保守场判定", slug: "练习-115势函数与保守场判定" }
+]}
 />
 
 ---
-*编者注：矢量分析是联结纯粹数学与物理现实的桥梁。掌握了 $\nabla$，你就掌握了描述宇宙动力学的画笔。*
+
+_编者注：矢量分析是联结纯粹数学与物理现实的桥梁。掌握了 $\nabla$，你就掌握了描述宇宙动力学的画笔。_

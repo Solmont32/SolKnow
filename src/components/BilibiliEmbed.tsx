@@ -28,7 +28,7 @@ export default function BilibiliEmbed({
   params.set('page', String(page));
   if (t > 0) params.set('t', String(t));
   if (highQuality) params.set('high_quality', '1');
-  
+
   // 核心播放参数，禁用自动播放以保证体验
   params.set('autoplay', '0');
 
@@ -57,11 +57,11 @@ export default function BilibiliEmbed({
           allowFullScreen
           loading="lazy"
           title="Bilibili Video Player"
-          style={{ 
-            position: 'absolute', 
-            top: 0, 
-            left: 0, 
-            width: '100%', 
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
             height: '100%',
             opacity: 0.95,
           }}
@@ -70,4 +70,3 @@ export default function BilibiliEmbed({
     </div>
   );
 }
-

@@ -34,9 +34,13 @@ title: 实变函数练习：$L^p$ 空间专题
 <summary>点击查看过程与答案</summary>
 
 $$
+
 \|f_n\|_1=\int_0^{1/n}1\,dx=\frac1n\to0,\qquad
 \|f_n\|_2^2=\int_0^{1/n}1\,dx=\frac1n\to0.
+
+
 $$
+
 因此在 $L^1$ 与 $L^2$ 中都收敛到 0。
 
 </details>
@@ -50,9 +54,14 @@ $$
 <summary>点击查看过程与答案</summary>
 
 由 Hölder（共轭指数 $3$ 与 $3/2$）：
+
 $$
+
 \|fg\|_1\le \|f\|_3\|g\|_{3/2}<\infty.
+
+
 $$
+
 故 $fg\in L^1(0,1)$。
 
 </details>
@@ -70,14 +79,24 @@ $$
 <summary>点击查看过程与答案</summary>
 
 由 Hölder：
+
 $$
+
 \|f\|_p^p=\int |f|^p\cdot 1
 \le \left(\int |f|^q\right)^{p/q}\left(\int 1^{q/(q-p)}\right)^{(q-p)/q}.
+
+
 $$
+
 化简得
+
 $$
+
 \|f\|_p \le \mu(X)^{1/p-1/q}\|f\|_q.
+
+
 $$
+
 故嵌入成立。
 
 </details>
@@ -92,9 +111,14 @@ $$
 
 对每个 $x>0$，最终 $x\notin(0,1/n)$，所以 $g_n(x)\to0$ a.e.  
 但
+
 $$
+
 \|g_n\|_1=\int_0^{1/n}n\,dx=1,
+
+
 $$
+
 故不收敛到 0 于 $L^1$。
 
 </details>
@@ -102,8 +126,12 @@ $$
 ### 练习 B3：Minkowski 估计
 
 设 $f,g\in L^p(X)$（$1\le p<\infty$），证明
+
 $$
+
 \|f+g\|_p\le \|f\|_p+\|g\|_p.
+
+
 $$
 
 <details>
@@ -139,10 +167,15 @@ $$
 <summary>点击查看过程与答案</summary>
 
 利用
+
 $$
+
 \|f_n-f\|_2^2
 =\|f_n\|_2^2+\|f\|_2^2-2\operatorname{Re}\langle f_n,f\rangle.
+
+
 $$
+
 弱收敛给出 $\langle f_n,f\rangle\to\langle f,f\rangle=\|f\|_2^2$，再配合范数收敛即可得 $\|f_n-f\|_2^2\to0$。
 
 </details>

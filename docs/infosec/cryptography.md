@@ -9,6 +9,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 密码学是信息安全的数学核心。
 
 ## 算法分类
+
 - **对称加密**：AES, DES。速度快，安全性依赖于密钥保护。
 - **非对称加密**：RSA, ECC。解决密钥分发问题。
 - **哈希算法**：SHA-256, MD5（已不再安全）。
