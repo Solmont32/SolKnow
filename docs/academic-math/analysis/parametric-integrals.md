@@ -286,12 +286,10 @@ $\frac{\pi}{n \sin(a\pi/n)}$
 
 <SupportingExercises
 topic="含参量积分"
+fileId="analysis-multivariable-calculus"
 exercises={[
-{ index: 52, title: "含参量广义积分 - 微分法计算", slug: "练习-52含参量广义积分" },
-{ index: 53, title: "Dirichlet 积分推导", slug: "练习-53dirichlet积分" },
-{ index: 54, title: "积分号下积分法 (Frullani 推广)", slug: "练习-54积分号下积分" },
-{ index: 63, title: "Beta 函数与余元公式应用", slug: "练习-63beta函数余元公式" },
-{ index: 64, title: "Weierstrass 一致收敛判定", slug: "练习-64一致收敛判定" }
+{ index: 19.1, title: "Leibniz 积分法则应用", slug: "练习-191leibniz-积分法则的应用" },
+{ index: 19.2, title: "含参量积分一致收敛性", slug: "练习-192含参量广义积分的一致收敛性" }
 ]}
 />
 

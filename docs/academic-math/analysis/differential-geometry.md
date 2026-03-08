@@ -391,4 +391,14 @@ $$
 
 ---
 
+<SupportingExercises
+topic="多元函数微分学在几何上的应用"
+fileId="analysis-multivariable-calculus"
+exercises={[
+{ index: 17.2, title: "空间曲线的曲率与挠率", slug: "练习-172空间曲线的曲率与挠率" }
+]}
+/>
+
+---
+
 _编者注：本章核心不是“背公式”，而是识别“导数对象的几何含义”。当你能把 $\mathbf{r}',\mathbf{r}'',\nabla F,\mathbf{R}_u\times\mathbf{R}_v$ 快速翻译成几何语言，微分几何就真正入门了。_

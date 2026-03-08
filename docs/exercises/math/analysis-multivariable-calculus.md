@@ -28,6 +28,25 @@ title: 多元微积分与矢量分析专题练习库 (Ch 16-23)
 证毕。
 </details>
 
+### 练习 16.2：多元函数的连续性判定
+讨论函数 $f(x, y) = \begin{cases} \frac{xy^2}{x^2+y^4} & (x, y) \neq (0, 0) \\ 0 & (x, y) = (0, 0) \end{cases}$ 在 $(0, 0)$ 处的连续性。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **沿直线趋于原点**：
+   令 $y = kx$，则 $\lim_{x \to 0} \frac{x(kx)^2}{x^2+(kx)^4} = \lim_{x \to 0} \frac{k^2x}{1+k^4x^2} = 0$。
+2. **沿抛物线趋于原点**：
+   令 $x = y^2$，则 $\lim_{y \to 0} \frac{y^2 \cdot y^2}{(y^2)^2+y^4} = \lim_{y \to 0} \frac{y^4}{2y^4} = \frac{1}{2}$。
+3. **结论**：
+   由于沿不同曲线趋于原点时极限不同，重极限 $\lim_{(x, y) \to (0, 0)} f(x, y)$ 不存在。
+   因此，函数在 $(0, 0)$ 处不连续。
+
+#### 答案
+在 $(0, 0)$ 处不连续。
+</details>
+
 ---
 
 ## 第十七章：多元函数微分学 (Multivariable Differentiation)
@@ -171,6 +190,25 @@ $\lambda = \pm \frac{1}{2} \sqrt{A^2a^2 + B^2b^2}$。
 $I(\alpha) = \frac{\pi}{2} - \arctan \alpha$；Dirichlet 积分值为 $\pi/2$。
 </details>
 
+### 练习 19.2：含参量广义积分的一致收敛性
+讨论 $I(\alpha) = \int_0^\infty \frac{\sin \alpha x}{x} dx$ 在 $\alpha \in [a, b]$ ($0 < a < b$) 上的一致收敛性。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **收敛性**：由 Dirichlet 判别法，对固定的 $\alpha \neq 0$，积分收敛。
+2. **一致收敛性判定**：
+   使用 **Dirichlet 一致收敛判别法**：
+   - $|\int_0^A \sin \alpha x dx| = |\frac{1 - \cos \alpha A}{\alpha}| \le \frac{2}{a}$（在 $[a, b]$ 上有界）。
+   - $\frac{1}{x}$ 在 $[0, \infty)$ 上关于 $x$ 单调减，且当 $x \to \infty$ 时，$\frac{1}{x} \rightrightarrows 0$（一致趋于 0）。
+   故积分在 $[a, b]$ 上一致收敛。
+3. **对比**：若 $\alpha$ 的范围包含 0，则由于 $\frac{1-\cos \alpha A}{\alpha}$ 在 $\alpha \to 0$ 时无界，不满足上述一致有界条件。
+
+#### 答案
+在 $[a, b]$ ($0 < a < b$) 上一致收敛。
+</details>
+
 ---
 
 ## 第二十章：重积分 (Multiple Integrals)
@@ -235,6 +273,24 @@ $\frac{\partial Q}{\partial x} = 1, \frac{\partial P}{\partial y} = -1$。
 $2\pi R^2$
 </details>
 
+### 练习 21.2：第一类曲线积分 (Path Integral)
+计算 $I = \int_C (x+y) ds$，其中 $C$ 是连接 $(0,0)$ 与 $(1,1)$ 的线段。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **参数化**：
+   $x = t, y = t, \quad t \in [0, 1]$。
+2. **微分弧长**：
+   $ds = \sqrt{(x')^2 + (y')^2} dt = \sqrt{1^2 + 1^2} dt = \sqrt{2} dt$。
+3. **计算积分**：
+   $I = \int_0^1 (t+t) \sqrt{2} dt = 2\sqrt{2} \int_0^1 t dt = 2\sqrt{2} [\frac{1}{2}t^2]_0^1 = \sqrt{2}$。
+
+#### 答案
+$\sqrt{2}$
+</details>
+
 ---
 
 ## 第二十二章：曲面积分 (Surface Integrals)
@@ -255,6 +311,22 @@ $= 3 \cdot 2\pi \cdot 2 \cdot [\frac{r^5}{5}]_0^a = \frac{12\pi a^5}{5}$。
 
 #### 答案
 $\frac{12\pi a^5}{5}$
+</details>
+
+### 练习 22.2：第一类曲面积分 (Surface Integral of Scalar Field)
+计算 $\iint_S (x^2+y^2) dS$，其中 $S$ 是球面 $x^2+y^2+z^2=a^2$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+由对称性，$\iint_S x^2 dS = \iint_S y^2 dS = \iint_S z^2 dS$。
+因此 $\iint_S (x^2+y^2+z^2) dS = 3 \iint_S x^2 dS = a^2 \iint_S dS = a^2 (4\pi a^2) = 4\pi a^4$。
+由此得 $\iint_S x^2 dS = \frac{4}{3}\pi a^4$。
+故 $\iint_S (x^2+y^2) dS = 2 \cdot \frac{4}{3}\pi a^4 = \frac{8}{3}\pi a^4$。
+
+#### 答案
+$\frac{8}{3}\pi a^4$
 </details>
 
 ---
@@ -307,9 +379,12 @@ $-3/2$
 
 - [第十六章 多元函数极限与连续](/docs/academic-math/analysis/multivariable-limits)
 - [第十七章 多元函数微分学](/docs/academic-math/analysis/multivariable-differentiation)
+- [第十七章续 空间曲线与曲面的微分几何](/docs/academic-math/analysis/differential-geometry)
 - [第十八章 隐函数定理及其应用](/docs/academic-math/analysis/implicit-function-theorem)
+- [第十九章 含参量积分](/docs/academic-math/analysis/parametric-integrals)
 - [第二十章 重积分](/docs/academic-math/analysis/multiple-integrals)
 - [第二十一章 曲线积分](/docs/academic-math/analysis/line-integrals)
 - [第二十二章 曲面积分](/docs/academic-math/analysis/surface-integrals)
+- [第二十三章 矢量分析与场论初步](/docs/academic-math/analysis/vector-analysis)
 - [数学分析综合练习库](/docs/exercises/math/analysis)
 

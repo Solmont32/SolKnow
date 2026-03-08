@@ -156,6 +156,8 @@ $$\int_\Omega d\omega = \int_{\partial \Omega} \omega$$
 
 **答案**：$\frac{Q}{\epsilon_0}$
 
+</details>
+
 ### 例题 5：高斯公式在特殊通量计算中的应用
 计算通量 $\oiint_\Sigma \frac{x dy dz + y dz dx + z dx dy}{(x^2+y^2+z^2)^{3/2}}$，其中 $\Sigma$ 为包围原点的任意闭曲面。
 
@@ -258,7 +260,8 @@ $$\int_\Omega d\omega = \int_{\partial \Omega} \omega$$
 topic="曲面积分"
 fileId="analysis-multivariable-calculus"
 exercises={[
-{ index: 22.1, title: "高斯公式 (Gauss's Theorem)", slug: "练习-221高斯公式-gausss-theorem" }
+{ index: 22.1, title: "高斯公式 (Gauss's Theorem)", slug: "练习-221高斯公式-gausss-theorem" },
+{ index: 22.2, title: "第一类曲面积分", slug: "练习-222第一类曲面积分-surface-integral-of-scalar-field" }
 ]}
 />
 

@@ -205,7 +205,8 @@ topic="多元函数微分学"
 fileId="analysis-multivariable-calculus"
 exercises={[
 { index: 17.1, title: "全微分的判定", slug: "练习-171全微分的判定" },
-{ index: 17.2, title: "曲率与挠率计算", slug: "练习-172空间曲线的曲率与挠率" }
+{ index: 17.2, title: "曲率与挠率计算", slug: "练习-172空间曲线的曲率与挠率" },
+{ index: 17.3, title: "多元函数 Taylor 展开", slug: "练习-173多元函数的-taylor-展开" }
 ]}
 />
 

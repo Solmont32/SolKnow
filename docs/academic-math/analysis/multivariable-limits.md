@@ -270,7 +270,8 @@ $$\lim_{(x, y) \to (0, y_0)} f(x, y) = 1 \cdot y_0 = y_0$$
 topic="多元函数极限与连续"
 fileId="analysis-multivariable-calculus"
 exercises={[
-{ index: 16.1, title: "二重极限不存在证明", slug: "练习-161二重极限不存在的证明" }
+{ index: 16.1, title: "二重极限不存在证明", slug: "练习-161二重极限不存在的证明" },
+{ index: 16.2, title: "多元函数的连续性判定", slug: "练习-162多元函数的连续性判定" }
 ]}
 />
 

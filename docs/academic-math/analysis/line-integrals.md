@@ -150,6 +150,8 @@ $$\oint_L P dx + Q dy = \iint_D \left( \frac{\partial Q}{\partial x} - \frac{\pa
 
 **答案**：3
 
+</details>
+
 ### 例题 5：格林公式在面积计算中的应用
 利用曲线积分计算由摆线一拱 $x = a(t - \sin t), y = a(1 - \cos t)$ ($0 \le t \le 2\pi$) 与 $x$ 轴所围图形的面积。
 
@@ -251,7 +253,8 @@ $$\oint_L P dx + Q dy = \iint_D \left( \frac{\partial Q}{\partial x} - \frac{\pa
 topic="曲线积分"
 fileId="analysis-multivariable-calculus"
 exercises={[
-{ index: 21.1, title: "格林公式 (Green's Theorem)", slug: "练习-211格林公式-greens-theorem" }
+{ index: 21.1, title: "格林公式 (Green's Theorem)", slug: "练习-211格林公式-greens-theorem" },
+{ index: 21.2, title: "第一类曲线积分", slug: "练习-212第一类曲线积分-path-integral" }
 ]}
 />
 
