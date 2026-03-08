@@ -8,8 +8,9 @@ title: 高等代数 (Higher Algebra)
 
 ## 目录
 - [行列式 (Determinant)](determinant)
-- [矩阵 (Matrix)](matrix)
 - [线性方程组 (Linear Equations)](linear-equations)
+- [向量空间与线性变换 (Vector Spaces and Linear Transformations)](vector-spaces-and-linear-transformations)
+- [矩阵 (Matrix)](matrix)
 - [多项式 (Polynomial)](polynomial)
 - [二次型 (Quadratic Forms)](quadratic-forms)
 - [高等代数练习库](../../exercises/math/algebra)

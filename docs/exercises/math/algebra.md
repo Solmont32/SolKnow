@@ -260,3 +260,113 @@ $$
 p(x)=x^2+x+1.
 $$
 </details>
+
+## E. 向量空间与线性变换专题加练
+
+### 练习 E1：子空间判定与维数
+在 $\mathbb{R}^4$ 中，设
+$$
+U=\{(x_1,x_2,x_3,x_4)\mid x_1+x_2=0,\ x_3-x_4=0\}.
+$$
+判断 $U$ 是否为子空间，并求其维数。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+$U$ 由齐次线性方程组给出，必为子空间。由约束得
+$$
+x_1=-x_2,\quad x_3=x_4.
+$$
+令 $x_2=s,x_4=t$，则
+$$
+(x_1,x_2,x_3,x_4)=s(-1,1,0,0)+t(0,0,1,1).
+$$
+故 $\dim U=2$，一组基可取
+$$
+\{(-1,1,0,0),(0,0,1,1)\}.
+$$
+</details>
+
+### 练习 E2：线性映射核与像
+设 $T:\mathbb{R}^3\to\mathbb{R}^3$，
+$$
+T(x,y,z)=(x-y,\ y-z,\ x-z).
+$$
+求 $\ker T$ 与 $\operatorname{rank}(T)$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+核满足
+$$
+x-y=0,\ y-z=0,\ x-z=0,
+$$
+即 $x=y=z=t$。所以
+$$
+\ker T=\operatorname{span}\{(1,1,1)\},\quad \dim\ker T=1.
+$$
+由秩-零空间维数定理，域维数为 3，故
+$$
+\operatorname{rank}(T)=3-1=2.
+$$
+</details>
+
+### 练习 E3：基下矩阵表示
+在 $P_2(\mathbb{R})$ 上定义 $T(p)=xp'(x)$。取标准基 $\mathcal{B}=\{1,x,x^2\}$，求 $[T]_{\mathcal{B}}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+$$
+T(1)=0,\quad T(x)=x,\quad T(x^2)=2x^2.
+$$
+对应坐标列向量分别为
+$$
+(0,0,0)^T,\ (0,1,0)^T,\ (0,0,2)^T.
+$$
+故
+$$
+[T]_{\mathcal{B}}=\begin{pmatrix}
+0&0&0\\
+0&1&0\\
+0&0&2
+\end{pmatrix}.
+$$
+</details>
+
+### 练习 E4：维数公式综合
+设 $V=\mathbb{R}^5$，子空间 $U,W$ 满足
+$$
+\dim U=3,\quad \dim W=4,\quad \dim(U\cap W)=2.
+$$
+求 $\dim(U+W)$，并判断是否必有 $U+W=V$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+由维数公式：
+$$
+\dim(U+W)=\dim U+\dim W-\dim(U\cap W)=3+4-2=5.
+$$
+又 $\dim V=5$，故 $U+W$ 与 $V$ 同维且 $U+W\subseteq V$，因此
+$$
+U+W=V.
+$$
+</details>
+
+### 练习 E5：线性变换可逆性判定
+设线性映射 $T:\mathbb{R}^2\to\mathbb{R}^2$，
+$$
+T(x,y)=(2x+y,\ 4x+2y).
+$$
+判断 $T$ 是否可逆。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+对应矩阵
+$$
+A=\begin{pmatrix}2&1\\4&2\end{pmatrix},\quad \det A=2\cdot2-4\cdot1=0.
+$$
+行向量线性相关，秩为 1，不满秩，故 $T$ 不可逆。
+</details>
