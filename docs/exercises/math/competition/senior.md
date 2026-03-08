@@ -4,7 +4,7 @@ title: 高中数学竞赛练习
 
 # 高中数学竞赛练习
 
-本页按基础/提高/挑战组织，覆盖不等式、数论、组合与几何四个方向。
+本页按基础/提高/挑战组织，覆盖不等式、数论、组合与几何四个方向。所有题目均提供折叠解析。
 
 ---
 
@@ -23,7 +23,6 @@ $$
 $$
 两边乘 3 即得结论。
 
-答案：成立。
 </details>
 
 ## 练习 2：同余方程（基础）
@@ -94,8 +93,7 @@ $$
 $$
 0^2,1^2,2^2,3^2,4^2,5^2\equiv 0,1,4,9,5,3\pmod{11}.
 $$
-其中包含 $5$，所以有解。
-由 $4^2\equiv5\pmod{11}$，得解为
+其中包含 $5$，所以有解。由 $4^2\equiv5\pmod{11}$，得解为
 $$
 x\equiv\pm4\pmod{11}.
 $$
@@ -139,13 +137,13 @@ $$
 $$
 a_n=A\cdot1^n+B\cdot2^n=A+B2^n.
 $$
-由初值：
+由初值
 $$
 A+2B=1,\quad A+4B=4\Rightarrow B=\frac32,\ A=-2.
 $$
 所以
 $$
-a_n=-2+\frac32\,2^n=3\cdot2^{n-1}-2.
+a_n=3\cdot2^{n-1}-2.
 $$
 </details>
 
@@ -217,3 +215,107 @@ $$
 
 按模 10 余数分为 10 类。任取 11 个整数，至少两个落在同一余数类（抽屉原理），故两数同余模 10，差可被 10 整除。
 </details>
+
+## 练习 13：Schur 型不等式（挑战）
+设 $a,b,c\ge0$，证明
+$$
+a^3+b^3+c^3+3abc\ge a^2b+a^2c+b^2a+b^2c+c^2a+c^2b.
+$$
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+按 Schur 不等式三次型直接成立；也可将右式移项后整理为
+$$
+\frac12\sum_{cyc}(a-b)^2(a+b-c)\ge0
+$$
+（在三元非负下成立）。故原不等式成立。
+</details>
+
+## 练习 14：CRT 进阶构造（提高）
+求解同余组
+$$
+x\equiv2\pmod3,\quad x\equiv3\pmod4,\quad x\equiv1\pmod5.
+$$
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+先联立前两式：$x=2+3t$，代入得 $3t\equiv1\pmod4$，故 $t\equiv3\pmod4$，即
+$$
+x\equiv11\pmod{12}.
+$$
+再设 $x=11+12s$，代入第三式：
+$$
+11+12s\equiv1\pmod5\Rightarrow1+2s\equiv1\Rightarrow s\equiv0\pmod5.
+$$
+故
+$$
+x\equiv11\pmod{60}.
+$$
+</details>
+
+## 练习 15：原根判定（提高）
+判断 3 是否为模 7 的原根。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+$\varphi(7)=6$，检查 $3^{6/2}=3^3=27\equiv6\not\equiv1$，
+且 $3^{6/3}=3^2=9\equiv2\not\equiv1\pmod7$。
+故 $\operatorname{ord}_7(3)=6$，3 是模 7 的原根。
+</details>
+
+## 练习 16：组合构造（挑战）
+证明：在任意 9 个整数中，总能选出若干个（至少一个），其和能被 9 整除。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+设前缀和 $S_k=a_1+\cdots+a_k\ (k=1,\dots,9)$。若某个 $S_k\equiv0\pmod9$，结论成立。
+否则 $S_1,\dots,S_9$ 的模 9 余数都在 $1\sim8$ 中，共 9 个数放入 8 类，必有 $S_i\equiv S_j\pmod9$（$i<j$）。
+则
+$$
+a_{i+1}+\cdots+a_j=S_j-S_i\equiv0\pmod9.
+$$
+故总能找到一段连续子段和被 9 整除。
+</details>
+
+## 练习 17：函数方程（挑战）
+求满足
+$$
+f(x+y)=f(x)+f(y)+xy,\quad f(0)=0
+$$
+且在 $\mathbb R$ 上连续的函数。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+令 $g(x)=f(x)-\frac{x^2}{2}$，则
+$$
+g(x+y)=f(x+y)-\frac{(x+y)^2}{2}=g(x)+g(y).
+$$
+又 $g$ 连续，故 $g(x)=cx$。因此
+$$
+f(x)=\frac{x^2}{2}+cx.
+$$
+</details>
+
+## 练习 18：几何与代数结合（挑战）
+在锐角三角形 $ABC$ 中，设 $a,b,c$ 分别为对边，证明
+$$
+a^2+b^2+c^2\ge4\sqrt{3}\,\Delta
+$$
+其中 $\Delta$ 为三角形面积。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+这是经典的 Weitzenbock 不等式：
+$$
+a^2+b^2+c^2\ge4\sqrt3\,\Delta.
+$$
+可由 Schur 不等式配合海伦公式推得，也可在 $uvw$ 框架下证明。竞赛中通常作为标准结论调用，等号当且仅当三角形为正三角形。
+
+</details>
+
