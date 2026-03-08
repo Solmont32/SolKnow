@@ -12,7 +12,7 @@
 
 - [x] 新增『小学奥数：数阵与最值』教材化专题 (2026-03-08)：新增 docs/academic-math/competition/elementary/number-arrangement-and-extremes.md，系统化固定和最值、位置权重与数阵补全，提供 5 道例题与 4 道章内折叠练习。 (2026-03-08)
 - [x] 扩容『小学奥数练习库』至 48 题并新增数阵与最值题组 (2026-03-08)：更新 docs/exercises/math/competition/elementary.md 新增练习 41-48，全部支持点击展开过程与答案。 (2026-03-08)
-- [x] 打通『小学奥数数阵专题-导航-侧边栏』联动闭环 (2026-03-08)：更新 docs/academic-math/competition/elementary/index.md 与 sidebars.ts，新增专题入口并同步题量文案。 (2026-03-08)
+- [x] 打通『小学奥数数阵专题-导航-侧边栏』联动闭环 (2026-03-08)：更新 docs/academic-math/competition/elementary/index.md，新增专题入口并同步题量文案（侧边栏已包含该专题）。 (2026-03-08)
 - [x] 新增『高等代数：向量空间与线性变换』教材化章节 (2026-03-08)：新增 docs/academic-math/algebra/vector-spaces-and-linear-transformations.md，系统化子空间/维数公式/核与像/基变换，补充 4 道例题与 4 道折叠练习。 (2026-03-08)
 - [x] 扩容『高等代数练习库』向量空间与线性变换题组 (2026-03-08)：更新 docs/exercises/math/algebra.md 新增练习 E1-E5，全部支持点击展开过程与答案。 (2026-03-08)
 - [x] 打通『高等代数章节-首页-侧边栏』联动闭环 (2026-03-08)：更新 docs/academic-math/algebra/index.md 与 sidebars.ts，新增向量空间专题入口并保持学习路径连续。 (2026-03-08)
@@ -250,6 +250,7 @@
 - [x] 新增『初中竞赛几何：面积法与相似构造』教材化专题 (2026-03-08)：新增 `docs/academic-math/competition/junior/geometry-area-method.md`，系统讲解同高同底面积比、平行线相似模型，补充 4 道例题与 4 道折叠练习。 (2026-03-08)
 - [x] 扩容『初中数学竞赛练习库』面积法题组 (2026-03-08)：更新 `docs/exercises/math/competition/junior.md` 新增练习 21-24，全部支持点击展开过程与答案。 (2026-03-08)
 - [x] 打通『初中竞赛面积法专题-导航-练习』联动闭环 (2026-03-08)：更新 `docs/academic-math/competition/junior/index.md` 与 `sidebars.ts`，新增专题入口并同步学习路径。 (2026-03-08)
+
 
 
 

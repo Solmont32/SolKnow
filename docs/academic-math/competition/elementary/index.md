@@ -15,6 +15,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 4. **几何模型**：等积变换、比例关系、割补思想。
 5. **代数技巧**：巧算、等差数列、裂项求和。
 6. **应用题建模**：和差倍、鸡兔同笼、行程、工程。
+7. **数阵与最值**：固定和最值、位置权重、数阵补全。
 
 ## 推荐学习顺序
 - 第一轮：先完成 `数论 -> 计数 -> 逻辑` 三个主线章节。
@@ -28,7 +29,8 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 - [`几何专题：面积与比例`](/docs/academic-math/competition/elementary/geometry)
 - [`代数专题：巧算与数列`](/docs/academic-math/competition/elementary/algebra)
 - [`应用题专题：建模方法`](/docs/academic-math/competition/elementary/word-problems)
-- [`小学奥数练习库（40 题）`](/docs/exercises/math/competition/elementary)
+- [`数阵与最值专题`](/docs/academic-math/competition/elementary/number-arrangement-and-extremes)
+- [`小学奥数练习库（48 题）`](/docs/exercises/math/competition/elementary)
 
 <KnowledgeCard type="info" title="学习建议">
 每道题都要写出“模型识别 -> 列式理由 -> 验算结论”三步，而不是只给最终答案。
