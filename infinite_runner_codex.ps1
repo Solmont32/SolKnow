@@ -262,28 +262,49 @@ function Invoke-GitRebasePull {
 }
 
 function Acquire-Lock {
+    function Test-IsActiveRunnerProcess([int]$procId) {
+        if (-not $procId) {
+            return $false
+        }
+
+        $proc = Get-CimInstance Win32_Process -Filter "ProcessId=$procId" -ErrorAction SilentlyContinue
+        if (-not $proc) {
+            return $false
+        }
+
+        $cmd = [string]$proc.CommandLine
+        if ([string]::IsNullOrWhiteSpace($cmd)) {
+            return $false
+        }
+
+        return ($cmd -match 'infinite_runner_codex\.ps1')
+    }
+
     if (Test-Path $LockFile) {
         $existing = Get-Content -Path $LockFile -ErrorAction SilentlyContinue
         $pidLine = $existing | Where-Object { $_ -match '^pid=\d+$' } | Select-Object -First 1
+        $cwdLine = $existing | Where-Object { $_ -match '^cwd=' } | Select-Object -First 1
         $existingPid = $null
+        $existingCwd = $null
 
         if ($pidLine) {
             $existingPid = [int]($pidLine -replace '^pid=', '')
         }
-
-        $lockIsActive = $false
-        if ($existingPid) {
-            $activeProcess = Get-Process -Id $existingPid -ErrorAction SilentlyContinue
-            if ($activeProcess) {
-                $lockIsActive = $true
-            }
+        if ($cwdLine) {
+            $existingCwd = ($cwdLine -replace '^cwd=', '').Trim()
         }
+
+        $lockIsActive = Test-IsActiveRunnerProcess $existingPid
 
         if ($lockIsActive) {
-            throw "Runner lock already exists: $LockFile | $existing"
+            throw "Runner lock already exists: $LockFile | pid=$existingPid cwd=$existingCwd"
         }
 
-        Write-Log "Detected stale runner lock. Reclaiming $LockFile." "WARN"
+        if ($existingPid) {
+            Write-Log "Detected stale/non-runner lock (pid=$existingPid). Reclaiming $LockFile." "WARN"
+        } else {
+            Write-Log "Detected malformed runner lock. Reclaiming $LockFile." "WARN"
+        }
         Remove-Item $LockFile -Force -ErrorAction SilentlyContinue
     }
 
@@ -804,3 +825,4 @@ try {
 } finally {
     Release-Lock
 }
+
