@@ -209,6 +209,7 @@ const sidebars: SidebarsConfig = {
               label: '实变函数',
               link: { type: 'doc', id: 'academic-math/real-analysis/index' },
               items: [
+                'academic-math/real-analysis/measure-theory',
                 'academic-math/real-analysis/lebesgue-integral',
               ]
             },
