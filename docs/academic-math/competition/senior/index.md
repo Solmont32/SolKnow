@@ -9,7 +9,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 高中数竞是选拔顶尖数学人才的重要途径（如 CMO, IMO）。
 
 ## 四大模块
--   **代数 (Algebra)**：不等式、函数方程、多项式。
+-   **代数 (Algebra)**：不等式、函数方程、多项式、递推与迭代。
 -   **平面几何 (Geometry)**：纯几何推导、塞瓦定理、梅涅劳斯定理。
 -   **数论 (Number Theory)**：同余、不定方程、原根与离散对数。
 -   **组合 (Combinatorics)**：双计数、图论、生成函数。
@@ -18,10 +18,11 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 在处理不等式时，熟练掌握 **Cauchy 不等式** 和 **Jensen 不等式** 是提分的关键。
 </KnowledgeCard>
 
-## 四、本轮新增学习提示（2026-03-08）
+## 五、本轮新增学习提示（2026-03-08）
 
 - 先做 [竞赛代数：经典不等式与函数方程](inequalities) 的基础题，再做挑战题。
 - 再做 [竞赛代数：多项式与代数方程](polynomials-and-equations) 的 Vieta 与重根判别题组。
+- 新增 [竞赛代数：递推、函数迭代与不动点](recurrence-and-fixed-points)，重点训练“单调有界 + 不动点代入”。
 - 再做 [竞赛数论：原根、剩余与构造](number-theory-advanced) 的 CRT 与阶专题。
 - 补上 [竞赛组合：母函数、图论与递推](combinatorics-advanced) 的双计数与抽屉原理题组。
 - 每学完一章立即到 [高中数学竞赛练习库](/docs/exercises/math/competition/senior) 完成对应专题训练。

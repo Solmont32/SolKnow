@@ -417,3 +417,141 @@ $$
 \alpha^2+\beta^2=(\alpha+\beta)^2-2\alpha\beta=9-2=7.
 $$
 </details>
+
+## 练习 25：一次递推通项（基础）
+已知
+$$
+a_{n+1}=2a_n+1,\quad a_1=1.
+$$
+求 $a_n$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+设 $b_n=a_n+1$，则
+$$
+b_{n+1}=2b_n,\quad b_1=2.
+$$
+故 $b_n=2^n$，从而
+$$
+a_n=2^n-1.
+$$
+</details>
+
+## 练习 26：二阶递推（提高）
+数列满足
+$$
+a_{n+2}=3a_{n+1}-2a_n,\quad a_1=2,\ a_2=3.
+$$
+求 $a_n$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+特征方程
+$$
+r^2-3r+2=0\Rightarrow r=1,2.
+$$
+故
+$$
+a_n=A+B2^n.
+$$
+由初值
+$$
+A+2B=2,\quad A+4B=3
+$$
+得 $B=\frac12,\ A=1$，
+$$
+a_n=1+2^{n-1}.
+$$
+</details>
+
+## 练习 27：不动点方程（提高）
+设 $x_1>0$，
+$$
+x_{n+1}=\frac{x_n+3}{x_n+1}.
+$$
+求其可能极限。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+若极限存在为 $L$，则
+$$
+L=\frac{L+3}{L+1}\Rightarrow L^2=3.
+$$
+因 $x_n>0$，取
+$$
+L=\sqrt3.
+$$
+</details>
+
+## 练习 28：根式迭代极限（挑战）
+设 $x_1=0$，
+$$
+x_{n+1}=\sqrt{3+x_n}.
+$$
+求 $\lim x_n$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+先证 $x_n<\frac{1+\sqrt{13}}2$（由不动点上界归纳），且
+$$
+x_{n+1}\ge x_n
+$$
+可由 $3+x_n\ge x_n^2$ 验证成立，故单调有界收敛。
+设极限为 $L$：
+$$
+L=\sqrt{3+L}\Rightarrow L^2-L-3=0.
+$$
+取正根：
+$$
+L=\frac{1+\sqrt{13}}2.
+$$
+</details>
+
+## 练习 29：迭代收敛速度（挑战）
+设 $x_1\in(0,2)$，
+$$
+x_{n+1}=\frac{x_n+2}{2}.
+$$
+求 $x_n$ 通项并判断极限。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+令 $y_n=x_n-2$，则
+$$
+y_{n+1}=\frac12y_n.
+$$
+所以
+$$
+y_n=\left(\frac12\right)^{n-1}(x_1-2),
+$$
+即
+$$
+x_n=2+\left(\frac12\right)^{n-1}(x_1-2)\to2.
+$$
+</details>
+
+## 练习 30：函数迭代与不变量（挑战）
+设 $x_1>0$，
+$$
+x_{n+1}=\frac{2x_n}{1+x_n^2}.
+$$
+证明：若 $x_1=1$，则对任意 $n$ 都有 $x_n=1$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+验证不动点：
+$$
+\frac{2\cdot1}{1+1^2}=1.
+$$
+由递推定义，若 $x_n=1$ 则 $x_{n+1}=1$。又 $x_1=1$，归纳得
+$$
+x_n\equiv1.
+$$
+这体现了“先找不动点，再看初值是否落在不动点上”的竞赛思路。
+</details>

@@ -126,6 +126,7 @@ const sidebars: SidebarsConfig = {
               items: [
                 'academic-math/competition/senior/inequalities',
                 'academic-math/competition/senior/polynomials-and-equations',
+                'academic-math/competition/senior/recurrence-and-fixed-points',
                 'academic-math/competition/senior/geometry-theorems',
                 'academic-math/competition/senior/number-theory-advanced',
                 'academic-math/competition/senior/combinatorics-advanced',
@@ -381,26 +382,4 @@ const sidebars: SidebarsConfig = {
 
 
 export default sidebars;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
