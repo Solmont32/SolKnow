@@ -1,11 +1,19 @@
 # SolKnow 自动化任务清单 (TASKS.md)
 ## 总任务
-- 数学知识库离散数学教程（对标教科书）：知识点详细，一个知识点对应多道例题，同时增加练习库中的练习，练习需要有多道，答案折叠，点击才显示过程和答案；
+- 数学知识库小学奥数教程（对标教科书）：知识点详细，一个知识点对应多道例题，同时增加练习库中的练习，练习需要有多道，答案折叠，点击才显示过程和答案；
 
 ## 待办子任务
 - （暂无，已清空）
 
 ## 已完成任务
+- [x] 深度重构『拓扑排序与 DAG DP』教程页 (2026-03-08)：重写 `docs/graph/topo-sort.md`，补全 Kahn/DFS 判环、字典序最小拓扑序、DAG 动态规划模型，新增多道例题与折叠练习。 (2026-03-08)
+- [x] 新增『算法竞赛练习库：拓扑排序专题』(2026-03-08)：新增 `docs/exercises/cs/algorithm-topo-sort.md`，提供 6 道分层练习并全部采用“点击展开过程与答案”的折叠格式。 (2026-03-08)
+- [x] 打通『图论教程-拓扑排序练习』联动 (2026-03-08)：更新 `docs/graph/index.md` 与 `sidebars.ts`，新增拓扑排序练习入口，形成教程到练习闭环。 (2026-03-08)- [x] 新增『初中竞赛不等式与函数方程』教材化专题 (2026-03-08)：新增 docs/academic-math/competition/junior/inequalities-and-equations.md，补全核心方法并提供 4 道例题与 4 道折叠练习。 (2026-03-08)
+- [x] 扩容『初中数学竞赛练习库』不等式与函数方程题组 (2026-03-08)：更新 docs/exercises/math/competition/junior.md 新增练习 17-20，全部支持点击展开过程与答案。 (2026-03-08)
+- [x] 打通『初中竞赛专题-导航-练习』联动闭环 (2026-03-08)：更新 docs/academic-math/competition/junior/index.md 与 sidebars.ts，新增专题入口并同步学习路径。 (2026-03-08)
+- [x] 深化『小学奥数代数：巧算-数列-裂项-逆推』教材化章节 (2026-03-08)：重写 `docs/academic-math/competition/elementary/algebra.md`，补全 7 道教材化例题与 3 道章内折叠练习。 (2026-03-08)
+- [x] 扩容『小学奥数练习库』至 32 题并新增代数提升分组 (2026-03-08)：扩展 `docs/exercises/math/competition/elementary.md` 新增练习 25-32，全部支持点击展开过程与答案。 (2026-03-08)
+- [x] 同步『小学奥数总览页』练习规模文案 (2026-03-08)：更新 `docs/academic-math/competition/elementary/index.md` 中练习库入口题量说明为 32 题。 (2026-03-08)
 - [x] 二次完善『抽象代数：格论章节与练习闭环』(2026-03-08)：补充 lattices 教材化推导与格论专题练习，统一折叠答案展示。 (2026-03-08)
 - [x] 完成『抽象代数格论专题』教材化补全与练习扩容 (2026-03-08)：重写 `docs/academic-math/abstract-algebra/lattices.md` 并扩展 `docs/exercises/math/abstract-algebra.md` 格论题组，统一折叠答案格式。 (2026-03-08)
 - [x] 深度重构『最小生成树（MST）』教程页 (2026-03-08)：重写 `docs/graph/mst.md`，补全切分/环路性质、Kruskal/Prim 模板、选型对比，新增 4 道例题与 3 道折叠练习。 (2026-03-08)
@@ -164,6 +172,10 @@
 - [x] 深化『初中竞赛几何：四点共圆、方幂与圆中比例』(2026-03-08)：重写 `docs/academic-math/competition/junior/circle-geometry.md`，补全判定体系与方幂三形态，扩展为 4 道例题 + 4 道折叠练习。 (2026-03-08)
 - [x] 深化『初中竞赛组合：计数、抽屉与构造』(2026-03-08)：重写 `docs/academic-math/competition/junior/combinatorics.md`，补全加乘原理、隔板法、抽屉与染色不变量，扩展为 4 道例题 + 4 道折叠练习。 (2026-03-08)
 - [x] 扩容『初中数学竞赛练习库与学习路径页』(2026-03-08)：更新 `docs/exercises/math/competition/junior.md` 新增 4 道综合题（合计 16 题，均折叠解析），并重写 `docs/academic-math/competition/junior/index.md` 打通章节与练习入口。 (2026-03-08)
+
+
+
+
 
 
 

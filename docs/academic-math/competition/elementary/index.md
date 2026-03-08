@@ -26,9 +26,10 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 - [`几何专题：面积与比例`](/docs/academic-math/competition/elementary/geometry)
 - [`代数专题：巧算与数列`](/docs/academic-math/competition/elementary/algebra)
 - [`应用题专题：建模方法`](/docs/academic-math/competition/elementary/word-problems)
-- [`小学奥数练习库（24 题）`](/docs/exercises/math/competition/elementary)
+- [`小学奥数练习库（32 题）`](/docs/exercises/math/competition/elementary)
 
 <KnowledgeCard type="info" title="学习建议">
 每道题都要写出“模型识别 -> 列式理由 -> 验算结论”三步，而不是只给最终答案。
 </KnowledgeCard>
+
 
