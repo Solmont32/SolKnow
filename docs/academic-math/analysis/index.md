@@ -88,7 +88,10 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 针对第一至第四章，新增 **[前四章基础专题练习](/docs/exercises/math/analysis-foundations)**（10 题分层 + 折叠解析）。
 
+针对第十三章，新增 **[函数列与函数项级数专题练习](/docs/exercises/math/analysis-function-sequences)**（10 题分层 + 折叠解析）。
+
 > **学习建议**：分析学的严密性需要通过大量的 $\epsilon$ 练习来磨练。建议在阅读理论时，务必亲手推导一遍核心定理的证明。
+
 
 
 

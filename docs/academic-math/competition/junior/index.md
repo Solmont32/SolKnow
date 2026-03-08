@@ -16,6 +16,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 5. **不等式与函数方程**：均值不等式、分式不等式、函数方程取值与构造。
 6. **面积法与相似构造**：同高同底面积比、平行线模型、面积反推分点比。
 7. **平移对称与最短路径**：折线拉直、轴对称最短路、平移等长替换。
+8. **不变量与染色构造**：奇偶不变量、模不变量、棋盘染色与可达性判断。
 
 ## 学习路径建议
 1. 先学代数与数论，提升算术与同余基础。
@@ -31,14 +32,9 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 - [竞赛专题：不等式与函数方程](./inequalities-and-equations.md)
 - [竞赛几何：面积法与相似构造](./geometry-area-method.md)
 - [竞赛几何：平移对称与最短路径构造](./transform-and-shortest-path.md)
+- [竞赛组合：不变量与染色构造](./invariant-and-coloring.md)
 - [初中数学竞赛练习库（折叠答案）](/docs/exercises/math/competition/junior)
 
 <KnowledgeCard type="info" title="学习要点">
 初中数竞非常强调运算准确性与证明严谨性。建议每道例题至少完成“独立重做一次 + 口述关键步骤一次”。
 </KnowledgeCard>
-
-
-
-
-
-

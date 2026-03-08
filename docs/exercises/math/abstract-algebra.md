@@ -228,3 +228,69 @@ $f(A)=f(B)=1$，所以 $\min(f(A),f(B))=1$；
 代入 \(0\) 得 1，代入 \(1\) 得 1，均非 0，故三次多项式无一次因子，因而不可约。
 所以商环是域，元素个数为 \(2^3=8\)。
 </details>
+
+## 六、群作用与 Sylow 专题
+
+### 练习 21：轨道-稳定子计算
+设群 $G$ 作用在集合 $X$ 上，且 $|G|=120$、某点 $x$ 的稳定子阶为 10。求 $x$ 的轨道大小。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+由轨道-稳定子定理：
+$$
+|\operatorname{Orb}(x)|=[G:G_x]=120/10=12.
+$$
+</details>
+
+### 练习 22：21 阶群的 Sylow 3-子群个数
+设 $|G|=21$，求 Sylow 3-子群个数 $n_3$ 的可能值。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+$n_3\mid 7$ 且 $n_3\equiv 1\pmod 3$。7 的因子为 $1,7$，两者都满足模 3 同余条件，因此
+$$
+n_3\in\{1,7\}.
+$$
+</details>
+
+### 练习 23：15 阶群中的正规 Sylow 子群
+设 $|G|=15=3\cdot 5$。证明 $G$ 至少有一个非平凡正规 Sylow 子群。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+对 $p=5$，$n_5\mid 3$ 且 $n_5\equiv 1\pmod 5$，只能 $n_5=1$，所以 Sylow 5-子群正规。
+</details>
+
+### 练习 24：共轭类大小
+在 $S_4$ 中求 3-轮换 $(123)$ 的共轭类大小。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+共轭保持循环类型。$S_4$ 中 3-轮换数量为
+$$
+\binom{4}{3}\cdot 2=8,
+$$
+所以 $(123)$ 的共轭类大小为 8。
+</details>
+
+### 练习 25：唯一 Sylow 子群与正规性
+证明：若有限群 $G$ 的 Sylow $p$-子群唯一，则它正规。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+设唯一 Sylow $p$-子群为 $P$。任取 $g\in G$，则 $gPg^{-1}$ 仍是 Sylow $p$-子群。由唯一性得 $gPg^{-1}=P$，故 $P\trianglelefteq G$。
+</details>
+
+### 练习 26：56 阶群的 Sylow 7-子群
+设 $|G|=56$。证明 Sylow 7-子群正规。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+$n_7\mid 8$ 且 $n_7\equiv 1\pmod 7$。8 的因子 $1,2,4,8$ 中只有 1 与 1 同余（模 7），故 $n_7=1$，Sylow 7-子群正规。
+</details>

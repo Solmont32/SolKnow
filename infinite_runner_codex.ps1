@@ -798,7 +798,13 @@ function Get-CodexTimeoutSeconds($modeLabel) {
     return 1200
 }
 
-function Invoke-CodexProcessWithTimeout([string[]]$CliArgs, [int]$timeoutSeconds) {
+function Invoke-CodexProcessWithTimeout(
+    [string[]]$CliArgs,
+    [int]$timeoutSeconds,
+    [int]$heartbeatSeconds = 30,
+    [string]$modeLabel = "unknown",
+    [string]$displayModel = "<default>"
+) {
     $stamp = Get-Date -Format "yyyyMMddHHmmssfff"
     $tmpOut = Join-Path $env:TEMP "codex_runner_${PID}_${stamp}.out.log"
     $tmpErr = Join-Path $env:TEMP "codex_runner_${PID}_${stamp}.err.log"
@@ -824,9 +830,31 @@ function Invoke-CodexProcessWithTimeout([string[]]$CliArgs, [int]$timeoutSeconds
         }
 
         $proc = Start-Process -FilePath $global:CODEX_LAUNCHER -ArgumentList $safeArgs -NoNewWindow -PassThru -RedirectStandardOutput $tmpOut -RedirectStandardError $tmpErr
-        $finished = $proc.WaitForExit($timeoutSeconds * 1000)
 
-        if (-not $finished) {
+        $sw = [System.Diagnostics.Stopwatch]::StartNew()
+        $nextBeatSeconds = [Math]::Max(1, $heartbeatSeconds)
+        $timedOut = $false
+
+        while ($true) {
+            if ($proc.WaitForExit(1000)) {
+                break
+            }
+
+            $elapsed = [int]$sw.Elapsed.TotalSeconds
+            if ($elapsed -ge $nextBeatSeconds) {
+                $remaining = [Math]::Max(0, $timeoutSeconds - $elapsed)
+                Write-Log "Codex still running... mode=$modeLabel model=$displayModel elapsed=${elapsed}s remaining=${remaining}s" "INFO"
+                $nextBeatSeconds += [Math]::Max(1, $heartbeatSeconds)
+            }
+
+            if ($elapsed -ge $timeoutSeconds) {
+                $timedOut = $true
+                break
+            }
+        }
+
+        $sw.Stop()
+        if ($timedOut) {
             try {
                 Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
             } catch {}
@@ -891,7 +919,7 @@ function Invoke-CodexSmart($prompt, [string[]]$models, $modeLabel) {
 
             $cliArgs += $prompt
 
-            $execResult = Invoke-CodexProcessWithTimeout -CliArgs $cliArgs -timeoutSeconds $timeoutSeconds
+            $execResult = Invoke-CodexProcessWithTimeout -CliArgs $cliArgs -timeoutSeconds $timeoutSeconds -heartbeatSeconds 30 -modeLabel $modeLabel -displayModel $displayModel
             $cmdOutput = $execResult.Output
             $exitCode = $execResult.ExitCode
 
