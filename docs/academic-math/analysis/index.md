@@ -82,5 +82,8 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 每个章节末尾均关联了配套练习，你也可以直接进入 **[数学分析练习库](/docs/exercises/math/analysis)** 进行针对性强化。
 
+针对第十七章续内容，新增 **[微分几何专题练习](/docs/exercises/math/analysis-differential-geometry)**（多题分层 + 折叠解析）。
+
 > **学习建议**：分析学的严密性需要通过大量的 $\epsilon$ 练习来磨练。建议在阅读理论时，务必亲手推导一遍核心定理的证明。
+
 

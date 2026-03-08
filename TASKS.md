@@ -1,11 +1,24 @@
 # SolKnow 自动化任务清单 (TASKS.md)
 ## 总任务
-- 数学知识库高中数学竞赛教程（对标教科书）：知识点详细，一个知识点对应多道例题，同时增加练习库中的练习，练习需要有多道，答案折叠，点击才显示过程和答案；
-
+- 数学知识库初中数学竞赛教程（对标教科书）：知识点详细，一个知识点对应多道例题，同时增加练习库中的练习，练习需要有多道，答案折叠，点击才显示过程和答案；
 ## 待办子任务
 - （暂无，已清空）
 
 ## 已完成任务
+- [x] 深度重构『行列式』教材页并形成“性质-展开-应用”闭环 (2026-03-08)：重写 docs/academic-math/algebra/determinant.md，补全定义、基本性质、Laplace 展开、伴随矩阵与克拉默法则，新增 2 道例题与 3 道配套练习。 (2026-03-08)
+- [x] 深化『线性方程组』章节并补全“判定-通解”体系 (2026-03-08)：重写 docs/academic-math/algebra/linear-equations.md，系统化 Rouché-Capelli 定理、齐次解空间维数、高斯消元流程，新增参数讨论与基础解系例题。 (2026-03-08)
+- [x] 完备『二次型』与『高等代数练习库』联动 (2026-03-08)：重写 docs/academic-math/algebra/quadratic-forms.md 与 docs/exercises/math/algebra.md，补全合同标准形、惯性定理、正定判别，并扩容基础/提高/挑战多题折叠解析。 (2026-03-08)
+- [x] 深化『初中竞赛代数：高阶恒等变形与根式』(2026-03-08)：重写 docs/academic-math/competition/junior/algebra-skills.md，补充结构识别与变形方法，扩展为 4 道教材化例题并统一折叠解析。 (2026-03-08)
+- [x] 深化『初中竞赛数论：整除、同余与不定方程』(2026-03-08)：重写 docs/academic-math/competition/junior/number-theory-basic.md，补全周期法、一次不定方程与同余方程，扩展为 4 道教材化例题并统一折叠解析。 (2026-03-08)
+- [x] 扩容『初中数学竞赛练习库』(2026-03-08)：重写 docs/exercises/math/competition/junior.md，按代数/几何/数论/组合新增 12 道分层练习，全部支持点击展开过程与答案。 (2026-03-08)
+- [x] 深化『空间曲线与曲面的微分几何』教材化章节 (2026-03-08)：重构 docs/academic-math/analysis/differential-geometry.md，补齐 Frenet 标架、曲率/挠率、隐式与参数曲面切平面理论，并新增 4 道教材级例题。
+- [x] 新增『微分几何专题练习库』并统一折叠答案 (2026-03-08)：新增 docs/exercises/math/analysis-differential-geometry.md，提供 8 道分层练习（基础/提高/挑战），全部支持点击展开过程与答案。
+- [x] 打通『章节-练习-侧边栏』微分几何闭环 (2026-03-08)：在 docs/academic-math/analysis/index.md 增加专题练习入口，并在 sidebars.ts 新增练习导航。
+- [x] 深化『小学奥数数论：整除-余数-质因数』教材化章节 (2026-03-08)：重写 docs/academic-math/competition/elementary/number-theory.md，按知识点补充 6 道例题并联动练习库。 (2026-03-08)
+- [x] 深化『小学奥数应用题：和差倍-行程-工程』教材化章节 (2026-03-08)：重写 docs/academic-math/competition/elementary/word-problems.md，补齐 8 道分模型例题与建模流程。 (2026-03-08)
+- [x] 扩容『小学奥数练习库』并统一折叠答案 (2026-03-08)：重写 docs/exercises/math/competition/elementary.md，扩展至 16 道分层练习并全部支持点击展开过程与答案。 (2026-03-08)
+- [x] 深度扩展『竞赛几何：近代几何定理与证明』(2026-03-08)：重写 docs/academic-math/competition/senior/geometry-theorems.md，按教材化结构补全梅涅劳斯/塞瓦/斯图尔特/圆幂/欧拉线九点圆，并新增 4 道例题 + 3 道折叠练习。 (2026-03-08)
+- [x] 扩容『高中数学竞赛练习库（综合）』(2026-03-08)：重写 docs/exercises/math/competition/senior.md，新增并整理 9 道分层练习，全部支持点击展开过程与答案。 (2026-03-08)
 - [x] 深化『高中竞赛代数（不等式与函数方程）』章节 (2026-03-08)：扩展 `docs/academic-math/competition/senior/inequalities.md`，新增进阶例题与折叠练习，强化教材式知识点-题目闭环。 (2026-03-08)
 - [x] 深化『高中竞赛数论（原根与剩余）』章节 (2026-03-08)：扩展 `docs/academic-math/competition/senior/number-theory-advanced.md`，补充阶/同余训练与折叠答案。 (2026-03-08)
 - [x] 扩容『高中数学竞赛练习库』并统一折叠答案 (2026-03-08)：扩展 `docs/exercises/math/competition/senior.md`，新增多题分层训练并全部支持点击展开过程与答案。 (2026-03-08)
@@ -74,6 +87,13 @@
 - [x] 为知识图谱 (Knowledge Graph) 实现深度下钻 (Deep-Dive) 交互模式与文档联动系统，增强全站导航的结构化视觉体验 (2026-03-07)
 - [x] 实现自动化脚本心跳系统与画面，符合人类审美。 
 - [x] 实现全站‘知识图谱’ (Knowledge Graph) 可视化交互系统，深度展现算法与数学的结构化联结 (2026-03-07)
+
+
+
+
+
+
+
 
 
 
