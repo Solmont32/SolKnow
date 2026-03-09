@@ -20,69 +20,99 @@ description: 布尔代数作为格的定义、基本定律、代数化表示与�
 - **吸收律**：$x \land (x \lor y) = x$
 - **德·摩根律**：$\neg(x \lor y) = \neg x \land \neg y, \neg(x \land y) = \neg x \lor \neg y$
 
-## 2. 布尔函数的代数化表示
+## 2. 核心代数定律与证明
 
-### 2.1 布尔表达式与布尔函数
-任何由布尔变量经过 $\lor, \land, \neg$ 复合而成的式子都是布尔表达式。
-- **等值性**：两个表达式在所有赋值下真值相同，等价于它们在布尔代数公理下可相互推导。
+布尔代数满足以下基本定律，这些定律是等价变换的基石。
 
-### 2.2 范式：代数化的标准形式
-- **主析取范式 (PDNF/SOP)**：最小项之和。
-- **主合取范式 (PCNF/POS)**：最大项之积。
+| 定律名称 | 表达式 (OR 形式) | 表达式 (AND 形式) |
+| :--- | :--- | :--- |
+| 分配律 | $a \lor (b \land c) = (a \lor b) \land (a \lor c)$ | $a \land (b \lor c) = (a \land b) \lor (a \land c)$ |
+| 吸收律 | $a \lor (a \land b) = a$ | $a \land (a \lor b) = a$ |
+| 德·摩根律 | $\overline{a \lor b} = \bar a \land \bar b$ | $\overline{a \land b} = \bar a \lor \bar b$ |
 
-:::info 判定定理
-两个布尔表达式等价，当且仅当它们的主析取范式（或主合取范式）完全一致。
-:::
+### 2.1 吸收律的形式证明
+证明：$a \lor (a \land b) = a$。
 
-## 3. 代数化化简技巧
+**证明**：
+$a \lor (a \land b) = (a \land 1) \lor (a \land b)$ (单位元)
+$= a \land (1 \lor b)$ (分配律)
+$= a \land 1$ (最大元性质：$1 \lor x = 1$)
+$= a$。
 
-除了基本的逻辑定律外，常用以下代数化技巧：
-1. **并项法**：$AB + A\bar B = A(B+\bar B) = A$
-2. **消因子法**：$A + \bar AB = (A+\bar A)(A+B) = A+B$
-3. **配项法**：$A + B = A + \bar AB$ (引入缺失项以便合并)
+## 3. 逻辑完备性与 NAND/NOR
 
-## 4. 逻辑电路建模
+一个逻辑门集合若能实现任何布尔函数，则称其为**完备集**。
+- $\{ \land, \lor, \neg \}$ 是最直观的完备集。
+- $\{ \uparrow \}$ (NAND) 与 $\{ \downarrow \}$ (NOR) 是单门完备集。
 
-布尔代数提供了从数学表达式到门电路的映射映射：
-- $\lor \to$ 或门 (OR)
-- $\land \to$ 与门 (AND)
-- $\neg \to$ 非门 (NOT)
+### 3.1 使用 NAND 实现所有运算
+- $\neg a = a \uparrow a$
+- $a \land b = \neg(a \uparrow b) = (a \uparrow b) \uparrow (a \uparrow b)$
+- $a \lor b = \neg a \uparrow \neg b = (a \uparrow a) \uparrow (b \uparrow b)$
 
-### 4.1 逻辑完备性
-集合 $\{ \lor, \land, \neg \}$ 是完备的，意味着任何布尔函数都能用这三种门实现。
-- **NAND 门** ($x \uparrow y = \overline{xy}$) 本身就是完备的。
+## 4. 布尔函数化简：卡诺图 (K-Map)
 
-## 5. 经典练习
+卡诺图是一种利用几何相邻性（格雷码顺序）进行逻辑简化的图形工具。
 
-:::info 练习 1
-证明：在布尔代数中，补元是唯一的。
-:::
+### 4.1 化简规则
+1. 圈内的项数必须是 $2^n$。
+2. 尽可能圈大的块以消掉更多的变量。
+3. 圈可以跨越图的边界（卷轴特性）。
+
+## 5. 本章练习
+
+### 练习 1：对偶原理
+写出表达式 $f = (a + \bar b) \cdot c + 0$ 的对偶式 $f^*$。
+
 <details>
-<summary>查看证明</summary>
+<summary>Check Solution</summary>
 
-设 $b, c$ 都是 $a$ 的补元。
-1. $a \lor b = 1, a \land b = 0$
-2. $a \lor c = 1, a \land c = 0$
-$b = b \land 1 = b \land (a \lor c) = (b \land a) \lor (b \land c)$ (分配律)
-$= 0 \lor (b \land c) = (c \land a) \lor (c \land b)$
-$= c \land (a \lor b) = c \land 1 = c$。
-故 $b = c$，补元唯一。
+对偶运算规则：$+ \leftrightarrow \cdot$，$0 \leftrightarrow 1$。
+$f^* = (a \cdot \bar b) + c \cdot 1$。
+
 </details>
 
-:::info 练习 2
-代数化简 $f(x, y, z) = xy + \bar x z + yz$。
-:::
-<details>
-<summary>查看解析</summary>
+### 练习 2：代数化简
+化简 $f = \overline{A \bar B (C + BD) + \bar A \bar B} C$。
 
-利用配项法处理 $yz$：
-$yz = (x + \bar x)yz = xyz + \bar x yz$
-$f = xy + \bar x z + xyz + \bar x yz$
-$= (xy + xyz) + (\bar x z + \bar x y z)$
-$= xy(1+z) + \bar x z(1+y)$
-$= xy + \bar x z$。
-(注：此为著名的**共识定理 Consensus Theorem**)
+<details>
+<summary>Check Solution</summary>
+
+1. 展开内层：$A \bar B C + A \bar B B D = A \bar B C$ (因为 $\bar B B = 0$)。
+2. 原式变为：$\overline{A \bar B C + \bar A \bar B} C$。
+3. 应用德·摩根律：$(\overline{A \bar B C} \cdot \overline{\bar A \bar B}) C$
+$= (\bar A + B + \bar C) \cdot (A + B) \cdot C$
+$= [(\bar A + B + \bar C) \cdot C] \cdot (A + B)$
+$= (\bar A C + B C + 0) \cdot (A + B)$
+$= \bar A C A + \bar A C B + B C A + B C B = 0 + \bar A B C + A B C + B C = B C (\bar A + A + 1) = B C$。
+
 </details>
+
+### 练习 3：NAND 完备性
+仅使用 NAND 门实现异或运算 $a \oplus b$。
+
+<details>
+<summary>Check Solution</summary>
+
+$a \oplus b = (a \land \bar b) \lor (\bar a \land b)$。
+使用 4 个 NAND 门：
+$x = a \uparrow b$
+$y = a \uparrow x$
+$z = b \uparrow x$
+结果 $= y \uparrow z$。
+
+</details>
+
+### 练习 4：卡诺图化简（思考题）
+给定四变量函数 $\sum m(0, 1, 2, 5, 8, 9, 10)$。画图并写出最简 SOP 形式。
+
+<details>
+<summary>Check Solution</summary>
+
+合并结果为 $f = \bar B \bar D + \bar B \bar C + \bar A \bar C D$。
+
+</details>
+
 
 ---
 
