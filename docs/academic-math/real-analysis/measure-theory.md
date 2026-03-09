@@ -136,7 +136,31 @@ $$
 
 ---
 
-## 三、零测集与“几乎处处”
+## 三、Lebesgue 测度的基本性质
+
+### 1. 测度的连续性 (Continuity of Measure)
+
+测度作为集合函数，在单调序列下具有良好的极限性质。
+
+**定理 (单调上升序列的连续性):**
+设 $\{E_n\}$ 是一列可测集，且 $E_1 \subset E_2 \subset \dots$，则
+$$ m\left(\bigcup_{n=1}^\infty E_n\right) = \lim_{n \to \infty} m(E_n). $$
+
+**定理 (单调下降序列的连续性):**
+设 $\{E_n\}$ 是一列可测集，且 $E_1 \supset E_2 \supset \dots$。若存在某个 $k$ 使得 $m(E_k) < \infty$，则
+$$ m\left(\bigcap_{n=1}^\infty E_n\right) = \lim_{n \to \infty} m(E_n). $$
+
+<KnowledgeCard type="warning" title="下降连续性的限制条件">
+注意下降序列必须要求其中一项测度有限。反例：在 $\mathbb{R}$ 上令 $E_n = [n, \infty)$，则 $m(E_n) = \infty$，但 $\bigcap E_n = \varnothing$，测度为 0。
+</KnowledgeCard>
+
+### 2. 平移不变性 (Translation Invariance)
+
+若 $E$ 是可测集，$x \in \mathbb{R}$，则 $E + x = \{e + x \mid e \in E\}$ 亦可测，且 $m(E+x) = m(E)$。
+
+---
+
+## 四、零测集与“几乎处处”
 
 ### 1. 零测集定义
 
@@ -437,15 +461,47 @@ $$
 
 <details>
 
-<summary>点击查看答案</summary>
+<summary>Check Solution</summary>
 
 闭集是开集的补集，而 Borel $\sigma$-代数对补集封闭，所以闭集是 Borel 集。又因为所有 Borel 集都 Lebesgue 可测，因此闭区间必 Lebesgue 可测。
 
 </details>
 
+### 练习 5 (深度：测度连续性的证明)
+
+试利用测度的可数可加性，证明单调上升序列的连续性。
+
+<details>
+
+<summary>Check Solution</summary>
+
+令 $A_1 = E_1, A_2 = E_2 \setminus E_1, \dots, A_n = E_n \setminus E_{n-1}, \dots$。
+则 $\{A_n\}$ 是两两不交的可测集，且 $\bigcup_{i=1}^n A_i = E_n$，$\bigcup_{i=1}^\infty A_i = \bigcup_{i=1}^\infty E_i$。
+由可数可加性：
+$$ m\left(\bigcup_{i=1}^\infty E_i\right) = m\left(\bigcup_{i=1}^\infty A_i\right) = \sum_{i=1}^\infty m(A_i) = \lim_{n \to \infty} \sum_{i=1}^n m(A_i). $$
+因为 $m(E_n) = \sum_{i=1}^n m(A_i)$，故结论成立。$\square$
+
+</details>
+
+### 练习 6 (深度：Borel 集与 Lebesgue 测度)
+
+证明对任一 Lebesgue 可测集 $E$，总存在 $F_\sigma$ 集 $F$ 和 $G_\delta$ 集 $G$，使得 $F \subset E \subset G$ 且 $m(G \setminus F) = 0$。
+
+<details>
+
+<summary>Check Solution</summary>
+
+由 Lebesgue 测度的定义（外测度逼近），对 $\forall n \in \mathbb{N}$，存在开集 $G_n \supset E$ 使得 $m(G_n \setminus E) < 1/n$。
+取 $G = \bigcap_{n=1}^\infty G_n$，则 $G$ 是 $G_\delta$ 集，且 $G \supset E$，$m(G \setminus E) = 0$。
+同理，考虑 $E^c$，存在 $G_\delta$ 集 $G'$ 使得 $G' \supset E^c$ 且 $m(G' \setminus E^c) = 0$。
+令 $F = (G')^c$，则 $F$ 是 $F_\sigma$ 集，$F \subset E$ 且 $m(E \setminus F) = 0$。
+结合得 $m(G \setminus F) = m(G \setminus E) + m(E \setminus F) = 0$。$\square$
+
+</details>
+
 ---
 
-## 八、与 Lebesgue 积分的衔接
+## 九、与 Lebesgue 积分的衔接
 
 测度论是积分论的底座：
 

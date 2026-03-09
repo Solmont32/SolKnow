@@ -148,7 +148,7 @@ $$
 
 <details>
 
-<summary>点击查看解析</summary>
+<summary>Check Solution</summary>
 
 $$
 
@@ -176,7 +176,7 @@ $$
 
 <details>
 
-<summary>点击查看解析</summary>
+<summary>Check Solution</summary>
 
 取共轭指数 $p=4,\ q=4/3$，应用 Hölder：
 
@@ -201,7 +201,7 @@ $$
 
 ### 例 3：用 Minkowski 证明 $L^p$ 三角不等式
 
-证明 $f,g\in L^p(X)$（$1\le p<\infty$）时，$f+g\in L^p$ 且
+证明 $f,g\in $L^p(X)$（$1\le p<\infty$）时，$f+g\in L^p$ 且
 
 $$
 
@@ -212,18 +212,18 @@ $$
 
 <details>
 
-<summary>点击查看解析</summary>
+<summary>Check Solution</summary>
 
 这是 Minkowski 不等式本身。证明通常从
 
 $$
 
-|f+g|^p = |f+g||f+g|^{p-1}
+|f+g|^p = |f+g||f+g|^{p-1} \le (|f| + |g|)|f+g|^{p-1}
 
 
 $$
 
-出发，再对 $|f||f+g|^{p-1}$、$|g||f+g|^{p-1}$ 分别使用 Hölder，即得结论。
+出发，展开为 $|f||f+g|^{p-1} + |g||f+g|^{p-1}$，再对两项分别使用 Hölder 不等式（其中共轭指数为 $p$ 和 $q = \frac{p}{p-1}$），即可得到结论。
 
 </details>
 
@@ -233,19 +233,11 @@ $$
 
 <details>
 
-<summary>点击查看解析</summary>
+<summary>Check Solution</summary>
 
-对任意 $x>0$，当 $n>1/x$ 时 $x\notin(0,1/n)$，故 $f_n(x)\to0$ a.e.  
-但
-
-$$
-
-\|f_n\|_1=\int_0^{1/n}n\,dx=1,
-
-
-$$
-
-所以不收敛到 0 于 $L^1$。
+对任意 $x \in (0, 1)$，当 $n > 1/x$ 时 $f_n(x) = 0$，故 $f_n(x) \to 0$ a.e.  
+但 $\|f_n\|_1 = \int_0^{1/n} n \, dx = 1$，不趋于 0，故不收敛于 $L^1$。
+这也说明了几乎处处收敛不能保证 $L^p$ 收敛，除非有额外的控制条件（如 DCT）。
 
 </details>
 
@@ -255,26 +247,26 @@ $$
 
 <details>
 
-<summary>点击查看解析</summary>
+<summary>Check Solution</summary>
 
-由 Markov 不等式：
+由 Markov 不等式（或称 Chebyshev 不等式）：
 
 $$
 
 \mu\{|f_n-f|>\varepsilon\}
 \le \frac{1}{\varepsilon^p}\int_X|f_n-f|^p\,d\mu
-=\frac{\|f_n-f\|_p^p}{\varepsilon^p}\to0.
+=\frac{\|f_n-f\|_p^p}{\varepsilon^p}.
 
 
 $$
 
-故得测度收敛。
+因为 $\|f_n-f\|_p \to 0$，故对任意 $\varepsilon > 0$，上述测度趋于 0。
 
 </details>
 
 ---
 
-## 七、分层练习（答案折叠）
+## 七、分层练习
 
 ### 练习 1（基础）
 
@@ -282,151 +274,45 @@ $$
 
 <details>
 
-<summary>点击查看过程与答案</summary>
+<summary>Check Solution</summary>
 
-由 Hölder：
-
-$$
-
-\int |f|^p = \int |f|^p\cdot 1
-\le \left(\int |f|^q\right)^{p/q}
-\left(\int 1^{q/(q-p)}\right)^{(q-p)/q}.
-
-
-$$
-
-即
-
-$$
-
-\|f\|_p \le \mu(X)^{\frac1p-\frac1q}\|f\|_q.
-
-
-$$
-
-所以 $L^q(X)\subset L^p(X)$。
+由 Hölder 不等式，取函数 $|f|^p$ 和 $1$，指数 $r = q/p$ 及其共轭指数 $r' = \frac{q}{q-p}$：
+$$ \int_X |f|^p \cdot 1 d\mu \le \left(\int_X (|f|^p)^{q/p} d\mu\right)^{p/q} \left(\int_X 1^{q/(q-p)} d\mu\right)^{(q-p)/q}. $$
+即 $\|f\|_p^p \le \|f\|_q^p \cdot \mu(X)^{(q-p)/q}$。
+两边开 $p$ 次方得：$\|f\|_p \le \|f\|_q \cdot \mu(X)^{\frac{1}{p} - \frac{1}{q}}$。
+由于 $\mu(X) < \infty$，范数有界，故 $L^q \subset L^p$。
 
 </details>
 
-### 练习 2（基础）
+### 练习 2（提高）
 
-设 $f_n=\mathbf{1}_{(0,1/n)}$，判定其在 $L^2(0,1)$ 中是否收敛到 0。
+证明 $L^\infty(X)$ 是 Banach 空间。
 
 <details>
 
-<summary>点击查看过程与答案</summary>
+<summary>Check Solution</summary>
 
-$$
-
-\|f_n\|_2^2=\int_0^{1/n}1\,dx=\frac1n\to0.
-
-
-$$
-
-故 $f_n\to0$ 于 $L^2(0,1)$。
+设 $\{f_n\}$ 是 $L^\infty$ 中的 Cauchy 序列。
+对于每个 $k, m, n \in \mathbb{N}$，定义 $A_{k,m,n} = \{x : |f_n(x) - f_m(x)| > \|f_n - f_m\|_\infty\}$ 和 $B_n = \{x : |f_n(x)| > \|f_n\|_\infty\}$。
+这些集合都是零测集。令 $N = (\bigcup_{n,m} A_{n,m}) \cup (\bigcup_n B_n)$，则 $m(N) = 0$。
+在 $X \setminus N$ 上，$\{f_n(x)\}$ 是一致 Cauchy 序列，因此一致收敛于某个 $f(x)$。
+易证 $f \in L^\infty$ 且 $\|f_n - f\|_\infty \to 0$。
 
 </details>
 
-### 练习 3（提高）
+### 练习 3 (深度：$L^2$ 的完备性证明)
 
-在 $(0,1)$ 上判定 $f(x)=\frac1{\sqrt{x}}$ 属于哪些 $L^p$。
-
-<details>
-
-<summary>点击查看过程与答案</summary>
-
-$$
-
-\int_0^1 |f|^p\,dx=\int_0^1 x^{-p/2}\,dx
-
-
-$$
-
-收敛当且仅当 $p/2<1$，即 $p<2$。  
-故 $f\in L^p(0,1)$ 当且仅当 $1\le p<2$；不属于 $L^2$ 与更高指数空间。
-
-</details>
-
-### 练习 4（提高）
-
-设 $f_n\to f$ 于 $L^p(X)$，证明存在子列 $f_{n_k}$ 使得 $f_{n_k}\to f$ a.e.。
+利用 Riesz-Fischer 定理的思路，简述为什么 $L^p$ 空间是完备的。
 
 <details>
 
-<summary>点击查看过程与答案</summary>
+<summary>Check Solution</summary>
 
-取子列使
-
-$$
-
-\|f_{n_k}-f\|_p^p<2^{-k}.
-
-
-$$
-
-由 Markov 不等式：
-
-$$
-
-\mu\{|f_{n_k}-f|>2^{-k/p}\}
-\le 2^k\|f_{n_k}-f\|_p^p<1.
-
-
-$$
-
-进一步按标准 Borel-Cantelli 型构造可得：除去零测集后，$f_{n_k}(x)\to f(x)$。
-
-</details>
-
-### 练习 5（挑战）
-
-设 $f_n\to f$ in measure，且存在 $g\in L^1$ 使 $|f_n|\le g$ a.e.。证明 $f_n\to f$ 于 $L^1$。
-
-<details>
-
-<summary>点击查看过程与答案</summary>
-
-这是受控收敛思想在测度收敛版本下的结论（Vitali/DCT 路径）。  
-由测度收敛可抽取子列 a.e. 收敛，再由 $|f_{n_k}|\le g$ 与 DCT 得
-
-$$
-
-\|f_{n_k}-f\|_1\to0.
-
-
-$$
-
-结合反证法可推出原序列也满足 $\|f_n-f\|_1\to0$。
-
-</details>
-
-### 练习 6（挑战）
-
-证明：在 Hilbert 空间 $L^2(X)$ 中，若 $f_n\rightharpoonup f$（弱收敛）且 $\|f_n\|_2\to\|f\|_2$，则 $f_n\to f$ 强收敛。
-
-<details>
-
-<summary>点击查看过程与答案</summary>
-
-用恒等式
-
-$$
-
-\|f_n-f\|_2^2=\|f_n\|_2^2+\|f\|_2^2-2\operatorname{Re}\langle f_n,f\rangle.
-
-
-$$
-
-弱收敛给出 $\langle f_n,f\rangle\to\langle f,f\rangle=\|f\|_2^2$，再结合范数收敛，
-
-$$
-
-\|f_n-f\|_2^2\to 0.
-
-
-$$
-
-故强收敛成立。
+核心在于：从 $L^p$ 的 Cauchy 序列中抽取一个快速收敛子列 $\{f_{n_k}\}$，使得 $\|f_{n_{k+1}} - f_{n_k}\|_p < 2^{-k}$。
+定义级数 $g(x) = |f_{n_1}(x)| + \sum_{k=1}^\infty |f_{n_{k+1}}(x) - f_{n_k}(x)|$。
+利用 Minkowski 不等式证明 $g \in L^p$，从而 $g(x) < \infty$ a.e.。
+这意味着级数 $f_{n_1}(x) + \sum (f_{n_{k+1}}(x) - f_{n_k}(x))$ 绝对收敛 a.e.，其部分和即子列 $f_{n_k}$ 收敛于某个 $f$。
+最后利用受控收敛定理证明 $\|f_n - f\|_p \to 0$。
 
 </details>
 
