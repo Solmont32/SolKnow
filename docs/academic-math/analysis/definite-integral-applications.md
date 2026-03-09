@@ -3,6 +3,7 @@ title: 定积分的高级应用：几何与物理的微元重构 (Applications o
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import SupportingExercises from '@site/src/components/SupportingExercises';
 
 # 定积分的高级应用：几何与物理的微元重构
 

@@ -3,6 +3,7 @@ title: 定积分：Riemann 积分、性质与微积分基本定理 (Definite Int
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import SupportingExercises from '@site/src/components/SupportingExercises';
 
 # 定积分：Riemann 积分、性质与微积分基本定理
 

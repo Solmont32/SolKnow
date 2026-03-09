@@ -3,6 +3,7 @@ title: 反常积分：敛散性判别与 Cauchy 主值 (Improper Integrals)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import SupportingExercises from '@site/src/components/SupportingExercises';
 
 # 反常积分：敛散性判别与 Cauchy 主值
 

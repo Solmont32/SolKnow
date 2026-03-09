@@ -3,6 +3,7 @@ title: 第十三章 函数序列与函数项级数 (Function Sequences & Series)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import SupportingExercises from '@site/src/components/SupportingExercises';
 
 # 第十三章 函数序列与函数项级数 (Function Sequences & Series)
 

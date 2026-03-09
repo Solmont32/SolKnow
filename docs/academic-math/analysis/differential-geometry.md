@@ -3,6 +3,7 @@ title: 空间曲线与曲面的微分几何 (Differential Geometry of Curves and
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import SupportingExercises from '@site/src/components/SupportingExercises';
 
 # 第十七章续：空间曲线与曲面的微分几何
 
