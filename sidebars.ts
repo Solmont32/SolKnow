@@ -256,6 +256,7 @@ const sidebars: SidebarsConfig = {
               items: [
                 'academic-math/functional-analysis/banach-spaces',
                 'academic-math/functional-analysis/hilbert-spaces',
+                'academic-math/functional-analysis/spectral-theory',
               ]
             },
             {

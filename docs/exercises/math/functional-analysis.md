@@ -5,91 +5,117 @@ description: 涵盖 Banach 空间三大定理、Hilbert 空间几何及线性算
 
 # 泛函分析专题练习库
 
-> 本练习库对标研究生水平的泛函分析课程，旨在通过严密的习题训练深化对无限维空间结构的理解。
+> 本练习库对标研究生水平的泛函分析课程（如张恭庆《泛函分析讲义》），旨在通过严密的习题训练深化对无限维空间结构的理解。
 
 ---
 
-## A 组：Banach 空间与三大定理 {#fa-a1}
+## A 组：赋范空间、Baire 纲与三大定理 {#fa-a1}
 
-### 练习 A1
-证明：若 $X$ 是有限维赋范线性空间，则 $X$ 必完备（即 $X$ 是 Banach 空间）。
+### 练习 A1（完备性判定）
+设 $C^1[0,1]$ 为连续可微函数空间。定义范数 $\|f\|_* = \max_{t \in [0,1]} |f(t)|$. 证明：$(C^1[0,1], \|\cdot\|_*)$ 不是 Banach 空间。
 
 <details>
-<summary>查看答案</summary>
+<summary>查看解析</summary>
 
 **证明**：
-1. 设 $\dim X = n$，$\{e_1, \dots, e_n\}$ 是 $X$ 的一组基。
-2. 定义映射 $\phi: \mathbb{K}^n \to X$，$\phi(\alpha_1, \dots, \alpha_n) = \sum \alpha_i e_i$。
-3. 由于有限维空间上所有范数等价，$\phi$ 是同胚映射。
-4. $\mathbb{K}^n$（$\mathbb{R}^n$ 或 $\mathbb{C}^n$）关于欧氏范数是完备的。
-5. 完备性在同胚映射下保持（对于一致同胚），故 $X$ 完备。
+1. 完备性要求每个 Cauchy 序列都收敛到空间内的元素。
+2. 考虑函数序列 $f_n(x) = \sqrt{x^2 + 1/n}$。
+3. 在 $\|\cdot\|_*$ 下，$f_n(x) \to |x|$（一致收敛）。
+4. 然而，$|x|$ 在 $x=0$ 处不可导，故不属于 $C^1[0,1]$。
+5. 结论：该空间不完备。若要使其完备，需使用更强的范数 $\|f\| = \|f\|_\infty + \|f'\|_\infty$。
 
 </details>
 
-### 练习 A2
-利用 Hahn-Banach 定理证明：对于赋范线性空间 $X$ 中的任意 $x \neq 0$，存在 $f \in X^*$ 使得 $\|f\|=1$ 且 $f(x) = \|x\|$.
+### 练习 A2（一致有界性原理：逆向应用）
+设 $X$ 为 Banach 空间，$Y$ 为赋范空间。若 $T_n \in \mathcal{B}(X, Y)$ 满足对每个 $x \in X$，序列 $\{T_n x\}$ 在 $Y$ 中强收敛。证明：算子序列的范数 $\{\|T_n\|\}$ 必有界。
 
 <details>
-<summary>查看答案</summary>
+<summary>查看解析</summary>
 
 **证明**：
-1. 令 $M = \operatorname{span}\{x\}$ 为 $X$ 的子空间。
-2. 在 $M$ 上定义线性泛函 $g(\alpha x) = \alpha \|x\|$.
-3. 显然 $g$ 有界且 $\|g\| = \sup_{\alpha \neq 0} \frac{|\alpha \|x\||}{\|\alpha x\|} = 1$.
-4. 由 Hahn-Banach 保范延拓定理，存在 $f \in X^*$ 满足 $f|_M = g$ 且 $\|f\| = \|g\| = 1$.
-5. 此时 $f(x) = g(x) = \|x\|$.
-
-</details>
-
----
-
-## B 组：Hilbert 空间与正交性 {#fa-b1}
-
-### 练习 B1
-在 Hilbert 空间 $H$ 中，证明 $M \subset (M^\perp)^\perp$。若 $M$ 是闭子空间，证明 $M = (M^\perp)^\perp$。
-
-<details>
-<summary>查看答案</summary>
-
-**证明**：
-1. 若 $x \in M$，则对任意 $y \in M^\perp$，有 $x \perp y$。这正好满足 $(M^\perp)^\perp$ 的定义，故 $M \subset (M^\perp)^\perp$。
-2. 若 $M$ 是闭子空间，由投影定理 $H = M \oplus M^\perp$。
-3. 对任意 $z \in (M^\perp)^\perp$，分解 $z = x + y$，其中 $x \in M, y \in M^\perp$。
-4. 由于 $z \in (M^\perp)^\perp$ 且 $y \in M^\perp$，有 $\langle z, y \rangle = 0$。
-5. 同时 $\langle z, y \rangle = \langle x+y, y \rangle = \langle x, y \rangle + \langle y, y \rangle = 0 + \|y\|^2$。
-6. 从而 $\|y\|^2 = 0 \Rightarrow y = 0$。
-7. 因此 $z = x \in M$，即 $(M^\perp)^\perp \subset M$。结论成立。
-
-</details>
-
-### 练习 B2
-证明：Hilbert 空间 $H$ 是可分的，当且仅当它拥有一个至多可列的规范正交基。
-
-<details>
-<summary>查看答案</summary>
-
-**提示**：
-1. **必要性**：利用 Gram-Schmidt 正交化过程处理 $H$ 中的可列稠密集。
-2. **充分性**：考虑基的有限线性组合且系数为有理数（或复有理数）构成的集合，证明其在 $H$ 中稠密。
+1. 由于 $\{T_n x\}$ 收敛，由收敛序列必有界可知，对每个 $x \in X$，有 $\sup_n \|T_n x\| < \infty$。
+2. 这正好满足一致有界性原理（Banach-Steinhaus 定理）的条件。
+3. 因此，存在 $M > 0$ 使得 $\sup_n \|T_n\| \le M$。
+4. **补充**：定义 $Tx = \lim T_n x$，则 $T$ 也是有界线性算子，且 $\|T\| \le \liminf \|T_n\|$。
 
 </details>
 
 ---
 
-## C 组：线性算子与谱理论初步 {#fa-c1}
+## B 组：Hilbert 空间、正交性与对偶 {#fa-b1}
 
-### 练习 C1
-设 $T \in \mathcal{B}(H)$。证明：若 $T$ 是自伴算子，则其谱 $\sigma(T) \subset \mathbb{R}$。
+### 练习 B1（极化恒等式）
+证明复内积空间中的极化恒等式：
+$$ \langle x, y \rangle = \frac{1}{4} \sum_{k=0}^3 i^k \|x + i^k y\|^2 $$
 
 <details>
-<summary>查看答案</summary>
+<summary>查看解析</summary>
 
 **证明**：
-1. 设 $\lambda = \alpha + i\beta$ ($\beta \neq 0$)。
-2. 计算 $\|(T - \lambda I)x\|^2 = \|(T-\alpha I)x - i\beta x\|^2 = \|(T-\alpha I)x\|^2 + \beta^2 \|x\|^2 \ge \beta^2 \|x\|^2$。
-3. 这说明 $T - \lambda I$ 是下有界的且是单射。
-4. 进一步证明其值域是全空间（利用自伴性及值域的闭性），故 $\lambda \in \rho(T)$（正则集）。
-5. 从而谱必须落在实轴上。
+1. 展开右式各项：
+   - $\|x+y\|^2 = \|x\|^2 + \|y\|^2 + \langle x, y \rangle + \langle y, x \rangle$
+   - $\|x-y\|^2 = \|x\|^2 + \|y\|^2 - \langle x, y \rangle - \langle y, x \rangle$
+   - $\|x+iy\|^2 = \|x\|^2 + \|y\|^2 - i\langle x, y \rangle + i\langle y, x \rangle$
+   - $\|x-iy\|^2 = \|x\|^2 + \|y\|^2 + i\langle x, y \rangle - i\langle y, x \rangle$
+2. 组合计算 $\sum i^k \| \dots \|^2$：
+   - 实部：$(\|x+y\|^2 - \|x-y\|^2) = 2(\langle x, y \rangle + \langle y, x \rangle) = 4 \operatorname{Re} \langle x, y \rangle$
+   - 虚部：$i(\|x+iy\|^2 - \|x-iy\|^2) = i(-2i \langle x, y \rangle + 2i \langle y, x \rangle) = 2(\langle x, y \rangle - \langle y, x \rangle) = 4i \operatorname{Im} \langle x, y \rangle$
+3. 相加即得 $4 \langle x, y \rangle$。
+
+</details>
+
+### 练习 B2（Riesz 表示定理的构造）
+在 $L^2(0,1)$ 中，求一个元素 $y$，使得对所有 $f \in L^2(0,1)$，有 $\int_0^1 f(t) e^t dt = \langle f, y \rangle$.
+
+<details>
+<summary>查看解析</summary>
+
+**解析**：
+1. 内积定义为 $\langle f, y \rangle = \int_0^1 f(t) \overline{y(t)} dt$。
+2. 对比已知等式：$\int_0^1 f(t) e^t dt = \int_0^1 f(t) \overline{y(t)} dt$。
+3. 显然 $\overline{y(t)} = e^t$，由于 $e^t$ 是实函数，故 $y(t) = e^t$。
+4. 验证有界性：$\int_0^1 (e^t)^2 dt = \int_0^1 e^{2t} dt = \frac{1}{2}(e^2 - 1) < \infty$，故 $y \in L^2(0,1)$。
+
+</details>
+
+---
+
+## C 组：算子理论、谱分解与自伴算子 {#fa-c1}
+
+### 练习 C1（自伴算子的谱半径）
+证明：若 $T$ 是 Hilbert 空间上的自伴算子，则 $\|T\| = r(T)$.
+
+<details>
+<summary>查看解析</summary>
+
+**证明**：
+1. 对于自伴算子，$\|T^2\| = \|T^* T\| = \|T\|^2$。
+2. 通过归纳法可得 $\|T^{2^n}\| = \|T\|^{2^n}$。
+3. 根据谱半径公式 $r(T) = \lim_{k \to \infty} \|T^k\|^{1/k}$。
+4. 取子序列 $k = 2^n$，$r(T) = \lim_{n \to \infty} (\|T\|^{2^n})^{1/2^n} = \|T\|$。
+5. **意义**：这说明自伴算子的范数完全由其谱的大小决定。
+
+</details>
+
+### 练习 C2（谱分类实战）
+在 $\ell^2$ 上定义右移算子 $S(x_1, x_2, \dots) = (0, x_1, x_2, \dots)$.
+1. 求 $\|S\|$.
+2. $0$ 是否为特征值？
+3. 证明 $\sigma(S) = \{ \lambda \in \mathbb{C} : |\lambda| \le 1 \}$.
+
+<details>
+<summary>查看解析</summary>
+
+**解析**：
+1. $\|Sx\|^2 = \sum |x_i|^2 = \|x\|^2$，故 $\|S\| = 1$。
+2. **特征值**：若 $Sx = \lambda x$，则 $(0, x_1, x_2, \dots) = (\lambda x_1, \lambda x_2, \dots)$。
+   - 若 $\lambda \neq 0$，则 $\lambda x_1 = 0 \Rightarrow x_1 = 0 \dots \Rightarrow x = 0$。
+   - 若 $\lambda = 0$，则 $Sx = 0 \Rightarrow x = 0$。
+   - 故点谱 $\sigma_p(S) = \emptyset$。
+3. **谱**：
+   - 因为 $\|S\|=1$，故谱落在单位圆盘内。
+   - 考虑其伴随算子 $S^*$（左移算子），其特征值充斥了单位开圆盘 $\{\lambda : |\lambda| < 1\}$。
+   - 利用 $\sigma(S) = \sigma(S^*)$ 的对称性及谱的闭性，得 $\sigma(S)$ 为闭单位圆盘。
 
 </details>
 
@@ -100,3 +126,4 @@ description: 涵盖 Banach 空间三大定理、Hilbert 空间几何及线性算
 - [返回泛函分析首页](/docs/academic-math/functional-analysis)
 - [查看 Banach 空间理论](/docs/academic-math/functional-analysis/banach-spaces)
 - [查看 Hilbert 空间理论](/docs/academic-math/functional-analysis/hilbert-spaces)
+- [查看算子谱理论](/docs/academic-math/functional-analysis/spectral-theory)
