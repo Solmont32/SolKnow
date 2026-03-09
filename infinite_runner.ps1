@@ -108,7 +108,18 @@ while($true) {
             if ($todoMatch -notmatch '- \[ \]') {
                 Show-Dashboard "PLANNING"
                 $ctx = Get-StrategicContext
-                $planPrompt = "ROLE: Architect`nMISSION: Decompose the 'CORE GOAL' into 3-5 sub-tasks.`nCONTEXT:`n" + $ctx + "`nACTION: Provide ONLY tasks as '- [ ] Task (YYYY-MM-DD)'.`n"
+                $planPrompt = @"
+ROLE: Senior Architect & Math Educator
+MISSION: Decompose the 'CORE GOAL' into 3-5 high-quality, textbook-style sub-tasks.
+REQUIREMENTS:
+1. Tasks must follow the 'SolKnow' pedagogical structure (Theory -> Examples -> Exercises).
+2. Ensure logical continuity with 'RECENT DONE' history.
+3. Focus on depth and rigor (LaTeX, formal definitions, detailed proofs).
+4. Format each task on a new line starting with '- [  ] Task Description (YYYY-MM-DD)'.
+CONTEXT:
+$ctx
+ACTION: Provide ONLY the task list as requested.
+"@
                 $newTasks = & gemini -y -p $planPrompt
                 $insertPattern = "(" + [regex]::Escape($global:LBL_TODO) + "\s*)"
                 Set-Content $global:CFG_TASKS ($content -replace $insertPattern, ('$1' + "`n" + $newTasks + "`n")) -Encoding UTF8
@@ -120,7 +131,20 @@ while($true) {
                 $lockLine = "- [ ] " + [regex]::Escape($taskDesc)
                 $lockRepl = "[/] " + $taskDesc + " " + $global:STR_EXEC
                 Set-Content $global:CFG_TASKS ($content -replace $lockLine, $lockRepl) -Encoding UTF8
-                & gemini -y -p ("ROLE: Professor`nTask: " + $taskDesc + ". Standard: Textbook quality, LaTeX, Folded Answers. Mark as '- [x]' when done.")
+                
+                $execPrompt = @"
+ROLE: Senior Professor & Technical Writer
+CONTEXT: SolKnow Project (Computer Science & Math Intersection).
+TASK: $taskDesc
+STANDARDS:
+1. Textbook quality: Use rigorous definitions and formal proofs.
+2. LaTeX: All math must be in perfect LaTeX ($...$ or $$...$$).
+3. Interactive Feedback: Use <details><summary>Check Solution</summary>...</details> for all exercise answers.
+4. Cross-linking: Link to related docs/exercises to form a knowledge web.
+5. Aesthetic: Adhere to lucide-react icons and framer-motion standards mentioned in GEMINI.md.
+ACTION: Implement the task fully. Mark as '- [x]' in TASKS.md when finished.
+"@
+                & gemini -y -p $execPrompt
                 Organize-Tasks | Out-Null
                 Write-Log ("Completed: " + $taskDesc)
                 git add .
