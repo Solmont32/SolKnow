@@ -83,8 +83,17 @@ $$
 
 九点圆圆心是 $OH$ 中点，过三边中点、三高垂足、以及顶点到垂心连线中点。
 
+### 5. 割补法 (Cut-and-Paste Method)
+
+割补法是处理面积、体积及复杂图形性质的经典直观方法。
+
+- **等积变形**：通过剪裁并重新拼接，不改变图形的总面积。
+- **割法**：将复杂图形分割为若干个易计算的简单图形（如三角形、矩形）。
+- **补法**：将原图形补全为一个更大的规则图形，再减去多余的部分。
+- **面积法证明**：利用面积比等于底边比（等高）或边长积之比（共角）来证明比例关系。例如，塞瓦定理的最直观证明即源于面积比。
+
 <KnowledgeCard type="contest" title="竞赛策略：先定型，再运算">
-看到“共点/共线”先判断是否是塞瓦-梅涅劳斯模型；看到“圆+长度”优先尝试圆幂；看到“中点/垂足”优先尝试九点圆结构。先把题目归类，通常比盲目计算更快。
+看到“共点/共线”先判断是否是塞瓦-梅涅劳斯模型；看到“圆+长度”优先尝试圆幂；看到涉及复杂多边形面积或难以直接计算的长度，优先考虑割补法构造等积或等长的辅助图形。
 </KnowledgeCard>
 
 ---
@@ -246,6 +255,31 @@ $PT=6$。
 
 </details>
 
+### 例题 5：割补法在角度/形状判定中的应用 (High Difficulty)
+
+在正方形 $ABCD$ 内部有一点 $P$，使得 $\angle PAD = \angle PDA = 15^\circ$。证明 $\triangle PBC$ 是正三角形。
+
+<details>
+
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程 (补法/构造法)
+1. **常规思路**：通过正切函数计算 $P$ 到 $AD$ 的距离，再算 $P$ 到 $BC$ 的距离，验证其等于 $\frac{\sqrt{3}}{2}a$。
+2. **割补/构造思路**：
+   - 在正方形内以 $BC$ 为边向内作正三角形 $QBC$。
+   - 连接 $QA, QD$。则 $\angle QBA = 90^\circ - 60^\circ = 30^\circ$。
+   - 因 $QB=BC=BA$，故 $\triangle QBA$ 为等腰三角形，$\angle QAB = (180-30)/2 = 75^\circ$。
+   - 同理 $\angle QDC = 75^\circ$。
+   - 于是 $\angle QAD = 90^\circ - 75^\circ = 15^\circ$，$\angle QDA = 15^\circ$。
+   - 此时点 $Q$ 满足 $\angle QAD = \angle QDA = 15^\circ$。
+   - 由点的唯一性，点 $P$ 与点 $Q$ 重合。
+   - 故 $\triangle PBC$ 为正三角形。
+
+#### 结论
+命题得证。
+
+</details>
+
 ---
 
 ## 三、章节练习（配套）
@@ -321,5 +355,34 @@ AD^2+108=181\Rightarrow AD^2=73.
 $$
 
 答案：$AD=\sqrt{73}$。
+
+</details>
+
+### 练习 D（高难度 - 割补法）
+
+正方形 $ABCD$ 边长为 1，点 $E, F$ 分别在 $BC, CD$ 上，使得 $\triangle CEF$ 的周长为 2。求 $\angle EAF$ 的度数。
+
+<details>
+
+<summary>点击查看过程与答案</summary>
+
+1. **割补构造**：将 $\triangle ADF$ 绕点 $A$ 逆时针旋转 $90^\circ$ 到 $\triangle ABF'$。
+2. **等量代换**：
+   - 旋转后 $BF'=DF$，$AF'=AF$，$\angle BAF' = \angle DAF$。
+   - 设 $BE=x, DF=y$，则 $CE=1-x, CF=1-y$。
+   - 周长 $CE+CF+EF=2 \Rightarrow (1-x)+(1-y)+EF=2 \Rightarrow EF = x+y$。
+   - 在旋转后的图中，$F', B, E$ 共线（因 $\angle ABF' + \angle ABC = 90^\circ + 90^\circ = 180^\circ$）。
+   - 且线段 $F'E = F'B + BE = y + x = EF$。
+3. **全等判定**：
+   - 在 $\triangle AEF'$ 与 $\triangle AEF$ 中：$AE=AE$, $AF'=AF$, $F'E=FE$。
+   - 故 $\triangle AEF' \cong \triangle AEF$ (SSS)。
+   - 因此 $\angle EAF' = \angle EAF$。
+4. **度数计算**：
+   - $90^\circ = \angle BAD = \angle BAE + \angle EAF + \angle DAF$。
+   - 又 $\angle EAF' = \angle BAE + \angle BAF' = \angle BAE + \angle DAF$。
+   - 故 $\angle EAF' = \angle EAF \Rightarrow 90^\circ - \angle EAF = \angle EAF \Rightarrow 2\angle EAF = 90^\circ$。
+   - $\angle EAF = 45^\circ$。
+
+答案：$45^\circ$
 
 </details>

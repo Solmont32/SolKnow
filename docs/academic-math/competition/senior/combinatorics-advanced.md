@@ -62,8 +62,20 @@ $$
 - **平面图与欧拉公式**：$V-E+F=2$（连通平面图）。
 - **握手定理**：$\sum \deg(v)=2E$，常用于奇偶性与度数下界。
 
+### 6. 容斥原理 (Inclusion-Exclusion Principle)
+
+处理“至少”或“至多”问题的标准工具。
+
+- **基本形式**：
+  $$|A_1 \cup A_2 \cup \dots \cup A_n| = \sum |A_i| - \sum |A_i \cap A_j| + \sum |A_i \cap A_j \cap A_k| - \dots + (-1)^{n-1} |A_1 \cap \dots \cap A_n|$$
+- **补集形式**：
+  $$|\bigcap \bar{A_i}| = |S| - \sum |A_i| + \sum |A_i \cap A_j| - \dots$$
+- **错位排列 (Derangements)**：$n$ 个元素的错排数 $D_n$ 满足：
+  $$D_n = n! \sum_{k=0}^n \frac{(-1)^k}{k!}$$
+  且满足递推式：$D_n = (n-1)(D_{n-1} + D_{n-2})$。
+
 <KnowledgeCard type="contest" title="竞赛策略">
-组合题先做“题型归类”：计数恒等式优先双计数，存在性优先抽屉原理，序列问题优先递推/母函数，图结构优先握手定理与欧拉公式。
+组合题先做“题型归类”：计数恒等式优先双计数，存在性优先抽屉原理，序列问题优先递推/母函数，涉及排除多个属性的计数优先容斥原理。
 </KnowledgeCard>
 
 ---
@@ -165,6 +177,32 @@ $$
 
 </details>
 
+### 例题 5：容斥原理的应用 (High Difficulty)
+
+求 $1, 2, \dots, 1000$ 中不能被 5, 6, 8 中任何一个数整除的整数个数。
+
+<details>
+
+<summary>点击查看解析与答案</summary>
+
+#### 解析过程
+设 $S = \{1, 2, \dots, 1000\}$，$A$ 为被 5 整除的集合，$B$ 为被 6 整除的集合，$C$ 为被 8 整除的集合。
+我们需要计算 $|S| - |A \cup B \cup C|$。
+1. 单个集合大小：$|A| = \lfloor 1000/5 \rfloor = 200$, $|B| = \lfloor 1000/6 \rfloor = 166$, $|C| = \lfloor 1000/8 \rfloor = 125$。
+2. 两两相交：
+   - $|A \cap B| = \lfloor 1000/\operatorname{lcm}(5,6) \rfloor = \lfloor 1000/30 \rfloor = 33$。
+   - $|A \cap C| = \lfloor 1000/\operatorname{lcm}(5,8) \rfloor = \lfloor 1000/40 \rfloor = 25$。
+   - $|B \cap C| = \lfloor 1000/\operatorname{lcm}(6,8) \rfloor = \lfloor 1000/24 \rfloor = 41$。
+3. 三者相交：
+   - $|A \cap B \cap C| = \lfloor 1000/\operatorname{lcm}(5,6,8) \rfloor = \lfloor 1000/120 \rfloor = 8$。
+4. 计算并集：$|A \cup B \cup C| = (200+166+125) - (33+25+41) + 8 = 491 - 99 + 8 = 400$。
+5. 结果：$1000 - 400 = 600$。
+
+#### 答案
+600
+
+</details>
+
 ---
 
 ## 三、 配套练习
@@ -253,5 +291,22 @@ $$
 $$
 
 因此结论成立。
+
+</details>
+
+### 练习 5（高难度 - 错位排列）
+
+5 个人把帽子扔进黑箱，每人随机取回一个。求恰有 2 个人拿对帽子的方案数。
+
+<details>
+
+<summary>点击查看过程与答案</summary>
+
+1. 先选出拿对帽子的 2 个人：$\binom{5}{2} = 10$ 种方案。
+2. 剩下 3 个人必须全部拿错，即进行错位排列：$D_3$。
+3. $D_3 = 3!(1 - 1 + 1/2 - 1/6) = 6 \cdot (1/3) = 2$。
+4. 总方案数：$10 \cdot 2 = 20$。
+
+答案：20
 
 </details>
