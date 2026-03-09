@@ -248,6 +248,17 @@ const sidebars: SidebarsConfig = {
               type: 'category',
               collapsible: true,
               collapsed: true,
+              label: '泛函分析 (Functional Analysis)',
+              link: { type: 'doc', id: 'academic-math/functional-analysis/index' },
+              items: [
+                'academic-math/functional-analysis/banach-spaces',
+                'academic-math/functional-analysis/hilbert-spaces',
+              ]
+            },
+            {
+              type: 'category',
+              collapsible: true,
+              collapsed: true,
               label: '点集拓扑学 (Topology)',
               link: { type: 'doc', id: 'academic-math/topology/index' },
               items: [
@@ -371,6 +382,7 @@ const sidebars: SidebarsConfig = {
                 { type: 'doc', id: 'exercises/math/analysis-differential-geometry', label: '进阶：微分几何专题' },
                 { type: 'doc', id: 'exercises/math/analysis-differential-equations', label: '进阶：常微分方程专题' },
                 { type: 'doc', id: 'exercises/math/topology', label: '点集拓扑专题' },                { type: 'doc', id: 'exercises/math/real-analysis', label: '实变函数专题' },
+                { type: 'doc', id: 'exercises/math/functional-analysis', label: '泛函分析专题' },
               ]
             },
           ],
