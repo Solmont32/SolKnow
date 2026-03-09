@@ -197,7 +197,7 @@ f_n(x)=n\chi_{(0,1/n)}(x).
 
 $$
 
-对任意固定 $x>0$，当 $n>1/x$ 时 $f_n(x)=0$，故 a.e. 收敛到 0。  
+对任意固定 $x>0$，当 $n>1/x$ 时 $f_n(x) = 0$，故 a.e. 收敛到 0。  
 但
 
 $$
@@ -208,6 +208,54 @@ $$
 $$
 
 故不在 $L^1$ 中收敛到 0。
+
+</details>
+
+### B5（提高）Egorov 定理的应用 {#ra-b5}
+
+证明：若 $m(E) < \infty$，$f_n \to f$ a.e. 且 $f$ 几乎处处有限，则 $f_n \xrightarrow{m} f$（依测度收敛）。
+
+<details>
+
+<summary>点击查看过程与答案</summary>
+
+对任意 $\varepsilon > 0$ 和 $\delta > 0$，由 Egorov 定理，存在 $A \subset E$ 使得 $m(E \setminus A) < \delta$ 且 $f_n \to f$ 在 $A$ 上一致收敛。  
+存在 $N$ 使得当 $n > N$ 时，对所有 $x \in A$ 有 $|f_n(x) - f(x)| < \varepsilon$。  
+因此 $\{x \in E \mid |f_n(x) - f(x)| \ge \varepsilon\} \subset E \setminus A$。  
+故 $m(\{x \in E \mid |f_n(x) - f(x)| \ge \varepsilon\}) \le m(E \setminus A) < \delta$。  
+证毕。
+
+</details>
+
+### B6（提高）Lusin 定理与逼近 {#ra-b6}
+
+设 $f$ 在 $[a, b]$ 上可测，证明存在连续函数序列 $\{g_n\}$ 使得 $g_n \to f$ a.e.。
+
+<details>
+
+<summary>点击查看过程与答案</summary>
+
+由 Lusin 定理，对每个 $n$，存在闭集 $F_n$ 使得 $m([a,b] \setminus F_n) < 1/2^n$ 且 $f|_{F_n}$ 连续。  
+由 Tietze 扩张定理，存在连续函数 $g_n$ 使得 $g_n|_{F_n} = f|_{F_n}$。  
+令 $A = \bigcup_{k=1}^\infty \bigcap_{n=k}^\infty F_n$，由 Borel-Cantelli 引理（或直接构造）知 $m([a,b] \setminus A) = 0$。  
+对任意 $x \in A$，当 $n$ 足够大时 $x \in F_n$，故 $g_n(x) = f(x)$。  
+结论成立。
+
+</details>
+
+### B7（进阶）MCT 与下降序列 {#ra-b7}
+
+证明：若 $f_n \downarrow f$ a.e. 且 $\int f_1 < \infty$，则 $\int f_n \to \int f$。并说明 $\int f_1 < \infty$ 为何必要。
+
+<details>
+
+<summary>点击查看过程与答案</summary>
+
+令 $g_n = f_1 - f_n$。则 $g_n \ge 0$ 且 $g_n \uparrow (f_1 - f)$。  
+由 MCT：$\int (f_1 - f_n) \to \int (f_1 - f)$。  
+由积分线性性（因 $\int f_1 < \infty$）：$\int f_1 - \int f_n \to \int f_1 - \int f$。  
+从而 $\int f_n \to \int f$。  
+反例：$f_n = \chi_{[n, \infty)}$ 在 $\mathbb{R}$ 上，$f_n \downarrow 0$ 但 $\int f_n = \infty \not\to 0$。
 
 </details>
 
