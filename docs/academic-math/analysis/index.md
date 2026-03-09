@@ -77,7 +77,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 - **[分析学不等式全书](inequalities)**：系统化梳理 Young, Hölder, Minkowski 等核心工具。
 - **[Riemann-Stieltjes 积分](riemann-stieltjes-integral)**：Lebesgue 积分的序曲。
-- **[常微分方程初步](differential-equations)**：动态系统的数学描述。
+- **[微分方程 (Differential Equations)](differential-equations)**：从常微分稳定性到偏微分特征理论。
 - **[无穷乘积](infinite-products)**：与级数并行的无限运算。
 - **[点集拓扑学 (Point-Set Topology)](/docs/academic-math/topology)**：从欧氏空间到抽象拓扑空间的基础构建。
 

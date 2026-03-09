@@ -1,14 +1,14 @@
 ---
-title: 常微分方程 (Ordinary Differential Equations)
-description: 系统化梳理 ODE 理论：从初等积分法到高阶线性方程组，涵盖 Picard 存在唯一性定理与稳定性理论。
+title: 微分方程 (Differential Equations)
+description: 系统化梳理微分方程理论：从 ODE 的稳定性到 PDE 的特征线法、分离变量法与 Sturm-Liouville 理论。
 ---
 
 import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
-import { Sigma, Infinity, Activity, ShieldCheck, Zap, Layers } from 'lucide-react';
+import { Sigma, Infinity, Activity, ShieldCheck, Zap, Layers, GitBranch, Waves, Target } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-# 常微分方程：初等积分法、线性理论与稳定性
+# 微分方程：从常微分稳定性到偏微分特征理论
 
 如果代数方程是寻找一个**未知的数**，那么微分方程就是在寻找一个**未知的函数**。它是分析学中连接理论与现实世界的桥梁，描述了自然界中几乎所有的动态变化规律。
 
@@ -49,25 +49,6 @@ $$y(x) = e^{-\int P(x)dx} \left[ \int Q(x) e^{\int P(x)dx} dx + C \right]$$
 形式：$\frac{dy}{dx} + P(x)y = Q(x)y^n \quad (n \neq 0, 1)$。
 变换：令 $z = y^{1-n}$，化为关于 $z$ 的线性方程：$\frac{dz}{dx} + (1-n)P(x)z = (1-n)Q(x)$。
 
-### 4. 全微分方程与积分因子
-形式：$M(x,y)dx + N(x,y)dy = 0$。
-- **全微分判别：** $\frac{\partial M}{\partial y} = \frac{\partial N}{\partial x}$。
-- **积分因子：** 若不满足全微分条件，寻找 $\mu(x,y)$ 使得 $\frac{\partial (\mu M)}{\partial y} = \frac{\partial (\mu N)}{\partial x}$。
-  - 若 $\frac{\frac{\partial M}{\partial y} - \frac{\partial N}{\partial x}}{N} = f(x)$，则 $\mu = e^{\int f(x)dx}$。
-
-<details>
-<summary><b>例题 2.1：全微分方程求解</b></summary>
-求解 $(3x^2 + 6xy^2)dx + (6x^2y + 4y^3)dy = 0$。
-<br/>
-**解析：**
-1. 检查全微分条件：$M_y = 12xy, N_x = 12xy$。相等，是全微分方程。
-2. 构造原函数 $u(x,y)$：
-   $u = \int (3x^2 + 6xy^2) dx = x^3 + 3x^2y^2 + \phi(y)$
-3. 求导匹配 $N$：
-   $\frac{\partial u}{\partial y} = 6x^2y + \phi'(y) = 6x^2y + 4y^3 \implies \phi'(y) = 4y^3 \implies \phi(y) = y^4$
-4. 通解：$x^3 + 3x^2y^2 + y^4 = C$。
-</details>
-
 ---
 
 ## <Layers className="inline-block mr-2 mb-1 text-purple-500" /> 三、 高阶线性微分方程
@@ -83,93 +64,142 @@ $$y(x) = e^{-\int P(x)dx} \left[ \int Q(x) e^{\int P(x)dx} dx + C \right]$$
 - **$k$ 重根 $\lambda$：** 对应解 $\{e^{\lambda x}, x e^{\lambda x}, \dots, x^{k-1} e^{\lambda x}\}$。
 - **共轭复根 $\alpha \pm i\beta$：** 对应解 $\{e^{\alpha x}\cos\beta x, e^{\alpha x}\sin\beta x\}$。
 
-### 3. 非齐次方程：参数变易法
-若已知齐次方程基础解系 $\{y_1, y_2\}$，对于 $y'' + P(x)y' + Q(x)y = f(x)$：
-设特解 $y^* = c_1(x)y_1 + c_2(x)y_2$，通过解方程组：
-$$ \begin{cases} c_1' y_1 + c_2' y_2 = 0 \\ c_1' y_1' + c_2' y_2' = f(x) \end{cases} $$
-得到 $c_1, c_2$ 的表达式。
-
-<details>
-<summary><b>例题 3.1：常系数非齐次方程</b></summary>
-求解 $y'' - 3y' + 2y = e^{3x}$。
-<br/>
-**解析：**
-1. 齐次方程 $y'' - 3y' + 2y = 0$ 的特征方程为 $\lambda^2 - 3\lambda + 2 = 0 \implies \lambda_1=1, \lambda_2=2$。
-   齐次通解为 $Y = C_1 e^x + C_2 e^{2x}$。
-2. 设非齐次特解 $y^* = A e^{3x}$。代入原方程：
-   $9A e^{3x} - 9A e^{3x} + 2A e^{3x} = e^{3x} \implies 2A = 1 \implies A = 1/2$。
-3. 全通解：$y = C_1 e^x + C_2 e^{2x} + \frac{1}{2} e^{3x}$。
-</details>
-
 ---
 
-## <Sigma className="inline-block mr-2 mb-1 text-red-500" /> 四、 线性微分方程组
-
-### 1. 矩阵形式
-$\mathbf{y}' = A(t)\mathbf{y} + \mathbf{f}(t)$
-- **基本矩阵 $\Phi(t)$：** 由 $n$ 个线性无关解向量组成，满足 $\Phi'(t) = A(t)\Phi(t)$。
-- **初值问题解：** $\mathbf{y}(t) = \Phi(t)\Phi^{-1}(t_0)\mathbf{y}_0 + \Phi(t)\int_{t_0}^t \Phi^{-1}(s)\mathbf{f}(s)ds$。
-
-### 2. 常系数矩阵指数 $e^{At}$
-对于常矩阵 $A$，其基本矩阵可取为 $e^{At} = \sum_{k=0}^\infty \frac{A^k t^k}{k!}$。
-- 若 $A$ 可对角化 $A = PDP^{-1}$，则 $e^{At} = P e^{Dt} P^{-1}$。
-- 若 $A$ 有 Jordan 块 $J = \lambda I + N$，则 $e^{Jt} = e^{\lambda t} e^{Nt}$（$N$ 是幂零阵，级数有限）。
-
----
-
-## <ShieldCheck className="inline-block mr-2 mb-1 text-green-500" /> 五、 稳定性理论 (Stability Theory)
+## <ShieldCheck className="inline-block mr-2 mb-1 text-green-500" /> 四、 稳定性理论 (Stability Theory)
 
 ### 1. 李雅普诺夫 (Lyapunov) 稳定性定义
-考虑 $\dot{\mathbf{x}} = \mathbf{f}(\mathbf{x})$，且 $\mathbf{f}(\mathbf{0}) = \mathbf{0}$（平衡点在原点）。
-- **稳定：** 对 $\forall \epsilon > 0$，$\exists \delta > 0$，若 $|\mathbf{x}(0)| < \delta$，则 $\forall t > 0, |\mathbf{x}(t)| < \epsilon$。
-- **渐近稳定：** 稳定且 $\lim_{t \to \infty} \mathbf{x}(t) = \mathbf{0}$。
+考虑动力系统 $\dot{\mathbf{x}} = \mathbf{f}(\mathbf{x})$，平衡点 $\mathbf{x}^* = \mathbf{0}$。
+- **稳定 (Stable)：** 微扰后轨道保持在邻域内。
+- **渐近稳定 (Asymptotically Stable)：** 微扰后轨道最终收敛至平衡点。
 
-### 2. 李雅普诺夫第二法 (直接法)
-寻找标量函数 $V(\mathbf{x})$（能量函数）：
-- 若 $V(\mathbf{x})$ 正定，且 $\dot{V}(\mathbf{x}) = \nabla V \cdot \mathbf{f}(\mathbf{x}) \le 0$，则原点**稳定**。
-- 若 $V(\mathbf{x})$ 正定，且 $\dot{V}(\mathbf{x})$ 负定，则原点**渐近稳定**。
-
-### 3. 一次近似判别法
-对非线性系统在平衡点线性化 $\dot{\mathbf{x}} = J \mathbf{x}$，其中 $J = \frac{\partial \mathbf{f}}{\partial \mathbf{x}} \big|_{\mathbf{0}}$：
-- 若 $J$ 的所有特征值 $\text{Re}(\lambda) < 0$，则原系统**渐近稳定**。
-- 若存在 $\text{Re}(\lambda) > 0$，则原系统**不稳定**。
+### 2. 李雅普诺夫直接法
+若存在正定函数 $V(\mathbf{x})$：
+- $\dot{V}(\mathbf{x}) \le 0 \implies$ **稳定**。
+- $\dot{V}(\mathbf{x}) < 0 \quad (\mathbf{x} \ne 0) \implies$ **渐近稳定**。
 
 ---
 
-## <Infinity className="inline-block mr-2 mb-1 text-indigo-500" /> 六、 综合练习库
+## <GitBranch className="inline-block mr-2 mb-1 text-cyan-500" /> 五、 一阶偏微分方程与特征线法
 
-1. **[一阶]** 求解方程 $x y' + y = y^2 \ln x$。
-2. **[高阶]** 求解 $y''' - y' = x$。
-3. **[方程组]** 求矩阵 $A = \begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix}$ 的指数矩阵 $e^{At}$，并说明其几何意义。
-4. **[稳定性]** 讨论系统 $\begin{cases} \dot{x} = -x + y + x^2 \\ \dot{y} = -x - y + y^2 \end{cases}$ 在原点的稳定性。
+一阶偏微分方程 (PDE) 的通式为 $F(x, y, u, u_x, u_y) = 0$。
+
+### 1. 拟线性方程 (Quasi-linear PDE)
+形式：$P(x, y, u)u_x + Q(x, y, u)u_y = R(x, y, u)$。
+
+### 2. 特征线法 (Method of Characteristics)
+其核心思想是将 PDE 转化为一组 **常微分方程组 (Characteristic ODEs)**：
+$$ \frac{dx}{P} = \frac{dy}{Q} = \frac{du}{R} $$
+通过解这组 ODE，可以找到解曲面上的曲线。若已知初始条件 $u(\Gamma) = f(\Gamma)$，则可确定唯一解。
+
+---
+
+## <Waves className="inline-block mr-2 mb-1 text-blue-600" /> 六、 二阶线性偏微分方程
+
+二阶线性 PDE 的一般形式为：
+$$ A u_{xx} + 2B u_{xy} + C u_{yy} + D u_x + E u_y + Fu = G $$
+
+### 1. 分类 (Classification)
+根据判别式 $\Delta = B^2 - AC$：
+- **$\Delta > 0$：双曲型 (Hyperbolic)**。典型代表：**波动方程** $u_{tt} - a^2 u_{xx} = 0$。
+- **$\Delta = 0$：抛物型 (Parabolic)**。典型代表：**热传导方程** $u_t - a^2 u_{xx} = 0$。
+- **$\Delta < 0$：椭圆型 (Elliptic)**。典型代表：**拉普拉斯方程** $\Delta u = 0$。
+
+### 2. 标准型与叠加原理
+由于线性性质，若 $u_1, u_2$ 是齐次方程的解，则 $c_1 u_1 + c_2 u_2$ 亦为解。
+
+---
+
+## <Target className="inline-block mr-2 mb-1 text-orange-500" /> 七、 分离变量法与 Sturm-Liouville 理论
+
+### 1. 分离变量法 (Separation of Variables)
+对于线性齐次边界值问题，设 $u(x, t) = X(x)T(t)$，代入 PDE 将其分解为两个独立的 ODE。
+例如对热传导方程 $u_t = k u_{xx}$，分解得：
+$$ \frac{T'}{kT} = \frac{X''}{X} = -\lambda $$
+
+### 2. Sturm-Liouville (S-L) 理论
+在分离变量法中，空间部分通常归结为 **Sturm-Liouville 边值问题**：
+$$ \frac{d}{dx} \left[ p(x) \frac{dy}{dx} \right] + [q(x) + \lambda w(x)]y = 0 $$
+- **性质：** 特征值 $\lambda$ 是一组递增的实数列；不同特征值对应的特征函数在加权空间 $L_w^2$ 内**正交**。
+- **意义：** 保证了任何“良好”的函数都可以按特征函数系进行广义傅里叶展开。
+
+---
+
+## <Infinity className="inline-block mr-2 mb-1 text-indigo-500" /> 八、 特殊函数初步
+
+特殊函数通常作为特定坐标系下偏微分方程分离变量后的特征函数出现。
+
+### 1. 勒让德多项式 (Legendre Polynomials) $P_n(x)$
+源自球坐标系下的拉普拉斯方程。满足：
+$$ (1-x^2)y'' - 2xy' + n(n+1)y = 0 $$
+其在 $[-1, 1]$ 上正交。
+
+### 2. 贝塞尔函数 (Bessel Functions) $J_n(x)$
+源自柱坐标系下的波动或热传导方程。满足：
+$$ x^2 y'' + xy' + (x^2 - n^2)y = 0 $$
+
+---
+
+## <Sigma className="inline-block mr-2 mb-1 text-red-500" /> 九、 深度综合练习库
 
 <details>
-<summary><b>点击查看练习参考解答</b></summary>
+<summary><b>练习 1：特征线法求解偏微分方程</b></summary>
+求解初值问题：$x u_x + y u_y = 2u$，初始条件 $u(x, 1) = x^2$。
+<br/>
+**解析：**
+1. 特征方程：$\frac{dx}{x} = \frac{dy}{y} = \frac{du}{2u}$。
+2. 由前两个等式：$\ln x = \ln y + \ln C_1 \implies \frac{x}{y} = C_1$。
+3. 由第一个和第三个等式：$\ln u = 2 \ln x + \ln C_2 \implies \frac{u}{x^2} = C_2$。
+4. 一般解形式：$\frac{u}{x^2} = \Phi\left(\frac{x}{y}\right) \implies u(x, y) = x^2 \Phi\left(\frac{x}{y}\right)$。
+5. 代入初值：$u(x, 1) = x^2 \Phi(x) = x^2 \implies \Phi(x) = 1$。
+6. **最终解：** $u(x, y) = x^2$。（注：此解满足原方程 $x(2x) + y(0) = 2x^2$）。
+</details>
 
-**1. 伯努利方程：**
-除以 $y^2$ 得 $x y^{-2} y' + y^{-1} = \ln x$。令 $z = y^{-1}$，则 $z' = -y^{-2} y'$。
-$-x z' + z = \ln x \implies z' - \frac{1}{x}z = -\frac{\ln x}{x}$。
-利用线性方程公式：$z = e^{\int \frac{1}{x}dx} [ \int -\frac{\ln x}{x} e^{-\int \frac{1}{x}dx} dx + C ] = x [ \int -\frac{\ln x}{x^2} dx + C ]$。
-积分 $\int \frac{\ln x}{x^2} dx = -\frac{\ln x}{x} - \frac{1}{x}$。
-故 $z = x [ \frac{\ln x + 1}{x} + C ] = \ln x + 1 + Cx \implies y = \frac{1}{\ln x + 1 + Cx}$。
+<details>
+<summary><b>练习 2：热传导方程的分离变量法</b></summary>
+求解一维杆的热传导方程 $u_t = u_{xx}$，边界条件 $u(0, t) = u(\pi, t) = 0$，初值 $u(x, 0) = \sin(2x)$。
+<br/>
+**解析：**
+1. 设 $u = X(x)T(t)$，代入得 $X T' = X'' T \implies \frac{T'}{T} = \frac{X''}{X} = -\lambda$。
+2. 空间方程 $X'' + \lambda X = 0, X(0)=X(\pi)=0$。这是一个 S-L 问题。
+3. 解得 $\lambda_n = n^2, X_n(x) = \sin(nx), n=1, 2, \dots$。
+4. 时间方程 $T' = -n^2 T \implies T_n(t) = e^{-n^2 t}$。
+5. 叠加解：$u(x, t) = \sum_{n=1}^\infty A_n \sin(nx) e^{-n^2 t}$。
+6. 初值条件：$u(x, 0) = \sum A_n \sin(nx) = \sin(2x)$。
+7. 对比系数：$A_2 = 1$，其余 $A_n = 0$。
+8. **最终解：** $u(x, t) = \sin(2x) e^{-4t}$。
+</details>
 
-**2. 高阶常系数：**
-特征方程 $\lambda^3 - \lambda = 0 \implies \lambda(\lambda-1)(\lambda+1)=0 \implies \lambda = 0, \pm 1$。
-齐次通解 $Y = C_1 + C_2 e^x + C_3 e^{-x}$。
-设特解 $y^* = x(Ax + B) = Ax^2 + Bx$（因为 $\lambda=0$ 是单根）。
-代入：$0 - (2Ax + B) = x \implies -2A = 1, -B = 0 \implies A = -1/2, B = 0$。
-通解 $y = C_1 + C_2 e^x + C_3 e^{-x} - \frac{1}{2}x^2$。
+<details>
+<summary><b>练习 3：稳定性判定 (李雅普诺夫法)</b></summary>
+分析系统 $\dot{x} = -x^3, \dot{y} = -y^3$ 在原点的稳定性。
+<br/>
+**解析：**
+1. 构造正定函数 $V(x, y) = \frac{1}{2}(x^2 + y^2)$。
+2. 计算其随时间的导数：$\dot{V} = x \dot{x} + y \dot{y} = x(-x^3) + y(-y^3) = -(x^4 + y^4)$。
+3. 观察 $\dot{V}$ 的性质：对于除原点外的所有点，$\dot{V} < 0$，即 $\dot{V}$ 是负定的。
+4. 根据李雅普诺夫第二法，原点是**全局渐近稳定**的。
+</details>
 
-**3. 指数矩阵：**
-$A^2 = \begin{pmatrix} -1 & 0 \\ 0 & -1 \end{pmatrix} = -I$，$A^3 = -A$，$A^4 = I$。
-$e^{At} = I + At + \frac{A^2 t^2}{2!} + \dots = I(1 - \frac{t^2}{2!} + \dots) + A(t - \frac{t^3}{3!} + \dots)$
-$e^{At} = I \cos t + A \sin t = \begin{pmatrix} \cos t & \sin t \\ -\sin t & \cos t \end{pmatrix}$。
-**几何意义：** 代表二维平面上的**旋转变换**（顺时针旋转 $t$ 弧度）。
+<details>
+<summary><b>练习 4：S-L 理论与正交性</b></summary>
+证明 Sturm-Liouville 算子 $\mathcal{L} = \frac{d}{dx}[p(x)\frac{d}{dx}] + q(x)$ 是自伴的（在齐次边界条件下）。
+<br/>
+**证明：**
+1. 我们需要证明 $\langle \mathcal{L}u, v \rangle = \langle u, \mathcal{L}v \rangle$。
+2. $\int_a^b v \frac{d}{dx}(p u') dx = [v p u']_a^b - \int_a^b p u' v' dx$ (分部积分)。
+3. 再次分部积分：$= [v p u' - u p v']_a^b + \int_a^b u \frac{d}{dx}(p v') dx$。
+4. 若边界条件使得 $[p(v u' - u v')]_a^b = 0$（如 Dirichlet 或 Neumann 条件），则：
+   $\langle \mathcal{L}u, v \rangle = \int_a^b u \mathcal{L}v dx = \langle u, \mathcal{L}v \rangle$。
+5. 结论：S-L 算子是自伴的，从而保证了其特征值的实数性与特征函数的正交性。
+</details>
 
-**4. 线性化判定：**
-计算 Jacobian $J = \begin{pmatrix} -1+2x & 1 \\ -1 & -1+2y \end{pmatrix}$。
-在原点 $(0,0)$ 处，$J = \begin{pmatrix} -1 & 1 \\ -1 & -1 \end{pmatrix}$。
-特征方程 $(\lambda+1)^2 + 1 = 0 \implies \lambda = -1 \pm i$。
-实部均为 $-1 < 0$，故原点是**渐近稳定**的。
-
+<details>
+<summary><b>练习 5：勒让德方程的解</b></summary>
+已知 $P_0(x) = 1, P_1(x) = x$。利用递推公式 $(n+1)P_{n+1}(x) = (2n+1)xP_n(x) - nP_{n-1}(x)$ 求 $P_2(x)$。
+<br/>
+**解析：**
+1. 取 $n=1$：$2P_2(x) = 3xP_1(x) - 1P_0(x)$。
+2. 代入 $P_1, P_0$：$2P_2(x) = 3x(x) - 1 = 3x^2 - 1$。
+3. **结果：** $P_2(x) = \frac{1}{2}(3x^2 - 1)$。
 </details>
