@@ -135,7 +135,7 @@ while($true) {
                 Show-Dashboard "PLANNING"
                 $ctx = Get-StrategicContext
                 $planPrompt = @"
-ROLE: Senior Architect & Math Educator
+ROLE: Senior Architect & Math Educator & Algorithm Master
 MISSION: Decompose the 'CORE GOAL' into 3-5 sub-tasks.
 STRICT FORMAT REQUIREMENTS:
 1. Format: '- [ ] Task Description (YYYY-MM-DD)'.

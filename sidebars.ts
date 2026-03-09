@@ -20,7 +20,7 @@ const sidebars: SidebarsConfig = {
       collapsed: true,
       label: '基础算法',
       link: {type: 'doc', id: 'basic/index'},
-      items: ['basic/io', 'basic/complexity', 'basic/binary-search', 'basic/sorting', 'basic/greedy', 'basic/two-pointers'],
+      items: ['basic/io', 'basic/complexity', 'basic/binary-search', 'basic/sorting', 'basic/prefix-sum', 'basic/greedy', 'basic/two-pointers'],
     },
     {
       type: 'category',
@@ -428,6 +428,7 @@ const sidebars: SidebarsConfig = {
       collapsed: true,
       label: '计算机练习库',
       items: [
+        { type: 'doc', id: 'exercises/cs/algorithm-basic', label: '算法竞赛：基础算法与线性结构' },
         { type: 'doc', id: 'exercises/cs/algorithm-linear-dp', label: '算法竞赛：线性 DP 练习' },
         { type: 'doc', id: 'exercises/cs/algorithm-knapsack', label: '算法竞赛：背包练习' },
         { type: 'doc', id: 'exercises/cs/algorithm-shortest-path', label: '算法竞赛：最短路练习' },
