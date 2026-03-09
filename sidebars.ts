@@ -75,7 +75,6 @@ const sidebars: SidebarsConfig = {
           items: [
             'academic-math/special/factorization-eisenstein',
             'academic-math/special/vieta-newton',
-            'academic-math/special/interpolation-newton',
             'academic-math/special/combinatorics-burnside',
           ],
         },
@@ -273,6 +272,14 @@ const sidebars: SidebarsConfig = {
             { type: 'category', collapsible: true, collapsed: true, label: '高等代数', link: {type: 'doc', id: 'academic-math/algebra/index'}, items: ['academic-math/algebra/polynomial', 'academic-math/algebra/determinant', 'academic-math/algebra/linear-equations', 'academic-math/algebra/vector-spaces-and-linear-transformations', 'academic-math/algebra/eigenvalues-and-jordan-form', 'academic-math/algebra/inner-product-spaces', 'academic-math/algebra/cayley-hamilton-and-rational-canonical-form', 'academic-math/algebra/matrix', 'academic-math/algebra/quadratic-forms'] },
             { type: 'category', collapsible: true, collapsed: true, label: '抽象代数', link: {type: 'doc', id: 'academic-math/abstract-algebra/index'}, items: ['academic-math/abstract-algebra/groups', 'academic-math/abstract-algebra/group-actions-and-sylow', 'academic-math/abstract-algebra/rings', 'academic-math/abstract-algebra/modules-and-field-extensions', 'academic-math/abstract-algebra/lattices'] },
             { type: 'category', collapsible: true, collapsed: true, label: '离散数学', link: {type: 'doc', id: 'academic-math/discrete-math/index'}, items: ['academic-math/discrete-math/logic', 'academic-math/discrete-math/set-theory', 'academic-math/discrete-math/relations-and-functions', 'academic-math/discrete-math/relation-closures-and-warshall', 'academic-math/discrete-math/boolean-algebra-and-logic-circuits', 'academic-math/discrete-math/graph-theory', 'academic-math/discrete-math/combinatorics', 'academic-math/discrete-math/recurrence-and-generating-functions'] },
+            { 
+              type: 'category', 
+              collapsible: true, 
+              collapsed: true, 
+              label: '数值分析 (Numerical Analysis)', 
+              link: {type: 'doc', id: 'academic-math/numerical-analysis/index'}, 
+              items: ['academic-math/numerical-analysis/interpolation', 'academic-math/numerical-analysis/fitting', 'academic-math/numerical-analysis/integration'] 
+            },
           ],
         },
       ],
@@ -394,6 +401,7 @@ const sidebars: SidebarsConfig = {
             { type: 'doc', id: 'exercises/math/algebra', label: '高等代数练习' },
             { type: 'doc', id: 'exercises/math/abstract-algebra', label: '抽象代数练习' },
             { type: 'doc', id: 'exercises/math/discrete-math', label: '离散数学练习' },
+            { type: 'doc', id: 'exercises/math/numerical-analysis', label: '数值分析练习' },
           ],
         },
       ],

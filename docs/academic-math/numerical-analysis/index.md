@@ -1,0 +1,53 @@
+---
+title: 数值分析 (Numerical Analysis)
+description: 致力于计算机与数学交叉领域的数值计算方法，涵盖插值、拟合、数值积分与线性方程组数值解。
+---
+
+import KnowledgeCard from '@site/src/components/KnowledgeCard';
+
+# 数值分析 (Numerical Analysis)
+
+数值分析（Numerical Analysis）是研究利用计算机求解数学问题数值近似解的理论与方法。它不仅是计算数学的核心，更是现代工程模拟、信号处理、机器学习及物理仿真的基石。
+
+本板块致力于提供严谨且具工业美感的数值算法导引，强调**理论误差估计**与**算法稳定性**的闭环。
+
+---
+
+## 核心章节 (Core Chapters)
+
+<div className="analysis-toc-grid">
+
+### 1. 多项式插值 (Polynomial Interpolation)
+- **[Lagrange 插值与 Newton 插值](interpolation)**：从基函数构造到差商递推，解决“过点”问题。
+- **误差估计**：Rolle 定理在插值余项中的精妙应用。
+- **Runge 现象**：高次插值的局限性与分段低次插值的引入。
+
+### 2. 函数拟合 (Function Fitting)
+- **[最小二乘法 (Least Squares Method)](fitting)**：处理带噪声的数据，求解超定方程组的全局最优解。
+- **正规方程组**：从几何投影视角理解误差平方和最小化。
+- **正交多项式拟合**：提高拟合过程的数值稳定性。
+
+### 3. 数值积分 (Numerical Integration)
+- **[Newton-Cotes 公式](integration)**：从等距节点出发，构建代数精度驱动的求积准则。
+- **复化求积法**：通过分段策略大幅提升数值积分的精度与可靠性。
+- **Romberg 算法**：利用 Richardson 外推法实现精度的跃迁。
+
+</div>
+
+---
+
+## 🛠️ 工业级工具与组件
+
+<KnowledgeCard type="warning" title="算法稳定性 (Stability)">
+在数值计算中，算法的稳定性至关重要。一个不稳定的算法会放大舍入误差，导致结果完全偏离真值。本教程在推导公式的同时，将深度分析每种方法的条件数与误差传播特性。
+</KnowledgeCard>
+
+---
+
+## ✍️ 练习与实战 (Exercises)
+
+每个章节均配套了深度练习，涵盖从手算推导到误差界估计的全流程：
+
+- **[数值分析专题练习库](/docs/exercises/math/numerical-analysis)**：包含 Lagrange 余项估计、最小二乘正规方程推导及复化 Simpson 公式应用。
+
+> **学习建议**：数值分析的学习不应止于公式背诵。建议读者在理解理论证明的基础上，尝试在 Python/MATLAB 中手动实现上述算法，观察不同阶数下的收敛性表现。
