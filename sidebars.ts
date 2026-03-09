@@ -267,6 +267,7 @@ const sidebars: SidebarsConfig = {
                 'academic-math/topology/separation-axioms',
                 'academic-math/topology/compactness',
                 'academic-math/topology/connectedness',
+                'academic-math/topology/homotopy',
               ]
             },
             { type: 'category', collapsible: true, collapsed: true, label: '高等代数', link: {type: 'doc', id: 'academic-math/algebra/index'}, items: ['academic-math/algebra/polynomial', 'academic-math/algebra/determinant', 'academic-math/algebra/linear-equations', 'academic-math/algebra/vector-spaces-and-linear-transformations', 'academic-math/algebra/eigenvalues-and-jordan-form', 'academic-math/algebra/inner-product-spaces', 'academic-math/algebra/cayley-hamilton-and-rational-canonical-form', 'academic-math/algebra/matrix', 'academic-math/algebra/quadratic-forms'] },

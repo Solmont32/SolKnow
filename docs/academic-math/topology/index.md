@@ -26,9 +26,13 @@ import { Infinity, BookOpen, PenTool, Lightbulb, Compass, Share2 } from 'lucide-
 
 ### 2. 核心结构性质 (Core Properties)
 
-- **[<Share2 size={18} /> 分离公理 (Separation Axioms)](separation-axioms)**：从 $T_0$ 到 $T_4$，$T_2$ (Hausdorff) 空间的中心地位。
-- **[<Share2 size={18} /> 紧致性 (Compactness)](compactness)**：有限覆盖原理，Heine-Borel 定理，分析学最强大的工具。
-- **[<Share2 size={18} /> 连通性 (Connectedness)](connectedness)**：连通集、路径连通与介值定理的拓扑根源。
+- **[<Share2 size={18} /> 分离公理 (Separation Axioms)](separation-axioms)**：从 $T_0$ 到 $T_4$，$T_2$ (Hausdorff) 空间的中心地位与 Urysohn 引理。
+- **[<Share2 size={18} /> 紧致性 (Compactness)](compactness)**：有限覆盖原理，Heine-Borel 与 Tychonoff 定理。
+- **[<Share2 size={18} /> 连通性 (Connectedness)](connectedness)**：连通集、路径连通与局部连通性，拓扑学家的正弦曲线。
+
+### 3. 同伦与代数初步 (Homotopy)
+
+- **[<Infinity size={18} /> 同伦初步 (Basic Homotopy)](homotopy)**：连续形变、路径同伦与基本群的直观引入。
 
 ---
 
