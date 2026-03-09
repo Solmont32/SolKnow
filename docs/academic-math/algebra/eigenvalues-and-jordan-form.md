@@ -2,7 +2,9 @@
 title: 特征值、特征向量与 Jordan 标准形
 ---
 
-# 特征值、特征向量与 Jordan 标准形
+import { motion } from 'framer-motion';
+
+# <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>特征值、特征向量与 Jordan 标准形</motion.div>
 
 本章按“特征值计算-对角化判定-Jordan 分解”组织，目标是把线性变换的结构看清楚。
 
@@ -135,30 +137,20 @@ $$
 
 ## 4. Jordan 标准形
 
-在代数闭域（如 $\mathbb{C}$）上，任意矩阵都与一个 Jordan 标准形相似：
+### 广义特征向量与循环子空间
 
-$$
+当代数重数大于几何重数时，普通特征向量不足以张成整个空间。我们需要 **广义特征向量 (Generalized Eigenvectors)**。
+若存在 $v \neq 0$ 使 $(A-\lambda I)^k v = 0$，则称 $v$ 为 $\lambda$ 的 $k$ 阶广义特征向量。
 
-J=\operatorname{diag}(J_{k_1}(\lambda_1),\dots,J_{k_s}(\lambda_t)).
+由广义特征向量构成的链 $\{ (A-\lambda I)^{k-1}v, \dots, (A-\lambda I)v, v \}$ 张成的子空间称为 **循环子空间**，它在 $A$ 下是不变的。在适当的基下，$A$ 在该子空间上的矩阵就是一个 Jordan 块 $J_k(\lambda)$。
 
+### Jordan 标准形的计算步骤
 
-$$
-
-其中 Jordan 块
-
-$$
-
-J_k(\lambda)=
-\begin{pmatrix}
-\lambda&1&0&\cdots&0\\
-0&\lambda&1&\cdots&0\\
-\vdots& &\ddots&\ddots&\vdots\\
-0&\cdots&0&\lambda&1\\
-0&\cdots&\cdots&0&\lambda
-\end{pmatrix}.
-
-
-$$
+1. **求特征值**：解 $\det(\lambda I - A) = 0$。
+2. **确定每个特征值的 Jordan 块分布**：
+   - 特征值 $\lambda$ 的 Jordan 块总个数 $= \dim\ker(A-\lambda I)$（几何重数）。
+   - 阶数 $\ge k$ 的 Jordan 块个数 $= \dim\ker(A-\lambda I)^k - \dim\ker(A-\lambda I)^{k-1}$。
+   - 最大的 Jordan 块阶数 $=$ $\lambda$ 在最小多项式 $m_A(x)$ 中的幂次。
 
 ### 例题 4：由核维数确定 Jordan 块个数
 
@@ -317,86 +309,61 @@ $$
 
 </details>
 
-### 练习 3：最小多项式
+### 练习 3：最小多项式深度分析
 
-已知
-
-$$
-
-A=\begin{pmatrix}
-1&1&0\\
-0&1&1\\
-0&0&1
-\end{pmatrix}.
-
-
-$$
-
-求 $A$ 的最小多项式。
+已知 4 阶矩阵 $A$ 满足 $A^2=A$。求 $A$ 的所有可能的最小多项式，并证明 $A$ 必可对角化。
 
 <details>
 
 <summary>点击查看过程与答案</summary>
 
-$A=I+N$，其中
+因为 $A^2-A=0$，故 $A$ 满足多项式 $f(x) = x(x-1) = 0$。
+最小多项式 $m_A(x)$ 必能整除 $f(x)$。
+可能的 $m_A(x)$ 为：
+1. $m_A(x) = x$ (此时 $A=0$)
+2. $m_A(x) = x-1$ (此时 $A=I$)
+3. $m_A(x) = x(x-1)$
 
-$$
-
-N=\begin{pmatrix}
-0&1&0\\
-0&0&1\\
-0&0&0
-\end{pmatrix},\quad N^3=0,\ N^2\neq0.
-
-
-$$
-
-因此
-
-$$
-
-(A-I)^3=0,\ (A-I)^2\neq0.
-
-
-$$
-
-最小多项式为
-
-$$
-
-m_A(x)=(x-1)^3.
-
-
-$$
+在所有情况下，$m_A(x)$ 都没有重因式。
+由判定定理：矩阵可对角化当且仅当其最小多项式无重根。
+故 $A$ 必可对角化。这种矩阵称为 **幂等矩阵 (Idempotent Matrix)**，物理上对应投影算子。
 
 </details>
 
 ### 练习 4：Jordan 形结构判断
 
-设 4 阶矩阵 $A$ 的唯一特征值为 0，且
-
-$$
-
-\dim\ker A=2,\quad \dim\ker A^2=4.
-
-
-$$
-
-写出可能的 Jordan 形。
+设 6 阶矩阵 $A$ 的特征多项式为 $p_A(x) = (x-2)^6$，最小多项式为 $m_A(x) = (x-2)^3$。
+已知 $\dim \ker(A-2I) = 3$。求 $A$ 的 Jordan 标准形。
 
 <details>
 
 <summary>点击查看过程与答案</summary>
 
-$\dim\ker A=2$ 说明 Jordan 块个数为 2。  
-$\dim\ker A^2=4$ 说明每个块大小都不超过 2，且总维数为 4。  
-因此只能是两块 2 阶块：
+1. $\dim \ker(A-2I) = 3$ 说明共有 3 个 Jordan 块。
+2. $m_A(x) = (x-2)^3$ 说明最大的 Jordan 块阶数为 3。
+3. 设三块的阶数分别为 $n_1, n_2, n_3$。
+   - $n_1 + n_2 + n_3 = 6$
+   - $\max(n_1, n_2, n_3) = 3$
+   - $n_i \ge 1$
 
-$$
+可能的组合只有 $3+2+1=6$。
+因此 Jordan 标准形为：
+$$ J = \operatorname{diag}(J_3(2), J_2(2), J_1(2)). $$
 
-J=\operatorname{diag}(J_2(0),J_2(0)).
+</details>
 
+### 练习 5：广义特征向量链
 
-$$
+设 $A = \begin{pmatrix} 2 & 1 \\ 0 & 2 \end{pmatrix}$。求一组基使 $A$ 为 Jordan 形。
 
+<details>
+
+<summary>点击查看过程与答案</summary>
+
+特征值为 2。$(A-2I) = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}$。
+取 $v_2 = \begin{pmatrix} 0 \\ 1 \end{pmatrix}$。
+计算 $v_1 = (A-2I)v_2 = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$。
+注意 $v_1$ 是特征向量，$(A-2I)v_1 = 0$。
+故 $\{v_1, v_2\}$ 构成一条 Jordan 链。
+在此基下，矩阵即为 $\begin{pmatrix} 2 & 1 \\ 0 & 2 \end{pmatrix}$。
 </details>
