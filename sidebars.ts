@@ -240,7 +240,11 @@ const sidebars: SidebarsConfig = {
               label: '复变函数 (Complex Analysis)',
               link: { type: 'doc', id: 'academic-math/complex-analysis/index' },
               items: [
-                { type: 'doc', id: 'academic-math/complex-analysis/index', label: '解析函数与留数定理' },
+                { type: 'doc', id: 'academic-math/complex-analysis/index', label: '1. 导论与解析性' },
+                { type: 'doc', id: 'academic-math/complex-analysis/holomorphic-functions', label: '2. 全纯性质与积分' },
+                { type: 'doc', id: 'academic-math/complex-analysis/series-expansions', label: '3. 级数展开与奇点' },
+                { type: 'doc', id: 'academic-math/complex-analysis/residue-theory', label: '4. 留数理论与应用' },
+                { type: 'doc', id: 'academic-math/complex-analysis/conformal-mapping', label: '5. 共形映射' },
               ]
             },
             {
