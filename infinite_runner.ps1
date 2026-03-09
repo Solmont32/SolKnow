@@ -68,6 +68,30 @@ function Show-Dashboard($stage="IDLE", $activeTask="") {
 }
 
 # --- 5. ENGINE CORE ---
+function Repair-TaskStructure {
+    if (-not (Test-Path $global:CFG_TASKS)) { return }
+    $c = Get-Content $global:CFG_TASKS -Raw
+    $changed = $false
+    # Check Goal Header
+    if ($c -notmatch [regex]::Escape($global:LBL_GOAL)) {
+        $c = $global:LBL_GOAL + "`n" + $c; $changed = $true
+    }
+    # Check Todo Header
+    if ($c -notmatch [regex]::Escape($global:LBL_TODO)) {
+        if ($c -match [regex]::Escape($global:LBL_DONE)) {
+            $c = $c -replace ([regex]::Escape($global:LBL_DONE)), ($global:LBL_TODO + "`n`n" + $global:LBL_DONE)
+        } else { $c += "`n`n" + $global:LBL_TODO }; $changed = $true
+    }
+    # Check Done Header
+    if ($c -notmatch [regex]::Escape($global:LBL_DONE)) {
+        $c += "`n`n" + $global:LBL_DONE; $changed = $true
+    }
+    if ($changed) {
+        Set-Content $global:CFG_TASKS $c.Trim() -Encoding UTF8
+        Write-Log "HEALED: Task structure restored."
+    }
+}
+
 function Organize-Tasks {
     $content = Get-Content $global:CFG_TASKS -Raw
     $pGoal = [regex]::Escape($global:LBL_GOAL)
@@ -82,8 +106,8 @@ function Organize-Tasks {
             elseif (-not [string]::IsNullOrWhiteSpace($l)) { $newTodo += $l }
         }
         if ($justFinished.Count -gt 0) {
-            $doneLines = $donePart -split "`n"
-            $final = $headerPart + "`n" + ($newTodo -join "`n").Trim() + "`n`n" + $doneLines[0] + "`n" + ($justFinished -join "`n").Trim() + "`n" + ($doneLines[1..($doneLines.Count-1)] -join "`n").Trim()
+            $doneLines = $donePart -split "`n" | Where-Object { $_ -match '\S' }
+            $final = $headerPart.Trim() + "`n" + ($newTodo -join "`n").Trim() + "`n`n" + $global:LBL_DONE + "`n" + ($justFinished -join "`n").Trim() + "`n" + ($doneLines[1..($doneLines.Count-1)] -join "`n").Trim()
             Set-Content $global:CFG_TASKS $final.Trim() -Encoding UTF8
             return $true
         }
@@ -99,9 +123,11 @@ function Write-Log($message) {
 # --- 6. MAIN LOOP ---
 while($true) {
     try {
+        Repair-TaskStructure
         Show-Dashboard "SYNCING"
         git pull origin main --rebase --autostash | Out-Null
         while($true) {
+            Repair-TaskStructure
             $content = Get-Content $global:CFG_TASKS -Raw
             $todoPattern = [regex]::Escape($global:LBL_TODO) + '(?s)(.*?)(?=' + [regex]::Escape($global:LBL_DONE) + '|$)'
             $todoMatch = if ($content -match $todoPattern) { $matches[1] } else { "" }
@@ -110,19 +136,22 @@ while($true) {
                 $ctx = Get-StrategicContext
                 $planPrompt = @"
 ROLE: Senior Architect & Math Educator
-MISSION: Decompose the 'CORE GOAL' into 3-5 high-quality, textbook-style sub-tasks.
-REQUIREMENTS:
-1. Tasks must follow the 'SolKnow' pedagogical structure (Theory -> Examples -> Exercises).
-2. Ensure logical continuity with 'RECENT DONE' history.
-3. Focus on depth and rigor (LaTeX, formal definitions, detailed proofs).
-4. Format each task on a new line starting with '- [  ] Task Description (YYYY-MM-DD)'.
+MISSION: Decompose the 'CORE GOAL' into 3-5 sub-tasks.
+STRICT FORMAT REQUIREMENTS:
+1. Format: '- [ ] Task Description (YYYY-MM-DD)'.
+2. Output: Exactly one task per line. No extra lines. No introduction. No headers.
+3. Content: Follow 'SolKnow' pedagogical structure (Theory -> Examples -> Exercises).
+4. Logic: Ensure continuity with 'RECENT DONE'.
 CONTEXT:
 $ctx
 ACTION: Provide ONLY the task list as requested.
 "@
-                $newTasks = & gemini -y -p $planPrompt
-                $insertPattern = "(" + [regex]::Escape($global:LBL_TODO) + "\s*)"
-                Set-Content $global:CFG_TASKS ($content -replace $insertPattern, ('$1' + "`n" + $newTasks + "`n")) -Encoding UTF8
+                $newTasksRaw = & gemini -y -p $planPrompt
+                # Clean up AI output to ensure only task lines are kept
+                $newTasks = ($newTasksRaw -split "`n" | Where-Object { $_ -match '^\s*- \[ \]' }) -join "`n"
+                $content = Get-Content $global:CFG_TASKS -Raw
+                $insertPoint = [regex]::Escape($global:LBL_TODO)
+                Set-Content $global:CFG_TASKS ($content -replace $insertPoint, ($global:LBL_TODO + "`n" + $newTasks.Trim())) -Encoding UTF8
                 $content = Get-Content $global:CFG_TASKS -Raw; $todoMatch = if ($content -match $todoPattern) { $matches[1] } else { "" }
             }
             if ($todoMatch -match '(?m)^\s*- \[ \] (.*)') {
@@ -130,19 +159,19 @@ ACTION: Provide ONLY the task list as requested.
                 Show-Dashboard "EXECUTING" $taskDesc
                 $lockLine = "- [ ] " + [regex]::Escape($taskDesc)
                 $lockRepl = "[/] " + $taskDesc + " " + $global:STR_EXEC
+                $content = Get-Content $global:CFG_TASKS -Raw
                 Set-Content $global:CFG_TASKS ($content -replace $lockLine, $lockRepl) -Encoding UTF8
                 
                 $execPrompt = @"
 ROLE: Senior Professor & Technical Writer
-CONTEXT: SolKnow Project (Computer Science & Math Intersection).
 TASK: $taskDesc
+SCOPE: Execute ONLY this specific sub-task.
 STANDARDS:
-1. Textbook quality: Use rigorous definitions and formal proofs.
-2. LaTeX: All math must be in perfect LaTeX ($...$ or $$...$$).
-3. Interactive Feedback: Use <details><summary>Check Solution</summary>...</details> for all exercise answers.
-4. Cross-linking: Link to related docs/exercises to form a knowledge web.
-5. Aesthetic: Adhere to lucide-react icons and framer-motion standards mentioned in GEMINI.md.
-ACTION: Implement the task fully. Mark as '- [x]' in TASKS.md when finished.
+1. Quality: Rigorous definitions and formal proofs.
+2. Math: Perfect LaTeX ($...$ or $$...$$).
+3. Interaction: Use <details><summary>Check Solution</summary>...</details> for exercises.
+4. Aesthetic: lucide-react icons & framer-motion.
+ACTION: Implement fully and mark as '- [x]' in TASKS.md.
 "@
                 & gemini -y -p $execPrompt
                 Organize-Tasks | Out-Null

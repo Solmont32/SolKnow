@@ -238,6 +238,16 @@ const sidebars: SidebarsConfig = {
               type: 'category',
               collapsible: true,
               collapsed: true,
+              label: '复变函数 (Complex Analysis)',
+              link: { type: 'doc', id: 'academic-math/complex-analysis/index' },
+              items: [
+                { type: 'doc', id: 'academic-math/complex-analysis/index', label: '解析函数与留数定理' },
+              ]
+            },
+            {
+              type: 'category',
+              collapsible: true,
+              collapsed: true,
               label: '点集拓扑学 (Topology)',
               link: { type: 'doc', id: 'academic-math/topology/index' },
               items: [
