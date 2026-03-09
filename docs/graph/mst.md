@@ -169,7 +169,7 @@ long long prim(int n, const vector<vector<pair<int,int>>>& g) {
 
 ## 六、配套练习（答案折叠）
 
-专题训练见：[`算法竞赛练习：最小生成树专题`](/exercises/cs/algorithm-mst)
+专题训练见：[`算法竞赛练习：最小生成树专题`](/docs/exercises/cs/algorithm-mst)
 
 ### 练习 1（基础）
 

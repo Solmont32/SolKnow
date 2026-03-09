@@ -159,7 +159,7 @@ $$
 
 ## 九、配套练习（答案折叠）
 
-更多分层题：[`算法竞赛练习：背包专题`](/exercises/cs/algorithm-knapsack)
+更多分层题：[`算法竞赛练习：背包专题`](/docs/exercises/cs/algorithm-knapsack)
 
 ### 练习 1（基础）
 

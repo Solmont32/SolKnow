@@ -149,7 +149,7 @@ $$
 
 ## 七、配套练习（答案折叠）
 
-专题练习页：[`算法竞赛练习：拓扑排序专题`](/exercises/cs/algorithm-topo-sort)
+专题练习页：[`算法竞赛练习：拓扑排序专题`](/docs/exercises/cs/algorithm-topo-sort)
 
 ### 练习 1（基础）
 

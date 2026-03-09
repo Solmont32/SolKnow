@@ -134,7 +134,7 @@ Tarjan 是 2-SAT 判定核心工具。
 
 ## 七、配套练习（答案折叠）
 
-专题练习页：[`算法竞赛练习：强连通分量专题`](/exercises/cs/algorithm-scc)
+专题练习页：[`算法竞赛练习：强连通分量专题`](/docs/exercises/cs/algorithm-scc)
 
 ### 练习 1
 

@@ -158,7 +158,7 @@ $O(n^3)$，适合 $n\le 400$ 左右（视常数与时限）。
 
 ## 九、配套练习（答案折叠）
 
-分层题库：[`算法竞赛练习：最短路专题`](/exercises/cs/algorithm-shortest-path)
+分层题库：[`算法竞赛练习：最短路专题`](/docs/exercises/cs/algorithm-shortest-path)
 
 ### 练习 1（基础）
 

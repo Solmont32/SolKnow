@@ -147,7 +147,7 @@ int edit_distance(const string& A, const string& B) {
 
 ## 六、配套练习（答案折叠）
 
-系统训练见：[`算法竞赛练习：线性 DP 专题`](/exercises/cs/algorithm-linear-dp)
+系统训练见：[`算法竞赛练习：线性 DP 专题`](/docs/exercises/cs/algorithm-linear-dp)
 
 ### 练习 1（基础）
 

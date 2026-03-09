@@ -4,7 +4,7 @@ title: 算法竞赛练习：强连通分量（SCC）
 
 # 算法竞赛练习：强连通分量（SCC）
 
-建议先学习：[`强连通分量（Tarjan / SCC）`](/graph/tarjan)
+建议先学习：[`强连通分量（Tarjan / SCC）`](/docs/graph/tarjan)
 
 ---
 

@@ -59,7 +59,7 @@ $(1 + \lambda'(s)) \mathbf{T}(s) + \lambda(s) \kappa \mathbf{N}(s) = \mathbf{0}$
 
 ## 二、曲面内蕴几何 (基本形式)
 
-### 练习 3：旋转面的第一基本形式 {#dg-3}
+### 练习 3：旋转面的第一基本形式 {#weingarten-map-exercise}
 设曲线在 $xz$ 平面内为 $x = f(u), z = g(u)$，绕 $z$ 轴旋转生成曲面 $\mathbf{r}(u,v) = (f(u)\cos v, f(u)\sin v, g(u))$。求其第一基本形式。
 
 <details>
@@ -77,7 +77,7 @@ $G = \mathbf{r}_v \cdot \mathbf{r}_v = f^2$
 **结论**：$I = ((f')^2 + (g')^2) du^2 + f^2 dv^2$。
 </details>
 
-### 练习 4：高斯曲率计算 {#dg-4}
+### 练习 4：高斯曲率计算 {#riemann-curvature-basics}
 计算正交参数网下（即 $F=0$）的高斯曲率公式。若 $E=1, G=f^2(u)$，证明 $K = -f''(u)/f(u)$。
 
 <details>
