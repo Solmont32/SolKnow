@@ -2,7 +2,7 @@
 title: 算术基础 (Arithmetic)
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 算术基础 (Arithmetic)
 

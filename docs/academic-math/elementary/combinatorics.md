@@ -2,7 +2,7 @@
 title: 组合初步 (Preliminary Combinatorics)
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 组合初步 (Preliminary Combinatorics)
 

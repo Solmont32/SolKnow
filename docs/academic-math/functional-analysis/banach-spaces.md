@@ -3,7 +3,7 @@ title: Banach 空间：对偶与三大基本定理 (Banach Spaces)
 description: 严密推导泛函分析三大核心支柱：Hahn-Banach 定理、一致有界性原理（共鸣定理）与开映射/闭图像定理。
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # Banach 空间：对偶与三大基本定理
 

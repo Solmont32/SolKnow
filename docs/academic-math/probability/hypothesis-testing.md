@@ -2,7 +2,7 @@
 title: 假设检验 (Hypothesis Testing)
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 假设检验 (Hypothesis Testing)
 

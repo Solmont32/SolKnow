@@ -2,7 +2,7 @@
 title: 竞赛专题：不等式与函数方程
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 竞赛专题：不等式与函数方程
 

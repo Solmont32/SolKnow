@@ -2,7 +2,7 @@
 title: 竞赛几何：四点共圆、方幂与圆中比例
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 竞赛几何：四点共圆、方幂与圆中比例
 

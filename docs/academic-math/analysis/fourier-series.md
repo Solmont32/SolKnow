@@ -2,7 +2,8 @@
 title: Fourier 级数 (Fourier Series)
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
+
 import SupportingExercises from '@site/src/components/SupportingExercises';
 import { Code2, Infinity, Monitor, Youtube, BookOpen, PenTool, Lightbulb } from 'lucide-react';
 

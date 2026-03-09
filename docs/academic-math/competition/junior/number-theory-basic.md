@@ -2,7 +2,7 @@
 title: 竞赛数论：整除、同余与不定方程
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 竞赛数论：整除、同余与不定方程
 

@@ -3,7 +3,7 @@ title: Hilbert 空间：内积、正交性与算子理论 (Hilbert Spaces)
 description: 深入探讨 Hilbert 空间的几何结构，包括 Riesz 表示定理、正交分解与有界线性算子的谱理论初步。
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # Hilbert 空间：内积、正交性与算子理论
 

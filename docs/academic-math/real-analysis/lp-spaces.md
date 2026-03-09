@@ -201,7 +201,7 @@ $$
 
 ### 例 3：用 Minkowski 证明 $L^p$ 三角不等式
 
-证明 $f,g\in $L^p(X)$（$1\le p<\infty$）时，$f+g\in L^p$ 且
+证明 $f,g\in L^p(X)$（$1\le p<\infty$）时，$f+g\in L^p$ 且
 
 $$
 

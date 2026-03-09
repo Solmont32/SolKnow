@@ -2,7 +2,7 @@
 title: 实数 (Real Numbers)
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 实数 (Real Numbers)
 

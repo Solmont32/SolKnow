@@ -2,7 +2,7 @@
 title: 竞赛几何：面积法与相似构造
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 竞赛几何：面积法与相似构造
 

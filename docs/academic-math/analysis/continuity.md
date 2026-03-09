@@ -3,7 +3,8 @@ title: 第四章 函数连续性：拓扑与分析的汇合 (Continuity)
 description: 深入探讨函数连续性的定义、间断点分类、闭区间连续函数性质及一致连续性。
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
+
 import SupportingExercises from '@site/src/components/SupportingExercises';
 import { Activity, ShieldCheck, Maximize, GitMerge, HelpCircle, Cpu } from 'lucide-react';
 

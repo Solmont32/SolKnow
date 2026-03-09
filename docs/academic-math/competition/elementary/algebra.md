@@ -2,7 +2,7 @@
 title: 奥数代数：巧算、数列与裂项
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 奥数代数：巧算、数列与裂项
 

@@ -3,8 +3,10 @@ title: 平面向量 (Planar Vectors)
 sidebar_label: 向量工具
 ---
 
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
+
 import { MoveUpRight, Grid3X3, Ruler, PenTool } from 'lucide-react';
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+
 
 # <MoveUpRight className="inline-block mr-2 mb-1" size={32} /> 平面向量 (Planar Vectors)
 

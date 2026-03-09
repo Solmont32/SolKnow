@@ -2,7 +2,7 @@
 title: 数值积分：Newton-Cotes 公式与复化求积
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 数值积分：Newton-Cotes 公式与复化求积
 

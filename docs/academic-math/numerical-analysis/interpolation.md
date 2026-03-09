@@ -2,7 +2,8 @@
 title: 多项式插值：Lagrange 与 Newton 公式
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
+
 import SupportingExercises from '@site/src/components/SupportingExercises';
 
 # 多项式插值：Lagrange 与 Newton 公式

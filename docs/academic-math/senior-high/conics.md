@@ -3,8 +3,10 @@ title: 圆锥曲线 (Conic Sections)
 sidebar_label: 解析几何
 ---
 
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
+
 import { Target, Zap, Circle, LayoutGrid, Focus } from 'lucide-react';
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+
 
 # <Target className="inline-block mr-2 mb-1" size={32} /> 圆锥曲线 (Conic Sections)
 

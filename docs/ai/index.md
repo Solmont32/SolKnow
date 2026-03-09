@@ -2,7 +2,7 @@
 title: 人工智能知识库 (Artificial Intelligence)
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 人工智能 (Artificial Intelligence)
 

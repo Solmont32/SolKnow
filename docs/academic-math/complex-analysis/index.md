@@ -3,7 +3,7 @@ title: 复变函数：解析函数与留数定理 (Complex Analysis)
 description: 系统梳理复分析核心理论，涵盖 Cauchy-Riemann 方程、柯西积分公式、留数定理及其积分应用
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 复变函数：解析函数与留数定理
 

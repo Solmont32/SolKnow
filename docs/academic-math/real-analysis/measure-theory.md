@@ -3,7 +3,7 @@ title: Lebesgue 测度：从长度到可测性的严格建立 (Measure Theory)
 description: 系统梳理外测度、可测集、零测集、Borel 集与 Cantor 集，作为 Lebesgue 积分的前置基础
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # Lebesgue 测度：从长度到可测性的严格建立
 

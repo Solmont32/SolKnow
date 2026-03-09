@@ -2,7 +2,7 @@
 title: 初中数学竞赛 (Junior High Math Competition)
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 初中数学竞赛
 

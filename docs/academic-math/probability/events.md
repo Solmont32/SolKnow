@@ -2,7 +2,7 @@
 title: 事件与概率公理化体系 (Events & Axiomatic Probability)
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 事件与概率公理化体系 (Events & Axiomatic Probability)
 

@@ -2,7 +2,7 @@
 title: 二次型 (Quadratic Forms)
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 二次型 (Quadratic Forms)
 

@@ -2,7 +2,7 @@
 title: 平面几何与逻辑证明 (Plane Geometry & Proof)
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 平面几何与逻辑证明 (Plane Geometry & Proof)
 

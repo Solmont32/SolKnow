@@ -2,6 +2,8 @@
 title: Lebesgue 积分：测度论视野下的现代积分理论 (Lebesgue Integral)
 ---
 
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
+
 # Lebesgue 积分：测度论视野下的现代积分理论
 
 > “黎曼积分是将函数定义域切碎，而勒贝格积分是将函数的值域切碎。” —— 亨利·勒贝格 (Henri Lebesgue)

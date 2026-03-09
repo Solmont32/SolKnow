@@ -2,7 +2,7 @@
 title: 整式与因式分解 (Algebraic Expressions & Factorization)
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 整式与因式分解 (Algebraic Expressions & Factorization)
 

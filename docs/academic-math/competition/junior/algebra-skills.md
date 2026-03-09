@@ -2,7 +2,7 @@
 title: 竞赛代数：高阶恒等变形与根式
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 竞赛代数：高阶恒等变形与根式
 

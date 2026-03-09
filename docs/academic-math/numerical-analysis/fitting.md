@@ -2,7 +2,7 @@
 title: 函数拟合：最小二乘法 (Least Squares)
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 函数拟合：最小二乘法 (Least Squares)
 

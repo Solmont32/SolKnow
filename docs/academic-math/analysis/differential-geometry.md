@@ -2,7 +2,8 @@
 title: 微分几何：曲线与曲面的局部理论 (Local Theory of Curves and Surfaces)
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
+
 import SupportingExercises from '@site/src/components/SupportingExercises';
 
 # 微分几何：曲线与曲面的局部理论

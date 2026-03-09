@@ -2,7 +2,7 @@
 title: 内积空间 (Inner Product Spaces)
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 内积空间 (Inner Product Spaces)
 

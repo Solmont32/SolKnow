@@ -3,8 +3,10 @@ title: 函数与导数 (Functions & Derivatives)
 sidebar_label: 函数与导数
 ---
 
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
+
 import { TrendingUp, Activity, Calculator, ArrowRightCircle } from 'lucide-react';
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+
 
 # <Activity className="inline-block mr-2 mb-1" size={32} /> 函数与导数 (Functions & Derivatives)
 

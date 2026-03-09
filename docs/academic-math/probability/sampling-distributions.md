@@ -2,7 +2,7 @@
 title: 抽样分布 (Sampling Distributions)
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 抽样分布 (Sampling Distributions)
 

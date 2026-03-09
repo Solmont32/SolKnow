@@ -2,7 +2,7 @@
 title: 三角函数 (Trigonometry)
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 三角函数 (Trigonometry)
 

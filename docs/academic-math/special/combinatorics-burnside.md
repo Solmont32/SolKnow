@@ -2,7 +2,7 @@
 title: 从排列组合到 Burnside 引理
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 从排列组合到 Burnside 引理
 

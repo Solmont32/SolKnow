@@ -2,7 +2,7 @@
 title: 整式方程 (Polynomial Equations)
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 整式方程 (Polynomial Equations)
 

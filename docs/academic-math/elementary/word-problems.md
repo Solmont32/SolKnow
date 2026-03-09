@@ -2,7 +2,7 @@
 title: 应用题 (Word Problems)
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 应用题 (Word Problems)
 

@@ -2,7 +2,7 @@
 title: 参数估计 (Parameter Estimation)
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 参数估计 (Parameter Estimation)
 

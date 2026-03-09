@@ -3,7 +3,8 @@ title: 常微分方程 (Ordinary Differential Equations)
 description: 系统化梳理 ODE 理论：从初等积分法到高阶线性方程组，涵盖 Picard 存在唯一性定理与稳定性理论。
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
+
 import { Sigma, Infinity, Activity, ShieldCheck, Zap, Layers } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -172,4 +173,3 @@ $e^{At} = I \cos t + A \sin t = \begin{pmatrix} \cos t & \sin t \\ -\sin t & \co
 实部均为 $-1 < 0$，故原点是**渐近稳定**的。
 
 </details>
-

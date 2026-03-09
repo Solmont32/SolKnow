@@ -2,7 +2,7 @@
 title: 奥数几何：面积法与比例法
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 奥数几何：面积法与比例法
 

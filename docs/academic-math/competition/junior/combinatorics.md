@@ -2,7 +2,7 @@
 title: 竞赛组合：计数、抽屉与构造
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 竞赛组合：计数、抽屉与构造
 

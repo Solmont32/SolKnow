@@ -2,7 +2,7 @@
 title: 奥数计数与组合：分类、分步与构造
 ---
 
-import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 # 奥数计数与组合：分类、分步与构造
 
