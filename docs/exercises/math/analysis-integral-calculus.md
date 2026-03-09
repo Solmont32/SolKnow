@@ -251,6 +251,64 @@ $$= \lim_{\epsilon \to 0^+} (\ln \epsilon - \ln 1 + \ln 2 - \ln \epsilon) = \ln 
 $\ln 2$
 </details>
 
+### 练习 11.4：[挑战] 广义积分的柯西准则应用
+证明：若 $\int_a^{+\infty} f(x) dx$ 绝对收敛，则该积分必收敛。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+利用 **Cauchy 准则**：
+1. 由于 $\int_a^{+\infty} |f(x)| dx$ 收敛，对任意 $\epsilon > 0$，存在 $A > a$，使得对于任意 $A_1, A_2 > A$，有：
+   $$\int_{A_1}^{A_2} |f(x)| dx < \epsilon$$
+2. 根据积分不等式：
+   $$\left| \int_{A_1}^{A_2} f(x) dx \right| \le \int_{A_1}^{A_2} |f(x)| dx < \epsilon$$
+3. 这满足反常积分收敛的 Cauchy 准则。
+故绝对收敛级数/积分必收敛。
+
+#### 答案
+证毕。
+</details>
+
+### 练习 11.5：[提高] 震荡积分的收敛性
+讨论 Fresnel 积分 $\int_0^{+\infty} \cos(x^2) dx$ 的收敛性。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+由于 $x \to \infty$ 时 $\cos(x^2)$ 并不趋于 0，不能使用必要条件直接否定。
+1. **变量代换**：令 $x^2 = t, dx = \frac{1}{2\sqrt{t}} dt$。
+   $$\int_1^{+\infty} \cos(x^2) dx = \frac{1}{2} \int_1^{+\infty} \frac{\cos t}{\sqrt{t}} dt$$
+2. **应用 Dirichlet 判别法**：
+   - $\int_1^A \cos t dt = \sin A - \sin 1$ 有界。
+   - $1/\sqrt{t}$ 单调递减趋于 0。
+故由 Dirichlet 判别法知积分收敛。
+注：该积分的值为 $\sqrt{\pi/8}$。
+
+#### 答案
+收敛。
+</details>
+
+### 练习 11.6：[挑战] 含对数项的反常积分
+判定 $\int_0^{+\infty} \frac{\ln x}{x^2+1} dx$ 的敛散性并求值。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **敛散性**：
+   - $x \to 0$ 时，$\frac{\ln x}{x^2+1} \sim \ln x$（瑕积分收敛）。
+   - $x \to +\infty$ 时，$\frac{\ln x}{x^2+1} < \frac{x^{1/2}}{x^2} = \frac{1}{x^{3/2}}$（无穷限积分收敛）。
+2. **求值**：
+   令 $x = 1/t, dx = -1/t^2 dt$。
+   $$\int_0^{+\infty} \frac{\ln x}{x^2+1} dx = \int_{+\infty}^0 \frac{\ln(1/t)}{(1/t)^2+1} (-\frac{1}{t^2}) dt = \int_0^{+\infty} \frac{-\ln t}{1+t^2} dt$$
+   设积分为 $I$，则 $I = -I \implies 2I = 0 \implies I = 0$。
+
+#### 答案
+收敛，值为 0。
+</details>
+
 ---
 
 ## 延伸入口

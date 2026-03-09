@@ -220,6 +220,61 @@ $\frac{\partial z}{\partial x} = -\frac{F_x}{F_z} = \frac{3yz - 2x}{2z - 3xy}$�
 $\frac{3yz - 2x}{2z - 3xy}$
 </details>
 
+### 练习 18.5：[挑战] 隐函数组的高阶偏导
+设 $x = u + v^2, y = u^2 - v$，求 $\frac{\partial u}{\partial x}, \frac{\partial u}{\partial y}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+对两方程全微分：
+1. $dx = du + 2v dv$
+2. $dy = 2u du - dv$
+用克莱姆法则解 $du, dv$：
+系数行列式 $J = \begin{vmatrix} 1 & 2v \\ 2u & -1 \end{vmatrix} = -1 - 4uv$。
+$du = \frac{\begin{vmatrix} dx & 2v \\ dy & -1 \end{vmatrix}}{-1-4uv} = \frac{-dx - 2v dy}{-1-4uv} = \frac{1}{1+4uv} dx + \frac{2v}{1+4uv} dy$。
+故 $\frac{\partial u}{\partial x} = \frac{1}{1+4uv}$，$\frac{\partial u}{\partial y} = \frac{2v}{1+4uv}$。
+
+#### 答案
+$\frac{\partial u}{\partial x} = \frac{1}{1+4uv}, \frac{\partial u}{\partial y} = \frac{2v}{1+4uv}$
+</details>
+
+### 练习 18.6：[挑战] 逆映射定理的应用
+证明映射 $f(x, y) = (x^2 - y^2, 2xy)$ 在除原点外的任何点都局部可逆。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+计算雅可比矩阵：
+$Df = \begin{pmatrix} 2x & -2y \\ 2y & 2x \end{pmatrix}$。
+$\det Df = 4x^2 + 4y^2 = 4(x^2+y^2)$。
+只要 $(x, y) \neq (0, 0)$，则 $\det Df \neq 0$。
+根据逆映射定理，$f$ 在除原点外的任何点都存在局部 $C^1$ 逆映射。
+注：该映射实际上是复平面上的平方映射 $w = z^2$ 的实部与虚部。
+
+#### 答案
+证毕。
+</details>
+
+### 练习 18.7：[提高] 函数相关性判定
+判定 $u = x+y, v = x^2+y^2, w = x^3+y^3$ 是否相关。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+由于只有两个独立变量 $x, y$，三个函数 $u, v, w$ 必然相关。
+寻找关系：$u^3 = (x+y)^3 = x^3+y^3 + 3xy(x+y) = w + 3xy u$。
+又 $u^2 = x^2+y^2 + 2xy = v + 2xy \implies xy = \frac{u^2-v}{2}$。
+代入得 $u^3 = w + 3u \frac{u^2-v}{2} = w + \frac{3u^3 - 3uv}{2}$。
+$2u^3 = 2w + 3u^3 - 3uv \implies w = \frac{3uv - u^3}{2}$。
+**结论**：函数相关。
+
+#### 答案
+相关
+</details>
+
 ---
 
 ## 第十九章：含参量积分 (Integrals with Parameters)

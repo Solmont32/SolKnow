@@ -57,6 +57,61 @@ $\lim_{n \to \infty} n(\frac{a_n}{a_{n+1}} - 1) = -\frac{1}{2}$。
 - $0 < p \le 1/2$：发散
 </details>
 
+### 练习 12.3：Dirichlet 判别法在正弦级数中的应用
+证明级数 $\sum_{n=2}^{\infty} \frac{\sin(nx)}{\ln n}$ 对任意固定的 $x \in (0, 2\pi)$ 均收敛。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+利用 **Dirichlet 判别法**：
+1. **部分和有界性**：
+   $|\sum_{k=2}^n \sin(kx)| = |\frac{\cos(3x/2) - \cos((n+1/2)x)}{2 \sin(x/2)}| \le \frac{1}{|\sin(x/2)|}$。
+   当 $x \in (0, 2\pi)$ 时，$\sin(x/2) \neq 0$，故部分和序列有界。
+2. **单调性与极限**：
+   数列 $b_n = \frac{1}{\ln n}$ 在 $n \ge 2$ 时单调递减趋于 0。
+故由 Dirichlet 判别法知级数收敛。
+
+#### 答案
+收敛。
+</details>
+
+### 练习 12.4：Cauchy 乘积的收敛性
+计算级数 $\sum_{n=0}^\infty \frac{x^n}{n!}$ 与自身（Cauchy 乘积）的和。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+设 $a_n = \frac{x^n}{n!}$。Cauchy 乘积的通项 $c_n$ 为：
+$$c_n = \sum_{k=0}^n a_k a_{n-k} = \sum_{k=0}^n \frac{x^k}{k!} \frac{x^{n-k}}{(n-k)!}$$
+$$c_n = \frac{x^n}{n!} \sum_{k=0}^n \frac{n!}{k!(n-k)!} = \frac{x^n}{n!} \sum_{k=0}^n \binom{n}{k}$$
+利用二项式展开 $\sum \binom{n}{k} = 2^n$：
+$$c_n = \frac{(2x)^n}{n!}$$
+由指数级数的展开知 $\sum c_n = e^{2x}$。这符合 $e^x \cdot e^x = e^{2x}$ 的恒等式。
+
+#### 答案
+$\sum_{n=0}^\infty \frac{(2x)^n}{n!}$ (即 $e^{2x}$)
+</details>
+
+### 练习 12.5：Kummer 判别法的挑战
+判定级数 $\sum_{n=1}^\infty a_n$，其中 $a_n = \frac{1 \cdot 3 \cdot \dots \cdot (2n-1)}{2 \cdot 4 \cdot \dots \cdot (2n)} \cdot \frac{1}{2n+1}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+计算比值：
+$$\frac{a_n}{a_{n+1}} = \frac{(2n-1)!!}{(2n)!!(2n+1)} \cdot \frac{(2n+2)!!(2n+3)}{(2n+1)!!} = \frac{(2n+2)(2n+3)}{(2n+1)(2n+1)}$$
+$$\frac{a_n}{a_{n+1}} = \frac{4n^2 + 10n + 6}{4n^2 + 4n + 1} = 1 + \frac{6n+5}{4n^2+4n+1} \approx 1 + \frac{3}{2n}$$
+利用 **Raabe 判别法**：
+$K = \lim n(\frac{a_n}{a_{n+1}} - 1) = \lim \frac{6n^2+5n}{4n^2+4n+1} = \frac{3}{2}$。
+由于 $3/2 > 1$，级数收敛。
+
+#### 答案
+收敛
+</details>
+
 ---
 
 ## 第十三章：函数列与函数项级数 (Sequences and Series of Functions)

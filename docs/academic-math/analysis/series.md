@@ -4,6 +4,7 @@ title: 第十二章 数项级数 (Numerical Series)
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 import SupportingExercises from '@site/src/components/SupportingExercises';
+import { Sigma, CheckCircle2, AlertCircle, HelpCircle, ArrowRightLeft, Binary } from 'lucide-react';
 
 # 第十二章 数项级数 (Numerical Series)
 
@@ -17,92 +18,52 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 
 - **部分和**：$S_n = \sum_{i=1}^n a_i$。
 - **收敛性**：若 $\lim_{n \to \infty} S_n = S$ 存在（有限），则级数收敛，称 $S$ 为其和；否则级数发散。
-- **必要条件**：若 $\sum a_n$ 收敛，则 $\lim_{n \to \infty} a_n = 0$。（注意：逆命题不成立，如调和级数 $\sum \frac{1}{n}$）。
+- **必要条件**：若 $\sum a_n$ 收敛，则 $\lim_{n \to \infty} a_n = 0$。
 - **柯西收敛准则**：$\sum a_n$ 收敛 $\iff \forall \epsilon > 0, \exists N, \forall n > N, \forall p \in \mathbb{N}_+, |a_{n+1} + \dots + a_{n+p}| < \epsilon$。
 
 ---
 
 ## 2. 正项级数判别法 (Positive Term Series)
 
-若 $a_n \geq 0$，则级数 $\sum a_n$ 的敛散性判别有如下工具：
+### 2.1 基础判别法
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+  <KnowledgeCard type="info" title={<><Sigma className="inline-block mr-2" /> 比较判别法</>}>
+    $0 \leq a_n \leq b_n$: <br/> $\sum b_n$ 收敛 $\implies \sum a_n$ 收敛；<br/> $\sum a_n$ 发散 $\implies \sum b_n$ 发散。
+  </KnowledgeCard>
+  <KnowledgeCard type="info" title={<><CheckCircle2 className="inline-block mr-2" /> 比值判别法 (D'Alembert)</>}>
+    $r = \lim \frac{a_{n+1}}{a_n}$: <br/> $r < 1$ 收敛；$r > 1$ 发散；$r = 1$ 失效。
+  </KnowledgeCard>
+  <KnowledgeCard type="info" title={<><AlertCircle className="inline-block mr-2" /> 根值判别法 (Cauchy)</>}>
+    $\rho = \lim \sqrt[n]{a_n}$: <br/> $\rho < 1$ 收敛；$\rho > 1$ 发散；$\rho = 1$ 失效。
+  </KnowledgeCard>
+</div>
 
-### 2.1 比较判别法 (Comparison Test)
+### 2.2 进阶判别法 (判别 $r=1$ 的利器)
 
-设 $0 \leq a_n \leq b_n$：
-
-- 若 $\sum b_n$ 收敛，则 $\sum a_n$ 收敛；
-- 若 $\sum a_n$ 发散，则 $\sum b_n$ 发散。
-
-<KnowledgeCard type="info" title="极限形式 (Limit Comparison Test)">
-若 $\lim_{n \to \infty} \frac{a_n}{b_n} = l$：
-- $0 < l < \infty$：$\sum a_n$ 与 $\sum b_n$ 同敛散；
-- $l = 0$：$\sum b_n$ 收敛 $\implies \sum a_n$ 收敛；
-- $l = \infty$：$\sum b_n$ 发散 $\implies \sum a_n$ 发散。
-</KnowledgeCard>
-
-### 2.2 比值与根值判别法
-
-- **比值判别法 (D'Alembert)**：设 $r = \lim_{n \to \infty} \frac{a_{n+1}}{a_n}$。
-  - $r < 1$ 收敛；$r > 1$ 发散；$r = 1$ 失效。
-- **根值判别法 (Cauchy)**：设 $\rho = \lim_{n \to \infty} \sqrt[n]{a_n}$。
-  - $\rho < 1$ 收敛；$\rho > 1$ 发散；$\rho = 1$ 失效。
-    > **注意**：根值判别法的适用范围比比值判别法更广（若比值极限存在，则根值极限必存在且相等）。
-
-### 2.3 积分判别法 (Integral Test)
-
-若 $f(x)$ 是 $[1, \infty)$ 上的非负、递减连续函数，且 $f(n) = a_n$，则：
-
-$$\sum_{n=1}^\infty a_n \text{ 收敛} \iff \int_1^\infty f(x) dx \text{ 收敛}$$
-
-<KnowledgeCard type="warning" title="余项估计">
-若级数收敛，其余项 $R_n = \sum_{k=n+1}^\infty a_k$ 满足：
-
-$$\int_{n+1}^\infty f(x) dx \leq R_n \leq \int_n^\infty f(x) dx$$
-
-</KnowledgeCard>
-
-### 2.4 Raabe 判别法 (深度扩展)
-
-当比值判别法失效（$r=1$）时，Raabe 判别法通过更高阶的渐近分析给出结论：
-设 $K = \lim_{n \to \infty} n \left( \frac{a_n}{a_{n+1}} - 1 \right)$。
-
-- **$K > 1$**：级数收敛。
-- **$K < 1$**：级数发散。
-- **$K = 1$**：失效（需更精细的判别法，如 Gauss 判别法）。
-
-### 2.5 Gauss 判别法 (完备化工具)
-
-若正项级数满足：
-
-$$\frac{a_n}{a_{n+1}} = 1 + \frac{\mu}{n} + \frac{\theta_n}{n^{1+\lambda}} \quad (\lambda > 0, |\theta_n| \text{ 有界})$$
-
-- 若 **$\mu > 1$**，级数收敛。
-- 若 **$\mu \leq 1$**，级数发散。
-  > Gauss 判别法是处理超几何级数等复杂项级数的终极利器，它涵盖了比值法与 Raabe 法。
+- **Raabe 判别法**：设 $K = \lim_{n \to \infty} n \left( \frac{a_n}{a_{n+1}} - 1 \right)$。
+  - **$K > 1$**：收敛。
+  - **$K < 1$**：发散。
+- **Kummer 判别法 (广义形式)**：设 $\{c_n\}$ 为正项数列且 $\sum 1/c_n$ 发散。令 $K_n = c_n \frac{a_n}{a_{n+1}} - c_{n+1}$。
+  - $\lim K_n > 0 \implies$ 收敛；$\lim K_n < 0 \implies$ 发散。
+- **Gauss 判别法**：若 $\frac{a_n}{a_{n+1}} = 1 + \frac{\mu}{n} + O(\frac{1}{n^{1+\lambda}})$，则 $\mu > 1$ 收敛，$\mu \leq 1$ 发散。
 
 ---
 
-## 3. 变号级数 (Series with Arbitrary Terms)
+## 3. 任意项级数 (Series with Arbitrary Terms)
 
-### 3.1 交错级数与 Leibniz 判别法
-
-形如 $\sum (-1)^{n-1} a_n$ ($a_n > 0$) 的级数。若 $\{a_n\}$ 单调不增且趋于 0，则级数收敛。
-
-### 3.2 绝对收敛与条件收敛
-
-- **绝对收敛**：$\sum |a_n|$ 收敛。绝对收敛级数具有类似于有限和的优良性质（如可交换性、乘法性质）。
+### 3.1 绝对收敛与条件收敛
+- **绝对收敛**：$\sum |a_n|$ 收敛。
 - **条件收敛**：$\sum a_n$ 收敛但 $\sum |a_n|$ 发散。
 
-<KnowledgeCard type="warning" title="Riemann 重排定理 (Riemann Rearrangement Theorem)">
-若级数 $\sum a_n$ 条件收敛，则对于任意实数 $S$（包括 $\pm\infty$），必存在一种重排方式，使得重排后的级数和为 $S$。
-</KnowledgeCard>
-
-### 3.3 级数的乘积 (Cauchy Product)
-
-设 $A = \sum_{n=0}^\infty a_n, B = \sum_{n=0}^\infty b_n$。定义其 Cauchy 乘积为 $\sum_{n=0}^\infty c_n$，其中 $c_n = \sum_{k=0}^n a_k b_{n-k}$。
-
-- **Mertens 定理**：若两级数至少有一个绝对收敛，且另一个收敛，则其 Cauchy 乘积收敛于 $AB$。
-- 若两个级数都绝对收敛，则其乘积也绝对收敛。
+### 3.2 变号级数判别法
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <KnowledgeCard type="warning" title={<><Binary className="inline-block mr-2" /> Dirichlet 判别法</>}>
+    满足：<br/>1. $\sum a_n$ 的部分和有界；<br/>2. $\{b_n\}$ 单调且 $\lim b_n = 0$。<br/>则 $\sum a_n b_n$ 收敛。
+  </KnowledgeCard>
+  <KnowledgeCard type="warning" title={<><ArrowRightLeft className="inline-block mr-2" /> Abel 判别法</>}>
+    满足：<br/>1. $\sum a_n$ 收敛；<br/>2. $\{b_n\}$ 单调有界。<br/>则 $\sum a_n b_n$ 收敛。
+  </KnowledgeCard>
+</div>
 
 ---
 
