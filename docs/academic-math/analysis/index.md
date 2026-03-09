@@ -79,7 +79,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 - **[Riemann-Stieltjes 积分](riemann-stieltjes-integral)**：Lebesgue 积分的序曲。
 - **[常微分方程初步](differential-equations)**：动态系统的数学描述。
 - **[无穷乘积](infinite-products)**：与级数并行的无限运算。
-- **[点集拓扑进阶](topology)**：从欧氏空间到抽象度量空间。
+- **[点集拓扑学 (Point-Set Topology)](/docs/academic-math/topology)**：从欧氏空间到抽象拓扑空间的基础构建。
 
 ---
 
@@ -100,5 +100,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 针对第一至第四章，新增 **[前四章基础专题练习](/docs/exercises/math/analysis-foundations)**（10 题分层 + 折叠解析）。
 
 针对第十三章，新增 **[函数列与函数项级数专题练习](/docs/exercises/math/analysis-function-sequences)**（10 题分层 + 折叠解析）。
+
+新增 **[点集拓扑专题练习](/docs/exercises/math/topology)**（严密证明 + 多维挑战）。
 
 > **学习建议**：分析学的严密性需要通过大量的 $\epsilon$ 练习来磨练。建议在阅读理论时，务必亲手推导一遍核心定理的证明。

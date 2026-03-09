@@ -187,7 +187,6 @@ const sidebars: SidebarsConfig = {
                     { type: 'doc', id: 'academic-math/analysis/function-sequences', label: '第十三章 函数列与函数项级数' },
                     { type: 'doc', id: 'academic-math/analysis/power-series', label: '第十四章 幂级数' },
                     { type: 'doc', id: 'academic-math/analysis/fourier-series', label: '第十五章 傅里叶级数' },
-                    { type: 'doc', id: 'academic-math/analysis/topology', label: '前置专题：点集拓扑初步' },
                     { type: 'doc', id: 'academic-math/analysis/multivariable-limits', label: '第十六章 多元函数的极限与连续' },
                     { type: 'doc', id: 'academic-math/analysis/multivariable-differentiation', label: '第十七章 多元函数微分学' },
                     { type: 'doc', id: 'academic-math/analysis/differential-geometry', label: '第十七章 多元函数微分学在几何上的应用' },
@@ -233,6 +232,21 @@ const sidebars: SidebarsConfig = {
                   id: 'academic-math/real-analysis/lp-spaces',
                   label: '第 3 站：L^p 空间',
                 },
+              ]
+            },
+            {
+              type: 'category',
+              collapsible: true,
+              collapsed: true,
+              label: '点集拓扑学 (Topology)',
+              link: { type: 'doc', id: 'academic-math/topology/index' },
+              items: [
+                'academic-math/topology/metric-spaces',
+                'academic-math/topology/topological-spaces',
+                'academic-math/topology/continuity',
+                'academic-math/topology/separation-axioms',
+                'academic-math/topology/compactness',
+                'academic-math/topology/connectedness',
               ]
             },
             { type: 'category', collapsible: true, collapsed: true, label: '高等代数', link: {type: 'doc', id: 'academic-math/algebra/index'}, items: ['academic-math/algebra/polynomial', 'academic-math/algebra/determinant', 'academic-math/algebra/linear-equations', 'academic-math/algebra/vector-spaces-and-linear-transformations', 'academic-math/algebra/eigenvalues-and-jordan-form', 'academic-math/algebra/inner-product-spaces', 'academic-math/algebra/cayley-hamilton-and-rational-canonical-form', 'academic-math/algebra/matrix', 'academic-math/algebra/quadratic-forms'] },
@@ -345,6 +359,7 @@ const sidebars: SidebarsConfig = {
               items: [
                 { type: 'doc', id: 'exercises/math/analysis-function-sequences', label: '进阶：函数列与级数性质' },
                 { type: 'doc', id: 'exercises/math/analysis-differential-geometry', label: '进阶：微分几何专题' },
+                { type: 'doc', id: 'exercises/math/topology', label: '点集拓扑专题' },
                 { type: 'doc', id: 'exercises/math/real-analysis', label: '实变函数专题' },
               ]
             },
