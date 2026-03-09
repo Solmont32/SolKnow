@@ -108,7 +108,7 @@ while($true) {
             if ($todoMatch -notmatch '- \[ \]') {
                 Show-Dashboard "PLANNING"
                 $ctx = Get-StrategicContext
-                $planPrompt = "ROLE: Architect`nMISSION: Decompose the 'CORE GOAL' into 3-5 sub-tasks.`nCONTEXT:`n" + $ctx + "`nACTION: Provide ONLY tasks as '- [ ] Task (YYYY-MM-DD)\n'.`n"
+                $planPrompt = "ROLE: Architect`nMISSION: Decompose the 'CORE GOAL' into 3-5 sub-tasks.`nCONTEXT:`n" + $ctx + "`nACTION: Provide ONLY tasks as '- [ ] Task (YYYY-MM-DD)'.`n"
                 $newTasks = & gemini -y -p $planPrompt
                 $insertPattern = "(" + [regex]::Escape($global:LBL_TODO) + "\s*)"
                 Set-Content $global:CFG_TASKS ($content -replace $insertPattern, ('$1' + "`n" + $newTasks + "`n")) -Encoding UTF8
