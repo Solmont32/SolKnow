@@ -11,6 +11,7 @@ title: 概率论与数理统计 (Probability & Statistics)
 - **[事件与概率公理化体系 (Events)](events)**：柯尔莫哥洛夫公理、全概率与贝叶斯。
 - **[离散型随机变量 (Discrete RV)](discrete-rv)**：期望、方差及常用分布 (二项, 泊松)。
 - **[连续型随机变量 (Continuous RV)](continuous-rv)**：密度函数及常用分布 (正态, 指数)。
+- **[特征函数 (Characteristic Functions)](characteristic-functions)**：概率论的解析工具与傅里叶变换。
 - **[大数定律与中心极限定理 (Limit Theorems)](limit-theorems)**：揭示大量随机现象背后的确定性趋势。
 
 ## 数理统计 (Statistics)
