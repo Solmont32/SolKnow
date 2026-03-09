@@ -57,7 +57,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 - **[第十六章 多元函数的极限与连续](multivariable-limits)**：二元极限、连续性。
 - **[第十七章 多元函数微分学](multivariable-differentiation)**：全微分、偏导数、Taylor 公式。
-  - **[(续) 空间曲线与曲面的微分几何](differential-geometry)**：切向量、法向量、曲率与挠率。
+  - **[微分几何：曲线与曲面的局部理论](differential-geometry)**：Frenet 标架、基本形式与 Gauss-Bonnet 定理。
 - **[第十八章 隐函数定理及其应用](implicit-function-theorem)**：隐函数存在定理、Lagrange 乘数法。
 - **[第十九章 含参量积分](parametric-integrals)**：含参量正常/反常积分、Beta/Gamma 函数。
 - **[第二十章 重积分](multiple-integrals)**：二重/三重积分、变量替换、Jacobi 行列式。
@@ -95,7 +95,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 针对第 16-23 章，新增 **[多元微积分与矢量分析专题练习](/docs/exercises/math/analysis-multivariable-calculus)**（多题分层 + 折叠解析）。
 
-针对第十七章续内容，新增 **[微分几何专题练习](/docs/exercises/math/analysis-differential-geometry)**（多题分层 + 折叠解析）。
+针对『微分几何：曲线与曲面的局部理论』，新增 **[微分几何专项练习](/docs/exercises/math/analysis-differential-geometry)**（Frenet、基本形式与 Gauss-Bonnet）。
 
 针对第一至第四章，新增 **[前四章基础专题练习](/docs/exercises/math/analysis-foundations)**（10 题分层 + 折叠解析）。
 

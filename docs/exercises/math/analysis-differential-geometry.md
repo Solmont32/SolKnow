@@ -1,296 +1,135 @@
 ---
-title: 微分几何专题练习
-description: 面向空间曲线与曲面的教材化分层练习，含完整折叠解析
+title: 微分几何：曲线与曲面的局部理论专项练习
+description: 面向 Frenet 标架、基本形式与 Gauss-Bonnet 定理的教材化分层练习
 ---
 
-# 微分几何专题练习
+# 微分几何：曲线与曲面的局部理论专项练习
 
-覆盖主题：切线与法平面、曲率与挠率、隐式/参数曲面的切平面。
+本练习库涵盖了从空间曲线的 Frenet-Serret 公式到曲面内蕴几何（第一、二基本形式）及整体联系（Gauss-Bonnet 定理）的深度题目。
 
-> 使用建议：先独立推导，再点击展开过程与答案。
+> **学习建议**：微分几何的计算量通常较大，建议先写出符号表达式，再代入具体数值。
 
 ---
 
-## 一、基础题
+## 一、空间曲线论 (Frenet 标架)
 
-### 练习 1：切线与法平面 {#dg-1}
-
-设 $\mathbf{r}(t)=(t, t^2, t^3)$，求 $t=1$ 时的切线与法平面。
+### 练习 1：Frenet 标架的显式计算 {#dg-1}
+求曲线 $\mathbf{r}(t) = (a\cos t, a\sin t, bt)$（圆柱螺旋线）在任意点 $t$ 处的 Frenet 标架 $\{\mathbf{T}, \mathbf{N}, \mathbf{B}\}$。
 
 <details>
+<summary>点击查看解析</summary>
 
-<summary>点击查看过程与答案</summary>
+**Step 1: 计算导数**
+$\mathbf{r}' = (-a\sin t, a\cos t, b)$，其模为 $\|\mathbf{r}'\| = \sqrt{a^2+b^2}$。
+**Step 2: 单位切向量 $\mathbf{T}$**
+$\mathbf{T} = \frac{\mathbf{r}'}{\|\mathbf{r}'\|} = \frac{1}{\sqrt{a^2+b^2}}(-a\sin t, a\cos t, b)$。
+**Step 3: 计算 $\mathbf{r}' \times \mathbf{r}''$**
+$\mathbf{r}'' = (-a\cos t, -a\sin t, 0)$。
+$\mathbf{r}' \times \mathbf{r}'' = \begin{vmatrix} \mathbf{i} & \mathbf{j} & \mathbf{k} \\ -a\sin t & a\cos t & b \\ -a\cos t & -a\sin t & 0 \end{vmatrix} = (ab\sin t, -ab\cos t, a^2)$。
+其模 $\|\mathbf{r}' \times \mathbf{r}''\| = \sqrt{a^2b^2 + a^4} = a\sqrt{a^2+b^2}$。
+**Step 4: 单位副法向量 $\mathbf{B}$**
+$\mathbf{B} = \frac{\mathbf{r}' \times \mathbf{r}''}{\|\mathbf{r}' \times \mathbf{r}''\|} = \frac{1}{\sqrt{a^2+b^2}}(b\sin t, -b\cos t, a)$。
+**Step 5: 单位主法向量 $\mathbf{N}$**
+$\mathbf{N} = \mathbf{B} \times \mathbf{T} = (-\cos t, -\sin t, 0)$。
 
-$$
-
-\mathbf{r}(1)=(1,1,1),\quad \mathbf{r}'(t)=(1,2t,3t^2),\quad \mathbf{r}'(1)=(1,2,3).
-
-
-$$
-
-切线：
-
-$$
-
-\frac{x-1}{1}=\frac{y-1}{2}=\frac{z-1}{3}.
-
-
-$$
-
-法平面：
-
-$$
-
-(x-1)+2(y-1)+3(z-1)=0.
-
-
-$$
-
+**结论**：主法向量始终指向 $z$ 轴（中心轴）。
 </details>
 
-### 练习 2：平面曲线曲率 {#dg-2}
-
-设 $\mathbf{r}(t)=(t,\ln\cosh t,0)$，求曲率 $\kappa(t)$。
-
-<details>
-
-<summary>点击查看过程与答案</summary>
-
-$$
-
-\mathbf{r}'=(1,\tanh t,0),\quad \mathbf{r}''=(0,\operatorname{sech}^2 t,0).
-
-
-$$
-
-$$
-\|\mathbf{r}'\times\mathbf{r}''\|=\operatorname{sech}^2 t,
-\quad
-\|\mathbf{r}'\|=\sqrt{1+\tanh^2 t}.
-
-
-$$
-
-因此
-
-$$
-
-\kappa(t)=\frac{\operatorname{sech}^2 t}{(1+\tanh^2 t)^{3/2}}.
-
-
-$$
-
-</details>
-
-### 练习 3：隐式曲面切平面 {#dg-3}
-
-设 $F(x,y,z)=x^2+2y^2+3z^2-6=0$，求点 $(1,1,1)$ 处切平面。
+### 练习 2：Frenet-Serret 公式应用 {#dg-2}
+若一条曲线的所有切线都通过一个固定点，证明该曲线是直线。
 
 <details>
+<summary>点击查看证明</summary>
 
-<summary>点击查看过程与答案</summary>
-
-$$
-
-\nabla F=(2x,4y,6z),\quad \nabla F(1,1,1)=(2,4,6).
-
-
-$$
-
-切平面：
-
-$$
-
-2(x-1)+4(y-1)+6(z-1)=0
-\iff x+2y+3z=6.
-
-
-$$
-
+设固定点为 $\mathbf{P}$。由题意，对于曲线 $\mathbf{r}(s)$（弧长参数），存在标量函数 $\lambda(s)$ 使得：
+$\mathbf{r}(s) + \lambda(s) \mathbf{T}(s) = \mathbf{P}$
+对 $s$ 求导：
+$\mathbf{T}(s) + \lambda'(s) \mathbf{T}(s) + \lambda(s) \mathbf{T}'(s) = \mathbf{0}$
+利用 Frenet 公式 $\mathbf{T}' = \kappa \mathbf{N}$：
+$(1 + \lambda'(s)) \mathbf{T}(s) + \lambda(s) \kappa \mathbf{N}(s) = \mathbf{0}$
+由于 $\mathbf{T}$ 与 $\mathbf{N}$ 正交且线性无关，其系数必须均为 0：
+1. $\lambda(s) \kappa = 0$
+2. $1 + \lambda'(s) = 0$
+从 (2) 得 $\lambda(s) = -s + c \neq 0$。
+代入 (1) 迫使 $\kappa = 0$。
+曲率为 0 的正则曲线必为直线。
 </details>
 
 ---
 
-## 二、提高题
+## 二、曲面内蕴几何 (基本形式)
 
-### 练习 4：螺旋线常曲率常挠率 {#dg-4}
-
-设 $\mathbf{r}(t)=(2\cos t,2\sin t,3t)$，求 $\kappa,\tau$。
+### 练习 3：旋转面的第一基本形式 {#dg-3}
+设曲线在 $xz$ 平面内为 $x = f(u), z = g(u)$，绕 $z$ 轴旋转生成曲面 $\mathbf{r}(u,v) = (f(u)\cos v, f(u)\sin v, g(u))$。求其第一基本形式。
 
 <details>
+<summary>点击查看解析</summary>
 
-<summary>点击查看过程与答案</summary>
+计算偏导：
+$\mathbf{r}_u = (f'(u)\cos v, f'(u)\sin v, g'(u))$
+$\mathbf{r}_v = (-f(u)\sin v, f(u)\cos v, 0)$
 
-直接套用圆柱螺旋线公式：
+计算系数：
+$E = \mathbf{r}_u \cdot \mathbf{r}_u = (f')^2 + (g')^2$
+$F = \mathbf{r}_u \cdot \mathbf{r}_v = 0$（说明经线与纬线正交）
+$G = \mathbf{r}_v \cdot \mathbf{r}_v = f^2$
 
-$$
-
-\kappa=\frac{a}{a^2+b^2},\quad \tau=\frac{b}{a^2+b^2}.
-
-
-$$
-
-其中 $a=2,b=3$，故
-
-$$
-
-\kappa=\frac{2}{13},\qquad \tau=\frac{3}{13}.
-
-
-$$
-
+**结论**：$I = ((f')^2 + (g')^2) du^2 + f^2 dv^2$。
 </details>
 
-### 练习 5：判定平面曲线 {#dg-5}
-
-设
-
-$$
-
-\mathbf{r}(t)=(e^t,e^{-t},2).
-
-
-$$
-
-证明曲线是平面曲线并求其所在平面。
+### 练习 4：高斯曲率计算 {#dg-4}
+计算正交参数网下（即 $F=0$）的高斯曲率公式。若 $E=1, G=f^2(u)$，证明 $K = -f''(u)/f(u)$。
 
 <details>
+<summary>点击查看解析</summary>
 
-<summary>点击查看过程与答案</summary>
-
-由第三分量恒为 2，整条曲线都满足 $z=2$，因此位于平面 $z=2$。  
-也可由挠率角度：$\mathbf{r}'''$ 与前两阶导线性相关，得到 $\tau\equiv 0$。
-
-</details>
-
-### 练习 6：参数曲面法向量 {#dg-6}
-
-设
-
-$$
-
-\mathbf{R}(u,v)=(u+v,u-v,u^2-v^2).
-
-
-$$
-
-求一般点处法向量。
-
-<details>
-
-<summary>点击查看过程与答案</summary>
-
-$$
-
-\mathbf{R}_u=(1,1,2u),\quad \mathbf{R}_v=(1,-1,-2v).
-
-
-$$
-
-$$
-\mathbf{n}=\mathbf{R}_u\times\mathbf{R}_v
-=\begin{vmatrix}
-\mathbf{i}&\mathbf{j}&\mathbf{k}\\
-1&1&2u\\
-1&-1&-2v
-\end{vmatrix}
-=(2(v-u),2(u+v),-2).
-
-
-$$
-
-法向量可取
-
-$$
-
-(v-u,\,u+v,\,-1).
-
-
-$$
-
+当 $F=0$ 时，高斯曲率有一种简洁形式（Liouville 公式）：
+$K = -\frac{1}{2\sqrt{EG}} \left[ \frac{\partial}{\partial u}\left(\frac{G_u}{\sqrt{EG}}\right) + \frac{\partial}{\partial v}\left(\frac{E_v}{\sqrt{EG}}\right) \right]$
+代入 $E=1, G=f^2$：
+$E_v = 0, \sqrt{EG} = f$
+$K = -\frac{1}{2f} \left[ \frac{\partial}{\partial u}\left(\frac{2f f'}{f}\right) + 0 \right] = -\frac{1}{2f} (2f'') = -\frac{f''(u)}{f(u)}$。
+**应用**：若 $f(u) = e^u$（伪球面局部），则 $K = -e^u/e^u = -1$。
 </details>
 
 ---
 
-## 三、挑战题
+## 三、Gauss-Bonnet 与综合应用
 
-### 练习 7：由弧长定义曲率 {#dg-7}
-
-设曲线按弧长参数 $s$ 给出，且
-
-$$
-
-\mathbf{T}(s)=(\cos s,\sin s,0).
-
-
-$$
-
-求曲率并恢复一条可能的曲线。
+### 练习 5：球面三角形的面积 {#dg-5}
+利用 Gauss-Bonnet 定理证明：半径为 $R$ 的球面上，三个内角为 $A, B, C$ 的球面三角形的面积为 $S = R^2(A + B + C - \pi)$。
 
 <details>
+<summary>点击查看解析</summary>
 
-<summary>点击查看过程与答案</summary>
-
-由定义
-
-$$
-
-\kappa=\left\|\frac{d\mathbf{T}}{ds}\right\|
-=\|(-\sin s,\cos s,0)\|=1.
-
-
-$$
-
-又因 $\mathbf{r}'(s)=\mathbf{T}(s)$，积分得
-
-$$
-
-\mathbf{r}(s)=(\sin s,-\cos s,0)+\mathbf{C}.
-
-
-$$
-
-这是一条半径为 1 的圆（平移后）。
-
+**Step 1: 定理应用**
+对球面区域 $\Omega$ 使用 Gauss-Bonnet 定理：
+$\iint_{\Omega} K dA + \int_{\partial \Omega} k_g ds + \sum \text{外角}_i = 2\pi$
+**Step 2: 代入参数**
+1. 球面高斯曲率 $K = 1/R^2$，故 $\iint K dA = \frac{1}{R^2} Area(\Omega)$。
+2. 球面三角形的边是大圆弧，大圆是球面的测地线，故 $k_g = 0$，积分项消失。
+3. 顶点的外角分别为 $\pi-A, \pi-B, \pi-C$。
+**Step 3: 代数整理**
+$\frac{S}{R^2} + 0 + (\pi-A + \pi-B + \pi-C) = 2\pi$
+$\frac{S}{R^2} + 3\pi - (A+B+C) = 2\pi$
+$S = R^2(A+B+C - \pi)$。
+**几何直观**：球面上三角形内角和大于 $\pi$。
 </details>
 
-### 练习 8：二次曲面的切平面族 {#dg-8}
-
-设曲面
-
-$$
-
-z=x^2+y^2.
-
-
-$$
-
-求过点 $(x_0,y_0,x_0^2+y_0^2)$ 的切平面，并说明当 $(x_0,y_0)$ 变化时斜率如何变化。
+### 练习 6：测地线的判定 {#dg-6}
+在圆柱面 $x^2+y^2=R^2$ 上，证明任何螺旋线都是测地线。
 
 <details>
+<summary>点击查看解析</summary>
 
-<summary>点击查看过程与答案</summary>
-
-$$
-
-f_x=2x,\quad f_y=2y.
-
-
-$$
-
-切平面：
-
-$$
-
-z-(x_0^2+y_0^2)=2x_0(x-x_0)+2y_0(y-y_0).
-
-
-$$
-
-其对 $x,y$ 的线性系数分别为 $2x_0,2y_0$，所以离原点越远，切平面越陡。
-
+**方法一：法向量判定**
+曲线是测地线的充要条件是其主法向量 $\mathbf{N}$ 与曲面法向量 $\mathbf{n}$ 平行。
+对于圆柱面 $\mathbf{n} = (\cos v, \sin v, 0)$。
+对于螺旋线，练习 1 已算出其主法向量 $\mathbf{N} = (-\cos t, -\sin t, 0)$。
+两者共线，证毕。
+**方法二：变分判定**
+将圆柱面展开为平面，螺旋线变为直线。由于平面上的直线是测地线，且等距变换保持测地线性质，故原螺旋线为测地线。
 </details>
 
 ---
 
-返回章节：[`空间曲线与曲面的微分几何`](/docs/academic-math/analysis/differential-geometry)
+返回章节：[`微分几何：曲线与曲面的局部理论`](/docs/academic-math/analysis/differential-geometry)
