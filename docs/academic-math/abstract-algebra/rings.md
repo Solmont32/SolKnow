@@ -1,162 +1,95 @@
 ---
 title: 环论 (Rings)
+sidebar_position: 2
 ---
 
-# 环论 (Rings)
+import { Infinity, Layers, Target, Boxes } from 'lucide-react';
 
-环论将“可加结构 + 可乘结构”统一在同一对象中，是从群论迈向数论与代数几何的重要桥梁。
+# <Infinity className="inline-block mr-2 mb-1" /> 环论 (Ring Theory)
+
+环论研究具备加法与乘法两种运算的代数结构，是联结算术、几何与代数的桥梁。
 
 ## 1. 环的定义与基本类型
 
-设 $R$ 是非空集合，配备加法 $+$ 与乘法 $\cdot$。若满足：
+设 $R$ 是集合，配备加法 $+$ 与乘法 $\cdot$。若 $(R,+)$ 是交换群，且乘法满足结合律与对加法的分配律，则称 $R$ 为 **环 (Ring)**。
 
-1. $(R,+)$ 是交换群；
-2. 乘法结合律：$(ab)c=a(bc)$；
-3. 分配律：$a(b+c)=ab+ac$，$(a+b)c=ac+bc$；
-   则称 $R$ 为环。
+- **整环 (Integral Domain)**: 无零因子的交换幺环。
+- **除环 (Division Ring)**: 每一个非零元都可逆的环。
+- **域 (Field)**: 交换的除环。
 
-若存在乘法单位元 $1_R$，称为幺环。
+## 2. 理想与商环 <Target className="inline-block ml-1" />
 
-常见重要环：
+### 2.1 理想的定义
+设 $I \subseteq R$，若 $(I, +)$ 是子群，且满足对任意 $r \in R, a \in I$ 都有 $ra \in I, ar \in I$，则称 $I$ 为 $R$ 的 **理想 (Ideal)**。
 
-- 整数环 $\mathbb{Z}$；
-- 多项式环 $F[x]$；
-- 模 $n$ 余数环 $\mathbb{Z}_n$；
-- 矩阵环 $M_n(F)$（通常非交换）。
+### 2.2 素理想与极大理想
+- **素理想 (Prime Ideal)**: 若 $ab \in P \implies a \in P$ 或 $b \in P$，则称 $P$ 为素理想。
+  - **性质**: $R/P$ 是整环 $\iff P$ 是素理想。
+- **极大理想 (Maximal Ideal)**: 若不存在理想 $J$ 使得 $I \subset J \subset R$，则称 $I$ 为极大理想。
+  - **性质**: $R/M$ 是域 $\iff M$ 是极大理想。
 
-## 2. 单位元、零因子、整环与域
+## 3. 环同构定理与中国剩余定理 <Layers className="inline-block ml-1" />
 
-在交换幺环中：
+### 3.1 环同构定理 (Ring Isomorphism Theorems)
+1. **第一同构定理**: $R/\ker \varphi \cong \operatorname{Im} \varphi$。
+2. **第二同构定理**: $(S+I)/I \cong S/(S \cap I)$。
+3. **第三同构定理**: $(R/I)/(J/I) \cong R/J$。
 
-- 若 $u\in R$ 存在 $v$ 使 $uv=1$，则 $u$ 是可逆元（单位）；
-- 若 $a\neq 0,b\neq 0$ 但 $ab=0$，则 $a,b$ 为零因子；
-- 无零因子的交换幺环称整环；
-- 每个非零元素都可逆的交换幺环称域。
+### 3.2 中国剩余定理 (Chinese Remainder Theorem)
+设 $I_1, I_2, \dots, I_n$ 是环 $R$ 的理想，且它们两两 **互素** (即 $I_i + I_j = R$)，则：
+$$R / (I_1 \cap I_2 \cap \dots \cap I_n) \cong R/I_1 \times R/I_2 \times \dots \times R/I_n$$
 
-### 例题 1：判别整环
+## 4. 经典例题
 
-判断 $\mathbb{Z}_6$ 是否为整环。
-
-解：$\bar{2}\neq 0,\ \bar{3}\neq 0$，但 $\bar{2}\bar{3}=\bar{0}$，存在零因子，故不是整环。
-
-## 3. 理想与商环
-
-理想 $I\subseteq R$ 要求：
-
-- $(I,+)$ 是 $R$ 的加法子群；
-- 对任意 $r\in R,\ a\in I$，有 $ra,ar\in I$。
-
-当 $R$ 交换时，商集 $R/I$ 可定义自然乘法，得到商环。
-
-### 例题 2：主理想与商环
-
-在 $\mathbb{Z}$ 中，证明 $n\mathbb{Z}$ 是理想，并写出 $\mathbb{Z}/n\mathbb{Z}$。
-
-解：$n\mathbb{Z}$ 对加法封闭且有逆元；任意 $r\in\mathbb{Z},nk\in n\mathbb{Z}$，有 $r(nk)=n(rk)\in n\mathbb{Z}$。故是理想。商环同构于 $\mathbb{Z}_n$。
-
-## 4. 环同态与同构定理
-
-映射 $\phi:R\to S$ 若满足
-
-$$
-
-\phi(a+b)=\phi(a)+\phi(b),\quad \phi(ab)=\phi(a)\phi(b),\quad \phi(1_R)=1_S,
-
-
-$$
-
-称为幺环同态。
-
-核与像：
-
-- $\ker\phi=\{a\in R:\phi(a)=0\}$（理想）；
-- $\operatorname{Im}\phi=\phi(R)$（子环）。
-
-第一同构定理：
-
-$$
-
-R/\ker\phi\cong \operatorname{Im}\phi.
-
-
-$$
-
-### 例题 3：同态核
-
-定义 $\phi:\mathbb{Z}[x]\to\mathbb{Z}$，$\phi(f)=f(1)$。求 $\ker\phi$。
-
-解：$\ker\phi=\{f(x):f(1)=0\}$。由因式定理，等价于 $(x-1)\mid f(x)$，故
-
-$$
-
-\ker\phi=(x-1).
-
-
-$$
-
-## 5. 多项式环与不可约性
-
-设 $F$ 为域，则 $F[x]$ 是欧几里得整环，从而是主理想整环。其核心工具：
-
-- 带余除法；
-- 最大公因式与辗转相除法；
-- 不可约多项式生成极大理想，进而构造域扩张。
-
-### 例题 4：有限域构造
-
-在 $\mathbb{F}_2[x]$ 中，设 $p(x)=x^2+x+1$。证明 $\mathbb{F}_2[x]/(p(x))$ 是 4 元域。
-
-解：$p(x)$ 在 $\mathbb{F}_2$ 上无根（代入 $0,1$ 都不为 $0$），故不可约。二次不可约多项式生成极大理想，商环成域，且元素形如 $a+bx$（$a,b\in\mathbb{F}_2$），共 4 个。
-
-## 6. 配套练习（点击展开答案）
-
-### 练习 1
-
-求 $\mathbb{Z}_{12}$ 的所有单位元个数。
-
+:::info 例题 1 (极大理想判定)
+证明：在整数环 $\mathbb{Z}$ 中，$n\mathbb{Z}$ 是极大理想当且仅当 $n$ 是素数。
+:::
 <details>
+<summary>查看解析</summary>
 
-<summary>点击查看解析与答案</summary>
-
-单位元等价于与 12 互素：$1,5,7,11$，共 4 个。
-
+我们已知 $\mathbb{Z}/n\mathbb{Z} \cong \mathbb{Z}_n$。
+根据理想性质，$n\mathbb{Z}$ 是极大理想 $\iff \mathbb{Z}/n\mathbb{Z}$ 是域。
+而剩余类环 $\mathbb{Z}_n$ 是域的充要条件是 $n$ 为素数。
+故得证。
 </details>
 
-### 练习 2
-
-证明在交换环 $R$ 中，所有幂零元构成理想（记为 $\sqrt{(0)}$）不总成立；并给出可交换幺环中成立条件的常见结论。
-
+:::info 例题 2 (不可约多项式)
+证明：若 $f(x) \in F[x]$ 是不可约多项式，则 $(f(x))$ 是极大理想。
+:::
 <details>
+<summary>查看解析</summary>
 
-<summary>点击查看解析与答案</summary>
-
-在交换幺环中，所有幂零元集合称零根基，确为理想。证明要点：若 $a^m=0,b^n=0$，则
-$(a+b)^{m+n-1}=0$（二项展开每项含 $a^m$ 或 $b^n$）；且 $r^ma^m=0$，故 $ra$ 仍幂零。
-
+因为 $F$ 是域，$F[x]$ 是主理想整环 (PID)。在 PID 中，非零素理想都是极大理想。
+不可约元素生成的理想是素理想。
+或者直接考虑商环：$F[x]/(f(x))$ 是由于 $f(x)$ 不可约而构造出的扩张域。
+因为商环是域，故 $(f(x))$ 是极大理想。
 </details>
 
-### 练习 3
+## 5. 强化练习
 
-设 $I,J$ 为环 $R$ 的理想，证明 $I\cap J$ 与 $I+J$ 仍是理想。
-
+:::info 练习 1 (幂零元与理想)
+设 $R$ 是交换环。证明：$R$ 中所有幂零元的集合 $\operatorname{Nil}(R)$ 是 $R$ 的一个理想。
+:::
 <details>
+<summary>查看解析</summary>
 
-<summary>点击查看解析与答案</summary>
-
-交集对加法和吸收律显然封闭；
-$I+J=\{a+b:a\in I,b\in J\}$ 在加法下封闭，且 $r(a+b)=ra+rb\in I+J$，同理右乘也在内，故为理想。
-
+1. **加法**: 设 $a^n = 0, b^m = 0$。由二项式定理 $(a+b)^{n+m-1} = \sum \binom{n+m-1}{k} a^k b^{n+m-1-k}$。每一项中 $k \ge n$ 或 $n+m-1-k \ge m$ 必居其一，故每一项都为 0，即 $a+b$ 幂零。
+2. **乘法**: $(ra)^n = r^n a^n = 0$，故 $ra$ 幂零。
+故 $\operatorname{Nil}(R)$ 是理想。
 </details>
 
-### 练习 4
-
-在 $\mathbb{Q}[x]$ 中判断 $x^4-5x^2+6$ 是否可约，并给出分解。
-
+:::info 练习 2 (商环结构)
+描述商环 $\mathbb{Z}[x] / (x^2+1, 3)$ 的结构。
+:::
 <details>
+<summary>查看解析</summary>
 
-<summary>点击查看解析与答案</summary>
-
-设 $y=x^2$，则多项式为 $y^2-5y+6=(y-2)(y-3)$，故
-$x^4-5x^2+6=(x^2-2)(x^2-3)$，在 $\mathbb{Q}[x]$ 可约。
-
+首先 $\mathbb{Z}[x]/(3) \cong \mathbb{Z}_3[x]$。
+接着 $\mathbb{Z}_3[x] / (x^2+1)$。由于 $x^2+1$ 在 $\mathbb{Z}_3$ 中没有根（代入 $0, 1, 2$ 均不为 0），故 $x^2+1$ 在 $\mathbb{Z}_3$ 上不可约。
+不可约多项式生成的商环是域，元素个数为 $3^{\deg(f)} = 3^2 = 9$。
+故该商环是 9 元域 $\mathbb{F}_9$。
 </details>
+
+---
+
+_本章节由 SolKnow 高级计算代数系统生成。_
