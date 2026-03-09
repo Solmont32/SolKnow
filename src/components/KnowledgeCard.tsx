@@ -1,8 +1,8 @@
 import React, { ReactNode } from 'react';
-import { Info, AlertTriangle, CheckCircle2, Lightbulb, Terminal, Trophy } from 'lucide-react';
+import { Info, AlertTriangle, CheckCircle2, Lightbulb, Terminal, Trophy, AlertOctagon, XCircle } from 'lucide-react';
 import clsx from 'clsx';
 
-type CardType = 'info' | 'warning' | 'success' | 'tip' | 'code' | 'contest';
+type CardType = 'info' | 'warning' | 'success' | 'tip' | 'code' | 'contest' | 'danger' | 'error';
 
 interface KnowledgeCardProps {
   children: ReactNode;
@@ -53,6 +53,20 @@ const config = {
     bg: 'rgba(236, 72, 153, 0.05)',
     border: 'rgba(236, 72, 153, 0.2)',
     label: '竞赛',
+  },
+  danger: {
+    icon: AlertOctagon,
+    color: '#ef4444',
+    bg: 'rgba(239, 68, 68, 0.05)',
+    border: 'rgba(239, 68, 68, 0.2)',
+    label: '危险',
+  },
+  error: {
+    icon: XCircle,
+    color: '#ef4444',
+    bg: 'rgba(239, 68, 68, 0.05)',
+    border: 'rgba(239, 68, 68, 0.2)',
+    label: '错误',
   },
 };
 

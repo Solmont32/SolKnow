@@ -1,5 +1,5 @@
 ---
-title: 微分几何：局部曲线论、曲面曲率与张量计算 (Differential Geometry: Curves, Surfaces & Tensors)
+title: "微分几何：局部曲线论、曲面曲率与张量计算 (Differential Geometry: Curves, Surfaces & Tensors)"
 ---
 
 import KnowledgeCard from "@site/src/components/KnowledgeCard";
