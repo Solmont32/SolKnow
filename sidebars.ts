@@ -369,8 +369,8 @@ const sidebars: SidebarsConfig = {
               items: [
                 { type: 'doc', id: 'exercises/math/analysis-function-sequences', label: '进阶：函数列与级数性质' },
                 { type: 'doc', id: 'exercises/math/analysis-differential-geometry', label: '进阶：微分几何专题' },
-                { type: 'doc', id: 'exercises/math/topology', label: '点集拓扑专题' },
-                { type: 'doc', id: 'exercises/math/real-analysis', label: '实变函数专题' },
+                { type: 'doc', id: 'exercises/math/analysis-differential-equations', label: '进阶：常微分方程专题' },
+                { type: 'doc', id: 'exercises/math/topology', label: '点集拓扑专题' },                { type: 'doc', id: 'exercises/math/real-analysis', label: '实变函数专题' },
               ]
             },
           ],
