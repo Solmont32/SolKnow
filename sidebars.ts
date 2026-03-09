@@ -142,7 +142,7 @@ const sidebars: SidebarsConfig = {
           collapsed: true,
           label: '基础教育 (K-12)',
           items: [
-            { type: 'category', collapsible: true, collapsed: true, label: '小学数学', link: {type: 'doc', id: 'academic-math/elementary/index'}, items: ['academic-math/elementary/arithmetic', 'academic-math/elementary/geometry-basic', 'academic-math/elementary/fractions', 'academic-math/elementary/word-problems'] },
+            { type: 'category', collapsible: true, collapsed: true, label: '小学数学', link: {type: 'doc', id: 'academic-math/elementary/index'}, items: ['academic-math/elementary/arithmetic', 'academic-math/elementary/geometry-basic', 'academic-math/elementary/fractions', 'academic-math/elementary/combinatorics', 'academic-math/elementary/word-problems'] },
             { type: 'category', collapsible: true, collapsed: true, label: '初中数学', link: {type: 'doc', id: 'academic-math/junior-high/index'}, items: ['academic-math/junior-high/real-numbers', 'academic-math/junior-high/linear-equations', 'academic-math/junior-high/algebraic-expressions', 'academic-math/junior-high/plane-geometry', 'academic-math/junior-high/functions-basic'] },
             { type: 'category', collapsible: true, collapsed: true, label: '高中数学', link: {type: 'doc', id: 'academic-math/senior-high/index'}, items: ['academic-math/senior-high/sets', 'academic-math/senior-high/elementary-functions', 'academic-math/senior-high/trigonometry', 'academic-math/senior-high/vectors', 'academic-math/senior-high/conics', 'academic-math/senior-high/stats-basic', 'academic-math/senior-high/calculus-intro'] },
           ],
