@@ -114,3 +114,56 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 5. **结论**：具有 3 次代数精度。
 
 </details>
+
+### Q6: Romberg 序列推导
+若复化梯形值 $T_0^{(0)}=1.0, T_0^{(1)}=0.9$，试求第一级 Richardson 外推值 $T_1^{(0)}$。
+
+<details>
+<summary>Check Solution</summary>
+
+**解析：**
+1. **公式**：$T_1^{(0)} = \frac{4 T_0^{(1)} - T_0^{(0)}}{3}$。
+2. **计算**：
+   $T_1^{(0)} = \frac{4(0.9) - 1.0}{3} = \frac{3.6 - 1.0}{3} = \frac{2.6}{3} \approx 0.8667$。
+3. **意义**：这一步将误差由 $O(h^2)$ 提升到了 $O(h^4)$，本质上对应于 Simpson 公式的计算结果。
+
+</details>
+
+---
+
+## 4. 非线性方程练习 (Nonlinear Equations)
+
+### Q7: Newton 迭代收敛阶分析
+设 $f(x) = x^2 - a = 0$，证明 Newton 迭代法 $x_{k+1} = \frac{1}{2}(x_k + \frac{a}{x_k})$ 在根 $\sqrt{a}$ 处是平方收敛的。
+
+<details>
+<summary>Check Solution</summary>
+
+**解析：**
+1. **迭代函数**：$\phi(x) = \frac{1}{2}(x + \frac{a}{x})$。
+2. **一阶导数**：$\phi'(x) = \frac{1}{2}(1 - \frac{a}{x^2})$。
+   - 代入根 $x^* = \sqrt{a}$：$\phi'(\sqrt{a}) = \frac{1}{2}(1 - \frac{a}{a}) = 0$。
+3. **二阶导数**：$\phi''(x) = \frac{1}{2} \cdot \frac{2a}{x^3} = \frac{a}{x^3}$。
+   - 代入根 $x^* = \sqrt{a}$：$\phi''(\sqrt{a}) = \frac{a}{a\sqrt{a}} = \frac{1}{\sqrt{a}} \neq 0$。
+4. **判定**：由于 $\phi'(x^*) = 0$ 且 $\phi''(x^*) \neq 0$，由收敛阶理论知该方法为**平方收敛**。
+
+</details>
+
+### Q8: 三次样条插值边界条件
+已知 $n$ 个子区间的自然三次样条插值，为什么需要 $S''(x_0)=0$ 和 $S''(x_n)=0$ 才能唯一确定？
+
+<details>
+<summary>Check Solution</summary>
+
+**解析：**
+1. **参数计数**：每个区间是 3 次多项式，有 4 个系数，$n$ 个区间共 $4n$ 个待定参数。
+2. **内部约束**：
+   - 节点处函数值：每个内部节点 2 个方程，端点各 1 个，共 $2(n-1) + 2 = 2n$ 个。
+   - 一阶导数连续：$n-1$ 个内部节点。
+   - 二阶导数连续：$n-1$ 个内部节点。
+   总计 $2n + (n-1) + (n-1) = 4n - 2$ 个方程。
+3. **自由度**：$4n - (4n-2) = 2$。
+4. **结论**：我们需要额外 2 个方程来封闭方程组。自然边界条件提供的 $S''(x_0)=0$ 和 $S''(x_n)=0$ 恰好提供了这两个约束。
+
+</details>
+

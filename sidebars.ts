@@ -284,7 +284,12 @@ const sidebars: SidebarsConfig = {
               collapsed: true, 
               label: '数值分析 (Numerical Analysis)', 
               link: {type: 'doc', id: 'academic-math/numerical-analysis/index'}, 
-              items: ['academic-math/numerical-analysis/interpolation', 'academic-math/numerical-analysis/fitting', 'academic-math/numerical-analysis/integration'] 
+              items: [
+                'academic-math/numerical-analysis/interpolation',
+                'academic-math/numerical-analysis/fitting',
+                'academic-math/numerical-analysis/integration',
+                'academic-math/numerical-analysis/nonlinear-equations'
+              ] 
             },
           ],
         },
