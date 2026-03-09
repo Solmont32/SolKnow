@@ -8,112 +8,111 @@ import { Network, GitMerge, Scaling, Layers, MousePointer2, Calculator } from 'l
 
 # 第十八章 隐函数定理及其应用
 
-隐函数定理是数学分析中最深刻的定理之一。它描述了方程在局部能否解出变量的条件，并将多元微分学的应用从显式函数推广到由方程定义的隐式图形。
+隐函数定理是数学分析中连接代数方程与局部几何结构的桥梁。它不仅解决了方程在局部能否解出显式函数的问题，更为流形理论与约束最优化奠定了分析基础。
 
-<KnowledgeCard type="tip" title={<><MousePointer2 className="inline-block mr-2" /> 核心洞察</>}>
-隐函数定理的本质是将**非线性方程的局部可解性**转化为其**线性逼近（导数/雅可比矩阵）的可逆性**。只要雅可比行列式非零，我们就能在局部“切开”复杂的约束面，将其视为一个标准的显式函数图像。
+<KnowledgeCard type="tip" title={<><MousePointer2 className="inline-block mr-2" /> 核心洞察：线性化的威力</>}>
+隐函数定理的本质是将**非线性方程的局部可解性**等价于其**线性逼近（导数/雅可比矩阵）的可逆性**。只要在该点的线性切空间不与投影方向平行，我们就能在局部“切开”复杂的约束面，将其视为一个标准的显式函数图像。
 </KnowledgeCard>
 
-## 一、 隐函数定理 (Implicit Function Theorem)
+---
 
-### 1. 单个方程的情形
-**定理**：设 $F(x, y)$ 在点 $P_0(x_0, y_0)$ 的邻域内连续可微，且：
-1. $F(x_0, y_0) = 0$
-2. $F_y(x_0, y_0) \neq 0$
-则在 $x_0$ 附近唯一确定连续可微函数 $y = f(x)$，其导数为 $\frac{dy}{dx} = -\frac{F_x}{F_y}$。
+## 一、 隐函数存在定理 (Existence of Implicit Functions)
 
-### 2. 隐函数组定理 (System Case)
-**定理**：设 $\mathbf{F}: D \subset \mathbb{R}^n \times \mathbb{R}^m \to \mathbb{R}^m$ 是 $C^1$ 映射。若在 $P_0(\mathbf{x}_0, \mathbf{y}_0)$ 满足：
+### 1. 单个方程情形：从曲线到导数
+**定理**：设 $F(x, y)$ 在点 $P_0(x_0, y_0)$ 的邻域内连续可微，且满足：
+1. **零点条件**：$F(x_0, y_0) = 0$
+2. **非退化条件**：$F_y(x_0, y_0) \neq 0$
+则在 $x_0$ 的某个邻域 $I$ 内，唯一存在连续可微函数 $y = f(x)$ 使得 $F(x, f(x)) \equiv 0$。
+
+**导数公式推导**：
+对 $F(x, f(x)) = 0$ 两边求全导数：
+$$F_x + F_y \frac{dy}{dx} = 0 \implies \frac{dy}{dx} = -\frac{F_x}{F_y}$$
+
+### 2. 隐函数组定理：高维映射的解
+**定理**：设 $\mathbf{F}: D \subset \mathbb{R}^n \times \mathbb{R}^m \to \mathbb{R}^m$ 为 $C^1$ 映射。若在 $P_0(\mathbf{x}_0, \mathbf{y}_0)$ 满足：
 1. $\mathbf{F}(\mathbf{x}_0, \mathbf{y}_0) = \mathbf{0}$
-2. **雅可比行列式** $\det \frac{\partial \mathbf{F}}{\partial \mathbf{y}} \neq 0$
-则在 $\mathbf{x}_0$ 邻域内唯一确定 $C^1$ 映射 $\mathbf{y} = \mathbf{f}(\mathbf{x})$，且其导数阵为：
+2. **雅可比行列式非零**：$\det \frac{\partial \mathbf{F}}{\partial \mathbf{y}} = \det \begin{pmatrix} \frac{\partial F_1}{\partial y_1} & \dots & \frac{\partial F_1}{\partial y_m} \\ \vdots & \ddots & \vdots \\ \frac{\partial F_m}{\partial y_1} & \dots & \frac{\partial F_m}{\partial y_m} \end{pmatrix} \neq 0$
+则在 $\mathbf{x}_0$ 邻域内唯一确定 $C^1$ 映射 $\mathbf{y} = \mathbf{f}(\mathbf{x})$，且其偏导数阵为：
 $$D\mathbf{f}(\mathbf{x}) = -[D_{\mathbf{y}}\mathbf{F}]^{-1} [D_{\mathbf{x}}\mathbf{F}]$$
 
 ---
 
-## 二、 逆映射定理与秩定理 (Rank Theorem)
+## 二、 逆映射定理与局部同胚 (Inverse Mapping Theorem)
 
-### 1. 逆映射定理 (Inverse Mapping Theorem)
-<KnowledgeCard type="info" title={<><Scaling className="inline-block mr-2" /> 局部同胚</>}>
-若 $\det D\mathbf{f}(\mathbf{x}_0) \neq 0$，则 $\mathbf{f}$ 在 $\mathbf{x}_0$ 附近是局部 $C^1$ 可逆的，即存在局部逆映射。
-</KnowledgeCard>
+### 1. 逆映射定理
+若 $f: U \subset \mathbb{R}^n \to \mathbb{R}^n$ 是 $C^1$ 映射，且在点 $\mathbf{x}_0$ 的雅可比矩阵 $Df(\mathbf{x}_0)$ 可逆，则 $f$ 在 $\mathbf{x}_0$ 的某个邻域内是**局部微分同胚**。
+
+- **意义**：这意味着在微观尺度下，只要导数矩阵不退化，非线性映射的表现与线性映射（坐标旋转、拉伸）是一致的。
+- **证明要点**：利用**收缩映射原理**（Contraction Mapping Principle）在 Banach 空间中迭代构造不动点。
 
 ### 2. 秩定理 (Rank Theorem)
-**定理**：设 $f: U \subset \mathbb{R}^n \to \mathbb{R}^m$ 是 $C^1$ 映射。若在 $x_0$ 附近 $\text{rank}(Df(x)) = k$（常数），则存在局部坐标变换使得 $f$ 在新坐标系下的形式为投影映射。这保证了在秩不变的情况下，映射的局部结构是极其简单的。
+若 $f: \mathbb{R}^n \to \mathbb{R}^m$ 的导数矩阵 $Df(\mathbf{x})$ 在点 $\mathbf{x}_0$ 附近的秩恒为 $k$，则通过局部坐标变换，该映射可以简化为：
+$$(x_1, \dots, x_n) \mapsto (x_1, \dots, x_k, 0, \dots, 0)$$
+这是研究子流形嵌入的重要工具。
 
 ---
 
-## 三、 函数的相关性判定 (Functional Dependence)
+## 三、 几何应用：切空间与法向量
 
-### 1. 判定准则
-若 $m$ 个函数 $u_1, \dots, u_m$ 的雅可比矩阵秩 $r < m$，则这些函数在局部是相关的。
+对于由 $\mathbf{F}(\mathbf{x}) = \mathbf{0}$ 定义的超曲面 $\Sigma$：
+- **法向量**：梯度向量 $\nabla F$ 即为曲面的法向量。
+- **切空间**：由所有满足 $\nabla F \cdot \mathbf{v} = 0$ 的向量 $\mathbf{v}$ 构成的超平面。
 
-### 2. 典型辨析例题
+---
 
-**例 1：基本代数相关性**
-判定 $u = x+y+z, v = xy+yz+zx, w = x^2+y^2+z^2$ 的相关性。
+## 四、 多元函数的极值与约束最优化
+
+### 1. 无条件极值：Hessian 判别法
+对于驻点 $d f = 0$，极值性质由 Hessian 矩阵 $H = (\frac{\partial^2 f}{\partial x_i \partial x_j})$ 决定：
+- **正定** $\implies$ 极小值
+- **负定** $\implies$ 极大值
+- **不定** $\implies$ 鞍点（Saddle Point）
+
+### 2. Lagrange 乘数法 (Lagrange Multipliers)
+求 $f$ 在约束 $\mathbf{g}(\mathbf{x}) = \mathbf{0}$ 下的极值。
+**几何解释**：在极值点处，目标函数 $f$ 的等值面必须与约束面 $\mathbf{g}=0$ **相切**。
+这意味着 $\nabla f$ 必须落在由约束函数梯度 $\{\nabla g_i\}$ 张成的空间中：
+$$\nabla f + \sum \lambda_i \nabla g_i = 0$$
+
+---
+
+## 五、 深度例题：理论与实战
+
+### 例 1：隐函数组的高阶导数
+设 $x+y+z=0, x^2+y^2+z^2=1$，求 $\frac{d z}{d x}$ 与 $\frac{d^2 z}{d x^2}$。
+
 <details>
 <summary>点击查看解析</summary>
-观察到 $u^2 = (x+y+z)^2 = x^2+y^2+z^2 + 2(xy+yz+zx) = w + 2v$。
-故存在关系 $\Phi(u, v, w) = u^2 - 2v - w = 0$。
-**结论**：函数相关。
+
+**解**：
+1. **一阶导**：
+   对两式关于 $x$ 求导（视 $y, z$ 为 $x$ 的函数）：
+   $1 + y' + z' = 0$ (1)
+   $2x + 2yy' + 2zz' = 0 \implies x + yy' + zz' = 0$ (2)
+   由 (1) 得 $y' = -1 - z'$，代入 (2)：
+   $x + y(-1 - z') + zz' = 0 \implies x - y + (z - y)z' = 0 \implies z' = \frac{y-x}{z-y}$。
+2. **二阶导**：
+   继续对 (1) (2) 关于 $x$ 求导：
+   $y'' + z'' = 0 \implies y'' = -z''$
+   $1 + (y')^2 + yy'' + (z')^2 + zz'' = 0$
+   代入 $y'' = -z''$：
+   $1 + (y')^2 + (z')^2 + (z-y)z'' = 0 \implies z'' = -\frac{1 + (y')^2 + (z')^2}{z-y}$。
+   （进一步代入 $y', z'$ 即可得到最终显式）。
+
 </details>
 
-**例 2：超越函数组合**
-判定 $u = \ln x - \ln y, v = \frac{x^2+y^2}{xy}, w = \frac{x+y}{x-y}$ 的相关性。
+### 例 2：雅可比矩阵与反函数的计算
+给定 $u = x^2 - y^2, v = 2xy$，求反映射的导数矩阵 $D(u,v)^{-1}$。
+
 <details>
 <summary>点击查看解析</summary>
-注意到 $u = \ln(x/y), v = x/y + y/x, w = \frac{x/y+1}{x/y-1}$。
-三个函数都仅取决于中间变量 $t = x/y$。
-**结论**：函数相关，秩为 1。
-</details>
 
----
+**解**：
+1. 计算正向雅可比矩阵 $J = \begin{pmatrix} 2x & -2y \\ 2y & 2x \end{pmatrix}$。
+2. $\det J = 4(x^2+y^2)$。
+3. 由逆映射定理，$D_{\mathbf{w}}f^{-1} = [Df]^{-1}$：
+   $[J]^{-1} = \frac{1}{4(x^2+y^2)} \begin{pmatrix} 2x & 2y \\ -2y & 2x \end{pmatrix} = \begin{pmatrix} \frac{x}{2(x^2+y^2)} & \frac{y}{2(x^2+y^2)} \\ \frac{-y}{2(x^2+y^2)} & \frac{x}{2(x^2+y^2)} \end{pmatrix}$。
 
-## 四、 多元函数的极值理论
-
-### 1. 无条件极值：Hessian 矩阵
-对于驻点，极值性质取决于 Hessian 矩阵的正定性：
-- **正定** $\implies$ 极小值；
-- **负定** $\implies$ 极大值；
-- **不定** $\implies$ 鞍点。
-
-### 2. Lagrange 乘数法
-求 $f$ 在约束 $g=0$ 下的极值，构造 $L = f + \lambda g$。
-
----
-
-## 五、 章内专题练习 (In-Chapter Exercises)
-
-<details>
-<summary><b>练习 1：隐函数求导技巧</b></summary>
-
-设 $x^2 + y^2 + z^2 - 3xyz = 0$，求 $\frac{\partial z}{\partial x}$。
-<br/>
-**解析**：
-令 $F = x^2 + y^2 + z^2 - 3xyz$。
-$F_x = 2x - 3yz, F_z = 2z - 3xy$。
-故 $\frac{\partial z}{\partial x} = -\frac{2x - 3yz}{2z - 3xy}$。
-</details>
-
-<details>
-<summary><b>练习 2：逆映射存在的条件</b></summary>
-
-讨论 $f(x, y) = (e^x \cos y, e^x \sin y)$ 在何处可逆？
-<br/>
-**答案解析**：
-计算雅可比矩阵：
-$\det Df = e^{2x} (\cos^2 y + \sin^2 y) = e^{2x} \neq 0$。
-故该映射在全平面任意点都局部可逆。
-</details>
-
-<details>
-<summary><b>练习 3：Lagrange 乘数法的几何应用</b></summary>
-
-在平面 $x+y+z=1$ 上求一点，使其到原点的距离最短。
-<br/>
-**答案解析**：
-利用 $L = x^2+y^2+z^2 + \lambda(x+y+z-1)$，得 $x=y=z=1/3$。
 </details>
 
 ---
@@ -123,6 +122,7 @@ topic="隐函数定理及其应用"
 fileId="analysis-multivariable-calculus"
 exercises={[
 { index: 18.1, title: "隐函数组求导", slug: "练习-181隐函数组求导" },
-{ index: 18.2, title: "带约束的极值 (Lagrange)", slug: "练习-182带约束的极值-lagrange-multipliers" }
+{ index: 18.5, title: "隐函数组的高阶偏导", slug: "练习-185隐函数组的高阶偏导" },
+{ index: 18.6, title: "逆映射定理的应用", slug: "练习-186逆映射定理的应用" }
 ]}
 />

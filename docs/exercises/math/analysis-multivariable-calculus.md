@@ -275,6 +275,27 @@ $2u^3 = 2w + 3u^3 - 3uv \implies w = \frac{3uv - u^3}{2}$。
 相关
 </details>
 
+### 练习 18.8：[深度] 隐函数组在切空间的应用
+证明由方程组 $\begin{cases} x+y+z=0 \\ x^2+y^2+z^2=1 \end{cases}$ 定义的曲线在点 $(\frac{1}{\sqrt{2}}, -\frac{1}{\sqrt{2}}, 0)$ 处的切线方向。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **雅可比矩阵**：令 $F_1 = x+y+z, F_2 = x^2+y^2+z^2$。
+   $$DF = \begin{pmatrix} 1 & 1 & 1 \\ 2x & 2y & 2z \end{pmatrix}$$
+2. **在给定点计算**：$P = (\frac{1}{\sqrt{2}}, -\frac{1}{\sqrt{2}}, 0)$。
+   $$DF|_P = \begin{pmatrix} 1 & 1 & 1 \\ \sqrt{2} & -\sqrt{2} & 0 \end{pmatrix}$$
+3. **切线方向**：切线方向 $\mathbf{v}$ 必须在两个面梯度的法空间中，即 $DF|_P \cdot \mathbf{v} = \mathbf{0}$。
+   - $v_1 + v_2 + v_3 = 0$
+   - $\sqrt{2}v_1 - \sqrt{2}v_2 = 0 \implies v_1 = v_2$
+   代入得 $2v_1 + v_3 = 0 \implies v_3 = -2v_1$。
+4. **结论**：切线方向向量为 $(1, 1, -2)$（或其倍数）。
+
+#### 答案
+$(1, 1, -2)$
+</details>
+
 ---
 
 ## 第十九章：含参量积分 (Integrals with Parameters)
@@ -453,12 +474,74 @@ $\int_0^1 (t+t+t) dt = 3/2$。
 3/2
 </details>
 
+### 练习 21.5：[挑战] 非单连通区域的格林公式
+计算 $\oint_L \frac{-y dx + x dy}{x^2+y^2}$，其中 $L$ 为包围原点的任意正向闭曲线。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **奇点处理**：原点 $(0,0)$ 是奇点，函数在原点无定义。
+2. **辅助圆**：取以原点为心，半径为 $\epsilon$ 的极小圆 $C_\epsilon$，使得 $C_\epsilon$ 在 $L$ 内部。
+3. **区域变形**：由格林公式在复连通区域的应用，$\oint_L = \oint_{C_\epsilon}$。
+4. **计算小圆积分**：令 $x = \epsilon \cos \theta, y = \epsilon \sin \theta, dx = -\epsilon \sin \theta d\theta, dy = \epsilon \cos \theta d\theta$。
+   $$\int_0^{2\pi} \frac{-\epsilon \sin \theta (-\epsilon \sin \theta) + \epsilon \cos \theta (\epsilon \cos \theta)}{\epsilon^2} d\theta = \int_0^{2\pi} 1 d\theta = 2\pi$$
+5. **结论**：结果与 $L$ 的具体形状无关，只要其包围原点，积分值恒为 $2\pi$。
+
+#### 答案
+$2\pi$
+</details>
+
 ---
 
 ## 第二十二章：曲面积分 (Surface Integrals)
 [**理论回顾：第二十二章 曲面积分**](../../academic-math/analysis/surface-integrals)
 
 ### 练习 22.1：高斯公式求通量
+... (unchanged) ...
+
+### 练习 22.5：[深度] 高斯定律与点电荷
+利用高斯公式证明：穿过包围点电荷 $Q$（位于原点）的任意闭曲面 $S$ 的电场通量为 $Q/\epsilon_0$。已知 $\mathbf{E} = \frac{Q}{4\pi \epsilon_0 r^3} \mathbf{r}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **计算散度**：在 $r \neq 0$ 时，$\nabla \cdot \mathbf{E} = \frac{Q}{4\pi \epsilon_0} \nabla \cdot (\frac{\mathbf{r}}{r^3}) = 0$。
+2. **处理奇点**：由于原点散度未定义，在原点包围一个半径为 $\delta$ 的小球 $B_\delta$。
+3. **应用高斯公式**：在 $\Omega = V \setminus B_\delta$ 上，$\iiint_\Omega \nabla \cdot \mathbf{E} dV = 0$。
+   故 $\oiint_S \mathbf{E} \cdot d\mathbf{S} = \oiint_{\partial B_\delta} \mathbf{E} \cdot d\mathbf{S}$。
+4. **计算球面积分**：在球面 $r = \delta$ 上，$\mathbf{E} \cdot \mathbf{n} = \frac{Q}{4\pi \epsilon_0 \delta^2}$，面积为 $4\pi \delta^2$。
+   通量 $\Phi = \frac{Q}{4\pi \epsilon_0 \delta^2} \cdot 4\pi \delta^2 = \frac{Q}{\epsilon_0}$。
+
+#### 答案
+证毕。
+</details>
+
+---
+
+## 第二十三章：矢量分析与场论初步 (Vector Analysis)
+[**理论回顾：第二十三章 矢量分析与场论初步**](../../academic-math/analysis/vector-analysis)
+
+### 练习 23.1：拉普拉斯算子
+... (unchanged) ...
+
+### 练习 23.5：[提高] 球坐标系下的拉普拉斯算子应用
+设 $f(r)$ 仅与极径有关，求 $\nabla^2 f(r)$ 在球坐标系下的表达式，并求方程 $\nabla^2 f = 0$ 的通解。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. **算子表达式**：在球坐标系下，若 $f$ 只与 $r$ 有关，则 $\nabla^2 f = \frac{1}{r^2} \frac{d}{d r}(r^2 \frac{d f}{d r})$。
+2. **求解方程**：$\frac{1}{r^2} \frac{d}{d r}(r^2 f') = 0 \implies \frac{d}{d r}(r^2 f') = 0$。
+3. **积分一次**：$r^2 f' = C_1$。
+4. **再积分一次**：$f' = \frac{C_1}{r^2} \implies f = -\frac{C_1}{r} + C_2$。
+5. **结论**：通解为 $f(r) = \frac{A}{r} + B$。
+
+#### 答案
+$f(r) = \frac{A}{r} + B$
+</details>
 计算 $\oiint_S (x^3 dydz + y^3 dzdx + z^3 dxdy)$，其中 $S$ 是球面 $x^2+y^2+z^2 = a^2$ 的外侧。
 
 <details>
