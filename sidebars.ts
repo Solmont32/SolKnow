@@ -170,6 +170,7 @@ const sidebars: SidebarsConfig = {
                     { type: 'doc', id: 'academic-math/analysis/continuity', label: '第四章 函数的连续性' },
                     { type: 'doc', id: 'academic-math/analysis/derivatives', label: '第五章 导数与微分' },
                     { type: 'doc', id: 'academic-math/analysis/mean-value-theorems', label: '第六章 微分中值定理及其应用' },
+                    { type: 'doc', id: 'academic-math/analysis/taylor-expansion', label: '（补）泰勒展开：局部信息的极限延伸' },
                     { type: 'doc', id: 'academic-math/analysis/convexity-and-extremum', label: '（续）凸函数、不等式与极值' },
                     { type: 'doc', id: 'academic-math/analysis/completeness', label: '第七章 实数的完备性' },
                     { type: 'doc', id: 'academic-math/analysis/indefinite-integrals', label: '第八章 不定积分' },
