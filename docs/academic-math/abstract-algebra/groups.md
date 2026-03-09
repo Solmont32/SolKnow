@@ -22,39 +22,46 @@ import { motion } from 'framer-motion';
 ### 1.2 阿贝尔群 (Abelian Group)
 若群 $G$ 满足交换律，即 $\forall a, b \in G, ab = ba$，则称 $G$ 为 **阿贝尔群**。
 
-## 2. 子群与正规子群
+## 2. 子群、陪集与拉格朗日定理 <ShieldCheck className="inline-block ml-1" />
 
-### 2.1 子群 (Subgroups) <ShieldCheck className="inline-block ml-1" />
+### 2.1 子群 (Subgroups)
 设 $H \subseteq G$，若 $H$ 在 $G$ 的运算下也构成群，则称 $H$ 为 $G$ 的 **子群**，记作 $H \le G$。
 - **子群判别法**: $H \neq \varnothing$ 且 $\forall a, b \in H, ab^{-1} \in H$。
 
-### 2.2 正规子群 (Normal Subgroups)
-若对所有 $g \in G$，都有 $gHg^{-1} = H$（或等价于 $gH = Hg$），则称 $H$ 为 $G$ 的 **正规子群**，记作 $H \trianglelefteq G$。
-正规子群是构造商结构的核心。
+### 2.2 陪集分解 (Coset Decomposition)
+设 $H \le G$，对于 $g \in G$，集合 $gH = \{gh \mid h \in H\}$ 称为 $H$ 在 $G$ 中的一个 **左陪集 (Left Coset)**。
+- **等价关系**: 定义 $a \sim b \iff a^{-1}b \in H$。这是一个等价关系。
+- **划分性质**: 陪集构成了 $G$ 的一个划分，即 $G = \bigcup_{g \in \mathcal{R}} gH$，其中 $\mathcal{R}$ 是代表元集。
+- **拉格朗日定理 (Lagrange's Theorem)**: 若 $G$ 是有限群，则 $|G| = [G:H] \cdot |H|$，其中 $[G:H]$ 是 $H$ 在 $G$ 中的指数（不同陪集的个数）。
 
-## 3. 同态、同构与同构定理 <Layers className="inline-block ml-1" />
+### 2.3 正规子群 (Normal Subgroups)
+若对所有 $g \in G$，都有 $gH = Hg$，则称 $H$ 为 $G$ 的 **正规子群**，记作 $H \trianglelefteq G$。
+- **商群 (Quotient Group)**: 若 $H \trianglelefteq G$，则陪集集合 $G/H = \{gH \mid g \in G\}$ 在运算 $(aH)(bH) = (ab)H$ 下构成群。
 
-### 3.1 同态核与像
+## 3. 同态、同构与基本定理 <Layers className="inline-block ml-1" />
+
+### 3.1 群同态与同态核
 映射 $\varphi: G \to K$ 称为 **群同态**，若 $\varphi(ab) = \varphi(a)\varphi(b)$。
 - **核 (Kernel)**: $\ker \varphi = \{g \in G \mid \varphi(g) = e_K\} \trianglelefteq G$。
 - **像 (Image)**: $\operatorname{Im} \varphi = \varphi(G) \le K$。
 
-### 3.2 群同构定理 (Systematic Isomorphism Theorems)
+### 3.2 同态基本定理 (Fundamental Theorem of Homomorphism)
+**定理**: 设 $\varphi: G \to K$ 是群同态，则诱导映射 $\bar{\varphi}: G/\ker \varphi \to \operatorname{Im} \varphi$ 是群同构。
+$$G / \ker \varphi \cong \operatorname{Im} \varphi$$
+该定理说明了任何同态像在同构意义下都是定义域对其核的商群。
+
+### 3.3 同构定理 (Isomorphism Theorems)
 
 #### 第一同构定理 (First Isomorphism Theorem)
-设 $\varphi: G \to K$ 是群同态，则：
-$$G / \ker \varphi \cong \operatorname{Im} \varphi$$
-**意义**: 同态像本质上是定义域对核的商群。
+即上述同态基本定理。
 
 #### 第二同构定理 (Second Isomorphism Theorem)
-设 $H \le G, N \trianglelefteq G$，则 $H \cap N \trianglelefteq H$ 且：
+设 $H \le G, N \trianglelefteq G$，则 $H \cap N \trianglelefteq H, N \trianglelefteq HN$ 且：
 $$H / (H \cap N) \cong (HN) / N$$
-**意义**: 它揭示了子群与正规子群交、并运算下的商群关系。
 
 #### 第三同构定理 (Third Isomorphism Theorem)
 设 $N \trianglelefteq G, M \trianglelefteq G$ 且 $N \subseteq M$，则 $(M/N) \trianglelefteq (G/N)$ 且：
 $$(G/N) / (M/N) \cong G / M$$
-**意义**: 它类似于分数的约分规律，展示了商群套商群的递归性质。
 
 ## 4. 经典例题
 

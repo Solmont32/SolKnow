@@ -30,10 +30,15 @@ import { Infinity, Layers, Target, Boxes } from 'lucide-react';
 
 ## 3. 环同构定理与中国剩余定理 <Layers className="inline-block ml-1" />
 
-### 3.1 环同构定理 (Ring Isomorphism Theorems)
-1. **第一同构定理**: $R/\ker \varphi \cong \operatorname{Im} \varphi$。
-2. **第二同构定理**: $(S+I)/I \cong S/(S \cap I)$。
-3. **第三同构定理**: $(R/I)/(J/I) \cong R/J$。
+### 3.1 环同态与同态基本定理
+设 $\varphi: R \to S$ 是环同态，其核 $\ker \varphi = \{r \in R \mid \varphi(r) = 0_S\}$ 是 $R$ 的一个双边理想。
+**同态基本定理**: $R/\ker \varphi \cong \operatorname{Im} \varphi$。
+这表明任何环同态像都同构于原环对同态核的商环。
+
+### 3.2 环同构定理 (Ring Isomorphism Theorems)
+1. **第一同构定理**: 即上述同态基本定理。
+2. **第二同构定理**: 设 $I$ 是 $R$ 的理想，$S$ 是 $R$ 的子环，则 $(S+I)/I \cong S/(S \cap I)$。
+3. **第三同构定理**: 设 $I, J$ 是 $R$ 的理想且 $I \subseteq J$，则 $(R/I)/(J/I) \cong R/J$。
 
 ### 3.2 中国剩余定理 (Chinese Remainder Theorem)
 设 $I_1, I_2, \dots, I_n$ 是环 $R$ 的理想，且它们两两 **互素** (即 $I_i + I_j = R$)，则：

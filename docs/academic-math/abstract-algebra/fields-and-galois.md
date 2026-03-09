@@ -46,7 +46,20 @@ import { Microscope, Zap, Share2, Binary } from 'lucide-react';
 3. 扩张次数关系: $[K:E] = |H|$，$[E:F] = [G:H]$。
 4. **正规性**: $E/F$ 是正规扩张 $\iff \operatorname{Gal}(K/E) \trianglelefteq G$。
 
-## 5. 经典例题
+## 5. 有限域构造 (Finite Fields) <Binary className="inline-block ml-1" />
+
+### 5.1 有限域的结构
+任何有限域 $\mathbb{F}$ 的元素个数必为 $p^n$（其中 $p$ 为素数，$n \in \mathbb{Z}^+$）。
+- **特征**: 有限域的特征必为素数 $p$。
+- **构造**: $\mathbb{F}_{p^n}$ 可以构造为 $x^{p^n} - x$ 在 $\mathbb{F}_p$ 上的分裂域。
+- **同构意义**: 对给定的 $p^n$，有限域在同构意义下是唯一的。
+
+### 5.2 商环构造法
+若 $f(x) \in \mathbb{F}_p[x]$ 是 $n$ 次不可约多项式，则商环：
+$$\mathbb{F}_{p^n} \cong \mathbb{F}_p[x] / (f(x))$$
+其元素可表示为 $a_{n-1}x^{n-1} + \dots + a_1x + a_0 \pmod{f(x)}$，共 $p^n$ 个。
+
+## 6. 经典例题
 
 :::info 例题 1 (扩张次数计算)
 求 $f(x) = x^3-2$ 在 $\mathbb{Q}$ 上的分裂域 $K$ 及其扩张次数 $[K:\mathbb{Q}]$。
@@ -62,23 +75,20 @@ import { Microscope, Zap, Share2, Binary } from 'lucide-react';
    - 由乘法公式 $[K:\mathbb{Q}] = 3 \times 2 = 6$。
 </details>
 
-:::info 例题 2 (Galois 群)
-求 $\mathbb{Q}(\sqrt{2}, \sqrt{3})$ 在 $\mathbb{Q}$ 上的 Galois 群。
+:::info 例题 2 (有限域构造)
+构造 4 元域 $\mathbb{F}_4$。
 :::
 <details>
 <summary>查看解析</summary>
 
-该扩张是双二次扩张，基为 $\{1, \sqrt{2}, \sqrt{3}, \sqrt{6}\}$。
-自同构由其对生成元的取值决定：
-- $\sigma_1: \sqrt{2} \to \sqrt{2}, \sqrt{3} \to \sqrt{3}$ (恒等)
-- $\sigma_2: \sqrt{2} \to -\sqrt{2}, \sqrt{3} \to \sqrt{3}$
-- $\sigma_3: \sqrt{2} \to \sqrt{2}, \sqrt{3} \to -\sqrt{3}$
-- $\sigma_4: \sqrt{2} \to -\sqrt{2}, \sqrt{3} \to -\sqrt{3}$
-这四个元素每个平方都是恒等元，且 $\sigma_2 \sigma_3 = \sigma_4$。
-故 $\operatorname{Gal}(K/\mathbb{Q}) \cong V_4$ (克莱因四元群)。
+1. **选择不可约多项式**: 在 $\mathbb{F}_2[x]$ 中，寻找 2 次不可约多项式。
+   - $x^2, x^2+1=(x+1)^2, x^2+x = x(x+1)$ 均可约。
+   - $x^2+x+1$ 在 $x=0,1$ 时均不为 0，故在 $\mathbb{F}_2$ 上不可约。
+2. **商环构造**: $\mathbb{F}_4 = \mathbb{F}_2[x] / (x^2+x+1)$。
+3. **元素集合**: $\{0, 1, \alpha, \alpha+1\}$，其中 $\alpha$ 是 $x$ 的等价类，满足 $\alpha^2 = \alpha+1$。
 </details>
 
-## 6. 强化练习
+## 7. 强化练习
 
 :::info 练习 1 (最小多项式)
 求 $\sqrt{2} + \sqrt{3}$ 在 $\mathbb{Q}$ 上的最小多项式。
@@ -92,16 +102,23 @@ $\implies x^4 - 10x^2 + 25 = 24 \implies x^4 - 10x^2 + 1 = 0$。
 可以验证该多项式在 $\mathbb{Q}$ 上不可约，故 $m(x) = x^4 - 10x^2 + 1$。
 </details>
 
-:::info 练习 2 (不可解性初步)
-简述为什么五次方程没有通用的根式解。
+:::info 练习 2 (有限域逆元)
+在 $\mathbb{F}_8 \cong \mathbb{F}_2[x]/(x^3+x+1)$ 中，求 $\alpha^2$ 的乘法逆元。
 :::
 <details>
 <summary>查看解析</summary>
 
-根据 Galois 理论，一个代数方程有根式解的充要条件是其 **Galois 群是可解群**。
-一般五次方程的 Galois 群是 $S_5$（对称群）。
-由于 $S_5$ 的正规子群序列中包含单群 $A_5$，且 $A_5$ 不是阿贝尔群，故 $S_5$ 不是可解群。
-因此，一般五次方程不存在根式通解。
+我们需要找 $g(\alpha)$ 使得 $\alpha^2 \cdot g(\alpha) \equiv 1 \pmod{\alpha^3+\alpha+1}$。
+使用扩展欧几里得算法或观察法：
+已知 $\alpha^3 = \alpha+1$。
+则 $\alpha^2 \cdot \alpha = \alpha^3 = \alpha+1$。
+$\alpha^2 \cdot (\alpha+1) = \alpha^3 + \alpha^2 = \alpha^2+\alpha+1$。
+$\alpha^2 \cdot (\alpha^2+1) = \alpha^4 + \alpha^2 = \alpha(\alpha+1) + \alpha^2 = \alpha^2+\alpha+\alpha^2 = \alpha$。
+注意到 $\alpha(\alpha^2+1) = \alpha^3+\alpha = (\alpha+1)+\alpha = 1$。
+所以 $\alpha^{-1} = \alpha^2+1$。
+那么 $(\alpha^2)^{-1} = (\alpha^{-1})^2 = (\alpha^2+1)^2 = \alpha^4+1 = \alpha(\alpha+1)+1 = \alpha^2+\alpha+1$。
+验证: $\alpha^2(\alpha^2+\alpha+1) = \alpha^4+\alpha^3+\alpha^2 = (\alpha^2+\alpha)+(\alpha+1)+\alpha^2 = \alpha+1+1 = 1 \pmod{2}$。
+故逆元为 $\alpha^2+\alpha+1$。
 </details>
 
 ---
