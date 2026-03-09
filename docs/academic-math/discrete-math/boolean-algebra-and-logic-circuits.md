@@ -1,198 +1,89 @@
 ---
-title: 布尔代数与逻辑电路 (Boolean Algebra)
-description: 布尔代数基本定律、标准形、最小化与逻辑电路建模
+title: 布尔代数与代数化表示 (Boolean Algebra)
+description: 布尔代数作为格的定义、基本定律、代数化表示与逻辑电路
 ---
 
-# 布尔代数与逻辑电路
+# 布尔代数与代数化表示
 
-布尔代数把命题逻辑中的“真/假”抽象为代数运算，是离散数学连接逻辑推理与数字电路设计的关键章节。
+布尔代数（Boolean Algebra）不仅是计算机逻辑的基础，其本质上是一个**有补分配格**。本章将从代数结构的角度系统化定义布尔代数。
 
-## 1. 基本对象与运算
+## 1. 布尔代数的代数定义
 
-设布尔变量只取 $0,1$ 两值，定义：
+### 1.1 定义
+布尔代数是一个代数系统 $\langle B, \lor, \land, \neg, 0, 1 \rangle$，其中 $\langle B, \lor, \land \rangle$ 是一个**有补分配格**。
+- $0, 1$ 分别是格的最小元和最大元。
+- $\neg$ 是补元运算，满足 $a \lor \neg a = 1$ 且 $a \land \neg a = 0$。
 
-- 与（AND）：$x\cdot y$
-- 或（OR）：$x+y$
-- 非（NOT）：$\bar x$
+### 1.2 核心性质
+由于布尔代数是格，它天然满足：
+- **分配律**：$x \land (y \lor z) = (x \land y) \lor (x \land z)$
+- **吸收律**：$x \land (x \lor y) = x$
+- **德·摩根律**：$\neg(x \lor y) = \neg x \land \neg y, \neg(x \land y) = \neg x \lor \neg y$
 
-常见解释：
+## 2. 布尔函数的代数化表示
 
-- $0$ 表示假（False），$1$ 表示真（True）；
-- 在电路里对应低电平与高电平。
+### 2.1 布尔表达式与布尔函数
+任何由布尔变量经过 $\lor, \land, \neg$ 复合而成的式子都是布尔表达式。
+- **等值性**：两个表达式在所有赋值下真值相同，等价于它们在布尔代数公理下可相互推导。
 
-## 2. 布尔代数核心定律
+### 2.2 范式：代数化的标准形式
+- **主析取范式 (PDNF/SOP)**：最小项之和。
+- **主合取范式 (PCNF/POS)**：最大项之积。
 
-1. 交换律：$x+y=y+x,\ x\cdot y=y\cdot x$
-2. 结合律：$(x+y)+z=x+(y+z)$
-3. 分配律：$x(y+z)=xy+xz,\ x+yz=(x+y)(x+z)$
-4. 幂等律：$x+x=x,\ xx=x$
-5. 互补律：$x+\bar x=1,\ x\bar x=0$
-6. 吸收律：$x+xy=x,\ x(x+y)=x$
-7. 德摩根律：$\overline{x+y}=\bar x\bar y,\ \overline{xy}=\bar x+\bar y$
+:::info 判定定理
+两个布尔表达式等价，当且仅当它们的主析取范式（或主合取范式）完全一致。
+:::
 
-### 例题 1（代数化简）
+## 3. 代数化化简技巧
 
-化简 $F(x,y,z)=x\bar y+xy+x\bar yz$。
+除了基本的逻辑定律外，常用以下代数化技巧：
+1. **并项法**：$AB + A\bar B = A(B+\bar B) = A$
+2. **消因子法**：$A + \bar AB = (A+\bar A)(A+B) = A+B$
+3. **配项法**：$A + B = A + \bar AB$ (引入缺失项以便合并)
 
-**解：**
+## 4. 逻辑电路建模
 
-$$
+布尔代数提供了从数学表达式到门电路的映射映射：
+- $\lor \to$ 或门 (OR)
+- $\land \to$ 与门 (AND)
+- $\neg \to$ 非门 (NOT)
 
-F=x(\bar y+y+\bar yz)=x(1+\bar yz)=x.
+### 4.1 逻辑完备性
+集合 $\{ \lor, \land, \neg \}$ 是完备的，意味着任何布尔函数都能用这三种门实现。
+- **NAND 门** ($x \uparrow y = \overline{xy}$) 本身就是完备的。
 
+## 5. 经典练习
 
-$$
-
-## 3. 最小项、最大项与标准形
-
-- 最小项（minterm）：包含每个变量且只出现一次（原变量或反变量）的乘积项。
-- 最大项（maxterm）：包含每个变量且只出现一次的和项。
-
-任意布尔函数都可写成：
-
-- 主析取范式（SOP，最小项之和）；
-- 主合取范式（POS，最大项之积）。
-
-### 例题 2（由真值表写 SOP）
-
-已知三变量函数 $f(x,y,z)$ 在输入 $001,010,111$ 时取 1，写主析取范式。
-
-**解：**
-
-$$
-
-f=\bar x\bar y z+\bar x y\bar z+xyz=\Sigma m(1,2,7).
-
-
-$$
-
-## 4. 卡诺图最小化
-
-对 2~4 变量函数，可用卡诺图合并相邻 1 方格（大小为 $2^k$）得到最简表达式。
-
-### 例题 3（3 变量卡诺图）
-
-$$
-
-f=\Sigma m(1,3,5,7).
-
-
-$$
-
-求最简式。
-
-**解：** 上述四个最小项都满足 $z=1$，故
-
-$$
-
-f=z.
-
-
-$$
-
-## 5. 逻辑门与电路实现
-
-常见逻辑门：
-
-- 与门、或门、非门；
-- 与非门（NAND）、或非门（NOR）。
-
-NAND 和 NOR 都是完备门，即仅用一种门就能实现任意布尔函数。
-
-### 例题 4（仅用 NAND 实现非门）
-
-证明 $\bar x$ 可由 NAND 实现。
-
-**解：**
-
-$$
-
-\bar x = x\uparrow x=\overline{x\cdot x}.
-
-
-$$
-
-即将同一输入并到一个 NAND 门即可得到非运算。
-
-### 例题 5（从表达式到门级电路）
-
-函数 $f(x,y,z)=\bar x y+xz$。
-
-**解：**
-
-1. 用一个非门得到 $\bar x$；
-2. 两个与门分别得到 $\bar x y$ 和 $xz$；
-3. 再用或门输出 $f$。
-
-该结构对应“与或两级电路”。
-
-## 6. 本章练习
-
-### 练习 1
-
-化简：$x+\bar x y$。
-
+:::info 练习 1
+证明：在布尔代数中，补元是唯一的。
+:::
 <details>
+<summary>查看证明</summary>
 
-<summary>点击查看解析与答案</summary>
-
-$$
-
-x+\bar x y=(x+\bar x)(x+y)=x+y.
-
-
-$$
-
+设 $b, c$ 都是 $a$ 的补元。
+1. $a \lor b = 1, a \land b = 0$
+2. $a \lor c = 1, a \land c = 0$
+$b = b \land 1 = b \land (a \lor c) = (b \land a) \lor (b \land c)$ (分配律)
+$= 0 \lor (b \land c) = (c \land a) \lor (c \land b)$
+$= c \land (a \lor b) = c \land 1 = c$。
+故 $b = c$，补元唯一。
 </details>
 
-### 练习 2
-
-化简：$(x+y)(x+\bar y)$。
-
+:::info 练习 2
+代数化简 $f(x, y, z) = xy + \bar x z + yz$。
+:::
 <details>
+<summary>查看解析</summary>
 
-<summary>点击查看解析与答案</summary>
-
-$$
-
-(x+y)(x+\bar y)=x+y\bar y=x.
-
-
-$$
-
+利用配项法处理 $yz$：
+$yz = (x + \bar x)yz = xyz + \bar x yz$
+$f = xy + \bar x z + xyz + \bar x yz$
+$= (xy + xyz) + (\bar x z + \bar x y z)$
+$= xy(1+z) + \bar x z(1+y)$
+$= xy + \bar x z$。
+(注：此为著名的**共识定理 Consensus Theorem**)
 </details>
 
-### 练习 3
+---
 
-将 $f=\Sigma m(0,2,6,7)$ 写成主析取范式（变量顺序 $x,y,z$）。
-
-<details>
-
-<summary>点击查看解析与答案</summary>
-
-$$
-
-f=\bar x\bar y\bar z+\bar x y\bar z+xy\bar z+xyz.
-
-
-$$
-
-</details>
-
-### 练习 4
-
-为什么 NAND 是完备门？
-
-<details>
-
-<summary>点击查看解析与答案</summary>
-
-因为可先构造 $\bar x=x\uparrow x$，再由德摩根构造与、或，从而实现任意布尔表达式。
-
-</details>
-
-## 7. 学习闭环
-
-- 前置：[命题逻辑与谓词逻辑](logic)
-- 后续：[递推关系与生成函数](recurrence-and-generating-functions)
-- 配套题单：[离散数学练习库](/docs/exercises/math/discrete-math)
+_本章节由 SolKnow 系统根据布尔代数与格论深度整合。_

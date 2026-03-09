@@ -1,105 +1,90 @@
 ---
-title: 命题逻辑与谓词逻辑 (Logic)
-description: 命题等值、推理规则、范式与谓词量词入门
+title: 命题演算与形式系统 (Propositional Calculus)
+description: 命题逻辑、形式证明系统（希尔伯特系统、自然推理）与完备性
 ---
 
-# 命题逻辑与谓词逻辑
+# 命题演算与形式系统
 
-逻辑是离散数学的证明引擎。学习目标不是“背符号”，而是形成三步闭环：
+命题逻辑不仅是符号化的思维，其核心是构建**形式演算系统**。在本章中，我们将讨论如何从公理或推理规则出发，系统化地推导出所有逻辑真理。
 
-1. 把自然语言命题形式化；
-2. 用等值变形或推理规则完成证明；
-3. 用真值表/范式验证结论。
+## 1. 命题演算的形式定义
 
-## 1. 命题逻辑基础
+一个形式化命题系统 $\mathcal{L}$ 由以下部分组成：
+1. **字母表**：命题变元 $p, q, r, \dots$ 和联结词 $\neg, \to, \dots$。
+2. **合式公式 (WFF)**：定义良好的逻辑表达式。
+3. **公理 (Axioms)**：系统内预设为真的公式。
+4. **推理规则**：如**分离规则 (Modus Ponens)**：从 $P$ 和 $P \to Q$ 推导出 $Q$。
 
-### 1.1 命题与联结词
+## 2. 自然推理系统 (Natural Deduction)
 
-- 命题：可判定真假的陈述句。
-- 否定：$\neg p$ (Not)
-- 合取：$p\land q$ (And)
-- 析取：$p\lor q$ (Or)
-- 蕴含：$p\to q$ (Implies)
-- 等价：$p\leftrightarrow q$ (Equivalent)
+自然推理不设公理，而是为每个联结词定义“引入”和“消去”规则。
 
-### 1.2 蕴含的真值语义
+### 2.1 引入与消去规则
+- **$\land$-引入**：若有 $P$ 和 $Q$，可推得 $P \land Q$。
+- **$\to$-消去 (MP)**：从 $P \to Q$ 和 $P$ 推得 $Q$。
+- **$\neg$-消去 (归谬法)**：若从 $P$ 推导出矛盾，则推得 $\neg P$。
 
-$ p\to q $ 仅在“$p$ 真且 $q$ 假”时为假。
-常用等值式：
-$$p\to q \equiv \neg p \lor q$$
+### 2.2 证明示例
+证明 $p \to q, \neg q \vdash \neg p$（否定后件律）：
+1. $p \to q$ (前提)
+2. $\neg q$ (前提)
+3. 假设 $p$:
+   - 由 1, 3 推得 $q$ (MP 规则)
+   - $q$ 与 $\neg q$ 矛盾
+4. 故 $\neg p$ (由 3 归谬法)
 
-## 2. 范式 (Normal Forms)
+## 3. 语义与证明论的关系
 
-范式是逻辑公式的标准表达形式，便于机器处理和系统化化简。
+### 3.1 可靠性 (Soundness)
+若 $\Gamma \vdash A$（可通过规则推导），则 $\Gamma \models A$（语义上恒真）。
+> 系统导出的结果一定是正确的。
 
-### 2.1 析取范式 (DNF) 与 合取范式 (CNF)
-- **析取范式 (DNF)**: 若干个合取项的析取。例如：$(p \land \neg q) \lor (r \land q)$。
-- **合取范式 (CNF)**: 若干个析取项的合取。例如：$(p \lor \neg q) \land (r \lor q)$。
+### 3.2 完备性 (Completeness)
+若 $\Gamma \models A$（语义上恒真），则 $\Gamma \vdash A$（可通过规则推导）。
+> 所有正确的真理都能被系统导出。
 
-### 2.2 主范式 (Canonical Normal Forms)
-- **主析取范式 (PDNF)**: 每个合取项都是极小项 (Minterm)。
-- **主合取范式 (PCNF)**: 每个析取项都是极大项 (Maxterm)。
+## 4. 谓词演算进阶
 
-:::info 例题
-求 $p \leftrightarrow q$ 的主析取范式。
+在谓词逻辑中，形式系统增加了对量词的控制：
+- **全称特指 (UI)**: $\forall x A(x) \to A(t)$。
+- **存在泛化 (EG)**: $A(t) \to \exists x A(x)$。
+
+## 5. 经典练习
+
+:::info 练习 1
+使用推理规则证明：$(p \to r) \land (q \to r) \equiv (p \lor q) \to r$。
 :::
 <details>
-<summary>查看解析</summary>
+<summary>查看证明</summary>
 
-真值表法：
-| $p$ | $q$ | $p \leftrightarrow q$ | 极小项 |
-| :--- | :--- | :--- | :--- |
-| T | T | T | $m_3: p \land q$ |
-| T | F | F | - |
-| F | T | F | - |
-| F | F | T | $m_0: \neg p \land \neg q$ |
+1. **证明 $(p \to r) \land (q \to r) \vdash (p \lor q) \to r$**：
+   - 前提：$p \to r$，$q \to r$。
+   - 假设 $p \lor q$。
+   - 分情况讨论：
+     - 若 $p$：由前提 1 推得 $r$。
+     - 若 $q$：由前提 2 推得 $r$。
+   - 无论哪种情况都有 $r$，故 $(p \lor q) \to r$。
 
-故 $p \leftrightarrow q \equiv (p \land q) \lor (\neg p \land \neg q)$。
+2. **证明 $(p \lor q) \to r \vdash (p \to r) \land (q \to r)$**：
+   - 假设 $p$。则 $p \lor q$ 成立。
+   - 由前提推得 $r$。故 $p \to r$。
+   - 同理可得 $q \to r$。
+   - 合取即证。
 </details>
 
-## 3. 一阶逻辑 (First-Order Logic)
-
-一阶逻辑（谓词逻辑）扩展了命题逻辑，允许对个体及其属性进行量化。
-
-### 3.1 谓词与量词
-- **谓词**: $P(x)$ 表示 $x$ 具有属性 $P$。
-- **全称量词**: $\forall x P(x)$（对所有 $x$，$P(x)$ 成立）。
-- **存在量词**: $\exists x P(x)$（存在某个 $x$，使 $P(x)$ 成立）。
-
-### 3.2 量词否定规则 (De Morgan's Laws for Quantifiers)
-$$\neg \forall x P(x) \equiv \exists x \neg P(x)$$
-$$\neg \exists x P(x) \equiv \forall x \neg P(x)$$
-
-### 3.3 推理规则
-在一阶逻辑中，除了命题逻辑的推理规则外，还有：
-- **全称特指 (UI)**: $\forall x P(x) \Rightarrow P(c)$
-- **存在泛化 (EG)**: $P(c) \Rightarrow \exists x P(x)$
-
-## 4. 经典例题
-
-:::info 例题 1 (形式化证明)
-前提：$\forall x(P(x) \to Q(x))$，$P(a)$。结论：$Q(a)$。
+:::info 练习 2
+判断下列公式是否为有效公式（恒真）：$\forall x P(x) \to \exists x P(x)$。
 :::
 <details>
 <summary>查看解析</summary>
 
-1. $\forall x(P(x) \to Q(x))$ (前提)
-2. $P(a) \to Q(a)$ (由 1，UI 规则)
-3. $P(a)$ (前提)
-4. $Q(a)$ (由 2, 3，MP 规则)
-结论得证。
-</details>
-
-:::info 例题 2 (量词嵌套)
-翻译：每一个学生都至少有一门课程及格。
-:::
-<details>
-<summary>查看解析</summary>
-
-设 $S(x)$ 表示 $x$ 是学生，$C(y)$ 表示 $y$ 是课程，$P(x, y)$ 表示 $x$ 在 $y$ 课程中及格。
-$$\forall x (S(x) \to \exists y (C(y) \land P(x, y)))$$
+在**非空论域**中，该公式是恒真的。
+1. 假设论域中有个体 $a$。
+2. 若 $\forall x P(x)$ 为真，则 $P(a)$ 必为真。
+3. 因为存在个体 $a$ 使 $P(a)$ 为真，故 $\exists x P(x)$ 必为真。
+4. 所以前件真蕴含后件真，公式为有效公式。
 </details>
 
 ---
 
-_本章节由 SolKnow 系统根据经典离散数学教材重写。_
+_本章节由 SolKnow 系统深度优化。_
