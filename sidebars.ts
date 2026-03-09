@@ -318,18 +318,42 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           collapsible: true,
-          collapsed: true,
-          label: '大学数学练习',
+          collapsed: false,
+          label: '大学数学练习 (数学分析)',
           items: [
             { type: 'doc', id: 'exercises/math/analysis', label: '数学分析精选练习 (综合)' },
-            { type: 'doc', id: 'exercises/math/analysis-foundations', label: 'Ch 1-4: 实数极限与连续专题' },
-            { type: 'doc', id: 'exercises/math/analysis-derivatives-mean-value', label: 'Ch 5-7: 导数与中值定理专题' },
-            { type: 'doc', id: 'exercises/math/analysis-integral-calculus', label: 'Ch 8-11: 一元积分学专题' },
-            { type: 'doc', id: 'exercises/math/analysis-series-fourier', label: 'Ch 12-15: 级数论与 Fourier 分析专题' },
-            { type: 'doc', id: 'exercises/math/analysis-multivariable-calculus', label: 'Ch 16-23: 多元微积分与矢量分析' },
-            { type: 'doc', id: 'exercises/math/analysis-function-sequences', label: '进阶：函数列与函数项级数' },
-            { type: 'doc', id: 'exercises/math/analysis-differential-geometry', label: '进阶：微分几何专题练习' },
-            { type: 'doc', id: 'exercises/math/real-analysis', label: '实变函数练习' },
+            {
+              type: 'category',
+              label: '上册同步专题 (Volume 1)',
+              items: [
+                { type: 'doc', id: 'exercises/math/analysis-foundations', label: 'Ch 1-4: 实数极限与连续' },
+                { type: 'doc', id: 'exercises/math/analysis-derivatives-mean-value', label: 'Ch 5-7: 导数与中值定理' },
+                { type: 'doc', id: 'exercises/math/analysis-integral-calculus', label: 'Ch 8-11: 一元积分学' },
+              ]
+            },
+            {
+              type: 'category',
+              label: '下册同步专题 (Volume 2)',
+              items: [
+                { type: 'doc', id: 'exercises/math/analysis-series-fourier', label: 'Ch 12-15: 级数论与 Fourier 分析' },
+                { type: 'doc', id: 'exercises/math/analysis-multivariable-calculus', label: 'Ch 16-23: 多元微积分与矢量分析' },
+              ]
+            },
+            {
+              type: 'category',
+              label: '进阶与专项练习',
+              items: [
+                { type: 'doc', id: 'exercises/math/analysis-function-sequences', label: '进阶：函数列与级数性质' },
+                { type: 'doc', id: 'exercises/math/analysis-differential-geometry', label: '进阶：微分几何专题' },
+                { type: 'doc', id: 'exercises/math/real-analysis', label: '实变函数专题' },
+              ]
+            },
+          ],
+        },
+        {
+          type: 'category',
+          label: '代数与离散练习',
+          items: [
             { type: 'doc', id: 'exercises/math/algebra', label: '高等代数练习' },
             { type: 'doc', id: 'exercises/math/abstract-algebra', label: '抽象代数练习' },
             { type: 'doc', id: 'exercises/math/discrete-math', label: '离散数学练习' },

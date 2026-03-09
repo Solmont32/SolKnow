@@ -47,9 +47,45 @@ title: 多元微积分与矢量分析专题练习库 (Ch 16-23)
 在 $(0, 0)$ 处不连续。
 </details>
 
+### 练习 16.3：利用极坐标求极限
+求 $\lim_{(x, y) \to (0, 0)} \frac{x^3 + y^3}{x^2 + y^2}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+令 $x = r \cos \theta, y = r \sin \theta$，当 $(x, y) \to (0, 0)$ 时，$r \to 0^+$。
+代入式中：
+$\frac{r^3(\cos^3 \theta + \sin^3 \theta)}{r^2} = r(\cos^3 \theta + \sin^3 \theta)$。
+由于 $|\cos^3 \theta + \sin^3 \theta| \le |\cos \theta|^3 + |\sin \theta|^3 \le 2$，
+故 $0 \le |r(\cos^3 \theta + \sin^3 \theta)| \le 2r \to 0$。
+由于该估计与 $\theta$ 无关，故重极限存在且为 0。
+
+#### 答案
+0
+</details>
+
+### 练习 16.4：累次极限与重极限的辨析
+求 $f(x, y) = \frac{x^2 y^2}{x^2 y^2 + (x-y)^2}$ 在 $(0, 0)$ 处的累次极限。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+1. 先对 $y$ 取极限，再对 $x$ 取极限：
+   $\lim_{x \to 0} \left( \lim_{y \to 0} \frac{x^2 y^2}{x^2 y^2 + (x-y)^2} \right) = \lim_{x \to 0} \frac{0}{0 + x^2} = 0$。
+2. 先对 $x$ 取极限，再对 $y$ 取极限：
+   $\lim_{y \to 0} \left( \lim_{x \to 0} \frac{x^2 y^2}{x^2 y^2 + (x-y)^2} \right) = \lim_{y \to 0} \frac{0}{0 + y^2} = 0$。
+**注意**：虽然累次极限相等且均为 0，但沿 $y=x$ 趋于 $(0, 0)$ 时，极限为 $\lim_{x \to 0} \frac{x^4}{x^4+0} = 1$。故重极限不存在。
+
+#### 答案
+两个累次极限均为 0。
+</details>
+
 ---
 
 ## 第十七章：多元函数微分学 (Multivariable Differentiation)
+[**理论回顾：第十七章 多元函数微分学**](../../academic-math/analysis/multivariable-differentiation) | [**微分几何延伸**](../../academic-math/analysis/differential-geometry)
 
 ### 练习 17.1：全微分的判定
 讨论函数 $f(x, y) = \sqrt{|xy|}$ 在 $(0, 0)$ 处的可微性。
@@ -59,11 +95,10 @@ title: 多元微积分与矢量分析专题练习库 (Ch 16-23)
 
 #### 解析
 1. **偏导数**：
-   $f_x(0, 0) = \lim_{\Delta x \to 0} \frac{f(\Delta x, 0) - f(0, 0)}{\Delta x} = \lim \frac{0-0}{\Delta x} = 0$。
+   $f_x(0, 0) = \lim_{\Delta x \to 0} \frac{f(\Delta x, 0) - f(0, 0)}{\Delta x} = 0$。
    同理 $f_y(0, 0) = 0$。
 2. **可微性判定**：
-   考察 $\Delta f - [f_x(0,0)\Delta x + f_y(0,0)\Delta y] = \sqrt{|\Delta x \Delta y|} - 0$。
-   需判断 $\lim_{(\Delta x, \Delta y) \to (0, 0)} \frac{\sqrt{|\Delta x \Delta y|}}{\sqrt{\Delta x^2 + \Delta y^2}}$ 是否为 0。
+   考察 $\lim_{(\Delta x, \Delta y) \to (0, 0)} \frac{\sqrt{|\Delta x \Delta y|}}{\sqrt{\Delta x^2 + \Delta y^2}}$。
    沿 $y = x$ 趋于 0：$\frac{|x|}{\sqrt{2x^2}} = \frac{1}{\sqrt{2}} \neq 0$。
    故函数在 $(0, 0)$ 处不可微。
 
@@ -79,16 +114,15 @@ title: 多元微积分与矢量分析专题练习库 (Ch 16-23)
 
 #### 解析
 1. **一阶导与二阶导**：
-   $\mathbf{r}'(t) = (-a \sin t, a \cos t, b)$，其模 $|\mathbf{r}'| = \sqrt{a^2+b^2}$。
-   $\mathbf{r}''(t) = (-a \cos t, -a \sin t, 0)$。
-   $\mathbf{r}'''(t) = (a \sin t, -a \cos t, 0)$。
+   $\mathbf{r}' = (-a \sin t, a \cos t, b)$，$|\mathbf{r}'| = \sqrt{a^2+b^2}$。
+   $\mathbf{r}'' = (-a \cos t, -a \sin t, 0)$。
+   $\mathbf{r}''' = (a \sin t, -a \cos t, 0)$。
 2. **曲率 $\kappa$**：
-   $\mathbf{r}' \times \mathbf{r}'' = \begin{vmatrix} \mathbf{i} & \mathbf{j} & \mathbf{k} \\ -a \sin t & a \cos t & b \\ -a \cos t & -a \sin t & 0 \end{vmatrix} = (ab \sin t, -ab \cos t, a^2)$。
-   $|\mathbf{r}' \times \mathbf{r}''| = \sqrt{a^2b^2 + a^4} = a\sqrt{a^2+b^2}$。
-   $\kappa = \frac{|\mathbf{r}' \times \mathbf{r}''|}{|\mathbf{r}'|^3} = \frac{a\sqrt{a^2+b^2}}{(a^2+b^2)^{3/2}} = \frac{a}{a^2+b^2}$。
+   $\mathbf{r}' \times \mathbf{r}'' = (ab \sin t, -ab \cos t, a^2)$，$|\mathbf{r}' \times \mathbf{r}''| = a\sqrt{a^2+b^2}$。
+   $\kappa = \frac{a\sqrt{a^2+b^2}}{(a^2+b^2)^{3/2}} = \frac{a}{a^2+b^2}$。
 3. **挠率 $\tau$**：
-   混合积 $(\mathbf{r}', \mathbf{r}'', \mathbf{r}''') = (\mathbf{r}' \times \mathbf{r}'') \cdot \mathbf{r}''' = (ab \sin t, -ab \cos t, a^2) \cdot (a \sin t, -a \cos t, 0) = a^2b \sin^2 t + a^2b \cos^2 t = a^2b$。
-   $\tau = \frac{(\mathbf{r}', \mathbf{r}'', \mathbf{r}''')}{|\mathbf{r}' \times \mathbf{r}''|^2} = \frac{a^2b}{a^2(a^2+b^2)} = \frac{b}{a^2+b^2}$。
+   混合积 $(\mathbf{r}', \mathbf{r}'', \mathbf{r}''') = a^2b$。
+   $\tau = \frac{a^2b}{a^2(a^2+b^2)} = \frac{b}{a^2+b^2}$。
 
 #### 答案
 $\kappa = \frac{a}{a^2+b^2}$，$\tau = \frac{b}{a^2+b^2}$。
@@ -101,117 +135,155 @@ $\kappa = \frac{a}{a^2+b^2}$，$\tau = \frac{b}{a^2+b^2}$。
 <summary>点击查看解析与答案</summary>
 
 #### 解析
-计算在 $(0, 0)$ 处的各阶偏导数：
-1. $f(0, 0) = e^0 \sin 0 = 0$。
-2. $f_x = e^x \sin y \implies f_x(0, 0) = 0$。
-3. $f_y = e^x \cos y \implies f_y(0, 0) = 1$。
-4. $f_{xx} = e^x \sin y \implies f_{xx}(0, 0) = 0$。
-5. $f_{xy} = e^x \cos y \implies f_{xy}(0, 0) = 1$。
-6. $f_{yy} = -e^x \sin y \implies f_{yy}(0, 0) = 0$。
-二阶 Taylor 公式：
-$f(x, y) = f(0, 0) + [f_x x + f_y y] + \frac{1}{2!} [f_{xx} x^2 + 2f_{xy} xy + f_{yy} y^2] + o(\rho^2)$
-$= 0 + [0 \cdot x + 1 \cdot y] + \frac{1}{2} [0 \cdot x^2 + 2(1)xy + 0 \cdot y^2] + o(x^2+y^2)$
-$= y + xy + o(x^2+y^2)$。
+$f(0, 0) = 0, f_x=0, f_y=1, f_{xx}=0, f_{xy}=1, f_{yy}=0$。
+$f(x, y) \approx y + xy$。
 
 #### 答案
 $y + xy + o(x^2+y^2)$
 </details>
 
+### 练习 17.4：链式法则应用
+设 $z = f(x^2 - y^2)$，$f$ 可导，求 $y \frac{\partial z}{\partial x} + x \frac{\partial z}{\partial y}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+$\frac{\partial z}{\partial x} = f' \cdot 2x$，$\frac{\partial z}{\partial y} = f' \cdot (-2y)$。
+$y(2x f') + x(-2y f') = 2xy f' - 2xy f' = 0$。
+
+#### 答案
+0
+</details>
+
 ---
 
 ## 第十八章：隐函数定理及其应用 (Implicit Function Theorem)
+[**理论回顾：第十八章 隐函数定理及其应用**](../../academic-math/analysis/implicit-function-theorem)
 
 ### 练习 18.1：隐函数组求导
-由方程组 $\begin{cases} u + v = x + y \\ \frac{\sin u}{\sin v} = \frac{x}{y} \end{cases}$ 确定隐函数 $u(x, y), v(x, y)$。求 $\frac{\partial u}{\partial x}$。
+由方程组 $\begin{cases} u + v = x + y \\ xu+yv=1 \end{cases}$ 确定隐函数 $u(x, y), v(x, y)$。求 $\frac{\partial u}{\partial x}$。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
-对方程组两边关于 $x$ 求偏导（视 $y$ 为常数）：
-1. $\frac{\partial u}{\partial x} + \frac{\partial v}{\partial x} = 1$
-2. $\frac{\cos u \frac{\partial u}{\partial x} \sin v - \sin u \cos v \frac{\partial v}{\partial x}}{\sin^2 v} = \frac{1}{y}$
-由 (1) 知 $\frac{\partial v}{\partial x} = 1 - \frac{\partial u}{\partial x}$。代入 (2)：
-$\frac{\cos u \sin v \frac{\partial u}{\partial x} - \sin u \cos v (1 - \frac{\partial u}{\partial x})}{\sin^2 v} = \frac{1}{y}$
-$(\cos u \sin v + \sin u \cos v) \frac{\partial u}{\partial x} = \frac{\sin^2 v}{y} + \sin u \cos v$
-$\sin(u+v) \frac{\partial u}{\partial x} = \frac{\sin^2 v}{y} + \sin u \cos v$
-故 $\frac{\partial u}{\partial x} = \frac{\sin^2 v + y \sin u \cos v}{y \sin(x+y)}$。
+对两方程关于 $x$ 求偏导：
+1. $u_x + v_x = 1$
+2. $u + xu_x + yv_x = 0 \implies xu_x + yv_x = -u$
+解方程组得 $u_x = \frac{y+u}{y-x}$。
 
 #### 答案
-$\frac{\partial u}{\partial x} = \frac{\sin^2 v + y \sin u \cos v}{y \sin(x+y)}$
+$\frac{\partial u}{\partial x} = \frac{y + u}{y - x}$
 </details>
 
 ### 练习 18.2：带约束的极值 (Lagrange Multipliers)
-在椭圆 $\frac{x^2}{a^2} + \frac{y^2}{b^2} = 1$ 上求一点，使其到直线 $Ax+By+C=0$ 的距离最短。
+求函数 $f(x, y) = xy$ 在约束条件 $x + y = 2$ 下的极值。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
-点到直线的距离公式为 $d = \frac{|Ax+By+C|}{\sqrt{A^2+B^2}}$。
-最小化 $d$ 等价于最小化 $f(x, y) = Ax+By+C$（或其绝对值）。
-构造 Lagrange 函数：$L(x, y, \lambda) = Ax+By+C + \lambda(\frac{x^2}{a^2} + \frac{y^2}{b^2} - 1)$。
-求偏导：
-1. $L_x = A + \frac{2\lambda x}{a^2} = 0 \implies x = -\frac{Aa^2}{2\lambda}$
-2. $L_y = B + \frac{2\lambda y}{b^2} = 0 \implies y = -\frac{Bb^2}{2\lambda}$
-代入约束条件：
-$\frac{1}{a^2} (-\frac{Aa^2}{2\lambda})^2 + \frac{1}{b^2} (-\frac{Bb^2}{2\lambda})^2 = 1 \implies \frac{A^2a^2 + B^2b^2}{4\lambda^2} = 1$
-$\lambda = \pm \frac{1}{2} \sqrt{A^2a^2 + B^2b^2}$。
-代回 $x, y$ 得两个驻点。通过几何意义判定哪个是最小值点。
+$L = xy + \lambda(x+y-2)$。
+$L_x = y+\lambda=0, L_y = x+\lambda=0 \implies x=y=1$。
+此时 $f(1, 1) = 1$。
 
 #### 答案
-点坐标为 $(\mp \frac{Aa^2}{\sqrt{A^2a^2+B^2b^2}}, \mp \frac{Bb^2}{\sqrt{A^2a^2+B^2b^2}})$。
+最大值为 1。
+</details>
+
+### 练习 18.3：雅可比行列式计算
+计算极坐标变换 $x = r \cos \theta, y = r \sin \theta$ 的雅可比行列式。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+$J = \frac{\partial(x, y)}{\partial(r, \theta)} = \begin{vmatrix} \cos \theta & -r \sin \theta \\ \sin \theta & r \cos \theta \end{vmatrix} = r(\cos^2 \theta + \sin^2 \theta) = r$。
+
+#### 答案
+$r$
+</details>
+
+### 练习 18.4：隐函数的高阶导数
+设 $x^2 + y^2 + z^2 - 3xyz = 0$，求 $\frac{\partial z}{\partial x}$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+令 $F = x^2+y^2+z^2-3xyz$。
+$F_x = 2x-3yz, F_z = 2z-3xy$。
+$\frac{\partial z}{\partial x} = -\frac{F_x}{F_z} = \frac{3yz - 2x}{2z - 3xy}$。
+
+#### 答案
+$\frac{3yz - 2x}{2z - 3xy}$
 </details>
 
 ---
 
 ## 第十九章：含参量积分 (Integrals with Parameters)
+[**理论回顾：第十九章 含参量积分**](../../academic-math/analysis/parametric-integrals)
 
 ### 练习 19.1：Leibniz 积分法则的应用
-计算 $I(\alpha) = \int_0^\infty \frac{e^{-\alpha x} \sin x}{x} dx$ ($\alpha > 0$)，并求 $\int_0^\infty \frac{\sin x}{x} dx$。
+计算 $I(\alpha) = \int_0^\infty \frac{e^{-\alpha x} \sin x}{x} dx$ ($\alpha > 0$)。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
-1. **求导**：
-   $I'(\alpha) = \int_0^\infty \frac{\partial}{\partial \alpha} (\frac{e^{-\alpha x} \sin x}{x}) dx = - \int_0^\infty e^{-\alpha x} \sin x dx$。
-   利用分部积分两次可得：$I'(\alpha) = - \frac{1}{\alpha^2 + 1}$。
-2. **积分**：
-   $I(\alpha) = - \arctan \alpha + C$。
-   由于 $\alpha \to \infty$ 时，$|I(\alpha)| \le \int_0^\infty e^{-\alpha x} dx = \frac{1}{\alpha} \to 0$。
-   故 $0 = - \frac{\pi}{2} + C \implies C = \frac{\pi}{2}$。
-   $I(\alpha) = \frac{\pi}{2} - \arctan \alpha$。
-3. **极限情形**：
-   由 Dirichlet 积分的一致收敛性（Abel 判别法），
-   $\int_0^\infty \frac{\sin x}{x} dx = \lim_{\alpha \to 0^+} I(\alpha) = \frac{\pi}{2}$。
+$I'(\alpha) = - \int_0^\infty e^{-\alpha x} \sin x dx = - \frac{1}{\alpha^2 + 1}$。
+$I(\alpha) = \pi/2 - \arctan \alpha$。
 
 #### 答案
-$I(\alpha) = \frac{\pi}{2} - \arctan \alpha$；Dirichlet 积分值为 $\pi/2$。
+$\frac{\pi}{2} - \arctan \alpha$
 </details>
 
-### 练习 19.2：含参量广义积分的一致收敛性
-讨论 $I(\alpha) = \int_0^\infty \frac{\sin \alpha x}{x} dx$ 在 $\alpha \in [a, b]$ ($0 < a < b$) 上的一致收敛性。
+### 练习 19.2：Beta 函数应用
+求 $\int_0^{\pi/2} \sin^6 x \cos^4 x dx$。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
-1. **收敛性**：由 Dirichlet 判别法，对固定的 $\alpha \neq 0$，积分收敛。
-2. **一致收敛性判定**：
-   使用 **Dirichlet 一致收敛判别法**：
-   - $|\int_0^A \sin \alpha x dx| = |\frac{1 - \cos \alpha A}{\alpha}| \le \frac{2}{a}$（在 $[a, b]$ 上有界）。
-   - $\frac{1}{x}$ 在 $[0, \infty)$ 上关于 $x$ 单调减，且当 $x \to \infty$ 时，$\frac{1}{x} \rightrightarrows 0$（一致趋于 0）。
-   故积分在 $[a, b]$ 上一致收敛。
-3. **对比**：若 $\alpha$ 的范围包含 0，则由于 $\frac{1-\cos \alpha A}{\alpha}$ 在 $\alpha \to 0$ 时无界，不满足上述一致有界条件。
+原式 $= \frac{1}{2} B(7/2, 5/2) = \frac{1}{2} \frac{\Gamma(7/2)\Gamma(5/2)}{\Gamma(6)} = \frac{3\pi}{512}$。
 
 #### 答案
-在 $[a, b]$ ($0 < a < b$) 上一致收敛。
+$\frac{3\pi}{512}$
+</details>
+
+### 练习 19.3：一致收敛性判定
+证明 $I(y) = \int_0^\infty \frac{\cos(xy)}{1+x^2} dx$ 在 $\mathbb{R}$ 上一致收敛。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+$|\frac{\cos(xy)}{1+x^2}| \le \frac{1}{1+x^2} = M(x)$。
+$\int_0^\infty M(x) dx = \pi/2$ 收敛。故由 M-判别法一致收敛。
+
+#### 答案
+证毕。
+</details>
+
+### 练习 19.4：Gamma 函数计算
+求 $\int_0^\infty x^2 e^{-x^2} dx$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+令 $t = x^2, dt = 2x dx \implies dx = \frac{1}{2} t^{-1/2} dt$。
+原式 $= \int_0^\infty t e^{-t} \frac{1}{2} t^{-1/2} dt = \frac{1}{2} \int_0^\infty t^{1/2} e^{-t} dt = \frac{1}{2} \Gamma(3/2) = \frac{1}{2} \cdot \frac{1}{2} \sqrt{\pi} = \frac{\sqrt{\pi}}{4}$。
+
+#### 答案
+$\frac{\sqrt{\pi}}{4}$
 </details>
 
 ---
 
 ## 第二十章：重积分 (Multiple Integrals)
+[**理论回顾：第二十章 重积分**](../../academic-math/analysis/multiple-integrals)
 
 ### 练习 20.1：极坐标下的二重积分
 计算 $\iint_D e^{x^2+y^2} dx dy$，其中 $D$ 是圆域 $x^2+y^2 \le R^2$。
@@ -220,171 +292,237 @@ $I(\alpha) = \frac{\pi}{2} - \arctan \alpha$；Dirichlet 积分值为 $\pi/2$。
 <summary>点击查看解析与答案</summary>
 
 #### 解析
-转极坐标：
-$I = \int_0^{2\pi} d\theta \int_0 R e^{r^2} r dr$
-令 $u = r^2, du = 2r dr$：
-$I = 2\pi \cdot \frac{1}{2} \int_0^{R^2} e^u du = \pi [e^u]_0^{R^2} = \pi(e^{R^2} - 1)$。
+$\int_0^{2\pi} d\theta \int_0^R e^{r^2} r dr = \pi (e^{R^2} - 1)$。
 
 #### 答案
 $\pi(e^{R^2} - 1)$
 </details>
 
 ### 练习 20.2：球坐标下的三重积分
-计算 $\iiint_V \sqrt{x^2+y^2+z^2} dV$，其中 $V$ 是由 $z = \sqrt{x^2+y^2}$ 与 $z=1$ 围成的区域。
+计算由 $z = \sqrt{x^2+y^2}$ 与 $z=1$ 围成的区域 $V$ 的体积。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
-区域 $V$ 是一个顶点在原点、开口向上的圆锥。
-转球坐标：
-$x^2+y^2+z^2 = r^2$。
-圆锥面 $z = \sqrt{x^2+y^2} \implies r \cos \theta = r \sin \theta \implies \theta = \pi/4$。
-顶面 $z = 1 \implies r \cos \theta = 1 \implies r = \frac{1}{\cos \theta}$。
-积分范围：$0 \le \phi \le 2\pi, 0 \le \theta \le \pi/4, 0 \le r \le \sec \theta$。
-$I = \int_0^{2\pi} d\phi \int_0^{\pi/4} d\theta \int_0^{\sec \theta} r \cdot r^2 \sin \theta dr$
-$= 2\pi \int_0^{\pi/4} \sin \theta [\frac{r^4}{4}]_0^{\sec \theta} d\theta = \frac{\pi}{2} \int_0^{\pi/4} \frac{\sin \theta}{\cos^4 \theta} d\theta$
-令 $u = \cos \theta, du = -\sin \theta d\theta$：
-$I = \frac{\pi}{2} \int_1^{\sqrt{2}/2} \frac{-du}{u^4} = \frac{\pi}{2} [\frac{1}{3u^3}]_{\sqrt{2}/2}^1 = \frac{\pi}{6} (1 - \frac{1}{(\sqrt{2}/2)^3}) = \frac{\pi}{6} (1 - 2\sqrt{2})$。
-(注意符号，结果应为正，这里计算上限时需仔细：$1/(\sqrt{2}/2)^3 = 2\sqrt{2}$，故结果为 $\frac{\pi}{6}(2\sqrt{2}-1)$)。
+柱坐标：$V = \int_0^{2\pi} d\phi \int_0^1 \rho d\rho \int_\rho^1 dz = \pi/3$。
 
 #### 答案
-$\frac{\pi}{6}(2\sqrt{2}-1)$
+$\pi/3$
+</details>
+
+### 练习 20.3：二重积分的换序
+求 $\int_0^1 dx \int_{\sqrt{x}}^1 e^{y^3} dy$。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+换序为 $\int_0^1 dy \int_0^{y^2} e^{y^3} dx = \int_0^1 y^2 e^{y^3} dy = \frac{1}{3}(e - 1)$。
+
+#### 答案
+$\frac{1}{3}(e - 1)$
+</details>
+
+### 练习 20.4：三重积分应用（质心）
+求密度为 1 的均匀半球体 $x^2+y^2+z^2 \le R^2, z \ge 0$ 的质心。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+$\bar{x}=\bar{y}=0$。$\bar{z} = \frac{\iiint z dV}{\iiint dV}$。
+$\iiint z dV = \int_0^{2\pi} d\phi \int_0^{\pi/2} \sin \theta \cos \theta d\theta \int_0^R r^3 dr = \frac{\pi R^4}{4}$。
+体积 $V = \frac{2}{3}\pi R^3 \implies \bar{z} = \frac{\pi R^4/4}{2\pi R^3/3} = \frac{3}{8}R$。
+
+#### 答案
+$(0, 0, \frac{3}{8}R)$
 </details>
 
 ---
 
 ## 第二十一章：曲线积分 (Line Integrals)
+[**理论回顾：第二十一章 曲线积分**](../../academic-math/analysis/line-integrals)
 
-### 练习 21.1：格林公式 (Green's Theorem)
+### 练习 21.1：格林公式应用
 计算 $I = \oint_C (x^2-y) dx + (x+y^2) dy$，其中 $C$ 是圆 $x^2+y^2=R^2$。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
-由格林公式：
-$I = \iint_D (\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y}) dA$
-其中 $P = x^2-y, Q = x+y^2$。
-$\frac{\partial Q}{\partial x} = 1, \frac{\partial P}{\partial y} = -1$。
-故 $I = \iint_D (1 - (-1)) dA = 2 \iint_D dA = 2 \cdot (\pi R^2) = 2\pi R^2$。
+$\iint_D (Q_x - P_y) dA = \iint_D (1 - (-1)) dA = 2 \pi R^2$。
 
 #### 答案
 $2\pi R^2$
 </details>
 
-### 练习 21.2：第一类曲线积分 (Path Integral)
-计算 $I = \int_C (x+y) ds$，其中 $C$ 是连接 $(0,0)$ 与 $(1,1)$ 的线段。
+### 练习 21.2：第一类曲线积分
+计算 $\int_C (x+y) ds$，其中 $C$ 是连接 $(0,0)$ 与 $(1,1)$ 的线段。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
-1. **参数化**：
-   $x = t, y = t, \quad t \in [0, 1]$。
-2. **微分弧长**：
-   $ds = \sqrt{(x')^2 + (y')^2} dt = \sqrt{1^2 + 1^2} dt = \sqrt{2} dt$。
-3. **计算积分**：
-   $I = \int_0^1 (t+t) \sqrt{2} dt = 2\sqrt{2} \int_0^1 t dt = 2\sqrt{2} [\frac{1}{2}t^2]_0^1 = \sqrt{2}$。
+$\int_0^1 2t \sqrt{2} dt = \sqrt{2}$。
 
 #### 答案
 $\sqrt{2}$
 </details>
 
----
-
-## 第二十二章：曲面积分 (Surface Integrals)
-
-### 练习 22.1：高斯公式 (Gauss's Theorem)
-计算曲面积分 $I = \oiint_S (x^3 dy dz + y^3 dz dx + z^3 dx dy)$，其中 $S$ 是球面 $x^2+y^2+z^2 = a^2$ 的外侧。
+### 练习 21.3：路径无关性与势函数
+求 $\int_{(0,0)}^{(1,1)} (2x+y) dx + (x+2y) dy$。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
-由高斯公式：
-$I = \iiint_V (\frac{\partial P}{\partial x} + \frac{\partial Q}{\partial y} + \frac{\partial R}{\partial z}) dV$
-$= \iiint_V (3x^2 + 3y^2 + 3z^2) dV = 3 \iiint_V (x^2+y^2+z^2) dV$。
-转球坐标：
-$I = 3 \int_0^{2\pi} d\phi \int_0^\pi \sin\theta d\theta \int_0^a r^2 \cdot r^2 dr$
-$= 3 \cdot 2\pi \cdot 2 \cdot [\frac{r^5}{5}]_0^a = \frac{12\pi a^5}{5}$。
+$P_y=1, Q_x=1$。势函数 $u = x^2+xy+y^2$。
+结果为 $1+1+1 - 0 = 3$。
+
+#### 答案
+3
+</details>
+
+### 练习 21.4：变力做功
+计算 $\mathbf{F} = (y, z, x)$ 沿线段 $A(0,0,0)$ 到 $B(1,1,1)$ 做的功。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+参数化 $x=t, y=t, z=t, dt \in [0, 1]$。
+$\int_0^1 (t+t+t) dt = 3/2$。
+
+#### 答案
+3/2
+</details>
+
+---
+
+## 第二十二章：曲面积分 (Surface Integrals)
+[**理论回顾：第二十二章 曲面积分**](../../academic-math/analysis/surface-integrals)
+
+### 练习 22.1：高斯公式求通量
+计算 $\oiint_S (x^3 dydz + y^3 dzdx + z^3 dxdy)$，其中 $S$ 是球面 $x^2+y^2+z^2 = a^2$ 的外侧。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+$\iiint 3(x^2+y^2+z^2) dV = 3 \int_0^{2\pi} d\phi \int_0^\pi \sin \theta d\theta \int_0^a r^4 dr = \frac{12\pi a^5}{5}$。
 
 #### 答案
 $\frac{12\pi a^5}{5}$
 </details>
 
-### 练习 22.2：第一类曲面积分 (Surface Integral of Scalar Field)
-计算 $\iint_S (x^2+y^2) dS$，其中 $S$ 是球面 $x^2+y^2+z^2=a^2$。
+### 练习 22.2：第一类曲面积分
+计算 $\iint_S z dS$，其中 $S$ 为球面 $x^2+y^2+z^2=a^2, z \ge 0$。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
-由对称性，$\iint_S x^2 dS = \iint_S y^2 dS = \iint_S z^2 dS$。
-因此 $\iint_S (x^2+y^2+z^2) dS = 3 \iint_S x^2 dS = a^2 \iint_S dS = a^2 (4\pi a^2) = 4\pi a^4$。
-由此得 $\iint_S x^2 dS = \frac{4}{3}\pi a^4$。
-故 $\iint_S (x^2+y^2) dS = 2 \cdot \frac{4}{3}\pi a^4 = \frac{8}{3}\pi a^4$。
+$dS = \frac{a}{z} dA_{xy} \implies \iint z \cdot \frac{a}{z} dA_{xy} = a \cdot \pi a^2 = \pi a^3$。
 
 #### 答案
-$\frac{8}{3}\pi a^4$
+$\pi a^3$
 </details>
 
----
-
-## 第二十三章：矢量分析与场论初步 (Vector Analysis)
-
-### 练习 23.1：斯托克斯公式 (Stokes' Theorem)
-计算 $\oint_C y dx + z dy + x dz$，其中 $C$ 是平面 $x+y+z=1$ 与坐标平面的交线，沿逆时针方向。
+### 练习 22.3：斯托克斯公式应用
+计算 $\oint_C y dx + z dy + x dz$，其中 $C$ 是平面 $x+y+z=1$ 与坐标轴的交线。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
-设 $\mathbf{F} = (y, z, x)$。计算旋度：
-$\text{curl } \mathbf{F} = \nabla \times \mathbf{F} = \begin{vmatrix} \mathbf{i} & \mathbf{j} & \mathbf{k} \\ \frac{\partial}{\partial x} & \frac{\partial}{\partial y} & \frac{\partial}{\partial z} \\ y & z & x \end{vmatrix} = (-1, -1, -1)$。
-由斯托克斯公式，原式 $= \iint_S (\text{curl } \mathbf{F}) \cdot d\mathbf{S}$。
-取 $S$ 为平面 $x+y+z=1$ 在第一卦限的部分，法向量为 $\mathbf{n} = \frac{1}{\sqrt{3}}(1, 1, 1)$。
-面积元素 $dS = \sqrt{3} dA_{xy}$。
-积分 $= \iint_{D_{xy}} (-1, -1, -1) \cdot (1, 1, 1) dA_{xy} = -3 \iint_{D_{xy}} dA_{xy}$。
-$D_{xy}$ 是由 $x=0, y=0, x+y=1$ 围成的三角形，面积为 $1/2$。
-故积分结果为 $-3 \cdot \frac{1}{2} = -1.5$。
+$\text{curl } \mathbf{F} = (-1, -1, -1)$。$\mathbf{n} = \frac{1}{\sqrt{3}}(1, 1, 1)$。
+$\iint_S (-1,-1,-1) \cdot \frac{1}{\sqrt{3}}(1,1,1) dS = -\sqrt{3} \text{Area}(S) = -\sqrt{3} \cdot \frac{\sqrt{3}}{2} = -3/2$。
 
 #### 答案
 $-3/2$
 </details>
 
-### 练习 23.2：保守场与势函数
-判定向量场 $\mathbf{F} = (2xy+z^2, x^2, 2xz)$ 是否为保守场，若是，求其势函数 $\Phi$。
+### 练习 22.4：通量直接计算
+计算向量场 $\mathbf{F} = (x, y, z)$ 穿过平面 $z=1$ 在 $x^2+y^2 \le 1$ 部分的通量（向上）。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
-1. **判定旋度**：
-   $\nabla \times \mathbf{F} = \begin{vmatrix} \mathbf{i} & \mathbf{j} & \mathbf{k} \\ \partial_x & \partial_y & \partial_z \\ 2xy+z^2 & x^2 & 2xz \end{vmatrix} = (0 - 0, 2z - 2z, 2x - 2x) = (0, 0, 0)$。
-   由于旋度为 0 且定义域为 $\mathbb{R}^3$（全平面单连通），故 $\mathbf{F}$ 是保守场。
-2. **求势函数**：
-   $\frac{\partial \Phi}{\partial x} = 2xy+z^2 \implies \Phi = x^2y + xz^2 + g(y, z)$。
-   $\frac{\partial \Phi}{\partial y} = x^2 + g_y(y, z) = x^2 \implies g_y = 0 \implies g = h(z)$。
-   $\frac{\partial \Phi}{\partial z} = 2xz + h'(z) = 2xz \implies h'(z) = 0 \implies h = C$。
-   故 $\Phi(x, y, z) = x^2y + xz^2 + C$。
+$\mathbf{n}=(0,0,1), \mathbf{F} \cdot \mathbf{n} = z = 1$。
+通量为面积 $\pi(1)^2 = \pi$。
 
 #### 答案
-是保守场，势函数 $\Phi = x^2y + xz^2 + C$。
+$\pi$
+</details>
+
+---
+
+## 第二十三章：矢量分析与场论初步 (Vector Analysis)
+[**理论回顾：第二十三章 矢量分析与场论初步**](../../academic-math/analysis/vector-analysis)
+
+### 练习 23.1：拉普拉斯算子
+计算 $\nabla^2 (\ln r)$，其中 $r = \sqrt{x^2+y^2}$ (二维)。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+$\frac{\partial}{\partial x} \ln r = \frac{x}{r^2}, \frac{\partial^2}{\partial x^2} \ln r = \frac{r^2 - 2x^2}{r^4}$。
+$\nabla^2 \ln r = \frac{2r^2 - 2(x^2+y^2)}{r^4} = 0$。
+
+#### 答案
+0
+</details>
+
+### 练习 23.2：保守场判定
+判定 $\mathbf{F} = (y+z) \mathbf{i} + (x+z) \mathbf{j} + (x+y) \mathbf{k}$ 是否为保守场。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+$\nabla \times \mathbf{F} = (1-1, 1-1, 1-1) = \mathbf{0}$。
+是保守场。势函数为 $\Phi = xy + yz + zx + C$。
+
+#### 答案
+是，$\Phi = xy + yz + zx + C$
+</details>
+
+### 练习 23.3：旋度计算
+求向量场 $\mathbf{F} = (-y, x, 0)$ 的旋度。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+$\text{curl } \mathbf{F} = (0, 0, 1 - (-1)) = (0, 0, 2) = 2\mathbf{k}$。
+
+#### 答案
+$2\mathbf{k}$
+</details>
+
+### 练习 23.4：方向导数
+求 $f = x^2+y^2+z^2$ 在点 $(1, 1, 1)$ 沿梯度方向的方向导数。
+
+<details>
+<summary>点击查看解析与答案</summary>
+
+#### 解析
+梯度 $\nabla f = (2x, 2y, 2z) = (2, 2, 2)$。
+模 $|\nabla f| = \sqrt{4+4+4} = 2\sqrt{3}$。
+梯度方向的方向导数即为梯度的模。
+
+#### 答案
+$2\sqrt{3}$
 </details>
 
 ---
 
 ## 延伸入口
 
-- [第十六章 多元函数极限与连续](/docs/academic-math/analysis/multivariable-limits)
-- [第十七章 多元函数微分学](/docs/academic-math/analysis/multivariable-differentiation)
-- [第十七章续 空间曲线与曲面的微分几何](/docs/academic-math/analysis/differential-geometry)
-- [第十八章 隐函数定理及其应用](/docs/academic-math/analysis/implicit-function-theorem)
-- [第十九章 含参量积分](/docs/academic-math/analysis/parametric-integrals)
-- [第二十章 重积分](/docs/academic-math/analysis/multiple-integrals)
-- [第二十一章 曲线积分](/docs/academic-math/analysis/line-integrals)
-- [第二十二章 曲面积分](/docs/academic-math/analysis/surface-integrals)
-- [第二十三章 矢量分析与场论初步](/docs/academic-math/analysis/vector-analysis)
 - [数学分析综合练习库](/docs/exercises/math/analysis)
-
+- [数学分析：上册 (Volume 1) 练习概览](/docs/exercises/math/analysis-foundations)
+- [数学分析：下册 (Volume 2) 练习概览](/docs/exercises/math/analysis-series-fourier)
+- [返回数学分析知识导航](/docs/academic-math/analysis/index)
