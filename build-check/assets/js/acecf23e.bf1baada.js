@@ -1,1 +1,0 @@
-"use strict";(globalThis.webpackChunksol_know=globalThis.webpackChunksol_know||[]).push([[1903],{1912(o){o.exports=JSON.parse('{"blogBasePath":"/SolKnow/blog","blogTitle":"Blog","authorsListPath":"/SolKnow/blog/authors"}')}}]);

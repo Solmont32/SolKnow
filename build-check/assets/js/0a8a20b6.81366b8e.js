@@ -1,1 +1,0 @@
-"use strict";(globalThis.webpackChunksol_know=globalThis.webpackChunksol_know||[]).push([[8665],{3019(l){l.exports=JSON.parse('{"tags":[{"label":"stl","permalink":"/SolKnow/docs/tags/stl","count":1},{"label":"map","permalink":"/SolKnow/docs/tags/map","count":1},{"label":"set","permalink":"/SolKnow/docs/tags/set","count":1}]}')}}]);

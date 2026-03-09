@@ -1,1 +1,0 @@
-"use strict";(globalThis.webpackChunksol_know=globalThis.webpackChunksol_know||[]).push([[5033],{8337(o){o.exports=JSON.parse('{"metadata":{"permalink":"/SolKnow/blog","page":1,"postsPerPage":10,"totalPages":1,"totalCount":2,"blogDescription":"Blog","blogTitle":"Blog"}}')}}]);
