@@ -57,6 +57,14 @@ const sidebars: SidebarsConfig = {
       link: {type: 'doc', id: 'string/index'},
       items: ['string/kmp', 'string/hashing', 'string/manacher', 'string/ac-automaton'],
     },
+    {
+      type: 'category',
+      collapsible: true,
+      collapsed: true,
+      label: '计算几何',
+      link: {type: 'doc', id: 'geometry/index'},
+      items: ['geometry/convex-hull', 'geometry/rotating-calipers'],
+    },
   ],
 
   // 数学知识库（含竞赛与专题）
@@ -437,6 +445,7 @@ const sidebars: SidebarsConfig = {
         { type: 'doc', id: 'exercises/cs/algorithm-topo-sort', label: '算法竞赛：拓扑排序练习' },
         { type: 'doc', id: 'exercises/cs/algorithm-scc', label: '算法竞赛：强连通分量练习' },
         { type: 'doc', id: 'exercises/cs/algorithm-network-flow', label: '算法竞赛：网络流练习' },
+        { type: 'doc', id: 'exercises/cs/algorithm-geometry', label: '算法竞赛：计算几何练习' },
         { type: 'doc', id: 'exercises/cs/linux', label: 'Linux 实操练习' },
         { type: 'doc', id: 'exercises/cs/cpp', label: 'C++ 编程练习' },
         { type: 'doc', id: 'exercises/cs/os', label: '操作系统练习' },
