@@ -1,22 +1,26 @@
 ---
-title: 排序算法与离散化 (Sorting & Discretization)
+title: 排序算法 (Sorting Algorithms)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
-# 排序算法与离散化 (Sorting & Discretization)
+# 排序算法 (Sorting Algorithms)
 
-排序是算法的基础。在竞赛中，我们通常直接使用标准库函数 `std::sort` ($O(n \log n)$)，但理解其背后的分治思想对于解决更复杂的问题（如逆序对、第 K 大数）至关重要。
+排序不仅是算法的入门基石，更是深刻理解**分治 (Divide & Conquer)** 思想的最佳途径。在竞赛中，虽然 `std::sort` ($O(n \log n)$) 能解决 99% 的问题，但掌握经典算法的内部逻辑对于变体问题的求解（如逆序对、第 K 大数、外部排序）至关重要。
 
 ---
 
-## 一、核心排序算法
+## 一、核心排序算法：分治的两副面孔
 
-### 1. 快速排序 (Quick Sort)
-**核心思想**：分治 (Divide & Conquer)。
-1. 确定分界点 `x`（通常取 `q[l]`, `q[r]` 或 `q[(l+r)/2]`）。
-2. **调整区间**：使得左半部分 $\le x$，右半部分 $\ge x$。
-3. 递归处理左右两段。
+### 1. 快速排序 (Quick Sort) —— “分”重于“合”
+**核心思想**：选取一个基准值 (Pivot)，通过一趟排序将待排记录分割成独立的两部分。
+
+1. **确定分界点** `x`（取中点、随机或首尾）。
+2. **调整区间 (Partition)**：使得左区间 $\le x$，右区间 $\ge x$。
+3. **递归处理**：分别对左右子区间进行快速排序。
+
+<details>
+<summary>点击查看标准 C++ 模板</summary>
 
 ```cpp
 void quick_sort(int q[], int l, int r) {
@@ -31,75 +35,62 @@ void quick_sort(int q[], int l, int r) {
     quick_sort(q, j + 1, r);
 }
 ```
+</details>
 
-### 2. 归并排序 (Merge Sort)
-**核心思想**：分治。
-1. 确定中点 `mid = (l + r) / 2`。
-2. 递归排序左边和右边。
-3. **归并**：将两个有序序列合并为一个。
+### 2. 归并排序 (Merge Sort) —— “合”重于“分”
+**核心思想**：将已有序的子序列合并，得到完全有序的序列。
+
+1. **确定中点** `mid = (l + r) / 2`。
+2. **递归排序**：分别处理 `[l, mid]` 和 `[mid + 1, r]`。
+3. **归并 (Merge)**：用双指针将两个有序子序列合并。
+
+<details>
+<summary>点击查看标准 C++ 模板</summary>
 
 ```cpp
 void merge_sort(int q[], int l, int r) {
     if (l >= r) return;
     int mid = l + r >> 1;
-    merge_sort(q, l, mid); merge_sort(q, mid + 1, r);
+    merge_sort(q, l, mid);
+    merge_sort(q, mid + 1, r);
+
     int k = 0, i = l, j = mid + 1;
     while (i <= mid && j <= r)
         if (q[i] <= q[j]) tmp[k++] = q[i++];
         else tmp[k++] = q[j++];
     while (i <= mid) tmp[k++] = q[i++];
     while (j <= r) tmp[k++] = q[j++];
+
     for (i = l, j = 0; i <= r; i++, j++) q[i] = tmp[j];
 }
 ```
+</details>
 
 ---
 
-## 二、离散化 (Discretization)
+## 二、稳定性与复杂度对比
 
-离散化是一种处理**值域极大**但**数据个数较少**的问题的技巧。本质是将无限的（或范围极大的）连续空间映射到有限的（或范围较小的）整数空间。
-
-<KnowledgeCard type="info" title="应用场景">
-例如：坐标范围在 $[0, 10^9]$，但仅有 $10^5$ 个点有值。我们需要进行区间求和，此时无法开 $10^9$ 的数组，必须离散化。
-</KnowledgeCard>
-
-### 离散化流程
-1. 收集所有需要用到的坐标。
-2. 排序并去重（Unique）。
-3. 通过二分查找原坐标在去重后数组中的下标。
-
-```cpp
-vector<int> alls; // 存储所有待离散化的值
-sort(alls.begin(), alls.end());
-alls.erase(unique(alls.begin(), alls.end()), alls.end()); // 去重
-
-// 二分查找映射后的下标（从1开始）
-int find(int x) {
-    int l = 0, r = alls.size() - 1;
-    while (l < r) {
-        int mid = l + r >> 1;
-        if (alls[mid] >= x) r = mid;
-        else l = mid + 1;
-    }
-    return l + 1;
-}
-```
+| 算法 | 平均复杂度 | 最坏复杂度 | 空间复杂度 | 稳定性 |
+| :--- | :--- | :--- | :--- | :--- |
+| **快速排序** | $O(n \log n)$ | $O(n^2)$ | $O(\log n)$ | 不稳定 |
+| **归并排序** | $O(n \log n)$ | $O(n \log n)$ | $O(n)$ | 稳定 |
+| **堆排序** | $O(n \log n)$ | $O(n \log n)$ | $O(1)$ | 不稳定 |
 
 ---
 
 ## 三、教材化例题
 
 ### 例题 1：逆序对的数量 (归并排序应用)
+给定长度为 $n$ 的数列，求逆序对 $(i, j)$ 的个数，满足 $i < j$ 且 $a[i] > a[j]$。
 
-给定一个长度为 $n$ 的整数数列，请你计算数列中的逆序对的数量。
-
-:::note[点击查看解析与代码]
+<details>
+<summary>点击查看解析与代码</summary>
 
 **解析**：
-在归并排序的合并过程中，若左半部分当前元素 $q[i] > q[j]$（右半部分当前元素），则 $q[i \dots mid]$ 均大于 $q[j]$。
-产生的逆序对数量为 `mid - i + 1`。
+利用归并排序的合并步骤。在合并 `[l, mid]` 和 `[mid + 1, r]` 时，若左侧元素 $q[i] > q[j]$，由于左侧已排好序，则 $q[i \dots mid]$ 全都大于 $q[j]$。
+贡献的逆序对数为：$mid - i + 1$。
 
-**代码实现 (C++)**：
+**代码实现**：
 ```cpp
 #include <iostream>
 using namespace std;
@@ -112,11 +103,12 @@ LL merge_sort(int l, int r) {
     if (l >= r) return 0;
     int mid = l + r >> 1;
     LL res = merge_sort(l, mid) + merge_sort(mid + 1, r);
+
     int k = 0, i = l, j = mid + 1;
     while (i <= mid && j <= r) {
         if (q[i] <= q[j]) tmp[k++] = q[i++];
         else {
-            res += mid - i + 1;
+            res += mid - i + 1; // 核心逻辑
             tmp[k++] = q[j++];
         }
     }
@@ -127,91 +119,63 @@ LL merge_sort(int l, int r) {
 }
 
 int main() {
-    cin >> n;
-    for (int i = 0; i < n; i++) cin >> q[i];
-    cout << merge_sort(0, n - 1) << endl;
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++) scanf("%d", &q[i]);
+    printf("%lld\n", merge_sort(0, n - 1));
     return 0;
 }
 ```
-:::
+</details>
 
-### 例题 2：区间和 (离散化典型应用)
+### 例题 2：第 K 个数 (快速选择算法)
+在 $O(n)$ 的时间复杂度内找到数列中排名第 $k$ 小的数。
 
-假定有一个无限长的数轴，数轴上每个坐标上的数都是 0。现在，我们首先进行 $n$ 次操作，每次操作将 $x$ 坐标上的数加上 $c$。接下来，进行 $m$ 次询问，每个询问包含两个整数 $l$ 和 $r$，你需要求出区间 $[l, r]$ 之间的所有数的和。
-
-:::note[点击查看解析与代码]
+<details>
+<summary>点击查看解析与代码</summary>
 
 **解析**：
-坐标范围大 ($10^9$)，操作和询问数有限 ($10^5$)。
-1. 将所有涉及到的坐标 $x$ 以及查询的边界 $l, r$ 存入 `alls` 数组离散化。
-2. 在离散化后的数组上进行单点加。
-3. 求离散化后数组的前缀和。
-4. 查询时二分找到映射后的 $l, r$ 下标，利用前缀和求值。
+利用快排 Partition。划分后，左半部分长度为 `sl = j - l + 1`。
+- 若 $k \le sl$，则第 $k$ 小数一定在左半部分。
+- 若 $k > sl$，则第 $k$ 小数一定在右半部分，且是右半部分的第 $k - sl$ 小数。
 
-**代码实现 (C++)**：
+**代码实现**：
 ```cpp
 #include <iostream>
-#include <vector>
-#include <algorithm>
-
 using namespace std;
 
-typedef pair<int, int> PII;
-const int N = 300010; // n + 2m
+const int N = 100010;
+int q[N], n, k;
 
-int n, m;
-int a[N], s[N];
-vector<int> alls;
-vector<PII> add, query;
-
-int find(int x) {
-    int l = 0, r = alls.size() - 1;
-    while (l < r) {
-        int mid = l + r >> 1;
-        if (alls[mid] >= x) r = mid;
-        else l = mid + 1;
+int quick_select(int l, int r, int k) {
+    if (l == r) return q[l];
+    int x = q[l + r >> 1], i = l - 1, j = r + 1;
+    while (i < j) {
+        do i++; while (q[i] < x);
+        do j--; while (q[j] > x);
+        if (i < j) swap(q[i], q[j]);
     }
-    return l + 1;
+    int sl = j - l + 1;
+    if (k <= sl) return quick_select(l, j, k);
+    return quick_select(j + 1, r, k - sl);
 }
 
 int main() {
-    cin >> n >> m;
-    for (int i = 0; i < n; i++) {
-        int x, c;
-        cin >> x >> c;
-        add.push_back({x, c});
-        alls.push_back(x);
-    }
-    for (int i = 0; i < m; i++) {
-        int l, r;
-        cin >> l >> r;
-        query.push_back({l, r});
-        alls.push_back(l);
-        alls.push_back(r);
-    }
-
-    sort(alls.begin(), alls.end());
-    alls.erase(unique(alls.begin(), alls.end()), alls.end());
-
-    for (auto item : add) a[find(item.first)] += item.second;
-    for (int i = 1; i <= alls.size(); i++) s[i] = s[i - 1] + a[i];
-
-    for (auto item : query) {
-        int l = find(item.first), r = find(item.second);
-        cout << s[r] - s[l - 1] << endl;
-    }
+    scanf("%d %d", &n, &k);
+    for (int i = 0; i < n; i++) scanf("%d", &q[i]);
+    printf("%d\n", quick_select(0, n - 1, k));
     return 0;
 }
 ```
-:::
+</details>
 
 ---
 
-## 四、练习库
+## 四、练习与挑战
 
-- [练习 1：第 K 个数 (快速选择)](/docs/exercises/cs/algorithm-basic#练习-3)
-- [练习 2：电影评分离散化](/docs/exercises/cs/algorithm-basic#练习-4)
+- **练习 1**：[基础] 给定 $n$ 个整数，输出升序排列后的结果。
+- **练习 2**：[进阶] 利用堆排序实现相同功能。
+- **练习 3**：[思想] 思考如何使用排序思想处理“区间合并”问题。
 
 ---
 
-_编者注：排序不仅是为了有序，更是为了分治思想的运用。离散化则是处理大值域问题的金钥匙。_
+_编者注：排序不仅是为了有序，更是分治思想的第一次实战。归并排序的“合并”与快速排序的“划分”是算法世界中永恒的交响。_

@@ -2,64 +2,52 @@
 title: 二分算法 (Binary Search)
 ---
 
-import Details from '@theme/Details';
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # 二分算法 (Binary Search)
 
-二分算法的核心在于利用**单调性**（或某种分段性质），通过不断缩小目标区间将搜索范围减半，将线性搜索的 $O(n)$ 复杂度优化至 $O(\log n)$。
+二分算法的核心在于利用**单调性**（Monotonicity）或某种**分段性质**。通过不断将搜索区间减半，将线性搜索的 $O(n)$ 复杂度优化至 $O(\log n)$。
 
 ---
 
-## 一、整数二分
+## 一、数学基础与收敛性
 
-整数二分的难点在于**边界处理**（死循环问题）。根据区间划分方式，通常分为两种模板。
+### 1. 适用条件：单调性与二分性
+虽然单调性是二分的充分条件，但并非必要条件。只要区间 $[L, R]$ 满足某种性质 $P$，使得存在一个分界点 $M$，满足 $P(x)$ 在 $x \le M$ 时为真（或假），在 $x > M$ 时为假（或真），即可通过二分找到 $M$。
 
-### 1. 基本模板
+### 2. 复杂度分析
+每次迭代区间缩小为一半，经过 $k$ 次迭代后区间长度为 $\frac{R-L}{2^k}$。当长度缩减至 1（整数）或指定精度 $\epsilon$（实数）时停止。
+$$ k = \lceil \log_2(R-L) \rceil \text{ 或 } k = \lceil \log_2(\frac{R-L}{\epsilon}) \rceil $$
 
-<KnowledgeCard type="warning" title="边界陷阱">
-当区间划分包含 `mid = l + r >> 1` 且更新为 `l = mid` 时，若 `l = r - 1`，则 `mid` 始终等于 `l`，导致死循环。必须使用模板 2 中的 `+ 1` 偏移。
-</KnowledgeCard>
+---
 
-**模板 1：查找左边界（第一个满足条件的元素）**
-区间 $[l, r]$ 被划分成 $[l, mid]$ 和 $[mid + 1, r]$：
+## 二、整数二分模板
+
+整数二分的关键在于**边界处理**。为了避免死循环，根据区间划分方式，通常采用以下两套模板。
+
+### 1. 查找左边界（第一个满足性质的点）
+区间被划分为 $[l, mid]$ 和 $[mid + 1, r]$。
+
 ```cpp
 int bsearch_1(int l, int r) {
     while (l < r) {
         int mid = l + r >> 1;
-        if (check(mid)) r = mid;    // mid满足性质，目标在左侧或就是mid
-        else l = mid + 1;           // mid不满足，目标必然在右侧
+        if (check(mid)) r = mid;
+        else l = mid + 1;
     }
     return l;
 }
 ```
 
-**模板 2：查找右边界（最后一个满足条件的元素）**
-区间 $[l, r]$ 被划分成 $[l, mid - 1]$ 和 $[mid, r]$：
+### 2. 查找右边界（最后一个满足性质的点）
+区间被划分为 $[l, mid - 1]$ 和 $[mid, r]$。注意 `mid` 的计算需向上取整。
+
 ```cpp
 int bsearch_2(int l, int r) {
     while (l < r) {
-        int mid = l + r + 1 >> 1;   // 注意这里的 +1
-        if (check(mid)) l = mid;    // mid满足性质，目标在右侧或就是mid
-        else r = mid - 1;           // mid不满足，目标必然在左侧
-    }
-    return l;
-}
-```
-
----
-
-## 二、实数二分
-
-实数二分不存在边界死循环，只需设定精度 `eps` 或固定迭代次数。
-
-```cpp
-double bsearch_3(double l, double r) {
-    const double eps = 1e-8; // 精度视题意而定
-    while (r - l > eps) {
-        double mid = (l + r) / 2;
-        if (check(mid)) r = mid;
-        else l = mid;
+        int mid = l + r + 1 >> 1; // +1 防止 l=r-1 时死循环
+        if (check(mid)) l = mid;
+        else r = mid - 1;
     }
     return l;
 }
@@ -69,30 +57,25 @@ double bsearch_3(double l, double r) {
 
 ## 三、二分答案 (Bisection on Answers)
 
-这是算法竞赛中最常见的应用：**如果答案具有单调性，则可以通过二分来寻找最优解。**
+这是二分算法最高频的应用。当直接求解最优解困难，但判定一个解是否合法容易（且合法性具有单调性）时，可以使用二分。
 
-### 判别准则
-- 题目要求：最大值最小 / 最小值最大。
-- 性质：若 $x$ 满足条件，则所有 $y > x$（或 $y < x$）通常也满足条件。
+<KnowledgeCard type="warning" title="典型特征">
+- 题目求：**最大值的最小值** (Minimize the maximum) 或 **最小值的最大值** (Maximize the minimum)。
+- 性质：若 $X$ 是一个可行解，则所有 $X' < X$（或 $X' > X$）也必然可行。
+</KnowledgeCard>
 
 ---
 
 ## 四、教材化例题
 
-### 例题 1：数的范围 (数轴上的左右边界)
+### 例题 1：数的范围 (基础应用)
+给定升序数组，查询 $k$ 的起始与终止位置。
 
-给定一个按照升序排列的长度为 $n$ 的整数数组，以及 $q$ 个查询。对于每个查询，返回一个元素 $k$ 的起始位置和终止位置。如果数组中不存在该元素，则返回 `-1 -1`。
+<details>
+<summary>点击查看 C++ 实现</summary>
 
-:::note[点击查看解析与代码]
-
-**解析**：
-本题是标准的整数二分应用。起始位置是“第一个 $\ge k$ 的位置”，终止位置是“最后一个 $\le k$ 的位置”。
-
-**代码实现 (C++)**：
 ```cpp
 #include <iostream>
-#include <vector>
-
 using namespace std;
 
 const int N = 100010;
@@ -106,116 +89,88 @@ int main() {
     while (m--) {
         int x;
         scanf("%d", &x);
-
+        // 查找左边界
         int l = 0, r = n - 1;
         while (l < r) {
             int mid = l + r >> 1;
             if (q[mid] >= x) r = mid;
             else l = mid + 1;
         }
-
         if (q[l] != x) cout << "-1 -1" << endl;
         else {
             cout << l << " ";
-            int l = 0, r = n - 1;
-            while (l < r) {
-                int mid = l + r + 1 >> 1;
-                if (q[mid] <= x) l = mid;
-                else r = mid - 1;
+            // 查找右边界
+            int l2 = 0, r2 = n - 1;
+            while (l2 < r2) {
+                int mid = l2 + r2 + 1 >> 1;
+                if (q[mid] <= x) l2 = mid;
+                else r2 = mid - 1;
             }
-            cout << l << endl;
+            cout << l2 << endl;
         }
     }
     return 0;
 }
 ```
-:::
+</details>
 
-### 例题 2：数的三次方根 (实数二分)
+### 例题 2：进击的奶牛 (最小值最大化)
+$n$ 个隔间坐标为 $x_1, \dots, x_n$。放置 $m$ 头牛，使得任意两头牛之间的最小距离最大。
 
-给定一个浮点数 $n$，求它的三次方根。
-
-:::note[点击查看解析与代码]
+<details>
+<summary>点击查看解析与代码</summary>
 
 **解析**：
-三次方根函数 $f(x) = x^3$ 在 $\mathbb{R}$ 上单调递增，直接二分。
+1. **二分距离** $d$。
+2. **check(d)**：能否在 $x$ 中选出 $m$ 个点，使得相邻点距离 $\ge d$。
+   - 贪心策略：第一头牛放第一个位置，后面每头牛尽可能早放。
+3. 如果能放下 $m$ 头，说明 $d$ 可能更大，`l = d`；否则 `r = d - 1`。
 
-**代码实现 (C++)**：
-```cpp
-#include <iostream>
-using namespace std;
-
-int main() {
-    double x;
-    cin >> x;
-    double l = -100, r = 100;
-    while (r - l > 1e-8) {
-        double mid = (l + r) / 2;
-        if (mid * mid * mid >= x) r = mid;
-        else l = mid;
-    }
-    printf("%.6f\n", l);
-    return 0;
-}
-```
-:::
-
-### 例题 3：最佳牛围栏 (二分答案 + 前缀和)
-
-给定 $n$ 块草地，第 $i$ 块草地产奶量为 $a_i$。求一个长度不小于 $L$ 的连续子段，使得该子段的平均值最大。
-
-:::note[点击查看解析与代码]
-
-**策略**：
-1. 二分平均值 $v$。
-2. 判定：是否存在一段长度 $\ge L$ 的子段，平均值 $\ge v$。
-3. 转化：将所有 $a_i$ 减去 $v$，即判定是否存在长度 $\ge L$ 的子段和 $\ge 0$。
-4. 使用前缀和 $S_i$。判定 $\max_{j \ge L, i \le j-L} (S_j - S_i) \ge 0$。维护 $S_i$ 的最小值即可。
-
-**代码实现 (C++)**：
+**代码实现**：
 ```cpp
 #include <iostream>
 #include <algorithm>
 using namespace std;
 
 const int N = 100010;
-int a[N];
-double s[N];
-int n, L;
+int n, m, x[N];
 
-bool check(double mid) {
-    for (int i = 1; i <= n; i++) s[i] = s[i - 1] + a[i] - mid;
-    double min_v = 0;
-    for (int i = 0, j = L; j <= n; i++, j++) {
-        min_v = min(min_v, s[i]);
-        if (s[j] >= min_v) return true;
+bool check(int d) {
+    int cnt = 1, last = x[0];
+    for (int i = 1; i < n; i++) {
+        if (x[i] - last >= d) {
+            cnt++;
+            last = x[i];
+        }
     }
-    return false;
+    return cnt >= m;
 }
 
 int main() {
-    cin >> n >> L;
-    for (int i = 1; i <= n; i++) cin >> a[i];
+    scanf("%d %d", &n, &m);
+    for (int i = 0; i < n; i++) scanf("%d", &x[i]);
+    sort(x, x + n);
 
-    double l = 0, r = 2000;
-    while (r - l > 1e-5) {
-        double mid = (l + r) / 2;
+    int l = 0, r = 1e9;
+    while (l < r) {
+        int mid = l + r + 1 >> 1;
         if (check(mid)) l = mid;
-        else r = mid;
+        else r = mid - 1;
     }
-    printf("%d\n", (int)(r * 1000));
+    printf("%d\n", l);
     return 0;
 }
 ```
-:::
+</details>
 
 ---
 
-## 五、练习库
+## 五、练习与巩固
 
-- [练习 1：查找元素首尾位置](/docs/exercises/cs/algorithm-basic#练习-1)
-- [练习 2：进阶二分答案](/docs/exercises/cs/algorithm-basic#练习-2)
+- **练习 1**：[实数二分] 求 $n$ 的三次方根，精确到 $10^{-6}$。
+- **练习 2**：[二分答案] 锯木厂问题：求切割高度 $H$，使得得到的木材总量恰好不小于 $M$。
+- **练习 3**：[思维] 给定一个峰值数组（先增后减），求峰值元素下标。
 
 ---
 
-_编者注：二分不仅是搜索，更是一种思想。在遇到单调性、最大化极小值等字眼时，应第一时间考虑二分。_
+_编者注：二分不仅是一种算法，更是一种高效搜索的思想。只要存在某种“判定性”的单调性，二分就是最锋利的剑。_
