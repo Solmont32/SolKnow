@@ -26,6 +26,14 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       collapsible: true,
       collapsed: true,
+      label: '搜索与启发式算法',
+      link: {type: 'doc', id: 'search/index'},
+      items: ['search/heuristic-search'],
+    },
+    {
+      type: 'category',
+      collapsible: true,
+      collapsed: true,
       label: '数据结构',
       link: {type: 'doc', id: 'ds/index'},
       items: [
@@ -438,6 +446,7 @@ const sidebars: SidebarsConfig = {
       label: '计算机练习库',
       items: [
         { type: 'doc', id: 'exercises/cs/algorithm-basic', label: '算法竞赛：基础算法与线性结构' },
+        { type: 'doc', id: 'exercises/cs/algorithm-search', label: '算法竞赛：搜索与启发式算法' },
         { type: 'doc', id: 'exercises/cs/algorithm-ds', label: '算法竞赛：高级数据结构' },
         { type: 'doc', id: 'exercises/cs/algorithm-linear-dp', label: '算法竞赛：线性 DP 练习' },
         { type: 'doc', id: 'exercises/cs/algorithm-knapsack', label: '算法竞赛：背包练习' },
