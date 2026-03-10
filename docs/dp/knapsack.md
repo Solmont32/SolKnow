@@ -1,103 +1,98 @@
----
-title: 背包 DP
----
-
 # 背包问题体系 (Knapsack Problem System)
 
-背包问题是一类经典的组合优化问题，其本质是在**有限约束（容量）下追求目标函数（价值）的最大化**。
+import { Microscope, Layers, Activity, ShieldCheck } from 'lucide-react';
+
+背包问题是一类经典的组合优化问题，其本质是在**有限约束（容量）下追求目标函数（价值）的最大化**。从数学角度看，它是线性规划在整数域上的一个分支。
 
 ---
 
-## 1. 0/1 背包：每种物品仅一件
+## <Microscope className="inline-block mr-2" /> 核心建模范式
 
-**状态定义**：$f[i][j]$ 表示在前 $i$ 件物品中选取，总体积不超过 $j$ 的最大价值。
-**转移方程**：
-$$f[i][j] = \max(f[i-1][j], f[i-1][j-w_i] + v_i)$$
+### 1. 状态定义 (State Representation)
+$f[i][j]$ 表示在前 $i$ 件物品中进行决策，且总体积不超过 $j$ 的最大价值。
+- **目标函数**：$\max \{ \sum v_k \cdot x_k \}$。
+- **约束条件**：$\sum w_k \cdot x_k \le W$。
 
-### 维度压缩与遍历顺序
-为了将空间优化至 $O(W)$，我们使用一维数组 `f[j]`。
-- **核心逻辑**：计算第 $i$ 轮的 `f[j]` 时，它需要依赖第 $i-1$ 轮的 `f[j-w_i]`。
-- **倒序遍历**：为了保证 `f[j-w_i]` 尚未被第 $i$ 轮的数据覆盖（即它仍代表第 $i-1$ 轮的状态），必须从 $W$ 递减到 $w_i$。
-
----
-
-## 2. 完全背包：物品无限量
-
-**转移方程**：
-$$f[i][j] = \max(f[i-1][j], f[i][j-w_i] + v_i)$$
-注意：第二个状态是 $f[i]$ 而非 $f[i-1]$，表示可以多次重复选取。
-
-### 正序遍历的必然性
-在一维优化中，正序遍历 $j$ 意味着当计算 `f[j]` 时，`f[j-w_i]` 已经被当前第 $i$ 轮更新过了。这恰好符合“可以多次选取同一物品”的物理含义。
+### 2. 转移推导逻辑 (Transition Logic)
+核心在于对“第 $i$ 件物品”的处理决策：
+- **不选**：$f[i][j] = f[i-1][j]$。
+- **选 $k$ 个**：$f[i][j] = f[i-1][j - k \cdot w_i] + k \cdot v_i$。
 
 ---
 
-## 3. 多重背包：物品有限量 $c_i$
+## <Layers className="inline-block mr-2" /> 经典模型深度解析
 
-### 二进制拆分优化 ($O(NW \log C)$)
-将数量 $c_i$ 拆分为 $1, 2, 4, \dots, 2^k, R$，利用这些基底可以组合出 $[0, c_i]$ 之间的任何整数。从而将多重背包转化为 $\sum \log c_i$ 个 0/1 背包物品。
+### 1. 0/1 背包：每种物品仅一件 ($x_i \in \{0, 1\}$)
+**转移方程**：$f[i][j] = \max(f[i-1][j], f[i-1][j-w_i] + v_i)$。
+- **优化**：使用一维数组 `f[j]`，为了保证依赖的是“上一轮”状态，必须**倒序遍历** $j$。
 
-### 单调队列优化 ($O(NW)$)
-**数学推导**：
-令 $j = q \cdot w_i + r$（其中 $r < w_i$ 为余数）。转移方程可改写为：
-$$f[j] = \max_{0 \le k \le c_i} \{ f[j - k \cdot w_i] + k \cdot v_i \}$$
-代入 $j = q \cdot w_i + r$：
+### 2. 完全背包：物品无限量 ($x_i \ge 0$)
+**转移方程**：$f[i][j] = \max(f[i-1][j], f[i][j-w_i] + v_i)$。
+- **优化**：使用一维数组 `f[j]`，为了让当前轮次的更新能被后续状态复用，必须**正序遍历** $j$。
+
+### 3. 多重背包：物品有限量 ($0 \le x_i \le c_i$)
+**优化路径 1：二进制拆分 ($O(NW \log C)$)**
+将 $c_i$ 拆分为 $1, 2, 4, \dots, 2^k, R$，将其转化为 $\sum \log c_i$ 个 0/1 背包物品。
+
+**优化路径 2：单调队列 ($O(NW)$)**
+利用余数分组：$j = q \cdot w_i + r$。
 $$f[q \cdot w_i + r] = \max_{q-c_i \le k \le q} \{ f[k \cdot w_i + r] - k \cdot v_i \} + q \cdot v_i$$
-这是一个典型的**滑动窗口最大值**问题，可以使用单调队列维护。
+该方程在每一组余数 $r$ 下都是一个**滑动窗口最值**问题。
 
+---
+
+## <Activity className="inline-block mr-2" /> 复杂度矩阵
+
+| 模式 | 状态空间 | 转移开销 | 总时间复杂度 | 空间复杂度 |
+| :--- | :--- | :--- | :--- | :--- |
+| **0/1 背包** | $O(W)$ | $O(1)$ | $O(NW)$ | $O(W)$ |
+| **完全背包** | $O(W)$ | $O(1)$ | $O(NW)$ | $O(W)$ |
+| **多重背包 (拆分)** | $O(W)$ | $O(\log C)$ | $O(NW \log C)$ | $O(W)$ |
+| **多重背包 (队列)** | $O(W)$ | $O(1)$ (均摊) | $O(NW)$ | $O(W)$ |
+
+---
+
+## <ShieldCheck className="inline-block mr-2" /> 综合练习与强化
+
+### 练习 1：恰好装满 vs 不超过 (Boundary Condition)
+若要求背包**必须恰好装满**，在求最大价值时初值应如何设定？
+
+<details>
+<summary>Check Solution</summary>
+
+- `f[0] = 0`：容量为 0 恰好装满的价值为 0。
+- `f[1...W] = -INF`：其余容量初始均为非法态。
+这样只有从 $f[0]$ 出发且最终到达 $f[W]$ 的路径才是合法解。
+</details>
+
+### 练习 2：分组背包 (Grouped Knapsack)
+每组物品互斥（每组最多选一个）。
+
+<details>
+<summary>Check Solution</summary>
+
+**遍历序至关重要**：
 ```cpp
-// 多重背包单调队列优化核心模板
-void MultipleKnapsack(int w, int v, int c) {
-    for (int r = 0; r < w; r++) {
-        deque<int> q;
-        for (int j = r; j <= W; j += w) {
-            // 维护窗口大小：(j - q.front()) / w <= c
-            if (!q.empty() && q.front() < j - c * w) q.pop_front();
-            // 维护单调递减队列
-            while (!q.empty() && f[q.back()] - (q.back() - r) / w * v <= f[j] - (j - r) / w * v)
-                q.pop_back();
-            q.push_back(j);
-            new_f[j] = f[q.front()] + (j - q.front()) / w * v;
+for (int g = 1; g <= G; g++) { // 1. 枚举组
+    for (int j = W; j >= 0; j--) { // 2. 倒序枚举容量
+        for (int i : group[g]) { // 3. 枚举组内物品
+            if (j >= w[i]) f[j] = max(f[j], f[j - w[i]] + v[i]);
         }
     }
 }
 ```
-
----
-
-## 4. 依赖背包与分组背包
-
-### 分组背包
-每组物品互斥。**遍历顺序**：组 $\to$ 容量（倒序） $\to$ 组内物品。
-这种顺序确保了在每一组中，由于容量是倒序遍历的，当前组内的多个物品之间产生了“互斥”效果（只会从上一组的状态转移过来）。
-
-### 依赖背包
-若选物品 $B$ 必选 $A$，通常转化为**树形 DP** 解决。见 [树形 DP](tree-dp) 章节。
-
----
-
-## 综合练习与强化
-
-### 练习 1：方案数初始化
-求凑成总重量为 $W$ 的方案总数，初值如何设定？
-
-<details>
-<summary>Check Solution</summary>
-
-- `f[0] = 1`：凑成重量 0 有一种方案（什么都不选）。
-- `f[1...W] = 0`。
-- 转移：`f[j] = (f[j] + f[j - w_i]) % MOD`。
+*注意：组内枚举必须在容量循环内部，且容量必须倒序，以确保每组内只发生一次转移。*
 </details>
 
-### 练习 2：恰好装满 vs 不超过
-若要求背包**必须恰好装满**，在求最大价值时初值应如何？
+### 练习 3：方案总数
+凑成重量 $W$ 的组合数。
 
 <details>
 <summary>Check Solution</summary>
 
-- `f[0] = 0`
-- `f[1...W] = -INF`
-这样只有从 0 开始合法转移的路径最终才会得到非负数。
+- **状态**：$f[j]$ 表示重量为 $j$ 的方案数。
+- **初值**：$f[0] = 1$。
+- **转移**：$f[j] = (f[j] + f[j - w_i]) \pmod M$。
 </details>
 
 ---
@@ -105,3 +100,4 @@ void MultipleKnapsack(int w, int v, int c) {
 ## 延伸挑战
 - [洛谷 P1064 金明的预算方案](https://www.luogu.com.cn/problem/P1064)
 - [HDU 2191 多重背包模板](http://acm.hdu.edu.cn/showproblem.php?pid=2191)
+- [洛谷 P1776 宝物筛选](https://www.luogu.com.cn/problem/P1776)（单调队列优化练习）

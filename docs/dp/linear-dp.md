@@ -8,99 +8,101 @@ title: 线性 DP
 
 ---
 
-## 核心理论体系
+## <Microscope className="inline-block mr-2" /> 核心理论体系
 
-### 1. 状态定义范式
+### 1. 状态定义范式 (State Formalization)
 在线性结构中，状态通常表征为“前缀的最优解”：
-- **单序列**：$f[i]$ 表示前 $i$ 个元素满足某种约束的最优值。
-- **双序列**：$f[i][j]$ 表示第一个序列前 $i$ 个元素与第二个序列前 $j$ 个元素匹配后的最优值。
+- **单序列 (Single Sequence)**：$f[i]$ 表示子序列 $A[1 \dots i]$ 满足某种约束的最优值。
+- **双序列 (Dual Sequence)**：$f[i][j]$ 表示 $A[1 \dots i]$ 与 $B[1 \dots j]$ 匹配后的最优值。
 
-### 2. 拓扑序要求
-状态转移必须满足 $i \to i+1$，即计算 $f[i]$ 时，$f[0 \dots i-1]$ 必须已处于完成态。
+### 2. 转移推导逻辑 (Derivation Logic)
+线性 DP 的转移通常取决于“最后一步”的决策：
+- 包含/不包含当前元素 $A[i]$。
+- $A[i]$ 与前驱状态 $j < i$ 的某种关联。
 
 ---
 
-## 经典模型深度解析
+## <Layers className="inline-block mr-2" /> 经典模型深度解析
 
 ### 1. 最长上升子序列 (LIS)
-**状态定义**：$f[i]$ 为以第 $i$ 个元素 $a[i]$ **结尾**的最长上升子序列的长度。
+**状态定义**：$f[i]$ 表示以 $a[i]$ 结尾的 LIS 长度。
 **转移方程**：
 $$f[i] = \max_{0 \le j < i, a[j] < a[i]} \{f[j]\} + 1$$
-**复杂度**：$O(N^2)$。通过“维护单调队列+二分查找”可优化至 $O(N \log N)$。
+**复杂度**：$O(N^2)$。
+
+#### 🚀 进阶：$O(N \log N)$ 贪心 + 二分优化
+**推导本质**：我们希望子序列增长得尽可能“慢”，以便后面能接更多的数。
+**维护对象**：$g[len]$ 表示长度为 $len$ 的上升子序列末尾元素的**最小值**。
+- **性质**：$g$ 数组显然是单调递增的。
+- **操作**：对于每个 $a[i]$，在 $g$ 中找到第一个 $\ge a[i]$ 的位置并替换它；若都比 $a[i]$ 小，则在末尾新增。
 
 ### 2. 最长公共子序列 (LCS)
-**状态定义**：$f[i][j]$ 为序列 $A[1 \dots i]$ 与 $B[1 \dots j]$ 的 LCS 长度。
-**转移方程**：
-若 $A[i] = B[j]$，则两元素必定可作为公共末尾：
-$$f[i][j] = f[i-1][j-1] + 1$$
-若 $A[i] \neq B[j]$，则当前最优解必由舍弃其中一个元素的状态转移而来：
-$$f[i][j] = \max(f[i-1][j], f[i][j-1])$$
-
-### 3. 编辑距离 (Levenshtein Distance)
-**状态定义**：$f[i][j]$ 表示将 $A[1 \dots i]$ 转换为 $B[1 \dots j]$ 的最少操作次数。
+**状态定义**：$f[i][j]$ 表示 $A[1 \dots i]$ 与 $B[1 \dots j]$ 的 LCS 长度。
 **转移核心逻辑**：
-- **匹配/替换**：从 $f[i-1][j-1]$ 转移。若 $A[i]=B[j]$ 代价为 0，否则代价为 1。
-- **删除**：从 $f[i-1][j]$ 转移，相当于删掉 $A[i]$。
-- **插入**：从 $f[i][j-1]$ 转移，相当于在 $A$ 结尾插入 $B[j]$。
-$$f[i][j] = \min \begin{cases} f[i-1][j-1] + (A[i] \neq B[j]) \\ f[i-1][j] + 1 \\ f[i][j-1] + 1 \end{cases}$$
+- 若 $A[i] = B[j]$，则 $f[i][j] = f[i-1][j-1] + 1$（贪心选择）。
+- 若 $A[i] \neq B[j]$，则 $f[i][j] = \max(f[i-1][j], f[i][j-1])$。
 
 ---
 
-## 空间优化：滚动数组 (Rolling Array)
+## <Activity className="inline-block mr-2" /> 复杂度矩阵
 
-在线性 DP 中，$f[i]$ 通常只依赖于 $f[i-1]$。利用取模运算 $i \& 1$ 或直接覆盖，可将空间复杂度从 $O(N^2)$ 降低至 $O(N)$。
+| 模型 | 状态空间 | 转移开销 | 总时间复杂度 | 空间复杂度 |
+| :--- | :--- | :--- | :--- | :--- |
+| **朴素 LIS** | $O(N)$ | $O(N)$ | $O(N^2)$ | $O(N)$ |
+| **二分 LIS** | $O(N)$ | $O(\log N)$ | $O(N \log N)$ | $O(N)$ |
+| **LCS** | $O(NM)$ | $O(1)$ | $O(NM)$ | $O(NM) \to O(\min(N,M))$ |
+| **编辑距离** | $O(NM)$ | $O(1)$ | $O(NM)$ | $O(NM)$ |
+
+---
+
+## <ShieldCheck className="inline-block mr-2" /> 综合练习与强化
+
+### 练习 1：LIS 的方案总数 (Combination)
+求长度等于最长上升子序列长度的不同子序列方案数。
+
+<details>
+<summary>Check Solution</summary>
+
+需维护两个状态：`f[i]` (长度) 和 `cnt[i]` (以 $i$ 结尾的方案数)。
+- 初始化 `f[i] = 1, cnt[i] = 1`。
+- 遍历 $j < i$ 且 $a[j] < a[i]$：
+  - 若 `f[j] + 1 > f[i]`：更新 `f[i] = f[j] + 1`, `cnt[i] = cnt[j]`。
+  - 若 `f[j] + 1 == f[i]`：累加 `cnt[i] += cnt[j]`。
+- 最终答案为所有 `f[i] == max_len` 的 `cnt[i]` 之和。
 
 ```cpp
-// LCS 空间优化模板
-int LCS_Optimized(string s1, string s2) {
-    int n = s1.size(), m = s2.size();
-    vector<int> dp(m + 1, 0);
-    for (int i = 1; i <= n; i++) {
-        int prev = 0; // 相当于 dp[i-1][j-1]
-        for (int j = 1; j <= m; j++) {
-            int temp = dp[j];
-            if (s1[i-1] == s2[j-1]) dp[j] = prev + 1;
-            else dp[j] = max(dp[j], dp[j-1]);
-            prev = temp;
+// 核心逻辑
+for (int i = 0; i < n; i++) {
+    for (int j = 0; j < i; j++) {
+        if (a[j] < a[i]) {
+            if (f[j] + 1 > f[i]) {
+                f[i] = f[j] + 1;
+                cnt[i] = cnt[j];
+            } else if (f[j] + 1 == f[i]) {
+                cnt[i] += cnt[j];
+            }
         }
     }
-    return dp[m];
 }
 ```
-
----
-
-## 综合练习与强化
-
-### 练习 1：LIS 的方案总数
-求长度为 LIS 的不同子序列有多少个？
-
-<details>
-<summary>Check Solution</summary>
-
-需维护两个状态：`len[i]` (长度) 和 `cnt[i]` (方案数)。
-- 若 `len[j] + 1 > len[i]`：更新 `len[i] = len[j] + 1`, `cnt[i] = cnt[j]`。
-- 若 `len[j] + 1 == len[i]`：累加 `cnt[i] += cnt[j]`。
-
-**注意**：对于大数据量，需配合树状数组进行 $O(N \log N)$ 的前缀和维护。
 </details>
 
-### 练习 2：最大子段和 (Kadane 算法)
-求序列中连续子段的最大和。
+### 练习 2：最长公共上升子序列 (LCIS)
+结合 LCS 与 LIS 的特征。
 
 <details>
 <summary>Check Solution</summary>
 
-$$f[i] = \max(a[i], f[i-1] + a[i])$$
-本质是对于每一个元素，决定“自立门户”还是“加入前缀”。
+**状态定义**：$f[i][j]$ 表示 $A$ 前 $i$ 个数与 $B$ 前 $j$ 个数匹配，且以 $B[j]$ 结尾的 LCIS 长度。
+**优化推导**：朴素 $O(N^2 M)$ 可优化至 $O(NM)$。
 ```cpp
-int maxSubArray(vector<int>& nums) {
-    int res = nums[0], cur = 0;
-    for (int x : nums) {
-        cur = max(x, cur + x);
-        res = max(res, cur);
+for (int i = 1; i <= n; i++) {
+    int max_val = 0; // 维护 B[1...j-1] 中小于 A[i] 的 f[i-1][k] 的最大值
+    for (int j = 1; j <= m; j++) {
+        if (a[i] == b[j]) f[i][j] = max_val + 1;
+        else f[i][j] = f[i-1][j];
+        if (b[j] < a[i]) max_val = max(max_val, f[i-1][j]);
     }
-    return res;
 }
 ```
 </details>
