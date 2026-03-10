@@ -2,53 +2,26 @@
 title: AC 自动机
 ---
 
-import { Layers, GitBranch, Cpu, Search } from 'lucide-react';
+import { Layers, GitBranch, Cpu, Search, Workflow, Network } from 'lucide-react';
 
-# AC 自动机：多模式匹配的高效引擎
+# AC 自动机：多模式匹配与状态机建模
 
-AC 自动机 (Aho-Corasick Automaton) 是多模式匹配问题的终极解决方案。它通过将多个模式串构建为一棵 Trie 树，并引入类似 KMP 的 $fail$ 指针，实现了在 $O(n)$ 时间内完成所有模式串在主串中的匹配。
+AC 自动机 (Aho-Corasick Automaton) 是多模式匹配问题的标准解决方案。它将 $k$ 个模式串构建为一棵 Trie 树，并引入 $fail$ 指针，在 $O(N + \sum |P_i|)$ 时间内完成所有匹配。
 
-## 1. 结构与定义
+## 1. 核心构造：从 Trie 到 DFA
 
-### 1.1 Trie 树结构
-将所有模式串 $P_1, P_2, \dots, P_k$ 插入一棵字典树中。树中的每个节点代表某个模式串的前缀。
+### 1.1 Fail 指针的本质
+对于节点 $u$，其失败指针 $fail[u]$ 指向节点 $v$，满足 $v$ 所代表的字符串是 $u$ 所代表字符串在 Trie 中存在的最长**真后缀**。
+这一设计确保了当在 $u$ 处失配时，我们可以无缝跳跃到 $v$ 继续尝试，而不必从头开始。
 
-### 1.2 Fail 指针 (失败指针)
-对于节点 $u$，其失败指针 $fail[u]$ 指向节点 $v$，其中 $v$ 代表的字符串是 $u$ 代表的字符串在 Trie 树中最长的**真后缀**。
+### 1.2 Trie 图优化 (Trie Graph)
+通过在构建时预处理不存在的转移，将 Trie 转换为一个**确定有限状态自动机 (DFA)**：
+- 若节点 $u$ 没有字符 $c$ 的子节点，则令 $trie[u][c] = trie[fail[u]][c]$。
+- 这使得每次状态转移都是 $O(1)$ 的，消除了原版 AC 自动机中可能存在的长路径 $fail$ 跳跃。
 
-**数学性质**：
-若从根到 $u$ 的路径表示字符串 $S$，则从根到 $fail[u]$ 的路径表示 $S$ 的最长真后缀，且该真后缀同时是 Trie 树中某个模式串的前缀。
+## 2. 系统化构建过程
 
-## 2. 系统化 Fail 指针与 Trie 图优化
-
-### 2.1 递推构建
-利用 BFS 逐层构建 $fail$ 指针：
-1. 根节点的子节点 $v$，$fail[v] = 0$。
-2. 对于节点 $u$ 的字符 $c$ 对应的子节点 $v$：
-   - 若 $v$ 存在，$fail[v] = trie[fail[u]][c]$。
-   - 若 $v$ 不存在（**Trie 图优化/字典树压缩**），令 $trie[u][c] = trie[fail[u]][c]$。
-
-### 2.2 Trie 图优化 (Trie Graph)
-传统的 AC 自动机在匹配失败时需要回溯 $fail$ 指针，最坏情况下匹配单次字符的时间复杂度较高。
-通过在构建 $fail$ 时直接将不存在的子节点指向其 $fail$ 节点的对应子节点，我们将 Trie 树转化为了一个**确定有限状态自动机 (DFA)**。这样，每次转移的时间复杂度降为 $O(1)$。
-
-## 3. 实现细节
-
-### 核心实现 (C++)
 ```cpp
-const int MAXN = 5e5 + 5;
-int trie[MAXN][26], fail[MAXN], cnt[MAXN], tot;
-
-void insert(const string& s) {
-    int p = 0;
-    for (char c : s) {
-        int v = c - 'a';
-        if (!trie[p][v]) trie[p][v] = ++tot;
-        p = trie[p][v];
-    }
-    cnt[p]++; // 记录以该节点结尾的模式串数量
-}
-
 void build() {
     queue<int> q;
     for (int i = 0; i < 26; i++)
@@ -59,51 +32,85 @@ void build() {
         for (int i = 0; i < 26; i++) {
             if (trie[u][i]) {
                 fail[trie[u][i]] = trie[fail[u]][i];
+                in[fail[trie[u][i]]]++; // 记录 Fail 树入度
                 q.push(trie[u][i]);
             } else {
-                trie[u][i] = trie[fail[u]][i]; // 核心优化：Trie 图
+                trie[u][i] = trie[fail[u]][i];
             }
         }
     }
 }
 ```
 
-## 4. 经典例题
+## 3. 高级优化：Fail 树与拓扑排序
 
-### 例题 1：关键词统计
-> 给定 $k$ 个模式串和 1 个主串，统计有多少个模式串在主串中出现过。
+在处理“每个模式串出现次数”的问题时，若对每个匹配点都沿 $fail$ 指针向上跳，最坏复杂度会退化为 $O(N \sqrt{\sum |P_i|})$。
+
+### 3.1 拓扑优化方案
+我们可以先在匹配过程中只标记当前节点，最后在 **Fail 树**（由 $fail[u] \to u$ 构成的树）上通过拓扑排序（或 DFS）一次性完成统计。
 
 <details>
-<summary><Cpu size={18} className="inline-block mr-1" /> 查看 C++ 解答</summary>
+<summary><Network size={18} className="inline-block mr-1" /> 查看拓扑优化实现</summary>
 
 ```cpp
-int query(string t) {
-    int p = 0, res = 0;
+void query(string t) {
+    int p = 0;
     for (char c : t) {
         p = trie[p][c - 'a'];
-        for (int j = p; j && ~cnt[j]; j = fail[j]) {
-            res += cnt[j];
-            cnt[j] = -1; // 避免重复统计
-        }
+        ans[p]++; // 先打上标记
     }
-    return res;
+}
+
+void solve() {
+    queue<int> q;
+    for (int i = 1; i <= tot; i++) if (!in[i]) q.push(i);
+    while (!q.empty()) {
+        int u = q.front(); q.pop();
+        // res[end_id[u]] = ans[u]; // end_id[u] 记录节点对应的模式串编号
+        int v = fail[u];
+        ans[v] += ans[u]; // 向父节点累加
+        if (--in[v] == 0) q.push(v);
+    }
 }
 ```
 </details>
 
-### 例题 2：Fail 树的应用
-> 在 AC 自动机中，若 $v = fail[u]$，则从 $v$ 到根的路径表示的串是 $u$ 的后缀。
-> 我们可以将所有的 $(fail[u], u)$ 看作一棵树的边，构建出 **Fail 树**。
+## 4. 经典建模：AC 自动机 + DP
+
+AC 自动机不仅是匹配工具，更是强大的**状态空间**。
+
+### 例题 1：文本生成问题
+> 给定若干禁止出现的模式串，求长度为 $L$ 的不包含任何禁止串的字符串数量。
 
 <details>
-<summary><Layers size={18} className="inline-block mr-1" /> 查看理论深度分析</summary>
+<summary><Workflow size={18} className="inline-block mr-1" /> 查看状态转移设计</summary>
 
-**定理**：模式串 $P_i$ 在 $P_j$ 中出现的次数，等于在 Fail 树中以 $P_i$ 对应节点为根的子树内，包含多少个属于 $P_j$ 前缀的节点。
+**状态定义**：
+$dp[i][j]$ 表示长度为 $i$，当前位于 AC 自动机的状态 $j$ 时的方案数。
 
-**应用**：结合 DFS 序和树状数组，可以处理复杂的动态匹配与查询问题。
+**转移方程**：
+$$
+dp[i+1][trie[j][c]] = \sum dp[i][j] \quad (\text{其中 } trie[j][c] \text{ 及其 } fail \text{ 路径上不含禁止位})
+$$
+
+**代码片段**：
+```cpp
+for (int i = 0; i < L; i++) {
+    for (int j = 0; j <= tot; j++) {
+        if (is_forbidden[j]) continue;
+        for (int c = 0; c < 26; c++) {
+            int nxt = trie[j][c];
+            if (!is_forbidden[nxt]) {
+                dp[i+1][nxt] = (dp[i+1][nxt] + dp[i][j]) % MOD;
+            }
+        }
+    }
+}
+```
 </details>
 
 ## 5. 练习
 1. [Luogu P3808] AC 自动机（简单版）
-2. [Luogu P3796] AC 自动机（加强版）
-3. [Luogu P5357] AC 自动机（二次加强版）- 需要用到 Fail 树拓扑优化。
+2. [Luogu P5357] AC 自动机（二次加强版）- 强制要求拓扑优化。
+3. [POJ 2778] DNA Sequence - AC 自动机 + 矩阵快速幂。
+4. [HDU 2222] Keywords Search - 基础应用。

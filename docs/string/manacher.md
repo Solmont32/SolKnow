@@ -2,62 +2,53 @@
 title: Manacher 算法
 ---
 
-import { Zap, ShieldCheck, Repeat, Activity } from 'lucide-react';
+import { Zap, ShieldCheck, Repeat, Activity, Ruler, Target } from 'lucide-react';
 
 # Manacher 算法：线性回文提取
 
-Manacher 算法（俗称“马拉车”）是求解最长回文子串的经典线性算法。它通过巧妙地利用回文的对称性，将原本 $O(n^2)$ 的暴力搜索优化至 $O(n)$。
+Manacher 算法（马拉车算法）是解决最长回文子串问题的终极利器。它通过巧妙的预处理与对称性映射，将原本 $O(N^2)$ 的暴力中心扩展法优化至惊人的 $O(N)$。
 
-## 1. 预处理：统一奇偶性
-为了处理偶数长度的回文串（如 `aa`），我们在每个字符间插入一个特殊符号 `#`。
-- `aba` $\to$ `#a#b#a#` (长度 $3 \to 7$)
-- `abba` $\to$ `#a#b#b#a#` (长度 $4 \to 9$)
-这样处理后，所有回文串的长度均变为奇数。
+## 1. 预处理：消除奇偶差异
 
-## 2. 核心原理：回文半径与对称性
+回文串分为奇回文（如 `aba`）和偶回文（如 `abba`）。为了统一处理，我们在每个字符两侧及字符串首尾插入特殊字符（如 `#`）：
+- `aba` $\to$ `#a#b#a#` (长度 $2n+1$)
+- `abba` $\to$ `#a#b#b#a#` (长度 $2n+1$)
+
+**关键性质**：经过预处理后，所有回文串在变换后的串中均为**奇回文**。
+
+## 2. 核心原理：半径对称性
 
 ### 2.1 定义
-- $d[i]$：以 $i$ 为中心的最长回文半径（包括 $i$ 自身）。
-- $M$：当前已探测到的回文串中，延伸至最右侧的回文串中心。
-- $R$：该回文串的最右边界，$R = M + d[M] - 1$。
+- $d[i]$：以预处理串位置 $i$ 为中心的最长回文半径（含 $i$ 自身）。
+- $M$：当前探测到的最右边界回文串的中心。
+- $R$：该回文串的最右端点，$R = M + d[M] - 1$。
 
 ### 2.2 状态转移
-对于当前位置 $i$，若 $i < R$：
-令 $i_{mirror} = 2M - i$（即 $i$ 关于 $M$ 的对称位置）。
-根据对称性，$d[i]$ 至少可以继承 $d[i_{mirror}]$ 的值，但受限于 $R-i$ 的范围。
-$d[i] = \min(d[2M - i], R - i)$
+对于当前计算的位置 $i$，若 $i \le R$，我们可以利用 $i$ 关于 $M$ 的对称点 $i_{mirror} = 2M - i$ 的信息：
+$$
+d[i] \ge \min(d[2M - i], R - i + 1)
+$$
+在此基础上，再尝试向两侧进行朴素扩展。
 
-接着，从 $d[i]$ 开始尝试暴力向外扩展。
+## 3. 实现细节与映射
 
-## 3. C++ 核心实现
+### 映射关系
+- 原串中以某位置为中心的最长回文长度 = $d[i] - 1$。
+- 原串总回文子串数 = $\sum \lfloor d[i] / 2 \rfloor$。
 
 ```cpp
-#include <iostream>
-#include <vector>
-#include <string>
-#include <algorithm>
-
-using namespace std;
-
 int manacher(string s) {
-    // 1. 预处理
-    string t = "#";
+    string t = "$#"; // 头部加 $ 防止越界
     for (char c : s) { t += c; t += '#'; }
+    t += '@'; // 尾部加 @ 
     
     int n = t.size();
     vector<int> d(n);
     int m = 0, r = 0, ans = 0;
     
-    for (int i = 0; i < n; i++) {
-        // 2. 继承与转移
-        if (i < r) d[i] = min(d[2 * m - i], r - i);
-        else d[i] = 1;
-        
-        // 3. 暴力扩展
-        while (i - d[i] >= 0 && i + d[i] < n && t[i - d[i]] == t[i + d[i]])
-            d[i]++;
-            
-        // 4. 更新边界
+    for (int i = 1; i < n - 1; i++) {
+        d[i] = i < r ? min(d[2 * m - i], r - i) : 1;
+        while (t[i - d[i]] == t[i + d[i]]) d[i]++;
         if (i + d[i] > r) {
             m = i;
             r = i + d[i];
@@ -68,34 +59,54 @@ int manacher(string s) {
 }
 ```
 
-## 4. 复杂度分析
-**定理**：Manacher 算法的时间复杂度为 $O(n)$。
-**证明**：
-观察 $R$ 的变化。每次 `while` 循环成功扩展一次，$R$ 都会至少增加 1。由于 $R$ 最大只能达到 $n$，且 $R$ 永不减小，因此所有 `while` 循环的总成功执行次数为 $O(n)$。
+## 4. 经典例题
 
-## 5. 经典例题
-
-### 例题 1：回文子串计数
-> 计算字符串中回文子串的总个数。
+### 例题 1：最长双回文子串
+> 给定字符串 $S$，求两个不相交的回文子串，其长度之和最大。
 
 <details>
-<summary><Activity size={18} className="inline-block mr-1" /> 查看 C++ 解答</summary>
+<summary><Ruler size={18} className="inline-block mr-1" /> 查看前后缀分解方案</summary>
 
-在 Manacher 预处理串中，以 $i$ 为中心的回文半径为 $d[i]$，则原串中对应位置的回文子串个数为 $\lfloor d[i] / 2 \rfloor$。
+**思路**：
+1. 运行 Manacher 记录每个位置能向左/右延伸的最长回文。
+2. 定义 $L[i]$ 为以 $i$ 结尾的最长回文长度，$R[i]$ 为以 $i$ 开头的最长回文长度。
+3. 通过线性扫描维护 $L[i]$ 和 $R[i]$。
+4. 结果为 $\max(L[i] + R[i+1])$。
 
 ```cpp
-long long count_palindromes(string s) {
+// 核心逻辑：利用 Manacher 的 d[i] 更新 L[i] 和 R[i]
+for (int i = 1; i < n - 1; i++) {
+    L[i + d[i] - 1] = max(L[i + d[i] - 1], d[i] - 1);
+    R[i - d[i] + 1] = max(R[i - d[i] + 1], d[i] - 1);
+}
+// 进一步递推 L[i] = max(L[i], L[i+2]-2)...
+```
+</details>
+
+### 例题 2：最长回文前缀
+> 给定字符串 $S$，在其末尾添加最少的字符使其变为回文串。
+
+<details>
+<summary><Target size={18} className="inline-block mr-1" /> 查看 C++ 解答</summary>
+
+**思路**：
+该问题等价于找到 $S$ 的最长回文后缀。将 $S$ 翻转得到 $S'$，问题转化为求 $S$ 与 $S'$ 的某个特定重叠，或者直接在 Manacher 预处理串中找到一个包含末尾字符且半径最大的回文中心。
+
+```cpp
+int solve(string s) {
+    int n = s.size();
     // ... 执行 Manacher ...
-    long long total = 0;
-    for (int i = 0; i < n; i++) {
-        total += d[i] / 2;
+    for (int i = n_new - 1; i >= 0; i--) {
+        if (i + d[i] == n_new) { // 触及末尾
+            return n - (d[i] - 1); // 需要补全的长度
+        }
     }
-    return total;
 }
 ```
 </details>
 
-## 6. 练习
+## 5. 练习
 1. [Luogu P3805] Manacher 模板。
-2. [HDU 3068] 最长回文。
-3. [Codeforces 7D] Palindrome Degree - 判定前缀回文级数。
+2. [Codeforces 1827C] Palindrome Partition - 进阶 DP + Manacher。
+3. [HDU 3068] 最长回文。
+4. [LeetCode 5] Longest Palindromic Substring.

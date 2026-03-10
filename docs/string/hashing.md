@@ -2,105 +2,99 @@
 title: 字符串哈希
 ---
 
-import { ShieldCheck, Zap, Hash, AlertTriangle } from 'lucide-react';
+import { ShieldCheck, Zap, Hash, AlertTriangle, Scale, Network } from 'lucide-react';
 
-# 字符串哈希：从随机映射到 $O(1)$ 查询
+# 字符串哈希：高效判等与随机化算法
 
-字符串哈希是将不定长的字符串映射为定长整数的技术。其核心价值在于能够通过 $O(n)$ 的预处理，实现 $O(1)$ 时间内对任意子串的相等性判定。
+字符串哈希是将字符串映射为固定长度整数的技术。它的核心优势在于能够以 $O(N)$ 预处理换取 $O(1)$ 的子串相等性判定，是处理子串匹配、去重及复杂结构对比的有力工具。
 
-## 1. 数学基础：多项式哈希 (Polynomial Rolling Hash)
+## 1. 数学模型：多项式哈希
 
-对于字符串 $S = s_1 s_2 \dots s_n$，其哈希值定义为：
-$H(S) = \left( \sum_{i=1}^n s_i \cdot B^{n-i} \right) \pmod M$
-其中 $B$ 是基数 (Base)，$M$ 是模数 (Modulus)。
+对于字符串 $S = s_1 s_2 \dots s_n$，其哈希值 $H(S)$ 定义为：
+$$
+H(S) = \left( \sum_{i=1}^n s_i \cdot B^{n-i} \right) \pmod M
+$$
+其中 $B$（Base）是基数，$M$（Modulus）是模数。
 
-### 区间哈希公式
-设 $h[i]$ 为前缀 $S[1 \dots i]$ 的哈希值，则子串 $S[l \dots r]$ 的哈希值为：
-$H(S[l \dots r]) = (h[r] - h[l-1] \cdot B^{r-l+1}) \pmod M$
+### 1.1 区间哈希公式
+预处理前缀哈希 $h[i]$：
+$$
+H(S[l \dots r]) = (h[r] - h[l-1] \cdot B^{r-l+1}) \pmod M
+$$
 
-## 2. 系统化碰撞优化 (Collision Optimization)
+## 2. 碰撞分析与抗攻击
 
-### 2.1 生日悖论与碰撞概率
-根据生日悖论，若模数为 $M$，在处理 $\sqrt{M}$ 个不同字符串时，发生碰撞的概率接近 $50\%$。
-- 对于 $M = 2^{64}$ (使用 `unsigned long long` 自动溢出)，在处理 $10^9$ 个字符串时仍有一定碰撞风险。
-- **Anti-Hash 数据**：某些精心构造的数据可以针对单模数哈希进行攻击。
+### 2.1 生日悖论 (Birthday Paradox)
+对于模数 $M$，在处理 $K$ 个不同的字符串时，发生碰撞的概率 $P \approx 1 - e^{-K^2 / 2M}$。
+- 若 $M = 10^9$，当 $K \approx 40000$ 时，碰撞概率即达到 $50\%$。
+- **结论**：单模数 $10^9$ 级别的哈希在处理大量数据时极不安全。
 
-### 2.2 双哈希策略 (Double Hashing)
-为了极大降低碰撞概率，通常使用两组不同的 $(B, M)$ 计算哈希值：
-$H_{double}(S) = (H_{B_1, M_1}(S), H_{B_2, M_2}(S))$
-只有当两个哈希值都相等时，才判定字符串相等。此时碰撞概率降至 $1 / (M_1 M_2)$。
+### 2.2 推荐参数组合
+| 方案 | 基数 $B$ | 模数 $M$ | 安全等级 |
+| :--- | :--- | :--- | :--- |
+| 单哈希 (自然溢出) | $131, 233$ | $2^{64}$ | 低 (易被 Anti-hash 构造卡掉) |
+| 单大质数哈希 | $13331$ | $10^{18}+7$ | 中 (需配合 `__int128`) |
+| **双哈希** | $131, 13331$ | $(10^9+7, 10^9+9)$ | **高** |
 
-### 2.3 模数与基数的选择
-- **基数 $B$**：应大于字符集大小，且建议选择较大的质数（如 $131, 13331, 23333$）。
-- **模数 $M$**：
-  - 大质数：$10^9+7, 10^9+9$。
-  - 更大质数：$10^{18}+7, 10^{18}+3$ (配合 `__int128`)。
-  - **避开 $2^{64}$**：在某些平台上，自然溢出哈希极易被构造数据卡掉。
+## 3. 高级应用
 
-## 3. C++ 高级实现 (双哈希版)
+### 3.1 树哈希 (Tree Hashing)
+哈希思想可以扩展到非线性结构。判断两棵无根树是否同构：
+$$
+H(u) = 1 + \sum_{v \in son(u)} f(H(v))
+$$
+其中 $f(x)$ 是一个随机映射函数（如 $f(x) = \text{shift}(x)$ 或使用特定质数映射）。
 
-```cpp
-#include <iostream>
-#include <vector>
-
-using namespace std;
-
-typedef long long LL;
-
-struct DoubleHash {
-    const LL B1 = 131, M1 = 1e9 + 7;
-    const LL B2 = 13331, M2 = 1e9 + 9;
-    vector<LL> h1, h2, p1, p2;
-
-    DoubleHash(string s) {
-        int n = s.size();
-        h1.resize(n + 1); h2.resize(n + 1);
-        p1.resize(n + 1); p2.resize(n + 1);
-        p1[0] = p2[0] = 1;
-        for (int i = 1; i <= n; i++) {
-            p1[i] = p1[i - 1] * B1 % M1;
-            p2[i] = p2[i - 1] * B2 % M2;
-            h1[i] = (h1[i - 1] * B1 + s[i - 1]) % M1;
-            h2[i] = (h2[i - 1] * B2 + s[i - 1]) % M2;
-        }
-    }
-
-    pair<LL, LL> get(int l, int r) {
-        LL res1 = (h1[r] - h1[l - 1] * p1[r - l + 1] % M1 + M1) % M1;
-        LL res2 = (h2[r] - h2[l - 1] * p2[r - l + 1] % M2 + M2) % M2;
-        return {res1, res2};
-    }
-};
-```
-
-## 4. 经典应用
-
-### 例题 1：最长公共子串 (LCS)
-> 给定两个字符串 $A$ 和 $B$，求它们的最长公共子串长度。
+### 例题 1：最长公共子回文串
+> 给定两个字符串 $A$ 和 $B$，求它们的最长公共回文子串长度。
 
 <details>
-<summary><Zap size={18} className="inline-block mr-1" /> 查看“二分+哈希”优化方案</summary>
+<summary><Scale size={18} className="inline-block mr-1" /> 查看“Manacher + 哈希 + 二分”方案</summary>
 
 **思路**：
-二分答案长度 $L$。对于每个 $L$，将 $A$ 中所有长度为 $L$ 的子串哈希值存入 `set` 或 `unordered_set`，然后检查 $B$ 中是否存在相同的哈希值。
+1. 先对 $A$ 跑 Manacher 得到所有回文中心及其半径。
+2. 二分答案 $L$。
+3. 提取 $A$ 中所有长度为 $L$ 的回文子串哈希值放入 `unordered_set`。
+4. 检查 $B$ 中是否存在长度为 $L$ 且在 $A$ 中出现过的回文子串。
 
 ```cpp
-bool check(int L, DoubleHash& ha, DoubleHash& hb, int n, int m) {
-    unordered_set<LL> s; // 简便起见使用 LL 存储合并后的双哈希
-    for (int i = 1; i + L - 1 <= n; i++) {
-        auto val = ha.get(i, i + L - 1);
-        s.insert(val.first << 32 | val.second);
-    }
-    for (int i = 1; i + L - 1 <= m; i++) {
-        auto val = hb.get(i, i + L - 1);
-        if (s.count(val.first << 32 | val.second)) return true;
-    }
-    return false;
+// 核心：判定长度 L 是否可行
+bool check(int L) {
+    unordered_set<LL> seen;
+    // 遍历 A 的回文中心 i，若 d_A[i]-1 >= L
+    // 获取该回文子串的哈希值并存入 seen
+    // 遍历 B 同理检查
 }
 ```
 </details>
 
-## 5. 练习
+### 例题 2：树的同构判定
+> 给定两棵树，判断它们是否同构。
+
+<details>
+<summary><Network size={18} className="inline-block mr-1" /> 查看树哈希 C++ 实现</summary>
+
+```cpp
+typedef unsigned long long ull;
+ull shift(ull x) {
+    x ^= x << 13;
+    x ^= x >> 7;
+    x ^= x << 17;
+    return x;
+}
+ull get_hash(int u, int f) {
+    ull res = 1;
+    for (int v : adj[u]) {
+        if (v == f) continue;
+        res += shift(get_hash(v, u));
+    }
+    return res;
+}
+```
+</details>
+
+## 4. 练习
 1. [Luogu P3370] 字符串哈希模板。
-2. [Codeforces 1200E] Compress Words - 动态维护哈希进行前缀匹配。
-3. [USACO 2017 February Gold] Why Did the Cow Cross the Road II - 利用哈希判断路径一致性。
+2. [Codeforces 514C] Watto and Mechanism - 允许一位不同的哈希匹配。
+3. [Luogu P5043] 树同构模板。
+4. [AtCoder ABC284F] ABCBAC - 哈希处理翻转拼接。
