@@ -50,4 +50,4 @@ import { Code2, Infinity, Zap, Layers, GitBranch, Binary, Target } from 'lucide-
 
 ## 延伸阅读
 - [动态规划中的数学美感](/blog/2026-03-07-major-upgrade)
-- [如何通过练习提升 DP 建模能力](/docs/exercises/cs/algorithm-dp-guide)
+- [动态规划 (DP) 专项强化练习库](/docs/exercises/cs/algorithm-dp-comprehensive)

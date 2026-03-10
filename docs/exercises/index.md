@@ -51,9 +51,9 @@ import {
       </div>
       对标 Codeforces, AtCoder 与 NOI 难度。包含工业级 C++ 代码解析。
       <ul style={{ marginTop: '10px', fontSize: '0.9rem' }}>
-        <li><b>基础：</b> 线性结构与基础搜索</li>
-        <li><b>进阶：</b> 动态规划与复杂图论</li>
-        <li><b>巅峰：</b> 网络流、多项式与字符串</li>
+        <li><b>基础：</b> 基础算法与线性结构专项强化</li>
+        <li><b>进阶：</b> 动态规划 (DP) 专项强化</li>
+        <li><b>综合：</b> 搜索、图论与几何练习</li>
       </ul>
       <a href="cs/algorithm-basic" className="button button--outline button--info button--sm">进入算法库 <ChevronRight size={14} /></a>
     </KnowledgeCard>

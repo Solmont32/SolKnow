@@ -1,224 +1,334 @@
 ---
-title: 基础算法与线性数据结构练习
+title: 基础算法专项强化练习
+sidebar_label: 基础算法与线性结构
 ---
 
-import { Target, Layers, Zap, Trophy, Compass } from 'lucide-react';
+import { Target, Zap, Trophy, BarChart3, ChevronRight, Code2, Layers } from 'lucide-react';
 
-# 基础算法与线性数据结构练习
+# 基础算法与线性结构专项强化
 
-> **“算法之美，在于思维的跃迁。”** —— 本练习库对标 NOI/ACM 竞赛规范，建立从基础数据结构到复杂线性优化的阶梯体系。
-
----
-
-## 🪜 练习阶梯说明
-
-- <span style={{ color: 'var(--ifm-color-success)' }}>● **Level A (基础巩固)**</span>：二分、排序、前缀和、基础栈/队列应用。
-- <span style={{ color: 'var(--ifm-color-warning)' }}>● **Level B (综合提升)**</span>：单调栈/队列优化、并查集路径压缩与合并、二维差分。
-- <span style={{ color: 'var(--ifm-color-danger)' }}>● **Level C (竞赛挑战)**</span>：涉及扫描线、树状数组进阶应用、复杂线性结构的综合建模。
+> **“算法竞赛的天花板，往往由基础算法的熟练度决定。”** —— 本专题对标《算法竞赛进阶指南》与 CLRS 教材深度，通过阶梯式训练实现从“懂算法”到“秒出代码”的跨越。
 
 ---
 
-## 🔍 多视角解法对比专题 (Case Study)
+## 🪜 练习阶梯与评价标准
 
-### 专题 1：有序序列的目标和问题
-**题目**：给定一个升序数组 `nums` 和一个目标值 `target`，判断是否存在两个数之和等于 `target`。
-
-<details>
-<summary>点击查看：双指针 (Two Pointers) vs 二分搜索 (Binary Search)</summary>
-
-#### 视角一：双指针法 (最优解)
-1. 设置左右指针 `i = 0, j = n-1`。
-2. 若 `nums[i] + nums[j] == target`，返回成功。
-3. 若和小于 `target`，`i++`；若和大于 `target`，`j--`。
-4. **复杂度**：$O(n)$ 时间，$O(1)$ 空间。
-
-#### 视角二：二分搜索法
-1. 遍历数组，对于每个 `nums[i]`，在 `[i+1, n-1]` 范围内查找 `target - nums[i]`。
-2. 使用二分查找加速。
-3. **复杂度**：$O(n \log n)$ 时间，$O(1)$ 空间。
-
-#### 📌 竞赛评价
-**双指针法**利用了数组升序的全局单调性，将搜索空间从 $O(n^2)$ 线性降维至 $O(n)$，是解决此类问题的“金标准”。而**二分搜索**则是在无法直接应用全局单调性，但存在局部有序性时的有力补丁。
-
-</details>
+| 等级 | 难度目标 | 核心考察点 | 期望达成 |
+| :--- | :--- | :--- | :--- |
+| <span style={{ color: 'var(--ifm-color-success)' }}>● **Level A**</span> | 模板即时复现 | 边界处理、离散化、1D 前缀和 | 10分钟内 AC 且无编译错误 |
+| <span style={{ color: 'var(--ifm-color-warning)' }}>● **Level B**</span> | 灵活建模应用 | 单调性转换、2D 差分、复杂二分答案 | 能够独立推导出核心逻辑 |
+| <span style={{ color: 'var(--ifm-color-danger)' }}>● **Level C**</span> | 算法融合创新 | 扫描线、带权并查集、复杂单调栈应用 | 具备省赛前列/全国赛水平 |
 
 ---
 
-## 📝 练习库正文
+## 📂 核心习题库
 
-### Level A：基础算法应用
+### Level A：基础巩固 (Foundations)
 
-## 练习 1：数的范围 (Level A)
-给定一个有序数组 `1 2 2 3 3 4`，查询数字 `2` 的起始和终止下标。
+#### 练习 1：数的范围（二分搜索边界判定）
+**题目描述**：给定一个长度为 $n$ 的按照升序排列的整数数组，以及 $q$ 个查询。对于每个查询，返回一个元素 $k$ 的起始位置和终止位置（下标从 0 开始）。如果数组中不存在该元素，则返回 `-1 -1`。
+- **数据范围**：$n \le 10^5, q \le 10^4$。
 
 <details>
-<summary>点击查看过程与答案</summary>
+<summary>Check Solution (C++ Implementation)</summary>
 
-**解析**：
-1. 第一个 $\ge 2$ 的下标是 1。
-2. 最后一个 $\le 2$ 的下标是 2。
+**解题思路**：
+二分查找的精髓在于“性质”的划分。
+1. **左边界**：寻找第一个 $\ge k$ 的数。性质为 $x \ge k$。
+2. **右边界**：寻找最后一个 $\le k$ 的数。性质为 $x \le k$。
 
-**答案**：`1 2`
+**C++ 代码实现**：
+```cpp
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+void solve() {
+    int n, q;
+    cin >> n >> q;
+    vector<int> a(n);
+    for (int i = 0; i < n; i++) cin >> a[i];
+
+    while (q--) {
+        int k;
+        cin >> k;
+        // 二分左边界
+        int l = 0, r = n - 1;
+        while (l < r) {
+            int mid = l + r >> 1;
+            if (a[mid] >= k) r = mid;
+            else l = mid + 1;
+        }
+
+        if (a[l] != k) {
+            cout << "-1 -1" << endl;
+        } else {
+            cout << l << " ";
+            // 二分右边界
+            l = 0, r = n - 1;
+            while (l < r) {
+                int mid = l + r + 1 >> 1;
+                if (a[mid] <= k) l = mid;
+                else r = mid - 1;
+            }
+            cout << l << endl;
+        }
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    solve();
+    return 0;
+}
+```
+**复杂度分析**：$O(q \log n)$。
+
 </details>
 
-### 练习 2：78 亿分 (二分答案思路)
-在一个 $1 \times 10^9$ 的范围内寻找一个满足性质 $f(x)$ 的最大整数，且 $f(x)$ 具有单调性。最多需要多少次 `check` 操作？
+#### 练习 2：子矩阵的和（二维前缀和）
+**题目描述**：给定一个 $n \times m$ 的整数矩阵，要求 $q$ 次查询，每次给定 $(x_1, y_1, x_2, y_2)$，求以此为左上角和右下角的子矩阵内所有元素的和。
+- **公式提示**：$S[i,j] = S[i-1,j] + S[i,j-1] - S[i-1,j-1] + a[i,j]$。
 
 <details>
-<summary>点击查看过程与答案</summary>
+<summary>Check Solution (C++ Implementation)</summary>
 
-**解析**：
-$\log_2(10^9) \approx 30$。
+**C++ 代码实现**：
+```cpp
+#include <iostream>
+using namespace std;
 
-**答案**：约 30 次。
-</details>
+const int N = 1010;
+int a[N][N], s[N][N];
 
-### 练习 3：第 K 个数 (快速选择)
-给定数组 `3 1 2 4 5`，求第 3 小的数。
-
-<details>
-<summary>点击查看过程与答案</summary>
-
-**解析**：
-排序后为 `1 2 3 4 5`，第 3 小是 3。
-快速选择算法在每次划分后只递归一边，复杂度 $O(n)$。
-
-**答案**：3
-</details>
-
----
-
-## 提高题
-
-### 练习 4：坐标映射 (离散化)
-坐标集合 $\{10, 10^9, 10^6, 10\}$ 离散化去重后映射到 $\{1, 2, 3, \dots\}$ 的结果是什么？
-
-<details>
-<summary>点击查看过程与答案</summary>
-
-**解析**：
-1. 去重并排序：$\{10, 10^6, 10^9\}$。
-2. 映射：$10 \to 1, 10^6 \to 2, 10^9 \to 3$。
-
-**答案**：$10 \to 1, 10^6 \to 2, 10^9 \to 3$。
-</details>
-
-### 练习 5：最高牛 (前缀和与差分)
-有 $N$ 头牛，已知最高的牛 $H$ 在位置 $P$。给出 $M$ 条信息，每条信息 $(A, B)$ 表示第 $A$ 头牛能看到第 $B$ 头牛（即 $A, B$ 之间的牛都比它们矮）。求每头牛可能的最高高度。
-
-<details>
-<summary>点击查看过程与答案</summary>
-
-**解析**：
-1. 假设所有牛初始高度为 $H$。
-2. 对于每对 $(A, B)$，使中间的牛高度 $-1$。
-3. 利用差分数组维护：$D[A+1]--, D[B]++$。
-4. 最后求前缀和恢复高度。
-
-**答案**：利用差分维护区间减法。
-</details>
-
-### 练习 6：激光炸弹 (二维前缀和)
-地图上有若干目标，每个目标有价值。炸弹能炸 $R \times R$ 的正方形。求最大价值。
-
-<details>
-<summary>点击查看过程与答案</summary>
-
-**解析**：
-1. 预处理二维前缀和 $S_{i,j}$。
-2. 枚举所有 $R \times R$ 的矩形，利用 $O(1)$ 公式求和。
-
-**答案**：二维前缀和。
+int main() {
+    int n, m, q;
+    scanf("%d%d%d", &n, &m, &q);
+    for (int i = 1; i <= n; i++)
+        for (int j = 1; j <= m; j++) {
+            scanf("%d", &a[i][j]);
+            s[i][j] = s[i-1][j] + s[i][j-1] - s[i-1][j-1] + a[i][j];
+        }
+    
+    while (q--) {
+        int x1, y1, x2, y2;
+        scanf("%d%d%d%d", &x1, &y1, &x2, &y2);
+        printf("%d\n", s[x2][y2] - s[x1-1][y2] - s[x2][y1-1] + s[x1-1][y1-1]);
+    }
+    return 0;
+}
+```
 </details>
 
 ---
 
-## 挑战题
+### Level B：综合提升 (Intermediate)
 
-### 练习 7：直方图最大矩形 (单调栈)
-给定 $n$ 个高度，求最大矩形面积。
+#### 练习 3：最长连续不重复子序列（双指针）
+**题目描述**：给定一个长度为 $n$ 的整数序列，请找出最长的不包含重复数字的连续区间。输出最大长度。
+- **技巧**：使用哈希或数组记录桶状态，左指针收缩时更新桶。
 
 <details>
-<summary>点击查看过程与答案</summary>
+<summary>Check Solution (C++ Implementation)</summary>
 
-**解析**：
-对于每个高度 $h_i$，寻找左右两侧第一个比它矮的位置 $L_i, R_i$。
-面积 $S = h_i \times (R_i - L_i - 1)$。
-使用单调栈在 $O(n)$ 内求出所有 $L_i, R_i$。
+**解题思路**：
+经典双指针。`j` 指针向右枚举，`i` 指针在发现重复时向右收缩直到不重复。
+**C++ 代码实现**：
+```cpp
+#include <iostream>
+#include <vector>
 
-**答案**：单调栈。
+using namespace std;
+
+const int N = 100010;
+int a[N], S[N]; // S 记录每个数字出现的次数
+
+int main() {
+    int n;
+    cin >> n;
+    int res = 0;
+    for (int j = 0, i = 0; j < n; j++) {
+        cin >> a[j];
+        S[a[j]]++;
+        while (S[a[j]] > 1) {
+            S[a[i]]--;
+            i++;
+        }
+        res = max(res, j - i + 1);
+    }
+    cout << res << endl;
+    return 0;
+}
+```
 </details>
 
-### 练习 8：理想正方形 (二维单调队列)
-在 $n \times m$ 矩阵中找 $k \times k$ 子矩阵，使其最大值与最小值的差最小。
+#### 练习 4：区间合并（排序 + 贪心）
+**题目描述**：给定 $n$ 个区间 $[l_i, r_i]$，要求合并所有有交集的区间。
+- **考察点**：按左端点排序的贪心策略。
 
 <details>
-<summary>点击查看过程与答案</summary>
+<summary>Check Solution (C++ Implementation)</summary>
 
-**解析**：
-1. 先对每一行跑一遍单调队列，求出长度为 $k$ 的行区间最值。
-2. 对结果的每一列跑一遍单调队列，求出 $k \times k$ 块的最值。
+**C++ 代码实现**：
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
 
-**答案**：两次单调队列。
-</details>
+using namespace std;
 
-### 练习 9：银河英雄传说 (带权并查集)
-维护战舰队列，支持合并整列，并查询两战舰是否在同列及其距离。
+typedef pair<int, int> PII;
 
-<details>
-<summary>点击查看过程与答案</summary>
+void merge(vector<PII> &segs) {
+    vector<PII> res;
+    sort(segs.begin(), segs.end());
+    int st = -2e9, ed = -2e9;
+    for (auto seg : segs) {
+        if (ed < seg.first) {
+            if (st != -2e9) res.push_back({st, ed});
+            st = seg.first, ed = seg.second;
+        } else ed = max(ed, seg.second);
+    }
+    if (st != -2e9) res.push_back({st, ed});
+    segs = res;
+}
 
-**解析**：
-1. `p[x]` 维护父节点。
-2. `d[x]` 维护到父节点的距离。
-3. `sz[x]` 维护当前集合总数。
-4. 合并时：`p[px] = py; d[px] = sz[py]; sz[py] += sz[px];`
-5. 查询距离：`abs(d[x] - d[y]) - 1`。
-
-**答案**：带权并查集。
-</details>
-
-### 练习 10：程序自动分析
-给定 $n$ 个变量相等或不等的限制条件，判定是否矛盾。
-
-<details>
-<summary>点击查看过程与答案</summary>
-
-**解析**：
-1. 变量范围大，先离散化。
-2. 处理所有相等条件：`union(a, b)`。
-3. 检查所有不等条件：若 `find(a) == find(b)` 则矛盾。
-
-**答案**：离散化 + 并查集。
-</details>
-
-### 练习 11：迷失的牛 (BIT + 二分/树状数组上二分)
-$N$ 头牛排队，已知第 $i$ 头牛前面比它编号小的牛的数量 $A_i$。求每头牛的编号。
-
-<details>
-<summary>点击查看过程与答案</summary>
-
-**解析**：
-从后往前推。最后一头牛前面有 $A_n$ 个比它小的，说明它是当前剩余数中第 $A_n+1$ 小的。
-1. 建立 BIT，初值为 1。
-2. 查找第 $k$ 个 1 的位置：可以二分 + BIT 查询，或在 BIT 上直接二分 ($O(\log n)$)。
-3. 找到后将该位置 BIT 值设为 0。
-
-**答案**：树状数组维护剩余数，逆向寻找第 $K$ 小。
-</details>
-
-### 练习 12：动态区间和 (树状数组)
-支持单点修改和区间查询。
-
-<details>
-<summary>点击查看过程与答案</summary>
-
-**解析**：
-标准树状数组应用。
-
-**答案**：`add(x, c)` 和 `query(r) - query(l-1)`。
+int main() {
+    int n;
+    cin >> n;
+    vector<PII> segs;
+    for (int i = 0; i < n; i++) {
+        int l, r;
+        cin >> l >> r;
+        segs.push_back({l, r});
+    }
+    merge(segs);
+    cout << segs.size() << endl;
+    return 0;
+}
+```
 </details>
 
 ---
 
-_编者注：基础算法的熟练度决定了天花板。请务必亲手实现上述所有模型。_
+### Level C：竞赛挑战 (Advanced)
+
+#### 练习 5：单调栈 - 直方图中的最大矩形
+**题目描述**：给定 $n$ 个非负整数，表示直方图的各个柱子的高度，每个柱子彼此相邻，且宽度为 1。求直方图中能够勾勒出的矩形的最大面积。
+- **核心思想**：对于每个高度 $h$，寻找左侧和右侧第一个比它矮的柱子，确定该高度能延伸的最大宽度。
+
+<details>
+<summary>Check Solution (C++ Implementation)</summary>
+
+**C++ 代码实现 (单调栈最优解)**：
+```cpp
+#include <iostream>
+#include <stack>
+#include <vector>
+
+using namespace std;
+
+typedef long long LL;
+
+void solve() {
+    int n;
+    while (cin >> n && n) {
+        vector<int> h(n + 2, 0);
+        for (int i = 1; i <= n; i++) cin >> h[i];
+        
+        stack<int> stk;
+        stk.push(0);
+        LL res = 0;
+        for (int i = 1; i <= n + 1; i++) {
+            while (h[stk.top()] > h[i]) {
+                int height = h[stk.top()];
+                stk.pop();
+                int width = i - stk.top() - 1;
+                res = max(res, (LL)height * width);
+            }
+            stk.push(i);
+        }
+        cout << res << endl;
+    }
+}
+
+int main() {
+    solve();
+    return 0;
+}
+```
+</details>
+
+#### 练习 6：二维单调队列 - 理想正方形
+**题目描述**：在 $a \times b$ 的矩阵中找出 $n \times n$ 的子矩阵，使得其最大值减去最小值的差最小。
+- **限制**：$a, b \le 1000, n \le \min(a,b)$。
+- **思路**：两遍单调队列。第一遍处理每行，求出每个长度为 $n$ 的行区间的最值；第二遍对结果处理每列，求出 $n \times n$ 区域的最值。
+
+<details>
+<summary>Check Solution (C++ Implementation)</summary>
+
+**C++ 代码实现**：
+```cpp
+#include <iostream>
+#include <deque>
+
+using namespace std;
+
+const int N = 1010;
+int mat[N][N];
+int row_max[N][N], row_min[N][N];
+int n, m, k;
+
+void get_max(int a[], int b[], int len, int k) {
+    deque<int> q;
+    for (int i = 1; i <= len; i++) {
+        if (q.size() && q.front() <= i - k) q.pop_front();
+        while (q.size() && a[q.back()] <= a[i]) q.pop_back();
+        q.push_back(i);
+        if (i >= k) b[i] = a[q.front()];
+    }
+}
+
+void get_min(int a[], int b[], int len, int k) {
+    deque<int> q;
+    for (int i = 1; i <= len; i++) {
+        if (q.size() && q.front() <= i - k) q.pop_front();
+        while (q.size() && a[q.back()] >= a[i]) q.pop_back();
+        q.push_back(i);
+        if (i >= k) b[i] = a[q.front()];
+    }
+}
+
+int main() {
+    scanf("%d%d%d", &n, &m, &k);
+    for (int i = 1; i <= n; i++)
+        for (int j = 1; j <= m; j++) scanf("%d", &mat[i][j]);
+
+    for (int i = 1; i <= n; i++) {
+        get_max(mat[i], row_max[i], m, k);
+        get_min(mat[i], row_min[i], m, k);
+    }
+
+    int res = 2e9;
+    int a[N], b[N], c[N];
+    for (int j = k; j <= m; j++) {
+        for (int i = 1; i <= n; i++) a[i] = row_max[i][j];
+        get_max(a, b, n, k);
+        for (int i = 1; i <= n; i++) a[i] = row_min[i][j];
+        get_min(a, c, n, k);
+        for (int i = k; i <= n; i++) res = min(res, b[i] - c[i]);
+    }
+    printf("%d\n", res);
+    return 0;
+}
+```
+</details>
+
+---
+
+## 🏆 训练建议
+1. **追求 Zero-Error**：在 Level A 题目中，目标是在不查阅资料的情况下一次性写出正确代码。
+2. **注重数学证明**：双指针的正确性、差分的操作原理、单调性的维护，理解了证明才能在变题中游刃有余。
+3. **复杂度意识**：养成先看数据范围再写代码的习惯。$10^5$ 的范围通常暗示 $O(n \log n)$。

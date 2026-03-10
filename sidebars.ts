@@ -448,11 +448,9 @@ const sidebars: SidebarsConfig = {
       collapsed: true,
       label: '计算机练习库',
       items: [
-        { type: 'doc', id: 'exercises/cs/algorithm-basic', label: '算法竞赛：基础算法与线性结构' },
+        { type: 'doc', id: 'exercises/cs/algorithm-basic', label: '算法竞赛：基础算法与线性结构专项强化' },
+        { type: 'doc', id: 'exercises/cs/algorithm-dp-comprehensive', label: '算法竞赛：动态规划 (DP) 专项强化' },
         { type: 'doc', id: 'exercises/cs/algorithm-search', label: '算法竞赛：搜索与启发式算法' },
-        { type: 'doc', id: 'exercises/cs/algorithm-ds', label: '算法竞赛：高级数据结构' },
-        { type: 'doc', id: 'exercises/cs/algorithm-linear-dp', label: '算法竞赛：线性 DP 练习' },
-        { type: 'doc', id: 'exercises/cs/algorithm-knapsack', label: '算法竞赛：背包练习' },
         { type: 'doc', id: 'exercises/cs/algorithm-shortest-path', label: '算法竞赛：最短路练习' },
         { type: 'doc', id: 'exercises/cs/algorithm-mst', label: '算法竞赛：最小生成树练习' },
         { type: 'doc', id: 'exercises/cs/algorithm-topo-sort', label: '算法竞赛：拓扑排序练习' },
