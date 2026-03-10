@@ -95,7 +95,7 @@ vector<Point> andrew(vector<Point>& points) {
 2. **空间复杂度**：$O(n)$。
 
 <KnowledgeCard type="tip" title="注意事项">
-在处理共线点时，叉积为 0。如果题目要求凸包边界上包含所有点（包括共线点），则应修改 <code>cross(...) <= 0</code> 为 <code>cross(...) < 0</code>。
+在处理共线点时，叉积为 0。如果题目要求凸包边界上包含所有点（包括共线点），则应修改 `cross(...) <= 0` 为 `cross(...) < 0`。
 </KnowledgeCard>
 
 ---
