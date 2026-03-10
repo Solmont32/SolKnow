@@ -77,6 +77,7 @@ const config: Config = {
           label: '练习库',
           position: 'left',
           items: [
+            { to: '/docs/exercises/', label: '练习库总览' },
             { type: 'docSidebar', sidebarId: 'mathExerciseSidebar', label: '数学练习' },
             { type: 'docSidebar', sidebarId: 'csExerciseSidebar', label: '计算机练习' },
             { type: 'docSidebar', sidebarId: 'aiExerciseSidebar', label: 'AI 练习' },

@@ -371,6 +371,7 @@ const sidebars: SidebarsConfig = {
 
   // 练习库镜像结构
   mathExerciseSidebar: [
+    { type: 'doc', id: 'exercises/index', label: '练习库总览' },
     {
       type: 'category',
       collapsible: true,
@@ -440,6 +441,7 @@ const sidebars: SidebarsConfig = {
   ],
 
   csExerciseSidebar: [
+    { type: 'doc', id: 'exercises/index', label: '练习库总览' },
     {
       type: 'category',
       collapsible: true,
@@ -465,6 +467,7 @@ const sidebars: SidebarsConfig = {
   ],
 
   aiExerciseSidebar: [
+    { type: 'doc', id: 'exercises/index', label: '练习库总览' },
     {
       type: 'category',
       collapsible: true,
@@ -478,6 +481,7 @@ const sidebars: SidebarsConfig = {
   ],
 
   infosecExerciseSidebar: [
+    { type: 'doc', id: 'exercises/index', label: '练习库总览' },
     {
       type: 'category',
       collapsible: true,

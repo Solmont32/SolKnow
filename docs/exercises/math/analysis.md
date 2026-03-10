@@ -2,12 +2,54 @@
 title: 数学分析精选练习
 ---
 
+import { Target, Layers, Zap, Trophy, Compass } from 'lucide-react';
+
 # 数学分析精选练习
+
+> **“不积跬步，无以至千里。”** —— 本练习库采用阶梯式结构，对标经典教材《数学分析》课后习题规范。
 
 ---
 
-## 练习 1：求极限
+## 🪜 练习阶梯说明
 
+- <span style={{ color: 'var(--ifm-color-success)' }}>● **Level A (基础巩固)**</span>：聚焦核心定义、基本运算法则（如极限计算、求导、积分公式）。
+- <span style={{ color: 'var(--ifm-color-warning)' }}>● **Level B (综合提升)**</span>：涉及中值定理证明、一致连续性、多元函数极值等综合应用。
+- <span style={{ color: 'var(--ifm-color-danger)' }}>● **Level C (竞赛挑战)**</span>：对标考研名校真题、数学竞赛，涵盖实数完备性深度证明及复杂积分变换。
+
+---
+
+## 🔍 多视角解法对比专题 (Case Study)
+
+### 专题 1：数列极限的证明与计算
+**题目**：证明 $\lim_{n \to \infty} \sqrt[n]{n} = 1$。
+
+<details>
+<summary>点击查看：代数缩放 vs 几何/分析视角对比</summary>
+
+#### 视角一：代数缩放法 (Bernoulli 不等式)
+1. 令 $\sqrt[n]{n} = 1 + h_n$ ($h_n > 0$)。
+2. 则 $n = (1 + h_n)^n = 1 + nh_n + \frac{n(n-1)}{2}h_n^2 + \dots > \frac{n(n-1)}{2}h_n^2$。
+3. 得到 $h_n^2 < \frac{2}{n-1} \to 0$ ($n \to \infty$)。
+4. 由夹逼定理，$h_n \to 0 \implies \sqrt[n]{n} \to 1$。
+
+#### 视角二：连续化视角 (L'Hôpital 法则)
+1. 考虑函数 $f(x) = x^{1/x}$。
+2. 取对数：$\ln f(x) = \frac{\ln x}{x}$。
+3. 利用 L'Hôpital 法则：$\lim_{x \to \infty} \frac{\ln x}{x} = \lim_{x \to \infty} \frac{1/x}{1} = 0$。
+4. 故 $\lim_{x \to \infty} x^{1/x} = e^0 = 1$。由归结原则，数列极限为 1。
+
+#### 📌 教学评价
+视角一更符合**分析学**初期的严密推导逻辑，不依赖连续函数的性质；视角二则利用了**微积分**的强大工具，计算效率更高。
+
+</details>
+
+---
+
+## 📝 练习库正文
+
+### Level A：基础运算与定义应用
+
+## 练习 1：求极限 (Level A)
 计算 $\lim_{x \to 0} \frac{\sin 5x}{3x}$。
 
 <details>
