@@ -2,7 +2,7 @@
 title: 状态压缩 DP
 ---
 
-import { Cpu, Layout, Layers, Lightbulb } from 'lucide-react';
+import { Cpu, Layout, Layers, Lightbulb, Binary, Share2 } from 'lucide-react';
 
 # 状态压缩动态规划 (State Compression DP)
 
@@ -12,55 +12,55 @@ import { Cpu, Layout, Layers, Lightbulb } from 'lucide-react';
 
 ## <Cpu className="inline-block mr-2" /> 核心位运算技巧
 
-在状态压缩中，我们通常使用一个二进制数（整数）来表示一个集合。
+在状态压缩中，我们通常使用一个二进制数 $S$ 来表示一个集合。
 
-| 操作 | 代码实现 | 含义 |
+### 1. 基础集合操作
+| 操作 | 代码实现 | 数学含义 |
 | :--- | :--- | :--- |
-| **检查第 $i$ 位** | `(S >> i) & 1` | 检查元素 $i$ 是否在集合 $S$ 中 |
-| **加入第 $i$ 位** | `S | (1 << i)` | 将元素 $i$ 加入集合 $S$ |
-| **移除第 $i$ 位** | `S & ~(1 << i)` | 将元素 $i$ 从集合 $S$ 中移除 |
-| **切换第 $i$ 位** | `S ^ (1 << i)` | 翻转元素 $i$ 的选取状态 |
-| **取全集** | `(1 << n) - 1` | 获取包含 $n$ 个元素的全集 |
-| **Lowbit** | `S & -S` | 获取集合中最低位的 $1$ 及其对应的权重 |
+| **检查元素 $i$** | `(S >> i) & 1` | $i \in S$ |
+| **加入元素 $i$** | `S | (1 << i)` | $S \cup \{i\}$ |
+| **移除元素 $i$** | `S & ~(1 << i)` | $S \setminus \{i\}$ |
+| **切换元素 $i$** | `S ^ (1 << i)` | 对称差 $S \Delta \{i\}$ |
+| **全集** | `(1 << n) - 1` | $U = \{0, 1, \dots, n-1\}$ |
+| **空集判断** | `!S` | $S = \emptyset$ |
+
+### 2. 高阶技巧
+- **枚举子集**：枚举 $S$ 的所有子集 $sub$。
+  ```cpp
+  for (int sub = S; sub; sub = (sub - 1) & S) { ... }
+  ```
+- **Popcount**：统计集合中元素的个数。
+  ```cpp
+  __builtin_popcount(S); // GCC 内置函数
+  ```
 
 ---
 
-## <Layout className="inline-block mr-2" /> 经典模型解析
+## <Share2 className="inline-block mr-2" /> 复杂度分析与子集 DP
 
-### 1. 最小 Hamilton 路径 (TSP 基础)
-**问题**：求从点 $0$ 到点 $n-1$ 经过每个点恰好一次的最短路径。
-- **状态设计**：$f[S][i]$ 表示当前经过的点集为 $S$（二进制压缩），且当前处于点 $i$ 的最短路径长度。
-- **转移方程**：
-  $$f[S][i] = \min_{j \in S, j \neq i} \{ f[S \oplus (1 \ll i)][j] + \text{dist}(j, i) \}$$
-- **复杂度**：$O(2^n \cdot n^2)$。
-
-### 2. 轮廓线/插头 DP 初探 (Mondriaan's Dream)
-**问题**：用 $2 \times 1$ 的长方形填充 $N \times M$ 的棋盘。
-- **状态设计**：$f[i][S]$ 表示前 $i$ 行已填满，且第 $i$ 行对第 $i+1$ 行的垂直伸出状态为 $S$。
-- **转移逻辑**：枚举第 $i+1$ 行的放置方式，确保其与 $S$ 兼容且第 $i+1$ 行内部也能填满。
+当我们需要枚举所有状态 $S$ 及其对应的所有子集时，总复杂度为：
+$$\sum_{k=0}^n \binom{n}{k} 2^k = (1+2)^n = 3^n$$
+这在 $N \le 15 \sim 18$ 时通常是可接受的。
 
 ---
 
-## <Layers className="inline-block mr-2" /> 进阶技巧：子集枚举
+## <Layout className="inline-block mr-2" /> 经典建模：棋盘与网格
 
-给定一个状态 $S$，枚举其所有子集 $sub$：
+### 1. 相邻约束 (Independence Set on Grids)
+在网格图中，若要求相邻格子不能同时选取，通常状态定义为 $f[i][S]$，表示第 $i$ 行的选择状态为 $S$。
+- **合法性判断**：`!(S & (S << 1))` 保证行内不相邻。
+- **转移约束**：`!(S & prev_S)` 保证行间不相邻。
 
-```cpp
-for (int sub = S; sub; sub = (sub - 1) & S) {
-    // 处理子集 sub
-}
-```
-
-**复杂度分析**：对所有 $S \in [0, 2^n-1]$ 枚举子集的总复杂度为 $O(3^n)$。
-**证明**：
-$$\sum_{k=0}^{n} \binom{n}{k} 2^k = (1+2)^n = 3^n$$
-其中 $\binom{n}{k}$ 是选择大小为 $k$ 的集合 $S$ 的方案数，$2^k$ 是该集合的子集数。
+### 2. 轮廓线 DP (Profile DP)
+当状态不仅取决于上一行，还取决于前几个格子时，可以使用“轮廓线”记录边界状态。这通常用于铺砖问题（如 $2 \times 1$ 长方形填充）。
 
 ---
 
-## <Lightbulb className="inline-block mr-2" /> 完备例题解答
+## <Layers className="inline-block mr-2" /> 完备例题解答
 
 ### 例题 1：最短 Hamilton 路径
+**题目**：从点 $0$ 出发，经过所有点恰好一次回到终点（或到达特定点）的最短距离。
+
 <details>
 <summary>Check Solution (C++)</summary>
 
@@ -74,7 +74,7 @@ using namespace std;
 const int N = 20, M = 1 << N;
 int n;
 int w[N][N];
-int f[M][N];
+int f[M][N]; // f[S][i] 表示当前访问点集为 S，且当前位于点 i
 
 int main() {
     cin >> n;
@@ -83,14 +83,19 @@ int main() {
             cin >> w[i][j];
 
     memset(f, 0x3f, sizeof f);
-    f[1][0] = 0; // 起点在 0，状态只有点 0 被访问
+    f[1][0] = 0; // 初始状态：只访问了 0 号点，且位于 0 号点
 
-    for (int i = 0; i < (1 << n); i++)
-        for (int j = 0; j < n; j++)
-            if ((i >> j) & 1)
-                for (int k = 0; k < n; k++)
-                    if (((i ^ (1 << j)) >> k) & 1)
+    for (int i = 1; i < (1 << n); i++) {
+        for (int j = 0; j < n; j++) {
+            if ((i >> j) & 1) { // 如果当前状态包含点 j
+                for (int k = 0; k < n; k++) {
+                    if (((i ^ (1 << j)) >> k) & 1) { // 尝试从状态 i \ {j} 中的点 k 转移过来
                         f[i][j] = min(f[i][j], f[i ^ (1 << j)][k] + w[k][j]);
+                    }
+                }
+            }
+        }
+    }
 
     cout << f[(1 << n) - 1][n - 1] << endl;
     return 0;
@@ -98,46 +103,54 @@ int main() {
 ```
 </details>
 
-### 例题 2：玉米地 (Luogu P1879)
-在 $M \times N$ 的网格中种草，相邻格不能同时种，且某些格不能种。求方案数。
+### 例题 2：吃奶酪 (Luogu P1433)
+**题目**：平面上有 $n$ 个点，从原点出发走遍所有点，求最短路径。
 
 <details>
 <summary>Check Solution (C++)</summary>
 
 ```cpp
 #include <iostream>
-#include <vector>
+#include <cmath>
+#include <iomanip>
+#include <cstring>
 using namespace std;
 
-const int MOD = 1e8;
-int m, n;
-int g[15], f[15][1 << 12];
-vector<int> states;
+int n;
+double x[20], y[20], d[20][20];
+double f[1 << 15][16];
 
-bool check(int s) {
-    return !(s & (s << 1));
+double dist(int i, int j) {
+    return sqrt((x[i] - x[j]) * (x[i] - x[j]) + (y[i] - y[j]) * (y[i] - y[j]));
 }
 
 int main() {
-    cin >> m >> n;
-    for (int i = 1; i <= m; i++)
-        for (int j = 0, x; j < n; j++)
-            cin >> x, g[i] = (g[i] << 1) | !x; // 1 表示不能种
+    cin >> n;
+    x[0] = y[0] = 0;
+    for (int i = 1; i <= n; i++) cin >> x[i] >> y[i];
+    for (int i = 0; i <= n; i++)
+        for (int j = 0; j <= n; j++) d[i][j] = dist(i, j);
 
     for (int i = 0; i < (1 << n); i++)
-        if (check(i)) states.push_back(i);
+        for (int j = 1; j <= n; j++) f[i][j] = 1e18;
 
-    f[0][0] = 1;
-    for (int i = 1; i <= m; i++)
-        for (int s : states)
-            if (!(s & g[i]))
-                for (int ps : states)
-                    if (!(s & ps))
-                        f[i][s] = (f[i][s] + f[i - 1][ps]) % MOD;
+    for (int i = 1; i <= n; i++) f[1 << (i - 1)][i] = d[0][i];
 
-    int res = 0;
-    for (int s : states) res = (res + f[m][s]) % MOD;
-    cout << res << endl;
+    for (int i = 1; i < (1 << n); i++) {
+        for (int j = 1; j <= n; j++) {
+            if (f[i][j] > 1e17) continue;
+            for (int k = 1; k <= n; k++) {
+                if (!((i >> (k - 1)) & 1)) {
+                    int next_s = i | (1 << (k - 1));
+                    f[next_s][k] = min(f[next_s][k], f[i][j] + d[j][k]);
+                }
+            }
+        }
+    }
+
+    double res = 1e18;
+    for (int i = 1; i <= n; i++) res = min(res, f[(1 << n) - 1][i]);
+    cout << fixed << setprecision(2) << res << endl;
     return 0;
 }
 ```
@@ -145,7 +158,16 @@ int main() {
 
 ---
 
+## <Binary className="inline-block mr-2" /> 进阶：SOS DP (Sum Over Subsets)
+
+SOS DP 用于高效计算如下形式的卷积：
+$$F[S] = \sum_{T \subseteq S} A[T]$$
+通过分维处理，复杂度可以优化到 $O(N \cdot 2^N)$，而非朴素的 $O(3^N)$。
+
+---
+
 ## 练习推荐
-1. **[Luogu P2704] 炮兵阵地**：需要考虑前两行的状态。
-2. **[Luogu P1433] 吃奶酪**：经典的 TSP 问题。
-3. **[POJ 2411] Mondriaan's Dream**：位压缩处理垂直放置。
+1. **[Luogu P1879] 玉米地**：基础网格约束。
+2. **[Luogu P2704] 炮兵阵地**：三行状态压缩（通常记录前两行）。
+3. **[HDU 4616] Gift**：树上状态压缩（配合树形 DP）。
+4. **[CF 11D] A Simple Task**：状压 DP 统计简单环个数。

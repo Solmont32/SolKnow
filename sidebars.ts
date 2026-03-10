@@ -55,7 +55,7 @@ const sidebars: SidebarsConfig = {
       collapsed: true,
       label: '动态规划',
       link: {type: 'doc', id: 'dp/index'},
-      items: ['dp/linear-dp', 'dp/knapsack', 'dp/range-dp', 'dp/tree-dp', 'dp/state-compression-dp'],
+      items: ['dp/linear-dp', 'dp/knapsack', 'dp/range-dp', 'dp/tree-dp', 'dp/digit-dp', 'dp/state-compression-dp', 'dp/optimization'],
     },
     {
       type: 'category',
