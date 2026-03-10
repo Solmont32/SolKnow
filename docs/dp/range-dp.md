@@ -4,7 +4,7 @@ title: 区间 DP
 
 # 区间动态规划 (Range Dynamic Programming)
 
-区间动态规划（Range DP）通过合并小区间的最优解来构建大区间的最优解。它是解决**合并类问题**（如堆叠、石子合并、表达式求值等）的核心工具。
+区间动态规划主要解决**可以将一段区间拆分为更小的区间并进行合并**的问题。其核心特征是状态定义与区间两端点 $[i, j]$ 直接相关。
 
 ---
 
@@ -13,18 +13,19 @@ title: 区间 DP
 **状态定义**：
 $f[i][j]$ 表示区间 $[i, j]$ 内的最优解。
 
-**状态转移**：
-通过枚举中间断点 $k$，将区间拆分为 $[i, k]$ 与 $[k+1, j]$：
+**转移方程**：
+通常通过枚举区间内的“断点” $k$ 来进行转移：
 $$f[i][j] = \min_{i \le k < j} \{ f[i][k] + f[k+1][j] + \text{cost}(i, j) \}$$
 
-**计算顺序**：
-必须按照**区间长度由短到长**的顺序进行计算。
+**拓扑序（计算顺序）**：
+由于大区间依赖于小区间，必须按照**区间长度（Length）从小到大**进行递推。
+
 ```cpp
-for (int len = 1; len <= n; len++) { // 枚举长度
-    for (int i = 1; i + len - 1 <= n; i++) { // 枚举起点
-        int j = i + len - 1; // 终点
-        if (len == 1) { f[i][j] = 初值; continue; }
-        for (int k = i; k < j; k++) { // 枚举断点
+for (int len = 1; len <= n; len++) { // 1. 枚举区间长度
+    for (int i = 1; i + len - 1 <= n; i++) { // 2. 枚举起点
+        int j = i + len - 1; // 3. 确定终点
+        if (len == 1) { /* 初始化 */ continue; }
+        for (int k = i; k < j; k++) { // 4. 枚举断点
             f[i][j] = min(f[i][j], f[i][k] + f[k+1][j] + cost(i, j));
         }
     }
@@ -35,72 +36,67 @@ for (int len = 1; len <= n; len++) { // 枚举长度
 
 ## 1. 经典模型：石子合并 (Stone Merging)
 
-设有 $n$ 堆石子，每次只能合并相邻的两堆，代价为两堆石子的重量之和。
-$$f[i][j] = \min_{i \le k < j} \{ f[i][k] + f[k+1][j] \} + \sum_{x=i}^j w_x$$
-**优化**：区间和 $\sum w_x$ 可通过**前缀和** $O(1)$ 计算。
+设有 $n$ 堆石子排成一排，每次合并相邻两堆，代价为两堆重量之和。求合并为一堆的最小总代价。
+$$f[i][j] = \min_{i \le k < j} \{ f[i][k] + f[k+1][j] \} + \sum_{p=i}^j w_p$$
+**优化**：区间和 $\sum w_p$ 利用**前缀和**实现 $O(1)$ 查询。
 
 ---
 
-## 2. 经典模型：矩阵链乘法 (Matrix Chain Multiplication)
+## 2. 经典模型：矩阵链乘法
 
-给定 $n$ 个矩阵，求计算其连乘积所需的最小标量乘法次数。
+给定 $n$ 个矩阵，维度分别为 $p_0 \times p_1, p_1 \times p_2, \dots$。求计算乘积的最少标量乘法次数。
 $$f[i][j] = \min_{i \le k < j} \{ f[i][k] + f[k+1][j] + p_{i-1} \cdot p_k \cdot p_j \}$$
-其中 $p_{i-1} \times p_k$ 是左侧矩阵的维度，$p_k \times p_j$ 是右侧矩阵的维度。
 
 ---
 
-## 3. 经典模型：最长回文子序列 (LPS)
+## 高阶优化：四边形不等式 (Quadrangle Inequality)
 
-求一个字符串中最长的回文子序列（可以不连续）。
-$$
-f[i][j] = \begin{cases} 
-f[i+1][j-1] + 2 & \text{if } s[i] = s[j] \\
-\max(f[i+1][j], f[i][j-1]) & \text{if } s[i] \neq s[j]
-\end{cases}
-$$
+对于形如 $f[i][j] = \min \{ f[i][k] + f[k+1][j] + w(i, j) \}$ 的方程，若代价函数 $w(i, j)$ 满足：
+1. **区间包含单调性**：若 $[i', j'] \subseteq [i, j]$，则 $w(i', j') \le w(i, j)$。
+2. **四边形不等式**：对于 $a < b < c < d$，有 $w(a, c) + w(b, d) \le w(a, d) + w(b, c)$。
 
----
-
-## 高阶优化：四边形不等式
-
-对于形如 $f[i][j] = \min \{ f[i][k] + f[k+1][j] + w(i, j) \}$ 的方程，若 $w(i, j)$ 满足四边形不等式且具有单调性，其复杂度可从 $O(N^3)$ 降至 $O(N^2)$。
-核心技巧：记 $s[i][j]$ 为 $f[i][j]$ 的最优断点 $k$，则有 $s[i][j-1] \le s[i][j] \le s[i+1][j]$。
+则 $f$ 也满足四边形不等式，且其最优断点 $s[i][j]$ 满足：
+$$s[i][j-1] \le s[i][j] \le s[i+1][j]$$
+利用此性质，断点循环的开销在均摊意义下从 $O(N)$ 降至 $O(1)$，总复杂度降至 **$O(N^2)$**。
 
 ---
 
-## 配套练习与解答
+## 综合练习与强化
 
-### 练习 1：环形石子合并
-如果石子围成一个环，该如何处理？
+### 练习 1：环形区间处理
+如果序列是一个环（如环形石子合并），如何处理？
 
 <details>
-<summary>点击查看解题思路</summary>
+<summary>Check Solution</summary>
 
-**“破环成链”**常用技巧：
-将原序列复制一份接在后面，变为长度 $2N$ 的链，在该链上跑一遍 Range DP，最后统计所有长度为 $N$ 的区间的最大/最小值。
+**“破环成链”法**：
+将序列复制一份拼接在末尾，构造长度为 $2N$ 的链。在 $2N$ 链上跑 Range DP。
+最终结果为所有 $f[i][i+N-1]$（其中 $1 \le i \le N$）的最值。
 </details>
 
 ### 练习 2：能量项链 (NOIP 2006)
-给定一串能量珠，每颗珠子由头标记和尾标记组成。相邻珠子合并释放能量。
+涉及珠子合并，每颗珠子有头/尾标记。
 
 <details>
-<summary>点击查看解题思路</summary>
+<summary>Check Solution</summary>
 
-与矩阵链乘法类似，将珠子抽象为矩阵维度。注意环形处理。
+本质上是环形矩阵链乘法。定义 $f[i][j]$ 为合并 $[i, j]$ 区间珠子释放的最大能量。
+转移：$f[i][j] = \max \{ f[i][k] + f[k+1][j] + head[i] \cdot tail[k] \cdot tail[j] \}$。
 </details>
 
-### 练习 3：括号匹配 (Parentheses Matching)
-给定一个字符串，求最少添加多少个括号使其变为合法序列。
+### 练习 3：括号匹配 (Min Additions)
+使字符串变成合法的括号序列最少需要添加多少个括号？
 
 <details>
-<summary>点击查看解题思路</summary>
+<summary>Check Solution</summary>
 
-- `s[i], s[j]` 匹配时：`f[i][j] = f[i+1][j-1]`。
-- 否则通过断点 $k$ 枚举：`f[i][j] = min(f[i][k] + f[k+1][j])`。
+- 若 `s[i]` 与 `s[j]` 匹配：`f[i][j] = f[i+1][j-1]`。
+- 无论是否匹配：`f[i][j] = min(f[i][k] + f[k+1][j])`。
+- 基准：`f[i][i] = 1`。
 </details>
 
 ---
 
 ## 延伸挑战
-- [洛谷 P1880 石子合并](https://www.luogu.com.cn/problem/P1880)
-- [UVA 10003 切割木棒](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=12&page=show_problem&problem=944)
+- [洛谷 P1880 [NOI1995] 石子合并](https://www.luogu.com.cn/problem/P1880)
+- [HDU 3506 Monkey Party](http://acm.hdu.edu.cn/showproblem.php?pid=3506)（四边形不等式优化练习）
