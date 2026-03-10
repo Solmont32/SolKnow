@@ -102,12 +102,12 @@ export const graphData: GraphData = {
     },
     { id: 'mst', name: '最小生成树', val: 5, group: 2, type: 'doc', path: '/docs/graph/mst' },
     {
-      id: 'combinatorics',
-      name: '组合数学',
+      id: 'combinatorics-and-game-theory',
+      name: '组合计数与博弈论',
       val: 5,
       group: 1,
       type: 'doc',
-      path: '/docs/math/combinatorics',
+      path: '/docs/math/combinatorics-and-game-theory',
     },
     {
       id: 'graph-theory-math',
@@ -150,7 +150,7 @@ export const graphData: GraphData = {
 
     // Category to Docs
     { source: 'discrete', target: 'graph-theory-math', value: 1 },
-    { source: 'discrete', target: 'combinatorics', value: 1 },
+    { source: 'discrete', target: 'combinatorics-and-game-theory', value: 1 },
     { source: 'discrete', target: 'logic', value: 1 },
     { source: 'algebra', target: 'matrix-math', value: 1 },
     { source: 'graph', target: 'shortest-path', value: 1 },
@@ -161,7 +161,7 @@ export const graphData: GraphData = {
     // 核心交叉联结 (The "Structured Connections")
     { source: 'graph-theory-math', target: 'graph', value: 5 }, // 离散数学图论 -> 算法图论
     { source: 'matrix-math', target: 'matrix-pow', value: 5 }, // 矩阵论 -> 矩阵快速幂
-    { source: 'combinatorics', target: 'dp', value: 5 }, // 组合数学 -> 动态规划
+    { source: 'combinatorics-and-game-theory', target: 'dp', value: 5 }, // 组合数学 -> 动态规划
     { source: 'analysis', target: 'ai', value: 4 }, // 数学分析 -> AI
     { source: 'algebra', target: 'ai', value: 4 }, // 线性代数 -> AI
     { source: 'logic', target: 'cs', value: 4 }, // 数理逻辑 -> 计算机科学
