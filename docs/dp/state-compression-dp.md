@@ -18,10 +18,10 @@ import { Cpu, Layout, Layers, Lightbulb, Binary, Share2 } from 'lucide-react';
 | 操作 | 代码实现 | 数学含义 |
 | :--- | :--- | :--- |
 | **检查元素 $i$** | `(S >> i) & 1` | $i \in S$ |
-| **加入元素 $i$** | `S | (1 << i)` | $S \cup \{i\}$ |
-| **移除元素 $i$** | `S & ~(1 << i)` | $S \setminus \{i\}$ |
-| **切换元素 $i$** | `S ^ (1 << i)` | 对称差 $S \Delta \{i\}$ |
-| **全集** | `(1 << n) - 1` | $U = \{0, 1, \dots, n-1\}$ |
+| **加入元素 $i$** | `S \| (1 &lt;&lt; i)` | $S \cup \{i\}$ |
+| **移除元素 $i$** | `S & ~(1 &lt;&lt; i)` | $S \setminus \{i\}$ |
+| **切换元素 $i$** | `S ^ (1 &lt;&lt; i)` | 对称差 $S \Delta \{i\}$ |
+| **全集** | `(1 &lt;&lt; n) - 1` | $U = \{0, 1, \dots, n-1\}$ |
 | **空集判断** | `!S` | $S = \emptyset$ |
 
 ### 2. 高阶技巧
