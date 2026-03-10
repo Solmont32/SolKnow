@@ -1,268 +1,111 @@
 ---
-title: 最短路算法
+title: 最短路算法与状态建模
 ---
 
-import { Compass, Navigation, Zap, Layers, AlertCircle } from 'lucide-react';
+import { Compass, Navigation, Zap, Layers, AlertCircle, Share2 } from 'lucide-react';
 
-# <Compass className="inline-block mr-2 mb-1 text-blue-500" /> 最短路算法 (Shortest Path)
+# <Compass className="inline-block mr-2 mb-1 text-blue-600" /> 最短路算法 (Shortest Path)
 
-最短路问题是图论中最核心的模型之一：在带权图中，寻找从起点到终点的最小代价路径。
+最短路算法不仅用于求地理上的路径，更是**状态转移代价最小化**的底层引擎。在图论建模中，每一个点往往代表一个状态，每一条边则代表一次动作。
 
-## 一、 <Navigation className="inline-block mr-2 mb-1 text-blue-400" /> 问题建模
+## 一、 <Navigation className="inline-block mr-2 mb-1 text-blue-500" /> 问题分类与建模
 
-给定图 $G=(V,E)$，边权为 $w(u,v)$。
+1.  **单源最短路 (SSSP)**：从一点出发到所有点的最短路。
+2.  **全源最短路 (APSP)**：任意两点间的最短路。
+3.  **状态建模**：
+    -   **分层图最短路**：处理具有“限制次数”的特殊权力（如 $k$ 次免费边）。
+    -   **差分约束**：将变量间的代数不等式（$x_j - x_i \le w$）转化为边权关系。
 
-- 单源最短路：固定源点 $s$，求 $s$ 到所有点的最短距离。
-- 单终点最短路：等价于反图上的单源最短路。
-- 全源最短路：求任意两点间最短距离。
+---
 
-常见权值类型：
+## 二、 核心算法：Dijkstra (非负权单源)
 
-- 非负边：可用 Dijkstra。
-- 含负边但无负环：可用 Bellman-Ford / SPFA。
-- 点数较小、需全源：可用 Floyd-Warshall。
+Dijkstra 是一种基于**贪心与松弛**的算法。它的核心前提是边权非负。
 
-## 二、Dijkstra（非负权单源）
-
-### 1. 核心思想
-
-每次从“尚未确定最短路”的点里，取当前 `dist` 最小的点 $u$，将其最短距离永久确定，再用 $u$ 松弛出边。
-
-### 2. 正确性要点
-
-边权非负时，未确定点中最小 `dist[u]` 不可能再被更短路径改写。
-
-### 3. 复杂度
-
-- 邻接表 + 小根堆：$O((n+m)\log n)$。
-- 稠密图（邻接矩阵朴素版）：$O(n^2)$。
-
-### 4. 模板代码（堆优化）
+-   **堆优化复杂度**：$O((n+m) \log n)$。
 
 ```cpp
-vector<long long> dijkstra(int n, int s, const vector<vector<pair<int,int>>>& g) {
-    const long long INF = (1LL << 62);
+vector<long long> dijkstra(int n, int s, const vector<vector<pair<int, int>>>& g) {
+    const long long INF = 1e18;
     vector<long long> dist(n + 1, INF);
-    priority_queue<pair<long long,int>, vector<pair<long long,int>>, greater<pair<long long,int>>> pq;
-
-    dist[s] = 0;
-    pq.push({0, s});
-
+    priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<>> pq;
+    dist[s] = 0; pq.push({0, s});
     while (!pq.empty()) {
-        auto [du, u] = pq.top();
-        pq.pop();
-        if (du != dist[u]) continue; // 丢弃过期堆节点
-
-        for (auto [v, w] : g[u]) {
-            if (dist[v] > du + w) {
-                dist[v] = du + w;
+        auto [d, u] = pq.top(); pq.pop();
+        if (d > dist[u]) continue;
+        for (auto& [v, w] : g[u])
+            if (dist[v] > d + w) {
+                dist[v] = d + w;
                 pq.push({dist[v], v});
             }
-        }
     }
     return dist;
 }
 ```
 
-### 5. 例题 A（基础计算）
+---
 
-边：$1\to2(2), 1\to3(5), 2\to3(1), 2\to4(4), 3\to4(1)$。
+## 三、 负权图处理：Bellman-Ford / SPFA
 
-从 1 出发：
+当图中包含负权边时，Dijkstra 失效。需使用基于多次全图松弛的算法。
 
-- `dist[2]=2`
-- `dist[3]=min(5,2+1)=3`
-- `dist[4]=min(2+4,3+1)=4`
+-   **负环判定**：若 $n-1$ 轮松弛后仍能更新，则存在从起点可达的负环。
+-   **SPFA 警示**：最坏情况下 SPFA 退化为 $O(nm)$，在网格图或特定构造图上极易被卡。
 
-答案：$d(1,4)=4$。
+---
 
-## 三、Bellman-Ford（可含负边）
+## 四、 <Layers className="inline-block mr-2 mb-1 text-purple-500" /> 全源最短路：Floyd-Warshall
 
-### 1. 核心思想
+Floyd 算法是一种**动态规划**。
+-   **状态**：`dp[k][i][j]` 表示中间点只允许使用 $1 \dots k$ 时，$i$ 到 $j$ 的最短路。
+-   **转移**：`dp[i][j] = min(dp[i][j], dp[i][k] + dp[k][j])`。
+-   **复杂度**：$O(n^3)$。
 
-最短路最多包含 $n-1$ 条边；对全部边做 $n-1$ 轮松弛即可。
+---
 
-### 2. 负环判定
+## 五 <Zap className="inline-block mr-2 mb-1 text-amber-500" /> 建模实战：分层图
 
-第 $n$ 轮若仍可松弛，则存在从源点可达的负环。
+**场景**：有 $n$ 个城市，$m$ 条带权路。你拥有 $k$ 次将任意一条路费用减半的特权。求从起点到终点的最小花费。
 
-### 3. 复杂度
+**方法**：
+1.  建立 $k+1$ 层拓扑结构相同的图。
+2.  层内连接普通边 $(u, v, w)$。
+3.  层间（从 $i$ 层到 $i+1$ 层）连接特殊边 $(u, v, w/2)$。
+4.  答案为 $\min_{0 \le i \le k} \{ dist[i][T] \}$。
 
-$O(nm)$。
+---
 
-### 4. 例题 B（负边无负环）
+## 六、 配套练习（答案折叠）
 
-边：$1\to2(4), 1\to3(5), 2\to3(-2), 3\to4(3)$。
-
-从 1 到 4 的最短路：$1\to2\to3\to4$，距离 $4-2+3=5$。
-
-## 四、SPFA（队列优化的 Bellman-Ford）
-
-SPFA 将“本轮可能继续改进他人”的点放入队列，在随机数据上常较快，但最坏仍可退化到 $O(nm)$。
-
-竞赛建议：
-
-- 负边图且数据范围较大时，优先考虑 Bellman-Ford 的可控上界或题目特定性质。
-- 若使用 SPFA，建议配合入队次数判负环（某点入队次数 $\ge n$）。
-
-## 五、Floyd-Warshall（全源）
-
-### 1. 状态定义
-
-`dist[i][j]` 表示当前允许若干中间点时，$i$ 到 $j$ 的最短路。
-
-### 2. 转移
-
-$$
-
-\text{dist}[i][j] = \min(\text{dist}[i][j],\ \text{dist}[i][k] + \text{dist}[k][j])
-
-
-$$
-
-### 3. 复杂度
-
-$O(n^3)$，适合 $n\le 400$ 左右（视常数与时限）。
-
-### 4. 例题 C（全源查询）
-
-若图有大量“任意两点最短路”查询，而点数不大，Floyd 一次预处理后每次查询 $O(1)$ 返回。
-
-## 六、算法选型速查
-
-| 场景                     | 推荐算法     |
-| :----------------------- | :----------- |
-| 单源 + 非负边            | Dijkstra     |
-| 单源 + 有负边 + 需判负环 | Bellman-Ford |
-| 全源 + 点数小            | Floyd        |
-| DAG 最短路               | 拓扑序 DP    |
-
-## 九、 分层图最短路 (Layered Graph)
-
-### 1. 核心思想
-**分层图**是对图论建模的升维。当题目中存在“可以进行 $k$ 次特殊操作（如免费、降价等）”时，传统的单层图无法记录当前消耗的特殊次数状态。
-我们建立 $k+1$ 层拓扑结构相同的图，第 $i$ 层表示“已经使用了 $i$ 次特殊机会”的状态。
-
-### 2. 状态定义
-- $dist[i][u]$：到达点 $u$ 且已使用了 $i$ 次特殊权力的最短距离。
-- **空间复杂度**：$O(k \cdot n + k \cdot m)$。
-- **算法执行**：在扩容后的图上跑普通的 Dijkstra。
-
-### 3. 建图规律
-- **层内边**：在第 $i$ 层内部，按原图连边 $(u, v, w)$。
-- **跨层边**：从第 $i$ 层点 $u$ 连向第 $i+1$ 层点 $v$，权值为 $0$（免费）或特定优惠值，表示执行了一次特殊操作。
-- **终点处理**：答案通常是 $\min_{0 \le i \le k} \{ dist[i][T] \}$。
-
-### 4. 经典例题：[JLOI2011] 飞行路线
-**题意**：$n$ 个点 $m$ 条边，可以免费乘坐 $k$ 次航线，求 $S$ 到 $T$ 最小花费。
-**建图实现**：
-```cpp
-for (int i = 0; i < k; ++i) {
-    add(i*n + u, i*n + v, w);      // 层内普通边
-    add(i*n + u, (i+1)*n + v, 0);  // 跨层免费边
-}
-```
-
-## 十、 竞赛高频坑点
-
-1. 把 Dijkstra 用在负边图上。
-2. `INF` 过小导致溢出或误判可达。
-3. 堆优化 Dijkstra 忘记丢弃过期状态。
-4. Floyd 未先判 `dist[i][k]`、`dist[k][j]` 是否为 `INF` 就直接相加。
-
-## 十一、 综合例题（教材风格）
-
-### 例题 D：路径重构
-
-在 Dijkstra/Bellman-Ford 松弛时维护 `pre[v]=u`，终点回溯可得具体路径。
-
-### 例题 E：边数限制最短路
-
-若限制“最多经过 $K$ 条边”，可用 `dp[k][v]`（分层 Bellman-Ford）处理，避免普通最短路误解。
-
-### 例题 F：多源最短路
-
-可建立超级源点 $S$，向所有源点连 0 权边，再跑单源最短路。
-
-## 十二、 配套练习（答案折叠）
-
-
-分层题库：[`算法竞赛练习：最短路专题`](/docs/exercises/cs/algorithm-shortest-path)
-
-### 练习 1（基础）
-
-为什么 Dijkstra 要求边权非负？请给出一个负边反例。
+### 练习 1（选型）
+若图有 500 个点，需要频繁查询任意两点间的最短路，应使用哪种算法？
 
 <details>
-
 <summary>点击查看过程与答案</summary>
 
-反例：$1\to2(2), 1\to3(5), 3\to2(-10)$。
-
-Dijkstra 可能先确定 `dist[2]=2`，但真实最短路为 $1\to3\to2=-5$。
-
-**答案**：存在负边时，“当前最小 dist 不再可改写”的关键性质失效。
+**分析**：$n=500$ 时，$n^3 = 1.25 \times 10^8$，勉强可以通过，且 Floyd 预处理一次后查询仅需 $O(1)$。
+**答案**：Floyd-Warshall。
 
 </details>
 
-### 练习 2（基础）
-
-Floyd 适合什么类型的数据规模与查询模式？
+### 练习 2（计算）
+点 1 到点 2 的边权为 5，点 1 到点 3 的边权为 10，点 3 到点 2 的边权为 -10。Dijkstra 能否算出 1 到 2 的正确最短路？
 
 <details>
-
 <summary>点击查看过程与答案</summary>
 
-Floyd 预处理 $O(n^3)$，查询 $O(1)$。适用于点数较小但查询量很大的场景。
-
-**答案**：`n` 小、全源多次查询时优先 Floyd。
+**分析**：Dijkstra 第一次取出点 2 确定 $dist[2]=5$ 后便不再更新点 2。但实际最短路为 $1 \to 3 \to 2 = 0$。
+**答案**：不能。负边权破坏了 Dijkstra 的贪心正确性。
 
 </details>
 
-### 练习 3（提高）
-
-如何在 Bellman-Ford 中检测负环？
-
-<details>
-
-<summary>点击查看过程与答案</summary>
-
-执行 $n-1$ 轮松弛后，再做第 $n$ 轮：若还有边可松弛，则存在源点可达负环。
-
-**答案**：第 $n$ 轮仍可松弛即判负环。
-
-</details>
-
-### 练习 4（提高）
-
-在堆优化 Dijkstra 中，为什么要写 `if (du != dist[u]) continue;`？
+### 练习 3（进阶）
+如何在 Dijkstra 中记录并还原出最短路径的具体节点序列？
 
 <details>
-
 <summary>点击查看过程与答案</summary>
 
-同一节点可能多次入堆，旧键值会滞留在堆中。若不跳过过期状态，会重复扩展，增加复杂度并引入错误风险。
-
-**答案**：用于过滤过期堆节点，保证以最新最短距离扩展。
-
-</details>
-
-### 练习 5（挑战）
-
-有向图边：$1\to2(3),2\to3(4),1\to3(10),3\to4(2),2\to4(8)$，求从 1 到 4 的最短路与路径。
-
-<details>
-
-<summary>点击查看过程与答案</summary>
-
-候选路径：
-
-- $1\to3\to4 = 12$
-- $1\to2\to4 = 11$
-- $1\to2\to3\to4 = 3+4+2=9$
-
-最短为 9，路径为 $1\to2\to3\to4$。
-
-**答案**：最短距离 9，最短路径 `1-2-3-4`。
+**分析**：在每次成功松弛 `dist[v] > dist[u] + w` 时，记录 `pre[v] = u`。
+**答案**：使用 `pre` 数组记录前驱节点，最后从终点逆序回溯即可。
 
 </details>
