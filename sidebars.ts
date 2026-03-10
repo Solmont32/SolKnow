@@ -47,7 +47,7 @@ const sidebars: SidebarsConfig = {
       collapsed: true,
       label: '图论',
       link: {type: 'doc', id: 'graph/index'},
-      items: ['graph/representation', 'graph/traversal', 'graph/shortest-path', 'graph/mst', 'graph/topo-sort', 'graph/tarjan', 'graph/network-flow'],
+      items: ['graph/representation', 'graph/traversal', 'graph/shortest-path', 'graph/mst', 'graph/topo-sort', 'graph/tarjan', 'graph/2-sat', 'graph/network-flow', 'graph/bipartite-matching'],
     },
     {
       type: 'category',

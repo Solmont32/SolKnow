@@ -1,132 +1,130 @@
 ---
-title: 网络流基础
+title: 网络流进阶
 ---
 
-import { GitMerge, Zap, Activity, ShieldCheck } from 'lucide-react';
+import { GitMerge, Zap, Activity, ShieldCheck, Layers, Landmark } from 'lucide-react';
 
-# <GitMerge className="inline-block mr-2 mb-1 text-blue-500" /> 网络流基础 (Network Flow)
+# <GitMerge className="inline-block mr-2 mb-1 text-blue-500" /> 网络流进阶 (Advanced Network Flow)
 
-网络流是图论中一类具有实际物理背景的模型，广泛应用于资源分配、匹配问题和路径规划。
+本篇在基础最大流之上，探讨复杂的网络建模技巧与最小费用最大流算法。
 
-## 一、 <Activity className="inline-block mr-2 mb-1 text-blue-400" /> 基本概念
+## 一、 <Layers className="inline-block mr-2 mb-1 text-blue-400" /> 建模技巧：点边转化
 
-### 1. 网络与流
-一个**网络** $G=(V, E)$ 是一个有向图，包含：
-- **源点 (Source)** $S$：产生流的点。
-- **汇点 (Sink)** $T$：消耗流的点。
-- **容量 (Capacity)** $c(u, v)$：边 $(u, v)$ 上允许通过的最大流量。
-- **流量 (Flow)** $f(u, v)$：实际通过该边的流量。
+### 1. 点权转化为边权 (Node Splitting)
+**场景**：每个点 $u$ 有通过能力的限制 $cap(u)$。
+**做法**：将点 $u$ 拆分为入点 $u_{in}$ 和出点 $u_{out}$。
+-   所有进入 $u$ 的边连向 $u_{in}$。
+-   所有从 $u$ 出发的边连向 $u_{out}$。
+-   在 $u_{in}$ 和 $u_{out}$ 之间连一条容量为 $cap(u)$ 的有向边。
 
-### 2. 三大性质
-- **容量限制**: $0 \le f(u, v) \le c(u, v)$。
-- **斜对称性**: $f(u, v) = -f(v, u)$。
-- **流量守恒**: 除 $S, T$ 外，任意点的流入量等于流出量。
+### 2. 最大权闭合子图 (Project Selection)
+**场景**：有若干项目，选项目 $i$ 获益 $w_i$（可正可负），但项目间有依赖关系：选 $i$ 必须选 $j$。
+**建模**：
+1.  建立源点 $S$ 和汇点 $T$。
+2.  若 $w_i > 0$，连边 $(S, i)$，容量为 $w_i$。
+3.  若 $w_i < 0$，连边 $(i, T)$，容量为 $-w_i$。
+4.  若选 $i$ 依赖 $j$，连边 $(i, j)$，容量为 $\infty$。
+**结论**：**最大收益 = 所有正收益之和 - 最小割容量**。
 
-## 二、 残量网络 (Residual Network)
+---
 
-### 1. 定义
-**残量网络** $G_f$ 描述了当前网络中“还能推多少流”的状态。
-- 若 $f(u, v) < c(u, v)$，则存在一条边 $(u, v)$，容量为 $c(u, v) - f(u, v)$。
-- 若 $f(u, v) > 0$，则存在一条反向边 $(v, u)$，容量为 $f(u, v)$。
+## 二、 <Landmark className="inline-block mr-2 mb-1 text-amber-500" /> 最小费用最大流 (MCMF)
 
-### 2. 核心作用
-**反向边**是网络流算法实现“撤销”操作的核心。如果没有反向边，贪心算法一旦走错路径将无法修正。
+当网络中的边除了容量 $c$ 外，还有单位流量费用 $cost$ 时，我们需要在保证流量最大的前提下，使总费用 $\sum f(i, j) \cdot cost(i, j)$ 最小。
 
-## 三、 最大流算法：Dinic
+### 1. 算法：SPFA 增广
+核心思想：将 Dinic 中的 BFS 替换为 **SPFA**，寻找关于“单位费用”的最短路作为增广路。
+-   **反向边处理**：反向边的容量为 0，费用为 $-cost$。
 
-Dinic 算法是目前竞赛中最主流的最大流算法，通过“分层图”和“当前弧优化”大幅提升效率。
-
-### 1. 算法步骤
-1. **BFS 分层**：在残量网络上计算每个点到源点的距离 $d[u]$。若 $T$ 不可达，结束。
-2. **DFS 增广**：在分层图上寻找增广路。仅当 $d[v] = d[u] + 1$ 时才向 $v$ 推流。
-3. **重复执行**。
-
-### 2. 优化手段
-- **当前弧优化**：记录 `cur[u]` 表示 $u$ 点目前推到了哪条出边，避免重复扫描已满或死路的出边。
-
-### 3. 代码实现 (C++ 模板)
+### 2. C++ 实现模板
 ```cpp
-struct Edge {
-    int to, nxt;
-    long long cap;
-} e[M];
-int head[N], d[N], cur[N], tot = 1;
+struct MCMF {
+    struct Edge { int to, nxt, cap, flow, cost; } e[M];
+    int head[N], dist[N], pre[N], edge[N], tot = 1;
+    bool in_q[N];
 
-void add(int u, int v, long long w) {
-    e[++tot] = {v, head[u], w}; head[u] = tot;
-    e[++tot] = {u, head[v], 0}; head[v] = tot;
-}
+    void add(int u, int v, int c, int w) {
+        e[++tot] = {v, head[u], c, 0, w}; head[u] = tot;
+        e[++tot] = {u, head[v], 0, 0, -w}; head[v] = tot;
+    }
 
-bool bfs() {
-    memset(d, 0, sizeof(d));
-    queue<int> q; q.push(S); d[S] = 1; cur[S] = head[S];
-    while (!q.empty()) {
-        int u = q.front(); q.pop();
-        for (int i = head[u]; i; i = e[i].nxt) {
-            if (e[i].cap && !d[e[i].to]) {
-                d[e[i].to] = d[u] + 1;
-                cur[e[i].to] = head[e[i].to];
-                q.push(e[i].to);
-                if (e[i].to == T) return true;
+    bool spfa(int s, int t, int &flow, int &cost) {
+        memset(dist, 0x3f, sizeof(dist));
+        memset(in_q, 0, sizeof(in_q));
+        queue<int> q; q.push(s); dist[s] = 0; in_q[s] = 1;
+        pre[t] = -1;
+        while (!q.empty()) {
+            int u = q.front(); q.pop(); in_q[u] = 0;
+            for (int i = head[u]; i; i = e[i].nxt) {
+                if (e[i].cap > e[i].flow && dist[e[i].to] > dist[u] + e[i].cost) {
+                    dist[e[i].to] = dist[u] + e[i].cost;
+                    pre[e[i].to] = u; edge[e[i].to] = i;
+                    if (!in_q[e[i].to]) { q.push(e[i].to); in_q[e[i].to] = 1; }
+                }
             }
         }
-    }
-    return false;
-}
-
-long long dfs(int u, long long flow) {
-    if (u == T || !flow) return flow;
-    long long res = 0;
-    for (int &i = cur[u]; i; i = e[i].nxt) {
-        int v = e[i].to;
-        if (d[v] == d[u] + 1 && e[i].cap) {
-            long long k = dfs(v, min(flow, e[i].cap));
-            if (!k) d[v] = 0; // 优化：该点已无法增广
-            e[i].cap -= k;
-            e[i ^ 1].cap += k;
-            res += k; flow -= k;
-            if (!flow) break;
+        if (pre[t] == -1) return false;
+        int d = 1e9;
+        for (int i = t; i != s; i = pre[i]) d = min(d, e[edge[i]].cap - e[edge[i]].flow);
+        flow += d; cost += d * dist[t];
+        for (int i = t; i != s; i = pre[i]) {
+            e[edge[i]].flow += d;
+            e[edge[i] ^ 1].flow -= d;
         }
+        return true;
     }
-    return res;
-}
+
+    pair<int, int> solve(int s, int t) {
+        int flow = 0, cost = 0;
+        while (spfa(s, t, flow, cost));
+        return {flow, cost};
+    }
+};
 ```
-
-## 四、 最小割 (Minimum Cut)
-
-### 1. 最大流最小割定理
-在一个网络中，最大流的流量等于最小割的容量。
-- **割**：将点集切分为 $S \in A, T \in B$ 两部分。
-- **容量**：所有从 $A$ 指向 $B$ 的边的容量之和。
 
 ---
 
-## 配套练习（答案折叠）
+## 三、 综合建模案例：有向无环图 (DAG) 最小路径覆盖
 
-### 练习 1（理论）
-为什么反向边的初始容量通常设为 0？
+**问题**：给定一个 DAG，求最少需要多少条路径才能覆盖所有顶点。
+**模型转化**：
+1.  拆点：将每个点 $u$ 拆分为 $u_{in}$ 和 $u_{out}$。
+2.  连边：原图边 $(u, v)$ 变为网络中的 $(u_{out}, v_{in})$，容量为 1。
+3.  源汇：$S \to u_{out}$，容量 1；$v_{in} \to T$，容量 1。
+**结论**：**最小路径数 = 总顶点数 - 二分图最大匹配数**。
+
+---
+
+## 四、 配套练习（答案折叠）
+
+### 练习 1（建模）
+如何求一个图的“最大权独立集”？（已知该图是二分图）
 
 <details>
 <summary>点击查看过程与答案</summary>
 
-反向边代表的是“已经推送流量的撤销权力”。
-在初始状态下，没有任何流量被推送，因此没有可以撤销的量，容量为 0。
+**分析**：
+在二分图中：
+1. 最大权独立集 = 所有权值之和 - 最小权顶点覆盖。
+2. 最小权顶点覆盖可以通过最小割求解。
+**建模**：
+- $S \to U_i$，容量为点权。
+- $W_j \to T$，容量为点权。
+- 若 $U_i, W_j$ 有边，连 $U_i \to W_j$ 容量 $\infty$。
+最大收益 = 总权值 - 最小割。
 
-**答案**：因为初始状态没有流量可以被撤销。
+**答案**：转化为二分图的最小割问题，利用“总权值 - 最小割”求解。
 
 </details>
 
-### 练习 2（计算）
-给出一个简单的 $S \to A(5), S \to B(3), A \to T(2), B \to T(4), A \to B(1)$ 的网络，求其最大流。
+### 练习 2（算法应用）
+在 MCMF 中，如果存在负权环，SPFA 会发生什么？
 
 <details>
 <summary>点击查看过程与答案</summary>
 
-1. 路径 $S \to A \to T$：增广 2，剩余 $S \to A(3), A \to T(0)$。
-2. 路径 $S \to B \to T$：增广 3，剩余 $S \to B(0), B \to T(1)$。
-3. 路径 $S \to A \to B \to T$：增广 1，剩余 $S \to A(2), B \to T(0)$。
-总流量：$2+3+1 = 6$。
+**分析**：SPFA 会进入死循环，无法得出最短路。在普通的网络流问题中，由于流量限制，负权环通常需要先进行消圈处理（Cycle Canceling）或利用初始流消除负权边。
 
-**答案**：最大流为 6。
+**答案**：SPFA 无法终止，算法失效。
 
 </details>

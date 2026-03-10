@@ -35,10 +35,11 @@ import { Network, GitBranch, Map, Share2, Target, Zap } from 'lucide-react';
 -   [**最短路算法 (Shortest Path)**](shortest-path)：Dijkstra, Bellman-Ford, SPFA, Floyd 及分层图应用。
 -   [**最小生成树 (MST)**](mst)：Kruskal, Prim 算法及切分定理。
 
-### 3. 连通性分析 (Connectivity)
+### 3. 连通性分析与进阶模型 (Connectivity & Advanced)
 -   [**强连通分量 (SCC)**](tarjan)：有向图中的 Tarjan 算法与缩点技巧。
--   [**割点与桥 (Bridges/Cut-points)**](tarjan#割点与桥)：无向图连通性分析。
--   [**网络流基础 (Network Flow)**](network-flow)：最大流、最小割及其扩展模型。
+-   [**2-SAT 问题**](2-sat)：利用强连通分量解决逻辑约束满足问题。
+-   [**网络流进阶 (Network Flow)**](network-flow)：最大流、最小割、最小费用最大流及其建模技巧。
+-   [**二分图匹配 (Matching)**](bipartite-matching)：匈牙利算法、Konig 定理及其在分配问题中的应用。
 
 ---
 
