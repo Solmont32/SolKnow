@@ -1,12 +1,12 @@
 ---
-title: 数论基础与进阶：从欧几里得算法、筛法到莫比乌斯反演与杜教筛
+title: 数论：从整除、素数筛到同余系与积性函数求和
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 import { motion } from 'framer-motion';
-import { Hash, Lock, Sigma, Infinity, Code2, Zap, Layers, Binary, Cpu, FunctionSquare } from 'lucide-react';
+import { Hash, Lock, Sigma, Infinity, Code2, Zap, Layers, Binary, Cpu, FunctionSquare, ShieldCheck, Scale } from 'lucide-react';
 
-# 数论基础与进阶 (Number Theory: Basic to Advanced)
+# 数论基础与进阶 (Number Theory)
 
 <motion.div
   initial={{ opacity: 0, y: 20 }}
@@ -14,58 +14,58 @@ import { Hash, Lock, Sigma, Infinity, Code2, Zap, Layers, Binary, Cpu, FunctionS
   transition={{ duration: 0.5 }}
   className="text-gray-600 dark:text-gray-400 mb-8"
 >
-本篇文档系统化构建了从基础同余理论、线性筛法，到积性函数求和、数论变换（NTT）与复杂同余方程组的工业级知识体系，旨在为计算机科学与数学竞赛选手提供严谨的理论支撑与工程实现。
+本篇文档系统化构建了从整除理论、素数筛法，到积性函数、数论变换（NTT）与复杂同余方程组的工业级知识体系。数论作为代数学的分支，其核心在于研究整数的结构及其性质。
 </motion.div>
 
 ---
 
-## 1. 数论基石：整除与欧几里得算法
+## 1. 整除理论与算术基本定理
 
-### 1.1 欧几里得算法 (GCD)
-**定理**：对于任意不全为 0 的整数 $a, b$，有 $\gcd(a, b) = \gcd(b, a \pmod b)$。
-**复杂度**：$O(\log(\min(a, b)))$。
+### 1.1 整除 (Divisibility)
+**定义**：对于整数 $a, b$ ($a \neq 0$)，若存在整数 $k$ 使得 $b = ak$，则称 $a$ 整除 $b$，记作 $a \mid b$。
 
-### 1.2 扩展欧几里得算法 (EXGCD)
-用于求解形如 $ax + by = \gcd(a, b)$ 的线性丢番图方程。
+**性质**：
+1. **传递性**：若 $a \mid b$ 且 $b \mid c$，则 $a \mid c$。
+2. **线性组合性**：若 $a \mid b$ 且 $a \mid c$，则对于任意整数 $u, v$，有 $a \mid (ub + vc)$。
 
-```cpp
-long long exgcd(long long a, long long b, long long &x, long long &y) {
-    if (b == 0) {
-        x = 1; y = 0;
-        return a;
-    }
-    long long d = exgcd(b, a % b, y, x);
-    y -= (a / b) * x;
-    return d;
-}
-```
+### 1.2 最大公约数 (GCD) 与欧几里得算法
+**定理 (Euclidean Algorithm)**：$\gcd(a, b) = \gcd(b, a \pmod b)$。
+**证明**：
+设 $a = kb + r$，其中 $r = a \pmod b$。
+若 $d \mid a$ 且 $d \mid b$，则 $d \mid (a - kb)$，即 $d \mid r$。
+若 $d \mid b$ 且 $d \mid r$，则 $d \mid (kb + r)$，即 $d \mid a$。
+因此 $(a, b)$ 与 $(b, r)$ 的公因子集合完全相同，最大公约数亦相同。
+
+### 1.3 算术基本定理 (Fundamental Theorem of Arithmetic)
+**定理**：任一大于 1 的自然数 $n$ 都可以唯一地分解为有限个素数的乘积：
+$$n = p_1^{a_1} p_2^{a_2} \dots p_k^{a_k} \quad (p_1 < p_2 < \dots < p_k)$$
 
 ---
 
-## 2. 素数与筛法系统
+## 2. 素数分布与筛法系统
 
-### 2.1 线性筛 (Euler Sieve)
-**核心思想**：确保每个合数仅被其 **最小质因子** 筛去。
-通过线性筛，我们可以在 $O(n)$ 内预处理出所有的积性函数，如 $\mu(n), \phi(n), d(n)$。
+### 2.1 素数分布
+**素数定理 (PNT)**：当 $x \to \infty$ 时，不大于 $x$ 的素数个数 $\pi(x) \approx \frac{x}{\ln x}$。
+
+### 2.2 线性筛 (Euler Sieve)
+**核心原理**：每个合数仅由其 **最小质因子** 筛去一次。
+线性筛不仅能找出素数，还可以在 $O(n)$ 时间内预处理出所有 **积性函数**。
 
 <details>
-<summary>C++ 线性筛全量积性函数模板</summary>
+<summary>C++ 线性筛全量积性函数模板 (μ, φ, d)</summary>
 
 ```cpp
 const int MAXN = 1e6 + 5;
 int primes[MAXN], cnt;
 bool vis[MAXN];
-int mu[MAXN], phi[MAXN], d[MAXN], num[MAXN]; // num: 最小质因子的幂次
+int mu[MAXN], phi[MAXN], d[MAXN], num[MAXN];
 
 void sieve(int n) {
     mu[1] = phi[1] = d[1] = 1;
     for (int i = 2; i <= n; i++) {
         if (!vis[i]) {
             primes[++cnt] = i;
-            mu[i] = -1;
-            phi[i] = i - 1;
-            d[i] = 2;
-            num[i] = 1;
+            mu[i] = -1; phi[i] = i - 1; d[i] = 2; num[i] = 1;
         }
         for (int j = 1; j <= cnt && i * primes[j] <= n; j++) {
             vis[i * primes[j]] = true;
@@ -88,193 +88,80 @@ void sieve(int n) {
 
 ---
 
-## 3. 同余方程组 (Systems of Congruence Equations)
+## 3. 同余系与模运算
 
-### 3.1 中国剩余定理 (CRT)
-求解方程组 $x \equiv a_i \pmod{m_i}$，其中 $m_i$ 两两互质。
-令 $M = \prod m_i, M_i = M/m_i, t_i = M_i^{-1} \pmod{m_i}$。
-则通解为 $x = \sum a_i M_i t_i \pmod M$。
+### 3.1 欧拉函数 (Euler's Totient Function)
+$\phi(n)$ 表示小于等于 $n$ 且与 $n$ 互质的正整数个数。
+**公式**：$\phi(n) = n \prod_{i=1}^k (1 - \frac{1}{p_i})$。
 
-### 3.2 扩展中国剩余定理 (EXCRT)
-当 $m_i$ 不一定互质时，使用两两合并的方法。
-考虑两个方程 $x \equiv r_1 \pmod{m_1}$ 和 $x \equiv r_2 \pmod{m_2}$，可转化为 $k_1 m_1 - k_2 m_2 = r_2 - r_1$，利用 EXGCD 求解。
+### 3.2 欧拉定理与费马小定理
+- **欧拉定理**：若 $\gcd(a, n) = 1$，则 $a^{\phi(n)} \equiv 1 \pmod n$。
+- **费马小定理**：若 $p$ 为质数，则 $a^{p-1} \equiv 1 \pmod p$ (对于 $a$ 不是 $p$ 的倍数)。
 
----
-
-## 4. 进阶同余理论 (Lucas & BSGS)
-
-### 4.1 卢卡斯定理 (Lucas Theorem)
-对于质数 $p$：
-$$\binom{n}{m} \equiv \binom{n/p}{m/p} \cdot \binom{n \pmod p}{m \pmod p} \pmod p$$
-
-### 4.2 BSGS 与扩展 BSGS
-求解 $a^x \equiv b \pmod p$。
-- **BSGS**：要求 $\gcd(a, p) = 1$，分块 $O(\sqrt{p})$。
-- **ExBSGS**：通过不断除去 $d = \gcd(a, p)$ 降幂，直到互质。
+### 3.3 乘法逆元 (Multiplicative Inverse)
+若 $ax \equiv 1 \pmod m$，则称 $x$ 为 $a$ 在模 $m$ 意义下的逆元。
+- **求法 1 (EXGCD)**：$ax + my = 1$。
+- **求法 2 (费马小定理)**：$x = a^{m-2} \pmod m$ (仅限 $m$ 为质数)。
 
 ---
 
-## 5. 积性函数与数论求和
+## 4. 积性函数与杜教筛
 
-### 5.1 狄利克雷卷积 (Dirichlet Convolution)
+### 4.1 狄利克雷卷积 (Dirichlet Convolution)
 $$(f * g)(n) = \sum_{d \mid n} f(d)g\left(\frac{n}{d}\right)$$
-- **重要恒等式**：
-  - $\mu * I = \epsilon$
-  - $\phi * I = Id$
-  - $\mu * Id = \phi$
+- $\mu * I = \epsilon$ (莫比乌斯反演的基础)
+- $\phi * I = Id$
 
-### 5.2 杜教筛 (Du-Sieve)
-对于积性函数 $f$，求 $S(n) = \sum_{i=1}^n f(i)$。
-若能找到 $g$ 使得 $(f * g)$ 和 $g$ 的前缀和易求，则：
+### 4.2 杜教筛核心
+求 $S(n) = \sum_{i=1}^n f(i)$。找到 $g$ 使得 $(f*g)$ 的前缀和易求：
 $$g(1)S(n) = \sum_{i=1}^n (f * g)(i) - \sum_{d=2}^n g(d) S(\lfloor \frac{n}{d} \rfloor)$$
 
 ---
 
-## 6. 数论变换：快速数论变换 (NTT)
+## 5. 综合练习与解答 (Folded Examples)
 
-NTT 是在模数域下的快速傅里叶变换（FFT）。它利用 **原根 (Primitive Root)** 替代复数域的单位根。
-
-### 6.1 NTT 核心属性
-- **模数要求**：必须是 $P = k \cdot 2^n + 1$ 形式的质数（如 998244353）。
-- **原根映射**：$\omega_n^1 \equiv g^{(P-1)/n} \pmod P$。
+### 例题 1：五指山 (EXGCD 求解线性同余方程)
+大圣在 $n$ 个点的环上，步长为 $d$，从 $x$ 到 $y$，最少跳几次？即求解 $x + kd \equiv y \pmod n$。
 
 <details>
-<summary>C++ NTT 工业级实现</summary>
+<summary>Check Solution (C++)</summary>
 
 ```cpp
-const int mod = 998244353, G = 3, Gi = 332748118;
-void ntt(int *a, int n, int type) {
-    for (int i = 0; i < n; i++) if (i < rev[i]) swap(a[i], a[rev[i]]);
-    for (int mid = 1; mid < n; mid <<= 1) {
-        int Wn = power(type == 1 ? G : Gi, (mod - 1) / (mid << 1));
-        for (int j = 0; j < n; j += (mid << 1)) {
-            int w = 1;
-            for (int k = 0; k < mid; k++, w = 1ll * w * Wn % mod) {
-                int x = a[j + k], y = 1ll * w * a[j + k + mid] % mod;
-                a[j + k] = (x + y) % mod;
-                a[j + k + mid] = (x - y + mod) % mod;
-            }
-        }
-    }
-    if (type == -1) {
-        int inv = power(n, mod - 2);
-        for (int i = 0; i < n; i++) a[i] = 1ll * a[i] * inv % mod;
-    }
+// 转化方程为 kd - Mn = y - x，即 aX + bY = c
+long long a = d, b = n, c = (y - x % n + n) % n;
+long long X, Y, g = exgcd(a, b, X, Y);
+if (c % g) cout << "Impossible" << endl;
+else {
+    long long mod = b / g;
+    cout << (X * (c / g) % mod + mod) % mod << endl;
 }
 ```
 </details>
 
----
-
-## 7. 综合练习与解答
-
-### 例题 1：[SDOI2009] Bill 的挑战 (EXGCD 综合)
-求解线性同余方程组 $x \equiv r_i \pmod{m_i}$，其中 $m_i$ 不互质。
+### 例题 2：[SDOI2008] 沙拉公主的困惑 (欧拉函数性质)
+求 $1 \dots N!$ 中与 $M!$ 互质的数有多少个 ($M \le N$)。
+**解析**：答案为 $\frac{N!}{M!} \phi(M!) \pmod P$。
 
 <details>
-<summary>查看 C++ 解答 (EXCRT)</summary>
+<summary>Check Solution (C++)</summary>
 
 ```cpp
-typedef __int128_t int128; // 处理溢出
-long long m[MAXN], r[MAXN];
-long long excrt() {
-    long long M = m[1], R = r[1];
-    for (int i = 2; i <= n; i++) {
-        long long x, y;
-        long long d = exgcd(M, m[i], x, y);
-        if ((r[i] - R) % d) return -1;
-        x = (int128)x * ((r[i] - R) / d) % (m[i] / d);
-        if (x < 0) x += m[i] / d;
-        R = R + (int128)x * M;
-        M = M / d * m[i];
-        R %= M;
+// 答案 = N! * prod_{p <= M} (p-1)/p
+long long solve(int n, int m, int p) {
+    long long res = fact[n];
+    for (int i = 1; i <= cnt && primes[i] <= m; i++) {
+        res = res * (primes[i] - 1) % p * inv(primes[i], p) % p;
     }
-    return (R % M + M) % M;
+    return res;
 }
 ```
-</details>
-
-### 例题 2：余数求和 (数论分块)
-计算 $\sum_{i=1}^n (k \pmod i)$。
-
-<details>
-<summary>查看解析</summary>
-
-$k \pmod i = k - i \cdot \lfloor \frac{k}{i} \rfloor$。
-故 $\sum (k \pmod i) = n \cdot k - \sum i \cdot \lfloor \frac{k}{i} \rfloor$。
-利用 **数论分块** 在 $O(\sqrt{k})$ 内计算 $\sum i \cdot \lfloor \frac{k}{i} \rfloor$。
-```cpp
-long long solve(int n, int k) {
-    long long ans = 1ll * n * k;
-    for (int l = 1, r; l <= min(n, k); l = r + 1) {
-        r = min(n, k / (k / l));
-        ans -= 1ll * (k / l) * (l + r) * (r - l + 1) / 2;
-    }
-    return ans;
-}
-```
-</details>
-
-### 例题 3：[Luogu P4213] 杜教筛模板
-求 $\mu$ 和 $\phi$ 的前缀和，$n \le 2^{31}-1$。
-
-<details>
-<summary>查看 C++ 实现</summary>
-
-```cpp
-map<long long, long long> sum_mu, sum_phi;
-long long get_mu(long long n) {
-    if (n <= MAXN) return pre_mu[n];
-    if (sum_mu.count(n)) return sum_mu[n];
-    long long ans = 1;
-    for (long long l = 2, r; l <= n; l = r + 1) {
-        r = n / (n / l);
-        ans -= (r - l + 1) * get_mu(n / l);
-    }
-    return sum_mu[n] = ans;
-}
-
-long long get_phi(long long n) {
-    if (n <= MAXN) return pre_phi[n];
-    if (sum_phi.count(n)) return sum_phi[n];
-    long long ans = n * (n + 1) / 2;
-    for (long long l = 2, r; l <= n; l = r + 1) {
-        r = n / (n / l);
-        ans -= (r - l + 1) * get_phi(n / l);
-    }
-    return sum_phi[n] = ans;
-}
-```
-</details>
-
----
-
-## 8. 练习库
-
-<details>
-<summary>练习 1：公约数的公约数</summary>
-给定 $n$ 个数，求这 $n$ 个数两两最大公约数的最大值。
-
-**提示**：统计每个因子的出现次数。
-</details>
-
-<details>
-<summary>练习 2：莫比乌斯反演练习</summary>
-证明：$\sum_{d \mid n} \mu(d) \frac{n}{d} = \phi(n)$。
-
-**解答**：即证 $\mu * Id = \phi$。由于 $I * \phi = Id$，两边卷上 $\mu$ 得 $\mu * I * \phi = \mu * Id$，即 $\epsilon * \phi = \mu * Id$，结论成立。
-</details>
-
-<details>
-<summary>练习 3：NTT 卷积</summary>
-给定两个长度为 $n, m$ 的多项式，求其在模 998244353 意义下的卷积。
 </details>
 
 <motion.div
   initial={{ opacity: 0 }}
   whileInView={{ opacity: 1 }}
-  className="mt-12 p-6 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-100 dark:border-purple-800"
+  className="mt-12 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800"
 >
-<Infinity className="text-purple-500 mb-2" />
-**大师寄语**：数论之美在于其简洁的定义与深邃的内在联系。从欧几里得的余数到莫比乌斯的转换，每一步都是人类对数之本源的探索。
+<ShieldCheck className="text-blue-500 mb-2" />
+**大师寄语**：数论是纯数学的桂冠。理解了余数的对称性，你便窥见了密码学与现代计算理论的基石。
 </motion.div>
