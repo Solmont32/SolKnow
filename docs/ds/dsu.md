@@ -3,58 +3,47 @@ title: 并查集 (Disjoint Set Union)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import { GitMerge, Users, Zap, ShieldCheck } from 'lucide-react';
 
-# 并查集 (Disjoint Set Union)
+# 并查集 (DSU): 集合关系的维护艺术
 
-并查集是一种维护**不相交集合**（等价类）的数据结构。它支持两种核心操作：
-1. **合并 (Union)**：将两个元素所在的集合合并为一个。
-2. **查询 (Find)**：查询某个元素所在的集合编号（或判定两个元素是否在同一集合）。
+<KnowledgeCard type="info" title="核心定义">
+并查集（Disjoint Set Union, DSU）是一种维护**等价关系**的数据结构。它管理一系列不相交的集合，并支持两种原子操作：
+1. **Find**：确定元素所属的集合（即找到其所在树的根节点）。
+2. **Union**：将两个集合合并为一个。
+</KnowledgeCard>
 
 ---
 
-## 一、核心实现
+## 1. 算法优化与复杂度分析
 
-### 1. 基础逻辑
-每个集合用一棵树表示，根节点即为集合的代表。
-```cpp
-int p[N]; // 存储每个元素的父节点
-```
-
-### 2. 核心优化
-- **路径压缩 (Path Compression)**：在 `find` 过程中，将路径上所有节点直接指向根节点。
-- **按秩合并 (Union by Rank/Size)**：将深度（或大小）较小的树合并到较大的树下。
-
-**代码模板 (路径压缩)**：
+### 1.1 路径压缩 (Path Compression)
+在执行 `find` 操作时，将路径上经过的所有节点直接挂在根节点下。
 ```cpp
 int find(int x) {
-    if (p[x] != x) p[x] = find(p[x]);
-    return p[x];
+    return p[x] == x ? x : p[x] = find(p[x]);
 }
 ```
+
+### 1.2 按秩合并 (Union by Rank/Size)
+始终将深度较小（或规模较小）的树合并到较大的树下，防止退化为链。
+
+### 1.3 复杂度证明
+**结论**：同时使用路径压缩和按秩合并，并查集操作的摊还时间复杂度为 $O(\alpha(N))$，其中 $\alpha$ 是**反阿克曼函数**。对于宇宙中任何可观察的数据规模，$O(\alpha(N)) < 5$，可视为常数级。
 
 ---
 
-## 二、扩展功能
+## 2. 核心进阶：带权并查集 (Weighted DSU)
 
-### 1. 维护集合大小
-```cpp
-int size[N];
-// 合并时
-int pa = find(a), pb = find(b);
-if (pa != pb) {
-    p[pa] = pb;
-    size[pb] += size[pa];
-}
-```
+带权并查集通过在每个节点上维护一个相对于其父节点的权值，来描述元素间的**相对关系**（如距离、倍数、逻辑关系）。
 
-### 2. 维护边权 (带权并查集)
-记录每个节点到其父节点的某种权值（如距离）。在路径压缩时同步更新权值。
+### 2.1 权值更新公式
+在路径压缩时，权值需递归更新。设 $d[x]$ 为 $x$ 到父节点的权值：
 ```cpp
-int d[N]; // 到父节点的距离
 int find(int x) {
     if (p[x] != x) {
         int root = find(p[x]);
-        d[x] += d[p[x]]; // 权值更新
+        d[x] += d[p[x]]; // 权值累加（或按模运算）
         p[x] = root;
     }
     return p[x];
@@ -63,119 +52,82 @@ int find(int x) {
 
 ---
 
-## 三、教材化例题
+## 3. 教材化例题与解析
 
-### 例题 1：合并集合 (基础应用)
+### 例题 1：食物链 (经典带权应用)
+<details>
+<summary>Check Solution</summary>
 
-一共有 $n$ 个数，编号 $1 \dots n$。进行 $m$ 个操作：
-1. `M a b`：合并 $a$ 和 $b$。
-2. `Q a b`：询问 $a$ 和 $b$ 是否在同一集合。
-
-:::note[点击查看代码实现]
-```cpp
-#include <iostream>
-using namespace std;
-
-const int N = 100010;
-int p[N];
-
-int find(int x) {
-    if (p[x] != x) p[x] = find(p[x]);
-    return p[x];
-}
-
-int main() {
-    int n, m;
-    scanf("%d %d", &n, &m);
-    for (int i = 1; i <= n; i++) p[i] = i;
-
-    while (m--) {
-        char op[2];
-        int a, b;
-        scanf("%s %d %d", op, &a, &b);
-        if (*op == 'M') p[find(a)] = find(b);
-        else {
-            if (find(a) == find(b)) puts("Yes");
-            else puts("No");
-        }
-    }
-    return 0;
-}
-```
-:::
-
-### 例题 2：食物链 (带权并查集)
-
-有三类动物 A, B, C，形成环形食物链：A 吃 B，B 吃 C，C 吃 A。
-给定 $k$ 句话，判定真假：
-1. $x$ 和 $y$ 是同类。
-2. $x$ 吃 $y$。
-
-:::note[点击查看解析与代码]
-
-**解析**：
-利用 $d[x]$ 表示 $x$ 与父节点的食物链关系：
+**题目描述**：有 A, B, C 三类动物形成食物链环。判定 $k$ 句话的真伪。
+**解析**：维护每个点到根节点的距离 $d[x]$。
 - $d[x] \equiv 0 \pmod 3$：同类。
-- $d[x] \equiv 1 \pmod 3$：$x$ 吃父节点。
-- $d[x] \equiv 2 \pmod 3$：$x$ 被父节点吃。
+- $d[x] \equiv 1 \pmod 3$：吃根节点。
+- $d[x] \equiv 2 \pmod 3$：被根节点吃。
 
-**代码实现 (C++)**：
 ```cpp
 #include <iostream>
 using namespace std;
-
-const int N = 50010;
+const int N = 50005;
 int p[N], d[N];
 
 int find(int x) {
-    if (p[x] != x) {
-        int t = find(p[x]);
-        d[x] += d[p[x]];
-        p[x] = t;
-    }
-    return p[x];
+    if (p[x] == x) return x;
+    int root = find(p[x]);
+    d[x] = (d[x] + d[p[x]]) % 3;
+    p[x] = root;
+    return root;
 }
 
 int main() {
-    int n, k;
-    scanf("%d %d", &n, &k);
-    for (int i = 1; i <= n; i++) p[i] = i;
-
-    int res = 0;
-    while (k--) {
-        int t, x, y;
-        scanf("%d %d %d", &t, &x, &y);
-        if (x > n || y > n) res++;
-        else {
-            int px = find(x), py = find(y);
-            if (t == 1) {
-                if (px == py && (d[x] - d[y]) % 3) res++;
-                else if (px != py) {
-                    p[px] = py;
-                    d[px] = d[y] - d[x];
-                }
-            } else {
-                if (px == py && (d[x] - d[y] - 1) % 3) res++;
-                else if (px != py) {
-                    p[px] = py;
-                    d[px] = d[y] + 1 - d[x];
-                }
+    int n, k, ans = 0;
+    cin >> n >> k;
+    for(int i=1; i<=n; i++) p[i] = i;
+    while(k--) {
+        int t, x, y; cin >> t >> x >> y;
+        if(x > n || y > n) { ans++; continue; }
+        int px = find(x), py = find(y);
+        if(t == 1) {
+            if(px == py && (d[x] - d[y] + 3) % 3 != 0) ans++;
+            else if(px != py) {
+                p[px] = py;
+                d[px] = (d[y] - d[x] + 3) % 3;
+            }
+        } else {
+            if(px == py && (d[x] - d[y] + 3) % 3 != 1) ans++;
+            else if(px != py) {
+                p[px] = py;
+                d[px] = (d[y] - d[x] + 1 + 3) % 3;
             }
         }
     }
-    printf("%d\n", res);
+    cout << ans << endl;
     return 0;
 }
 ```
-:::
+</details>
+
+### 例题 2：并查集与离散化 (程序自动分析)
+<details>
+<summary>Check Solution</summary>
+
+**题目描述**：给定 $N$ 个约束 $x_i = x_j$ 或 $x_i \neq x_j$，判定是否冲突。
+**策略**：先处理所有相等关系（合并），再检查不等关系。
+
+```cpp
+// 1. 离散化所有坐标
+// 2. 将所有 e=1 的操作进行并查集合并
+// 3. 遍历所有 e=0 的操作，若 find(a) == find(b) 则冲突
+```
+</details>
 
 ---
 
-## 四、练习库
+## 4. 综合练习
 
-- [练习 1：银河英雄传说 (带权)](/docs/exercises/cs/algorithm-basic#练习-9)
-- [练习 2：程序自动分析 (离散化+并查集)](/docs/exercises/cs/algorithm-basic#练习-10)
+1. **[基础]** 维护集合大小的并查集。
+2. **[提高]** 银河英雄传说（带权距离维护）。
+3. **[进阶]** 边带权的并查集解决 parity 问题。
 
 ---
 
-_编者注：并查集是大规模等价关系维护的最优选择。带权并查集则是处理环形或相对关系的神兵。_
+_编者注：并查集是离散结构中最具美感的算法之一。简单的递归背后，隐藏着近乎线性复杂度的深刻数学支撑。_
