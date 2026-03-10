@@ -2,104 +2,184 @@
 title: 数位 DP
 ---
 
-# 数位动态规划 (Digit Dynamic Programming)
+import { Hash, Target, Zap, ChevronRight } from 'lucide-react';
 
-数位 DP 是一种处理关于**数字位数的性质或统计**的问题。典型题目如：“在区间 $[L, R]$ 内，有多少个数满足不包含数字 4？”
+# 数位动态规划 (Digit DP)
 
----
-
-## 核心建模思路
-
-数位 DP 通常使用**记忆化搜索**来实现，其状态通常包含：
-- `pos`：当前处理到第几位。
-- `limit`：当前位是否受上界限制（若受限，则当前位最大只能填 $a[pos]$）。
-- `lead`：是否存在前导零（对于处理如“不含相邻重复数字”等问题至关重要）。
-- `state`：题目要求的核心状态（如已出现的数字和、模数等）。
+数位 DP 是一种处理关于 **数字位数性质或统计** 的动态规划方法。它通常用于解决“在区间 $[L, R]$ 内，有多少个正整数满足某种特定条件”的问题。这类条件的共同特征是：**条件与数的具体大小关系较弱，而与数的每一位数字（数位）的关系较强。**
 
 ---
 
-## 1. 核心代码模板
+## <Hash className="inline-block mr-2" /> 核心建模思想
+
+数位 DP 的本质是在 **数位搜索树** 上进行记忆化搜索。
+
+### 1. 状态定义
+标准的状态通常包含以下维度：
+- `pos`：当前处理到的数位（从高到低或从低到高）。
+- `limit`：**上界限制标志**。布尔值，表示当前位是否受到 $N$ 对应位的限制。
+- `lead`：**前导零标志**。布尔值，表示当前位之前是否全是 $0$。这对于处理包含数字 $0$ 的统计或长度限制至关重要。
+- `state`：核心业务逻辑状态（如已出现的数字、模数、是否包含特定子串等）。
+
+### 2. 记忆化搜索模板
 
 ```cpp
 long long a[20];
 long long f[20][state_size];
 
+/**
+ * @param pos   当前位数
+ * @param state 业务状态
+ * @param limit 是否受限
+ * @param lead  是否有前导零
+ */
 long long dfs(int pos, int state, bool limit, bool lead) {
-    if (pos == 0) return 1; // 递归终点：填完了所有位
-    if (!limit && !lead && f[pos][state] != -1) return f[pos][state]; // 记忆化
+    if (pos == 0) return 1; // 递归终点：填完了所有位且合法
+    // 只有在不受限且无前导零时，状态才具有通用性，可以查表
+    if (!limit && !lead && f[pos][state] != -1) return f[pos][state];
 
     long long res = 0;
     int up = limit ? a[pos] : 9; // 确定当前位枚举的上界
 
     for (int i = 0; i <= up; i++) {
-        // 根据题目逻辑更新 state'
-        // 注意前导零 lead 的处理
-        res += dfs(pos - 1, new_state, limit && (i == up), lead && (i == 0));
+        // 核心逻辑：判断 i 是否符合题目条件
+        if (!check(i, state)) continue;
+        
+        // 状态转移
+        res += dfs(pos - 1, get_next_state(i, state), 
+                   limit && (i == up), lead && (i == 0));
     }
 
-    if (!limit && !lead) f[pos][state] = res; // 记录非受限状态
+    if (!limit && !lead) f[pos][state] = res; // 记忆化
     return res;
-}
-
-long long solve(long long n) {
-    int len = 0;
-    while (n) a[++len] = n % 10, n /= 10;
-    memset(f, -1, sizeof f);
-    return dfs(len, initial_state, true, true);
 }
 ```
 
 ---
 
-## 2. 经典模型：不要 62 (HDU 2089)
+## <Target className="inline-block mr-2" /> 经典模型解析
 
+### 1. 不包含特定数字（如 "4"）
+这是最基础的模型。
+- **状态**：只需 `pos, limit, lead`。
+- **转移条件**：`i != 4`。
+
+### 2. Windy 数 (BZOJ 1026)
+**题目描述**：求 $[L, R]$ 内相邻数字之差至少为 $2$ 的正整数个数。
+- **状态设计**：`f[pos][pre]`，其中 `pre` 记录上一位的数字。
+- **关键处理**：由于前导零存在时，当前位填任何非零数都不受“差值 $\ge 2$”的限制，因此 `lead` 必须参与逻辑判断。
+
+---
+
+## <Zap className="inline-block mr-2" /> 完备例题解答
+
+### 例题 1：不要 62 (HDU 2089)
 求 $[L, R]$ 范围内不包含 "4" 且不包含 "62" 的数字个数。
-**状态设计**：
-$f[pos][pre]$：当前处理到第 $pos$ 位，且前一位数字是 $pre$。
+
+<details>
+<summary>Check Solution (C++)</summary>
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <cstring>
+using namespace std;
+
+int a[20];
+int f[20][10];
+
+int dfs(int pos, int pre, bool limit) {
+    if (pos == 0) return 1;
+    if (!limit && f[pos][pre] != -1) return f[pos][pre];
+
+    int res = 0;
+    int up = limit ? a[pos] : 9;
+    for (int i = 0; i <= up; i++) {
+        if (i == 4) continue;
+        if (pre == 6 && i == 2) continue;
+        res += dfs(pos - 1, i, limit && (i == up));
+    }
+
+    if (!limit) f[pos][pre] = res;
+    return res;
+}
+
+int solve(int n) {
+    int len = 0;
+    while (n) a[++len] = n % 10, n /= 10;
+    memset(f, -1, sizeof f);
+    return dfs(len, 0, true);
+}
+
+int main() {
+    int l, r;
+    while (cin >> l >> r && (l || r)) {
+        cout << solve(r) - solve(l - 1) << endl;
+    }
+    return 0;
+}
+```
+</details>
+
+### 例题 2：数字计数 (Luogu P2602)
+统计 $[L, R]$ 中 $0 \sim 9$ 每个数字出现的总次数。
+
+<details>
+<summary>Check Solution (C++)</summary>
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+typedef long long ll;
+
+ll l, r;
+int a[20], target;
+ll f[20][20];
+
+ll dfs(int pos, int cnt, bool limit, bool lead) {
+    if (pos == 0) return cnt;
+    if (!limit && !lead && f[pos][cnt] != -1) return f[pos][cnt];
+
+    ll res = 0;
+    int up = limit ? a[pos] : 9;
+    for (int i = 0; i <= up; i++) {
+        res += dfs(pos - 1, cnt + (!lead || i != 0 ? i == target : 0),
+                   limit && (i == up), lead && (i == 0));
+    }
+
+    if (!limit && !lead) f[pos][cnt] = res;
+    return res;
+}
+
+ll solve(ll n) {
+    int len = 0;
+    while (n) a[++len] = n % 10, n /= 10;
+    memset(f, -1, sizeof f);
+    return dfs(len, 0, true, true);
+}
+
+int main() {
+    cin >> l >> r;
+    for (int i = 0; i <= 9; i++) {
+        target = i;
+        cout << solve(r) - solve(l - 1) << (i == 9 ? "" : " ");
+    }
+    return 0;
+}
+```
+</details>
 
 ---
 
-## 3. 经典模型：Windy 数 (BZOJ 1026)
+## <ChevronRight className="inline-block mr-2" /> 进阶练习
 
-求 $[L, R]$ 范围内相邻数字之差至少为 2 的正整数个数。
-**关键点**：必须处理前导零。如果上一位是前导零，当前位可以填任意非零数字，而不受“差至少为 2”的限制。
-
----
-
-## 配套练习与解答
-
-### 练习 1：数字计数
-给定 $L, R$，统计 $0 \dots 9$ 这 10 个数字在所有数中出现的总次数。
+1. **[Luogu P2657] Windy 数**：处理前导零的经典练习。
+2. **[Luogu P4127] 同类分布**：数位之和模 $S$ 且原数模 $S$ 为 $0$，需要枚举 $S$。
+3. **[Luogu P4317] 花神降临隔壁**：二进制数位 DP，统计 $1$ 的个数并利用快速幂求积。
 
 <details>
-<summary>点击查看解题思路</summary>
+<summary>练习 2 思路提示</summary>
 
-分别对 $0 \dots 9$ 每一个数字跑一遍数位 DP。状态记录当前已出现的该数字的次数 `cnt`。
-$$f[pos][cnt]$$
+由于数位之和 $S$ 最大只有 $9 \times 18 = 162$，可以外层枚举 $S$，内层 DP 状态为 `f[pos][current_sum][rem]`，判断最终 `current_sum == S` 且 `rem == 0`。
 </details>
-
-### 练习 2：各位数之和 (Digit Sum)
-求区间 $[L, R]$ 内各位数之和等于 $S$ 的数字个数。
-
-<details>
-<summary>点击查看解题思路</summary>
-
-状态设计：`f[pos][sum]`。
-转移：枚举当前位填 $i$，则 `sum' = sum - i`。
-</details>
-
-### 练习 3：包含特定子串
-有多少个 $N$ 位数包含子串 "13"？
-
-<details>
-<summary>点击查看解题思路</summary>
-
-正向法：记录状态 $0$（无 13）、$1$（以 1 结尾）、$2$（已含 13）。
-反向法：总数 - 不含 13 的数量。
-</details>
-
----
-
-## 延伸挑战
-- [洛谷 P2602 数字计数](https://www.luogu.com.cn/problem/P2602)
-- [洛谷 P2657 Windy 数](https://www.luogu.com.cn/problem/P2657)
