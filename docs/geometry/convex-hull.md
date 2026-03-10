@@ -1,106 +1,96 @@
 ---
 title: 凸包算法 (Convex Hull)
+description: Andrew's 算法、数学性质证明与共线点处理。
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { MousePointer2, Move, LayoutGrid } from 'lucide-react';
+import { Waypoints, ShieldCheck, Zap } from 'lucide-react';
 
 # 凸包算法 (Convex Hull)
 
-给定平面上的一组点，能够包含所有这些点的最小凸多边形称为**凸包（Convex Hull）**。
+给定平面上的一组点，能够包含所有这些点的最小凸多边形称为**凸包（Convex Hull）**。在算法竞赛中，凸包是解决各种复杂几何问题的预处理基础。
 
 ---
 
-## 1. 定义与性质
+## 1. 定义与核心性质
 
-### 定义
-设平面点集为 $S = \{P_1, P_2, \dots, P_n\}$，凸包 $CH(S)$ 是包含 $S$ 中所有点的最小凸集。直观上，可以将其想象为一根橡皮筋将所有点包围。
+### 形式化定义
+对于平面点集 $S$，其凸包 $CH(S)$ 是包含 $S$ 的所有凸集的交集。
+$$CH(S) = \{ \sum_{i=1}^n \lambda_i P_i \mid P_i \in S, \lambda_i \ge 0, \sum \lambda_i = 1 \}$$
 
-### 性质
-1. 凸包上的顶点均来自原点集 $S$。
-2. 凸包的边界由 $S$ 中的若干条线段组成。
-3. 凸包上的内角均为 $\le 180^\circ$。
+### 关键性质
+1. **顶点性**: 凸包的顶点一定是 $S$ 中的点。
+2. **极值性**: $x$ 或 $y$ 坐标最大/最小的点一定在凸包上。
+3. **单调性**: 沿着凸包边界移动，向量的极角是单调变化的。
 
 ---
 
 ## 2. 算法实现：Andrew's Algorithm
 
-Andrew 算法是 Graham 扫描法的优化版本，它将凸包分为**上凸壳 (Upper Hull)** 和**下凸壳 (Lower Hull)** 两部分分别求解。
+Andrew 算法是对 Graham 扫描法的优化，通过分治（上凸壳与下凸壳）将极角排序简化为坐标排序。
 
-### 算法步骤
-1. **排序**：将所有点按 $x$ 坐标升序排列，若 $x$ 相同则按 $y$ 升序。
-2. **求下凸壳**：
-   - 维护一个栈。
-   - 依次遍历排序后的点，若新点在栈顶两个点所构成的直线的**右侧**（利用叉积判定），则弹出栈顶点。
-   - 直到无法弹出，将新点入栈。
-3. **求上凸壳**：
-   - 从最后一个点开始逆向重复上述过程。
-   - 注意不要重复计算首尾顶点。
+### 算法流程
+1. **预处理**: 对点集按 $x$ 升序排序（$x$ 相同时按 $y$ 升序）。
+2. **求下凸壳**: 从左到右遍历，维护一个栈，通过叉积 `cross(S1, S2, P) <= 0` 剔除非凸点。
+3. **求上凸壳**: 从右到左遍历，重复上述逻辑。
 
-### 叉积判定的核心逻辑
-对于当前栈顶两点 $S_1, S_2$ 和新加入的点 $P$，若 $\vec{S_1S_2} \times \vec{S_2P} \le 0$，则表示出现了顺时针转动或共线，需要弹出 $S_2$。
-
----
-
-## 3. 代码实现 (C++)
+### 空间复杂度优化
+在 C++ 中，可以直接利用 `vector` 作为栈，并在算法结束前通过 `resize` 缩减空间，达到 $O(N)$ 辅助空间。
 
 ```cpp
-#include <iostream>
-#include <vector>
-#include <algorithm>
-using namespace std;
-
-typedef double DB;
-struct Point {
-    DB x, y;
-    bool operator< (const Point& b) const {
-        if (x != b.x) return x < b.x;
-        return y < b.y;
-    }
-};
-
-DB cross(Point a, Point b, Point c) {
-    return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
-}
-
-vector<Point> andrew(vector<Point>& points) {
-    int n = points.size();
-    if (n <= 2) return points;
-    sort(points.begin(), points.end());
-    
-    vector<Point> hull;
-    // 下凸壳
-    for (int i = 0; i < n; i++) {
-        while (hull.size() > 1 && cross(hull[hull.size() - 2], hull.back(), points[i]) <= 0)
-            hull.pop_back();
-        hull.push_back(points[i]);
-    }
-    // 上凸壳
-    int lower_size = hull.size();
-    for (int i = n - 2; i >= 0; i--) {
-        while (hull.size() > lower_size && cross(hull[hull.size() - 2], hull.back(), points[i]) <= 0)
-            hull.pop_back();
-        hull.push_back(points[i]);
-    }
-    hull.pop_back(); // 去重最后一个点
-    return hull;
+vector<Point> getHull(vector<Point>& p) {
+    int n = p.size(), k = 0;
+    if (n <= 2) return p;
+    sort(p.begin(), p.end());
+    vector<Point> h(2 * n);
+    // Lower hull
+    for (int i = 0; i < n; h[k++] = p[i++])
+        while (k > 1 && sign(cross(h[k-2], h[k-1], p[i])) <= 0) k--;
+    // Upper hull
+    for (int i = n - 2, t = k; i >= 0; h[k++] = p[i--])
+        while (k > t && sign(cross(h[k-2], h[k-1], p[i])) <= 0) k--;
+    h.resize(k - 1);
+    return h;
 }
 ```
 
 ---
 
-## 4. 复杂度分析
+## 3. 共线点处理 (Collinear Points)
 
-1. **时间复杂度**：排序 $O(n \log n)$，扫描阶段每个点最多进栈一次、出栈一次，复杂度 $O(n)$。总复杂度 $O(n \log n)$。
-2. **空间复杂度**：$O(n)$。
-
-<KnowledgeCard type="tip" title="注意事项">
-在处理共线点时，叉积为 0。如果题目要求凸包边界上包含所有点（包括共线点），则应修改 `cross(...) <= 0` 为 `cross(...) < 0`。
-</KnowledgeCard>
+在某些题目（如围栏构建）中，需要保留边界上的所有点：
+- **修改判定条件**: 将 `cross(...) <= 0` 改为 `cross(...) < 0`。
+- **注意**: 在上凸壳与下凸壳的衔接处，共线点可能会被重复处理，需要严格逻辑判定。
 
 ---
 
-## 5. 进阶应用
+## 4. 经典练习
 
-- [旋转卡壳 (Rotating Calipers)](rotating-calipers)：利用凸包求解最远点对距离（直径）。
-- [动态凸包 (Dynamic Convex Hull)](../ds/balanced-tree)：利用平衡树动态维护凸包。
+<details>
+<summary>例题：最小围栏长度 (POJ 1113 - Wall)</summary>
+
+**题目描述**：给定 $N$ 个点和距离 $L$，要求建立一个围栏，使得围栏与所有点的距离至少为 $L$，求最小围栏周长。
+
+**解答思路**：
+1. 该问题的本质是求点集的**凸包周长**加上一个**半径为 $L$ 的圆的周长**。
+2. 凸包周长：$\sum |P_i P_{i+1}|$。
+3. 圆周长：$2\pi L$。
+
+```cpp
+double solve(vector<Point>& pts, double L) {
+    auto hull = getHull(pts);
+    double res = 2 * PI * L;
+    for (int i = 0; i < (int)hull.size(); i++) {
+        res += length(hull[i] - hull[(i + 1) % hull.size()]);
+    }
+    return res;
+}
+```
+</details>
+
+---
+
+## 5. 模块导航
+
+- <Zap className="inline-block w-4 h-4 mr-1 text-yellow-500" /> [旋转卡壳 (Rotating Calipers)](rotating-calipers) - 在凸包基础上进行对踵点扫描。
+- <ShieldCheck className="inline-block w-4 h-4 mr-1 text-green-500" /> [半平面交 (Half-plane Intersection)](half-plane-intersection) - 凸包的对偶问题。

@@ -71,7 +71,7 @@ const sidebars: SidebarsConfig = {
       collapsed: true,
       label: '计算几何',
       link: {type: 'doc', id: 'geometry/index'},
-      items: ['geometry/convex-hull', 'geometry/rotating-calipers'],
+      items: ['geometry/convex-hull', 'geometry/rotating-calipers', 'geometry/half-plane-intersection'],
     },
   ],
 
