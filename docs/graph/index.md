@@ -4,11 +4,18 @@
 
 ## 目录
 
+- [图的存储 (Representation)](representation)
 - [图的遍历 (DFS/BFS)](traversal)
-- [最短路算法](shortest-path)
+- [最短路算法 (Shortest Path)](shortest-path)
 - [最小生成树 (MST)](mst)
 - [拓扑排序 (Topological Sort)](topo-sort)
 - [强连通分量 (Tarjan / SCC)](tarjan)
+- [网络流基础 (Network Flow)](network-flow)
+
+---
+
+## 练习库
+
 - [算法竞赛练习：最短路专题](/docs/exercises/cs/algorithm-shortest-path)
 - [算法竞赛练习：最小生成树专题](/docs/exercises/cs/algorithm-mst)
 - [算法竞赛练习：拓扑排序专题](/docs/exercises/cs/algorithm-topo-sort)

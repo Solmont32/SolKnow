@@ -39,7 +39,7 @@ const sidebars: SidebarsConfig = {
       collapsed: true,
       label: '图论',
       link: {type: 'doc', id: 'graph/index'},
-      items: ['graph/traversal', 'graph/shortest-path', 'graph/mst', 'graph/topo-sort', 'graph/tarjan'],
+      items: ['graph/representation', 'graph/traversal', 'graph/shortest-path', 'graph/mst', 'graph/topo-sort', 'graph/tarjan', 'graph/network-flow'],
     },
     {
       type: 'category',
@@ -435,6 +435,7 @@ const sidebars: SidebarsConfig = {
         { type: 'doc', id: 'exercises/cs/algorithm-mst', label: '算法竞赛：最小生成树练习' },
         { type: 'doc', id: 'exercises/cs/algorithm-topo-sort', label: '算法竞赛：拓扑排序练习' },
         { type: 'doc', id: 'exercises/cs/algorithm-scc', label: '算法竞赛：强连通分量练习' },
+        { type: 'doc', id: 'exercises/cs/algorithm-network-flow', label: '算法竞赛：网络流练习' },
         { type: 'doc', id: 'exercises/cs/linux', label: 'Linux 实操练习' },
         { type: 'doc', id: 'exercises/cs/cpp', label: 'C++ 编程练习' },
         { type: 'doc', id: 'exercises/cs/os', label: '操作系统练习' },
