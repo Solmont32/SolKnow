@@ -30,7 +30,7 @@ const sidebars: SidebarsConfig = {
       link: {type: 'doc', id: 'ds/index'},
       items: [
         { type: 'category', collapsible: true, collapsed: true, label: 'STL', link: {type: 'doc', id: 'ds/stl/index'}, items: ['ds/stl/map-set'] },
-        'ds/heap', 'ds/monotonic', 'ds/trie', 'ds/fenwick', 'ds/segtree', 'ds/dsu', 'ds/st',
+        'ds/heap', 'ds/monotonic', 'ds/trie', 'ds/fenwick', 'ds/segtree', 'ds/balanced-tree', 'ds/persistent-structure', 'ds/dsu', 'ds/st',
       ],
     },
     {
@@ -429,6 +429,7 @@ const sidebars: SidebarsConfig = {
       label: '计算机练习库',
       items: [
         { type: 'doc', id: 'exercises/cs/algorithm-basic', label: '算法竞赛：基础算法与线性结构' },
+        { type: 'doc', id: 'exercises/cs/algorithm-ds', label: '算法竞赛：高级数据结构' },
         { type: 'doc', id: 'exercises/cs/algorithm-linear-dp', label: '算法竞赛：线性 DP 练习' },
         { type: 'doc', id: 'exercises/cs/algorithm-knapsack', label: '算法竞赛：背包练习' },
         { type: 'doc', id: 'exercises/cs/algorithm-shortest-path', label: '算法竞赛：最短路练习' },

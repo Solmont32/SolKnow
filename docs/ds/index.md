@@ -14,6 +14,8 @@
 - [字典树 (Trie)](trie)
 - [树状数组 (Fenwick Tree)](fenwick)
 - [线段树 (Segment Tree)](segtree)
+- [平衡树 (Balanced Tree)](balanced-tree)
+- [可持久化结构 (Persistent Structures)](persistent-structure)
 
 ### 其他
 

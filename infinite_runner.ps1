@@ -146,7 +146,7 @@ CONTEXT:
 $ctx
 ACTION: Provide ONLY the task list as requested.
 "@
-                $newTasksRaw = & gemini -y -p $planPrompt
+                $newTasksRaw = & gemini -y -m gemini-3-flash-preview -p $planPrompt
                 # Clean up AI output to ensure only task lines are kept
                 $newTasks = ($newTasksRaw -split "`n" | Where-Object { $_ -match '^\s*- \[ \]' }) -join "`n"
                 $content = Get-Content $global:CFG_TASKS -Raw
@@ -173,7 +173,7 @@ STANDARDS:
 4. Aesthetic: lucide-react icons & framer-motion.
 ACTION: Implement fully and mark as '- [x]' in TASKS.md.
 "@
-                & gemini -y -p $execPrompt
+                & gemini -y -m gemini-3-flash-preview -p $execPrompt
                 Organize-Tasks | Out-Null
                 Write-Log ("Completed: " + $taskDesc)
                 git add .
