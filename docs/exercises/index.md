@@ -37,10 +37,10 @@ import {
       涵盖数学分析、高等代数、概率论、实变/复变等大学数学核心课程。
       <ul style={{ marginTop: '10px', fontSize: '0.9rem' }}>
         <li><b>基础：</b> 定义理解与基本计算</li>
-        <li><b>进阶：</b> 综合证明与高阶技巧</li>
+        <li><b>进阶：</b> 数论与同余系专项强化</li>
         <li><b>竞赛：</b> 考研/数学竞赛真题解析</li>
       </ul>
-      <a href="math/analysis" className="button button--outline button--primary button--sm">进入数学库 <ChevronRight size={14} /></a>
+      <a href="cs/algorithm-number-theory" className="button button--outline button--primary button--sm">进入数论库 <ChevronRight size={14} /></a>
     </KnowledgeCard>
   </div>
   <div className="col col--6">
@@ -52,8 +52,8 @@ import {
       对标 Codeforces, AtCoder 与 NOI 难度。包含工业级 C++ 代码解析。
       <ul style={{ marginTop: '10px', fontSize: '0.9rem' }}>
         <li><b>基础：</b> 基础算法与线性结构专项强化</li>
-        <li><b>进阶：</b> 动态规划 (DP) 专项强化</li>
-        <li><b>综合：</b> 搜索、图论与几何练习</li>
+        <li><b>进阶：</b> 搜索与启发式算法专项强化</li>
+        <li><b>综合：</b> 计算几何与图论专项强化</li>
       </ul>
       <a href="cs/algorithm-basic" className="button button--outline button--info button--sm">进入算法库 <ChevronRight size={14} /></a>
     </KnowledgeCard>

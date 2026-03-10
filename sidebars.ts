@@ -450,6 +450,7 @@ const sidebars: SidebarsConfig = {
       items: [
         { type: 'doc', id: 'exercises/cs/algorithm-basic', label: '算法竞赛：基础算法与线性结构专项强化' },
         { type: 'doc', id: 'exercises/cs/algorithm-dp-comprehensive', label: '算法竞赛：动态规划 (DP) 专项强化' },
+        { type: 'doc', id: 'exercises/cs/algorithm-number-theory', label: '算法竞赛：数论与同余系专项强化' },
         { type: 'doc', id: 'exercises/cs/algorithm-search', label: '算法竞赛：搜索与启发式算法' },
         { type: 'doc', id: 'exercises/cs/algorithm-shortest-path', label: '算法竞赛：最短路练习' },
         { type: 'doc', id: 'exercises/cs/algorithm-mst', label: '算法竞赛：最小生成树练习' },
