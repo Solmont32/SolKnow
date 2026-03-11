@@ -81,18 +81,29 @@ int find(int u, int l, int r, int qL, int qR, int k) {
 ```
 </details>
 
-### 例题 2：扫描线 (矩形面积并)
+### 例题 2：区间乘法与加法 (维护多重标记)
 <details>
-<summary>Check Solution</summary>
+<summary>Check Solution (C++ Implementation)</summary>
 
-**策略**：将矩形左右边视为入边和出边，纵向用线段树维护覆盖长度。
+**题目描述**：支持区间 $[l, r]$ 加 $v$，区间 $[l, r]$ 乘 $v$，查询区间 $[l, r]$ 的和（模 $P$）。
+**解析**：需要维护两个标记：`add` 和 `mul`。
+- **优先级**: 规定先乘后加。即 $val = val \times mul + add$。
+- **下传规则**:
+  - $mul_{son} = mul_{son} \times mul_{parent}$
+  - $add_{son} = add_{son} \times mul_{parent} + add_{parent}$
 
 ```cpp
-// 维护 cnt (覆盖次数) 和 len (覆盖长度)
-void push_up(int u, int l, int r) {
-    if (tr[u].cnt > 0) tr[u].len = nodes[r + 1] - nodes[l];
-    else if (l == r) tr[u].len = 0;
-    else tr[u].len = tr[u << 1].len + tr[u << 1 | 1].len;
+void eval(int u, int l, int r, int m, int a) {
+    tr[u].sum = (1LL * tr[u].sum * m + 1LL * a * (r - l + 1)) % P;
+    tr[u].mul = 1LL * tr[u].mul * m % P;
+    tr[u].add = (1LL * tr[u].add * m + a) % P;
+}
+
+void pushdown(int u, int l, int r) {
+    int mid = (l + r) >> 1;
+    eval(u << 1, l, mid, tr[u].mul, tr[u].add);
+    eval(u << 1 | 1, mid + 1, r, tr[u].mul, tr[u].add);
+    tr[u].mul = 1; tr[u].add = 0;
 }
 ```
 </details>

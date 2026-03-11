@@ -26,6 +26,7 @@ import { Trophy } from 'lucide-react';
 ## 高级结构与时空权衡 (Advanced & Persistence)
 
 - [可持久化结构 (Persistent Structures)](persistent-structure) - 历史版本的精准检索与路径复制。
+- [扫描线技巧 (Scanning Line)](scanning-line) - 降维打击：将几何积分转化为动态区间维护。
 - [字典树 (Trie)](trie) - 字符串前缀压缩与异或最值优化。
 - [Sparse Table (ST 表)](st) - 静态区间的 $O(1)$ 极值查询。
 
