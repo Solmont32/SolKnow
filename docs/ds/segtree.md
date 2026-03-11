@@ -3,123 +3,108 @@ title: 线段树 (Segment Tree)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import BilibiliEmbed from '@site/src/components/BilibiliEmbed';
-import { Code2, GitMerge, Layers, Zap, ShieldCheck, BoxSelect } from 'lucide-react';
+import { Layers, Zap, ShieldCheck, BoxSelect, Code2 } from 'lucide-react';
 
 # 线段树 (Segment Tree): 区间维护的工业级标准
 
-<KnowledgeCard type="info" title="核心定义">
-线段树（Segment Tree）是一种高度平衡的二叉搜索树，主要用于维护**区间信息**。它将长度为 $N$ 的序列划分为 $O(N)$ 个区间节点，每个节点代表序列中的一个子区间 $[l, r]$。通过**算子延迟传播（Lazy Propagation）**与**分治**技术，它能在 $O(\log N)$ 时间内完成区间查询与修改。
+<KnowledgeCard type="info" title="代数抽象：蒙耐德与算子作用">
+从代数结构看，线段树维护的是一个**蒙耐德 (Monoid)** $(M, \oplus)$ 上的元素。
+1. **结合律**: $(a \oplus b) \oplus c = a \oplus (b \oplus c)$。
+2. **单位元**: 存在 $e$ 使得 $a \oplus e = a$。
+对于区间修改，引入**算子作用 (Operator Action)** $F$：
+- **复合性**: $f_1 \circ (f_2 \circ a) = (f_1 \circ f_2) \circ a$。
+- **分配律**: $f \circ (a \oplus b) = (f \circ a) \oplus (f \circ b)$。
+满足上述性质的任何区间问题均可用线段树在 $O(\log N)$ 内解决。
 </KnowledgeCard>
 
 ---
 
-## 1. 数学建模与复杂度分析
+## 1. 核心原理与时空复杂度
 
-### 1.1 节点构造与分治原理
-对于区间 $[L, R]$，其分解满足：
-$$T(L, R) = \begin{cases} \{[L, L]\} & L = R \\ \{[L, R]\} \cup T(L, mid) \cup T(mid+1, R) & L < R, mid = \lfloor \frac{L+R}{2} \rfloor \end{cases}$$
-**定理**：任何长度为 $L$ 的区间 $[l, r] \subseteq [1, N]$ 都可以被线段树分解为不超过 $2\log N$ 个原生节点。
+### 1.1 节点构造与空间定律
+线段树将区间 $[1, N]$ 递归划分为 $2N-1$ 个节点。在数组实现中，索引 $u$ 的左儿子为 $2u$，右儿子为 $2u+1$。
+**定理 (4N 规则)**：为了防止索引越界，必须开辟 $4N$ 大小的数组空间。
+**证明**：深为 $H$ 的二叉树节点编号最大为 $2^H-1$。对于 $N$ 个叶子，$H = \lceil \log_2 N \rceil + 1$。最坏情况下 $N = 2^k + 1$，此时 $H = k+2$，最大索引接近 $2^{k+2} = 4 \cdot 2^k \approx 4N$。
 
-### 1.2 空间复杂度：$4N$ 存储律
-**证明**：
-线段树本质上是一棵深度为 $\lceil \log_2 N \rceil + 1$ 的二叉树。
-1. 当 $N = 2^k$ 时，它是满二叉树，节点数为 $2N-1$。
-2. 当 $N \ne 2^k$ 时，最底层的节点可能延伸到数组下标 $2^{\lceil \log_2 N \rceil + 1}$。
-由于 $2^{\lceil \log_2 N \rceil + 1} < 2^{\log_2 N + 2} = 4N$，因此数组开销 $4N$ 是绝对安全的。
+### 1.2 懒标记 (Lazy Propagation)
+为了支持 $O(\log N)$ 的区间修改，线段树引入“延时更新”思想。
+- **标记下传 (`push_down`)**: 仅在需要访问子节点时，才将挂在父节点上的修改算子应用到子节点。
 
 ---
 
-## 2. 区间操作优化：算子合并与蒙耐德 (Monoid)
+## 2. 进阶结构：线段树合并与分裂
 
-线段树维护的信息 $V$ 与修改算子 $F$ 应满足以下代数性质：
-
-1. **结合律**：信息合并 $(a \oplus b) \oplus c = a \oplus (b \oplus c)$，确保分治查询正确。
-2. **算子复合**：$f_2 \circ (f_1 \circ V) = (f_2 \circ f_1) \circ V$，确保懒标记叠加正确。
-3. **分配律**：$f \circ (a \oplus b) = (f \circ a) \oplus (f \circ b)$，确保标记下传后信息合并仍正确。
-
-### 2.1 懒标记 (Lazy Tag) 传播规范
+### 2.1 线段树合并 (Segment Tree Merging)
+当处理树上路径问题或子树信息聚合时，常需要合并两棵**动态开点**线段树。
 ```cpp
-void push_down(int u, int l, int r) {
-    if (tr[u].tag == ID) return; // ID 为单位元标记
+int merge(int u, int v, int l, int r) {
+    if (!u || !v) return u | v;
+    int x = ++idx;
+    if (l == r) {
+        tr[x].val = tr[u].val + tr[v].val; // 合并叶子
+        return x;
+    }
     int mid = (l + r) >> 1;
-    apply(u << 1, l, mid, tr[u].tag);
-    apply(u << 1 | 1, mid + 1, r, tr[u].tag);
-    tr[u].tag = ID;
+    ls[x] = merge(ls[u], ls[v], l, mid);
+    rs[x] = merge(rs[u], rs[v], mid + 1, r);
+    push_up(x);
+    return x;
 }
 ```
+**复杂度**：若初始有 $N$ 个单点节点，总合并复杂度为 $O(N \log N)$。
+
+### 2.2 李超线段树 (Li Chao Tree)
+用于维护区间内若干个线性函数（线段）的最值。
+- **核心**：每个节点维护在该区间中点处取值最大的线段，通过标记永久化实现。
 
 ---
 
-## 3. 空间压缩策略：动态开点线段树
+## 3. 教材化例题与解析
 
-当 $N$ 极大（如 $10^9$）且实际操作的元素较少时，静态 $4N$ 数组会内存溢出。此时采用**动态开点**。
-
-### 3.1 核心思想
-不预先分配所有节点，仅在访问到该区间时创建节点。
-- **空间复杂度**：$O(M \log N)$，$M$ 为操作次数。
-- **实现差异**：放弃 `u<<1` 索引，改用 `ls[u]` 和 `rs[u]` 存储子节点指针。
-
-```cpp
-int ls[MAX_NODES], rs[MAX_NODES], tr[MAX_NODES], idx;
-
-void update(int &u, int l, int r, int x, int v) {
-    if (!u) u = ++idx; // 动态分配节点
-    if (l == r) { tr[u] += v; return; }
-    int mid = (l + r) >> 1;
-    if (x <= mid) update(ls[u], l, mid, x, v);
-    else update(rs[u], mid + 1, r, x, v);
-    push_up(u);
-}
-```
-
----
-
-## 4. 教材化例题与解析
-
-### 例题 1：混合算子维护 (乘法 + 加法)
+### 例题 1：线段树上二分 (寻找阈值)
 <details>
 <summary>Check Solution</summary>
 
-**题目描述**：维护区间加与区间乘。
-**算子复合推导**：
-设当前值为 $v$，先进行 $(+a, \times m)$，再进行 $(+a', \times m')$：
-$$v' = (v \cdot m + a) \cdot m' + a' = v \cdot (m \cdot m') + (a \cdot m' + a')$$
-因此，新标记为：$m_{new} = m \cdot m'$, $a_{new} = a \cdot m' + a'$。
+**题目描述**：支持单点修改，查询区间内第一个 $\ge k$ 的位置。
+**解析**：利用线段树维护区间最大值。若 `tr[u<<1].max >= k` 则向左递归，否则向右。
 
 ```cpp
-void eval(Node &t, LL add, LL mul) {
-    t.sum = (t.sum * mul + add * (t.r - t.l + 1)) % p;
-    t.mul = t.mul * mul % p;
-    t.add = (t.add * mul + add) % p;
+int find(int u, int l, int r, int qL, int qR, int k) {
+    if (tr[u].max < k) return -1;
+    if (l == r) return l;
+    int mid = (l + r) >> 1;
+    int res = -1;
+    if (qL <= mid) res = find(u << 1, l, mid, qL, qR, k);
+    if (res == -1 && qR > mid) res = find(u << 1 | 1, mid + 1, r, qL, qR, k);
+    return res;
 }
 ```
 </details>
 
-### 例题 2：区间最大公约数 (GCD)
+### 例题 2：扫描线 (矩形面积并)
 <details>
 <summary>Check Solution</summary>
 
-**题目描述**：维护区间修改与区间 GCD 查询。
-**原理**：利用 $\gcd(a, b, c) = \gcd(a, b-a, c-b)$。
-将原序列转化为差分序列 $d_i$，则区间 $[l, r]$ 的 GCD 为 $\gcd(a_l, \text{query\_gcd\_d}(l+1, r))$。
-区间加操作在差分序列上变为两个单点修改。
+**策略**：将矩形左右边视为入边和出边，纵向用线段树维护覆盖长度。
+
+```cpp
+// 维护 cnt (覆盖次数) 和 len (覆盖长度)
+void push_up(int u, int l, int r) {
+    if (tr[u].cnt > 0) tr[u].len = nodes[r + 1] - nodes[l];
+    else if (l == r) tr[u].len = 0;
+    else tr[u].len = tr[u << 1].len + tr[u << 1 | 1].len;
+}
+```
 </details>
 
 ---
 
-## 5. 综合练习
+## 4. 综合练习
 
-1. **[空间压缩]** 使用动态开点线段树解决值域为 $[1, 10^9]$ 的单点修改、区间求和问题。
-2. **[算子优化]** 维护一个序列，支持区间赋值为 $x$，区间加 $y$，区间求和。
-3. **[进阶]** **线段树上二分**：寻找区间内第一个大于 $x$ 的位置，要求复杂度 $O(\log N)$。
+1. **[动态开点]** 在 $[1, 10^9]$ 的范围内实现单点修改、区间求和。
+2. **[标记永久化]** 实现一个不支持 `push_down` 的区间加、区间求和线段树（提示：利用贡献法）。
+3. **[进阶]** **线段树分裂**：将一棵维护 $[1, N]$ 的线段树按权值 $k$ 分裂为两棵。
 
 ---
 
-## 📺 深度解析
-
-<div className="bilibili-embed-inner">
-  <BilibiliEmbed bvid="BV1pE41197be" />
-</div>
-
-_编者注：线段树的精髓在于“将线性序列结构化”。掌握了动态开点与算子复合，你就能处理几乎所有复杂的区间问题。_
+_编者注：线段树是区间问题的“万金油”。深刻理解其分治思想与代数背景，是通往高级算法竞赛的必经之路。_

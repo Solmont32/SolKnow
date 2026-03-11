@@ -3,125 +3,89 @@ title: 平衡树 (Balanced Tree)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import BilibiliEmbed from '@site/src/components/BilibiliEmbed';
 import { GitBranch, Move, RotateCcw, Shuffle, Layers, Scissors, Repeat } from 'lucide-react';
 
 # 平衡树 (Balanced Tree): 动态维护有序集
 
-<KnowledgeCard type="info" title="核心目标">
-平衡二叉搜索树（BBST）旨在通过特定的调整机制，确保树的高度始终维持在 $O(\log N)$，从而保证插入、删除和查询操作的效率。
+<KnowledgeCard type="info" title="结构抽象：增强型 BST">
+平衡二叉搜索树（BBST）在满足二叉搜索树性质的同时，通过特定的拓扑调整机制维护树的高度。
+- **BST 性质**: $v(left) < v(root) < v(right)$。
+- **增强 (Augmentation)**: 每个节点维护子树信息（如 $size, sum, \max$），使得所有区间操作均可降维为对特定子树的操作。
 </KnowledgeCard>
 
 ---
 
-## 1. 平衡维护策略分类
+## 1. 伸展树 (Splay): 势能分析与自适应
 
-平衡树的维护逻辑可分为三大流派：
+Splay 的核心在于通过伸展操作将目标节点提升至根节点。
 
-| 策略 | 代表结构 | 核心原理 | 优点 | 缺点 |
-| :--- | :--- | :--- | :--- | :--- |
-| **旋转式 (Rotation)** | AVL, Red-Black, **Splay** | 利用左旋/右旋改变节点层级 | 严格平衡 (AVL) 或自适应访问 (Splay) | 实现复杂，Splay 常数大 |
-| **分裂合并式 (Split-Merge)** | **FHQ-Treap** | 基于随机权值的分裂与合并 | 极易实现，天然支持可持久化 | 依赖随机数，常数稍大 |
-| **重构式 (Rebuilding)** | Scapegoat Tree | 局部不平衡时暴力重建子树 | 无需旋转，思想朴素 | 复杂度为均摊 $O(\log N)$ |
+### 1.1 双旋操作的必要性
+在连续三点成链时，传统的 Zig-Zig 操作若仅进行单旋，无法有效压缩树高。
+- **定理**: 采用特殊的双旋（Zig-Zig/Zig-Zag）策略，Splay 操作的均摊复杂度为 $O(\log N)$。
+- **证明 (势能法)**: 定义 $\Phi = \sum \log(size(i))$。通过计算一次双旋前后的势能变化，可以抵消单次旋转的高额代价，最终分摊到 $O(\log N)$。
 
----
-
-## 2. Splay (伸展树)
-
-### 2.1 伸展操作与势能分析
-Splay 的核心在于 `splay(x, k)`，将节点 $x$ 旋转至 $k$ 的下方。
-**定理**：采用 Zig-Zig 和 Zig-Zag 双旋策略，Splay 操作的均摊复杂度为 $O(\log N)$。
-
-```cpp
-void rotate(int x) {
-    int y = tr[x].p, z = tr[y].p;
-    int k = (tr[y].s[1] == x);
-    tr[z].s[tr[z].s[1] == y] = x; tr[x].p = z;
-    tr[y].s[k] = tr[x].s[k ^ 1]; tr[tr[x].s[k ^ 1]].p = y;
-    tr[x].s[k ^ 1] = y; tr[y].p = x;
-    push_up(y); push_up(x);
-}
-```
-
-### 2.2 维护序列：区间操作
-Splay 维护序列时，第 $k$ 个元素对应树中中序遍历的第 $k$ 个节点。区间 $[L, R]$ 可通过将 $L-1$ 伸展至根，$R+1$ 伸展至根的右子节点来提取（即根右儿子的左子树）。
+### 1.2 区间维护的艺术
+通过 `splay(L-1, 0)` 和 `splay(R+1, root)`，区间 $[L, R]$ 对应的子树会被完整隔离在 `ch[ch[root][1]][0]` 中。
 
 ---
 
-## 3. FHQ-Treap (无旋 Treap)
+## 2. FHQ-Treap: 随机化与非旋转
 
-### 3.1 概率平衡证明
-Treap 给每个节点分配随机权值 $priority$，使其在满足 BST 性质的同时满足大根堆性质。
-**证明**：随机插入 $N$ 个节点形成的 Treap，其期望高度为 $O(\log N)$。
+Treap 将 Binary Search Tree (BST) 与 Heap 结合。
 
-### 3.2 核心操作：Split & Merge
-```cpp
-void split(int u, int val, int &l, int &r) { // 按值分裂
-    if (!u) { l = r = 0; return; }
-    if (tr[u].v <= val) {
-        l = u; split(tr[u].r, val, tr[u].r, r);
-    } else {
-        r = u; split(tr[u].l, val, l, tr[u].l);
-    }
-    push_up(u);
-}
-```
+### 2.1 概率平衡性
+每个节点分配一个随机权值 $priority$。
+- **定理**: 随机插入 $N$ 个节点构成的 Treap，其平均深度为 $O(\log N)$。
+- **证明**: 节点 $i$ 是 $j$ 的祖先的概率为 $\frac{1}{|v_i - v_j| + 1}$。通过求和公式 $\sum \frac{1}{i}$，可得深度为 $H_n \approx \ln N$。
+
+### 2.2 Split & Merge 的高度抽象
+所有平衡维护均通过这两个原语实现，无需任何旋转，且天然支持**可持久化**。
 
 ---
 
-## 4. 空间压缩与性能优化
+## 3. 教材化例题与解析
 
-- **节点回收 (Garbage Collection)**：对于频繁删除操作的平衡树，可将废弃节点索引存入栈中，下次申请时重用。
-- **动态树 (LCT) 预演**：平衡树是维护动态图连通性的基石。
-
----
-
-## 5. 经典例题
-
-### 例题 1：普通平衡树 (Top 6 操作)
+### 例题 1：区间翻转 (文艺平衡树)
 <details>
-<summary>Check Solution (FHQ-Treap)</summary>
+<summary>Check Solution (Splay)</summary>
 
-**要求**：插入、删除、求 $x$ 的排名、求排名 $k$ 的数、求前驱、求后继。
+**题目描述**：支持区间翻转。
+**解析**：在节点上打翻转标记 $rev$，每次访问子节点前 `push_down`。
 
 ```cpp
-// 核心逻辑演示
-void insert(int v) {
-    int l, r;
-    split(root, v, l, r);
-    root = merge(merge(l, new_node(v)), r);
-}
-
-void remove(int v) {
-    int l, r, p;
-    split(root, v, l, r);
-    split(l, v - 1, l, p);
-    p = merge(tr[p].l, tr[p].r); // 删除一个节点
-    root = merge(merge(l, p), r);
+void push_down(int x) {
+    if (tr[x].rev) {
+        swap(tr[x].s[0], tr[x].s[1]);
+        tr[tr[x].s[0]].rev ^= 1;
+        tr[tr[x].s[1]].rev ^= 1;
+        tr[x].rev = 0;
+    }
 }
 ```
 </details>
 
-### 例题 2：区间最大子段和 (动态版)
+### 例题 2：序列编辑器 (NOI 维修数列)
 <details>
 <summary>Check Solution</summary>
 
-**题目描述**：在平衡树上维护区间，支持插入、删除、修改，查询区间最大子段和。
-**解析**：在每个节点维护 `sum`, `lmax`, `rmax`, `tmax`，类似于线段树的合并逻辑，但在平衡树旋转/分裂时更新。
+**题目描述**：支持插入、删除、修改、翻转、求和、最大子段和。
+**解析**：综合性最强的平衡树题目。需要维护 `lmax, rmax, tmax` 标记以及区间赋值标记。由于涉及大量删除，建议结合**节点回收池**。
+
+```cpp
+int nodes[N], top; // 回收池
+int new_node() { return top ? nodes[top--] : ++idx; }
+void del_node(int u) { if(u) nodes[++top] = u, del_node(ls[u]), del_node(rs[u]); }
+```
 </details>
 
 ---
 
-## 6. 综合练习
+## 4. 综合练习
 
-1. **[维护序列]** 实现区间翻转与区间加。
-2. **[性能优化]** 实现带节点回收池的平衡树。
-3. **[进阶]** **文艺平衡树+最大子段和**：NOI 维修数列。
+1. **[基础]** 使用 FHQ-Treap 实现普通平衡树的 6 大操作。
+2. **[区间]** 在平衡树上维护一个字符串，支持在任意位置插入、删除字符，以及查询子串的哈希值。
+3. **[进阶]** **可持久化平衡树**：实现一个支持历史版本回滚的有序集合。
 
 ---
 
-## 📺 扩展学习
-
-<div className="bilibili-embed-inner">
-  <BilibiliEmbed bvid="BV1pE41197be" />
-</div>
+_编者注：平衡树是数据结构中的“变形金刚”。从 Splay 的灵活伸展到 FHQ-Treap 的优雅分裂，它们为动态序列的处理提供了近乎无限的可能性。_
