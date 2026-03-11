@@ -4,7 +4,7 @@ title: 组合计数与博弈论：从计数原理、生成函数到博弈平衡
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 import { motion } from 'framer-motion';
-import { Sigma, FunctionSquare, Layers, Binary, Infinity, Zap, Cpu, Gamepad2, Target, Sword, FlaskConical, Balance } from 'lucide-react';
+import { Sigma, FunctionSquare, Layers, Binary, Infinity, Zap, Cpu, Gamepad2, Target, Sword, FlaskConical, Scale } from 'lucide-react';
 
 # 组合计数与博弈论 (Combinatorics & Game Theory)
 
@@ -134,6 +134,6 @@ int main() {
   whileInView={{ opacity: 1 }}
   className="mt-12 p-6 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-amber-100 dark:border-amber-800"
 >
-<Balance className="text-amber-500 mb-2" />
+<Scale className="text-amber-500 mb-2" />
 **大师寄语**：组合学让我们学会如何优雅地穷举，而博弈论则教会我们在复杂的决策树中寻找那一抹确定性的微光。
 </motion.div>

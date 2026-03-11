@@ -2,7 +2,7 @@
 title: 动态规划优化策略
 ---
 
-import { TrendingUp, Maximize2, Zap, GitBranch, LineChart, Activity } from 'lucide-react';
+import { TrendingUp, Maximize2, Zap, GitBranch, LineChart, Activity, ShieldCheck } from 'lucide-react';
 
 # 动态规划优化策略 (DP Optimization)
 

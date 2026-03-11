@@ -2,6 +2,8 @@
 title: 树形 DP
 ---
 
+import { Microscope, Zap, Target, Activity, ShieldCheck } from 'lucide-react';
+
 # 树形动态规划 (Tree Dynamic Programming)
 
 树形动态规划是建立在**树结构**（具有 $N$ 个节点 $N-1$ 条边的无向连通图）上的 DP。其核心范式是通过 **DFS (深度优先搜索)**，利用子树的统计信息来推导当前节点的信息，体现了“局部子树最优推导全局最优”的思想。

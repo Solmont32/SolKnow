@@ -2,6 +2,8 @@
 title: 线性 DP
 ---
 
+import { Microscope, Layers, Activity, ShieldCheck } from 'lucide-react';
+
 # 线性动态规划 (Linear Dynamic Programming)
 
 线性动态规划是 DP 体系中最基础的模型，其核心特征是**状态的演进与输入序列的下标（或多个序列的下标组合）呈线性增长关系**。

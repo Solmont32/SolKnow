@@ -2,6 +2,8 @@
 title: 区间 DP
 ---
 
+import { Microscope, Zap, Activity, ShieldCheck } from 'lucide-react';
+
 # 区间动态规划 (Range Dynamic Programming)
 
 区间动态规划主要解决**可以将一段区间拆分为更小的区间并进行合并**的问题。其核心特征是状态定义与区间两端点 $[i, j]$ 直接相关，通常采用“从小区间推导大区间”的策略。
