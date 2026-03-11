@@ -12,6 +12,13 @@ module.exports = {
     es2021: true,
     node: true,
   },
+  parserOptions: {
+    ecmaVersion: 2022,
+    sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true,
+    },
+  },
   settings: {
     react: {
       version: 'detect',
@@ -23,4 +30,13 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
   },
+  ignorePatterns: ['node_modules/', 'build/', '.docusaurus/', '*.config.js'],
+  overrides: [
+    {
+      files: ['**/*.{js,jsx,ts,tsx}'],
+      rules: {
+        // 可以添加文件特定规则
+      },
+    },
+  ],
 };

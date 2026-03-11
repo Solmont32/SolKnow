@@ -23,14 +23,14 @@ import { Target, Zap, Trophy, BarChart3, ChevronRight, Brain, Layers, Cpu } from
 
 ## 🎯 考点覆盖模型 (Knowledge Matrix)
 
-| 知识模块         | 核心考点                             | 关联习题   | 推荐等级 |
-| :--------------- | :----------------------------------- | :--------- | :------- |
-| **监督学习基础** | 正规方程推导、梯度下降收敛性         | 练习 1, 6  | Level A  |
-| **分类模型**     | 逻辑回归梯度、决策树分裂准则         | 练习 2, 7  | Level A  |
-| **核方法与 SVM** | KKT 条件、对偶问题转换、核函数定义   | 练习 3     | Level B  |
-| **降维与特征**   | PCA 方差最大化证明、SVD 分解         | 练习 4     | Level B  |
-| **集成学习**     | AdaBoost 权重更新、GBDT 残差学习     | 练习 5     | Level C  |
-| **概率模型**     | EM 算法收敛性、高斯混合模型 (GMM)    | 练习 8     | Level C  |
+| 知识模块         | 核心考点                           | 关联习题  | 推荐等级 |
+| :--------------- | :--------------------------------- | :-------- | :------- |
+| **监督学习基础** | 正规方程推导、梯度下降收敛性       | 练习 1, 6 | Level A  |
+| **分类模型**     | 逻辑回归梯度、决策树分裂准则       | 练习 2, 7 | Level A  |
+| **核方法与 SVM** | KKT 条件、对偶问题转换、核函数定义 | 练习 3    | Level B  |
+| **降维与特征**   | PCA 方差最大化证明、SVD 分解       | 练习 4    | Level B  |
+| **集成学习**     | AdaBoost 权重更新、GBDT 残差学习   | 练习 5    | Level C  |
+| **概率模型**     | EM 算法收敛性、高斯混合模型 (GMM)  | 练习 8    | Level C  |
 
 ---
 
@@ -46,6 +46,7 @@ import { Target, Zap, Trophy, BarChart3, ChevronRight, Brain, Layers, Cpu } from
 <summary>Check Solution (Math & C++ Implementation)</summary>
 
 **数学推导**：
+
 1. **展开**：$J(w) = \frac{1}{2} (w^T X^T X w - 2 w^T X^T y + y^T y)$。
 2. **求梯度**：$\nabla_w J(w) = X^T X w - X^T y$。
 3. **令梯度为 0**：$X^T X w = X^T y$。

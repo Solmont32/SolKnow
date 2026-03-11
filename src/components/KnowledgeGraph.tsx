@@ -12,7 +12,7 @@ import {
   BookOpen,
   Info,
   Code2,
-  Infinity,
+  Infinity as InfinityIcon,
   Monitor,
   Youtube,
 } from 'lucide-react';
@@ -87,7 +87,7 @@ const KnowledgeGraphInner = () => {
   const getGroupIcon = (group: number) => {
     switch (group) {
       case 1:
-        return <Infinity size={18} className="text-blue-500" />;
+        return <InfinityIcon size={18} className="text-blue-500" />;
       case 2:
         return <Code2 size={18} className="text-purple-500" />;
       case 3:

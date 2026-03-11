@@ -12,10 +12,10 @@ import { Sigma, FunctionSquare, Zap, Cpu, Layers, Binary, Infinity, Code2, Hash,
 initial={{ opacity: 0, y: 20 }}
 animate={{ opacity: 1, y: 0 }}
 transition={{ duration: 0.5 }}
-className="text-gray-600 dark:text-gray-400 mb-8"
+className="text-gray-600 dark:text-gray-400 mb-8">
 
-> 本篇文档深入探讨矩阵快速幂在加速线性递推、处理非齐次关系以及图论最短路中的核心应用。矩阵不仅是数据的容器，更是线性空间的算子变换。
-> </motion.div>
+ 本篇文档深入探讨矩阵快速幂在加速线性递推、处理非齐次关系以及图论最短路中的核心应用。矩阵不仅是数据的容器，更是线性空间的算子变换。
+</motion.div>
 
 ---
 

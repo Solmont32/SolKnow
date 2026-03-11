@@ -12,10 +12,10 @@ import { Sigma, FunctionSquare, Target, Zap, Binary, Infinity, Cpu, Code2, Hash,
 initial={{ opacity: 0, y: 20 }}
 animate={{ opacity: 1, y: 0 }}
 transition={{ duration: 0.5 }}
-className="text-gray-600 dark:text-gray-400 mb-8"
+className="text-gray-600 dark:text-gray-400 mb-8">
 
-> 本篇章构建了从离散概率基础到复杂状态空间期望建模的完备体系。我们将深入探讨期望的线性性、条件期望、Min-Max 容斥以及随机化算法在处理大数问题中的工业级应用。
-> </motion.div>
+ 本篇章构建了从离散概率基础到复杂状态空间期望建模的完备体系。我们将深入探讨期望的线性性、条件期望、Min-Max 容斥以及随机化算法在处理大数问题中的工业级应用。
+</motion.div>
 
 ---
 
@@ -103,8 +103,8 @@ $n$ 个点树形结构，每个点有电概率。利用树形 DP 两次扫描（
 <motion.div
 initial={{ opacity: 0 }}
 whileInView={{ opacity: 1 }}
-className="mt-12 p-6 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-100 dark:border-purple-800"
+className="mt-12 p-6 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-100 dark:border-purple-800">
 
-> <Infinity className="text-purple-500 mb-2" />
-> **大师寄语**：在不确定性的迷雾中，期望是我们唯一的罗盘。只要步数足够多，大数定律终将让随机回归必然。
-> </motion.div>
+<Infinity className="text-purple-500 mb-2" />
+**大师寄语**：在不确定性的迷雾中，期望是我们唯一的罗盘。只要步数足够多，大数定律终将让随机回归必然。
+</motion.div>

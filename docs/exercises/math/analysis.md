@@ -9,6 +9,7 @@ import { Target, Layers, Zap, Trophy, Compass } from 'lucide-react';
 > **“不积跬步，无以至千里。”** —— 本练习库采用阶梯式结构，对标经典教材《数学分析》课后习题规范。
 
 ---
+
 ## 🪜 练习阶梯说明
 
 - <span style={{ color: 'var(--ifm-color-success)' }}>● **Level A (基础巩固)**</span>：聚焦核心定义、基本运算法则（如极限计算、求导、积分公式）。
@@ -19,17 +20,16 @@ import { Target, Layers, Zap, Trophy, Compass } from 'lucide-react';
 
 ## 🎯 考点覆盖模型 (Knowledge Matrix)
 
-| 知识模块         | 核心考点                             | 典型练习   | 推荐等级 |
-| :--------------- | :----------------------------------- | :--------- | :------- |
-| **极限论**       | $\epsilon-\delta$ 定义、Cauchy 准则 | 练习 1, 10 | Level A/B|
-| **一元微分学**   | Rolle/Lagrange/Cauchy 中值定理       | 练习 2, 15 | Level B  |
-| **一元积分学**   | Newton-Leibniz 公式、分部积分技巧   | 练习 5, 20 | Level A  |
-| **无穷级数**     | 敛散性判别法、Fourier 级数展开       | 练习 30, 35| Level B  |
-| **多元微积分**   | 偏导数、重积分、Green/Stokes 公式    | 练习 40, 50| Level B/C|
-| **实数完备性**   | 七大等价定理证明                     | 练习 60    | Level C  |
+| 知识模块       | 核心考点                            | 典型练习    | 推荐等级  |
+| :------------- | :---------------------------------- | :---------- | :-------- |
+| **极限论**     | $\epsilon-\delta$ 定义、Cauchy 准则 | 练习 1, 10  | Level A/B |
+| **一元微分学** | Rolle/Lagrange/Cauchy 中值定理      | 练习 2, 15  | Level B   |
+| **一元积分学** | Newton-Leibniz 公式、分部积分技巧   | 练习 5, 20  | Level A   |
+| **无穷级数**   | 敛散性判别法、Fourier 级数展开      | 练习 30, 35 | Level B   |
+| **多元微积分** | 偏导数、重积分、Green/Stokes 公式   | 练习 40, 50 | Level B/C |
+| **实数完备性** | 七大等价定理证明                    | 练习 60     | Level C   |
 
 ---
-
 
 ## 🔍 多视角解法对比专题 (Case Study)
 
