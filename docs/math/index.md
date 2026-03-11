@@ -1,4 +1,7 @@
 ---
+title: 数学与算法竞赛专题
+sidebar_position: 1
+---
 
 ## 🎯 关联练习与实战
 
