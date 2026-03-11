@@ -1,21 +1,22 @@
 ---
 title: 计算几何基础 (Geometry Basics)
-description: 系统化向量运算、拓扑性质判定与空间复杂度优化。
+description: 系统化向量运算、拓扑性质判定与几何对象抽象。
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { Trophy, Waypoints, Compass, Target } from 'lucide-react';
+import { Trophy, Waypoints, Compass, Target, Circle, MoveRight } from 'lucide-react';
 
 # 计算几何基础 (Geometry Basics)
 
-计算几何（Computational Geometry）是研究几何问题算法设计的学科。在算法竞赛与工业建模中，核心在于将几何直观转化为严谨的**向量运算**，并妥善处理浮点数精度与边界情况。
+计算几何（Computational Geometry）是算法竞赛中逻辑最为严密的版块之一。其核心在于通过**向量算子**将欧几里得几何直观转化为代数运算，并利用**精度控制**屏蔽浮点数截断带来的逻辑崩塌。
 
 ---
 
 ## 1. 精度控制与数值鲁棒性
 
-由于 `double` 类型的有限精度，直接使用 `==` 判定浮点数相等会导致不可预知的错误。
+由于 `double` 遵循 IEEE 754 标准，其有效位数约为 15-17 位。在涉及减法（尤其是两个相近数相减）和叉积运算时，误差会迅速积累。
 
+### 符号函数 (Sign Function)
 ```cpp
 typedef double DB;
 const DB eps = 1e-9;
@@ -33,11 +34,11 @@ int dcmp(DB x, DB y) {
 
 ---
 
-## 2. 向量运算体系 (Vector Operations)
+## 2. 几何对象抽象 (Geometric Abstraction)
 
-向量是计算几何的基石。我们将点与向量统一使用 `Point` 结构体表示。
+在工业级实现中，建议将几何对象封装为结构体，并重载基础算子。
 
-### 基础结构
+### 2.1 点与向量 (Point & Vector)
 ```cpp
 struct Point {
     DB x, y;
@@ -45,64 +46,133 @@ struct Point {
     Point operator- (const Point& b) const { return {x - b.x, y - b.y}; }
     Point operator* (const DB& b) const { return {x * b, y * b}; }
     Point operator/ (const DB& b) const { return {x / b, y / b}; }
+    bool operator== (const Point& b) const { return dcmp(x, b.x) == 0 && dcmp(y, b.y) == 0; }
 };
 typedef Point Vector;
 
 DB dot(Vector a, Vector b) { return a.x * b.x + a.y * b.y; }
 DB cross(Vector a, Vector b) { return a.x * b.y - a.y * b.x; }
 DB length(Vector a) { return sqrt(dot(a, a)); }
+DB angle(Vector a, Vector b) { return acos(dot(a, b) / length(a) / length(b)); }
 ```
 
-### 核心算子
-1. **点积 (Dot Product)**: $\vec{A} \cdot \vec{B} = |\vec{A}||\vec{B}|\cos\theta$。常用于判断向量夹角（锐角/钝角）及投影长度。
-2. **叉积 (Cross Product)**: $\vec{A} \times \vec{B} = |\vec{A}||\vec{B}|\sin\theta$。
-   - **有向面积**: 平行四边形面积，三角形面积为 `cross/2`。
-   - **拓扑判定**: 若 `cross > 0`，则 $B$ 在 $A$ 的左侧。
-3. **向量旋转**: 逆时针旋转 $\alpha$：
-   $(x\cos\alpha - y\sin\alpha, x\sin\alpha + y\cos\alpha)$。
+### 2.2 直线与线段 (Line & Segment)
+直线通常使用“点+方向向量”表示：$P = P_0 + t\vec{v}$。
+```cpp
+struct Line {
+    Point p; Vector v;
+    DB ang;
+    Line() {}
+    Line(Point p, Vector v) : p(p), v(v) { ang = atan2(v.y, v.x); }
+    // 获取直线上 parameter 为 t 的点
+    Point point(DB t) { return p + v * t; }
+};
+```
+
+### 2.3 圆 (Circle)
+```cpp
+struct Circle {
+    Point c; DB r;
+    Circle(Point c, DB r) : c(c), r(r) {}
+    Point point(DB a) { // 根据圆心角获取圆上点
+        return {c.x + cos(a) * r, c.y + sin(a) * r};
+    }
+};
+```
 
 ---
 
-## 3. 拓扑性质判定 (Topological Predicates)
+## 3. 核心拓扑性质判定 (Topological Predicates)
 
-### 线段交点判定
-判定线段 $AB$ 与 $CD$ 是否相交：
-- **快速排斥实验**: 检查两线段矩形包围盒是否有交集。
-- **跨立实验**: 检查 $A, B$ 是否在直线 $CD$ 两侧，且 $C, D$ 是否在直线 $AB$ 两侧。
-  $$(\vec{CA} \times \vec{CD}) \cdot (\vec{CB} \times \vec{CD}) \le 0$$
+### 3.1 点与直线的关系
+1. **点在直线上**: `sign(cross(p - L.p, L.v)) == 0`。
+2. **点到直线的距离**: 
+   $$d = \frac{|\vec{v} \times \vec{AP}|}{|\vec{v}|}$$
+3. **点在直线上的投影**:
+   $$P' = A + \frac{\vec{AP} \cdot \vec{v}}{|\vec{v}|^2}\vec{v}$$
 
-### 点在多边形内 (Point in Polygon)
-1. **射线法 (Ray Casting)**: 从点 $P$ 向任意方向引射线，计算与多边形边界的交点个数。奇数在内，偶数在外。
-2. **回转数法 (Winding Number)**: 计算 $P$ 点相对于多边形边界的总转角。若总转角为 $2\pi$ 则在内，为 $0$ 则在外。
-
----
-
-## 4. 空间复杂度优化
-
-在处理大规模几何数据（如 $N > 10^6$）时：
-- **原地算法 (In-place)**: 如 Andrew 算法中，可以利用排序后的原数组空间进行栈操作，减少额外 $O(N)$ 分配。
-- **轻量化表征**: 尽量避免在结构体中存储冗余信息（如提前存储长度、角度等），除非它是性能瓶颈。
-
-<KnowledgeCard type="warning" title="精度陷阱">
-在使用 <code>asin</code>, <code>acos</code> 与 <code>sqrt</code> 时，务必确保参数在合法定义域内。例如 <code>sqrt(max(0.0, x))</code>。
-</KnowledgeCard>
-
----
-
-## 5. 经典练习
-
-<details>
-<summary>例题：判定点是否在线段上</summary>
-
-**题目描述**：给定点 $P$ 和线段 $AB$，判定 $P$ 是否在线段 $AB$ 上（含端点）。
-
-**解答思路**：
-1. 首先判定 $P$ 是否在直线 $AB$ 上：即 $\vec{AP} \times \vec{AB} = 0$。
-2. 其次判定 $P$ 是否在 $A, B$ 之间：即 $\vec{PA} \cdot \vec{PB} \le 0$。
+### 3.2 线段相交判定
+**规范相交**: 两条线段恰好有一个不在端点处的交点。
+**非规范相交**: 交点可能在端点，或两线段部分重合。
 
 ```cpp
+// 判定点 c 是否在线段 ab 上
 bool onSegment(Point p, Point a, Point b) {
     return sign(cross(a - p, b - p)) == 0 && sign(dot(a - p, b - p)) <= 0;
+}
+
+// 判定线段 ab 与 cd 是否相交
+bool segmentIntersection(Point a, Point b, Point c, Point d) {
+    DB c1 = cross(b - a, c - a), c2 = cross(b - a, d - a);
+    DB c3 = cross(d - c, a - c), c4 = cross(d - c, b - c);
+    // 跨立实验
+    if (sign(c1) * sign(c2) < 0 && sign(c3) * sign(c4) < 0) return true;
+    // 端点重合或在线段上
+    if (onSegment(c, a, b) || onSegment(d, a, b) || 
+        onSegment(a, c, d) || onSegment(b, c, d)) return true;
+    return false;
+}
+```
+
+---
+
+## 4. 经典练习与推导
+
+<details>
+<summary>例题 1：直线交点求解 (Line-Line Intersection)</summary>
+
+**题目描述**：给定两条直线 $L_1: P_1 + t\vec{v}_1$ 和 $L_2: P_2 + w\vec{v}_2$，求其交点。
+
+**解答思路**：
+设交点为 $P_1 + t\vec{v}_1$，则该点应满足在 $L_2$ 上，即：
+$$(P_1 + t\vec{v}_1 - P_2) \times \vec{v}_2 = 0$$
+利用叉积分配律推导：
+$$(P_1 - P_2) \times \vec{v}_2 + t(\vec{v}_1 \times \vec{v}_2) = 0$$
+$$t = \frac{(P_2 - P_1) \times \vec{v}_2}{\vec{v}_1 \times \vec{v}_2}$$
+
+```cpp
+Point getLineIntersection(Line a, Line b) {
+    Vector u = a.p - b.p;
+    DB t = cross(b.v, u) / cross(a.v, b.v);
+    return a.p + a.v * t;
+}
+```
+</details>
+
+<details>
+<summary>例题 2：点关于直线的对称点</summary>
+
+**题目描述**：给定点 $P$ 和直线 $L$，求 $P$ 关于 $L$ 的对称点 $P''$。
+
+**解答思路**：
+1. 求出 $P$ 在直线 $L$ 上的投影点 $P'$。
+2. 对称点 $P'' = P' + (P' - P) = 2P' - P$。
+
+```cpp
+Point getSymmetricPoint(Point p, Line l) {
+    Vector ap = p - l.p;
+    Point p_proj = l.p + l.v * (dot(ap, l.v) / dot(l.v, l.v));
+    return p_proj * 2 - p;
+}
+```
+</details>
+
+<details>
+<summary>练习 1：判断多边形是否为凸多边形</summary>
+
+**提示**：遍历所有顶点，检查相邻两条边的叉积符号是否一致（不含共线点）。
+
+```cpp
+bool isConvex(vector<Point>& poly) {
+    int n = poly.size();
+    int sgn = 0;
+    for (int i = 0; i < n; i++) {
+        int cur = sign(cross(poly[(i+1)%n] - poly[i], poly[(i+2)%n] - poly[(i+1)%n]));
+        if (cur == 0) continue;
+        if (sgn == 0) sgn = cur;
+        else if (sgn != cur) return false;
+    }
+    return true;
 }
 ```
 </details>
@@ -120,8 +190,9 @@ bool onSegment(Point p, Point a, Point b) {
   <a href="/docs/exercises/cs/algorithm-geometry" className="button button--outline button--success button--sm">进入练习库 →</a>
 </div>
 
-## 6. 模块索引
+## 5. 模块索引
 
 - <Waypoints className="inline-block w-4 h-4 mr-1 text-blue-500" /> [凸包算法 (Convex Hull)](convex-hull) - $O(N \log N)$ 的边界构建。
 - <Compass className="inline-block w-4 h-4 mr-1 text-purple-500" /> [旋转卡壳 (Rotating Calipers)](rotating-calipers) - 对踵点搜索与直径求解。
 - <Target className="inline-block w-4 h-4 mr-1 text-amber-500" /> [半平面交 (Half-plane Intersection)](half-plane-intersection) - 线性约束下的可行域求解。
+- <MoveRight className="inline-block w-4 h-4 mr-1 text-emerald-500" /> [扫描线技巧 (Scanning Line)](scanning-line) - 离散化与区间覆盖面积。
