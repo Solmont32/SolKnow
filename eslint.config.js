@@ -7,7 +7,6 @@ const tsParser = require("@typescript-eslint/parser");
 const react = require("eslint-plugin-react");
 const typescriptEslint = require("@typescript-eslint/eslint-plugin");
 const globals = require("globals");
-const js = require("@eslint/js");
 
 const {
     FlatCompat,
@@ -15,8 +14,7 @@ const {
 
 const compat = new FlatCompat({
     baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
+    recommendedConfig: require("@eslint/js").configs.recommended,
 });
 
 module.exports = defineConfig([{
