@@ -2,7 +2,7 @@
 title: 字符串哈希
 ---
 
-import { ShieldCheck, Zap, Hash, AlertTriangle, Scale, Network } from 'lucide-react';
+import { ShieldCheck, Zap, Hash, AlertTriangle, Scale, Network, Info } from 'lucide-react';
 import CodeCollapse from '@site/src/components/CodeCollapse';
 
 # 字符串哈希：高效判等与随机化算法
@@ -18,95 +18,67 @@ $$
 其中 $B$（Base）为基数，$M$（Modulus）为模数。
 
 ### 1.1 区间哈希公式
-预处理前缀哈希 $h[i]$：
-$$
-H(S[l \dots r]) = (h[r] - h[l-1] \cdot B^{r-l+1}) \pmod M
-$$
+$$ H(S[l \dots r]) = (h[r] - h[l-1] \cdot B^{r-l+1}) \pmod M $$
 
-<CodeCollapse title="字符串哈希核心实现" language="cpp">
+## 2. 安全性与抗攻击
+
+### 2.1 生日悖论与碰撞风险
+在处理 $K$ 个不同的子串时，发生碰撞（$H(S_i) = H(S_j)$ 但 $S_i \neq S_j$）的概率 $P$ 满足：
+$$ P \approx 1 - e^{-\frac{K(K-1)}{2M}} \approx 1 - e^{-\frac{K^2}{2M}} $$
+- 若 $M = 10^9$，$K \approx 4 \times 10^4$ 时碰撞概率即达 $50\%$。
+- **结论**：对于 $10^5$ 量级的数据，单模数 $10^9$ 极不安全。
+
+### 2.2 抗攻击方案：$2^{61}-1$ 哈希
+使用梅森素数 $M = 2^{61}-1$。其优势在于：
+1. **极大模数**：碰撞概率降至极低。
+2. **位运算加速**：利用 $a \cdot 2^{61} + b \equiv a + b \pmod{2^{61}-1}$ 实现快速取模。
+
+<CodeCollapse title="双哈希与 2^61-1 实现 (C++)" language="cpp">
 
 ```cpp
+typedef __int128_t int128;
 typedef unsigned long long ull;
-const ull B = 131; // 常用基数：131, 13331, 133331
-ull h[MAXN], p[MAXN];
+const ull M = (1ULL << 61) - 1;
 
-void init_hash(const string& s) {
-    p[0] = 1;
-    for (int i = 1; i <= s.length(); i++) {
-        h[i] = h[i-1] * B + s[i-1];
-        p[i] = p[i-1] * B;
-    }
+ull mod_mul(ull a, ull b) {
+    int128 res = (int128)a * b;
+    ull ans = (ull)(res >> 61) + (ull)(res & M);
+    if (ans >= M) ans -= M;
+    return ans;
 }
 
 ull get_hash(int l, int r) {
-    return h[r] - h[l-1] * p[r-l+1];
+    ull res = h[r] + M - mod_mul(h[l-1], p[r-l+1]);
+    return res >= M ? res - M : res;
 }
 ```
 
 </CodeCollapse>
 
-## 2. 安全性与抗攻击：模数选择
-
-### 2.1 生日悖论与碰撞风险
-在处理 $K$ 个不同的子串时，发生碰撞（$H(S_i) = H(S_j)$ 但 $S_i \neq S_j$）的概率 $P \approx 1 - e^{-K^2 / 2M}$。
-- 若 $M = 10^9$，$K \approx 4 \times 10^4$ 时碰撞概率即达 $50\%$。
-- **推荐策略**：
-  1. **双哈希**：使用两对 $(B, M)$。例如 $(131, 10^9+7)$ 与 $(13331, 10^9+9)$。
-  2. **大质数哈希**：使用 $M = 2^{61}-1$ (Mersenne Prime)。
-
-### 2.2 自然溢出的隐患
-虽然 `unsigned long long` 自动取模 $2^{64}$ 极快，但存在**构造攻击**（如针对 $2^{64}$ 模数的特殊 Thue-Morse 序列），在严谨竞赛中建议手动取模大质数。
+### 2.3 自然溢出 (Mod 2^64) 的隐患
+虽然 `unsigned long long` 自动取模极快，但存在**Thue-Morse 序列**攻击。该序列定义的字符串 $S$ 满足：$S_0 = "a", S_i = S_{i-1} + \overline{S_{i-1}}$（其中 $\overline{S}$ 表示字符翻转）。
+- **原理**：该序列构造出的两个不同字符串在 $2^{64}$ 下具有相同的多项式哈希值。
+- **对策**：使用大质数取模，或随机化基数 $B$。
 
 ## 3. 高级应用场景
 
-### 例题 1：最长公共子串 (二分 + 哈希)
+### 例题：最长公共子串 (二分 + 哈希)
 > 在 $O(N \log N)$ 时间内求两个串的最长公共子串。
 
 <details>
 <summary>Check Solution</summary>
 
 **思路**：
-二分答案长度 $L$，将串 $A$ 所有长度为 $L$ 的哈希值插入 `unordered_set`，再遍历串 $B$ 检查。
+1. 二分答案长度 $L$。
+2. 计算 $A$ 中所有长度为 $L$ 的哈希值并存入 `hash_set`。
+3. 检查 $B$ 中是否存在相同的哈希值。
 
-```cpp
-bool check(int L) {
-    unordered_set<ull> st;
-    for (int i = 1; i + L - 1 <= n; i++) st.insert(get_hash_A(i, i + L - 1));
-    for (int i = 1; i + L - 1 <= m; i++) if (st.count(get_hash_B(i, i + L - 1))) return true;
-    return false;
-}
-```
-</details>
-
-### 例题 2：[Codeforces 514C] Watto and Mechanism
-> 给定 $n$ 个标准串，询问一个查询串是否能通过恰好修改一个字符变成某个标准串。
-
-<details>
-<summary>Check Solution</summary>
-
-**思路**：
-预处理所有标准串的哈希值存入 `set`。对于查询串 $S$，枚举修改位置 $i$ 和修改后的字符 $c$，利用 $O(1)$ 哈希公式快速计算新串哈希值并查询。
-$$ H_{new} = H_{old} - (S[i] \cdot B^{len-i-1}) + (c \cdot B^{len-i-1}) $$
-
-```cpp
-bool solve() {
-    ull current_h = get_query_hash();
-    for (int i = 0; i < len; i++) {
-        for (char c = 'a'; c <= 'c'; c++) {
-            if (c == query_s[i]) continue;
-            ull next_h = current_h - (query_s[i] * p[len-i-1]) + (c * p[len-i-1]);
-            if (standards.count(next_h)) return true;
-        }
-    }
-    return false;
-}
-```
 </details>
 
 ---
 
 ## 🎯 练习题清单
-1. [Luogu P3370] 字符串哈希模板：初步实践。
+1. [Luogu P3370] 字符串哈希模板。
 2. [POJ 2774] Longest Common Substring：哈希 + 二分。
 3. [Luogu P5043] 树同构：树哈希应用。
-4. [CF 1200E] Compress Words：利用哈希加速前缀后缀匹配合并。
+4. [CF 1200E] Compress Words：利用哈希加速合并。
