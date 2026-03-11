@@ -1,137 +1,118 @@
 ---
 title: 双指针算法 (Two Pointers)
-sidebar_position: 6
+sidebar_position: 7
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { FastForward, MoveHorizontal, Target } from 'lucide-react';
+import { Repeat, FastForward, ArrowLeftRight, MoveRight } from 'lucide-react';
 
 # 双指针算法 (Two Pointers)
 
-双指针是一种通过维护两个变量（指针）在序列上移动，从而利用序列的**单调性**将 $O(n^2)$ 的暴力枚举优化为 $O(n)$ 的技巧。
+双指针是一种通过维护两个指针 $i, j$ 来降低搜索空间维度的优化技术。它利用**单调性**，将 $O(n^2)$ 的暴力遍历优化至 $O(n)$。
 
 ---
 
-## 一、 算法分类与逻辑
+## 一、 核心分类与单调性证明
 
-### 1. 数学基础：单调性与收敛性 (Monotonicity & Convergence)
-双指针算法的有效性建立在**决策单调性**之上。
-设 $i, j$ 是序列上的两个索引。若对于每一个 $j$，存在一个最优的或唯一的 $i(j)$ 使得某种性质满足，且 $i(j)$ 随 $j$ 的增加而**单调不减**，则称该问题具有双指针结构。
+### 1. 同向双指针 (滑动窗口)
+两个指针向同一方向移动。常用于处理子段、子串性质。
+- **单调性证明**：若当 $i$ 增加时，$j$ 只能向右移动（即 $j$ 具有关于 $i$ 的单调递增性），则可使用。
+- **性质**：$j$ 不会回退，总时间复杂度为 $O(n)$。
 
-**复杂度分析**：
-由于 $i$ 和 $j$ 在整个过程中最多各自遍历序列一次（即 $i$ 和 $j$ 的总移动步数 $\le 2n$），因此算法的时间复杂度为 $O(n)$。这比暴力枚举 $i, j$ 的 $O(n^2)$ 有了质的飞跃。
+### 2. 反向双指针 (对撞指针)
+指针从两端向中间移动。常用于处理有序数组的匹配问题。
+- **单调性证明**：若 $A[i] + A[j] > Target$，由于数组递增，固定 $i$ 后，所有 $k > j$ 均有 $A[i] + A[k] > Target$，故 $j$ 只能向左移动。
 
 ---
 
-## 二 : 教材化例题
+## 二、 算法性能分析 (Complexity)
 
-### 例题 1：最长不包含重复字符的子段
-给定序列 $a$，求最长的子段长度，使得该子段内没有重复元素。
+| 类型 | 指针移动方向 | 时间复杂度 | 空间复杂度 | 适用场景 |
+| :--- | :--- | :--- | :--- | :--- |
+| **滑动窗口** | 同向 | $O(n)$ | $O(1)$ 或 $O(\text{charset})$ | 最长/最短子串 |
+| **对撞指针** | 异向 | $O(n)$ | $O(1)$ | 二数之和、回文判定 |
+| **快慢指针** | 同向 (速率不同) | $O(n)$ | $O(1)$ | 链表环判定、中点查找 |
+
+---
+
+## 三、 教材化例题
+
+### 例题 1：最长连续不重复子序列
+给定序列，求最长的一个子序列，使得子序列中没有重复数字。
 
 <details>
 <summary>解析与推导</summary>
 
-**逻辑推导**：
-1. 枚举右端点 $j$，维护左端点 $i$。
-2. 窗口 $[i, j]$ 内记录每个数出现的次数。
-3. 若 $a[j]$ 出现次数 $>1$，则不断右移 $i$ 并更新计数，直到 $a[j]$ 计数为 1。
-4. 由于 $i$ 和 $j$ 都只增不减，复杂度为 $O(n)$。
+**1. 单调性证明**：
+设 $j$ 是以 $i$ 结尾的最长不重复子序列的左边界。
+当 $i$ 移动到 $i+1$ 时，若 $[j, i+1]$ 出现重复，则左边界 $j'$ 必然满足 $j' \ge j$。
+即 $j$ 随 $i$ 单调递增。
 
+**2. 代码实现**：
 ```cpp
 #include <iostream>
-#include <algorithm>
 using namespace std;
 
 const int N = 100010;
-int a[N], s[N];
+int a[N], S[N]; // S记录窗口内数字出现次数
 
 int main() {
-    int n;
+    int n, res = 0;
     scanf("%d", &n);
-    for (int i = 0; i < n; i++) scanf("%d", &a[i]);
-
-    int res = 0;
-    for (int i = 0, j = 0; j < n; j++) {
-        s[a[j]]++;
-        while (s[a[j]] > 1) {
-            s[a[i]]--;
-            i++;
+    for (int i = 0, j = 0; i < n; i++) {
+        scanf("%d", &a[i]);
+        S[a[i]]++;
+        while (S[a[i]] > 1) { // 出现重复，收缩左边界
+            S[a[j]]--;
+            j++;
         }
-        res = max(res, j - i + 1);
+        res = max(res, i - j + 1);
     }
     printf("%d\n", res);
-    return 0;
-}
-```
-</details>
-
-### 例题 2 : 数组元素的目标和
-给定两个升序数组 $A, B$ 和一个数 $X$，求 $i, j$ 使得 $A[i] + B[j] = X$。
-
-<details>
-<summary>C++ 实现</summary>
-
-```cpp
-#include <iostream>
-using namespace std;
-
-const int N = 100010;
-int a[N], b[N];
-
-int main() {
-    int n, m, x;
-    scanf("%d %d %d", &n, &m, &x);
-    for (int i = 0; i < n; i++) scanf("%d", &a[i]);
-    for (int i = 0; i < m; i++) scanf("%d", &b[i]);
-
-    for (int i = 0, j = m - 1; i < n; i++) {
-        while (j >= 0 && a[i] + b[j] > x) j--;
-        if (j >= 0 && a[i] + b[j] == x) {
-            printf("%d %d\n", i, j);
-            break;
-        }
-    }
-    return 0;
 }
 ```
 </details>
 
 ---
 
-## 三 : 综合练习库
+## 四、 综合练习库
 
-### 练习 1：判断子序列
-给定序列 $a, b$，判断 $a$ 是否是 $b$ 的子序列。
+### 练习 1：数组元素之和 (对撞指针)
+给定两个升序数组 $A, B$，寻找 $i, j$ 使得 $A[i] + B[j] = X$。
 <details>
 <summary>Check Solution</summary>
 
+**证明**：
+对于固定的 $i$，当 $j$ 从 $m-1$ 开始向左移动。若 $A[i] + B[j] > X$，则对于 $i' > i$，$A[i'] + B[j]$ 依然可能等于 $X$，但对于当前的 $i$，我们需要减小 $j$。由于 $i$ 增大时 $j$ 只能减小，故满足单调性。
+
 ```cpp
-#include <iostream>
-using namespace std;
-
-const int N = 100010;
-int a[N], b[N];
-
-int main() {
-    int n, m;
-    scanf("%d %d", &n, &m);
-    for (int i = 0; i < n; i++) scanf("%d", &a[i]);
-    for (int i = 0; i < m; i++) scanf("%d", &b[i]);
-
-    int i = 0, j = 0;
-    while (i < n && j < m) {
-        if (a[i] == b[j]) i++;
-        j++;
+for (int i = 0, j = m - 1; i < n; i++) {
+    while (j >= 0 && a[i] + b[j] > x) j--;
+    if (j >= 0 && a[i] + b[j] == x) {
+        printf("%d %d\n", i, j);
+        break;
     }
-
-    if (i == n) puts("Yes");
-    else puts("No");
-
-    return 0;
 }
+```
+</details>
+
+### 练习 2：判断子序列
+判断 $a$ 序列是否为 $b$ 序列的子序列。
+<details>
+<summary>Check Solution</summary>
+
+**逻辑**：
+遍历 $b$ 序列，若 $b[j] == a[i]$，则 $i$ 移动。若最后 $i == n$，则成立。
+
+```cpp
+int i = 0;
+for (int j = 0; j < m; j++) {
+    if (i < n && a[i] == b[j]) i++;
+}
+if (i == n) puts("Yes");
 ```
 </details>
 
 ---
 
-_编者注：双指针的灵魂在于“不回退”。只要能证明当一个指针移动时，另一个指针的最优位置也单向移动，双指针就是最优解。_
+_编者注：双指针算法的灵魂在于“不回头”。通过分析性质，确定指针移动的单调性，是将其从暴力 $O(N^2)$ 拯救出来的唯一钥匙。_

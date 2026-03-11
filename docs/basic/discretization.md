@@ -1,128 +1,101 @@
 ---
-title: 离散化策略 (Discretization)
-sidebar_position: 7
+title: 离散化技巧 (Discretization)
+sidebar_position: 10
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { Minimize, Shuffle, Repeat } from 'lucide-react';
+import { Shuffle, Filter, Map, Layers } from 'lucide-react';
 
-# 离散化策略 (Discretization)
+# 离散化技巧 (Discretization)
 
-离散化是一种**空间换时间**的特殊映射技术。当数据的范围极大（如 $0 \sim 10^9$）但个数较少（如 $10^5$）时，我们只关心其相对大小（有序性），通过将其映射到连续的整数区间，可以使用前缀和、树状数组或线段树等工具。
-
----
-
-## 一、 核心步骤：映射策略 (Mapping Strategy)
-
-离散化并不是简单的排序，它是一套**保序映射**体系。其必要性源于：
-- **值域爆炸**：坐标或权值范围远超内存限制（如 $10^9$）。
-- **结构稀疏**：虽然值域大，但实际参与运算的离散点极少（如 $10^5$）。
-
-### 系统化执行流程：
-1.  **收集 (Collect)**：扫描题干，找出所有可能改变状态或被查询的**关键点**。
-2.  **保序 (Order Preservation)**：对关键点排序并去重，建立原值到连续秩（Rank）的映射。
-3.  **转换 (Transform)**：将原问题中的坐标替换为对应的秩。
-4.  **复原 (Optional)**：若输出需要原值，可通过秩在有序数组中反查。
+离散化是一种处理**大范围、稀疏数据**的映射技术。当数据的取值范围（如 $0 \sim 10^9$）远大于数据的个数（如 $10^5$）时，我们通过维护数据的**相对顺序**，将无限/超大空间的座标映射到紧凑的整数空间。
 
 ---
 
-## 二 : 实现模板
+## 一、 核心逻辑与步骤
 
-```cpp
-vector<int> alls; // 存储所有待离散化的值
-sort(alls.begin(), alls.end());
-alls.erase(unique(alls.begin(), alls.end()), alls.end());
+### 1. 离散化的适用场景
+- 坐标范围极大，但涉及到的坐标点数有限。
+- 算法复杂度与取值范围相关（如前缀和、线段树），通过离散化可降维。
 
-// 查询离散化后的坐标 (1-based)
-int find(int x) {
-    return lower_bound(alls.begin(), alls.end(), x) - alls.begin() + 1;
-}
-```
+### 2. 标准实现流程 ($O(n \log n)$)
+1.  **收集 (Collect)**：记录所有可能用到的坐标。
+2.  **去重 (Unique & Sort)**：
+    ```cpp
+    sort(alls.begin(), alls.end());
+    alls.erase(unique(alls.begin(), alls.end()), alls.end());
+    ```
+3.  **查询 (Find)**：利用二分搜索找到原坐标对应的映射下标。
 
 ---
 
-## 三 : 教材化例题
+## 二、 算法性能分析 (Complexity)
 
-### 例题 1：区间和
-在数轴上，初始全为 0。进行 $n$ 次操作，每次在 $x$ 位置加上 $c$。之后进行 $m$ 次询问，求 $[l, r]$ 区间内数字的和。坐标范围 $[-10^9, 10^9]$，$n, m \le 10^5$。
+| 阶段 | 复杂度 | 核心瓶颈 |
+| :--- | :--- | :--- |
+| **预处理 (排序去重)** | $O(n \log n)$ | `std::sort` 效率 |
+| **单次查询 (映射)** | $O(\log n)$ | 二分搜索 |
+| **空间复杂度** | $O(n)$ | 存储所有坐标点 |
+
+---
+
+## 三、 教材化例题
+
+### 例题 1：区间和 (经典离散化应用)
+数轴上有 $N$ 个点被加上了值 $c$，随后进行 $M$ 次区间查询 $[l, r]$。坐标范围 $[-10^9, 10^9]$。
 
 <details>
 <summary>解析与推导</summary>
 
-**逻辑推导**：
-1. 坐标范围极大，无法直接开数组。
-2. 但涉及到的坐标最多只有 $n + 2m$ 个。
-3. 将 $n$ 个操作位置和 $m$ 对询问端点全部放入 `alls`。
-4. 离散化后，在映射后的位置进行单点修改。
-5. 利用前缀和求区间和。
+**解题思路**：
+1. **数据稀疏性**：虽然坐标到 $10^9$，但实际上涉及的坐标点最多只有 $N + 2M$ 个（加上查询的左右端点）。
+2. **映射建立**：将所有涉及到的 $x, l, r$ 存入 `alls` 数组并离散化。
+3. **前缀和应用**：在离散化后的紧凑空间上建立前缀和数组。
 
+**关键实现 (Find 函数)**：
 ```cpp
-#include <iostream>
-#include <vector>
-#include <algorithm>
-using namespace std;
-
-typedef pair<int, int> PII;
-const int N = 300010;
-int a[N], s[N];
-vector<int> alls;
-vector<PII> add, query;
-
 int find(int x) {
-    return lower_bound(alls.begin(), alls.end(), x) - alls.begin() + 1;
+    int l = 0, r = alls.size() - 1;
+    while (l < r) {
+        int mid = l + r >> 1;
+        if (alls[mid] >= x) r = mid;
+        else l = mid + 1;
+    }
+    return l + 1; // 映射到从 1 开始的坐标
 }
+```
 
-int main() {
-    int n, m;
-    scanf("%d %d", &n, &m);
-    for (int i = 0; i < n; i++) {
-        int x, c;
-        scanf("%d %d", &x, &c);
-        add.push_back({x, c});
-        alls.push_back(x);
-    }
-    for (int i = 0; i < m; i++) {
-        int l, r;
-        scanf("%d %d", &l, &r);
-        query.push_back({l, r});
-        alls.push_back(l);
-        alls.push_back(r);
-    }
-
-    sort(alls.begin(), alls.end());
-    alls.erase(unique(alls.begin(), alls.end()), alls.end());
-
-    for (auto item : add) a[find(item.first)] += item.second;
-    for (int i = 1; i <= alls.size(); i++) s[i] = s[i - 1] + a[i];
-
-    for (auto item : query) {
-        int l = find(item.first), r = find(item.second);
-        printf("%d\n", s[r] - s[l - 1]);
-    }
-    return 0;
+**完整代码逻辑**：
+```cpp
+for (auto item : add) {
+    int x = find(item.first);
+    a[x] += item.second;
+}
+for (int i = 1; i <= alls.size(); i++) s[i] = s[i-1] + a[i];
+for (auto item : query) {
+    int l = find(item.first), r = find(item.second);
+    printf("%d\n", s[r] - s[l-1]);
 }
 ```
 </details>
 
 ---
 
-## 四 : 综合练习库
+## 四、 综合练习库
 
-### 练习 1：离散化去重
-实现一个支持在线插入、查询排名（离散化意义下）的简易系统。
+### 练习 1：地毯覆盖 (坐标离散化)
+在 $10^9 \times 10^9$ 的平面上，覆盖 $N$ 个矩形。求被至少覆盖一次的总面积。
 <details>
 <summary>Check Solution</summary>
 
-```cpp
-#include <iostream>
-#include <vector>
-#include <algorithm>
-using namespace std;
+**逻辑**：
+1. 将所有矩形的 $x$ 坐标和 $y$ 坐标分别进行离散化。
+2. 平面被划分为 $(2N-1) \times (2N-1)$ 个小矩形块。
+3. 统计每个小矩形块是否被覆盖，累加面积。
+*(注：通常配合扫描线算法 $O(N \log N)$，但暴力离散化为 $O(N^2)$。)*
 
-// 略：核心逻辑同模板。离散化通常用于静态或离线场景。
-```
 </details>
 
 ---
 
-_编者注：离散化是“无限到有限”的映射。它不仅仅是为了节省空间，更是为了打通数据与算法（如前缀和）之间的壁垒。_
+_编者注：离散化是“降维打击”的典型。它告诉我们，问题的本质往往不在于绝对值的大小，而在于元素之间的相对拓扑关系。_

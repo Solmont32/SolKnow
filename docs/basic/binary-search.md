@@ -4,222 +4,170 @@ sidebar_position: 3
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { Target, Zap, AlertTriangle, Lightbulb } from 'lucide-react';
+import { Target, Zap, AlertTriangle, Lightbulb, Search, Ruler } from 'lucide-react';
 
 # 二分与三分算法 (Binary & Ternary Search)
 
-二分与三分算法是处理**有序性（Order）**与**凸性（Convexity）**问题的利器。其本质是通过对决策空间的重复划分，实现搜索复杂度的对数级（$O(\log n)$）降维。
+二分与三分算法是处理**有序性（Order）**与**凸性（Convexity）**问题的核心范式。其本质是通过对决策空间的重复划分，实现搜索复杂度的对数级（$O(\log n)$）压缩。
 
 ---
 
 ## 一、 二分算法：单调性与二分性
 
-### 1. 核心理论：单调性分析 (Monotonicity Analysis)
-二分算法的本质并非针对“有序序列”，而是针对**判定函数 $P(x)$ 的单调性**。
+### 1. 形式化定义与判定
+设 $D$ 为一个全序集（通常是整数区间或实数区间），$P: D \to \{0, 1\}$ 为定义在 $D$ 上的判定性质。
 
-**判定函数 $P(x)$**：
-定义一个函数 $P(x)$，其返回值为真（1）或假（0）。若 $P(x)$ 满足：
-- $\forall x_1 < x_2 \implies P(x_1) \le P(x_2)$（单调递增）
-- 或 $\forall x_1 < x_2 \implies P(x_1) \ge P(x_2)$（单调递减）
+**二分性定义**：
+若性质 $P$ 在 $D$ 上满足：
+$$ \exists m \in D, \left( \forall x \le m, P(x) = 1 \right) \land \left( \forall x > m, P(x) = 0 \right) $$
+则称 $P$ 在 $D$ 上具有**二分性**。我们的目标是寻找该分界点 $m$ 或 $m+1$。
 
-则该问题具有**二分性**。单调性保证了我们可以通过检查中点 $mid$，一次性排除一半的决策空间。
+### 2. 系统化单调性证明 (Monotonicity Proof)
+要证明一个问题可以使用二分，必须证明其判定函数 $P(x)$ 具有单调性。
 
-**系统化识别步骤**：
-1. **决策空间确定**：识别答案的取值范围 $[L, R]$。
-2. **性质单调性检查**：思考“若 $x$ 满足条件，则 $x+1$（或 $x-1$）是否必然满足条件？”
-3. **Check 函数构建**：设计一个 $O(f(n))$ 的算法来验证 $P(x)$ 是否成立。
+**证明框架**：
+1. **假设**：设 $x$ 是一个可行解，即 $P(x) = \text{true}$。
+2. **推导**：证明对于任意 $x' < x$（或 $x' > x$），其性质 $P(x')$ 依然成立。
+3. **结论**：若该推导成立，则可行解集构成 $D$ 的一个前缀或后缀，即满足二分性。
 
-### 2. 形式化定义
-设 $f: D \to \{0, 1\}$ 为定义在有序集 $D$ 上的判定函数。若 $f$ 满足：
-$$\exists m \in D, \forall x \le m, f(x) = 1 \text{ 且 } \forall x > m, f(x) = 0$$
-则称性质 $f$ 在 $D$ 上具有**二分性**。我们的目标是寻找该分界点 $m$。
+<KnowledgeCard type="info" title="数学本质">
+二分的本质不是“查找元素”，而是“寻找性质的分界点”。即使数组无序，只要性质 $P(x)$ 在搜索空间上具有 $[1,1,\dots,1,0,0,\dots,0]$ 的分布，即可二分。
+</KnowledgeCard>
 
-### 2. 整数二分模板 (防死循环指南)
-整数二分最易在边界处产生死循环。其核心逻辑在于：**区间划分方式必须与 `mid` 取值严格对应**。
+---
 
-#### 情况 A：寻找符合性质的“最后”一个元素
-区间划分为 $[l, mid-1]$ 和 $[mid, r]$。
+## 二、 整数二分的数学边界 (防死循环指南)
+
+整数二分的难点在于边界处理。其核心矛盾在于：`mid` 是向下取整还是向上取整。
+
+### 1. 模板 A：寻找左侧分界点（满足性质的最大 $x$）
+区间从 $[l, r]$ 划分为 $[l, mid]$ 和 $[mid+1, r]$（若 $mid$ 满足性质，解在 $[mid, r]$）。
+- **数学纠偏**：当 $l = r-1$ 时，若使用 `mid = (l+r)/2`，则 $mid = l$。若 `check` 成功执行 `l = mid`，区间仍为 $[l, r]$，陷入死循环。
+- **解决方案**：`mid = (l + r + 1) >> 1`（向上取整）。
+
 ```cpp
 while (l < r) {
-    int mid = l + r + 1 >> 1; // 向上取整，防止 l = r-1 时 mid 停留在 l
+    int mid = l + r + 1 >> 1;
     if (check(mid)) l = mid;
     else r = mid - 1;
 }
 ```
 
-#### 情况 B：寻找符合性质的“第一”个元素
-区间划分为 $[l, mid]$ 和 $[mid+1, r]$。
+### 2. 模板 B：寻找右侧分界点（满足性质的最小 $x$）
+区间划分为 $[l, mid]$ 和 $[mid+1, r]$（若 $mid$ 满足性质，解在 $[l, mid]$）。
+- **逻辑**：执行 `r = mid`。
+- **解决方案**：`mid = (l + r) >> 1`（向下取整）。
+
 ```cpp
 while (l < r) {
-    int mid = l + r >> 1; // 向下取整
+    int mid = l + r >> 1;
     if (check(mid)) r = mid;
     else l = mid + 1;
 }
 ```
 
-<KnowledgeCard type="tip" title="单调性判定技巧">
-并不是只有单调函数才能二分。只要能找到一个判定条件 `check`，使得搜索空间被分成两部分，左半部分满足，右半部分不满足（或反之），二分即可生效。
-</KnowledgeCard>
+---
+
+## 三、 算法性能分析 (Complexity)
+
+| 维度 | 整数二分 | 实数二分 | 三分搜索 |
+| :--- | :--- | :--- | :--- |
+| **时间复杂度** | $O(\log(R-L) \cdot T_{check})$ | $O(\log(\frac{R-L}{\epsilon}) \cdot T_{check})$ | $O(\log_{1.5}(R-L) \cdot T_{f})$ |
+| **空间复杂度** | $O(1)$ | $O(1)$ | $O(1)$ |
+| **收敛速度** | 每次减少 $1/2$ | 每次减少 $1/2$ | 每次减少 $1/3$ |
 
 ---
 
-## 二、 三分算法：极值寻找与单峰函数
-
-当函数 $f(x)$ 为**单峰函数**（先增后减或先减后增）时，二分不再适用，此时需采用三分搜索。
-
-### 1. 逻辑推导
-在区间 $[L, R]$ 内取两个采样点 $m_1, m_2$，将区间三等分：
-- $m_1 = L + (R-L)/3$
-- $m_2 = R - (R-L)/3$
-
-若寻找极大值且 $f(m_1) < f(m_2)$，则极大值必不在 $[L, m_1]$，更新 $L = m_1$；反之更新 $R = m_2$。
-
-### 2. 实数三分模板
-```cpp
-for (int i = 0; i < 100; i++) { // 100次迭代足以达到极高精度
-    double m1 = l + (r - l) / 3, m2 = r - (r - l) / 3;
-    if (f(m1) < f(m2)) l = m1;
-    else r = m2;
-}
-```
-
----
-
-## 三、 教材化例题
+## 四、 教材化例题
 
 ### 例题 1：进击的奶牛 (最小值最大化)
-$N$ 个隔间坐标 $x_i$，放置 $M$ 头牛，使最近两头牛距离的最大值尽量大。
+$N$ 个坐标，放置 $M$ 头牛，使最近两牛间距的最大值。
 
 <details>
 <summary>解析与推导</summary>
 
-**逻辑推导**：
-1. **单调性判定**：若间距 $d$ 可行，则任何 $d' < d$ 均可行。
-2. **决策转化**：将“寻找最大值”转化为“判定距离 $d$ 是否合法”。
-3. **Check 函数**：贪心放置，第一头牛放 $x_0$，若当前牛在 $x_{last}$，则下一头牛放在第一个满足 $x_i \ge x_{last} + d$ 的位置。
+**1. 单调性证明**：
+若间距 $d$ 下能放下 $M$ 头牛，则对于任意 $d' < d$，显然也能放下 $M$ 头牛。性质满足二分性。
 
-```cpp
-bool check(int d) {
-    int cnt = 1, last = x[0];
-    for (int i = 1; i < n; i++) {
-        if (x[i] - last >= d) {
-            cnt++, last = x[i];
-        }
-    }
-    return cnt >= m;
-}
-```
-</details>
+**2. Check 函数实现 ($O(n)$)**：
+贪心放置，第一头放在 $x_0$，之后每头放在距离前一头至少为 $d$ 的第一个坐标。
 
-### 例题 2：曲线极值 (三分应用)
-给定二次函数 $f(x) = ax^2 + bx + c$ ($a < 0$)，在 $[L, R]$ 寻找其最大值。
-
-<details>
-<summary>C++ 实现</summary>
-
-```cpp
-double f(double x) { return a * x * x + b * x + c; }
-
-double solve() {
-    double l = L, r = R;
-    for (int i = 0; i < 100; i++) {
-        double m1 = l + (r - l) / 3;
-        double m2 = r - (r - l) / 3;
-        if (f(m1) < f(m2)) l = m1;
-        else r = m2;
-    }
-    return f(l);
-}
-```
-</details>
-
----
-
-## 四、 综合练习库
-
-### 练习 1：数的范围
-给定升序数组，查询 $k$ 的起始与终止位置。若不存在输出 `-1 -1`。
-<details>
-<summary>Check Solution</summary>
-
-```cpp
-#include <iostream>
-using namespace std;
-
-const int N = 100010;
-int a[N];
-
-int main() {
-    int n, q;
-    scanf("%d%d", &n, &q);
-    for (int i = 0; i < n; i++) scanf("%d", &a[i]);
-    while (q--) {
-        int x;
-        scanf("%d", &x);
-        int l = 0, r = n - 1;
-        while (l < r) {
-            int mid = l + r >> 1;
-            if (a[mid] >= x) r = mid;
-            else l = mid + 1;
-        }
-        if (a[l] != x) printf("-1 -1\n");
-        else {
-            printf("%d ", l);
-            int l2 = 0, r2 = n - 1;
-            while (l2 < r2) {
-                int mid = l2 + r2 + 1 >> 1;
-                if (a[mid] <= x) l2 = mid;
-                else r2 = mid - 1;
-            }
-            printf("%d\n", l2);
-        }
-    }
-    return 0;
-}
-```
-</details>
-
-### 练习 2：最佳牛围栏 (二分答案 + 前缀和)
-给定序列 $a$，求一个长度不小于 $L$ 的子段，使得该子段算术平均值最大。
-<details>
-<summary>Check Solution</summary>
-
-**解题思路**：
-1. 二分平均值 $avg$。
-2. 将所有 $a_i$ 减去 $avg$，问题转化为：是否存在长度 $\ge L$ 的子段，其和 $\ge 0$。
-3. 利用前缀和 $S_i$ 维护，并记录 $min\_S_j (j \le i-L)$，若 $S_i - min\_S_j \ge 0$ 则可行。
-
+**3. 代码实现**：
 ```cpp
 #include <iostream>
 #include <algorithm>
 using namespace std;
 
 const int N = 100010;
-double a[N], b[N], s[N];
-int n, L;
+int x[N], n, m;
 
-bool check(double mid) {
-    for (int i = 1; i <= n; i++) b[i] = a[i] - mid;
-    for (int i = 1; i <= n; i++) s[i] = s[i - 1] + b[i];
-    double minv = 0;
-    for (int i = 0, j = L; j <= n; i++, j++) {
-        minv = min(minv, s[i]);
-        if (s[j] - minv >= 0) return true;
-    }
-    return false;
+bool check(int d) {
+    int cnt = 1, last = x[0];
+    for (int i = 1; i < n; i++)
+        if (x[i] - last >= d) cnt++, last = x[i];
+    return cnt >= m;
 }
 
 int main() {
-    scanf("%d%d", &n, &L);
-    for (int i = 1; i <= n; i++) scanf("%lf", &a[i]);
-    double l = 0, r = 2000;
-    while (r - l > 1e-5) {
-        double mid = (l + r) / 2;
+    scanf("%d%d", &n, &m);
+    for (int i = 0; i < n; i++) scanf("%d", &x[i]);
+    sort(x, x + n);
+    int l = 0, r = 1e9;
+    while (l < r) {
+        int mid = l + r + 1 >> 1;
         if (check(mid)) l = mid;
-        else r = mid;
+        else r = mid - 1;
     }
-    printf("%d\n", (int)(r * 1000));
+    printf("%d\n", l);
     return 0;
+}
+```
+</details>
+
+---
+
+## 五、 综合练习库
+
+### 练习 1：数的范围 (基础模板)
+给定升序数组，查询 $k$ 的起始与终止位置。
+<details>
+<summary>Check Solution</summary>
+
+```cpp
+// 寻找第一个 >= x 的位置
+int l = 0, r = n - 1;
+while (l < r) {
+    int mid = l + r >> 1;
+    if (a[mid] >= x) r = mid;
+    else l = mid + 1;
+}
+// 寻找最后一个 <= x 的位置
+int l2 = 0, r2 = n - 1;
+while (l2 < r2) {
+    int mid = l2 + r2 + 1 >> 1;
+    if (a[mid] <= x) l2 = mid;
+    else r2 = mid - 1;
+}
+```
+</details>
+
+### 练习 2：最佳牛围栏 (二分 + 前缀和边界分析)
+长度 $\ge L$ 的子段，最大平均值。
+<details>
+<summary>Check Solution</summary>
+
+**策略**：二分平均值 $avg$，判断是否存在 $\sum (a_i - avg) \ge 0$。
+**关键推导**：维护 $S_i = \sum_{j=1}^i (a_j - avg)$，寻找 $S_j - \min_{k \le j-L} S_k \ge 0$。
+
+```cpp
+bool check(double avg) {
+    for (int i = 1; i <= n; i++) s[i] = s[i-1] + a[i] - avg;
+    double minv = 0;
+    for (int i = L; i <= n; i++) {
+        minv = min(minv, s[i-L]);
+        if (s[i] >= minv) return true;
+    }
+    return false;
 }
 ```
 </details>
