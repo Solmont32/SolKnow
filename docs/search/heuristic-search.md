@@ -2,7 +2,7 @@
 title: 搜索算法与启发式策略 (Search Algorithms & Heuristics)
 ---
 
-import { Search, Zap, Target, Thermometer, Box, ArrowRightCircle, Layers, ShieldCheck, Activity, Cpu, Database } from 'lucide-react';
+import { Search, Zap, Target, Thermometer, Box, ArrowRightCircle, Layers, ShieldCheck, Activity, Cpu, Database, Swords } from 'lucide-react';
 
 # <Target className="inline-block mr-2 mb-1 text-purple-500" /> 搜索算法与启发式策略
 
@@ -10,83 +10,93 @@ import { Search, Zap, Target, Thermometer, Box, ArrowRightCircle, Layers, Shield
 
 ---
 
-## 零、 <Layers className="inline-block mr-2 mb-1 text-blue-400" /> 系统化状态空间建模与优化
+## 零、 <Layers className="inline-block mr-2 mb-1 text-blue-400" /> 系统化状态空间建模与复杂度控制
 
-一个完备的搜索问题可形式化为五元组 $\mathcal{M} = \langle S, A, T, s_0, G \rangle$。优化搜索效率的第一步在于对 $S$ 的精简与高效表示。
+### 1. 状态空间的形式化定义
+一个完备的搜索问题可定义为五元组 $\mathcal{M} = \langle S, A, T, s_0, G \rangle$：
+- $S$：有限或无限的**状态集**。
+- $A(s)$：状态 $s$ 下的**合法动作集**。
+- $T: S \times A \to S$：**状态转移函数**。
+- $s_0 \in S$：**初始状态**。
+- $G \subseteq S$：**目标状态集**。
 
-### 1. 状态压缩与位运算 (State Compression)
+**搜索树 (Search Tree)** 是从 $s_0$ 出发，通过 $T$ 展开的虚拟结构。其规模由**分支因子 $b$**（平均 $|A(s)|$）和**目标深度 $d$** 决定，总节点数 $O(b^d)$ 呈指数爆炸。
+
+### 2. 状态压缩与位运算 (State Compression)
 当状态由多个二进制特征（如集合包含关系、开关状态）组成时，利用位掩码 (Bitmask) 可实现 $O(1)$ 的状态转移与空间极小化。
-- **集合表示**：$S \subseteq \{0, \dots, n-1\}$ 可映射为整数 $mask = \sum_{i \in S} 2^i$。
-- **技巧**：`mask & (1 << i)` (判断), `mask | (1 << i)` (添加), `mask ^ (1 << i)` (翻转)。
+- **技巧**：使用 `int` 或 `long long` 的位表示集合，配合 `__builtin_ctz` 或 `lowbit` 加速查找。
 
-### 2. 对称性破缺与等效压缩 (Symmetry Breaking)
-若状态空间存在群作用下的对称性（如旋转、镜像、全排列等效），应仅保留其**等效类代表元 (Canonical Form)**。
-- **实例**：在 $N$ 皇后问题中，通过旋转 90/180/270 度对称的解只算一个。
-- **实现**：通过定义某种标准全序，在搜索分支产生时强制执行 $s_1 < s_2 < \dots$，从而消除重复路径。
+### 3. 对称性破缺 (Symmetry Breaking)
+若状态空间存在群作用下的对称性，应仅保留其**等效类代表元**。
+- **定理**：若状态空间在变换 $\sigma$ 下不变且代价等价，则搜索树中只需处理满足 $s \preceq \sigma(s)$ 的分支。
 
 ---
 
 ## 一、 <ShieldCheck className="inline-block mr-2 mb-1 text-green-500" /> 搜索树优化：系统化剪枝策略
 
-剪枝 (Pruning) 的核心是在搜索树遍历中，利用逻辑断言提前终止对无效子树的访问。
+剪枝的核心是在不影响正确性的前提下，利用逻辑断言提前终止对无效子树的访问。
 
 ### 1. 剪枝分类与形式化准则
 
 | 策略类别 | 判定准则 (Predicate) | 优化逻辑 |
 | :--- | :--- | :--- |
-| **可行性剪枝 (Feasibility)** | $\nexists \, \tau: s \xrightarrow{\tau} G$ | 若当前状态已无法满足约束，立即回溯。 |
+| **可行性剪枝 (Feasibility)** | $\nexists \, \tau: s \xrightarrow{\tau} G$ | 若当前状态通过任何动作序列都无法到达目标，立即回溯。 |
 | **最优性剪枝 (Optimality)** | $g(s) + f_{low}(s) \ge \text{ans}_{best}$ | 若当前代价 + 理想最小余下代价已劣于已知最优，则剪枝。 |
-| **搜索顺序 (Ordering)** | $\arg \max_{a \in A} P(T(s, a) \rightsquigarrow G)$ | 优先探索“成功率高”或“约束强”的分支，及早更新 `ans_best`。 |
-| **记忆化搜索 (Memoization)** | $s \in \text{Visited}[S]$ | 利用哈希表或数组记录已处理状态，避免重复搜索。 |
+| **搜索顺序优化 (Ordering)** | $\arg \min_{a \in A} \text{Size}(\text{Subtree}(T(s, a)))$ | 优先搜索“限制最强”的分支（如 Sudoku 中剩余选项最少的格子）。 |
+| **排除冗余 (Redundancy)** | $s \in \text{Hash表}$ | 记录已访问状态，避免在图搜索中陷入死循环或重复计算。 |
 
-### 2. 例题：[生日蛋糕 - 深度综合剪枝]
-> 给定体积 $V$ 和层数 $M$，要求蛋糕表面积最小（不含底面积）。各层半径 $R_i$ 和高度 $H_i$ 均为正整数，且满足 $R_i > R_{i+1}, H_i > H_{i+1}$。
+### 2. 精选例题：[木棒拼接 - 极限界剪枝]
+> 给定 $n$ 根小木棒，要求将其拼接成若干长度相同的长木棒，求可能的最小长度。
 
 <details>
-<summary>C++ 高级剪枝分析与实现</summary>
+<summary>Check Solution: 深度剪枝 C++ 实现</summary>
 
-**优化点**：
-1. **范围确定**：由 $V = \sum R_i^2 H_i$，得 $R_u \in [u, \min(\sqrt{V_{rem}}, R_{u+1}-1)]$。
-2. **可行性剪枝**：预处理每一层最小体积 $minV[i]$ 和表面积 $minS[i]$。若 $V_{cur} + minV[u] > V_{total}$，剪。
-3. **最优性剪枝**：若 $S_{cur} + minS[u] \ge ans$，剪。
-4. **数学推导剪枝**：利用 $S_{side} = \sum 2R_i H_i = \sum \frac{2R_i^2 H_i}{R_i} > \frac{2V_{rem}}{R_u}$。若 $S_{cur} + \frac{2V_{rem}}{R_u} \ge ans$，剪。
+**核心剪枝逻辑**：
+1. **搜索顺序**：从长到短排序。
+2. **相同长度去重**：若当前木棒不符合要求，跳过后续相同长度的木棒。
+3. **空位首根失败**：若拼入第一根木棒就失败，则当前总长度必然非法。
+4. **末尾填满失败**：若填满最后一根木棒后后续失败，则当前总长度非法。
 
 ```cpp
 #include <iostream>
-#include <cmath>
+#include <vector>
 #include <algorithm>
+#include <numeric>
 
 using namespace std;
 
-int n, m, ans = 1e9;
-int minv[25], mins[25];
+int n, a[70], vis[70], total, target, m;
 
-void dfs(int u, int v, int s, int r, int h) {
-    if (u == 0) {
-        if (v == n) ans = min(ans, s);
-        return;
-    }
-    // 剪枝组合
-    if (v + minv[u] > n) return;
-    if (s + mins[u] >= ans) return;
-    if (s + 2 * (n - v) / r >= ans) return; // 数学推导最优性剪枝
+bool dfs(int cnt, int cur, int last) {
+    if (cnt == m) return true;
+    if (cur == target) return dfs(cnt + 1, 0, n);
 
-    for (int i = min((int)sqrt(n - v), r - 1); i >= u; i--) {
-        if (u == m) s = i * i;
-        for (int j = min((n - v) / (i * i), h - 1); j >= u; j--) {
-            dfs(u - 1, v + i * i * j, s + 2 * i * j, i, j);
-        }
+    for (int i = last - 1; i >= 0; i--) {
+        if (vis[i] || cur + a[i] > target) continue;
+        vis[i] = 1;
+        if (dfs(cnt, cur + a[i], i)) return true;
+        vis[i] = 0;
+
+        // 核心剪枝
+        if (cur == 0 || cur + a[i] == target) return false;
+        while (i > 0 && a[i] == a[i - 1]) i--;
     }
+    return false;
 }
 
 int main() {
-    cin >> n >> m;
-    for (int i = 1; i <= m; i++) {
-        minv[i] = minv[i - 1] + i * i * i;
-        mins[i] = mins[i - 1] + 2 * i * i;
+    while (cin >> n && n) {
+        total = 0;
+        for (int i = 0; i < n; i++) { cin >> a[i]; total += a[i]; }
+        sort(a, a + n);
+        for (target = a[n - 1]; target <= total; target++) {
+            if (total % target == 0) {
+                m = total / target;
+                fill(vis, vis + n, 0);
+                if (dfs(0, 0, n)) { cout << target << endl; break; }
+            }
+        }
     }
-    dfs(m, 0, 0, sqrt(n), n);
-    cout << (ans == 1e9 ? 0 : ans) << endl;
     return 0;
 }
 ```
@@ -94,164 +104,171 @@ int main() {
 
 ---
 
-## 二、 <Zap className="inline-block mr-2 mb-1 text-yellow-500" /> 双向搜索与折半查找 (Bidirectional & Meet-in-the-middle)
+## 二 <Target className="inline-block mr-2 mb-1 text-red-500" /> 启发式搜索：A* 与 IDA*
 
-对于分支因子为 $b$，目标深度为 $d$ 的搜索树：
-- **单向搜索**：$O(b^d)$
-- **双向搜索**：从起点与终点同步扩展，相遇点深度各为 $d/2$，复杂度降为 $O(2 \cdot b^{d/2})$。
+### 1. A* 算法的最优性证明
+定义 $f(n) = g(n) + h(n)$。
+- **可接受性 (Admissibility)**：若 $h(n) \le h^*(n)$（实际最小代价），则 A* 一定能找到最短路。
+- **一致性 (Consistency)**：若 $h(n) \le c(n, a, n') + h(n')$，则 $f(n)$ 随路径非递减。
 
-**折半搜索 (Meet-in-the-middle)** 是其在组合问题中的典型应用。例如：$N=40$ 的子集和问题，单搜 $2^{40} \approx 10^{12}$ 超时，拆分为 $2^{20} + 2^{20} \approx 2 \cdot 10^6$，配合二分查找或哈希表实现 $O(2^{N/2} \cdot \log(2^{N/2}))$。
+**证明（可接受性）**：假设 A* 选出了非最优目标 $G_2$（即 $g(G_2) > g(G^*)$）。在弹出 $G_2$ 时，最优路径上必存在一节点 $n$ 在队列中。
+$f(n) = g(n) + h(n) \le g(n) + h^*(n) = f^*(n) = g(G^*) < g(G_2) = f(G_2)$。
+由于 $f(n) < f(G_2)$，队列应优先弹出 $n$ 而非 $G_2$，矛盾。
+
+### 2. IDA* (Iterative Deepening A*)
+IDA* 是 IDDFS 与 $f(n)$ 估价的结合，主要解决 A* 空间消耗大的问题。
+- **核心逻辑**：设定 $f$-limit，若当前 $g(s) + h(s) > \text{limit}$ 则回溯，并记录最小的越界 $f$ 值作为下一轮 limit。
+
+### 3. 精选例题：[八数码问题 - IDA* 与 逆序对性质]
+<details>
+<summary>Check Solution: IDA* 实现与哈希优化</summary>
+
+**估价函数**：使用各数码到目标位置的曼哈顿距离之和。
+**性质剪枝**：八数码问题的逆序对奇偶性在空格平移（左右不改变，上下改变偶数列数）下具有不变性（或确定变化规律），可提前排除 50% 的不可达状态。
+
+```cpp
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+int board[9], limit, next_limit;
+int target[9] = {1, 2, 3, 4, 5, 6, 7, 8, 0};
+
+int get_h() {
+    int h = 0;
+    for (int i = 0; i < 9; i++) {
+        if (board[i] == 0) continue;
+        int val = board[i] - 1;
+        h += abs(i / 3 - val / 3) + abs(i % 3 - val % 3);
+    }
+    return h;
+}
+
+bool dfs(int g, int empty_pos, int pre) {
+    int h = get_h();
+    if (g + h > limit) {
+        next_limit = min(next_limit, g + h);
+        return false;
+    }
+    if (h == 0) return true;
+
+    int dx[] = {-1, 1, 0, 0}, dy[] = {0, 0, -1, 1};
+    int r = empty_pos / 3, c = empty_pos % 3;
+    for (int i = 0; i < 4; i++) {
+        if (i == (pre ^ 1)) continue; // 不往回走
+        int nx = r + dx[i], ny = c + dy[i];
+        if (nx >= 0 && nx < 3 && ny >= 0 && ny < 3) {
+            int n_pos = nx * 3 + ny;
+            swap(board[empty_pos], board[n_pos]);
+            if (dfs(g + 1, n_pos, i)) return true;
+            swap(board[empty_pos], board[n_pos]);
+        }
+    }
+    return false;
+}
+```
+</details>
 
 ---
 
-## 三、 <Target className="inline-block mr-2 mb-1 text-red-500" /> 估价函数设计与启发式引导 (A* & IDA*)
+## 三、 <Swords className="inline-block mr-2 mb-1 text-blue-600" /> 博弈搜索 (Adversarial Search)
 
-启发式搜索利用**估价函数 (Heuristic Function)** $h(n)$ 引导搜索方向。
+在零和博弈（Zero-Sum Game）中，玩家 A 试图最大化收益，玩家 B 试图最小化 A 的收益。
 
-### 1. 估价函数的理论基石
-$f(n) = g(n) + h(n)$
-- $g(n)$：起始点到当前点的实际代价。
-- $h(n)$：当前点到目标的预测代价。
+### 1. Minimax 算法与 Alpha-Beta 剪枝
+- **Minimax**：递归计算子节点的最优值。
+- **Alpha-Beta 剪枝**：
+  - $\alpha$：当前节点及祖先节点已发现的 **Max** 玩家的下界。
+  - $\beta$：当前节点及祖先节点已发现的 **Min** 玩家的上界。
+  - **剪枝条件**：若 $\alpha \ge \beta$，则当前子树不可能影响最终结果。
 
-**关键性质**：
-- **可接受性 (Admissibility)**：$\forall n, 0 \le h(n) \le h^*(n)$。保证 A* 找到全局最优解。
-- **一致性 (Consistency)**：$h(n) \le c(n, a, n') + h(n')$。保证 $f(n)$ 沿路径非递减，节点仅需扩展一次。
-
-### 2. 设计策略：松弛问题 (Relaxation)
-设计 $h(n)$ 的常用方法是**忽略某些约束**。
-- **八数码问题**：忽略“只能移动到空格”的约束 $\Rightarrow$ 曼哈顿距离。
-- **TSP 问题**：忽略“必须形成环”的约束 $\Rightarrow$ 最小生成树 (MST) 代价。
+### 2. 时空增强：置换表与启发式排序
+- **置换表 (Transposition Table)**：利用 Zobrist Hashing 记录已搜过的博弈状态。
+- **杀手启发式 (Killer Heuristic)**：优先尝试在同层其他分支中导致剪枝的动作。
 
 ---
 
-## 四、 <Cpu className="inline-block mr-2 mb-1 text-orange-500" /> 时空权衡：迭代加深与 IDA*
+## 四、 <Activity className="inline-block mr-2 mb-1 text-orange-400" /> 现代启发式：模拟退火 (Simulated Annealing)
 
-在大规模状态空间中，BFS 的空间消耗（指数级）常成为瓶颈。
-
-### 1. 迭代加深 (Iterative Deepening DFS, IDDFS)
-IDDFS 每次限定搜索深度 $d$，若未找到解则 $d \gets d+1$。它结合了 DFS 的低空间复杂度 ($O(d)$) 与 BFS 的最短路特性。
-
-### 2. IDA*：启发式迭代加深
-IDA* 将深度限制替换为 $f(n) = g(n) + h(n)$ 的限制。
-- **优点**：无需维护 Open/Closed 表，空间消耗极低。
-- **应用场景**：状态空间巨大且最优解深度有限的问题（如魔方、N-Puzzle）。
-
----
-
-## 五、 <Database className="inline-block mr-2 mb-1 text-indigo-500" /> 状态存储与哈希技巧 (Space-Time Tradeoffs)
-
-### 1. Zobrist Hashing
-一种针对棋类或复杂状态的增量式哈希。为每个位置的每个可能值预分配一个 64 位随机数。
-$Hash(S') = Hash(S) \oplus Rand[pos][val_{old}] \oplus Rand[pos][val_{new}]$。
-极大地加速了状态判重。
-
-### 2. 状态压缩与 Bloom Filter
-在极大规模搜索中，若无法精确存储所有状态，可利用位图或布隆过滤器实现常数级冲突率的概率性剪枝。
+对于连续或极大规模离散优化，若搜索树不可构建，可利用物理退火原理。
+- **Metropolis 准则**：若新解更优则接受；若更劣，以 $P = e^{-\Delta E / T}$ 的概率接受。
+- **参数控制**：初温 $T_0$、冷却系数 $\alpha \in [0.95, 0.999]$、末温 $T_{end}$。
 
 ---
 
 ## 🎯 综合练习与实战
 
-### 练习 1：[第 k 短路 - A* 算法应用]
-> 给定有向图，求从起点 $S$ 到终点 $T$ 的第 $k$ 短路径长度。
+### 练习 1：[骑士巡逻问题 - Warnsdorff 启发式]
+> 在 $N \times N$ 的棋盘上，骑士不重复地走遍所有格子的路径。
 
 <details>
-<summary>Check Solution: A* + 反向 Dijkstra 估价</summary>
+<summary>Check Solution: Warnsdorff 规则</summary>
 
-**思路**：
-1. **估价函数**：$h(x)$ 定义为 $x$ 到 $T$ 的最短路长度。可以通过在反向图上运行 Dijkstra 预处理。
-2. **搜索过程**：使用优先队列维护 $(f(x), g(x), x)$。当终点 $T$ 第 $k$ 次被从队列中弹出时，对应的 $g(x)$ 即为结果。
+**策略**：每次优先选择“下一步可选位置最少”的格子。这是一种典型的贪心启发式，极大地减小了分支回溯概率。
 
 ```cpp
-#include <iostream>
-#include <vector>
-#include <queue>
+// 核心逻辑：排序下一步动作
+struct Move {
+    int x, y, degree;
+    bool operator<(const Move& other) const { return degree < other.degree; }
+};
 
-using namespace std;
-
-const int MAXN = 1005;
-struct Edge { int to, w; };
-vector<Edge> g[MAXN], rg[MAXN];
-int dist[MAXN], cnt[MAXN], n, m, s, t, k;
-
-void dijkstra() {
-    fill(dist, dist + MAXN, 1e9);
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-    dist[t] = 0;
-    pq.push({0, t});
-    while (!pq.empty()) {
-        auto [d, u] = pq.top(); pq.pop();
-        if (d > dist[u]) continue;
-        for (auto& e : rg[u]) {
-            if (dist[e.to] > dist[u] + e.w) {
-                dist[e.to] = dist[u] + e.w;
-                pq.push({dist[e.to], e.to});
-            }
-        }
+int get_degree(int x, int y) {
+    int d = 0;
+    for(int i=0; i<8; i++) {
+        int nx = x + dx[i], ny = y + dy[i];
+        if(is_valid(nx, ny) && !vis[nx][ny]) d++;
     }
-}
-
-int a_star() {
-    if (dist[s] == 1e9) return -1;
-    priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int, int>>>> pq;
-    pq.push({dist[s], {0, s}});
-    while (!pq.empty()) {
-        auto cur = pq.top(); pq.pop();
-        int f = cur.first, g_val = cur.second.first, u = cur.second.second;
-        cnt[u]++;
-        if (cnt[t] == k) return g_val;
-        if (cnt[u] > k) continue; 
-
-        for (auto& e : g[u]) {
-            pq.push({g_val + e.w + dist[e.to], {g_val + e.w, e.to}});
-        }
-    }
-    return -1;
+    return d;
 }
 ```
 </details>
 
-### 练习 2：[埃及分数 - IDA* 深度搜索]
-> 将分数 $a/b$ 分解为若干互不相同的单位分数（分子为 1）之和，要求项数最少。若项数相同，则最后分母最小。
+### 练习 2：[井字棋对抗 - Alpha-Beta 搜索]
+> 实现一个无懈可击的井字棋 AI。
 
 <details>
-<summary>Check Solution: IDA* 策略分析</summary>
-
-**IDA* 建模**：
-1. **层数限制**：限定分解出的项数 $d$。
-2. **估价函数**：若当前剩余 $res = a/b$，且已选的最大分母为 $low$，则至少还需要 $\lceil res / (1/low) \rceil$ 项。若该值超过剩余项数，剪枝。
-3. **分母范围**：下一项 $1/i$ 需满足 $1/i < res$ 且 $1/i \times \text{rem\_steps} > res$。
+<summary>Check Solution: Alpha-Beta 实现</summary>
 
 ```cpp
-typedef long long ll;
-ll ans[105], path[105], limit;
+int minimax(int board[3][3], int depth, bool isMax, int alpha, int beta) {
+    int score = evaluate(board);
+    if (score == 10 || score == -10 || !isMovesLeft(board)) return score;
 
-ll gcd(ll a, ll b) { return b ? gcd(b, a % b) : a; }
-
-bool dfs(ll d, ll a, ll b, ll last) {
-    if (d == limit) {
-        if (a == 0) return true;
-        return false;
-    }
-    ll start = max(last + 1, (b + a - 1) / a);
-    bool found = false;
-    for (ll i = start; ; i++) {
-        if (b * (limit - d) <= a * i) break; 
-        path[d] = i;
-        ll na = a * i - b, nb = b * i;
-        ll g = gcd(na, nb);
-        if (dfs(d + 1, na / g, nb / g, i)) {
-            if (!found || path[limit - 1] < ans[limit - 1]) {
-                for (int j = 0; j < limit; j++) ans[j] = path[j];
+    if (isMax) {
+        int best = -1000;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i][j] == 0) {
+                    board[i][j] = 1;
+                    best = max(best, minimax(board, depth + 1, !isMax, alpha, beta));
+                    board[i][j] = 0;
+                    alpha = max(alpha, best);
+                    if (beta <= alpha) break;
+                }
             }
-            found = true;
         }
+        return best;
+    } else {
+        int best = 1000;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i][j] == 0) {
+                    board[i][j] = 2;
+                    best = min(best, minimax(board, depth + 1, !isMax, alpha, beta));
+                    board[i][j] = 0;
+                    beta = min(beta, best);
+                    if (beta <= alpha) break;
+                }
+            }
+        }
+        return best;
     }
-    return found;
 }
 ```
 </details>
 
 ---
 
-*“在有限的算力面前，搜索的艺术即是『有原则地放弃』。通过 $h(n)$ 洞察未来，通过剪枝约束当下，方能于万亿状态中取敌首级。”*
+*“搜索的本质是在庞大的解空间中，通过智慧的约束找到那道唯一的解。从盲目搜索到启发式引导，是计算从『体力活』向『脑力活』的进化。”*

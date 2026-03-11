@@ -220,6 +220,61 @@ bool dfs(int depth, int last_op) {
 ```
 </details>
 
+### 练习 7：井字棋 AI - Minimax 与 Alpha-Beta 剪枝
+实现一个在 $3 \times 3$ 井字棋中绝不会输的 AI。
+
+<details>
+<summary>Check Solution (C++ Implementation)</summary>
+
+**博弈搜索策略**：
+1. **极大极小搜索**：AI 试图最大化分数（自己赢 +10），玩家试图最小化分数（AI 输 -10）。
+2. **Alpha-Beta 剪枝**：维护 $\alpha$（已知的 AI 最小收益）和 $\beta$（已知的玩家最大损失）。若 $\alpha \ge \beta$，停止搜索该子树。
+
+**C++ 实现 (核心逻辑)**：
+```cpp
+int evaluate(char b[3][3]) {
+    // 检查行、列、对角线是否有人获胜
+    // 返回 +10, -10 或 0
+}
+
+int minimax(char board[3][3], int depth, bool isMax, int alpha, int beta) {
+    int score = evaluate(board);
+    if (score == 10 || score == -10 || !isMovesLeft(board)) return score;
+
+    if (isMax) {
+        int best = -1000;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i][j] == '_') {
+                    board[i][j] = 'X';
+                    best = max(best, minimax(board, depth + 1, !isMax, alpha, beta));
+                    board[i][j] = '_';
+                    alpha = max(alpha, best);
+                    if (beta <= alpha) break;
+                }
+            }
+        }
+        return best;
+    } else {
+        int best = 1000;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i][j] == '_') {
+                    board[i][j] = 'O';
+                    best = min(best, minimax(board, depth + 1, !isMax, alpha, beta));
+                    board[i][j] = '_';
+                    beta = min(beta, best);
+                    if (beta <= alpha) break;
+                }
+            }
+        }
+        return best;
+    }
+}
+```
+</details>
+
+
 ---
 
 ## 🏆 训练建议
