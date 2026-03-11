@@ -1,73 +1,78 @@
 ---
-title: 网络流算法与复杂建模
+title: 网络流算法：理论深度与建模范式
 ---
 
-import { GitMerge, Zap, Activity, ShieldCheck, Layers, Landmark, ArrowRightLeft, Maximize, Sigma, Workflow } from 'lucide-react';
+import { GitMerge, Zap, Activity, ShieldCheck, Layers, Landmark, ArrowRightLeft, Maximize, Sigma, Workflow, BookOpen, Target } from 'lucide-react';
 import ComplexityAnalysis from '@site/src/components/ComplexityAnalysis';
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
-# <GitMerge className="inline-block mr-2 mb-1 text-blue-500" /> 网络流 (Network Flow)
+# <GitMerge className="inline-block mr-2 mb-1 text-blue-500" /> 网络流理论 (Network Flow Theory)
 
-网络流是组合优化与运筹学中的皇冠，它不仅解决了实体的流量分配，还通过**对偶性 (Duality)** 建立了与割、覆盖问题的深刻数学映射。
-
----
-
-## 一、 <Sigma className="inline-block mr-2 mb-1 text-blue-500" /> 形式化定义与定理
-
-### 1. 流网络 (Flow Network)
-一个流网络 $G=(V, E)$ 是一个有向图，每条边 $(u, v)$ 有一个非负容量 $c(u, v) \ge 0$。存在源点 $s$ 和汇点 $t$。
-
-### 2. 三大基本性质
-- **容量限制**：$0 \le f(u, v) \le c(u, v)$。
-- **斜对称性**：$f(u, v) = -f(v, u)$。
-- **流量守恒**：除 $s, t$ 外，任意节点 $u$ 满足 $\sum_{v \in V} f(u, v) = 0$。
-
-### 3. 最大流最小割定理 (Max-Flow Min-Cut Theorem)
-> **定理**：在一个流网络中，$s-t$ 最大流的流量等于 $s-t$ 最小割的容量。
-> **直观理解**：系统的最大产出上限取决于系统的最细瓶颈。
+网络流是图论中兼具工业实用性与数学美感的领域。它不仅解决了资源的最优分配问题，其背后的**最大流最小割定理 (Max-Flow Min-Cut Theorem)** 更是凸优化理论中对偶性 (Duality) 的经典体现。
 
 ---
 
-## 二、 <Workflow className="inline-block mr-2 mb-1 text-green-500" /> 核心算法：Dinic 算法
+## 一、 <Sigma className="inline-block mr-2 mb-1 text-blue-500" /> 形式化公理系统
 
-Dinic 算法是工业界处理最大流的标准选择，其核心在于**分层图**与**多路增广**。
+### 1. 流网络与可行流
+给定有向图 $G=(V, E)$，每条边 $(u, v)$ 有容量 $c(u, v) \ge 0$。一个**可行流** $f: V \times V \to \mathbb{R}$ 必须满足：
+1. **容量限制 (Capacity Constraint)**：$f(u, v) \le c(u, v)$。
+2. **斜对称性 (Skew Symmetry)**：$f(u, v) = -f(v, u)$。
+3. **流量守恒 (Flow Conservation)**：对于所有 $u \in V - \{s, t\}$，$\sum_{v \in V} f(u, v) = 0$。
 
-### 优化机制
-1. **分层图 (Level Graph)**：通过 BFS 标记每个节点到源点的最短距离。增广时只走 $level[v] = level[u] + 1$ 的边，避免无效环路。
-2. **当前弧优化 (Current Arc Optimization)**：在一次 BFS 分层内，如果一条弧已经增广过且无法再提供流量，后续直接跳过。
+### 2. 残量网络与增广路 (Residual Network)
+- **残量网络 $G_f$**：边 $(u, v)$ 的残量为 $c_f(u, v) = c(u, v) - f(u, v)$。
+- **增广路**：残量网络中从 $s$ 到 $t$ 的简单路径。
 
-<ComplexityAnalysis time="O(V^2E)" space="O(V + E)" note="在二分图中为 O(E \sqrt{V})" />
+### 3. 最大流最小割定理
+**定理**：在一个流网络中，下列三个条件等价：
+1. $f$ 是 $G$ 的一个最大流。
+2. 残量网络 $G_f$ 不包含增广路。
+3. 存在一个割 $(S, T)$，使得 $f$ 的值等于 $c(S, T)$。
+*意义*：最小割是网络传输能力的绝对瓶颈，最大流是对该瓶颈的完美填充。
 
 ---
 
-## 三、 <Landmark className="inline-block mr-2 mb-1 text-purple-500" /> 高级建模范式
+## 二、 <Workflow className="inline-block mr-2 mb-1 text-green-500" /> 核心算法：Dinic 范式
 
-### 1. 最大权闭合子图 (Maximum Weight Closure)
-**问题**：选出一组点，使得若点 $u$ 被选中，其所有后继点也必须被选中。求点权和最大。
-**建模**：
-- $S \to$ 正权点，容量为点权。
-- 负权点 $\to T$，容量为点权的绝对值。
-- 原图中的边改为容量 $\infty$。
-**结论**：最大权 = 正权和 - 最小割。
+Dinic 算法通过**分层图**减少了增广路搜索的盲目性，是目前工业界处理大规模网络流的首选。
 
-### 2. 项目选择问题 (Project Selection)
-与闭合子图类似，实验获利与仪器成本的经典对立。
+<ComplexityAnalysis 
+  data={[
+    { algorithm: "Dinic (General Graph)", complexity: "O(V²E)", space: "O(V + E)", note: "实践中常数极小，远快于理论界" },
+    { algorithm: "Dinic (Unit Capacities)", complexity: "O(E min(V^{2/3}, E^{1/2}))", space: "O(V + E)", note: "在单位容量网络中性能卓越" },
+    { algorithm: "Dinic (Bipartite Matching)", complexity: "O(E sqrt{V})", space: "O(V + E)", note: "与 Hopcroft-Karp 复杂度一致" }
+  ]}
+/>
 
-### 3. 有上下界的网络流 (Bounded Flow)
+### 核心优化策略
+- **分层图 BFS**：建立 $level$ 数组，确保 DFS 仅沿最短路径增广。
+- **当前弧优化 (Current Arc)**：避免在同一层内重复扫描已无法增广的边（这是 Dinic 达到理论复杂度的关键）。
+- **多路增广**：一次 DFS 尽可能多地回溯流量。
+
+---
+
+## 三、 <Landmark className="inline-block mr-2 mb-1 text-purple-500" /> 建模范式：从图论到逻辑约束
+
+### 1. 最大权闭合子图 (Max Weight Closure)
+**定义**：给定带权点，若选点 $u$ 则必须选其所有后继点。求最大总权值。
+**建模方案**：
+- 建立源点 $S$ 连向所有**正权点**，容量为点权。
+- 建立所有**负权点**连向汇点 $T$，容量为点权的绝对值。
+- 原图依赖关系 $(u, v)$ 连边 $u \to v$，容量 $\infty$。
+**结论**：$\text{最大权} = \sum \text{正权和} - \text{最小割}$。
+
+### 2. 最小路径覆盖 (Minimum Path Cover)
+在 DAG 中用最少的路径覆盖所有顶点。
+**转化**：拆点构造二分图，$\text{路径数} = \text{顶点数} - \text{最大匹配数}$。
+
+### 3. 流量上下界 (Bounded Flow)
 要求 $l(u, v) \le f(u, v) \le c(u, v)$。
-**转化**：利用辅助源汇 $S', T'$ 补齐流量缺口。若 $S', T'$ 关联边满流，则存在可行流。
+**转化**：引入新源汇 $S', T'$，计算出入流量缺口，通过寻找 $S' \to T'$ 的满流来判定可行性。
 
 ---
 
-## 四 <Activity className="inline-block mr-2 mb-1 text-amber-500" /> 最小费用最大流 (MCMF)
-
-当边除了容量还有单位费用 $d(u, v)$ 时，寻找流量最大且 $\sum f \cdot d$ 最小的方案。
-**算法**：将 Dinic 中的 BFS 替换为 **SPFA**（寻找费用最短路）。
-*注：若无负权边，可结合势能法 (Johnson) 使用 Dijkstra 优化。*
-
----
-
-## 五、 工业级 C++ 实现 (Dinic 模板)
+## 四、 工业级 C++ 实现 (Dinic 完美版)
 
 ```cpp
 #include <vector>
@@ -76,42 +81,53 @@ Dinic 算法是工业界处理最大流的标准选择，其核心在于**分层
 
 using namespace std;
 
-const long long INF = 1e18;
+/**
+ * @brief Dinic 算法实现 (包含当前弧优化)
+ * 复杂度: O(V^2 E)
+ */
+class Dinic {
+public:
+    struct Edge {
+        int to, rev;
+        long long cap;
+    };
+    vector<vector<Edge>> adj;
+    vector<int> level, ptr;
 
-struct Dinic {
-    struct Edge { int to, rev; long long cap; };
-    vector<vector<Edge>> g;
-    vector<int> level, iter;
-
-    Dinic(int n) : g(n), level(n), iter(n) {}
+    Dinic(int n) : adj(n), level(n), ptr(n) {}
 
     void add_edge(int from, int to, long long cap) {
-        g[from].push_back({to, (int)g[to].size(), cap});
-        g[to].push_back({from, (int)g[from].size() - 1, 0});
+        adj[from].push_back({to, (int)adj[to].size(), cap});
+        adj[to].push_back({from, (int)adj[from].size() - 1, 0});
     }
 
     bool bfs(int s, int t) {
         fill(level.begin(), level.end(), -1);
-        level[s] = 0; queue<int> q; q.push(s);
+        level[s] = 0;
+        queue<int> q; q.push(s);
         while (!q.empty()) {
-            int u = q.front(); q.pop();
-            for (auto& e : g[u]) {
-                if (e.cap > 0 && level[e.to] < 0) {
-                    level[e.to] = level[u] + 1; q.push(e.to);
+            int v = q.front(); q.pop();
+            for (auto& edge : adj[v]) {
+                if (edge.cap > 0 && level[edge.to] == -1) {
+                    level[edge.to] = level[v] + 1;
+                    q.push(edge.to);
                 }
             }
         }
         return level[t] != -1;
     }
 
-    long long dfs(int u, int t, long long f) {
-        if (u == t) return f;
-        for (int& i = iter[u]; i < g[u].size(); ++i) {
-            Edge& e = g[u][i];
-            if (e.cap > 0 && level[u] < level[e.to]) {
-                long long d = dfs(e.to, t, min(f, e.cap));
-                if (d > 0) { e.cap -= d; g[e.to][e.rev].cap += d; return d; }
-            }
+    long long dfs(int v, int t, long long pushed) {
+        if (pushed == 0 || v == t) return pushed;
+        for (int& cid = ptr[v]; cid < adj[v].size(); ++cid) {
+            auto& edge = adj[v][cid];
+            int tr = edge.to;
+            if (level[v] + 1 != level[tr] || edge.cap == 0) continue;
+            long long tr_pushed = dfs(tr, t, min(pushed, edge.cap));
+            if (tr_pushed == 0) continue;
+            edge.cap -= tr_pushed;
+            adj[tr][edge.rev].cap += tr_pushed;
+            return tr_pushed;
         }
         return 0;
     }
@@ -119,8 +135,10 @@ struct Dinic {
     long long max_flow(int s, int t) {
         long long flow = 0;
         while (bfs(s, t)) {
-            fill(iter.begin(), iter.end(), 0);
-            long long f; while ((f = dfs(s, t, INF)) > 0) flow += f;
+            fill(ptr.begin(), ptr.end(), 0);
+            while (long long pushed = dfs(s, t, 1e18)) {
+                flow += pushed;
+            }
         }
         return flow;
     }
@@ -129,49 +147,49 @@ struct Dinic {
 
 ---
 
-## 六、 配套练习 (折叠解答)
+## 五、 <Target className="inline-block mr-2 mb-1 text-red-500" /> 精选练习与解析
 
-### 练习 1：最小割与二者选一
-有 $n$ 个任务，可以交给 A 或 B 完成。交给 A 获利 $a_i$，交给 B 获利 $b_i$。某些任务对 $(i, j)$ 若交给不同的人会产生额外损失 $w$。求最大获利。
+### 练习 1：最大流最小割的对偶性
+[经典] 在一个 $N \times M$ 的方格中放置不互相攻击的骑士（跳日字），最多放多少个？
 
 <details>
-<summary>点击查看解析</summary>
+<summary>Check Solution</summary>
 
 **分析**：
-1. **转化为最小割**：最大获利 = $\sum a_i + \sum b_i$ - 最小总损失。
-2. **建图**：
-   - $S \to i$，容量 $a_i$。
-   - $i \to T$，容量 $b_i$。
-   - $i \leftrightarrow j$，容量 $w$。
-3. **解释**：最小割将点集分为 $S$ 集和 $T$ 集。若点 $i \in S$，代表交给 A 完成；若 $i \in T$，代表交给 B。割掉 $S \to i$ 意味着放弃 $a_i$（由 B 完成）。
+1. **性质分析**：骑士在方格图中只能从黑格跳向白格，具有天然的**二分性**。
+2. **建模**：最大不攻击骑士数 = 总格子数 - 最小冲突数。
+3. **转化**：在一个二分图中，最小冲突数即为**最小点覆盖**，由于 $\text{最小点覆盖} = \text{最大匹配}$。
+4. **结论**：结果 = 总可用空格 - 最大匹配。
 
 </details>
 
-### 练习 2：混合图欧拉回路
-给定一个既有有向边又有无向边的图，判断是否存在欧拉回路。
+### 练习 2：最小费用流的应用
+在一个网格图中，移动每个点都有一定的代价，如何以最小代价使得网格中 $K$ 对起点和终点相连？
 
 <details>
-<summary>点击查看解析</summary>
+<summary>Check Solution</summary>
 
 **分析**：
-1. **预处理**：无向边先任意定向，计算每个点的出入度之差 $D(u)$。若 $D(u)$ 为奇数，必无解。
-2. **建模**：利用网络流调整无向边的方向。
-   - 若 $D(u) > 0$，从 $u \to T$，容量 $D(u)/2$。
-   - 若 $D(u) < 0$，从 $S \to u$，容量 $-D(u)/2$。
-   - 无向边 $u \to v$ 对应网络流边 $(u, v)$，容量 1。
-3. **判断**：若最大流等于所有正偏差之和，则存在。
+1. **多源多汇转化**：引入虚源 $S$ 连向所有起点，虚汇 $T$ 接收所有终点。
+2. **容量控制**：设置 $S \to \text{起点}$ 容量为 1，控制路径数量为 $K$。
+3. **费用控制**：将网格中的移动步数/代价设为边的 `cost`。
+4. **算法**：运行 **MCMF (Minimum Cost Maximum Flow)**。
 
 </details>
 
-### 练习 3：平均费用最小环
-给定一个有向图，求一个环，使得环上权值的**平均值**最小。
+### 练习 3：欧拉定向问题
+给定一个混合图（既有有向边又有无向边），问是否能为所有无向边定向，使得每个点的入度等于出度。
 
 <details>
-<summary>点击查看解析</summary>
+<summary>Check Solution</summary>
 
 **分析**：
-1. **二分答案 $X$**：判定是否存在环使得 $\frac{\sum w_i}{k} < X$。
-2. **转化**：$\sum (w_i - X) < 0$。
-3. **判定**：将所有边权减去 $X$，使用 SPFA 判定图中是否存在**负权环**。
+1. **基础检查**：若某点度数为奇数，必不可行。
+2. **预处理**：先随意定向，计算 $D_i = \text{in\_degree} - \text{out\_degree}$。
+3. **差量补齐**：
+   - 若 $D_i > 0$，从 $i \to T$ 连边，容量 $D_i / 2$。
+   - 若 $D_i < 0$，从 $S \to i$ 连边，容量 $-D_i / 2$。
+4. **边调整**：对于原无向边 $(u, v)$，连边 $u \to v$，容量 1。
+5. **判定**：若 $S$ 发出的边全部满流，则存在合法定向。
 
 </details>

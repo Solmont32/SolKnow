@@ -1,67 +1,77 @@
 ---
-title: Tarjan 算法与连通性理论
+title: Tarjan 算法：连通性理论与拓扑转换
 ---
 
-import { GitMerge, Layers, ShieldAlert, Share2, Zap, LayoutGrid, CircleDot, Network, GitBranch } from 'lucide-react';
+import { GitMerge, Layers, ShieldAlert, Share2, Zap, LayoutGrid, CircleDot, Network, GitBranch, Sigma, BookOpen, Target, Workflow } from 'lucide-react';
 import ComplexityAnalysis from '@site/src/components/ComplexityAnalysis';
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # <GitMerge className="inline-block mr-2 mb-1 text-purple-600" /> Tarjan 算法与连通性 (Connectivity)
 
-Tarjan 算法是图论中处理连通性的核心工具。通过一次 DFS 遍历，它能在线性时间内提取图的深层拓扑特征，如强连通分量 (SCC)、双连通分量 (BCC) 以及割点与桥。
+Tarjan 算法是图论中处理连通性的核心工具。它通过一次深度优先搜索 (DFS)，利用栈结构与时间戳判定，在线性时间内揭示图的深层拓扑特征，如强连通分量 (SCC)、双连通分量 (BCC) 以及关键的割点与桥。
 
 ---
 
-## 一、 <Layers className="inline-block mr-2 mb-1 text-blue-500" /> 核心机制：DFS 树与时间戳
+## 一、 <Sigma className="inline-block mr-2 mb-1 text-blue-500" /> 核心理论体系
 
-在 DFS 过程中，图的边被分为四类：
-1. **树边 (Tree Edge)**：DFS 森林中的边。
-2. **回边 (Back Edge)**：指向祖先节点的边（环的核心）。
-3. **前向边 (Forward Edge)**：指向子树中已访问节点的边。
-4. **横叉边 (Cross Edge)**：指向已访问但非祖先节点的边。
+### 1. DFS 树与边分类
+在 DFS 过程中，有向图的边被划分为四类，这是判定连通性的数学基础：
+- **树边 (Tree Edge)**：DFS 搜索树中的边。
+- **回边 (Back Edge)**：指向当前路径上祖先节点的边。
+- **前向边 (Forward Edge)**：指向子树中已访问节点的非树边。
+- **横叉边 (Cross Edge)**：指向已访问但非祖先节点的边。
 
-### 关键属性定义
-- **dfn[u]**：深度优先搜索序（时间戳），表示 $u$ 被访问的次序。
-- **low[u]**：通过子树及至多一条**回边**能到达的最小 $dfn$ 值。
-
----
-
-## 二、 <ShieldAlert className="inline-block mr-2 mb-1 text-red-500" /> 无向图连通性
-
-### 1. 割点 (Cut-point) 与 桥 (Bridge)
-- **桥判定**：若 $low[v] > dfn[u]$，则 $(u, v)$ 为桥。
-- **割点判定**：
-  - 若 $u$ 为根，且拥有至少两个子树，则为割点。
-  - 若 $u$ 不为根，且存在子节点 $v$ 使得 $low[v] \ge dfn[u]$，则为割点。
-
-### 2. 双连通分量与圆方树 (Block-cut Tree)
-<KnowledgeCard title="圆方树构造" icon={<CircleDot size={20} />}>
-对于每个**点双连通分量 (v-BCC)**，新建一个**方点**，并将其与该分量内的所有**圆点**（原图点）连边。
-**性质**：
-1. 圆方树点数不超过 $2n$。
-2. 任意两点间的路径经过的方点集，即为原图中路径经过的所有 v-BCC。
-3. 它将复杂的连通关系转化为简单的树形结构，是处理无向图路径约束的利器。
-</KnowledgeCard>
+### 2. 关键属性：dfn 与 low
+- **dfn[u]**：$u$ 被访问的绝对次序（时间戳）。
+- **low[u]**：$u$ 及其子树通过至多一条**回边**能到达的最小 $dfn$ 值。
+**核心公式**：
+$$low[u] = \min \begin{cases} dfn[u] \\ \min \{low[v] \mid (u, v) \text{ is Tree Edge}\} \\ \min \{dfn[v] \mid (u, v) \text{ is Back/Cross Edge (and } v \in \text{Stack)}\} \end{cases}$$
 
 ---
 
-## 三、 <LayoutGrid className="inline-block mr-2 mb-1 text-green-500" /> 有向图连通性：SCC 与 2-SAT
+## 二、 <Workflow className="inline-block mr-2 mb-1 text-purple-500" /> 算法矩阵与复杂度分析
+
+<ComplexityAnalysis 
+  data={[
+    { algorithm: "Tarjan (SCC)", complexity: "O(V + E)", space: "O(V + E)", note: "一次 DFS + 辅助栈" },
+    { algorithm: "Tarjan (BCC)", complexity: "O(V + E)", space: "O(V + E)", note: "点双与边双分量判定" },
+    { algorithm: "Kosaraju (SCC)", complexity: "O(V + E)", space: "O(V + E)", note: "两次 DFS，逻辑更直观" },
+    { algorithm: "Gabow (SCC)", complexity: "O(V + E)", space: "O(V + E)", note: "利用双栈优化" }
+  ]}
+/>
+
+---
+
+## 三、 <ShieldAlert className="inline-block mr-2 mb-1 text-red-500" /> 无向图连通性：割点、桥与圆方树
+
+### 1. 割点与桥的判定
+- **桥 (Bridge)**：若存在树边 $(u, v)$ 使得 $low[v] > dfn[u]$，则 $(u, v)$ 为桥。
+- **割点 (Cut-point)**：
+  - 若 $u$ 为根且有两个以上子树，则 $u$ 是割点。
+  - 若 $u$ 非根且存在子边 $(u, v)$ 满足 $low[v] \ge dfn[u]$，则 $u$ 是割点。
+
+### 2. 圆方树 (Block-cut Tree)
+圆方树是将无向图连通块结构抽象化的终极武器。
+- **圆点**：原图节点。
+- **方点**：代表一个点双连通分量 (v-BCC)。
+**性质**：任意两个圆点间的路径在圆方树上经过的所有**方点**，即为原图中这两点路径所经过的所有 v-BCC。
+
+---
+
+## 四、 <LayoutGrid className="inline-block mr-2 mb-1 text-green-500" /> 有向图连通性：SCC 缩点与 2-SAT
 
 ### 1. 强连通分量 (SCC)
 SCC 是有向图中极大互相可达的点集。
-**缩点技巧**：将每个 SCC 压缩为一个点，原图转化为 **DAG**。这是解决有向图问题（如最长路、可达性）的标准预处理。
+**缩点技巧 (Condensation)**：将每个 SCC 缩为一个点。
+**推论**：任何有向图缩点后必然得到一个 **DAG (有向无环图)**。
 
-### 2. 2-SAT 问题：逻辑约束的图论转化
-**问题定义**：给定 $n$ 个布尔变量 $x_i$，及 $m$ 个约束 $(A \lor B)$。
-**建模**：
-- $(x_i = true \lor x_j = false) \iff (x_i = false \to x_j = false) \land (x_j = true \to x_i = true)$。
-- **结论**：若存在 $i$ 使得 $x_i$ 与 $\neg x_i$ 属于同一个 SCC，则无解。
-
-<ComplexityAnalysis time="O(V + E)" space="O(V + E)" />
+### 2. 2-SAT 问题判定
+对于逻辑约束 $(A \lor B)$，转化为蕴含关系 $(\neg A \to B) \land (\neg B \to A)$。
+- **解的存在性**：若 $\forall i$，变量 $x_i$ 与其反面 $\neg x_i$ 不在同一个 SCC 中，则原布尔表达式有解。
 
 ---
 
-## 四、 工业级 C++ 实现 (SCC 缩点模板)
+## 五、 工业级 C++ 实现 (SCC 缩点模板)
 
 ```cpp
 #include <vector>
@@ -70,82 +80,105 @@ SCC 是有向图中极大互相可达的点集。
 
 using namespace std;
 
-struct SCC {
-    int n, timer, scc_cnt;
-    vector<vector<int>> g;
-    vector<int> dfn, low, id;
-    vector<bool> in_st;
+/**
+ * @brief Tarjan 算法实现强连通分量
+ * 复杂度: O(V + E)
+ */
+class TarjanSCC {
+private:
+    int n, timer, scc_count;
+    vector<vector<int>> adj;
+    vector<int> dfn, low, scc_id;
+    vector<bool> in_stack;
     stack<int> st;
 
-    SCC(int _n) : n(_n), timer(0), scc_cnt(0), g(n + 1), dfn(n + 1), low(n + 1), id(n + 1), in_st(n + 1) {}
-
-    void add_edge(int u, int v) { g[u].push_back(v); }
-
-    void tarjan(int u) {
+    void dfs(int u) {
         dfn[u] = low[u] = ++timer;
-        st.push(u); in_st[u] = true;
-        for (int v : g[u]) {
-            if (!dfn[v]) {
-                tarjan(v);
+        st.push(u);
+        in_stack[u] = true;
+
+        for (int v : adj[u]) {
+            if (dfn[v] == 0) {
+                dfs(v);
                 low[u] = min(low[u], low[v]);
-            } else if (in_st[v]) {
+            } else if (in_stack[v]) {
                 low[u] = min(low[u], dfn[v]);
             }
         }
+
         if (low[u] == dfn[u]) {
-            scc_cnt++;
+            scc_count++;
             while (true) {
-                int v = st.top(); st.pop();
-                in_st[v] = false;
-                id[v] = scc_cnt;
-                if (u == v) break;
+                int node = st.top(); st.pop();
+                in_stack[node] = false;
+                scc_id[node] = scc_count;
+                if (node == u) break;
             }
         }
     }
+
+public:
+    TarjanSCC(int _n) : n(_n), timer(0), scc_count(0), 
+        adj(n + 1), dfn(n + 1, 0), low(n + 1, 0), 
+        scc_id(n + 1, 0), in_stack(n + 1, false) {}
+
+    void add_edge(int u, int v) { adj[u].push_back(v); }
+
+    void solve() {
+        for (int i = 1; i <= n; ++i) {
+            if (dfn[i] == 0) dfs(i);
+        }
+    }
+
+    int get_scc_id(int u) { return scc_id[u]; }
+    int get_count() { return scc_count; }
 };
 ```
 
 ---
 
-## 五、 配套练习 (折叠解答)
+## 六、 <Target className="inline-block mr-2 mb-1 text-red-500" /> 精选练习与解析
 
-### 练习 1：边双连通性加边
-给定一个无向图，最少加几条边使其变成边双连通图？
+### 练习 1：边双连通分量的转化
+给定无向图，最少加几条边可以使其变为边双连通图？
 
 <details>
-<summary>查看解析</summary>
+<summary>Check Solution</summary>
 
-**分析**：
-1. 找出所有桥，并将其删除，得到若干个**边双连通分量 (e-BCC)**。
-2. 将每个 e-BCC 缩成一个点，原来的桥作为边，得到一棵**树**（或森林）。
-3. 统计树中度数为 1 的节点（叶子节点）数量 $L$。
-**结论**：答案为 $\lceil L/2 \rceil$（即 $\frac{L+1}{2}$）。
+**解析**：
+1. **缩点**：找出所有的桥，删除它们后将得到的每个连通块缩为一个点。
+2. **生成树**：原来的桥将这些缩点连接成一棵树（或森林）。
+3. **统计叶子**：令度数为 1 的节点（叶子）总数为 $L$。
+4. **结论**：为了覆盖所有叶子，最少需要 $\lceil L/2 \rceil$ 条新边。
 
 </details>
 
-### 练习 2：2-SAT 的最小字典序解
-在 2-SAT 中，如果需要求出字典序最小的解，能否使用 Tarjan？
+### 练习 2：SCC 缩点后的动态规划
+在有向图中，每个点有权值，求一条路径使得经过的权值和最大（可重复经过点和边）。
 
 <details>
-<summary>查看解析</summary>
+<summary>Check Solution</summary>
 
-**分析**：
-Tarjan 缩点只能判定是否有解，且只能给出任意一组可行解。
-**方案**：
-若要求字典序最小，通常需要使用 **暴力 DFS + 回溯**。按顺序尝试 $x_1 = false, x_1 = true \dots$，在尝试每个赋值时，通过隐含边进行推导，若发生冲突则回溯。
+**解析**：
+1. **缩点**：运行 Tarjan 算法求出所有 SCC。
+2. **权值叠加**：每个 SCC 缩为一个新点，其权值为该分量内所有原点权值之和。
+3. **建 DAG**：对于原边 $(u, v)$，若 $ID(u) \neq ID(v)$，则在新点之间连边。
+4. **求解**：在缩点后的 DAG 上运行**拓扑排序 + DP**（最长路）。
 
 </details>
 
-### 练习 3：圆方树上的路径查询
-如何求无向图中两点间的所有路径必经的点？
+### 练习 3：割点对网络鲁棒性的影响
+如何在线性时间内求出一个图中所有的关键节点，使得移除该节点后图的连通分量数增加？
 
 <details>
-<summary>查看解析</summary>
+<summary>Check Solution</summary>
 
-**分析**：
-1. 必经的点即为这两点路径上的所有**割点**。
-2. 构造圆方树。
-3. 在圆方树上，两点 $u, v$（圆点）之间的简单路径上，所有的**圆点**（除了 $u, v$ 本身）即为必经割点。
-4. 使用 LCA 可以在 $O(\log N)$ 时间内处理查询。
+**解析**：
+该“关键节点”即为图的**割点 (Articulation Point)**。
+1. **算法**：运行 Tarjan 割点判定算法。
+2. **统计**：
+   - 对于根节点 $R$，若 DFS 树中有超过 1 个儿子，则 $R$ 是割点。
+   - 对于非根节点 $u$，若存在儿子 $v$ 满足 $low[v] \ge dfn[u]$，则 $u$ 是割点。
+3. **复杂度**：$O(V + E)$。
 
 </details>
