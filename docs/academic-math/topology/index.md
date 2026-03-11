@@ -44,6 +44,61 @@ import { Infinity, BookOpen, PenTool, Lightbulb, Compass, Share2 } from 'lucide-
 
 ---
 
+---
+
+## 计算验证：C++ 度量空间验证 <Code2 className="inline-block ml-1" />
+
+度量空间是拓扑空间最直观的例子。我们可以编写代码验证距离函数是否满足度量公理（正定性、对称性、三角不等式）。
+
+<details>
+<summary>点击查看 C++ 验证代码</summary>
+
+```cpp
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <algorithm>
+
+/**
+ * @brief 欧氏度量 d(x, y) = |x - y|
+ */
+double metric(double x, double y) {
+    return std::abs(x - y);
+}
+
+int main() {
+    double x = 1.0, y = 2.5, z = 4.0;
+    
+    // 验证三角不等式: d(x, z) <= d(x, y) + d(y, z)
+    double d_xz = metric(x, z);
+    double d_xy = metric(x, y);
+    double d_yz = metric(y, z);
+
+    std::cout << "d(1.0, 4.0) = " << d_xz << std::endl;
+    std::cout << "d(1.0, 2.5) + d(2.5, 4.0) = " << d_xy + d_yz << std::endl;
+
+    if (d_xz <= d_xy + d_yz) {
+        std::cout << "三角不等式验证通过！" << std::endl;
+    }
+    return 0;
+}
+```
+
+</details>
+
+---
+
+## 跨领域映射 <Layers className="inline-block ml-1" />
+
+| 领域 | 对应概念 | 说明 |
+| :--- | :--- | :--- |
+| **计算机图形学** | 流形网格 (Manifold Mesh) | 使用拓扑局部欧氏性质描述 3D 模型表面。 |
+| **分布式系统** | 拓扑图 (Topology) | 节点间的连接关系决定了系统的容错性与一致性限制。 |
+| **数据科学** | TDA (拓扑数据分析) | 通过持续同调 (Persistent Homology) 发现高维数据中的形状。 |
+| **网络安全** | 路径连通性 | 分析网络图中各子网的连通关系以识别安全隔离边界。 |
+
+---
+
 ## <PenTool className="solknow-blue" style={{ verticalAlign: 'middle', marginRight: '8px' }} size={28} /> ✍️ 练习与实战
 
 - **[点集拓扑专题练习库](/docs/exercises/math/topology)**：包含从基础定义到深层证明的 20+ 经典题目。

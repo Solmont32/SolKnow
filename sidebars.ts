@@ -78,6 +78,7 @@ const sidebars: SidebarsConfig = {
 
   // 数学知识库（含竞赛与专题）
   mathSidebar: [
+    { type: 'doc', id: 'academic-math/index', label: '学术数学总览' },
     {
       type: 'category',
       collapsible: true,

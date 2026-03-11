@@ -20,6 +20,64 @@ title: 概率论与数理统计 (Probability & Statistics)
 - **[参数估计 (Parameter Estimation)](parameter-estimation)**：极大似然估计 (MLE) 与区间估计。
 - **[假设检验 (Hypothesis Testing)](hypothesis-testing)**：显著性水平、两类错误与 P-值决策。
 
+---
+
+## 计算验证：C++ 蒙特卡洛模拟 <Code2 className="inline-block ml-1" />
+
+概率论中的许多结论可以通过随机模拟（蒙特卡洛方法）来验证。以下是使用 C++ 模拟掷硬币过程并验证大数定律的示例。
+
+<details>
+<summary>点击查看 C++ 验证代码</summary>
+
+```cpp
+#include <iostream>
+#include <random>
+#include <vector>
+#include <iomanip>
+
+/**
+ * @brief 蒙特卡洛模拟：验证大数定律 (LLN)
+ */
+int main() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::bernoulli_distribution d(0.5); // 公平硬币
+
+    int head_count = 0;
+    std::vector<long long> trials = {10, 100, 1000, 10000, 100000, 1000000};
+
+    std::cout << std::fixed << std::setprecision(6);
+    std::cout << "Trials\t\tHeads Ratio\tError" << std::endl;
+    std::cout << "---------------------------------------------" << std::endl;
+
+    long long current_total = 0;
+    for (long long n : trials) {
+        while (current_total < n) {
+            if (d(gen)) head_count++;
+            current_total++;
+        }
+        double ratio = (double)head_count / n;
+        std::cout << n << "\t\t" << ratio << "\t" << std::abs(ratio - 0.5) << std::endl;
+    }
+    return 0;
+}
+```
+
+</details>
+
+---
+
+## 跨领域映射 <Layers className="inline-block ml-1" />
+
+| 领域 | 对应概念 | 说明 |
+| :--- | :--- | :--- |
+| **机器学习** | 贝叶斯推断 | 利用先验概率与证据更新后验概率，构建生成模型。 |
+| **金融数学** | 随机微积分 | 使用布朗运动描述资产价格的波动（Black-Scholes 模型）。 |
+| **量子力学** | 概率幅与波函数 | 粒子的状态由复概率幅描述，测量结果服从波函数模平方的概率分布。 |
+| **计算机网络** | 排队论 | 研究数据包到达与处理过程的随机性，优化缓冲区大小。 |
+
+---
+
 ## 学习建议
 
 > 概率论是基础，统计学是应用。建议首先掌握 **中心极限定理**，它是连接概率理论与统计推断的桥梁。

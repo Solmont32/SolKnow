@@ -49,7 +49,56 @@ description: 命题逻辑、形式证明系统（希尔伯特系统、自然推�
 - **全称特指 (UI)**: $\forall x A(x) \to A(t)$。
 - **存在泛化 (EG)**: $A(t) \to \exists x A(x)$。
 
-## 5. 经典练习
+---
+
+## 5. 计算验证：C++ 真值表生成器 <Code2 className="inline-block ml-1" />
+
+逻辑公式可以通过程序进行穷举验证。以下是一个简单的 C++ 示例，用于生成蕴含式 $(p \to q)$ 的真值表。
+
+<details>
+<summary>点击查看 C++ 验证代码</summary>
+
+```cpp
+#include <iostream>
+#include <iomanip>
+
+/**
+ * @brief 生成 p -> q 的真值表
+ */
+int main() {
+    std::cout << "p\tq\tp -> q" << std::endl;
+    std::cout << "--------------------" << std::endl;
+    
+    bool vals[] = {true, false};
+    for (bool p : vals) {
+        for (bool q : vals) {
+            // 蕴含 p -> q 等价于 !p || q
+            bool res = !p || q;
+            std::cout << (p ? "T" : "F") << "\t"
+                      << (q ? "T" : "F") << "\t"
+                      << (res ? "T" : "F") << std::endl;
+        }
+    }
+    return 0;
+}
+```
+
+</details>
+
+---
+
+## 6. 跨领域映射 <Layers className="inline-block ml-1" />
+
+| 领域 | 对应概念 | 说明 |
+| :--- | :--- | :--- |
+| **计算机体系结构** | 逻辑门 (AND, OR, NOT) | 命题逻辑的物理实现。 |
+| **程序设计** | 布尔表达式与短路求值 | `if (p && q)` 本质上是逻辑合取的应用。 |
+| **人工智能** | 知识表示与推理 (SAT Solver) | 自动推理系统解决复杂的逻辑约束满足问题。 |
+| **形式化方法** | 程序正确性证明 | 使用 Hoare 逻辑等形式系统确保代码无 Bug。 |
+
+---
+
+## 7. 经典练习
 
 :::info 练习 1
 使用推理规则证明：$(p \to r) \land (q \to r) \equiv (p \lor q) \to r$。

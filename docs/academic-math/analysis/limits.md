@@ -122,7 +122,58 @@ $$H_{2n}-H_n=\frac1{n+1}+\cdots+\frac1{2n}>n\cdot\frac1{2n}=\frac12.$$
 
 ---
 
-## 三、章内练习（折叠答案）
+## 三、计算验证：C++ 数值观测 <Code2 className="inline-block ml-1" />
+
+在分析学中，数值模拟能帮助我们直观感受收敛的速度。
+
+### 示例：验证数列 $a_n = (1 + 1/n)^n \to e$
+
+我们通过 C++ 观察该数列在 $n$ 增大时的收敛情况及其与真值 $e$ 的误差。
+
+<details>
+<summary>点击查看 C++ 验证代码</summary>
+
+```cpp
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+
+/**
+ * @brief 观测 e 的定义式收敛过程
+ */
+int main() {
+    const double e_true = std::exp(1.0);
+    std::cout << std::fixed << std::setprecision(12);
+    std::cout << "Target e: " << e_true << "\n\n";
+    std::cout << "n\t\tValue\t\t\tError" << std::endl;
+    std::cout << "---------------------------------------------" << std::endl;
+
+    for (long long n = 1; n <= 100000000000LL; n *= 10) {
+        double val = std::pow(1.0 + 1.0/n, (double)n);
+        double error = std::abs(val - e_true);
+        std::cout << "10^" << (int)std::log10(n) << "\t\t" << val << "\t" << error << std::endl;
+    }
+    
+    std::cout << "\n注：由于双精度浮点数精度限制，当 n 过大时，误差反而可能由于舍入误差而增大。" << std::endl;
+    return 0;
+}
+```
+
+</details>
+
+---
+
+## 四、跨领域映射 <Layers className="inline-block ml-1" />
+
+| 领域 | 对应概念 | 说明 |
+| :--- | :--- | :--- |
+| **算法分析** | 渐近时间复杂度 $O(f(n))$ | 本质上是研究函数在大 $n$ 下的阶数极限。 |
+| **信号处理** | 采样定理与极限 | 连续信号向离散采样的逼近过程。 |
+| **物理学** | 热力学极限 | 研究粒子数 $N \to \infty$ 时宏观量的统计行为。 |
+
+---
+
+## 五、章内练习（折叠答案）
 
 ### 练习 1：定义法
 

@@ -47,7 +47,7 @@ Rocket
         <strong style={{ color: '#8b5cf6' }}>Mathematical Analysis</strong>
       </div>
       从 K-12 基础到大学数学分析、高等代数、离散数学。为计算机科学提供坚实的理论支撑。
-      <br /><a href="academic-math/analysis/" className="margin-top--sm" style={{ display: 'inline-block' }}>探索公理 →</a>
+      <br /><a href="academic-math/" className="margin-top--sm" style={{ display: 'inline-block' }}>探索公理 →</a>
     </KnowledgeCard>
   </div>
 </div>

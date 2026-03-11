@@ -86,6 +86,63 @@ $$
 
 ---
 
+---
+
+## 四、计算验证：C++ 数值验证 C-R 方程 <Code2 className="inline-block ml-1" />
+
+解析函数的实部和虚部必须满足 Cauchy-Riemann 方程。我们可以通过数值微分来近似验证这一点。
+
+<details>
+<summary>点击查看 C++ 验证代码</summary>
+
+```cpp
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+
+/**
+ * @brief 验证 f(z) = z^2 = (x^2 - y^2) + i(2xy) 的解析性
+ * u(x,y) = x^2 - y^2, v(x,y) = 2xy
+ */
+int main() {
+    double x = 1.0, y = 1.0, h = 0.0001;
+    
+    // u = x^2 - y^2, v = 2xy
+    auto u = [](double x, double y) { return x*x - y*y; };
+    auto v = [](double x, double y) { return 2*x*y; };
+
+    // 数值偏导
+    double ux = (u(x + h, y) - u(x - h, y)) / (2 * h);
+    double uy = (u(x, y + h) - u(x, y - h)) / (2 * h);
+    double vx = (v(x + h, y) - v(x - h, y)) / (2 * h);
+    double vy = (v(x, y + h) - v(x, y - h)) / (2 * h);
+
+    std::cout << std::fixed << std::setprecision(6);
+    std::cout << "ux: " << ux << ", vy: " << vy << " (Should be equal)" << std::endl;
+    std::cout << "uy: " << uy << ", vx: " << vx << " (Should be opposite)" << std::endl;
+
+    if (std::abs(ux - vy) < 1e-5 && std::abs(uy + vx) < 1e-5) {
+        std::cout << "C-R 方程数值验证通过！" << std::endl;
+    }
+    return 0;
+}
+```
+
+</details>
+
+---
+
+## 五、跨领域映射 <Layers className="inline-block ml-1" />
+
+| 领域 | 对应概念 | 说明 |
+| :--- | :--- | :--- |
+| **流体力学** | 复势 (Complex Potential) | 解析函数的实部和虚部分别对应流函数和速度势。 |
+| **信号处理** | 解析信号与 Hilbert 变换 | 通过复分析工具处理带通信号。 |
+| **量子力学** | 算子谱论 | 在复数域研究能量算子的本征值。 |
+| **工程计算** | 有限元与边界元 | 利用解析函数的调和性质求解拉普拉斯方程。 |
+
+---
+
 ## 🚀 快速跳转
 
 -   [**下一站：解析函数的全纯性质**](./holomorphic-functions)

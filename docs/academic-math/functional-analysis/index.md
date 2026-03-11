@@ -75,6 +75,64 @@ import { BookOpen, Target, Infinity, Code2, Layers, Cpu } from 'lucide-react';
 
 ---
 
+---
+
+## 计算验证：C++ 数值泛函（积分算子离散化） <Code2 className="inline-block ml-1" />
+
+泛函分析中的线性算子（如 Fredholm 积分算子）可以通过离散化转化为矩阵运算。
+
+<details>
+<summary>点击查看 C++ 验证代码</summary>
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <iomanip>
+
+/**
+ * @brief 离散化积分算子 (K f)(x) = \int_0^1 K(x, t) f(t) dt
+ * 使用简单的矩形法则将算子离散化为矩阵。
+ */
+int main() {
+    int n = 5; // 离散点数
+    double h = 1.0 / n;
+    
+    // K(x, t) = x + t
+    auto K = [](double x, double t) { return x + t; };
+    
+    std::cout << "离散化算子矩阵 (n=" << n << "):" << std::endl;
+    std::cout << std::fixed << std::setprecision(3);
+    for (int i = 0; i < n; ++i) {
+        double x = i * h;
+        for (int j = 0; j < n; ++j) {
+            double t = j * h;
+            // 矩阵元素 A_ij = K(x_i, t_j) * h
+            std::cout << K(x, t) * h << "\t";
+        }
+        std::cout << std::endl;
+    }
+    
+    std::cout << "\n注：无限维算子的谱性质可以通过这种矩阵近似的本征值来观察。" << std::endl;
+    return 0;
+}
+```
+
+</details>
+
+---
+
+## 跨领域映射 <Layers className="inline-block ml-1" />
+
+| 领域 | 对应概念 | 说明 |
+| :--- | :--- | :--- |
+| **量子力学** | 算子谱论 | 物理观测量对应自伴算子，其谱对应测量结果。 |
+| **有限元分析 (FEA)** | Sobolev 空间 | 偏微分方程的弱解存在于带导数约束的赋范空间中。 |
+| **信号处理** | 滤波器设计 | 信号被视为 $L^2$ 空间中的点，滤波则是应用有界算子。 |
+| **机器学习** | 核方法 (RKHS) | 再生核 Hilbert 空间提供无限维特征映射的严密框架。 |
+
+---
+
 ## 章节列表
 
 - [Banach 空间：对偶与三大定理](./banach-spaces)

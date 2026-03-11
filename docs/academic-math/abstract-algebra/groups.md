@@ -63,7 +63,94 @@ $$H / (H \cap N) \cong (HN) / N$$
 设 $N \trianglelefteq G, M \trianglelefteq G$ 且 $N \subseteq M$，则 $(M/N) \trianglelefteq (G/N)$ 且：
 $$(G/N) / (M/N) \cong G / M$$
 
-## 4. 经典例题
+---
+
+## 4. 计算验证：C++ 群论性质检查器 <Code2 className="inline-block ml-1" />
+
+群的性质可以通过 Cayley 表（运算表）进行机械化验证。以下是一个验证有限集合在给定运算下是否构成群的 C++ 程序示例。
+
+<details>
+<summary>点击查看 C++ 验证代码</summary>
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <set>
+
+/**
+ * @brief 验证 (Z_4, +) 是否构成群
+ */
+bool verifyGroup(int n, const std::vector<std::vector<int>>& table) {
+    // 1. 封闭性 (Cayley 表中所有元素都在 0..n-1)
+    for (auto& row : table) {
+        for (int val : row) {
+            if (val < 0 || val >= n) return false;
+        }
+    }
+
+    // 2. 单位元 (假设为 0)
+    int e = 0;
+    for (int i = 0; i < n; ++i) {
+        if (table[e][i] != i || table[i][e] != i) return false;
+    }
+
+    // 3. 逆元
+    for (int i = 0; i < n; ++i) {
+        bool hasInverse = false;
+        for (int j = 0; j < n; ++j) {
+            if (table[i][j] == e && table[j][i] == e) {
+                hasInverse = true;
+                break;
+            }
+        }
+        if (!hasInverse) return false;
+    }
+
+    // 4. 结合律 (a*b)*c == a*(b*c)
+    for (int a = 0; a < n; ++a) {
+        for (int b = 0; b < n; ++b) {
+            for (int c = 0; c < n; ++c) {
+                if (table[table[a][b]][c] != table[a][table[b][c]]) return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+int main() {
+    int n = 4;
+    // Z_4 加法表
+    std::vector<std::vector<int>> z4 = {
+        {0, 1, 2, 3},
+        {1, 2, 3, 0},
+        {2, 3, 0, 1},
+        {3, 0, 1, 2}
+    };
+
+    if (verifyGroup(n, z4)) {
+        std::cout << "Z_4 加法 Cayley 表通过群性质验证！" << std::endl;
+    }
+    return 0;
+}
+```
+
+</details>
+
+---
+
+## 5. 跨领域映射 <Layers className="inline-block ml-1" />
+
+| 领域 | 对应概念 | 说明 |
+| :--- | :--- | :--- |
+| **理论计算机科学** | 自动机与半群 | 有限状态自动机的转移函数构成一个半群结构。 |
+| **密码学** | 椭圆曲线群 (ECC) | 基于群上离散对数难题构建现代加密体系。 |
+| **物理学** | 规范场论 (Gauge Theory) | 物理定律在局部群变换（如 $U(1), SU(3)$）下的不变性。 |
+| **算法设计** | Polya 计数定理 | 利用群作用（等价类）解决带对称性的计数问题。 |
+
+---
+
+## 6. 经典例题
 
 :::info 例题 1 (拉格朗日定理应用)
 设 $G$ 是有限群，证明：对任意 $g \in G$，有 $g^{|G|} = e$。
