@@ -14,14 +14,18 @@ import {
   ChevronRight,
   Target,
   BarChart3,
-  Layers
+  Layers,
+  Search,
+  GitBranch,
+  Terminal,
+  Cpu
 } from 'lucide-react';
 
 # SolKnow 综合练习库
 
 > **“纸上得来终觉浅，绝知此事要躬行。”** —— 系统化的阶梯式训练，助你完成从理论到实战的跨越。
 
-本练习库旨在对标国内外经典教科书（如《数学分析教程》、CLRS 等）的课后习题规范，建立从 **基础巩固** 到 **综合应用**，再到 **竞赛挑战** 的完整阶梯体系。每一道题目都经过精心挑选，并配有深度折叠解析。
+本练习库对标国内外经典教材与竞赛考纲，建立从 **基础巩固** 到 **综合应用**，再到 **竞赛挑战** 的完整阶梯体系。每一项练习均配有深度折叠解析与工业级 C++ 实现。
 
 ---
 
@@ -29,38 +33,61 @@ import {
 
 <div className="row">
   <div className="col col--6">
-    <KnowledgeCard type="tip" title="系统数学练习库" className="margin-bottom--md">
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-        <InfinityIcon size={20} color="#8b5cf6" />
-        <strong style={{ color: '#8b5cf6' }}>Mathematics Mastery</strong>
-      </div>
-      涵盖数学分析、高等代数、概率论、实/复变等大学数学核心课程。
-      <ul style={{ marginTop: '10px', fontSize: '0.9rem' }}>
-        <li><b>基础层</b>：定义理解与基本计算</li>
-        <li><b>进阶层</b>：代数结构与拓扑性质专项强化</li>
-        <li><b>竞赛层</b>：考研/数学竞赛真题解析</li>
-      </ul>
-      <div style={{ display: 'flex', gap: '8px' }}>
-        <a href="math/analysis" className="button button--outline button--primary button--sm">分析库 <ChevronRight size={14} /></a>
-        <a href="math/algebra" className="button button--outline button--primary button--sm">代数库 <ChevronRight size={14} /></a>
-      </div>
-    </KnowledgeCard>
-  </div>
-  <div className="col col--6">
     <KnowledgeCard type="info" title="算法竞赛练习库" className="margin-bottom--md">
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
         <Code2 size={20} color="#3b82f6" />
         <strong style={{ color: '#3b82f6' }}>Competitive Programming</strong>
       </div>
-      对标 Codeforces, AtCoder 与 NOI 难度。包含工业级 C++ 代码解析。
-      <ul style={{ marginTop: '10px', fontSize: '0.9rem' }}>
-        <li><b>基础层</b>：基础算法与线性结构专项强化</li>
-        <li><b>进阶层</b>：图论与动态规划专项强化</li>
-        <li><b>综合层</b>：数论、几何与复杂结构专项强化</li>
-      </ul>
-      <div style={{ display: 'flex', gap: '8px' }}>
-        <a href="cs/algorithm-basic" className="button button--outline button--info button--sm">基础算法 <ChevronRight size={14} /></a>
-        <a href="cs/algorithm-dp-comprehensive" className="button button--outline button--info button--sm">动规专题 <ChevronRight size={14} /></a>
+      对标 Codeforces, AtCoder 与 NOI 难度。包含系统化 C++ 代码解析。
+      <div className="row" style={{ marginTop: '10px', fontSize: '0.85rem' }}>
+        <div className="col col--6">
+          <ul style={{ paddingLeft: '1rem', marginBottom: '0' }}>
+            <li><a href="cs/algorithm-basic">基础算法与线性结构</a></li>
+            <li><a href="cs/algorithm-ds">高级数据结构专题</a></li>
+            <li><a href="cs/algorithm-dp-comprehensive">动态规划全体系</a></li>
+          </ul>
+        </div>
+        <div className="col col--6">
+          <ul style={{ paddingLeft: '1rem', marginBottom: '0' }}>
+            <li><a href="cs/algorithm-graph-comprehensive">图论算法综合库</a></li>
+            <li><a href="cs/algorithm-string">字符串算法专题</a></li>
+            <li><a href="cs/algorithm-number-theory">数论与同余系</a></li>
+          </ul>
+        </div>
+      </div>
+      <div style={{ marginTop: '10px', display: 'flex', gap: '8px' }}>
+        <a href="cs/algorithm-geometry" className="button button--outline button--info button--sm">计算几何 <ChevronRight size={14} /></a>
+        <a href="cs/algorithm-search" className="button button--outline button--info button--sm">搜索算法 <ChevronRight size={14} /></a>
+      </div>
+    </KnowledgeCard>
+  </div>
+  
+  <div className="col col--6">
+    <KnowledgeCard type="tip" title="系统数学练习库" className="margin-bottom--md">
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+        <InfinityIcon size={20} color="#8b5cf6" />
+        <strong style={{ color: '#8b5cf6' }}>Mathematics Mastery</strong>
+      </div>
+      涵盖从分析学、代数学到拓扑学、泛函分析的全阶数学练习。
+      <div className="row" style={{ marginTop: '10px', fontSize: '0.85rem' }}>
+        <div className="col col--6">
+          <ul style={{ paddingLeft: '1rem', marginBottom: '0' }}>
+            <li><a href="math/analysis">数学分析 (Analysis)</a></li>
+            <li><a href="math/algebra">高等代数 (Algebra)</a></li>
+            <li><a href="math/abstract-algebra">抽象代数 (Abstract)</a></li>
+          </ul>
+        </div>
+        <div className="col col--6">
+          <ul style={{ paddingLeft: '1rem', marginBottom: '0' }}>
+            <li><a href="math/real-analysis">实变与泛函分析</a></li>
+            <li><a href="math/topology">点集拓扑专题</a></li>
+            <li><a href="math/discrete-math">离散数学练习</a></li>
+          </ul>
+        </div>
+      </div>
+      <div style={{ marginTop: '10px', display: 'flex', gap: '8px' }}>
+        <a href="math/numerical-analysis" className="button button--outline button--primary button--sm">数值分析 <ChevronRight size={14} /></a>
+        <a href="math/probability" className="button button--outline button--primary button--sm">概率统计 <ChevronRight size={14} /></a>
       </div>
     </KnowledgeCard>
   </div>
@@ -68,33 +95,42 @@ import {
 
 <div className="row">
   <div className="col col--4">
-    <KnowledgeCard type="code" title="AI 实战训练">
+    <KnowledgeCard type="code" title="计算机系统实战">
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-        <Brain size={18} color="#06b6d4" />
-        <strong style={{ color: '#06b6d4' }}>Machine Learning</strong>
+        <Cpu size={18} color="#10b981" />
+        <strong style={{ color: '#10b981' }}>Computer Systems</strong>
       </div>
-      推导常用模型背后的数学公式，理解 PyTorch/TensorFlow 底层实现。
-      <br /><a href="ai/ml" style={{ fontSize: '0.85rem' }}>开始训练 →</a>
+      操作系统内核原语、Linux 命令实操与 C++ 工程化编程。
+      <br />
+      <div style={{ fontSize: '0.85rem', marginTop: '5px' }}>
+        <a href="cs/linux">Linux</a> | <a href="cs/cpp">C++</a> | <a href="cs/os">OS</a>
+      </div>
     </KnowledgeCard>
   </div>
   <div className="col col--4">
-    <KnowledgeCard type="warning" title="安全攻防练习">
+    <KnowledgeCard type="warning" title="AI 与安全实验室">
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-        <ShieldCheck size={18} color="#6366f1" />
-        <strong style={{ color: '#6366f1' }}>Security Lab</strong>
+        <ShieldCheck size={18} color="#f59e0b" />
+        <strong style={{ color: '#f59e0b' }}>AI & Security</strong>
       </div>
-      Web 渗透、CTF 二进制、密码学解密。模拟实战场景。
-      <br /><a href="infosec/web" style={{ fontSize: '0.85rem' }}>进入实验室 →</a>
+      ML/DL 算法推导与 Web/Pwn 安全攻防实战。
+      <br />
+      <div style={{ fontSize: '0.85rem', marginTop: '5px' }}>
+        <a href="ai/ml">AI 训练</a> | <a href="infosec/web">安全攻防</a>
+      </div>
     </KnowledgeCard>
   </div>
   <div className="col col--4">
-    <KnowledgeCard type="success" title="K-12 竞赛练习">
+    <KnowledgeCard type="success" title="K-12 竞赛挑战">
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-        <Trophy size={18} color="#10b981" />
-        <strong style={{ color: '#10b981' }}>Olympiad Math</strong>
+        <Trophy size={18} color="#ef4444" />
+        <strong style={{ color: '#ef4444' }}>Olympiad Math</strong>
       </div>
       从小学奥数到高中联赛。系统化整理常见套路与解题模型。
-      <br /><a href="math/competition/elementary" style={{ fontSize: '0.85rem' }}>开启挑战 →</a>
+      <br />
+      <div style={{ fontSize: '0.85rem', marginTop: '5px' }}>
+        <a href="math/competition/elementary">小学</a> | <a href="math/competition/junior">初中</a> | <a href="math/competition/senior">高中</a>
+      </div>
     </KnowledgeCard>
   </div>
 </div>
@@ -103,21 +139,18 @@ import {
 
 ## 🛠️ 教材化功能特性
 
-### 1. 阶梯式难度设计
+### 1. 阶梯式难度设计 (Ladders)
 我们将所有练习分为三个等级，确保学习曲线平滑：
 - <span style={{ color: 'var(--ifm-color-success)' }}>🟢 **基础巩固 (Level A)**</span>：聚焦核心概念的直接应用，对标课后基础题。
 - <span style={{ color: 'var(--ifm-color-warning)' }}>🟡 **综合提升 (Level B)**</span>：跨知识点结合，训练逻辑推理与综合运用能力。
-- <span style={{ color: 'var(--ifm-color-danger)' }}>🔴 **竞赛挑战 (Level C)**</span>：对标考研名校真题、数学竞赛或 Codeforces Div.1 难度。
+- <span style={{ color: 'var(--ifm-color-danger)' }}>🔴 **竞赛挑战 (Level C)**</span>：对标考研名校真题、数学竞赛或顶级算法竞赛难度。
 
-### 2. 多视角解法对比
-部分核心习题提供 **“代数法 vs 几何法”**、**“递归 vs 迭代”** 等多视角对比，帮助你理解算法与数学的本质联系。
-
-### 3. 折叠代码与解析系统
-默认隐藏过程，防止“一眼看到答案”。点击展开后，不仅有详细的数学证明，还有经过 Lint 规范的 C++/Python 代码实现。
+### 2. 多层级折叠解析系统
+默认隐藏过程，防止“一眼看到答案”。点击 **Check Solution** 展开后，不仅有严密的数学证明，还有经过规范化的 **C++ 工业级实现** 与 **复杂度边界分析**。
 
 ---
 
-## 📊 训练进度建议
+## 📊 训练建议
 
 <div style={{
   padding: '1.5rem',
@@ -135,7 +168,7 @@ import {
 </div>
 
 <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-  <a className="button button--primary button--lg" href="math/analysis">
-    从数学分析开始 <Layers size={20} style={{ marginLeft: '8px', verticalAlign: 'middle' }} />
+  <a className="button button--primary button--lg" href="cs/algorithm-basic">
+    从基础算法开始挑战 <Layers size={20} style={{ marginLeft: '8px', verticalAlign: 'middle' }} />
   </a>
 </div>
