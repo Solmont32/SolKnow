@@ -3,7 +3,7 @@ title: 并查集 (Disjoint Set Union)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { GitMerge, Users, Zap, ShieldCheck, Sigma } from 'lucide-react';
+import { GitMerge, Users, Zap, ShieldCheck, Sigma, Network } from 'lucide-react';
 
 # 并查集 (DSU): 集合关系的维护艺术
 
@@ -17,185 +17,136 @@ import { GitMerge, Users, Zap, ShieldCheck, Sigma } from 'lucide-react';
 
 ---
 
-## 1. 结构高度抽象
+## 1. 系统化抽象数据类型 (ADT) 推导
 
-从抽象代数角度看，并查集维护了一个集合序列的划分。设 $U$ 为全集，DSU 维护划分 $P = \{S_1, S_2, \dots, S_k\}$，满足 $\bigcup S_i = U$ 且 $S_i \cap S_j = \emptyset$。
+并查集维护了一个集合序列的划分 $P = \{S_1, S_2, \dots, S_k\}$。设 $U = \{1, 2, \dots, n\}$ 为全集。
 
-- **Find(x)**: 返回包含 $x$ 的集合 $S_i$ 的唯一代表元素（根）。
-- **Union(x, y)**: 若 $x \in S_i, y \in S_j$ 且 $i \neq j$，则将 $P$ 更新为 $(P \setminus \{S_i, S_j\}) \cup \{S_i \cup S_j\}$。
+### 1.1 基本操作定义
+- **Find(x)**: 返回包含 $x$ 的唯一集合代表元 $\text{rep}(S_i)$。
+- **Union(x, y)**: 若 $\text{rep}(S_i) \neq \text{rep}(S_j)$，则 $P \leftarrow (P \setminus \{S_i, S_j\}) \cup \{S_i \cup S_j\}$。
+
+### 1.2 数据完整性证明
+**命题**：并查集森林结构始终是一组互不相交的树，且根节点是该集合的唯一代表。
+**证明**：
+1. **初始状态**：每个节点自成一根，满足条件。
+2. **归纳步**：`Union(x, y)` 仅在 $x, y$ 的根节点 $r_x, r_y$ 不同时，将 $p[r_y] = r_x$。此操作仅合并两棵树且未引入环，故森林性质保持。
 
 ---
 
 ## 2. 时空复杂度摊还证明
 
-并查集的效率源于两大核心优化：**路径压缩 (Path Compression)** 与 **按秩合并 (Union by Rank)**。
-
 ### 2.1 路径压缩与按秩合并
-```cpp
-struct DSU {
-    vector<int> p, sz;
-    DSU(int n) : p(n + 1), sz(n + 1, 1) {
-        for (int i = 1; i <= n; i++) p[i] = i;
-    }
-    int find(int x) {
-        if (p[x] == x) return x;
-        return p[x] = find(p[x]); // 路径压缩
-    }
-    void unite(int x, int y) {
-        int rootX = find(x), rootY = find(y);
-        if (rootX != rootY) {
-            if (sz[rootX] < sz[rootY]) swap(rootX, rootY);
-            p[rootY] = rootX; // 按秩合并（Size 优化）
-            sz[rootX] += sz[rootY];
-        }
-    }
-};
-```
+**定理**：同时使用路径压缩和按秩（Rank/Size）合并，单次操作的均摊时间复杂度为 $O(\alpha(N))$，其中 $\alpha$ 是反阿克曼函数。
 
-### 2.2 复杂度证明 (势能分析概要)
-**定理**：同时使用路径压缩和按秩合并，单次操作的均摊时间复杂度为 $O(\alpha(N))$。
-
-**证明思路 (Tarjan, 1975)**：
-引入势能函数 $\Phi$。设节点的秩（Rank）为 $r(x)$，其为以 $x$ 为根的树的最大可能高度。
-定义 $\alpha(n)$ 为**反阿克曼函数 (Inverse Ackermann Function)**。
-1. **仅按秩合并**：树高限制在 $O(\log N)$，复杂度 $O(\log N)$。
-2. **结合路径压缩**：路径压缩会显著降低树高，但由于按秩合并维持了结构的“紧凑性”，势能的变化被分摊。通过对节点秩进行分层处理（层级由阿克曼函数定义），可以证明 $\alpha(n)$ 是摊还代价的严格上界。
-$\alpha(n)$ 增长极其缓慢，对于 $n = 2^{2^{10^{19729}}}$，$\alpha(n) \leq 5$。
+### 2.2 势能分析概要 (Tarjan 证明思路)
+定义节点的秩 $rank(x)$ 为以 $x$ 为根时树的最大高度上界。
+定义势能函数 $\Phi(x)$ 取决于 $rank(x)$ 与其父节点秩之差。
+1. **路径压缩**：每次 `find(x)` 会改变路径上所有节点的父节点，导致势能显著释放，补偿了遍历路径的代价。
+2. **收敛性**：由于秩的变化受限于 $\log N$ 或更小的层级划分，通过阿克曼函数的迭代定义，可以证明总代价被 $\alpha(N)$ 严格约束。
 
 ---
 
-## 3. 进阶：带权与扩展域
-
-### 3.1 带权并查集 (Weighted DSU)
-每个节点 $x$ 维护到父节点的偏移量 $d[x]$。在 `find` 递归返回时，更新 $d[x] = d[x] \oplus d[p[x]]$（其中 $\oplus$ 为满足结合律的算子）。
-
-### 3.2 扩展域并查集 (Multiple Domains)
-用于维护复杂的逻辑关系（如“敌人的敌人是朋友”）。将一个元素 $x$ 拆分为多个状态节点（如 $x_{friend}, x_{enemy}$），通过合并状态点来表达约束。
-
----
-
-## 4. 教材化例题与解析
+## 3. 教材化例题与解析
 
 ### 例题 1：食物链 (综合逻辑关系)
 <details>
 <summary>Check Solution (扩展域做法)</summary>
 
-**题目描述**：有 A, B, C 三类动物，A 吃 B，B 吃 C，C 吃 A。给定 $k$ 个描述，判断假话数量。
-**解析**：为每个动物 $i$ 开 3 个域：$i_A, i_B, i_C$。
-- 如果 $x, y$ 是同类：合并 $(x_A, y_A), (x_B, y_B), (x_C, y_C)$。
-- 如果 $x$ 吃 $y$：合并 $(x_A, y_B), (x_B, y_C), (x_C, y_A)$。
+**题目描述**：有 A, B, C 三类动物，A 吃 B，B 吃 C，C 吃 A。给定描述，判断假话。
+**核心逻辑**：利用扩展域（Domain Expansion）维护逻辑冲突。
 
 ```cpp
-#include <iostream>
-#include <numeric>
-#include <vector>
-
-using namespace std;
-
-struct DSU {
-    vector<int> p;
-    DSU(int n) : p(n + 1) { iota(p.begin(), p.end(), 0); }
-    int find(int x) { return p[x] == x ? x : p[x] = find(p[x]); }
-    void unite(int x, int y) { p[find(x)] = find(y); }
-    bool same(int x, int y) { return find(x) == find(y); }
-};
-
-int main() {
-    int n, k, ans = 0;
-    scanf("%d %d", &n, &k);
-    DSU dsu(3 * n + 1);
-    while (k--) {
-        int t, x, y;
-        scanf("%d %d %d", &t, &x, &y);
-        if (x > n || y > n) { ans++; continue; }
-        if (t == 1) {
-            if (dsu.same(x, y + n) || dsu.same(x, y + 2 * n)) ans++;
-            else {
-                dsu.unite(x, y);
-                dsu.unite(x + n, y + n);
-                dsu.unite(x + 2 * n, y + 2 * n);
-            }
-        } else {
-            if (dsu.same(x, y) || dsu.same(x, y + 2 * n)) ans++;
-            else {
-                dsu.unite(x, y + n);
-                dsu.unite(x + n, y + 2 * n);
-                dsu.unite(x + 2 * n, y);
-            }
-        }
-    }
-    printf("%d\n", ans);
-    return 0;
+// 域定义：x (自身), x+n (被x吃的), x+2n (吃x的)
+if (t == 1) { // x, y 是同类
+    if (dsu.same(x, y + n) || dsu.same(x, y + 2 * n)) ans++; // 冲突
+    else dsu.unite(x, y), dsu.unite(x + n, y + n), dsu.unite(x + 2 * n, y + 2 * n);
+} else { // x 吃 y
+    if (dsu.same(x, y) || dsu.same(x, y + 2 * n)) ans++; // 冲突
+    else dsu.unite(x, y + n), dsu.unite(x + n, y + 2 * n), dsu.unite(x + 2 * n, y);
 }
 ```
 </details>
 
-### 例题 2：银河英雄传说 (带权路径长度)
+### 例题 2：动态加边连通性
 <details>
 <summary>Check Solution</summary>
 
-**题目描述**：维护战舰队列，支持合并整排和查询同排两舰距离。
-**解析**：带权并查集。$d[x]$ 表示 $x$ 到当前排头的距离，$sz[x]$ 表示当前排的总数。
+**题目描述**：给定 $N$ 个点和 $M$ 条边 $(u, v, w)$，查询两点何时连通。
+**解析**：Kruskal 重构树基础。按权值排序后依次合并。
 
 ```cpp
-#include <iostream>
-#include <cmath>
-using namespace std;
+for (auto& edge : edges) {
+    if (dsu.find(edge.u) != dsu.find(edge.v)) {
+        dsu.unite(edge.u, edge.v);
+        // 记录此时的 w 为连通临界值
+    }
+}
+```
+</details>
 
-const int N = 30010;
-int p[N], d[N], sz[N];
+---
 
+## 4. 综合练习与解答
+
+1. **[连通块维护]** 维护每个连通块的最小、最大元素及成员总数。
+<details>
+<summary>Check Solution</summary>
+
+```cpp
+struct Node { int p, sz, mi, ma; };
+void unite(int x, int y) {
+    int rx = find(x), ry = find(y);
+    if (rx != ry) {
+        p[ry] = rx;
+        sz[rx] += sz[ry];
+        mi[rx] = min(mi[rx], mi[ry]);
+        ma[rx] = max(ma[rx], ma[ry]);
+    }
+}
+```
+</details>
+
+2. **[带权并查集]** 维护节点到根的距离 $d[x]$。
+<details>
+<summary>Check Solution</summary>
+
+```cpp
 int find(int x) {
     if (p[x] == x) return x;
     int root = find(p[x]);
-    d[x] += d[p[x]];
+    d[x] += d[p[x]]; // 路径压缩时更新权值
     p[x] = root;
     return root;
 }
+```
+</details>
 
-int main() {
-    int t; cin >> t;
-    for(int i=1; i<N; i++) p[i] = i, sz[i] = 1;
-    while(t--) {
-        char op; int i, j; cin >> op >> i >> j;
-        int pi = find(i), pj = find(j);
-        if(op == 'M') {
-            if(pi != pj) {
-                d[pi] = sz[pj];
-                sz[pj] += sz[pi];
-                p[pi] = pj;
-            }
-        } else {
-            if(pi != pj) cout << -1 << endl;
-            else cout << max(0, abs(d[i] - d[j]) - 1) << endl;
-        }
-    }
-    return 0;
+3. **[进阶] 可撤销并查集 (Undoable DSU)**
+<details>
+<summary>Check Solution</summary>
+
+**核心逻辑**：不使用路径压缩，仅用按秩合并。使用栈记录每次 `unite` 修改的 `p` 和 `sz` 状态。
+```cpp
+struct Operation { int u, v, add_rank; };
+stack<Operation> st;
+
+void unite(int u, int v) {
+    u = find(u), v = find(v);
+    if (u == v) return;
+    if (rank[u] < rank[v]) swap(u, v);
+    st.push({u, v, rank[u] == rank[v]});
+    p[v] = u;
+    rank[u] += (rank[u] == rank[v]);
+}
+
+void undo() {
+    auto t = st.top(); st.pop();
+    p[t.v] = t.v;
+    rank[t.u] -= t.add_rank;
 }
 ```
 </details>
 
-### 例题 3：关押罪犯 (二分图判定)
-<details>
-<summary>Check Solution</summary>
-
-**策略**：贪心思想，将冲突最大的两个人尽量分在不同监狱。使用并查集维护“敌人”域。
-
-```cpp
-// 核心逻辑：排序冲突值，对于 (u, v, w)
-// 若 find(u) == find(v) 则 w 为答案（无法避免冲突）
-// 否则 unite(u, v + n), unite(v, u + n)
-```
-</details>
-
 ---
 
-## 5. 综合练习
-
-1. **[维护连通块]** 使用并查集维护每个连通块的最小元素和最大元素。
-2. **[动态图论]** 结合 Kruskal 算法思想，判断动态加边过程中两点何时连通。
-3. **[进阶]** **可撤销并查集**：不使用路径压缩，仅用按秩合并，利用栈记录操作实现回滚。
-
----
-
-_编者注：并查集的精髓在于“降维打击”。通过将复杂的关系网压缩为简单的树形代表元，它在图论、离散几何乃至编译器优化中都有着不可替代的地位。_
+_编者注：并查集的复杂性隐藏在其极简的 API 之下。它是维护等价类关系的终极方案，而其与反阿克曼函数的深刻联系，更是计算复杂性理论中最为迷人的篇章之一。_
