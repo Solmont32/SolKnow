@@ -2,104 +2,101 @@
 title: 区间 DP
 ---
 
-import { Microscope, Zap, Activity, ShieldCheck } from 'lucide-react';
+import { Maximize2, Layers, Binary, ShieldCheck } from 'lucide-react';
 
 # 区间动态规划 (Range Dynamic Programming)
 
-区间动态规划主要解决**可以将一段区间拆分为更小的区间并进行合并**的问题。其核心特征是状态定义与区间两端点 $[i, j]$ 直接相关，通常采用“从小区间推导大区间”的策略。
+区间 DP 是以“区间”为研究对象的动态规划模型。其核心思想是将一个大区间的问题分解为若干个小区间的组合，通过由短到长（由内而外）地处理区间，最终得到全局最优解。
 
 ---
 
-## <Microscope className="inline-block mr-2" /> 核心建模范式
+## <Maximize2 className="inline-block mr-2" /> 1. 状态定义与转移范式
 
-### 1. 状态定义 (State Representation)
-$f[i][j]$ 表示闭区间 $[i, j]$ 内的最优解。
-- **基准状态 (Base Case)**：$f[i][i]$，通常为 0 或初始权值。
-- **最终答案**：$f[1][n]$。
+### 状态定义
+通常定义 $f[i][j]$ 为区间 $[i, j]$ 的某种最优属性值（如最小代价、最大收益、方案数等）。
 
-### 2. 转移推导逻辑 (Transition Logic)
-通过枚举区间内的“分割点” $k$ 来将问题规模缩减：
-$$f[i][j] = \min_{i \le k < j} \{ f[i][k] + f[k+1][j] + \text{cost}(i, j) \}$$
-其中 $\text{cost}(i, j)$ 是合并两个子区间产生的代价。
+### 核心转移逻辑
+大区间 $[i, j]$ 的最优解往往由其子区间 $[i, k]$ 与 $[k+1, j]$ 组合而成：
+$$f[i][j] = \min_{i \le k < j} \{ f[i][k] + f[k+1][j] \} + w(i, j)$$
+其中 $w(i, j)$ 表示将两个子区间合并为大区间的额外代价。
 
----
-
-## <Zap className="inline-block mr-2" /> 四边形不等式优化 (Quadrangle Inequality)
-
-对于上述方程，若代价函数 $w(i, j)$ 满足以下两条数学性质，则可进行显著优化：
-
-1. **区间包含单调性**：若 $[i', j'] \subseteq [i, j]$，则 $w(i', j') \le w(i, j)$。
-2. **四边形不等式**：对于 $a < b < c < d$，有 $w(a, c) + w(b, d) \le w(a, d) + w(b, c)$（交叉小于包含）。
-
-### 🚀 优化结论
-若 $w$ 满足上述性质，则 $f$ 也满足四边形不等式，且其**最优决策点** $s[i][j]$ 满足：
-$$s[i][j-1] \le s[i][j] \le s[i+1][j]$$
-**复杂度提升**：利用此性质，枚举 $k$ 的范围被限定在 $[s[i][j-1], s[i+1][j]]$，总复杂度从 **$O(N^3)$ 降至 $O(N^2)$**。
+### 计算顺序 (The Golden Rule)
+区间 DP 的枚举顺序必须保证**在计算大区间时，其包含的所有小区间已计算完毕**。
+- **推荐顺序**：外层枚举区间长度 $len \in [1, n]$，内层枚举左端点 $i$，计算右端点 $j = i + len - 1$。
 
 ---
 
-## <Activity className="inline-block mr-2" /> 复杂度矩阵
+## <Layers className="inline-block mr-2" /> 2. 经典模型：石子合并 (Stone Merging)
 
-| 模式 | 状态空间 | 转移开销 | 总时间复杂度 | 备注 |
-| :--- | :--- | :--- | :--- | :--- |
-| **标准区间 DP** | $O(N^2)$ | $O(N)$ | $O(N^3)$ | 常见于石子合并、括号匹配 |
-| **四边形不等式优化** | $O(N^2)$ | $O(1)$ (均摊) | $O(N^2)$ | 需要代价函数满足特定性质 |
-| **破环成链** | $O((2N)^2)$ | $O(N)$ | $O(N^3)$ | 解决环形结构问题 |
+**问题描述**：$n$ 堆石子排成一排，每次可将相邻的两堆合并，合并代价为两堆石子数之和。求将所有石子合并为一堆的最小总代价。
+
+### 状态设计
+- $f[i][j]$：合并第 $i$ 堆到第 $j$ 堆石子的最小代价。
+- $sum[i]$：前缀和，用于快速计算区间 $[i, j]$ 的石子总数（即合并代价）。
+
+### 转移方程
+$$f[i][j] = \min_{i \le k < j} \{ f[i][k] + f[k+1][j] \} + \sum_{p=i}^j a_p$$
+
+### 复杂度分析
+- **状态数**：$O(n^2)$。
+- **单次转移**：$O(n)$（枚举 $k$）。
+- **总时间复杂度**：$O(n^3)$。
+- **空间复杂度**：$O(n^2)$。
+
+---
+
+## <Binary className="inline-block mr-2" /> 3. 进阶：环形区间 DP
+
+若石子排成一个圈，第 $n$ 堆与第 $1$ 堆相邻，如何处理？
+
+**通用技巧：断环成链**
+将原序列复制一份接在末尾，构造长度为 $2n$ 的序列。
+1. 在长度为 $2n$ 的序列上进行区间 DP。
+2. 最终结果为 $\min_{1 \le i \le n} \{ f[i][i+n-1] \}$。
 
 ---
 
 ## <ShieldCheck className="inline-block mr-2" /> 综合练习与强化
 
-### 练习 1：环形石子合并 (Circular Merging)
-如果序列是一个环，如何求合并为一堆的最小代价？
+### 练习 1：矩阵链乘法 (Matrix Chain Multiplication)
+给定 $n$ 个矩阵，求计算它们的乘积所需的最少标量乘法次数。
 
 <details>
 <summary>Check Solution</summary>
 
-**“破环成链”法**：
-1. 将序列复制一份拼接在末尾，构造长度为 $2N$ 的线性链。
-2. 在 $2N$ 链上执行标准区间 DP。
-3. 最终答案为 $\min_{1 \le i \le n} \{ f[i][i+n-1] \}$。
+**推导**：
+设矩阵 $A_i$ 的规模为 $p_{i-1} \times p_i$。
+$f[i][j] = \min_{i \le k < j} \{ f[i][k] + f[k+1][j] + p_{i-1} p_k p_j \}$
+- $f[i][i] = 0$。
 
 ```cpp
 for (int len = 2; len <= n; len++) {
-    for (int i = 1; i + len - 1 <= 2 * n; i++) {
+    for (int i = 1; i <= n - len + 1; i++) {
         int j = i + len - 1;
-        for (int k = i; k < j; k++)
-            f[i][j] = min(f[i][j], f[i][k] + f[k+1][j] + sum(i, j));
+        f[i][j] = INF;
+        for (int k = i; k < j; k++) {
+            f[i][j] = min(f[i][j], f[i][k] + f[k+1][j] + p[i-1]*p[k]*p[j]);
+        }
     }
 }
 ```
 </details>
 
-### 练习 2：能量项链 (Matrix Chain Multi. Variant)
-涉及珠子合并，每颗珠子有头/尾标记。
+### 练习 2：凸多边形三角剖分 (Polygon Triangulation)
+给定 $N$ 个顶点的凸多边形，将其划分为 $N-2$ 个三角形，使得三角形权值之和最小。
 
 <details>
 <summary>Check Solution</summary>
 
-本质上是环形矩阵链乘法。
-**状态定义**：$f[i][j]$ 为合并 $[i, j]$ 区间珠子释放的最大能量。
-**转移**：$f[i][j] = \max_{i \le k < j} \{ f[i][k] + f[k+1][j] + head[i] \cdot tail[k] \cdot tail[j] \}$。
-注意：这里的 $tail[j]$ 实际上是第 $j$ 颗珠子的尾标记。
-</details>
-
-### 练习 3：括号匹配 (Min Additions)
-使字符串变成合法的括号序列最少需要添加多少个括号？
-
-<details>
-<summary>Check Solution</summary>
-
-- **状态定义**：$f[i][j]$ 为使 $s[i \dots j]$ 合法所需的最少添加数。
-- **转移**：
-  1. 若 $s[i]$ 与 $s[j]$ 匹配（如 `(` 与 `)`）：$f[i][j] = f[i+1][j-1]$。
-  2. 无论如何：$f[i][j] = \min_{i \le k < j} \{ f[i][k] + f[k+1][j] \}$。
-- **基准**：$f[i][i] = 1$。
+**状态**：$f[i][j]$ 表示剖分由顶点 $V_i, V_{i+1}, \dots, V_j$ 组成的多边形的最小权值。
+**转移**：枚举划分点 $k \in (i, j)$，形成三角形 $\triangle V_i V_k V_j$。
+$f[i][j] = \min_{i < k < j} \{ f[i][k] + f[k][j] + w(i, k, j) \}$
+注意：此处的 $w(i, k, j)$ 取决于具体定义（如周长、面积、顶点乘积等）。
 </details>
 
 ---
 
 ## 延伸挑战
-- [洛谷 P1880 [NOI1995] 石子合并](https://www.luogu.com.cn/problem/P1880)
-- [HDU 3506 Monkey Party](http://acm.hdu.edu.cn/showproblem.php?pid=3506)（四边形不等式优化练习）
-- [Codeforces 149D Coloring Brackets](https://codeforces.com/problemset/problem/149/D)（区间 DP + 深度约束）
+- [洛谷 P1063 能量项链](https://www.luogu.com.cn/problem/P1063)（环形区间 DP）
+- [洛谷 P1880 石子合并](https://www.luogu.com.cn/problem/P1880)（环形 + 最大最小）
+- [洛谷 P3205 合唱队形](https://www.luogu.com.cn/problem/P3205)（双端插入型区间 DP）

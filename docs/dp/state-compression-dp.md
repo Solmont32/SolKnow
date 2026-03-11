@@ -1,92 +1,99 @@
+---
+title: 状压 DP
+---
+
+import { Binary, Grid, Zap, ShieldCheck } from 'lucide-react';
+
 # 状态压缩动态规划 (State Compression DP)
 
-import { Cpu, Layout, Layers, Lightbulb, Binary, Share2, Microscope, Activity, ShieldCheck } from 'lucide-react';
-
-状态压缩 DP 是一种利用位运算将一个集合、一种配置或某种棋盘格局压缩成一个整数，并将其作为 DP 状态的一部分的方法。其核心在于将 **指数级搜索空间** 转化为 **多项式级别（通常是 $2^N \cdot \text{poly}(N)$）的动态规划**。
+状压 DP 是一种将“集合”或“某种复杂的组合状态”压缩为一个整数（通常利用二进制位）作为 DP 状态的技巧。它通常用于解决 $N$ 较小（通常 $N \le 20$）但搜索空间巨大的组合优化问题。
 
 ---
 
-## <Microscope className="inline-block mr-2" /> 核心位运算技巧
+## <Binary className="inline-block mr-2" /> 1. 位运算基础 (Bitwise Primitives)
 
-在状态压缩中，我们通常使用一个二进制数 $S$ 来表示一个集合。
+在状压 DP 中，整数 $S$ 的第 $i$ 位（从 0 开始）代表第 $i$ 个元素的状态。
 
-### 1. 基础集合操作
-| 操作 | 代码实现 | 数学含义 |
-| :--- | :--- | :--- |
-| **检查元素 $i$** | `(S >> i) & 1` | $i \in S$ |
-| **加入元素 $i$** | `S \| (1 << i)` | $S \cup \{i\}$ |
-| **移除元素 $i$** | `S & ~(1 << i)` | $S \setminus \{i\}$ |
-| **全集** | `(1 << n) - 1` | $U = \{0, 1, \dots, n-1\}$ |
-
-### 2. 枚举子集 (Subset Enumeration)
-高效枚举 $S$ 的所有子集 $sub$：
-```cpp
-for (int sub = S; sub; sub = (sub - 1) & S) { 
-    // Complexity: Total sum over all S is O(3^N)
-}
-```
+| 操作 | 位运算表达式 |
+| :--- | :--- |
+| **查询第 $i$ 位** | `(S >> i) & 1` |
+| **将第 $i$ 位置为 1** | `S |= (1 << i)` |
+| **将第 $i$ 位置为 0** | `S &= ~(1 << i)` |
+| **取反第 $i$ 位** | `S ^= (1 << i)` |
+| **全集 (大小为 $n$)** | `(1 << n) - 1` |
+| **枚举 $S$ 的子集** | `for (int sub = S; sub; sub = (sub - 1) & S)` |
 
 ---
 
-## <Activity className="inline-block mr-2" /> 复杂度矩阵
+## <Grid className="inline-block mr-2" /> 2. 经典模型 I：旅行商问题 (TSP)
 
-| 模式 | 状态空间 | 转移开销 | 总时间复杂度 | 适用场景 |
-| :--- | :--- | :--- | :--- | :--- |
-| **排列型状压** | $O(2^N \cdot N)$ | $O(N)$ | $O(2^N \cdot N^2)$ | TSP, 最短 Hamilton 路径 |
-| **棋盘型状压** | $O(M \cdot 2^N)$ | $O(2^N)$ | $O(M \cdot 4^N) \to O(M \cdot 3^N)$ | 互不侵犯, 炮兵阵地 |
-| **子集卷积 (SOS)** | $O(2^N)$ | $O(N)$ | $O(N \cdot 2^N)$ | 高维前缀和, 集合卷积 |
+**问题描述**：给定 $n$ 个点及两两之间的距离，求一条经过每个点恰好一次的最短路径。
 
----
+### 状态设计
+- $f[S][i]$：当前已访问的点集为 $S$（二进制表示），且当前处于点 $i$ 的最短路径长度。
 
-## <ShieldCheck className="inline-block mr-2" /> 典型建模范式
+### 转移方程
+$$f[S][i] = \min_{j \in S, j \neq i} \{ f[S \setminus \{i\}][j] + dist(j, i) \}$$
 
-### 1. 棋盘相邻约束 (Grid Constraints)
-状态定义 $f[i][S]$ 表示第 $i$ 行的选择状态为 $S$。
-- **行内合法**：`!(S & (S << 1))`。
-- **行间合法**：`!(S & prev_S)`。
-
-### 2. 集合划分 (Set Partitioning)
-状态定义 $f[S]$ 表示完成集合 $S$ 中的任务所需的最少资源。
-- **转移**：$f[S] = \min_{sub \subseteq S} \{ f[S \setminus sub] + \text{cost}(sub) \}$。
+### 复杂度
+- 状态数：$n \cdot 2^n$。
+- 转移代价：$O(n)$。
+- 总时间复杂度：$O(n^2 2^n)$。
 
 ---
 
-## <ShieldCheck className="inline-block mr-2" /> 完备例题解答
+## <Zap className="inline-block mr-2" /> 3. 经典模型 II：棋盘覆盖 (Mondrian's Dream)
 
-### 例题 1：最短 Hamilton 路径 (TSP Variant)
+**问题描述**：用 $1 \times 2$ 的多米诺骨牌填满 $N \times M$ 的棋盘，求方案数。
+
+### 核心思想
+按列（或按行）枚举状态。$f[i][S]$ 表示第 $i$ 列的覆盖状态为 $S$，且它对第 $i+1$ 列产生的影响。
+- **状态压缩**：$S$ 中的 1 表示第 $i$ 列的某个格子由第 $i-1$ 列的横放骨牌覆盖。
+
+---
+
+## <ShieldCheck className="inline-block mr-2" /> 综合练习与强化
+
+### 练习 1：最短 Hamilton 路径
+给定一张带权图，求从 0 到 $n-1$ 经过每个点恰好一次的最短路径。
 
 <details>
-<summary>Check Solution (C++)</summary>
+<summary>Check Solution</summary>
 
 ```cpp
-// f[S][i] 表示当前访问点集为 S，且当前位于点 i
-for (int i = 1; i < (1 << n); i++) {
-    for (int j = 0; j < n; j++) {
-        if ((i >> j) & 1) { 
-            for (int k = 0; k < n; k++) {
-                if (((i ^ (1 << j)) >> k) & 1) 
-                    f[i][j] = min(f[i][j], f[i ^ (1 << j)][k] + w[k][j]);
+memset(f, 0x3f, sizeof f);
+f[1][0] = 0; // 初始状态：只访问了点 0
+for (int s = 1; s < (1 << n); s++) {
+    for (int i = 0; i < n; i++) {
+        if ((s >> i) & 1) { // 如果当前集合包含点 i
+            for (int j = 0; j < n; j++) {
+                if (((s >> j) & 1) && j != i) { // 枚举前驱点 j
+                    f[s][i] = min(f[s][i], f[s ^ (1 << i)][j] + dist[j][i]);
+                }
             }
         }
     }
 }
+printf("%d\n", f[(1 << n) - 1][n - 1]);
 ```
 </details>
 
-### 例题 2：炮兵阵地 (Three-row Dependency)
+### 练习 2：集合划分 (Subset DP / SOS DP 初探)
+给定 $n$ 个任务和其相容关系，将任务划分为最少数量的互不冲突的集合。
 
 <details>
-<summary>Check Solution (C++)</summary>
+<summary>Check Solution</summary>
 
-由于炮兵射程为 2，当前行状态受前二行约束。
-**状态**：$f[i][S_{curr}][S_{prev}]$。
-**优化**：预处理单行合法状态，空间开销可大幅降低。
+**预处理**：`valid[S]` 表示集合 $S$ 内的所有任务是否互不冲突。
+**转移**：
+$$f[S] = \min_{sub \subseteq S, valid[sub]} \{ f[S \setminus sub] + 1 \}$$
+使用子集枚举优化可达到 $O(3^n)$。
 </details>
 
 ---
 
 ## 延伸挑战
-- [洛谷 P1879 玉米地](https://www.luogu.com.cn/problem/P1879)
-- [洛谷 P2704 [NOI2001] 炮兵阵地](https://www.luogu.com.cn/problem/P2704)
-- [洛谷 P1896 [SCOI2005] 互不侵犯](https://www.luogu.com.cn/problem/P1896)
-- [CF 11D A Simple Task](https://codeforces.com/contest/11/problem/D)（统计简单环）
+- [洛谷 P1171 售货员的难题](https://www.luogu.com.cn/problem/P1171) (TSP)
+- [洛谷 P1879 [USACO06NOV] Corn Fields G](https://www.luogu.com.cn/problem/P1879) (棋盘型状压)
+- [洛谷 P2704 [NOI2001] 炮兵阵地](https://www.luogu.com.cn/problem/P2704) (多行关联状压)
+- [Codeforces 11D A Simple Task](https://codeforces.com/contest/11/problem/D) (环计数)
