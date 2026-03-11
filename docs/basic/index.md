@@ -3,7 +3,7 @@ title: 基础算法原语 (Basic Algorithmic Primitives)
 sidebar_position: 1
 ---
 
-import { Code2, Zap, Target, Layers, GitBranch, Binary, Repeat } from 'lucide-react';
+import { Code2, Zap, Target, Layers, GitBranch, Binary, Repeat, Trophy } from 'lucide-react';
 
 # 基础算法原语 (Basic Algorithmic Primitives)
 

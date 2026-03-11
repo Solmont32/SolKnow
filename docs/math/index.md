@@ -3,6 +3,8 @@ title: 数学与算法竞赛专题
 sidebar_position: 1
 ---
 
+import { Trophy } from 'lucide-react';
+
 ## 🎯 关联练习与实战
 
 <div className="solknow-card border border-green-200 p-4 rounded-lg bg-green-50/10">

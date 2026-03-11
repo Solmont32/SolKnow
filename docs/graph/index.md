@@ -1,8 +1,9 @@
 ---
 title: 图论建模与连通性
+sidebar_position: 1
 ---
 
-import { Network, GitBranch, Map, Share2, Target, Zap } from 'lucide-react';
+import { Network, Target, GitBranch, Zap, Trophy } from 'lucide-react';
 
 # <Network className="inline-block mr-2 mb-1 text-blue-600" /> 图论建模与连通性 (Graph Theory & Connectivity)
 
@@ -27,7 +28,7 @@ import { Network, GitBranch, Map, Share2, Target, Zap } from 'lucide-react';
 本章节系统化涵盖了从基础遍历到高级连通性的工业级算法实现：
 
 ### 1. 基础与建模
--   [**图的存储 (Representation)**](representation)：邻接矩阵、邻接表与**链式前向星**。
+-   [**图的存储 (Representation)**](representation)：邻接矩阵、邻接表、*链式前向星*。
 -   [**图的遍历 (Traversal)**](traversal)：DFS/BFS 及其状态机理解。
 -   [**拓扑排序 (Topological Sort)**](topo-sort)：处理 DAG 依赖与动态规划基础。
 
@@ -45,7 +46,7 @@ import { Network, GitBranch, Map, Share2, Target, Zap } from 'lucide-react';
 
 ## 三、 <Zap className="inline-block mr-2 mb-1 text-amber-500" /> 学习路线建议
 
-1.  **初阶**：掌握 `vector` 存图与 BFS/DFS 搜索，理解连通块概念。
+1.  **初阶**：掌握 `vector` 存图、BFS/DFS 搜索，理解连通块概念。
 2.  **中阶**：精通 Dijkstra 与 Kruskal，能处理简单的拓扑排序依赖。
 3.  **高阶**：熟练运用 Tarjan 缩点转化 DAG，掌握分层图建模与网络流。
 

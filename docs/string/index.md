@@ -1,8 +1,9 @@
 ---
 title: 字符串算法 (String Algorithms)
+sidebar_position: 1
 ---
 
-import { Code2, Zap, Hash, Repeat, GitBranch, Layers, Search } from 'lucide-react';
+import { Zap, Repeat, Hash, GitBranch, Layers, Trophy } from 'lucide-react';
 
 # 字符串算法：从匹配到结构
 

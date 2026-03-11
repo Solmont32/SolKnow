@@ -4,7 +4,7 @@ description: 系统化向量运算、拓扑性质判定与空间复杂度优化�
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { MousePointer2, Move, LayoutGrid, Waypoints, Compass, Target } from 'lucide-react';
+import { Trophy, Waypoints, Compass, Target } from 'lucide-react';
 
 # 计算几何基础 (Geometry Basics)
 
@@ -66,7 +66,7 @@ DB length(Vector a) { return sqrt(dot(a, a)); }
 ## 3. 拓扑性质判定 (Topological Predicates)
 
 ### 线段交点判定
-判定线段 $AB$ 与 $CD$ 是否相交。
+判定线段 $AB$ 与 $CD$ 是否相交：
 - **快速排斥实验**: 检查两线段矩形包围盒是否有交集。
 - **跨立实验**: 检查 $A, B$ 是否在直线 $CD$ 两侧，且 $C, D$ 是否在直线 $AB$ 两侧。
   $$(\vec{CA} \times \vec{CD}) \cdot (\vec{CB} \times \vec{CD}) \le 0$$
@@ -81,10 +81,10 @@ DB length(Vector a) { return sqrt(dot(a, a)); }
 
 在处理大规模几何数据（如 $N > 10^6$）时：
 - **原地算法 (In-place)**: 如 Andrew 算法中，可以利用排序后的原数组空间进行栈操作，减少额外 $O(N)$ 分配。
-- **轻量化表示**: 尽量避免在结构体中存储冗余信息（如提前存储长度、角度等），除非它是性能瓶颈。
+- **轻量化表征**: 尽量避免在结构体中存储冗余信息（如提前存储长度、角度等），除非它是性能瓶颈。
 
 <KnowledgeCard type="warning" title="精度陷阱">
-在使用 <code>asin</code>, <code>acos</code> 或 <code>sqrt</code> 时，务必确保参数在合法定义域内。例如 <code>sqrt(max(0.0, x))</code>。
+在使用 <code>asin</code>, <code>acos</code> 与 <code>sqrt</code> 时，务必确保参数在合法定义域内。例如 <code>sqrt(max(0.0, x))</code>。
 </KnowledgeCard>
 
 ---
@@ -106,8 +106,6 @@ bool onSegment(Point p, Point a, Point b) {
 }
 ```
 </details>
-
----
 
 ---
 

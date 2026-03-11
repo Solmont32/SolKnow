@@ -1,10 +1,18 @@
+---
+title: 数据结构 (Data Structures): 信息的拓扑与优化
+sidebar_position: 1
+---
+
+import BilibiliEmbed from '@site/src/components/BilibiliEmbed';
+import { Trophy } from 'lucide-react';
+
 # 数据结构 (Data Structures): 信息的拓扑与优化
 
 数据的组织、管理和存储格式是算法设计的灵魂。
 
 ## 核心基石 (Foundations)
 
-- [STL 进阶应用](stl/) - 工业级容器、pb_ds 黑科技与 bitset 优化。
+- [STL 进阶应用](stl/) - 工业级容器、pb_ds 黑科技、bitset 优化。
 - [堆与优先队列 (Heap)](heap) - 动态维护极值的利器。
 - [单调结构 (Monotonic Stack/Queue)](monotonic) - 线性时间内的区间极值与关系维护。
 
@@ -42,5 +50,4 @@
   <a href="/docs/exercises/cs/algorithm-ds" className="button button--outline button--success button--sm">进入练习库 →</a>
 </div>
 
-_编者注：掌握数据结构的关键不在于背诵模板，而在于理解其背后的**代数性质**（如结合律、分配律）与**空间拓扑**。_
-
+_编者注：掌握数据结构的关键不在于背诵模板，而在于理解其背后的 **代数性质**（如结合律、分配律）与 **空间拓扑**。_

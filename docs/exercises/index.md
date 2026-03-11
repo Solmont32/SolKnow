@@ -21,7 +21,7 @@ import {
 
 > **“纸上得来终觉浅，绝知此事要躬行。”** —— 系统化的阶梯式训练，助你完成从理论到实战的跨越。
 
-本练习库旨在对标国内外经典教科书（如《数学分析教程》、CLRS 等）的课后习题规范，建立从**基础巩固**到**综合应用**，再到**竞赛挑战**的完整阶梯体系。每一道题目都经过精心挑选，并配有深度折叠解析。
+本练习库旨在对标国内外经典教科书（如《数学分析教程》、CLRS 等）的课后习题规范，建立从 **基础巩固** 到 **综合应用**，再到 **竞赛挑战** 的完整阶梯体系。每一道题目都经过精心挑选，并配有深度折叠解析。
 
 ---
 
@@ -34,11 +34,11 @@ import {
         <InfinityIcon size={20} color="#8b5cf6" />
         <strong style={{ color: '#8b5cf6' }}>Mathematics Mastery</strong>
       </div>
-      涵盖数学分析、高等代数、概率论、实变/复变等大学数学核心课程。
+      涵盖数学分析、高等代数、概率论、实/复变等大学数学核心课程。
       <ul style={{ marginTop: '10px', fontSize: '0.9rem' }}>
-        <li><b>基础：</b> 定义理解与基本计算</li>
-        <li><b>进阶：</b> 数论与同余系专项强化</li>
-        <li><b>竞赛：</b> 考研/数学竞赛真题解析</li>
+        <li><b>基础层</b>：定义理解与基本计算</li>
+        <li><b>进阶层</b>：数论与同余系专项强化</li>
+        <li><b>竞赛层</b>：考研/数学竞赛真题解析</li>
       </ul>
       <a href="cs/algorithm-number-theory" className="button button--outline button--primary button--sm">进入数论库 <ChevronRight size={14} /></a>
     </KnowledgeCard>
@@ -51,9 +51,9 @@ import {
       </div>
       对标 Codeforces, AtCoder 与 NOI 难度。包含工业级 C++ 代码解析。
       <ul style={{ marginTop: '10px', fontSize: '0.9rem' }}>
-        <li><b>基础：</b> 基础算法与线性结构专项强化</li>
-        <li><b>进阶：</b> 搜索与启发式算法专项强化</li>
-        <li><b>综合：</b> 计算几何与图论专项强化</li>
+        <li><b>基础层</b>：基础算法与线性结构专项强化</li>
+        <li><b>进阶层</b>：搜索与启发式算法专项强化</li>
+        <li><b>综合层</b>：计算几何与图论专项强化</li>
       </ul>
       <a href="cs/algorithm-basic" className="button button--outline button--info button--sm">进入算法库 <ChevronRight size={14} /></a>
     </KnowledgeCard>
@@ -99,9 +99,9 @@ import {
 
 ### 1. 阶梯式难度设计
 我们将所有练习分为三个等级，确保学习曲线平滑：
-- <span style={{ color: 'var(--ifm-color-success)' }}>● **基础巩固 (Level A)**</span>：聚焦核心概念的直接应用，对标课后基础题。
-- <span style={{ color: 'var(--ifm-color-warning)' }}>● **综合提升 (Level B)**</span>：跨知识点结合，训练逻辑推理与综合运用能力。
-- <span style={{ color: 'var(--ifm-color-danger)' }}>● **竞赛挑战 (Level C)**</span>：对标考研名校真题、数学竞赛或 Codeforces Div.1 难度。
+- <span style={{ color: 'var(--ifm-color-success)' }}>🟢 **基础巩固 (Level A)**</span>：聚焦核心概念的直接应用，对标课后基础题。
+- <span style={{ color: 'var(--ifm-color-warning)' }}>🟡 **综合提升 (Level B)**</span>：跨知识点结合，训练逻辑推理与综合运用能力。
+- <span style={{ color: 'var(--ifm-color-danger)' }}>🔴 **竞赛挑战 (Level C)**</span>：对标考研名校真题、数学竞赛或 Codeforces Div.1 难度。
 
 ### 2. 多视角解法对比
 部分核心习题提供 **“代数法 vs 几何法”**、**“递归 vs 迭代”** 等多视角对比，帮助你理解算法与数学的本质联系。
