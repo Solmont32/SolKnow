@@ -1,127 +1,136 @@
 ---
 title: 半平面交 (Half-plane Intersection)
-description: 线性约束下的凸多边形可行域求解，$O(N \log N)$ 算法。
+description: 极角排序、双端队列维护与线性约束求解证明。
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { Target, Layers, LayoutGrid, Zap } from 'lucide-react';
+import { Target, ShieldCheck, Activity, BookOpen, Layers } from 'lucide-react';
 
 # 半平面交 (Half-plane Intersection)
 
-**半平面交（Half-plane Intersection）** 是求解一组线性约束（即半平面）的交集的问题。其结果通常是一个凸多边形（可能为空、点、线段或无界区域）。
+在平面直角坐标系中，一条直线将平面分为两个区域，每个区域称为一个**半平面**。多个半平面的交集构成的凸区域（可能为空或无界）即为**半平面交**。它是线性规划问题的几何体现。
 
 ---
 
-## 1. 数学模型与性质
+## 1. 形式化描述与凸性证明
 
-### 1.1 有向直线表示
-对于直线 $L: P + t\vec{v}$，其左侧半平面 $H$ 满足：
-$$H = \{ Q \in \mathbb{R}^2 \mid \vec{v} \times (Q - P) \ge 0 \}$$
+### 1.1 算术表示
+一个半平面可以表示为线性不等式：
+$$ax + by + c \ge 0$$
+在计算几何实现中，通常使用**有向直线**表示：直线左侧为有效半平面。
 
-### 1.2 核心性质
-1. **凸性证明**: 
-   由于半平面是凸集，且凸集的交集仍为凸集，故半平面交 $S = \bigcap_{i=1}^n H_i$ 必然为凸集。
-2. **界限**: 
-   在实际计算中，常加入一个巨大的边界矩形将无穷区域转化为有界多边形。
+<KnowledgeCard type="theorem" title="交集的凸性">
+半平面交是一个**凸集**。
+**证明**：每个半平面都是凸集。根据凸集性质，任意数量凸集的交集仍然是凸集。因此，半平面交若不为空，必然是一个凸多边形或无界凸区域。
+</KnowledgeCard>
 
 ---
 
-## 2. 增量扫描算法 ($O(N \log N)$)
+## 2. $O(N \log N)$ 增量算法 (Sort-and-Scan)
 
-该算法基于极角排序与双端队列，由 S.I. 算法演变而来。
+目前主流的算法是基于极角排序的增量法，由顶点、边和双端队列共同维护。
 
-### 2.1 算法核心步骤
-1. **排序与去重**: 
-   按极角 $\theta \in (-\pi, \pi]$ 排序。对于极角相同的直线，只保留最左侧的一条（即最靠里的约束）。
-2. **双端队列维护**: 
-   依次处理排序后的直线 $L_i$：
-   - 当队尾（或队头）两直线的交点在 $L_i$ 的右侧时，说明该交点不满足 $L_i$ 的约束，弹出对应直线。
-3. **闭合检查**: 
-   处理完所有直线后，需用队头直线检查队尾交点，反之亦然，以确保首尾衔接。
+### 2.1 算法流程
+
+1.  **极角排序**：将所有有向直线按极角排序。对于极角相同的直线，仅保留最左侧的一条（即最强约束）。
+2.  **双端队列维护**：
+    -   依次加入排序后的直线。
+    -   若当前直线与队列末尾两直线的交点在该直线右侧（不满足约束），则弹出队尾。
+    -   同理，弹出队首。
+3.  **闭合性处理**：最后用队首直线检查队尾，弹出冗余。
+
+### 2.2 核心代码实现 (C++)
 
 ```cpp
-// 判定交点是否在直线 L 的右侧
-inline bool onRight(const Line& L, const Point& p) {
-    return sign(cross(L.v, p - L.p)) < 0;
+Point getIntersect(Line a, Line b) {
+    DB t = cross(b.v, a.p - b.p) / cross(a.v, b.v);
+    return a.p + a.v * t;
+}
+
+// 检查直线 l 是否包含点 p (点在直线左侧或线上)
+bool onLeft(Line l, Point p) {
+    return sign(cross(l.v, p - l.p)) >= 0;
 }
 
 vector<Point> halfPlaneIntersection(vector<Line>& L) {
     sort(L.begin(), L.end());
     int n = L.size(), head = 0, tail = 0;
     vector<Line> q(n + 10);
-    vector<Line> uniqueL;
+    vector<Point> p(n + 10);
     
-    // 去重：极角相同取最左
+    // 1. 去除极角相同的冗余直线
+    int m = 0;
     for (int i = 0; i < n; i++) {
         if (i > 0 && sign(L[i].ang - L[i-1].ang) == 0) continue;
-        uniqueL.push_back(L[i]);
+        L[m++] = L[i];
     }
     
-    n = uniqueL.size();
-    for (int i = 0; i < n; i++) {
-        while (head < tail && onRight(uniqueL[i], getLineIntersection(q[tail-1], q[tail]))) tail--;
-        while (head < tail && onRight(uniqueL[i], getLineIntersection(q[head], q[head+1]))) head++;
-        q[++tail] = uniqueL[i];
+    // 2. 双端队列维护
+    for (int i = 0; i < m; i++) {
+        while (tail - head > 1 && !onLeft(L[i], p[tail - 1])) tail--;
+        while (tail - head > 1 && !onLeft(L[i], p[head + 1])) head++;
+        q[tail++] = L[i];
+        if (tail - head > 1) p[tail - 1] = getIntersect(q[tail - 2], q[tail - 1]);
     }
-    // 最终检查
-    while (head < tail && onRight(q[head], getLineIntersection(q[tail-1], q[tail]))) tail--;
     
-    if (tail - head <= 1) return {}; 
-    vector<Point> poly;
-    for (int i = head; i < tail; i++) poly.push_back(getLineIntersection(q[i], q[i+1]));
-    poly.push_back(getLineIntersection(q[tail], q[head]));
-    return poly;
+    // 3. 闭合检查
+    while (tail - head > 1 && !onLeft(q[head], p[tail - 1])) tail--;
+    if (tail - head <= 2) return {}; // 交集为空或点/线
+    p[head] = getIntersect(q[head], q[tail - 1]);
+    
+    vector<Point> res;
+    for (int i = head; i < tail; i++) res.push_back(p[i]);
+    return res;
 }
 ```
 
 ---
 
-## 3. 经典应用：多边形的核 (Kernel)
+## 3. 复杂度分析与边界 (Analysis)
 
-### 3.1 形式化定义
-简单多边形 $P$ 的核 $K(P)$ 是内部点的集合，使得对于任意 $k \in K(P)$，点 $k$ 与多边形内所有点的连线均在多边形内部。
-$$K(P) = \{ k \in P \mid \forall p \in P, [k, p] \subseteq P \}$$
-
-### 3.2 判定定理
-$K(P)$ 等于由多边形各边所在直线定义的向内半平面的交集。若交集面积 $> 0$，则多边形存在核。
+<KnowledgeCard type="complexity">
+- **时间复杂度**: $O(N \log N)$。排序占主导，后续双端队列维护为线性 $O(N)$。
+- **空间复杂度**: $O(N)$。需存储直线数组与交点队列。
+- **边界情况**:
+    -   **平行直线**: 若方向相同，保留最内侧；若方向相反且不相交，交集为空。
+    -   **无界区域**: 在算法竞赛中，通常通过添加一个巨大的包围盒（如 $[-10^9, 10^9]$）将无界区域转化为有界多边形。
+</KnowledgeCard>
 
 ---
 
-## 4. 练习与挑战
+## 4. 经典练习与应用
 
 <details>
-<summary>例题 1：多边形核的面积</summary>
+<summary>例题 1：多边形核 (Polygon Kernel)</summary>
 
-**解答思路**：
-1. 提取多边形所有边，构建向内的有向直线。
-2. 运行半平面交算法求出交集多边形顶点。
-3. 利用 Shoelace Formula 计算交集面积。
+**定义**：多边形内部所有能看到多边形所有边界的点的集合。
+**求解**：多边形每一条边所在直线构成的半平面交即为多边形的核。
 
 ```cpp
-DB solveKernelArea(vector<Point>& poly) {
-    vector<Line> lines;
-    int n = poly.size();
-    for (int i = 0; i < n; i++) {
-        lines.push_back(Line(poly[i], poly[(i+1)%n] - poly[i]));
-    }
-    auto kernel = halfPlaneIntersection(lines);
-    return polygonArea(kernel);
-}
+// 将多边形顶点转化为有向直线
+vector<Line> lines;
+for(int i = 0; i < n; i++) lines.push_back(Line(p[i], p[(i+1)%n]-p[i]));
+vector<Point> kernel = halfPlaneIntersection(lines);
 ```
 </details>
 
 <details>
-<summary>例题 2：最小外接圆/矩形约束</summary>
+<summary>例题 2：线性规划最小割/覆盖</summary>
 
-**题目要求**：求一个半平面交，使得其包含在一个圆 $C$ 内且面积最大。
+许多看似复杂的几何问题可以转化为半平面交。例如：给定一组点，求一个点到所有点的最大距离最小（最小外接圆中心）。
 
-**提示**：将圆通过多边形逼近转化为多个线性约束，或利用含参量半平面交的思想。
 </details>
+
+<KnowledgeCard type="tip" title="习题库推荐">
+1.  [POJ 3335] Rotating Scoreboard - 判定多边形核是否存在。
+2.  [POJ 1279] Art Gallery - 求解多边形核的面积。
+3.  [HDU 4501] 小明系列问题 - 复杂约束下的半平面交。
+</KnowledgeCard>
 
 ---
 
-## 5. 模块导航
+## 🎯 模块导航
 
-- <Target className="inline-block w-4 h-4 mr-1 text-red-500" /> [计算几何基础](index) - 叉积与直线交点基础。
-- <Layers className="inline-block w-4 h-4 mr-1 text-purple-500" /> [凸包算法 (Convex Hull)](convex-hull) - 处理离散点集的边界。
-- <Zap className="inline-block w-4 h-4 mr-1 text-yellow-500" /> [旋转卡壳 (Rotating Calipers)](rotating-calipers) - 求解对踵点对。
+- <Target className="inline-block w-4 h-4 mr-1 text-blue-500" /> [凸包算法 (Convex Hull)](convex-hull) - 几何基础结构。
+- <Layers className="inline-block w-4 h-4 mr-1 text-emerald-500" /> [旋转卡壳 (Rotating Calipers)](rotating-calipers) - 凸包上的线性算法。
+- <Activity className="inline-block w-4 h-4 mr-1 text-amber-500" /> [计算几何基础](index) - 精度与向量原语。
