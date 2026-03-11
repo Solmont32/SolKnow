@@ -3,11 +3,11 @@ title: 字符串算法专项强化练习
 sidebar_label: 字符串算法
 ---
 
-import { Target, Zap, Trophy, BarChart3, ChevronRight, Code2, Layers, Hash, Repeat, GitBranch } from 'lucide-react';
+import { Target, Zap, Trophy, BarChart3, ChevronRight, Code2, Layers } from 'lucide-react';
 
-# 字符串算法专项强化练习 (String Algorithms)
+# 字符串算法专项强化练习
 
-> **“在字符的海洋中，寻找模式与结构的必然性。”** —— 本专题涵盖从基础 KMP、Manacher 到高阶 AC 自动机、后缀自动机的全体系练习，配套全量 C++ 工业级实现。
+> **“字符串是信息的载体。高效的模式匹配与特征提取，是处理大规模文本数据的核心。”** —— 本专题涵盖 KMP、AC 自动机、后缀结构与字符串哈希。
 
 ---
 
@@ -15,40 +15,39 @@ import { Target, Zap, Trophy, BarChart3, ChevronRight, Code2, Layers, Hash, Repe
 
 | 等级 | 难度目标 | 核心考察点 | 期望达成 |
 | :--- | :--- | :--- | :--- |
-| <span style={{ color: 'var(--ifm-color-success)' }}>● **Level A**</span> | 模式匹配与回文 | KMP Next 数组、Manacher 半径、双哈希 | 15分钟内手写无 bug 模板 |
-| <span style={{ color: 'var(--ifm-color-warning)' }}>● **Level B**</span> | 状态机建模 | AC 自动机 Fail 指针、Trie 图、周期性质 | 能够独立处理多模式匹配复杂逻辑 |
-| <span style={{ color: 'var(--ifm-color-danger)' }}>● **Level C**</span> | 后缀结构应用 | SAM 状态合并、Parent Tree 深度应用 | 具备解决省赛/ACM 字符串压轴题能力 |
+| <span style={{ color: 'var(--ifm-color-success)' }}>● **Level A**</span> | 模板复现与哈希 | KMP next 数组、哈希碰撞处理 | 能够 5 分钟内写出 KMP |
+| <span style={{ color: 'var(--ifm-color-warning)' }}>● **Level B**</span> | 自动机与回文 | AC 自动机多模式匹配、Manacher 算法 | 理解 Fail 指针的转移本质 |
+| <span style={{ color: 'var(--ifm-color-danger)' }}>● **Level C**</span> | 后缀结构与综合 | 后缀数组 (SA)、后缀自动机 (SAM) | 具备处理子串统计与最长公共子串能力 |
 
 ---
 
 ## 📂 核心习题库
 
-### 1. 基础匹配与回文 (Basic Matching & Palindrome)
+### Level A：基础巩固 (Foundations)
 
-#### 练习 1：KMP 字符串匹配 (模板)
-**题目描述**：给定模式串 $P$ 和文本串 $S$，找出 $P$ 在 $S$ 中出现的所有起始位置。
+#### 练习 1：KMP 字符串匹配
+**题目描述**：给定一个模式串 $P$ 和一个文本串 $S$，请输出 $P$ 在 $S$ 中出现的所有起始下标。
+- **考察点**：`next` 数组的构造与匹配流程。
 
 <details>
 <summary>Check Solution (C++ Implementation)</summary>
 
-**核心逻辑**：
-- `ne[i]` 表示 $P[1..i]$ 中最长的相等前后缀。
-- **C++ 实现**：
 ```cpp
 #include <iostream>
 #include <vector>
+#include <string>
 
 using namespace std;
 
 const int N = 1000010;
-char s[N], p[N];
 int ne[N];
+char s[N], p[N];
 
 int main() {
     int n, m;
     cin >> n >> p + 1 >> m >> s + 1;
 
-    // 求 next 数组
+    // 构造 next 数组
     for (int i = 2, j = 0; i <= n; i++) {
         while (j && p[i] != p[j + 1]) j = ne[j];
         if (p[i] == p[j + 1]) j++;
@@ -69,46 +68,42 @@ int main() {
 ```
 </details>
 
-#### 练习 2：Manacher 算法 (最长回文子串)
-**题目描述**：给定一个字符串，求其最长回文子串的长度。要求复杂度 $O(n)$。
+#### 练习 2：字符串哈希 (String Hashing)
+**题目描述**：给定一个长度为 $n$ 的字符串，查询 $m$ 次，每次查询两段区间 $[l_1, r_1]$ 和 $[l_2, r_2]$ 的子串是否相同。
+- **核心思想**：$O(n)$ 预处理哈希前缀和，$O(1)$ 提取子串哈希值。
 
 <details>
 <summary>Check Solution (C++ Implementation)</summary>
 
-**核心逻辑**：
-- 填充字符 `#` 使奇偶回文统一。
-- 维护当前右界最远的回文中心 $id$ 及其半径 $mx$。
-- **C++ 实现**：
 ```cpp
 #include <iostream>
-#include <vector>
-#include <algorithm>
-
 using namespace std;
 
-const int N = 20000010;
-char a[N], b[N];
-int p[N];
+typedef unsigned long long ULL;
+const int N = 100010, P = 131; // P 取 131 或 13331 经验值
+ULL h[N], p[N];
+
+ULL get(int l, int r) {
+    return h[r] - h[l - 1] * p[r - l + 1];
+}
 
 int main() {
-    scanf("%s", a);
-    int n = 0;
-    b[n++] = '$', b[n++] = '#';
-    for (int i = 0; a[i]; i++) b[n++] = a[i], b[n++] = '#';
-    b[n++] = '^';
-
-    int mr = 0, mid = 0, res = 0;
-    for (int i = 1; i < n; i++) {
-        if (i < mr) p[i] = min(p[2 * mid - i], mr - i);
-        else p[i] = 1;
-        while (b[i - p[i]] == b[i + p[i]]) p[i]++;
-        if (i + p[i] > mr) {
-            mr = i + p[i];
-            mid = i;
-        }
-        res = max(res, p[i] - 1);
+    int n, m;
+    char str[N];
+    scanf("%d%d%s", &n, &m, str + 1);
+    
+    p[0] = 1;
+    for (int i = 1; i <= n; i++) {
+        p[i] = p[i - 1] * P;
+        h[i] = h[i - 1] * P + str[i];
     }
-    cout << res << endl;
+    
+    while (m--) {
+        int l1, r1, l2, r2;
+        scanf("%d%d%d%d", &l1, &r1, &l2, &r2);
+        if (get(l1, r1) == get(l2, r2)) puts("Yes");
+        else puts("No");
+    }
     return 0;
 }
 ```
@@ -116,33 +111,30 @@ int main() {
 
 ---
 
-### 2. 状态机与多模式 (Automata & Multi-Pattern)
+### Level B：综合提升 (Intermediate)
 
-#### 练习 3：AC 自动机 (模板)
-**题目描述**：给定 $n$ 个模式串和 1 个主串，求有多少个模式串在主串中出现。
+#### 练习 3：AC 自动机（多模式匹配）
+**题目描述**：给定 $n$ 个单词和一篇文章，问每个单词在文章中出现了多少次。
+- **关键点**：在 Trie 树上建立 Fail 指针，并利用拓扑排序优化计数。
 
 <details>
-<summary>Check Solution (C++ Implementation)</summary>
+<summary>Check Solution (C++ Implementation - Optimized)</summary>
 
-**核心逻辑**：
-- 构建 Trie。
-- BFS 构建 Fail 指针。
-- **C++ 实现**：
 ```cpp
 #include <iostream>
 #include <queue>
-#include <cstring>
+#include <string>
 
 using namespace std;
 
-const int N = 10010, S = 1000010, M = N * 55;
-int tr[M][26], cnt[M], ne[M], idx;
-char str[S];
+const int N = 200010;
+int tr[N][26], cnt[N], ne[N], idx;
+int q[N], deg[N];
 
-void insert() {
+void insert(string s) {
     int p = 0;
-    for (int i = 0; str[i]; i++) {
-        int u = str[i] - 'a';
+    for (auto c : s) {
+        int u = c - 'a';
         if (!tr[p][u]) tr[p][u] = ++idx;
         p = tr[p][u];
     }
@@ -153,122 +145,85 @@ void build() {
     queue<int> q;
     for (int i = 0; i < 26; i++)
         if (tr[0][i]) q.push(tr[0][i]);
+        
     while (q.size()) {
         int t = q.front();
         q.pop();
         for (int i = 0; i < 26; i++) {
-            int &p = tr[t][i];
-            if (!p) p = tr[ne[t]][i];
+            int p = tr[t][i];
+            if (!p) tr[t][i] = tr[ne[t]][i];
             else {
                 ne[p] = tr[ne[t]][i];
+                deg[ne[p]]++;
                 q.push(p);
             }
         }
     }
 }
-
-int main() {
-    int n;
-    cin >> n;
-    while (n--) {
-        scanf("%s", str);
-        insert();
-    }
-    build();
-    scanf("%s", str);
-    int res = 0;
-    for (int i = 0, j = 0; str[i]; i++) {
-        j = tr[j][str[i] - 'a'];
-        int p = j;
-        while (p && cnt[p] != -1) {
-            res += cnt[p];
-            cnt[p] = -1;
-            p = ne[p];
-        }
-    }
-    cout << res << endl;
-    return 0;
-}
+// ... 篇幅原因省略部分实现
 ```
 </details>
 
 ---
 
-### 3. 后缀结构进阶 (Suffix Structures)
+### Level C：竞赛挑战 (Advanced)
 
-#### 练习 4：后缀自动机 (SAM) - 不同子串个数
-**题目描述**：给定一个字符串，求其不同子串的个数。要求 $O(n)$。
+#### 练习 4：后缀数组 (SA) - 最长公共前缀
+**题目描述**：给定一个字符串，求两个后缀 $Suffix(i)$ 和 $Suffix(j)$ 的最长公共前缀 (LCP)。
+- **核心工具**：使用倍增法构造 SA 数组和 $height$ 数组。
 
 <details>
 <summary>Check Solution (C++ Implementation)</summary>
 
-**核心逻辑**：
-- 不同子串个数等于 $\sum (len[i] - len[link[i]])$。
-- **C++ 实现**：
 ```cpp
 #include <iostream>
-#include <cstring>
+#include <algorithm>
+#include <string.h>
 
 using namespace std;
 
-const int N = 2000010;
-struct Node {
-    int len, link;
-    int next[26];
-} st[N];
-int sz, last;
+const int N = 100010;
+int n, m;
+int x[N], y[N], c[N], sa[N], rk[N], height[N];
+char s[N];
 
-void sam_init() {
-    st[0].len = 0;
-    st[0].link = -1;
-    sz = 1;
-    last = 0;
+void get_sa() {
+    for (int i = 1; i <= n; i++) c[x[i] = s[i]]++;
+    for (int i = 2; i <= m; i++) c[i] += c[i - 1];
+    for (int i = n; i; i--) sa[c[x[i]]--] = i;
+    for (int k = 1; k <= n; k <<= 1) {
+        int num = 0;
+        for (int i = n - k + 1; i <= n; i++) y[++num] = i;
+        for (int i = 1; i <= n; i++) if (sa[i] > k) y[++num] = sa[i] - k;
+        for (int i = 1; i <= m; i++) c[i] = 0;
+        for (int i = 1; i <= n; i++) c[x[i]]++;
+        for (int i = 2; i <= m; i++) c[i] += c[i - 1];
+        for (int i = num; i; i--) sa[c[x[y[i]]]--] = y[i], y[i] = 0;
+        swap(x, y);
+        x[sa[1]] = 1, num = 1;
+        for (int i = 2; i <= n; i++)
+            x[sa[i]] = (y[sa[i]] == y[sa[i - 1]] && y[sa[i] + k] == y[sa[i - 1] + k]) ? num : ++num;
+        if (num == n) break;
+        m = num;
+    }
 }
 
-void sam_extend(int c) {
-    int cur = sz++;
-    st[cur].len = st[last].len + 1;
-    int p = last;
-    while (p != -1 && !st[p].next[c]) {
-        st[p].next[c] = cur;
-        p = st[p].link;
+void get_height() {
+    for (int i = 1; i <= n; i++) rk[sa[i]] = i;
+    for (int i = 1, k = 0; i <= n; i++) {
+        if (rk[i] == 1) continue;
+        if (k) k--;
+        int j = sa[rk[i] - 1];
+        while (i + k <= n && j + k <= n && s[i + k] == s[j + k]) k++;
+        height[rk[i]] = k;
     }
-    if (p == -1) st[cur].link = 0;
-    else {
-        int q = st[p].next[c];
-        if (st[p].len + 1 == st[q].len) st[cur].link = q;
-        else {
-            int clone = sz++;
-            st[clone].len = st[p].len + 1;
-            memcpy(st[clone].next, st[q].next, sizeof(st[q].next));
-            st[clone].link = st[q].link;
-            while (p != -1 && st[p].next[c] == q) {
-                st[p].next[c] = clone;
-                p = st[p].link;
-            }
-            st[q].link = st[cur].link = clone;
-        }
-    }
-    last = cur;
-}
-
-int main() {
-    char s[1000010];
-    scanf("%s", s);
-    sam_init();
-    for (int i = 0; s[i]; i++) sam_extend(s[i] - 'a');
-
-    long long res = 0;
-    for (int i = 1; i < sz; i++)
-        res += st[i].len - st[st[i].link].len;
-    cout << res << endl;
 }
 ```
 </details>
 
 ---
 
-## 🏆 训练心法
-1. **深刻理解 Fail 指针**：Fail 指针指向的是当前状态的最长后缀，且该后缀在自动机中存在。这是所有字符串状态机（KMP, AC, SAM）的核心灵魂。
-2. **字符集优化**：对于字符集较大的情况，考虑使用 `std::map` 存储 `next` 数组。
-3. **空间换时间**：SAM 的节点数最多是原字符串长度的 2 倍，空间开销大但时间复杂度极优。
+## 🏆 训练建议
+1. **理解 Fail 的几何含义**：AC 自动机中的 Fail 指针本质上是在寻找最长的、且作为 Trie 中路径存在的、当前状态的后缀。
+2. **后缀结构的统一性**：后缀数组虽然难写，但配合 ST 表处理 LCP 问题的能力极强；后缀自动机 (SAM) 则是更强大的线性结构，建议同步掌握。
+3. **哈希作为保底**：在处理不涉及复杂子串关系的字符串问题时，双哈希往往能以极简的代码量过题。
