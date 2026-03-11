@@ -1,98 +1,92 @@
 ---
-title: 搜索优化与启发式算法 (Search Optimization & Heuristics)
+title: 搜索算法与启发式策略 (Search Algorithms & Heuristics)
 ---
 
-import { Search, Zap, Target, Thermometer, Box, ArrowRightCircle, Layers, ShieldCheck } from 'lucide-react';
+import { Search, Zap, Target, Thermometer, Box, ArrowRightCircle, Layers, ShieldCheck, Activity, Cpu, Database } from 'lucide-react';
 
-# <Target className="inline-block mr-2 mb-1 text-purple-500" /> 搜索优化与启发式算法
+# <Target className="inline-block mr-2 mb-1 text-purple-500" /> 搜索算法与启发式策略
 
-搜索 (Search) 是解决复杂决策、组合最优化及路径规划问题的普适性框架。在计算复杂性理论的视角下，许多 NP-Hard 问题在缺乏多项式时间解法时，必须通过遍历**状态空间 (State Space)** 来寻找全局最优或可行解。本章致力于探讨如何通过严密的数学建模、状态空间压缩、以及启发式诱导，将指数级复杂度降至工程可接受的范围。
-
----
-
-## 零、 <Layers className="inline-block mr-2 mb-1 text-blue-400" /> 系统化状态空间建模 (State Space Modeling)
-
-一个完备的搜索问题可被形式化定义为五元组 $\mathcal{M} = \langle S, A, T, s_0, G \rangle$：
-
-1.  **状态空间 $S$ (State Set)**：问题中所有可能局面的集合。
-2.  **动作集 $A(s)$ (Action Set)**：在状态 $s \in S$ 下可执行的合法操作集合。
-3.  **转移函数 $T: S \times A \to S$**：定义状态转移逻辑，$s' = T(s, a)$。
-4.  **初始状态 $s_0 \in S$**：搜索的逻辑起点。
-5.  **目标测试 $G(s) \to \{0, 1\}$**：判定 $s$ 是否为目标状态。
-
-**建模原则**：
-- **最小化 (Minimality)**：状态表示应仅包含影响决策与合法性的必要信息。例如，在位运算优化中，利用 `uint64_t` 的位掩码表示集合状态，可极大地减少空间开销并利用指令级并行。
-- **正规化 (Canonicalization)**：对于对称或等效的状态，应通过排序或某种标准序（Lexicographical Order）映射到唯一的代表元，以消除搜索冗余。
+搜索 (Search) 是解决复杂决策、组合最优化及路径规划问题的普适性框架。在计算复杂性理论视角下，许多 NP-Hard 问题在缺乏多项式时间解法时，必须遍历**状态空间 (State Space)**。本章旨在探讨如何通过严密的数学建模、状态空间压缩、估价函数诱导以及时空权衡，将指数级复杂度降至工程可接受范围。
 
 ---
 
-## 一、 <ShieldCheck className="inline-block mr-2 mb-1 text-green-500" /> 搜索优化与剪枝 (Pruning Strategies)
+## 零、 <Layers className="inline-block mr-2 mb-1 text-blue-400" /> 系统化状态空间建模与优化
 
-剪枝的本质是在搜索树的遍历过程中，通过逻辑断言提前终止对无效子树的访问。
+一个完备的搜索问题可形式化为五元组 $\mathcal{M} = \langle S, A, T, s_0, G \rangle$。优化搜索效率的第一步在于对 $S$ 的精简与高效表示。
 
-### 1. 剪枝分类与形式化定义
+### 1. 状态压缩与位运算 (State Compression)
+当状态由多个二进制特征（如集合包含关系、开关状态）组成时，利用位掩码 (Bitmask) 可实现 $O(1)$ 的状态转移与空间极小化。
+- **集合表示**：$S \subseteq \{0, \dots, n-1\}$ 可映射为整数 $mask = \sum_{i \in S} 2^i$。
+- **技巧**：`mask & (1 << i)` (判断), `mask | (1 << i)` (添加), `mask ^ (1 << i)` (翻转)。
 
-| 策略类别 | 数学描述 / 判定准则 | 核心目的 |
+### 2. 对称性破缺与等效压缩 (Symmetry Breaking)
+若状态空间存在群作用下的对称性（如旋转、镜像、全排列等效），应仅保留其**等效类代表元 (Canonical Form)**。
+- **实例**：在 $N$ 皇后问题中，通过旋转 90/180/270 度对称的解只算一个。
+- **实现**：通过定义某种标准全序，在搜索分支产生时强制执行 $s_1 < s_2 < \dots$，从而消除重复路径。
+
+---
+
+## 一、 <ShieldCheck className="inline-block mr-2 mb-1 text-green-500" /> 搜索树优化：系统化剪枝策略
+
+剪枝 (Pruning) 的核心是在搜索树遍历中，利用逻辑断言提前终止对无效子树的访问。
+
+### 1. 剪枝分类与形式化准则
+
+| 策略类别 | 判定准则 (Predicate) | 优化逻辑 |
 | :--- | :--- | :--- |
-| **可行性剪枝 (Feasibility)** | 若 $\forall \text{ path } \tau \text{ from } s, G(\tau) = 0$，则剪枝。 | 剔除注定无法到达目标的路径。 |
-| **最优性剪枝 (Optimality)** | 若 $g(s) + f_{low}(s) \ge \text{ans}_{best}$，则剪枝。 | 剔除代价已超过当前已知最优解的路径。 |
-| **搜索顺序优化 (Ordering)** | $\text{sort}(\{a_i\}) \text{ s.t. } P(T(s, a_i) \in G) \text{ is maximized.}$ | 优先探索更有潜力的分支，及早更新 `ans_best`。 |
-| **排除等效冗余 (Symmetry)** | 若 $s \equiv s' \text{ (under group action } \Gamma)$, 仅搜其一。 | 利用对称性（旋转、翻转、排列）压缩搜索树。 |
+| **可行性剪枝 (Feasibility)** | $\nexists \, \tau: s \xrightarrow{\tau} G$ | 若当前状态已无法满足约束，立即回溯。 |
+| **最优性剪枝 (Optimality)** | $g(s) + f_{low}(s) \ge \text{ans}_{best}$ | 若当前代价 + 理想最小余下代价已劣于已知最优，则剪枝。 |
+| **搜索顺序 (Ordering)** | $\arg \max_{a \in A} P(T(s, a) \rightsquigarrow G)$ | 优先探索“成功率高”或“约束强”的分支，及早更新 `ans_best`。 |
+| **记忆化搜索 (Memoization)** | $s \in \text{Visited}[S]$ | 利用哈希表或数组记录已处理状态，避免重复搜索。 |
 
-### 2. 例题：[小猫爬山 - 深度剪枝分析]
-> 给定 $N$ 只小猫的体重 $w_i$ 和缆车承重 $W$，求最少缆车数。
+### 2. 例题：[生日蛋糕 - 深度综合剪枝]
+> 给定体积 $V$ 和层数 $M$，要求蛋糕表面积最小（不含底面积）。各层半径 $R_i$ 和高度 $H_i$ 均为正整数，且满足 $R_i > R_{i+1}, H_i > H_{i+1}$。
 
 <details>
-<summary>C++ 高级实现（含位运算与搜索顺序策略）</summary>
+<summary>C++ 高级剪枝分析与实现</summary>
+
+**优化点**：
+1. **范围确定**：由 $V = \sum R_i^2 H_i$，得 $R_u \in [u, \min(\sqrt{V_{rem}}, R_{u+1}-1)]$。
+2. **可行性剪枝**：预处理每一层最小体积 $minV[i]$ 和表面积 $minS[i]$。若 $V_{cur} + minV[u] > V_{total}$，剪。
+3. **最优性剪枝**：若 $S_{cur} + minS[u] \ge ans$，剪。
+4. **数学推导剪枝**：利用 $S_{side} = \sum 2R_i H_i = \sum \frac{2R_i^2 H_i}{R_i} > \frac{2V_{rem}}{R_u}$。若 $S_{cur} + \frac{2V_{rem}}{R_u} \ge ans$，剪。
 
 ```cpp
 #include <iostream>
+#include <cmath>
 #include <algorithm>
-#include <vector>
 
 using namespace std;
 
-/**
- * 优化策略：
- * 1. 搜索顺序：将猫按体重从大到小排序。重猫约束强，分支少，能更早触发最优性剪枝。
- * 2. 最优性剪枝：如果当前车数 k >= ans，说明该分支不可能产生更优解。
- */
+int n, m, ans = 1e9;
+int minv[25], mins[25];
 
-int n, W, ans;
-int w[20], cabs[20];
-
-void dfs(int u, int k) {
-    if (k >= ans) return; // 最优性剪枝
-    if (u == n) {
-        ans = k;
+void dfs(int u, int v, int s, int r, int h) {
+    if (u == 0) {
+        if (v == n) ans = min(ans, s);
         return;
     }
+    // 剪枝组合
+    if (v + minv[u] > n) return;
+    if (s + mins[u] >= ans) return;
+    if (s + 2 * (n - v) / r >= ans) return; // 数学推导最优性剪枝
 
-    // 尝试放入已有缆车
-    for (int i = 0; i < k; i++) {
-        if (cabs[i] + w[u] <= W) { // 可行性剪枝
-            cabs[i] += w[u];
-            dfs(u + 1, k);
-            cabs[i] -= w[u];
+    for (int i = min((int)sqrt(n - v), r - 1); i >= u; i--) {
+        if (u == m) s = i * i;
+        for (int j = min((n - v) / (i * i), h - 1); j >= u; j--) {
+            dfs(u - 1, v + i * i * j, s + 2 * i * j, i, j);
         }
     }
-
-    // 放入新缆车
-    cabs[k] = w[u];
-    dfs(u + 1, k + 1);
-    cabs[k] = 0;
 }
 
 int main() {
-    ios::sync_with_stdio(false);
-    cin >> n >> W;
-    for (int i = 0; i < n; i++) cin >> w[i];
-    
-    sort(w, w + n, greater<int>()); // 搜索顺序优化
-    
-    ans = n;
-    dfs(0, 0);
-    cout << ans << endl;
+    cin >> n >> m;
+    for (int i = 1; i <= m; i++) {
+        minv[i] = minv[i - 1] + i * i * i;
+        mins[i] = mins[i - 1] + 2 * i * i;
+    }
+    dfs(m, 0, 0, sqrt(n), n);
+    cout << (ans == 1e9 ? 0 : ans) << endl;
     return 0;
 }
 ```
@@ -110,188 +104,150 @@ int main() {
 
 ---
 
-## 三、 <Target className="inline-block mr-2 mb-1 text-red-500" /> 启发式搜索 (Heuristic Search: A* & IDA*)
+## 三、 <Target className="inline-block mr-2 mb-1 text-red-500" /> 估价函数设计与启发式引导 (A* & IDA*)
 
-启发式搜索利用问题的领域知识（Domain Knowledge）构建估价函数，从而诱导搜索朝向目标节点。
+启发式搜索利用**估价函数 (Heuristic Function)** $h(n)$ 引导搜索方向。
 
-### 1. 估价函数设计准则
+### 1. 估价函数的理论基石
+$f(n) = g(n) + h(n)$
+- $g(n)$：起始点到当前点的实际代价。
+- $h(n)$：当前点到目标的预测代价。
 
-核心公式：$f(n) = g(n) + h(n)$
-- $g(n)$：从 $s_0$ 到当前节点 $n$ 的实际代价。
-- $h(n)$：从节点 $n$ 到目标状态的**预测代价**。
+**关键性质**：
+- **可接受性 (Admissibility)**：$\forall n, 0 \le h(n) \le h^*(n)$。保证 A* 找到全局最优解。
+- **一致性 (Consistency)**：$h(n) \le c(n, a, n') + h(n')$。保证 $f(n)$ 沿路径非递减，节点仅需扩展一次。
 
-#### A. 可接受性 (Admissibility)
-若对于任意节点 $n$，都有 $0 \le h(n) \le h^*(n)$（$h^*$ 为真实最小代价），则称 $h(n)$ 是可接受的。
-**定理**：若 $h(n)$ 是可接受的，则 A* 算法首次扩展到目标节点时，路径必为最优。
-
-#### B. 一致性/单调性 (Consistency)
-若对于任意边 $(n, a, n')$，都有 $h(n) \le c(n, a, n') + h(n')$ 且 $h(G)=0$，则称 $h(n)$ 是一致的。一致性蕴含了可接受性，且保证了 $f(n)$ 在路径上非递减。
-
-### 2. IDA* (Iterative Deepening A*)
-IDA* 结合了深度优先搜索 (DFS) 的空间优势（$O(d)$）与 A* 的高效剪枝。
-
-**算法逻辑**：
-1. 设定初始阈值 $limit = h(s_0)$。
-2. 进行 DFS，若当前 $g(n) + h(n) > limit$，则直接回溯（剪枝）。
-3. 若本次搜索未找到目标，更新 $limit$ 为搜索过程中触发剪枝的最小 $f(n)$ 值，重复步骤 2。
+### 2. 设计策略：松弛问题 (Relaxation)
+设计 $h(n)$ 的常用方法是**忽略某些约束**。
+- **八数码问题**：忽略“只能移动到空格”的约束 $\Rightarrow$ 曼哈顿距离。
+- **TSP 问题**：忽略“必须形成环”的约束 $\Rightarrow$ 最小生成树 (MST) 代价。
 
 ---
 
-## 四、 估价函数建模实战：15-Puzzle 案例
+## 四、 <Cpu className="inline-block mr-2 mb-1 text-orange-500" /> 时空权衡：迭代加深与 IDA*
 
-在 N-Puzzle 问题中，常用的估价函数设计如下：
-1.  **错位块数**：简单但不精确。
-2.  **曼哈顿距离之和 (Manhattan Distance)**：$h(n) = \sum |x_i - \text{target}_x(i)| + |y_i - \text{target}_y(i)|$。
-3.  **线性冲突 (Linear Conflict)**：若两块在同一行且目标也在该行，但它们相对顺序相反，则至少需要额外 2 步绕行。$h_{LC} = h_{Manhattan} + 2 \cdot \text{Conflicts}$。
+在大规模状态空间中，BFS 的空间消耗（指数级）常成为瓶颈。
+
+### 1. 迭代加深 (Iterative Deepening DFS, IDDFS)
+IDDFS 每次限定搜索深度 $d$，若未找到解则 $d \gets d+1$。它结合了 DFS 的低空间复杂度 ($O(d)$) 与 BFS 的最短路特性。
+
+### 2. IDA*：启发式迭代加深
+IDA* 将深度限制替换为 $f(n) = g(n) + h(n)$ 的限制。
+- **优点**：无需维护 Open/Closed 表，空间消耗极低。
+- **应用场景**：状态空间巨大且最优解深度有限的问题（如魔方、N-Puzzle）。
+
+---
+
+## 五、 <Database className="inline-block mr-2 mb-1 text-indigo-500" /> 状态存储与哈希技巧 (Space-Time Tradeoffs)
+
+### 1. Zobrist Hashing
+一种针对棋类或复杂状态的增量式哈希。为每个位置的每个可能值预分配一个 64 位随机数。
+$Hash(S') = Hash(S) \oplus Rand[pos][val_{old}] \oplus Rand[pos][val_{new}]$。
+极大地加速了状态判重。
+
+### 2. 状态压缩与 Bloom Filter
+在极大规模搜索中，若无法精确存储所有状态，可利用位图或布隆过滤器实现常数级冲突率的概率性剪枝。
+
+---
+
+## 🎯 综合练习与实战
+
+### 练习 1：[第 k 短路 - A* 算法应用]
+> 给定有向图，求从起点 $S$ 到终点 $T$ 的第 $k$ 短路径长度。
 
 <details>
-<summary>C++ 高效 IDA* 模板 (针对 15-Puzzle 优化)</summary>
+<summary>Check Solution: A* + 反向 Dijkstra 估价</summary>
+
+**思路**：
+1. **估价函数**：$h(x)$ 定义为 $x$ 到 $T$ 的最短路长度。可以通过在反向图上运行 Dijkstra 预处理。
+2. **搜索过程**：使用优先队列维护 $(f(x), g(x), x)$。当终点 $T$ 第 $k$ 次被从队列中弹出时，对应的 $g(x)$ 即为结果。
 
 ```cpp
 #include <iostream>
 #include <vector>
-#include <cmath>
+#include <queue>
 
 using namespace std;
 
-int board[16], limit;
-int dx[] = {-1, 0, 1, 0}, dy[] = {0, 1, 0, -1};
+const int MAXN = 1005;
+struct Edge { int to, w; };
+vector<Edge> g[MAXN], rg[MAXN];
+int dist[MAXN], cnt[MAXN], n, m, s, t, k;
 
-// 曼哈顿距离估价函数
-int get_h() {
-    int res = 0;
-    for (int i = 0; i < 16; i++) {
-        if (board[i] == 0) continue;
-        int target_x = (board[i] - 1) / 4;
-        int target_y = (board[i] - 1) % 4;
-        res += abs(i / 4 - target_x) + abs(i % 4 - target_y);
-    }
-    return res;
-}
-
-bool dfs(int depth, int prev_op, int h) {
-    if (h == 0) return true;
-    if (depth + h > limit) return false;
-
-    int pos;
-    for (pos = 0; pos < 16; pos++) if (board[pos] == 0) break;
-    int x = pos / 4, y = pos % 4;
-
-    for (int i = 0; i < 4; i++) {
-        if (abs(i - prev_op) == 2) continue; // 排除等效冗余：不走回头路
-        int nx = x + dx[i], ny = y + dy[i];
-        if (nx < 0 || nx >= 4 || ny < 0 || ny >= 4) continue;
-
-        int next_pos = nx * 4 + ny;
-        int val = board[next_pos];
-        // 增量更新估价函数 h (高效技巧)
-        int target_x = (val - 1) / 4, target_y = (val - 1) % 4;
-        int new_h = h - (abs(nx - target_x) + abs(ny - target_y)) 
-                      + (abs(x - target_x) + abs(y - target_y));
-
-        swap(board[pos], board[next_pos]);
-        if (dfs(depth + 1, i, new_h)) return true;
-        swap(board[pos], board[next_pos]);
-    }
-    return false;
-}
-
-int main() {
-    // 省略输入与逆序对判解逻辑...
-    int h = get_h();
-    limit = h;
-    while (!dfs(0, -10, h)) limit++;
-    cout << "Minimum steps: " << limit << endl;
-    return 0;
-}
-```
-</details>
-
----
-
-## 练习题库 (Exercises)
-
-### 练习 1：IDA* 与 Bookcase 放置
-> 给定若干不同尺寸的图书，需将其放入三层书架，求书架总面积（总高 $\times$ 最大宽）的最小值。
-
-<details>
-<summary>解题思路与 C++ 实现</summary>
-
-**建模与剪枝**：
-1. **状态定义**：`dfs(index, w1, w2, h1, h2, h3)` 表示当前处理到第几本书，三层当前的宽度和高度。
-2. **搜索顺序**：按书的高度从大到小排序。第一本书必放第一层。
-3. **估价函数**：若当前面积已超过最优解，或剩余书籍即使以最理想方式放置也无法优于当前解，则剪枝。
-
-```cpp
-// 核心逻辑框架
-void dfs(int u, int w1, int w2, int w3, int h1, int h2, int h3) {
-    int current_w = max({w1, w2, w3});
-    int current_area = current_w * (h1 + h2 + h3);
-    if (current_area >= ans) return; // 最优性剪枝
-
-    if (u == n) {
-        ans = current_area;
-        return;
-    }
-
-    // 尝试放入三层，优先放入不增加总高度或高度增加最少的分支
-    // ...
-}
-```
-</details>
-
-### 练习 2：模拟退火 (Simulated Annealing) 求解 TSP 问题
-> 旅行商问题：给定 $N$ 个城市的坐标，求遍历所有城市并回到起点的最短路径。
-
-<details>
-<summary>解题过程与代码解析</summary>
-
-**Metropolis 准则实现**：
-模拟退火在处理具有大量局部最优解的问题（如 TSP）时具有极强鲁棒性。
-
-```cpp
-#include <iostream>
-#include <vector>
-#include <cmath>
-#include <algorithm>
-#include <ctime>
-
-using namespace std;
-
-struct Point { double x, y; } p[50];
-int n, path[50];
-double ans = 1e18;
-
-double total_dist() {
-    double d = 0;
-    for (int i = 0; i < n; i++) {
-        int u = path[i], v = path[(i + 1) % n];
-        d += sqrt(pow(p[u].x - p[v].x, 2) + pow(p[u].y - p[v].y, 2));
-    }
-    return d;
-}
-
-void sa() {
-    double T = 5000, eps = 1e-9, delta = 0.995;
-    while (T > eps) {
-        int a = rand() % n, b = rand() % n;
-        reverse(path + min(a, b), path + max(a, b) + 1); // 2-opt 变换
-        double cur = total_dist();
-        if (cur < ans) {
-            ans = cur;
-        } else if (exp((ans - cur) / T) < (double)rand() / RAND_MAX) {
-            reverse(path + min(a, b), path + max(a, b) + 1); // 拒绝：回溯
+void dijkstra() {
+    fill(dist, dist + MAXN, 1e9);
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    dist[t] = 0;
+    pq.push({0, t});
+    while (!pq.empty()) {
+        auto [d, u] = pq.top(); pq.pop();
+        if (d > dist[u]) continue;
+        for (auto& e : rg[u]) {
+            if (dist[e.to] > dist[u] + e.w) {
+                dist[e.to] = dist[u] + e.w;
+                pq.push({dist[e.to], e.to});
+            }
         }
-        T *= delta;
     }
 }
 
-int main() {
-    srand(time(0));
-    // 输入与初始化 path...
-    for (int i = 0; i < 100; i++) sa(); // 多次迭代
-    printf("%.2f\n", ans);
-    return 0;
+int a_star() {
+    if (dist[s] == 1e9) return -1;
+    priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int, int>>>> pq;
+    pq.push({dist[s], {0, s}});
+    while (!pq.empty()) {
+        auto cur = pq.top(); pq.pop();
+        int f = cur.first, g_val = cur.second.first, u = cur.second.second;
+        cnt[u]++;
+        if (cnt[t] == k) return g_val;
+        if (cnt[u] > k) continue; 
+
+        for (auto& e : g[u]) {
+            pq.push({g_val + e.w + dist[e.to], {g_val + e.w, e.to}});
+        }
+    }
+    return -1;
+}
+```
+</details>
+
+### 练习 2：[埃及分数 - IDA* 深度搜索]
+> 将分数 $a/b$ 分解为若干互不相同的单位分数（分子为 1）之和，要求项数最少。若项数相同，则最后分母最小。
+
+<details>
+<summary>Check Solution: IDA* 策略分析</summary>
+
+**IDA* 建模**：
+1. **层数限制**：限定分解出的项数 $d$。
+2. **估价函数**：若当前剩余 $res = a/b$，且已选的最大分母为 $low$，则至少还需要 $\lceil res / (1/low) \rceil$ 项。若该值超过剩余项数，剪枝。
+3. **分母范围**：下一项 $1/i$ 需满足 $1/i < res$ 且 $1/i \times \text{rem\_steps} > res$。
+
+```cpp
+typedef long long ll;
+ll ans[105], path[105], limit;
+
+ll gcd(ll a, ll b) { return b ? gcd(b, a % b) : a; }
+
+bool dfs(ll d, ll a, ll b, ll last) {
+    if (d == limit) {
+        if (a == 0) return true;
+        return false;
+    }
+    ll start = max(last + 1, (b + a - 1) / a);
+    bool found = false;
+    for (ll i = start; ; i++) {
+        if (b * (limit - d) <= a * i) break; 
+        path[d] = i;
+        ll na = a * i - b, nb = b * i;
+        ll g = gcd(na, nb);
+        if (dfs(d + 1, na / g, nb / g, i)) {
+            if (!found || path[limit - 1] < ans[limit - 1]) {
+                for (int j = 0; j < limit; j++) ans[j] = path[j];
+            }
+            found = true;
+        }
+    }
+    return found;
 }
 ```
 </details>
