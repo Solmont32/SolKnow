@@ -1,98 +1,114 @@
 ---
-title: DP 优化策略
+title: DP 优化
 ---
 
-import { TrendingUp, Maximize2, Zap, GitBranch, LineChart, Activity, ShieldCheck, Microscope } from 'lucide-react';
+import { Microscope, Layers, Activity, ShieldCheck, Zap } from 'lucide-react';
+import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
-# 动态规划优化策略 (DP Optimization)
+# 动态规划优化技巧 (DP Optimization)
 
-在高阶算法竞赛中，原生的 DP 方程往往因 $O(N^2)$ 或 $O(N^3)$ 的复杂度而无法满足性能要求。优化 DP 的本质在于：**利用问题的数学性质（单调性、凸性、包含关系）减少冗余的状态转移。**
-
----
-
-## <Microscope className="inline-block mr-2" /> 1. 单调队列优化 (Monotonic Queue)
-
-**适用范式**：
-$$f[i] = \min_{i-k \le j < i} \{ f[j] + \text{cost}(j) \} + \text{cost}(i)$$
-当转移代价中 $j$ 与 $i$ 的项可以完全分离，且 $j$ 的取值范围是一个随 $i$ 移动的滑动窗口时。
-- **优化逻辑**：使用单调队列维护窗口内 $f[j] + \text{cost}(j)$ 的最优值。
-- **复杂度**：$O(N^2) \to O(N)$。
+在解决复杂的 DP 问题时，朴素的状态转移往往伴随着高昂的时间代价。DP 优化的核心在于**发掘转移方程中的数学性质**（如单调性、凸性、特殊代数结构），从而利用数据结构或数学变换降维提速。
 
 ---
 
-## <LineChart className="inline-block mr-2" /> 2. 斜率优化 (Slope Optimization / CHT)
-
-**适用范式**：转移方程包含 $i$ 与 $j$ 的**混合项**。
-$$f[i] = \min_{j < i} \{ f[j] - a[i] \cdot b[j] \} + c[i]$$
-我们将该式改写为直线方程：$f[j] = a[i] \cdot b[j] + f[i] - c[i]$。
-- **几何解释**：将每一个决策点看作平面上的一个点 $(b[j], f[j])$。求 $f[i]$ 相当于用一条斜率为 $a[i]$ 的直线去截这些点，使得截距 $b = f[i] - c[i]$ 最小。
-- **维护方式**：
-  - 若 $a[i]$ 和 $b[j]$ 均单调，使用单调队列维护凸包 ($O(N)$)。
-  - 若 $b[j]$ 单调但 $a[i]$ 不单调，使用凸包上二分 ($O(N \log N)$)。
-  - 若均不单调，使用 **李超线段树 (Li-Chao Tree)** 或 CDQ 分治。
+<KnowledgeCard type="info" title="决策单调性与凸性">
+    如果对于状态 $i$ 的最优决策点 $p_i$，满足 $i < j \implies p_i \le p_j$，则称该 DP 具有决策单调性。
+    <br/>
+    这通常是斜率优化和四边形不等式优化的理论前提。
+</KnowledgeCard>
 
 ---
 
-## <Zap className="inline-block mr-2" /> 3. 四边形不等式优化 (Quadrangle Inequality)
+## <Microscope className="inline-block mr-2" /> 1. 斜率优化 (Slope Optimization)
 
-**核心判定**：若代价函数 $w(i, j)$ 满足四边形不等式：
-$$w(a, c) + w(b, d) \le w(a, d) + w(b, c) \quad (a < b < c < d)$$
-且满足区间包含单调性 $w(b, c) \le w(a, d)$。
+当转移方程呈现 $f[i] = \min_{j < i} \{ f[j] + \dots + A(i)B(j) + \dots \}$ 的形式，且包含 $i, j$ 的乘积项时，简单的单调队列失效，此时需要斜率优化。
 
-### 模型一：1D / 1D 决策单调性
-$$f[i] = \min_{0 \le j < i} \{ f[j] + w(j, i) \}$$
-**性质**：若 $w$ 满足四边形不等式，则最优决策点 $p[i]$ 随 $i$ 单调递增。
-- **实现**：二分队列/栈维护每个决策点的贡献范围 ($O(N \log N)$)。
-
-### 模型二：2D / 1D 区间型优化
-$$f[i][j] = \min_{i \le k < j} \{ f[i][k] + f[k+1][j] \} + w(i, j)$$
-**定理**：最优决策点 $s[i][j]$ 满足：$s[i][j-1] \le s[i][j] \le s[i+1][j]$。
-- **实现**：直接在三层循环中限制 $k$ 的范围。
-- **复杂度**：$O(N^3) \to O(N^2)$。
+### 核心推导
+考虑 $f[i] = \min \{ f[j] + w(j, i) \}$。若能将其整理为：
+$$y_j = k_i \cdot x_j + b_i$$
+其中 $y_j, x_j$ 只与 $j$ 有关，$k_i$ 只与 $i$ 有关，$b_i$ 包含 $f[i]$。
+- **几何意义**：这相当于在平面直角坐标系中，有一堆点 $(x_j, y_j)$。我们要找一条斜率为 $k_i$ 的直线，使其经过某个点且截距 $b_i$ 最小。
+- **凸包维护**：最优决策点必然落在这些点的**下凸包**上。由于 $k_i$ 通常也具有单调性，我们可以用单调队列维护凸包上的相邻段斜率，实现 $O(N)$。
 
 ---
 
-## <Activity className="inline-block mr-2" /> 4. 分治优化 (Divide & Conquer)
+## <Zap className="inline-block mr-2" /> 2. 四边形不等式 (Quadrangle Inequality)
 
-**适用场景**：层级转移且具备决策单调性。
-$$f[k][i] = \min_{0 \le j < i} \{ f[k-1][j] + w(j, i) \}$$
-- **策略**：定义 `solve(L, R, pL, pR)` 表示计算当前层区间 $[L, R]$ 的 DP 值，其决策点范围在 $[pL, pR]$。
-- **实现**：取 $mid = (L+R)/2$，暴力寻找其最优决策点 $p$，然后递归处理子区间。
-- **复杂度**：$O(NK) \to O(NK \log N)$。
+若对于任意 $a \le b \le c \le d$，代价函数 $w$ 满足：
+$$w(a, c) + w(b, d) \le w(a, d) + w(b, c)$$
+则称 $w$ 满足四边形不等式。此时区间 DP $f[i][j] = \min \{ f[i][k] + f[k+1][j] + w(i, j) \}$ 的决策点 $s[i][j]$ 满足：
+$$s[i][j-1] \le s[i][j] \le s[i+1][j]$$
+利用此性质可将复杂度从 $O(N^3)$ 降至 $O(N^2)$。
 
 ---
 
-## <ShieldCheck className="inline-block mr-2" /> 综合练习与强化
+## <ShieldCheck className="inline-block mr-2" /> 3. 综合练习与强化
 
-### 练习 1：四边形不等式证明基础
-证明：若 $w(i, j) = (sum[j] - sum[i])^2$，则 $w$ 满足四边形不等式。
+### 练习 1：[NOI2007] 货币兑换 (斜率优化)
+这是斜率优化的进阶练习，涉及到 $x, y$ 和 $k$ 均不单调的情况。
 
 <details>
-<summary>Check Solution</summary>
+<summary>Check Solution (CDQ 分治/平衡树)</summary>
 
-**推导**：
-设 $a < b < c < d$，令 $A = sum[a], B = sum[b], C = sum[c], D = sum[d]$。
-目标证明：$(C-A)^2 + (D-B)^2 \le (D-A)^2 + (C-B)^2$。
-展开并约简后可得：$-2AC - 2BD \le -2AD - 2BC$
-即：$AD + BC \le AC + BD \Rightarrow (D-C)(B-A) \ge 0$。
-由于 $D > C$ 且 $B > A$，不等式成立。
+当斜率不单调时，无法使用单调队列。
+**方案**：
+1.  **CDQ 分治**：利用分治序保持时间序，并在合并时利用归并排序维护凸包。
+2.  **李超线段树**：维护线段的最值。
+3.  **动态凸包**（平衡树维护）。
 </details>
 
-### 练习 2：诗人小 G (Binary Search on Decison)
-给定 $f[i] = \min \{ f[j] + |(s[i]-s[j]) - L|^P \}$，其中 $P \ge 2$。
+### 练习 2：[SDOI2012] 任务安排
+经典斜率优化题目。$f[i] = \min_{j < i} \{ f[j] + S \cdot (sumC[n] - sumC[j]) + sumT[i] \cdot (sumC[i] - sumC[j]) \}$。
 
 <details>
-<summary>Check Solution</summary>
+<summary>Check Solution (O(N))</summary>
 
-**分析**：该代价函数满足四边形不等式，具有决策单调性。
-**实现**：维护一个队列，存储若干个三元组 `{j, L, R}`，表示决策点 $j$ 在当前已知的范围内是最优决策点的区间为 $[L, R]$。
-每次插入新点 $i$ 时，在队尾通过二分查找确定它能“干掉”哪个旧决策点的区间。
+```cpp
+#include <iostream>
+#include <vector>
+#include <deque>
+
+using namespace std;
+
+typedef long long ll;
+ll f[300005], st[300005], sc[300005];
+int q[300005], n, s;
+
+ll Y(int j) { return f[j]; }
+ll X(int j) { return sc[j]; }
+
+int main() {
+    cin >> n >> s;
+    for (int i = 1; i <= n; i++) {
+        ll t, c; cin >> t >> c;
+        st[i] = st[i - 1] + t;
+        sc[i] = sc[i - 1] + c;
+    }
+
+    int hh = 0, tt = 0;
+    q[0] = 0;
+    for (int i = 1; i <= n; i++) {
+        // 这里的斜率是 s + st[i]
+        while (hh < tt && (Y(q[hh + 1]) - Y(q[hh])) <= (s + st[i]) * (X(q[hh + 1]) - X(q[hh])))
+            hh++;
+        
+        int j = q[hh];
+        f[i] = f[j] + st[i] * (sc[i] - sc[j]) + (ll)s * (sc[n] - sc[j]);
+
+        while (hh < tt && (ll)(Y(q[tt]) - Y(q[tt - 1])) * (X(i) - X(q[tt])) >= (ll)(Y(i) - Y(q[tt])) * (X(q[tt]) - X(q[tt - 1])))
+            tt--;
+        q[++tt] = i;
+    }
+    cout << f[n] << endl;
+    return 0;
+}
+```
 </details>
 
 ---
 
 ## 延伸挑战
-- [洛谷 P3195 玩具装箱](https://www.luogu.com.cn/problem/P3195) (斜率优化)
-- [洛谷 P1912 诗人小 G](https://www.luogu.com.cn/problem/P1912) (1D/1D 决策单调性)
-- [Codeforces 321E Ciel and Gondolas](https://codeforces.com/contest/321/problem/E) (分治优化)
-- [洛谷 P4767 [IOI2000] 邮局](https://www.luogu.com.cn/problem/P4767) (2D/1D 四边形不等式)
+- [洛谷 P3195 [HNOI2008] 玩具装箱](https://www.luogu.com.cn/problem/P3195)（斜率优化入门）
+- [洛谷 P3628 [APIO2010] 特别行动队](https://www.luogu.com.cn/problem/P3628)
+- [洛谷 P4767 [IOI2000] 邮局](https://www.luogu.com.cn/problem/P4767)（四边形不等式）
+- [Codeforces 311B Cats Transport](https://codeforces.com/problemset/problem/311/B)（斜率优化 + 坐标变换）

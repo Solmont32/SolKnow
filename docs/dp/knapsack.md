@@ -1,103 +1,114 @@
+---
+title: 背包问题
+---
+
+import { Microscope, Layers, Activity, ShieldCheck, Zap } from 'lucide-react';
+import KnowledgeCard from '@site/src/components/KnowledgeCard';
+
 # 背包问题体系 (Knapsack Problem System)
 
-import { Microscope, Layers, Activity, ShieldCheck } from 'lucide-react';
-
-背包问题是一类经典的组合优化问题，其本质是在**有限约束（容量）下追求目标函数（价值）的最大化**。从数学角度看，它是线性规划在整数域上的一个分支。
+背包问题是一类经典的组合优化问题，其本质是在**有限约束（容量）下追求目标函数（价值）的最大化**。从数学角度看，它是整数规划（Integer Programming）的特殊形式。
 
 ---
 
-## <Microscope className="inline-block mr-2" /> 核心建模范式
-
-### 1. 状态定义 (State Representation)
-$f[i][j]$ 表示在前 $i$ 件物品中进行决策，且总体积不超过 $j$ 的最大价值。
-- **目标函数**：$\max \{ \sum v_k \cdot x_k \}$。
-- **约束条件**：$\sum w_k \cdot x_k \le W$。
-
-### 2. 转移推导逻辑 (Transition Logic)
-核心在于对“第 $i$ 件物品”的处理决策：
-- **不选**：$f[i][j] = f[i-1][j]$。
-- **选 $k$ 个**：$f[i][j] = f[i-1][j - k \cdot w_i] + k \cdot v_i$。
+<KnowledgeCard type="info" title="数学形式化定义">
+    给定 $n$ 个物品，每个物品有重量 $w_i$ 和价值 $v_i$。在总重不超过 $W$ 的前提下，选择变量 $x_i$ 使得：
+    $$\text{maximize } \sum_{i=1}^n v_i x_i \quad \text{subject to } \sum_{i=1}^n w_i x_i \le W$$
+    根据 $x_i$ 的取值范围，划分为 0/1 背包 ($x_i \in \{0, 1\}$)、完全背包 ($x_i \in \mathbb{N}$) 和多重背包 ($x_i \in \{0, 1, \dots, c_i\}$)。
+</KnowledgeCard>
 
 ---
 
-## <Layers className="inline-block mr-2" /> 经典模型深度解析
+## <Microscope className="inline-block mr-2" /> 1. 滚动数组的数学推导
 
-### 1. 0/1 背包：每种物品仅一件 ($x_i \in \{0, 1\}$)
-**转移方程**：$f[i][j] = \max(f[i-1][j], f[i-1][j-w_i] + v_i)$。
-- **优化**：使用一维数组 `f[j]`，为了保证依赖的是“上一轮”状态，必须**倒序遍历** $j$。
+### 1.1 0/1 背包：逆序遍历的必然性
+**原始方程**：$f[i][j] = \max(f[i-1][j], f[i-1][j-w_i] + v_i)$。
+观察发现，$f[i][\dots]$ 仅依赖于 $f[i-1][\dots]$ 且 $j$ 依赖于比它小的索引。
+若使用一维数组 $g[j]$：
+- 更新 $g[j]$ 时，若我们希望它是 $f[i][j]$，则等号右边的 $g[j-w_i]$ 必须仍代表 $f[i-1][j-w_i]$。
+- 如果我们**正序**更新 $j$，那么在更新 $g[j]$ 之前，$g[j-w_i]$ 已经被更新成了 $f[i][j-w_i]$，这违反了 0/1 背包每个物品只能选一次的限制。
+- 因此，必须**逆序**更新 $j$，确保依赖的是“上一层”的数据。
 
-### 2. 完全背包：物品无限量 ($x_i \ge 0$)
-**转移方程**：$f[i][j] = \max(f[i-1][j], f[i][j-w_i] + v_i)$。
-- **优化**：使用一维数组 `f[j]`，为了让当前轮次的更新能被后续状态复用，必须**正序遍历** $j$。
-
-### 3. 多重背包：物品有限量 ($0 \le x_i \le c_i$)
-**优化路径 1：二进制拆分 ($O(NW \log C)$)**
-将 $c_i$ 拆分为 $1, 2, 4, \dots, 2^k, R$，将其转化为 $\sum \log c_i$ 个 0/1 背包物品。
-
-**优化路径 2：单调队列 ($O(NW)$)**
-利用余数分组：$j = q \cdot w_i + r$。
-$$f[q \cdot w_i + r] = \max_{q-c_i \le k \le q} \{ f[k \cdot w_i + r] - k \cdot v_i \} + q \cdot v_i$$
-该方程在每一组余数 $r$ 下都是一个**滑动窗口最值**问题。
+### 1.2 完全背包：正序遍历的合理性
+**原始方程**：$f[i][j] = \max(f[i-1][j], f[i][j-w_i] + v_i)$。
+注意这里的第二项是 $f[i][\dots]$ 而不是 $f[i-1][\dots]$，因为物品可以无限选取。
+- 正序更新时，$g[j-w_i]$ 已经更新为当前层 $f[i][j-w_i]$，这恰好符合完全背包“可以重复选取当前物品”的逻辑。
 
 ---
 
-## <Activity className="inline-block mr-2" /> 复杂度矩阵
+## <Layers className="inline-block mr-2" /> 2. 进阶模型：多重背包优化
 
-| 模式 | 状态空间 | 转移开销 | 总时间复杂度 | 空间复杂度 |
-| :--- | :--- | :--- | :--- | :--- |
-| **0/1 背包** | $O(W)$ | $O(1)$ | $O(NW)$ | $O(W)$ |
-| **完全背包** | $O(W)$ | $O(1)$ | $O(NW)$ | $O(W)$ |
-| **多重背包 (拆分)** | $O(W)$ | $O(\log C)$ | $O(NW \log C)$ | $O(W)$ |
-| **多重背包 (队列)** | $O(W)$ | $O(1)$ (均摊) | $O(NW)$ | $O(W)$ |
+### 2.1 二进制拆分 ($O(NW \log C)$)
+将数量为 $C$ 的物品拆分为 $1, 2, 4, \dots, 2^k, R$ 个物品，其中 $R = C - (2^{k+1}-1)$。这些组合可以凑出 $[0, C]$ 间的任何整数。
+
+### 2.2 单调队列优化 ($O(NW)$)
+对于 $f[j] = \max_{0 \le k \le c_i} \{ f[j - k \cdot w_i] + k \cdot v_i \}$。
+令 $j = q \cdot w_i + r$，代入得：
+$f[q \cdot w_i + r] = \max_{q-c_i \le k \le q} \{ f[k \cdot w_i + r] - k \cdot v_i \} + q \cdot v_i$
+这是一个关于 $k$ 的滑动窗口最值问题，可以使用 `std::deque` 在 $O(1)$ 均摊时间内求解。
 
 ---
 
-## <ShieldCheck className="inline-block mr-2" /> 综合练习与强化
+## <ShieldCheck className="inline-block mr-2" /> 3. 综合练习与强化
 
-### 练习 1：恰好装满 vs 不超过 (Boundary Condition)
-若要求背包**必须恰好装满**，在求最大价值时初值应如何设定？
+### 练习 1：多重背包 (单调队列优化)
+物品 $i$ 有重量 $w_i$, 价值 $v_i$, 数量 $c_i$。求最大价值。
 
 <details>
-<summary>Check Solution</summary>
+<summary>Check Solution (O(NW))</summary>
 
-- `f[0] = 0`：容量为 0 恰好装满的价值为 0。
-- `f[1...W] = -INF`：其余容量初始均为非法态。
-这样只有从 $f[0]$ 出发且最终到达 $f[W]$ 的路径才是合法解。
+```cpp
+#include <iostream>
+#include <vector>
+#include <deque>
+
+using namespace std;
+
+int main() {
+    int n, m; cin >> n >> m;
+    vector<int> f(m + 1, 0), g(m + 1);
+    for (int i = 0; i < n; i++) {
+        int w, v, c; cin >> w >> v >> c;
+        g = f; // 备份上一轮状态
+        for (int r = 0; r < w; r++) { // 按余数分组
+            deque<int> q;
+            for (int j = r; j <= m; j += w) {
+                while (!q.empty() && q.front() < j - c * w) q.pop_front();
+                while (!q.empty() && g[q.back()] - (q.back() - r) / w * v <= g[j] - (j - r) / w * v)
+                    q.pop_back();
+                q.push_back(j);
+                f[j] = g[q.front()] + (j - q.front()) / w * v;
+            }
+        }
+    }
+    cout << f[m] << endl;
+    return 0;
+}
+```
 </details>
 
-### 练习 2：分组背包 (Grouped Knapsack)
-每组物品互斥（每组最多选一个）。
+### 练习 2：二维费用背包 (Two-Dimensional Constraints)
+物品有重量 $w_i$ 和体积 $v_i$，背包容量 $W$ 和最大体积 $V$。
 
 <details>
 <summary>Check Solution</summary>
 
-**遍历序至关重要**：
 ```cpp
-for (int g = 1; g <= G; g++) { // 1. 枚举组
-    for (int j = W; j >= 0; j--) { // 2. 倒序枚举容量
-        for (int i : group[g]) { // 3. 枚举组内物品
-            if (j >= w[i]) f[j] = max(f[j], f[j - w[i]] + v[i]);
+// 状态定义：f[i][j] 为重 i 且体 j 的最大价值
+for (int i = 0; i < n; i++) {
+    for (int j = W; j >= w[i]; j--) {
+        for (int k = V; k >= v[i]; k--) {
+            f[j][k] = max(f[j][k], f[j - w[i]][k - v[i]] + val[i]);
         }
     }
 }
 ```
-*注意：组内枚举必须在容量循环内部，且容量必须倒序，以确保每组内只发生一次转移。*
-</details>
-
-### 练习 3：方案总数
-凑成重量 $W$ 的组合数。
-
-<details>
-<summary>Check Solution</summary>
-
-- **状态**：$f[j]$ 表示重量为 $j$ 的方案数。
-- **初值**：$f[0] = 1$。
-- **转移**：$f[j] = (f[j] + f[j - w_i]) \pmod M$。
+*解析：由于是 0/1 背包，两个维度均需逆序遍历。*
 </details>
 
 ---
 
 ## 延伸挑战
-- [洛谷 P1064 金明的预算方案](https://www.luogu.com.cn/problem/P1064)
+- [洛谷 P1776 宝物筛选](https://www.luogu.com.cn/problem/P1776)（单调队列练习）
+- [洛谷 P1833 樱花](https://www.luogu.com.cn/problem/P1833)（混合背包）
 - [HDU 2191 多重背包模板](http://acm.hdu.edu.cn/showproblem.php?pid=2191)
-- [洛谷 P1776 宝物筛选](https://www.luogu.com.cn/problem/P1776)（单调队列优化练习）

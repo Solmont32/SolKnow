@@ -2,127 +2,172 @@
 title: 线性 DP
 ---
 
-import { Microscope, Layers, Activity, ShieldCheck } from 'lucide-react';
+import { Microscope, Layers, Activity, ShieldCheck, Brain, Zap } from 'lucide-react';
+import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # 线性动态规划 (Linear Dynamic Programming)
 
-线性动态规划是 DP 体系中最基础的模型，其核心特征是**状态的演进与输入序列的下标（或多个序列的下标组合）呈线性增长关系**。
+线性动态规划是 DP 体系中最基础的模型，其核心特征是**状态的演进与输入序列的下标（或多个序列的下标组合）呈线性增长关系**。在本章中，我们将从公理化基础出发，深入解析线性 DP 的推导逻辑与时空优化。
 
 ---
 
-## <Microscope className="inline-block mr-2" /> 核心理论体系
-
-### 1. 状态定义范式 (State Formalization)
-在线性结构中，状态通常表征为“前缀的最优解”：
-- **单序列 (Single Sequence)**：$f[i]$ 表示子序列 $A[1 \dots i]$ 满足某种约束的最优值。
-- **双序列 (Dual Sequence)**：$f[i][j]$ 表示 $A[1 \dots i]$ 与 $B[1 \dots j]$ 匹配后的最优值。
-
-### 2. 转移推导逻辑 (Derivation Logic)
-线性 DP 的转移通常遵循“归纳法”思想：假设前 $i-1$ 个状态已最优，考虑第 $i$ 个元素的加入如何改变局面。
-- **决策依赖**：$f[i]$ 依赖于 $f[j] (j < i)$。
-- **阶段划分**：通常以序列的下标 $1, 2, \dots, n$ 作为天然阶段。
-- **时空权衡**：通过滚动数组 (Rolling Array) 或位运算将 $O(N)$ 空间优化至 $O(1)$ 或 $O(M)$。
+<KnowledgeCard type="info" title="贝尔曼最优性原理 (Bellman's Principle of Optimality)">
+    一个最优策略具有这样的性质：不论过去的状态和决策如何，对前面的决策所形成的状态而言，余下的决策必须构成最优策略。
+    <br/>
+    在数学上，这体现为：若 $S = (d_1, d_2, \dots, d_n)$ 是最优解，则对于任意 $k < n$，$(d_{k+1}, \dots, d_n)$ 必须是给定前 $k$ 阶段状态下的最优子解。
+</KnowledgeCard>
 
 ---
 
-## <Layers className="inline-block mr-2" /> 经典模型深度解析
+## <Microscope className="inline-block mr-2" /> 1. 核心理论体系
 
-### 1. 最长上升子序列 (LIS)
-**状态定义**：$f[i]$ 表示以 $a[i]$ 结尾的 LIS 长度。
-**转移方程**：
-$$f[i] = \max_{0 \le j < i, a[j] < a[i]} \{f[j]\} + 1$$
-**复杂度**：$O(N^2)$。
+### 1.1 最优子结构的形式化证明 (Formal Proof)
+**定理**：线性 DP 满足最优子结构。
+**证明摘要**（以最长上升子序列 LIS 为例）：
+假设 $L(i)$ 是以 $a[i]$ 结尾的最长上升子序列的长度。若 $L(i) = k$，则必然存在一个 $j < i$ 满足 $a[j] < a[i]$ 且 $L(j) = k-1$。
+若存在一个更好的子问题解 $L'(j) > L(j)$ 且 $a[j] < a[i]$，那么我们可以构造一个长度为 $L'(j) + 1 > L(i)$ 的上升子序列以 $a[i]$ 结尾，这与 $L(i)$ 是最优解的前提矛盾。因此，全局最优解必然建立在子问题的最优解之上。
 
-#### 🚀 进阶：$O(N \log N)$ 贪心 + 二分优化
-**推导本质**：我们希望子序列增长得尽可能“慢”，以便后面能接更多的数。
-**维护对象**：$g[len]$ 表示长度为 $len$ 的上升子序列末尾元素的**最小值**。
-- **性质**：$g$ 数组显然是单调递增的。
-- **操作**：对于每个 $a[i]$，在 $g$ 中找到第一个 $\ge a[i]$ 的位置并替换它；若都比 $a[i]$ 小，则在末尾新增。
+### 1.2 建模范式
+- **阶段划分**：通常以序列下标 $i \in [1, n]$ 为阶段。
+- **无后效性**：计算 $f[i]$ 时，我们只关心 $f[j] (j < i)$ 的值，而不关心 $f[j]$ 是如何通过更前面的状态得到的。
 
-### 2. 最长公共子序列 (LCS)
+---
+
+## <Layers className="inline-block mr-2" /> 2. 经典模型深度解析
+
+### 2.1 最长公共子序列 (LCS) 的多维推导
 **状态定义**：$f[i][j]$ 表示 $A[1 \dots i]$ 与 $B[1 \dots j]$ 的 LCS 长度。
-**转移核心逻辑**：
-- 若 $A[i] = B[j]$，则 $f[i][j] = f[i-1][j-1] + 1$。
-- 若 $A[i] \neq B[j]$，则 $f[i][j] = \max(f[i-1][j], f[i][j-1])$。
+**归纳步骤**：
+1.  **若 $A[i] = B[j]$**：最后一个字符必然在 LCS 中。$f[i][j] = f[i-1][j-1] + 1$。
+2.  **若 $A[i] \neq B[j]$**：$A[i]$ 和 $B[j]$ 不同时在 LCS 中。
+    - 排除 $A[i]$：$f[i][j] = f[i-1][j]$
+    - 排除 $B[j]$：$f[i][j] = f[i][j-1]$
+    - 状态转移：$f[i][j] = \max(f[i-1][j], f[i][j-1])$。
 
-### 3. 编辑距离 (Edit Distance / Levenshtein)
-**问题描述**：将字符串 $A$ 转换为 $B$ 所需的最少操作次数（插入、删除、替换）。
-**状态定义**：$f[i][j]$ 表示 $A[1 \dots i]$ 变为 $B[1 \dots j]$ 的最小代价。
-**转移方程**：
-- 若 $A[i] = B[j]$，则 $f[i][j] = f[i-1][j-1]$。
-- 否则，$f[i][j] = \min($
-    - $f[i-1][j] + 1$ (删除 $A[i]$),
-    - $f[i][j-1] + 1$ (插入 $B[j]$),
-    - $f[i-1][j-1] + 1$ (替换)
-  $)$
+### 2.2 空间压缩：滚动数组 (Rolling Array)
+对于 LCS 转移方程 $f[i][j] = \dots f[i-1][\dots]$，我们发现当前行只依赖于上一行。
+- **二维空间**：$O(N \cdot M)$。
+- **压缩方案**：利用 $f[i \% 2][j]$ 或直接使用一维数组。
+- **一维实现注意点**：由于 $f[i][j]$ 依赖于 $f[i-1][j-1]$（左上方），若使用一维数组，更新 $j$ 时需要保留“旧的” $f[j-1]$。
 
 ---
 
-## <Activity className="inline-block mr-2" /> 复杂度矩阵
-
-| 模型 | 状态空间 | 转移开销 | 总时间复杂度 | 空间复杂度 |
-| :--- | :--- | :--- | :--- | :--- |
-| **朴素 LIS** | $O(N)$ | $O(N)$ | $O(N^2)$ | $O(N)$ |
-| **二分 LIS** | $O(N)$ | $O(\log N)$ | $O(N \log N)$ | $O(N)$ |
-| **LCS** | $O(NM)$ | $O(1)$ | $O(NM)$ | $O(NM) \to O(\min(N,M))$ |
-| **编辑距离** | $O(NM)$ | $O(1)$ | $O(NM)$ | $O(NM)$ |
+## <Zap className="inline-block mr-2" /> 3. 进阶优化：决策单调性初探
+在某些线性 DP 中，最优决策点 $j$ 随着 $i$ 的增加而单调移动。
+例如 $f[i] = \min_{0 \le j < i} \{ f[j] + w(j, i) \}$，若 $w(j, i)$ 满足四边形不等式，则可使用分治或单调队列优化至 $O(N \log N)$。
 
 ---
 
-## <ShieldCheck className="inline-block mr-2" /> 综合练习与强化
+## <ShieldCheck className="inline-block mr-2" /> 4. 综合练习与强化
 
-### 练习 1：LIS 的方案总数 (Combination)
-求长度等于最长上升子序列长度的不同子序列方案数。
+### 练习 1：最长上升子序列 (LIS) 
+给定序列 $A$，求 LIS 长度。
 
 <details>
-<summary>Check Solution</summary>
-
-需维护两个状态：`f[i]` (长度) 和 `cnt[i]` (以 $i$ 结尾的方案数)。
-- 初始化 `f[i] = 1, cnt[i] = 1`。
-- 遍历 $j < i$ 且 $a[j] < a[i]$：
-  - 若 `f[j] + 1 > f[i]`：更新 `f[i] = f[j] + 1`, `cnt[i] = cnt[j]`。
-  - 若 `f[j] + 1 == f[i]`：累加 `cnt[i] += cnt[j]`。
-- 最终答案为所有 `f[i] == max_len` 的 `cnt[i]` 之和。
+<summary>Check Solution (O(N log N))</summary>
 
 ```cpp
-// 核心逻辑
-for (int i = 0; i < n; i++) {
-    for (int j = 0; j < i; j++) {
-        if (a[j] < a[i]) {
-            if (f[j] + 1 > f[i]) {
-                f[i] = f[j] + 1;
-                cnt[i] = cnt[j];
-            } else if (f[j] + 1 == f[i]) {
-                cnt[i] += cnt[j];
-            }
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int solve_lis(const vector<int>& a) {
+    if (a.empty()) return 0;
+    // d[i] 表示长度为 i 的上升子序列末尾元素的最小值
+    vector<int> d;
+    for (int x : a) {
+        auto it = lower_bound(d.begin(), d.end(), x);
+        if (it == d.end()) {
+            d.push_back(x);
+        } else {
+            *it = x;
         }
     }
+    return d.size();
+}
+
+int main() {
+    int n; cin >> n;
+    vector<int> a(n);
+    for (int i = 0; i < n; i++) cin >> a[i];
+    cout << solve_lis(a) << endl;
+    return 0;
 }
 ```
+*解析：维护一个单调递增的数组 d。对于新元素 x，若 x 大于 d 末尾，则延长；否则用 x 替换 d 中第一个大于等于 x 的数，以使子序列增长更慢。*
 </details>
 
-### 练习 2：最长公共上升子序列 (LCIS)
-结合 LCS 与 LIS 的特征。
+### 练习 2：数字三角形 (Number Triangle)
+经典线性 DP，求从顶部到底部的路径最大和。
 
 <details>
-<summary>Check Solution</summary>
+<summary>Check Solution (Space Optimized)</summary>
 
-**状态定义**：$f[i][j]$ 表示 $A$ 前 $i$ 个数与 $B$ 前 $j$ 个数匹配，且以 $B[j]$ 结尾的 LCIS 长度。
-**优化推导**：朴素 $O(N^2 M)$ 可优化至 $O(NM)$。
 ```cpp
-for (int i = 1; i <= n; i++) {
-    int max_val = 0; // 维护 B[1...j-1] 中小于 A[i] 的 f[i-1][k] 的最大值
-    for (int j = 1; j <= m; j++) {
-        if (a[i] == b[j]) f[i][j] = max_val + 1;
-        else f[i][j] = f[i-1][j];
-        if (b[j] < a[i]) max_val = max(max_val, f[i-1][j]);
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+    int n; cin >> n;
+    vector<vector<int>> a(n, vector<int>(n));
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j <= i; j++)
+            cin >> a[i][j];
+
+    // 自底向上递推，空间复用原数组
+    for (int i = n - 2; i >= 0; i--) {
+        for (int j = 0; j <= i; j++) {
+            a[i][j] += max(a[i + 1][j], a[i + 1][j + 1]);
+        }
     }
+    cout << a[0][0] << endl;
+    return 0;
 }
 ```
+*解析：自底向上更新可以避免边界讨论，且最终答案即为 a[0][0]。*
+</details>
+
+### 练习 3：最大子段和 (Maximum Subarray Sum)
+求序列中连续一段的和的最大值。
+
+<details>
+<summary>Check Solution (Kadane's Algorithm)</summary>
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+long long max_subarray(const vector<int>& a) {
+    long long current_max = 0, global_max = -2e18; // 注意初始化
+    for (int x : a) {
+        current_max = max((long long)x, current_max + x);
+        global_max = max(global_max, current_max);
+    }
+    return global_max;
+}
+
+int main() {
+    int n; cin >> n;
+    vector<int> a(n);
+    for (int i = 0; i < n; i++) cin >> a[i];
+    cout << max_subarray(a) << endl;
+    return 0;
+}
+```
+*解析：f[i] = max(a[i], f[i-1] + a[i])。由于 f[i] 只依赖 f[i-1]，空间优化为 O(1)。*
 </details>
 
 ---
 
 ## 延伸挑战
 - [洛谷 P1091 合唱队形](https://www.luogu.com.cn/problem/P1091)（双向 LIS）
-- [Codeforces 1114D Flood Fill](https://codeforces.com/contest/1114/problem/D)（区间线性结合）
+- [洛谷 P1439 LCS 模板](https://www.luogu.com.cn/problem/P1439)（$O(N \log N)$ 技巧）
+- [AtCoder DP Contest F - LCS](https://atcoder.jp/contests/dp/tasks/dp_f)（构造最优方案）
