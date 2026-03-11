@@ -23,20 +23,26 @@ import { Lock, Key, Hash, ShieldCheck, History, Zap, ShieldAlert } from 'lucide-
 
 ## 2. 密码学数学基础 (Mathematical Foundations)
 
-现代密码学离不开数论的支持：
-- **同余运算**：$a \equiv b \pmod n$。
-- **费马小定理**：若 $p$ 为质数，则 $a^{p-1} \equiv 1 \pmod p$。
-- **大数分解问题 (IFP)**：RSA 安全性的基础。
-- **离散对数问题 (DLP)**：Diffie-Hellman 与 ECC 安全性的基础。
-- **欧拉函数 $\phi(n)$**：对于质数 $p, q$，$\phi(pq) = (p-1)(q-1)$。
+现代密码学的安全性建立在**单向陷门函数 (Trapdoor One-way Function)** 的存在性假设之上。
+
+### 2.1 数论核心定理
+- **同余类环**：考虑环 $\mathbb{Z}/n\mathbb{Z}$，其可逆元构成的乘法群为 $(\mathbb{Z}/n\mathbb{Z})^\times$，阶数为 $\phi(n)$。
+- **欧拉定理 (Euler's Theorem)**：若 $\gcd(a, n) = 1$，则 $a^{\phi(n)} \equiv 1 \pmod n$。
+- **费马小定理**：作为欧拉定理的特例，若 $p$ 为质数，则 $a^{p-1} \equiv 1 \pmod p$。
+
+### 2.2 计算困难性假设 (Hardness Assumptions)
+1. **大整数分解问题 (IFP)**：给定 $n = pq$，在多项式时间内求 $p, q$ 是困难的。
+2. **离散对数问题 (DLP)**：在有限群 $G$ 中，给定 $g, g^x \in G$，求 $x$。
+3. **椭圆曲线离散对数问题 (ECDLP)**：在椭圆曲线群 $E(\mathbb{F}_p)$ 上，给定点 $P$ 和 $Q = [k]P$，求标量 $k$。其计算复杂度远高于同等模数长度的 DLP。
 
 ---
 
-## 3. 对称加密：雪崩效应与扩散 (Symmetric Encryption)
+## 3. 对称加密：置换-置换网络 (SPN)
 
-### 3.1 分组加密 (Block Cipher) - AES
-- **AES (Advanced Encryption Standard)**：基于 **SPN (Substitution-Permutation Network)** 结构。
-- **关键阶段**：字节代换 (SubBytes)、行移位 (ShiftRows)、列混淆 (MixColumns)、轮密钥加 (AddRoundKey)。
+### 3.1 AES (Advanced Encryption Standard) 形式化
+AES 是一种基于 **SPN 结构** 的迭代分组加密算法。其状态可以用 $4 \times 4$ 的字节矩阵 $S$ 表示。
+- **层级变换**：$\text{Round}(S, K) = \text{AddRoundKey} \circ \text{MixColumns} \circ \text{ShiftRows} \circ \text{SubBytes}(S)$。
+- **安全性逻辑**：通过 `SubBytes` 引入非线性（S-Box），通过 `ShiftRows` 与 `MixColumns` 实现**扩散 (Diffusion)**，使得明文的微小变化能迅速影响整个密文空间。
 
 ### 3.2 工作模式与安全性
 - **ECB (Electronic Codebook)**：**不安全**。相同的明文块产生相同的密文块，暴露图像/结构信息。
@@ -47,12 +53,25 @@ import { Lock, Key, Hash, ShieldCheck, History, Zap, ShieldAlert } from 'lucide-
 
 ## 4. 非对称加密与 RSA 深度分析 (Asymmetric Encryption)
 
-### 4.1 RSA 算法流程
-1. 选择两个大质数 $p, q$，$n = p \times q$。
-2. $\phi(n) = (p-1)(q-1)$。
-3. 选择公钥 $e$，通常为 $65537$。
-4. 计算私钥 $d \equiv e^{-1} \pmod{\phi(n)}$。
-5. **加密**：$c = m^e \pmod n$；**解密**：$m = c^d \pmod n$。
+### 4.1 RSA 算法流程与正确性证明
+1. **公私钥生成**：
+   - 选择大质数 $p, q$，计算 $n = pq$。
+   - $\phi(n) = (p-1)(q-1)$。
+   - 选择 $e \in (1, \phi(n))$ 且 $\gcd(e, \phi(n)) = 1$。
+   - 计算 $d \equiv e^{-1} \pmod{\phi(n)}$。
+2. **加解密**：$c = m^e \pmod n$, $m = c^d \pmod n$。
+
+**正确性证明**：
+- 目标：证明 $m^{ed} \equiv m \pmod n$。
+- 已知 $ed = k\phi(n) + 1$，则 $m^{ed} = m^{k\phi(n) + 1} = m \cdot (m^{\phi(n)})^k \pmod n$。
+- 若 $\gcd(m, n) = 1$，由欧拉定理 $m^{\phi(n)} \equiv 1 \pmod n$，故结论成立。
+- 若 $\gcd(m, n) > 1$，利用中国剩余定理 (CRT) 分别在 $\pmod p$ 和 $\pmod q$ 下讨论，结论依然成立。$\square$
+
+### 4.2 椭圆曲线密码学 (ECC)
+椭圆曲线定义在有限域 $\mathbb{F}_p$ 上的方程为：
+$$E: y^2 = x^3 + ax + b \pmod p, \quad 4a^3 + 27b^2 \neq 0$$
+- **加法法则**：曲线上的点与无穷远点 $O$ 构成阿贝尔群。
+- **优势**：在提供相同安全强度的前提下，ECC 的密钥长度（如 256 位）远短于 RSA（如 3072 位），极大降低了计算与存储开销。
 
 ### 4.2 RSA 常见攻击模型
 - **低加密指数攻击 ($e=3$)**：若明文 $m$ 较小，满足 $m^3 < n$，则直接对密文开立方根即可获得明文。

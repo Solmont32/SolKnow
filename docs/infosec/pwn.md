@@ -26,9 +26,17 @@ import { Terminal, ShieldAlert, Zap, Cpu, Search, FileCode } from 'lucide-react'
 
 ## 2. 内存破坏与漏洞原理解析 (Vulnerabilities)
 
-### 2.1 栈溢出 (Stack Overflow)
-由于未对输入长度进行边界检查，覆盖了栈上的返回地址。
-- **Root Cause**：`gets()`, `scanf("%s")`, `strcpy()` 等危险函数的使用。
+### 2.1 栈溢出形式化建模 (Stack Overflow Modeling)
+考虑一个典型的栈帧布局。当函数调用发生时，栈指针 $RSP$ 向低地址增长：
+1. **参数传递**：前 6 个参数入寄存器，其余入栈。
+2. **返回地址 (RET)**：调用者下一条指令地址被压入。
+3. **保存的 RBP**：调用者的基址指针。
+4. **局部变量**：如 `char buf[N]`。
+
+**脆弱性方程**：
+若输入长度为 $L$，缓冲区长度为 $N$。当 $L > N$ 且缺乏边界检查时，溢出发生：
+$$\text{Memory}[RBP + 8] = \text{Input}[N + \text{Padding} \dots L]$$
+攻击者的目标是覆盖 $\text{Memory}[RBP + 8]$ 以劫持执行流。
 
 ### 2.2 格式化字符串 (Format String)
 - **原理**：`printf(user_input)` 允许用户传入控制符（如 `%p`, `%x`, `%n`）。
@@ -45,8 +53,9 @@ import { Terminal, ShieldAlert, Zap, Cpu, Search, FileCode } from 'lucide-react'
 ## 3. 控制流劫持技术 (Exploitation)
 
 ### 3.1 ROP (Return Oriented Programming)
-在 **NX** 开启时，通过拼接 Gadgets 绕过。
-- **Magic Gadget (One-gadget)**：Libc 中存在直接执行 `execve("/bin/sh", NULL, NULL)` 的单条跳转指令，通常是最高效的利用手段。
+在 **NX** 开启时，攻击者无法直接执行栈上的 Shellcode。
+- **逻辑**：利用以 `ret` (指令码 `0xc3`) 结尾的指令片段 (Gadgets)。
+- **链条构造**：$\text{RET} \to \text{Gadget}_1 \to \text{Gadget}_2 \to \dots \to \text{System Call}$。
 
 ### 3.2 SROP (Sigreturn Oriented Programming)
 利用 `sigreturn` 系统调用在栈上恢复伪造的寄存器上下文，从而一次性控制所有寄存器。
@@ -55,13 +64,17 @@ import { Terminal, ShieldAlert, Zap, Cpu, Search, FileCode } from 'lucide-react'
 
 ## 4. 攻防模型：漏洞缓解与绕过 (Mitigations)
 
-| 保护机制 | 绕过策略 |
+### 4.1 控制流完整性 (CFI) 形式化
+CFI 旨在确保程序执行路径符合预定义的控制流图 (CFG)。
+- **前向保护 (Forward Edge)**：确保间接跳转/调用（如虚函数表、函数指针）的目标合法。
+- **后向保护 (Backward Edge)**：保护返回地址不被篡改（如 **Shadow Stack** 或 **Intel CET**）。
+
+| 保护机制 | 形式化定义 / 绕过策略 |
 | :--- | :--- |
-| **NX (Stack Unexecutable)** | ROP, Ret2Libc |
-| **ASLR (Address Randomization)** | Memory Leak (泄露 Libc 基址或栈地址) |
-| **Canary (Stack Guard)** | Leak Canary (格式化字符串) 或覆盖非关键变量 |
-| **PIE (Code Randomization)** | 泄露代码段地址 |
-| **RELRO (Read-Only GOT)** | **Partial**: 修改 GOT；**Full**: 修改 `__malloc_hook` 或返回地址 |
+| **NX** | $\text{Permissions}(\text{Stack}) \subset \{R, W\}$；绕过：ROP |
+| **ASLR** | $\text{Base}_{\text{libc}} = \text{Random}()$；绕过：Memory Leak |
+| **Canary** | $\text{Stack}[RBP-8] = \text{Secret}$；绕过：Leak or Arbitrary Write |
+| **CFI** | $\forall j \in \text{Jump}, \text{Target}(j) \in \text{ValidTargets}$；绕过：非控制流数据攻击 (DOP) |
 
 ---
 

@@ -25,23 +25,32 @@ import { Globe, ShieldAlert, Key, Zap, Lock, RefreshCcw } from 'lucide-react';
 
 ## 2. 核心漏洞向量解析 (Vulnerabilities)
 
-### 2.1 注入攻击进阶
-- **SQL 注入**：除了基础注入，还需掌握 **二阶注入**（存入数据库后在另一个页面触发）与 **盲注**（基于布尔或时间）。
-- **XXE (XML External Entity)**：当解析器允许外部实体引用时，可导致**任意文件读取**或内网探测。
+### 2.1 注入攻击：上下文混淆模型 (Context Confusion)
+注入攻击的本质是**数据 (Data)** 与 **指令 (Code)** 的界限被打破。
+- **形式化定义**：设解析器函数为 $P(\text{Context}, \text{Input})$。当 Input 包含 Context 下的特殊元字符（如 SQL 的 `'`, HTML 的 `<`）时，$P$ 的逻辑结构被篡改。
+- **防御逻辑**：
+  - **参数化查询**：强制 $P$ 将所有 Input 视为 Data。
+  - **上下文相关编码 (Context-Aware Encoding)**：在数据进入 HTML/JS/CSS 上下文前，进行特定的转义处理。
 
-### 2.2 跨站脚本 (XSS) 与现代防御
-- **DOM 型 XSS**：由于前端数据流直接进入敏感汇聚点（如 `innerHTML`, `eval`）。
-- **防御**：
-  - **CSP (Content Security Policy)**：限制脚本来源。
-  - **Trusted Types**：在浏览器底层限制对 `innerHTML` 等接口的直接字符串赋值。
+### 2.2 同源策略 (SOP) 与 CORS 形式化
+**同源策略 (Same-Origin Policy)** 是 Web 安全的基石。
+- **三元组定义**：源 $O = (\text{Protocol}, \text{Host}, \text{Port})$。当且仅当 $O_1 = O_2$ 时，允许跨源访问资源。
 
-### 2.3 越权访问 (Broken Access Control)
-- **IDOR (Insecure Direct Object Reference)**：通过修改 URL 中的 ID（如 `/api/user/1001` -> `/api/user/1002`）直接访问他人数据。
-- **水平越权 vs 垂直越权**：同级别用户间的越权 vs 低权限用户访问管理接口。
+**CORS (Cross-Origin Resource Sharing)** 是 SOP 的安全例外机制：
+1. **简单请求**：浏览器直接发送请求，并在 Header 中带上 `Origin`。
+2. **预检请求 (Preflight)**：对于非简单请求，先发送 `OPTIONS`。服务器需返回：
+   - `Access-Control-Allow-Origin: <origin> | *`
+   - `Access-Control-Allow-Methods: GET, POST, ...`
+- **安全风险**：若 `Access-Control-Allow-Origin: *` 且 `Access-Control-Allow-Credentials: true` 同时存在，将导致 CSRF 及敏感数据泄露。
 
 ---
 
-## 3. 服务端安全与逻辑漏洞 (Server-Side)
+## 3. 现代前端安全架构
+
+### 3.1 跨站请求伪造 (CSRF) 防御模型
+CSRF 利用了浏览器自动携带 Cookie 的特性。
+- **同步令牌模式 (STP)**：服务器在表单中植入随机 Token，提交时校验。
+- **SameSite Cookie**：通过属性限制 Cookie 的跨站发送行为。
 
 ### 3.1 SSRF (Server-Side Request Forgery)
 攻击者诱使服务器访问内网敏感服务（如 `http://169.254.169.254` 元数据服务）。
