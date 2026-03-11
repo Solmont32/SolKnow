@@ -11,16 +11,39 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 ---
 
-<KnowledgeCard type="info" title="集合与二进制的映射">
-    对于集合 $S \subseteq \{0, 1, \dots, n-1\}$，我们可以用一个 $n$ 位二进制数 $x$ 表示：
+<KnowledgeCard type="info" title="集合与二进制的映射：最优子结构">
+    对于 TSP 问题的状态 $f[state][i]$，其**最优子结构**体现为：若 $0 \to \dots \to j \to i$ 是访问集合 $state$ 且止于 $i$ 的最短路径，则 $0 \to \dots \to j$ 必须是访问集合 $state \setminus \{i\}$ 且止于 $j$ 的最短路径。
+    <br/>
+    映射规则：
     - $i \in S \iff (x \gg i) \& 1 = 1$
     - $S_1 \cup S_2 \iff x_1 | x_2$
-    - $S_1 \setminus \{i\} \iff x_1 \oplus (1 \ll i)$
+    - $S_1 \setminus \{i\} \iff x \oplus (1 \ll i)$
 </KnowledgeCard>
 
 ---
 
-## <Microscope className="inline-block mr-2" /> 1. 经典模型：哈密顿路径 (Hamiltonian Path)
+## <Microscope className="inline-block mr-2" /> 1. 子集遍历的艺术：从 $O(4^n)$ 到 $O(3^n)$
+
+在许多状压 DP 中，我们需要枚举每个状态的所有子集。
+**朴素做法**：枚举所有状态 $S$ ($2^n$)，再枚举所有状态 $s \in [0, 2^n)$，检查 $s$ 是否为 $S$ 的子集。总复杂度 $O(4^n)$。
+
+**高效做法**：
+```cpp
+for (int S = 0; S < (1 << n); S++) {
+    for (int s = S; s; s = (s - 1) & S) {
+        // s 是 S 的子集
+    }
+}
+```
+**复杂度证明**：
+总计算次数等于 $\sum_{k=0}^n \binom{n}{k} \cdot 2^k$。
+根据二项式定理 $(1+x)^n = \sum \binom{n}{k} x^k$，令 $x=2$，得：
+$$(1+2)^n = 3^n$$
+因此，该技巧将复杂度从 $O(4^n)$ 显著降至 $O(3^n)$。
+
+---
+
+## <Layers className="inline-block mr-2" /> 2. 经典模型：哈密顿路径 (Hamiltonian Path)
 
 **问题**：给定 $n$ 个点及其间的边权，求从点 0 到点 $n-1$ 经过每个点恰好一次的最短路径。
 

@@ -11,28 +11,33 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 ---
 
-<KnowledgeCard type="info" title="区间合并性质">
-    对于区间 $[i, j]$，其最优解通常由其子区间 $[i, k]$ 和 $[k+1, j]$ 的最优解合并而来（其中 $i \le k < j$）。
+<KnowledgeCard type="info" title="区间合并性质与最优子结构">
+    对于区间 $[i, j]$，其最优解通常由其子区间 $[i, k]$ 和 $[k+1, j]$ 的最优解合并而来。
     <br/>
-    由于计算 $[i, j]$ 时需要所有长度更短的区间已计算完毕，因此循环顺序通常是**先枚举长度 $len$，再枚举左端点 $i$**。
+    **最优子结构证明**：以矩阵链乘为例，设 $A_i \dots A_j$ 的最优相乘顺序在 $k$ 处断开。如果 $A_i \dots A_k$ 的子序列不是最优相乘顺序，那么我们可以替换为更优的顺序，从而使整体 $A_i \dots A_j$ 的代价更小，这与前提矛盾。
+    <br/>
+    **计算顺序**：由于计算长度为 $L$ 的区间依赖于长度小于 $L$ 的区间，因此必须**外层枚举区间长度 $len$**。
 </KnowledgeCard>
 
 ---
 
-## <Microscope className="inline-block mr-2" /> 1. 经典模型：石子合并 (Stone Merging)
+## <Microscope className="inline-block mr-2" /> 1. 经典模型深度解析
 
-**问题**：有 $n$ 堆石子排成一排，每次合并相邻两堆，代价为两堆石子总重。求合并为一堆的最小代价。
+### 1.1 石子合并 (Stone Merging)
+**问题**：有 $n$ 堆石子，合并相邻两堆的代价为重量和。
+**转移方程**：
+$$f[i][j] = \min_{i \le k < j} \{ f[i][k] + f[k+1][j] \} + \text{sum}(i, j)$$
 
-### 状态设计
-$f[i][j]$ 表示将第 $i$ 堆到第 $j$ 堆石子合并为一堆的最小代价。
-
-### 转移方程
-$$f[i][j] = \min_{i \le k < j} \{ f[i][k] + f[k+1][j] \} + \sum_{p=i}^j w_p$$
-其中 $\sum_{p=i}^j w_p$ 可通过前缀和 $O(1)$ 计算。
+### 1.2 矩阵链乘 (Matrix Chain Multiplication)
+**问题**：给定 $n$ 个矩阵的维数，求最少标量乘法次数。
+**状态设计**：$f[i][j]$ 为相乘 $A_i \dots A_j$ 的最小代价。
+**转移方程**：
+$$f[i][j] = \min_{i \le k < j} \{ f[i][k] + f[k+1][j] + p_{i-1} \cdot p_k \cdot p_j \}$$
+其中矩阵 $A_i$ 的维数为 $p_{i-1} \times p_i$。
 
 ---
 
-## <Zap className="inline-block mr-2" /> 2. 环形区间 DP 的技巧
+## <Zap className="inline-block mr-2" /> 2. 环形区间 DP 的技巧与推导
 
 许多题目（如环形石子合并）中物品排成一环。
 **标准处理方案**：将原序列复制一份接在末尾（变为 $2n$ 长度），然后对 $2n$ 的序列做普通的区间 DP。最终答案为 $\min_{1 \le i \le n} \{ f[i][i+n-1] \}$。
