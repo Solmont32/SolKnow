@@ -4,46 +4,50 @@ sidebar_position: 3
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { Target, Zap, AlertTriangle, Lightbulb, Search, Ruler } from 'lucide-react';
+import { Target, Zap, AlertTriangle, Lightbulb, Search, Ruler, ShieldCheck, TrendingUp } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 # 二分与三分算法 (Binary & Ternary Search)
 
-二分与三分算法是处理**有序性（Order）**与**凸性（Convexity）**问题的核心范式。其本质是通过对决策空间的重复划分，实现搜索复杂度的对数级（$O(\log n)$）压缩。
+二分与三分算法是处理**有序性 (Order)** 与 **凸性 (Convexity)** 问题的核心范式。其本质是通过对决策空间的重复划分，实现搜索复杂度的对数级 ($O(\log n)$) 压缩。
 
 ---
 
 ## 一、 二分算法：单调性与二分性
 
 ### 1. 形式化定义与判定
-设 $D$ 为一个全序集（通常是整数区间或实数区间），$P: D \to \{0, 1\}$ 为定义在 $D$ 上的判定性质。
+设 $D$ 为一个全序集（通常是整数区间 $[L, R]$ 或实数域），$P: D \to \{0, 1\}$ 为定义在 $D$ 上的判定性质。
 
-**二分性定义**：
-若性质 $P$ 在 $D$ 上满足：
-$$ \exists m \in D, \left( \forall x \le m, P(x) = 1 \right) \land \left( \forall x > m, P(x) = 0 \right) $$
-则称 $P$ 在 $D$ 上具有**二分性**。我们的目标是寻找该分界点 $m$ 或 $m+1$。
+**二分性定义 (Bisection Property)**：
+若性质 $P$ 在 $D$ 上满足单调性，即：
+$$ \exists m \in D, \forall x, y \in D: (x \le y) \implies (P(x) \ge P(y)) $$
+则称 $P$ 在 $D$ 上具有**二分性**。我们的目标是寻找该分界点 $m$，使得 $P(m)=1$ 且 $P(m+1)=0$。
 
 ### 2. 系统化单调性证明 (Monotonicity Proof)
-要证明一个问题可以使用二分，必须证明其判定函数 $P(x)$ 具有单调性。
+证明一个问题可二分的标准步骤：
+1. **决策空间定义**：确定待求答案的取值范围 $[L, R]$。
+2. **性质定义**：定义判定函数 $f(x)$，表示“答案为 $x$ 时是否满足约束”。
+3. **单调性推导**：
+   - **假设**：若 $f(x)$ 成立，即在约束 $x$ 下存在可行解。
+   - **证明**：对于任意 $x' < x$，由于约束变弱，原可行解必然仍满足 $x'$ 的约束，故 $f(x')$ 亦成立。
+   - **结论**：可行解集构成 $D$ 的一个前缀，满足二分性。
 
-**证明框架**：
-1. **假设**：设 $x$ 是一个可行解，即 $P(x) = \text{true}$。
-2. **推导**：证明对于任意 $x' < x$（或 $x' > x$），其性质 $P(x')$ 依然成立。
-3. **结论**：若该推导成立，则可行解集构成 $D$ 的一个前缀或后缀，即满足二分性。
-
-<KnowledgeCard type="info" title="数学本质">
-二分的本质不是“查找元素”，而是“寻找性质的分界点”。即使数组无序，只要性质 $P(x)$ 在搜索空间上具有 $[1,1,\dots,1,0,0,\dots,0]$ 的分布，即可二分。
+<KnowledgeCard type="success" title="证明范式">
+在“最小值最大化”或“最大值最小化”问题中，单调性通常源于**资源约束的松紧程度**。
 </KnowledgeCard>
 
 ---
 
-## 二、 整数二分的数学边界 (防死循环指南)
+## 二、 整数二分的数学边界与收敛证明
 
-整数二分的难点在于边界处理。其核心矛盾在于：`mid` 是向下取整还是向上取整。
+整数二分的难点在于离散空间的边界处理。其核心矛盾在于 $mid$ 的取整方向需与区间收缩方向匹配。
 
-### 1. 模板 A：寻找左侧分界点（满足性质的最大 $x$）
-区间从 $[l, r]$ 划分为 $[l, mid]$ 和 $[mid+1, r]$（若 $mid$ 满足性质，解在 $[mid, r]$）。
-- **数学纠偏**：当 $l = r-1$ 时，若使用 `mid = (l+r)/2`，则 $mid = l$。若 `check` 成功执行 `l = mid`，区间仍为 $[l, r]$，陷入死循环。
-- **解决方案**：`mid = (l + r + 1) >> 1`（向上取整）。
+### 1. 模板 A：寻找满足性质的最大值 (Rightmost 1)
+区间 $[l, r]$ 划分为 $[l, mid]$ 和 $[mid+1, r]$。若 $check(mid)$ 为真，解在 $[mid, r]$。
+
+**收敛性分析**：
+- **公式**：`mid = l + r + 1 >> 1` (向上取整)
+- **正确性证明**：若不加 $1$，当 $l = r-1$ 时，`mid = l`。若 $check(mid)$ 成立，执行 `l = mid`，区间仍为 $[l, r]$，导致无限死循环。向上取整确保 $mid > l$，迫使区间收缩。
 
 ```cpp
 while (l < r) {
@@ -53,10 +57,12 @@ while (l < r) {
 }
 ```
 
-### 2. 模板 B：寻找右侧分界点（满足性质的最小 $x$）
-区间划分为 $[l, mid]$ 和 $[mid+1, r]$（若 $mid$ 满足性质，解在 $[l, mid]$）。
-- **逻辑**：执行 `r = mid`。
-- **解决方案**：`mid = (l + r) >> 1`（向下取整）。
+### 2. 模板 B：寻找满足性质的最小值 (Leftmost 1)
+若 $check(mid)$ 为真，解在 $[l, mid]$。
+
+**收敛性分析**：
+- **公式**：`mid = l + r >> 1` (向下取整)
+- **正确性证明**：当 $l = r-1$ 时，`mid = l`。若 $check(mid)$ 成立，执行 `r = mid`，区间变为 $[l, l]$，循环正常终止。
 
 ```cpp
 while (l < r) {
@@ -68,13 +74,17 @@ while (l < r) {
 
 ---
 
-## 三、 算法性能分析 (Complexity)
+## 三、 时空复杂度收敛推导
 
-| 维度 | 整数二分 | 实数二分 | 三分搜索 |
-| :--- | :--- | :--- | :--- |
-| **时间复杂度** | $O(\log(R-L) \cdot T_{check})$ | $O(\log(\frac{R-L}{\epsilon}) \cdot T_{check})$ | $O(\log_{1.5}(R-L) \cdot T_{f})$ |
-| **空间复杂度** | $O(1)$ | $O(1)$ | $O(1)$ |
-| **收敛速度** | 每次减少 $1/2$ | 每次减少 $1/2$ | 每次减少 $1/3$ |
+### 1. 时间复杂度 $O(\log N)$
+设初始区间长度为 $L = R - L_0$。每一次迭代后，区间长度变为：
+$$ L_{k+1} = \lceil L_k / 2 \rceil $$
+经过 $k$ 次迭代，区间长度 $L_k \approx L / 2^k$。
+令 $L / 2^k = 1$，解得 $k = \log_2 L$。
+总时间复杂度：$O(\text{Cost}_{check} \cdot \log(R-L))$。
+
+### 2. 实数二分的精度控制
+实数二分不涉及边界取整，但需注意精度 $\epsilon$。通常循环次数固定（如 100 次）比判断 `r - l > eps` 更稳定，精度可达 $1/2^{100}$。
 
 ---
 
@@ -87,10 +97,13 @@ $N$ 个坐标，放置 $M$ 头牛，使最近两牛间距的最大值。
 <summary>解析与推导</summary>
 
 **1. 单调性证明**：
-若间距 $d$ 下能放下 $M$ 头牛，则对于任意 $d' < d$，显然也能放下 $M$ 头牛。性质满足二分性。
+设 $f(d)$ 为“是否存在一种放置方案使得最近间距 $\ge d$”。
+若 $f(d)$ 为真，对于 $d' < d$，原方案中任意两牛距离 $\Delta \ge d > d'$，故 $f(d')$ 必为真。性质具有单调性。
 
-**2. Check 函数实现 ($O(n)$)**：
-贪心放置，第一头放在 $x_0$，之后每头放在距离前一头至少为 $d$ 的第一个坐标。
+**2. 复杂度分析**：
+- 二分次数：$\log(10^9) \approx 30$ 次。
+- Check 函数：$O(N)$ 扫描。
+- 总复杂度：$O(N \log X)$。
 
 **3. 代码实现**：
 ```cpp
@@ -128,50 +141,74 @@ int main() {
 
 ## 五、 综合练习库
 
-### 练习 1：数的范围 (基础模板)
-给定升序数组，查询 $k$ 的起始与终止位置。
+### 练习 1：寻找峰值 (二分在非单调数组的应用)
+给定一个山峰数组，寻找任意一个峰值位置 $i$ 使得 $a[i-1] < a[i] > a[i+1]$。
+
 <details>
 <summary>Check Solution</summary>
 
+**单调性变体证明**：
+虽然全局不单调，但斜率具有二分性。
+- 若 $a[mid] < a[mid+1]$，说明右侧必然存在峰值（至少有一个上升趋势）。
+- 否则，左侧（包含 $mid$）必然存在峰值。
+
 ```cpp
-// 寻找第一个 >= x 的位置
-int l = 0, r = n - 1;
-while (l < r) {
-    int mid = l + r >> 1;
-    if (a[mid] >= x) r = mid;
-    else l = mid + 1;
-}
-// 寻找最后一个 <= x 的位置
-int l2 = 0, r2 = n - 1;
-while (l2 < r2) {
-    int mid = l2 + r2 + 1 >> 1;
-    if (a[mid] <= x) l2 = mid;
-    else r2 = mid - 1;
+int findPeakElement(vector<int>& nums) {
+    int l = 0, r = nums.size() - 1;
+    while (l < r) {
+        int mid = l + r >> 1;
+        if (nums[mid] < nums[mid + 1]) l = mid + 1;
+        else r = mid;
+    }
+    return l;
 }
 ```
 </details>
 
 ### 练习 2：最佳牛围栏 (二分 + 前缀和边界分析)
 长度 $\ge L$ 的子段，最大平均值。
+
 <details>
 <summary>Check Solution</summary>
 
-**策略**：二分平均值 $avg$，判断是否存在 $\sum (a_i - avg) \ge 0$。
-**关键推导**：维护 $S_i = \sum_{j=1}^i (a_j - avg)$，寻找 $S_j - \min_{k \le j-L} S_k \ge 0$。
+**策略**：二分平均值 $avg$。判定是否存在子段满足 $\frac{\sum_{i=j}^k a[i]}{k-j+1} \ge avg \iff \sum_{i=j}^k (a[i] - avg) \ge 0$。
 
 ```cpp
 bool check(double avg) {
     for (int i = 1; i <= n; i++) s[i] = s[i-1] + a[i] - avg;
     double minv = 0;
     for (int i = L; i <= n; i++) {
-        minv = min(minv, s[i-L]);
-        if (s[i] >= minv) return true;
+        minv = min(minv, s[i-L]); // 维护 i-L 之前的最小前缀和
+        if (s[i] - minv >= 0) return true;
     }
     return false;
 }
 ```
 </details>
 
+### 练习 3：分断气球 (最小化最大值)
+将气球序列分为 $K$ 段，使每段和的最大值最小。
+
+<details>
+<summary>Check Solution</summary>
+
+**收敛推导**：
+若最大段和为 $S$ 时能分成 $\le K$ 段，则对于 $S' > S$ 显然也能。
+```cpp
+bool check(LL limit) {
+    LL sum = 0, cnt = 1;
+    for (int i = 0; i < n; i++) {
+        if (a[i] > limit) return false;
+        if (sum + a[i] > limit) {
+            cnt++;
+            sum = a[i];
+        } else sum += a[i];
+    }
+    return cnt <= k;
+}
+```
+</details>
+
 ---
 
-_编者注：二分是“缩小确定性的范围”，而三分是“排除不可能的区域”。掌握这两者，便掌握了高效检索决策空间的精髓。_
+_编者注：二分是“缩小确定性的范围”，其核心在于对“二分性”的深刻洞察。即使数据无序，只要性质可分，二分即存。_
