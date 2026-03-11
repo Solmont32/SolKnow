@@ -9,11 +9,13 @@ import { Box, Code2, Infinity, Target, Zap, Layers } from "lucide-react";
 
 # 复变函数：解析函数与留数理论
 
-<motion.div 
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.5 }}
+<motion.div
+initial={{ opacity: 0, y: 20 }}
+animate={{ opacity: 1, y: 0 }}
+transition={{ duration: 0.5 }}
+
 >
+
   <blockquote>
     复变函数论不仅是数学分析在复数域的自然延伸，更展现了实分析中不具备的“刚性”与对称美。它是现代物理、信号处理与控制理论的数学基石。
   </blockquote>
@@ -45,11 +47,13 @@ import { Box, Code2, Infinity, Target, Zap, Layers } from "lucide-react";
 ## 一、复数项级数与基本定义
 
 ### 1. 复变函数
+
 设 $D$ 是复平面 $\mathbb{C}$ 上的一个区域。若对 $D$ 内每一个复数 $z = x + iy$，都有唯一的复数 $w = u + iv$ 与之对应，则称 $w = f(z)$ 是定义在 $D$ 上的**复变函数**。
 通常写作：
 $$ f(z) = u(x,y) + i v(x,y) $$
 
 ### 2. 极限与连续性
+
 复变函数的极限定义与多元实函数类似，但要求 $\Delta z \to 0$ 时无论路径如何，极限值均一致。
 
 ---
@@ -57,7 +61,7 @@ $$ f(z) = u(x,y) + i v(x,y) $$
 ## 二、导数与解析性 (Analyticity)
 
 若极限
-$$ f'(z_0) = \lim_{\Delta z \to 0} \frac{f(z_0 + \Delta z) - f(z_0)}{\Delta z} $$
+$$ f'(z*0) = \lim*{\Delta z \to 0} \frac{f(z_0 + \Delta z) - f(z_0)}{\Delta z} $$
 存在且唯一，则称 $f(z)$ 在 $z_0$ 点**可导**。
 
 <KnowledgeCard type="info" title="解析 (Holomorphic) 的定义">
@@ -65,8 +69,10 @@ $$ f'(z_0) = \lim_{\Delta z \to 0} \frac{f(z_0 + \Delta z) - f(z_0)}{\Delta z} $
 </KnowledgeCard>
 
 ### 1. Cauchy-Riemann (C-R) 方程
+
 这是判定解析性的充要条件（需满足偏导数连续）：
-$$ 
+
+$$
 \begin{cases}
 \frac{\partial u}{\partial x} = \frac{\partial v}{\partial y} \\
 \frac{\partial u}{\partial y} = -\frac{\partial v}{\partial x}
@@ -74,15 +80,16 @@ $$
 $$
 
 ### 2. 复导数的几何意义
+
 解析函数在 $f'(z_0) \neq 0$ 的点具有**保角性**（保持曲线间夹角不变）和**保域性**。
 
 ---
 
 ## 三、初等解析函数
 
--   **指数函数**: $e^z = e^x(\cos y + i \sin y)$，具有周期 $2\pi i$。
--   **对数函数**: $\text{Ln}\,z = \ln |z| + i \arg z + 2k\pi i$，是多值函数。
--   **幂函数**: $z^\alpha = e^{\alpha \text{Ln}\,z}$。
+- **指数函数**: $e^z = e^x(\cos y + i \sin y)$，具有周期 $2\pi i$。
+- **对数函数**: $\text{Ln}\,z = \ln |z| + i \arg z + 2k\pi i$，是多值函数。
+- **幂函数**: $z^\alpha = e^{\alpha \text{Ln}\,z}$。
 
 ---
 
@@ -106,7 +113,7 @@ $$
  */
 int main() {
     double x = 1.0, y = 1.0, h = 0.0001;
-    
+
     // u = x^2 - y^2, v = 2xy
     auto u = [](double x, double y) { return x*x - y*y; };
     auto v = [](double x, double y) { return 2*x*y; };
@@ -134,20 +141,20 @@ int main() {
 
 ## 五、跨领域映射 <Layers className="inline-block ml-1" />
 
-| 领域 | 对应概念 | 说明 |
-| :--- | :--- | :--- |
+| 领域         | 对应概念                 | 说明                                         |
+| :----------- | :----------------------- | :------------------------------------------- |
 | **流体力学** | 复势 (Complex Potential) | 解析函数的实部和虚部分别对应流函数和速度势。 |
-| **信号处理** | 解析信号与 Hilbert 变换 | 通过复分析工具处理带通信号。 |
-| **量子力学** | 算子谱论 | 在复数域研究能量算子的本征值。 |
-| **工程计算** | 有限元与边界元 | 利用解析函数的调和性质求解拉普拉斯方程。 |
+| **信号处理** | 解析信号与 Hilbert 变换  | 通过复分析工具处理带通信号。                 |
+| **量子力学** | 算子谱论                 | 在复数域研究能量算子的本征值。               |
+| **工程计算** | 有限元与边界元           | 利用解析函数的调和性质求解拉普拉斯方程。     |
 
 ---
 
 ## 🚀 快速跳转
 
--   [**下一站：解析函数的全纯性质**](./holomorphic-functions)
--   [**核心：留数理论与应用**](./residue-theory)
--   [**几何：共形映射**](./conformal-mapping)
+- [**下一站：解析函数的全纯性质**](./holomorphic-functions)
+- [**核心：留数理论与应用**](./residue-theory)
+- [**几何：共形映射**](./conformal-mapping)
 
 ---
 

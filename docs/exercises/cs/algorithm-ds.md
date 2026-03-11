@@ -13,11 +13,11 @@ import { Target, Zap, Trophy, BarChart3, ChevronRight, Code2, Layers } from 'luc
 
 ## 🪜 练习阶梯与评价标准
 
-| 等级 | 难度目标 | 核心考察点 | 期望达成 |
-| :--- | :--- | :--- | :--- |
-| <span style={{ color: 'var(--ifm-color-success)' }}>● **Level A**</span> | 模板即时复现 | 并查集路径压缩、BIT 单点修改、ST 表 | 能够闭眼复现核心逻辑 |
-| <span style={{ color: 'var(--ifm-color-warning)' }}>● **Level B**</span> | 结构变换与维护 | 线段树懒标记、Splay 旋转、字典树前缀匹配 | 能够处理复杂的区间更新 |
-| <span style={{ color: 'var(--ifm-color-danger)' }}>● **Level C**</span> | 结构融合与持久化 | 主席树（可持久化线段树）、树套树、LCT | 具备处理历史版本与动态树能力 |
+| 等级                                                                     | 难度目标         | 核心考察点                               | 期望达成                     |
+| :----------------------------------------------------------------------- | :--------------- | :--------------------------------------- | :--------------------------- |
+| <span style={{ color: 'var(--ifm-color-success)' }}>● **Level A**</span> | 模板即时复现     | 并查集路径压缩、BIT 单点修改、ST 表      | 能够闭眼复现核心逻辑         |
+| <span style={{ color: 'var(--ifm-color-warning)' }}>● **Level B**</span> | 结构变换与维护   | 线段树懒标记、Splay 旋转、字典树前缀匹配 | 能够处理复杂的区间更新       |
+| <span style={{ color: 'var(--ifm-color-danger)' }}>● **Level C**</span>  | 结构融合与持久化 | 主席树（可持久化线段树）、树套树、LCT    | 具备处理历史版本与动态树能力 |
 
 ---
 
@@ -26,7 +26,9 @@ import { Target, Zap, Trophy, BarChart3, ChevronRight, Code2, Layers } from 'luc
 ### Level A：基础巩固 (Foundations)
 
 #### 练习 1：并查集与路径压缩 (Merge & Find)
+
 **题目描述**：维护 $N$ 个集合，支持合并两个集合、查询两个元素是否在同一集合。
+
 - **考察点**：`find` 函数中的递归路径压缩。
 
 <details>
@@ -60,10 +62,13 @@ int main() {
     return 0;
 }
 ```
+
 </details>
 
 #### 练习 2：ST 表 (Range Minimum Query)
+
 **题目描述**：给定序列，要求在 $O(1)$ 时间内回答区间最大值查询。
+
 - **核心思想**：倍增法预处理 $f[i][j]$ 表示以 $i$ 为起点长度为 $2^j$ 的区间最值。
 
 <details>
@@ -82,11 +87,11 @@ int main() {
     scanf("%d%d", &n, &m);
     for (int i = 1; i <= n; i++) scanf("%d", &f[i][0]);
     for (int i = 2; i <= n; i++) lg[i] = lg[i / 2] + 1;
-    
+
     for (int j = 1; j < M; j++)
         for (int i = 1; i + (1 << j) - 1 <= n; i++)
             f[i][j] = max(f[i][j - 1], f[i + (1 << (j - 1))][j - 1]);
-            
+
     while (m--) {
         int l, r;
         scanf("%d%d", &l, &r);
@@ -96,6 +101,7 @@ int main() {
     return 0;
 }
 ```
+
 </details>
 
 ---
@@ -103,7 +109,9 @@ int main() {
 ### Level B：综合提升 (Intermediate)
 
 #### 练习 3：线段树区间乘法 (P3373)
+
 **题目描述**：维护一个序列，支持：1. 区间乘 $k$；2. 区间加 $k$；3. 查询区间和。
+
 - **考察点**：两个懒标记（add 和 mul）的优先级处理。
 
 <details>
@@ -152,6 +160,7 @@ void build(int u, int l, int r) {
 }
 // ... 篇幅原因省略部分实现
 ```
+
 </details>
 
 ---
@@ -159,7 +168,9 @@ void build(int u, int l, int r) {
 ### Level C：竞赛挑战 (Advanced)
 
 #### 练习 4：可持久化线段树（主席树）
+
 **题目描述**：给定一个序列，求区间 $[L, R]$ 内第 $k$ 小的数。
+
 - **核心思想**：对序列的每个前缀建立一棵权值线段树，利用前缀和思想查询。
 
 <details>
@@ -224,11 +235,11 @@ int main() {
     }
     sort(nums.begin(), nums.end());
     nums.erase(unique(nums.begin(), nums.end()), nums.end());
-    
+
     root[0] = build(0, nums.size() - 1);
     for (int i = 1; i <= n; i++)
         root[i] = update(root[i - 1], 0, nums.size() - 1, find(a[i]));
-        
+
     while (m--) {
         int l, r, k;
         scanf("%d%d%d", &l, &r, &k);
@@ -237,11 +248,13 @@ int main() {
     return 0;
 }
 ```
+
 </details>
 
 ---
 
 ## 🏆 训练建议
+
 1. **注重代码复用**：线段树的 `pushdown` 和 `pushup` 是核心，养成良好的封装习惯。
 2. **空间复杂度敏感**：对于可持久化结构，必须精确估算节点数（通常为 $N \log N$）。
 3. **离散化技巧**：处理大范围坐标时，优先考虑离散化或动态开点。

@@ -17,13 +17,17 @@ import { Code2, Infinity, Layers, Sigma, Box, Target, Zap, Cpu } from 'lucide-re
 一切数学推导的终点都是公理。
 
 ### 1.1 集合论与数系构造
+
 现代数学以 **ZFC 集合论**为基石。
+
 - **Peano 公理**：定义了自然数 $\mathbb{N}$ 的后继关系。
 - **Dedekind 分割**：将有理数 $\mathbb{Q}$ 扩张为实数 $\mathbb{R}$，赋予了数轴“连续性”。
 - **实数完备性 (Completeness)**：这是数学分析的“第一推动力”。任何有上界的非空集合必有上确界。
 
 ### 1.2 代数结构的阶梯
+
 代数研究的是集合上的**运算结构**：
+
 1. **半群 (Semigroup)**：封闭性 + 结合律。
 2. **群 (Group)**：半群 + 单位元 + 逆元。
 3. **环 (Ring)**：加法交换群 + 乘法半群 + 分配律。
@@ -37,12 +41,15 @@ import { Code2, Infinity, Layers, Sigma, Box, Target, Zap, Cpu } from 'lucide-re
 映射（Mapping）是研究结构如何保持（Preserve）或改变（Transform）的工具。
 
 ### 2.1 同态基本定理 (Fundamental Theorem of Homomorphism)
+
 设 $f: G \to H$ 是群同态，则：
 $$G / \text{Ker}(f) \cong \text{Im}(f)$$
 这个定理深刻地揭示了：**核（Kernel）刻画了信息的损失，而商群（Quotient Group）重塑了结构的影像。**
 
 ### 2.2 线性变换与矩阵表示
+
 在线性代数中，只要选定了基底，抽象的线性变换 $T: V \to W$ 就等价于一个矩阵 $A$。
+
 - **同构 (Isomorphism)**：当 $T$ 是双射时，两个空间在代数意义上是“同一个”。
 - **谱定理 (Spectral Theorem)**：揭示了算子的内在结构，即在何种“视角”（特征基）下变换最为简洁。
 
@@ -53,10 +60,12 @@ $$G / \text{Ker}(f) \cong \text{Im}(f)$$
 分析学研究的是“临近（Nearness）”与“极限（Limit）”。
 
 ### 3.1 从度量到拓扑
+
 - **度量空间 (Metric Space)**：引入距离 $d(x,y)$。收敛性定义为 $d(x_n, x) \to 0$。
 - **拓扑空间 (Topological Space)**：抛弃距离，保留“开集（Open Sets）”的概念。连续性定义为：开集的原像是开集。
 
 ### 3.2 完备性证明示例：Bolzano-Weierstrass 定理
+
 **定理**：实数空间中的任何有界序列必有收敛子列。
 **核心逻辑**：利用区间套套法（Nested Interval Lemma）。不断平分有无穷多项的区间，构造一个收敛的 Cauchy 序列。
 
@@ -75,6 +84,7 @@ $$G / \text{Ker}(f) \cong \text{Im}(f)$$
 ## 💻 5. 计算验证：C++ 工业级模拟
 
 ### 示例 1：抽象代数——对称群 $S_n$ 的阶与置换验证
+
 验证置换群的非交换性与阶（Order）的计算。
 
 <details>
@@ -148,6 +158,7 @@ int main() {
 </details>
 
 ### 示例 2：中心极限定理 (CLT) 的 Monte Carlo 验证
+
 通过大量模拟验证不同分布之和趋向于正态分布。
 
 <details>
@@ -167,7 +178,7 @@ int main() {
 int main() {
     const int num_simulations = 100000;
     const int n_sum = 12; // 根据 CLT，均值为 n/2=6, 方差为 n/12=1
-    
+
     std::mt19937 gen(42);
     std::uniform_real_distribution<> dis(0.0, 1.0);
 
@@ -177,7 +188,7 @@ int main() {
     for (int i = 0; i < num_simulations; ++i) {
         double sum = 0;
         for (int j = 0; j < n_sum; ++j) sum += dis(gen);
-        
+
         // 归一化到直方图
         int bin = static_cast<int>(std::floor(sum / bin_width));
         histogram[bin]++;
@@ -185,7 +196,7 @@ int main() {
 
     std::cout << "CLT 模拟结果 (n=12, 均值应接近 6):" << std::endl;
     for (auto const& [bin, count] : histogram) {
-        std::cout << std::fixed << std::setprecision(1) 
+        std::cout << std::fixed << std::setprecision(1)
                   << bin * bin_width << " | ";
         for (int k = 0; k < count / 2000; ++k) std::cout << "*";
         std::cout << " (" << count << ")" << std::endl;
@@ -202,12 +213,14 @@ int main() {
 ## ✍️ 6. 综合练习 (Integrated Exercises)
 
 ### 练习 1：公理化推导 (实数完备性)
+
 证明：若数列 $\{a_n\}$ 单调增加且有上界，则 $\{a_n\}$ 必收敛。
 
 <details>
 <summary>查看解析</summary>
 
 **证明**：
+
 1. 设 $S = \{a_n : n \in \mathbb{N}\}$。由于 $\{a_n\}$ 有上界，根据**实数确界存在公理**，集合 $S$ 必有上确界，设为 $A = \sup S$。
 2. 对于任意 $\epsilon > 0$，根据上确界的性质，$A - \epsilon$ 不是 $S$ 的上界。
 3. 因此，存在某个 $N \in \mathbb{N}$，使得 $a_N > A - \epsilon$。
@@ -215,23 +228,25 @@ int main() {
 5. 又因为 $A$ 是上界，故 $a_n \le A < A + \epsilon$。
 6. 综上可知，对于所有 $n > N$，有 $A - \epsilon < a_n < A + \epsilon$，即 $|a_n - A| < \epsilon$。
 7. 由极限定义，$\lim_{n \to \infty} a_n = A$。
-证毕。
+   证毕。
 
 </details>
 
 ### 练习 2：结构映射 (线性代数与群论)
+
 考虑所有 $n \times n$ 可逆矩阵构成的集合 $GL(n, \mathbb{R})$。证明这是一个群，并说明其行列式映射 $\det: GL(n, \mathbb{R}) \to \mathbb{R}^*$ 是一个群同态。
 
 <details>
 <summary>查看解析</summary>
 
 **解析**：
+
 1. **群的验证**：
    - **封闭性**：可逆矩阵之积仍可逆（$\det(AB) = \det(A)\det(B) \neq 0$）。
    - **结合律**：矩阵乘法满足结合律。
    - **单位元**：单位矩阵 $I$，显然可逆。
    - **逆元**：可逆矩阵定义即存在逆矩阵。
-   因此 $GL(n, \mathbb{R})$ 构成群（一般线性群）。
+     因此 $GL(n, \mathbb{R})$ 构成群（一般线性群）。
 2. **同态证明**：
    - 设 $A, B \in GL(n, \mathbb{R})$。
    - 根据行列式的乘法性质：$\det(AB) = \det(A) \cdot \det(B)$。
@@ -241,12 +256,14 @@ int main() {
 </details>
 
 ### 练习 3：复分析中的同构 (Cauchy-Riemann 方程)
+
 设 $f(z) = u(x,y) + iv(x,y)$ 是全纯函数。写出 $u, v$ 满足的偏微分方程，并解释这如何反映了复平面上映射的“保角性”。
 
 <details>
 <summary>查看解析</summary>
 
 **解析**：
+
 1. **Cauchy-Riemann 方程**：
    $$\frac{\partial u}{\partial x} = \frac{\partial v}{\partial y}, \quad \frac{\partial u}{\partial y} = -\frac{\partial v}{\partial x}$$
 2. **几何意义**：

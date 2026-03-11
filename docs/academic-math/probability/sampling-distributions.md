@@ -29,17 +29,22 @@ import KnowledgeCard from "@site/src/components/KnowledgeCard";
 ## 3. 三大抽样分布
 
 ### $\chi^2$ 分布 (卡方分布)
+
 设 $X_1, \dots, X_n$ 独立且均服从标准正态分布 $N(0, 1)$，则：
 $$\chi^2 = \sum_{i=1}^n X_i^2 \sim \chi^2(n)$$
 其中 $n$ 称为 **自由度**。
+
 - $E(\chi^2) = n, \quad Var(\chi^2) = 2n$。
 
 ### $t$ 分布 (学生分布)
+
 设 $X \sim N(0, 1)$，$Y \sim \chi^2(n)$，且 $X, Y$ 独立，则：
 $$T = \frac{X}{\sqrt{Y/n}} \sim t(n)$$
+
 - 当 $n \to \infty$ 时，$t(n) \to N(0, 1)$。
 
 ### $F$ 分布
+
 设 $U \sim \chi^2(n_1)$，$V \sim \chi^2(n_2)$，且 $U, V$ 独立，则：
 $$F = \frac{U/n_1}{V/n_2} \sim F(n_1, n_2)$$
 
@@ -69,6 +74,7 @@ $$F = \frac{U/n_1}{V/n_2} \sim F(n_1, n_2)$$
 根据 $t$ 分布定义：
 $$T = \frac{Z'}{\sqrt{W/3}} = \frac{Z/\sqrt{6}}{\sqrt{W/3}} = \frac{Z}{\sqrt{2W}} = \frac{1}{\sqrt{2}} Y \sim t(3)$$
 故 $c = \frac{1}{\sqrt{2}}$，$n = 3$。
+
 </details>
 
 ---

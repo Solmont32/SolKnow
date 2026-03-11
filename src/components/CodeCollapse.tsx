@@ -48,8 +48,12 @@ export default function CodeCollapse({
           outline: 'none',
           transition: 'background-color 0.2s ease',
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--ifm-color-emphasis-200)')}
-        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--ifm-color-emphasis-100)')}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.backgroundColor = 'var(--ifm-color-emphasis-200)')
+        }
+        onMouseLeave={(e) =>
+          (e.currentTarget.style.backgroundColor = 'var(--ifm-color-emphasis-100)')
+        }
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{ color: 'var(--ifm-color-primary)', display: 'flex' }}>
@@ -57,7 +61,13 @@ export default function CodeCollapse({
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Terminal size={16} className="solknow-blue" />
-            <span style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--ifm-color-emphasis-900)' }}>
+            <span
+              style={{
+                fontWeight: 600,
+                fontSize: '0.9rem',
+                color: 'var(--ifm-color-emphasis-900)',
+              }}
+            >
               {title}
             </span>
           </div>

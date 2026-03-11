@@ -12,24 +12,31 @@ KMP (Knuth-Morris-Pratt) 算法是字符串处理的基石。它的核心在于�
 ## 1. 前缀函数 (Prefix Function)
 
 ### 1.1 形式化定义
+
 对于长度为 $n$ 的字符串 $s$，其前缀函数 $\pi[i]$ 定义为子串 $s[0 \dots i]$ 的最长真前缀的长度，且该真前缀同时也是 $s[0 \dots i]$ 的真后缀。
 
 数学表达式：
+
 $$
 \pi[i] = \max \{k : 0 < k \le i \text{ 且 } s[0 \dots k-1] = s[i-k+1 \dots i]\}
 $$
+
 规定 $\pi[0] = 0$。
 
 ### 1.2 关键性质与证明
 
 **引理 1 (单调性限制)**：对于任意 $i > 0$，有 $\pi[i] \le \pi[i-1] + 1$。
+
 - **证明**：设 $\pi[i] = k$。这意味着 $s[0 \dots k-1] = s[i-k+1 \dots i]$。若 $k > 1$，则去掉最后一个字符后有 $s[0 \dots k-2] = s[i-k+1 \dots i-1]$，这表明 $s[0 \dots k-2]$ 是 $s[0 \dots i-1]$ 的一个相等真前后缀。根据定义 $\pi[i-1] \ge k-1$，即 $k \le \pi[i-1] + 1$。
 
 **引理 2 (前后缀等价链)**：若 $k$ 是 $s[0 \dots i]$ 的一个相等真前后缀的长度，则比 $k$ 小的下一个最长相等真前后缀长度必为 $\pi[k-1]$。
+
 - **推论**：通过不断迭代 $j = \pi[j-1]$，可以遍历 $s[0 \dots i]$ 的所有相等真前后缀长度。
 
 ### 1.3 周期性引理 (Periodicity Lemma)
+
 **定理**：字符串 $s$ 具有长度为 $T$ 的周期，当且仅当 $T$ 整除 $n$ 且 $n-T = \pi[n-1]$。
+
 - **推广**：最小周期长度为 $n - \pi[n-1]$。若 $(n - \pi[n-1])$ 能整除 $n$，则该串由 $n / (n - \pi[n-1])$ 个循环节组成；否则，最小循环元长度仍为 $n - \pi[n-1]$，但末尾不完整。
 
 ## 2. 复杂度证明：势能分析法
@@ -37,6 +44,7 @@ $$
 **定理**：前缀函数的计算时间复杂度为 $O(n)$。
 
 **证明**：
+
 1. 定义势函数 $\Phi_i = \pi[i]$。显然 $\Phi_i \ge 0$ 且 $\Phi_0 = 0$。
 2. 考察第 $i$ 次迭代的操作：
    - `j++` 操作（最多一次）使势能增加 1：$\Delta \Phi_{inc} \le 1$。
@@ -69,7 +77,9 @@ vector<int> prefix_function(const string& s) {
 ## 4. KMP 自动机 (DFA Perspective)
 
 ### 4.1 状态转移函数 $\delta$
+
 状态 $j$ 表示当前已匹配的模式串前缀长度。当接收字符 $c$ 时：
+
 $$
 \delta(j, c) = \begin{cases} j+1 & \text{if } c = P[j] \\ \delta(\pi[j-1], c) & \text{if } c \neq P[j] \text{ and } j > 0 \\ 0 & \text{otherwise} \end{cases}
 $$
@@ -97,6 +107,7 @@ void compute_automaton(string p, int trans[][26]) {
 ## 5. 经典应用与例题
 
 ### 例题 1：模式串出现次数
+
 > 统计模式串 $P$ 在文本串 $T$ 中出现的总次数。
 
 <details>
@@ -113,15 +124,18 @@ int count_occurrences(string t, string p) {
     return count;
 }
 ```
+
 </details>
 
 ### 例题 2：[Codeforces 126B] Password
+
 > 给定字符串 $S$，求最长的子串 $T$，使得 $T$ 既是 $S$ 的前缀，又是 $S$ 的后缀，且在 $S$ 的中间也出现过。
 
 <details>
 <summary>Check Solution</summary>
 
 **思路**：
+
 1. 候选长度 $k$ 必须满足 $k = \pi[n-1], \pi[\pi[n-1]-1] \dots$。
 2. 检查 $k$ 是否在 $\pi[1 \dots n-2]$ 中出现过。记录 $max\_pi = \max_{i=1}^{n-2} \pi[i]$。
 3. 最大满足 $k \le max\_pi$ 的 $k$ 即为答案。
@@ -138,15 +152,18 @@ string solve_password(string s) {
     return curr == 0 ? "Just a legend" : s.substr(0, curr);
 }
 ```
+
 </details>
 
 ### 进阶思考：还原前缀函数
+
 > 给定一个数组 $\pi[0 \dots n-1]$，判断是否存在一个仅含小写字母的字符串 $S$ 满足该数组为其前缀函数。若存在，构造字典序最小的 $S$。
 
 <details>
 <summary>Check Analysis</summary>
 
 **核心逻辑**：
+
 1. 检查合法性：$\pi[0]=0$ 且 $\pi[i] \le \pi[i-1]+1$。
 2. 构造 $S[i]$：
    - 若 $\pi[i] > 0$，则 $S[i] = S[\pi[i]-1]$。
@@ -174,11 +191,13 @@ string reconstruct(vector<int> pi) {
     return s;
 }
 ```
+
 </details>
 
 ---
 
 ## 🎯 练习题清单
+
 1. [Luogu P3375] KMP 模板题。
 2. [POJ 2406] Power Strings：最小循环节应用。
 3. [HDU 3336] Count the string：前缀计数 DP。

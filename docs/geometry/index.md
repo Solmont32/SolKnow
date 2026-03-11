@@ -19,6 +19,7 @@ import { Trophy, Waypoints, Compass, Target, Circle, MoveRight, Sigma, Activity 
 </KnowledgeCard>
 
 ### 1.1 符号函数与比较算子
+
 通过引入 $\epsilon$ ($10^{-9} \sim 10^{-10}$)，我们将连续实数集 $\mathbb{R}$ 映射到离散拓扑集合 $\{-1, 0, 1\}$。
 
 ```cpp
@@ -39,6 +40,7 @@ inline int dcmp(DB x, DB y) {
 ```
 
 ### 1.2 精度自适应建议
+
 对于坐标范围在 $10^9$ 且涉及多次乘法的题目，`double` 可能不足以支撑，建议使用 `long double` 或在可能的情况下使用**全整数运算**（去掉除法和开根号）。
 
 ---
@@ -46,6 +48,7 @@ inline int dcmp(DB x, DB y) {
 ## 2. 几何原语代数建模 (Algebraic Modeling)
 
 ### 2.1 向量空间与基本算子
+
 在 $\mathbb{R}^2$ 空间中，点与向量共用相同的代数结构。
 
 ```cpp
@@ -63,10 +66,10 @@ typedef Point Vector;
 <KnowledgeCard type="theorem" title="核心算子性质">
 
 1.  **点积 (Dot Product)**: $\vec{a} \cdot \vec{b} = |\vec{a}||\vec{b}|\cos\theta$。
-    -   判定夹角：$>0$ 为锐角，$=0$ 垂直，$<0$ 为钝角。
+    - 判定夹角：$>0$ 为锐角，$=0$ 垂直，$<0$ 为钝角。
 2.  **叉积 (Cross Product)**: $\vec{a} \times \vec{b} = |\vec{a}||\vec{b}|\sin\theta$（二维中为标量）。
-    -   **几何意义**：以 $\vec{a}, \vec{b}$ 为邻边的平行四边形的**有向面积**。
-    -   **右手定则**：$\vec{a} \times \vec{b} > 0$ 表示 $\vec{b}$ 在 $\vec{a}$ 的逆时针方向。
+    - **几何意义**：以 $\vec{a}, \vec{b}$ 为邻边的平行四边形的**有向面积**。
+    - **右手定则**：$\vec{a} \times \vec{b} > 0$ 表示 $\vec{b}$ 在 $\vec{a}$ 的逆时针方向。
 
 </KnowledgeCard>
 
@@ -79,10 +82,11 @@ typedef Point Vector;
 <KnowledgeCard type="algorithm" title="线段相交判定">
 
 线段 $L_1(A, B)$ 与 $L_2(C, D)$ 相交（非规范相交含端点）的充要条件是：
+
 1.  **快速排斥实验**：两个线段的包围盒（Bounding Box）相交。
 2.  **跨立实验**：
-    -   $( \vec{AB} \times \vec{AC} ) \cdot ( \vec{AB} \times \vec{AD} ) \le 0$
-    -   $( \vec{CD} \times \vec{CA} ) \cdot ( \vec{CD} \times \vec{CB} ) \le 0$
+    - $( \vec{AB} \times \vec{AC} ) \cdot ( \vec{AB} \times \vec{AD} ) \le 0$
+    - $( \vec{CD} \times \vec{CA} ) \cdot ( \vec{CD} \times \vec{CB} ) \le 0$
 
 **证明简述**：
 叉积的符号代表了点相对于向量的左右位置。若 $C, D$ 在直线 $AB$ 的两侧，则 $\vec{AB} \times \vec{AC}$ 与 $\vec{AB} \times \vec{AD}$ 符号相反（或至少一个为 0），乘积必 $\le 0$。
@@ -100,7 +104,7 @@ bool segmentIntersection(Point a, Point b, Point c, Point d) {
     // 快速排斥 (可选优化)
     if (max(a.x, b.x) < min(c.x, d.x) || max(c.x, d.x) < min(a.x, b.x) ||
         max(a.y, b.y) < min(c.y, d.y) || max(c.y, d.y) < min(a.y, b.y)) return false;
-    
+
     DB c1 = cross(b - a, c - a), c2 = cross(b - a, d - a);
     DB c3 = cross(d - c, a - c), c4 = cross(d - c, b - c);
     return sign(c1) * sign(c2) <= 0 && sign(c3) * sign(c4) <= 0;
@@ -126,6 +130,7 @@ bool segmentIntersection(Point a, Point b, Point c, Point d) {
 <summary>例题 1：点到线段的距离 (Case Analysis)</summary>
 
 **逻辑分叉**：
+
 1.  若 $\vec{AB} \cdot \vec{AP} < 0$，垂足落在 $A$ 点外侧，最短距离为 $|AP|$。
 2.  若 $\vec{BA} \cdot \vec{BP} < 0$，垂足落在 $B$ 点外侧，最短距离为 $|BP|$。
 3.  否则，最短距离为点到直线的垂直距离 $\frac{|\vec{AB} \times \vec{AP}|}{|\vec{AB}|}$。
@@ -139,6 +144,7 @@ DB distToSegment(Point p, Point a, Point b) {
     return fabs(cross(v1, v2)) / length(v1);
 }
 ```
+
 </details>
 
 <details>
@@ -162,6 +168,7 @@ bool isPointInPolygon(Point p, const vector<Point>& poly) {
     return in;
 }
 ```
+
 </details>
 
 <KnowledgeCard type="tip" title="习题推荐">

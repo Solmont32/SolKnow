@@ -844,6 +844,7 @@ $$ B(p, q) = \int_0^1 p(x)q(x) dx. $$
 <summary>点击查看解析与答案</summary>
 
 计算度量矩阵 $A = (a_{ij})$：
+
 - $a_{11} = B(1, 1) = \int_0^1 1 dx = 1$
 - $a_{12} = B(1, x) = \int_0^1 x dx = 1/2$
 - $a_{21} = B(x, 1) = 1/2$
@@ -851,6 +852,7 @@ $$ B(p, q) = \int_0^1 p(x)q(x) dx. $$
 
 故度量矩阵为：
 $$ A = \begin{pmatrix} 1 & 1/2 \\ 1/2 & 1/3 \end{pmatrix}. $$
+
 </details>
 
 ### 练习 H2：反对称双线性型的秩
@@ -866,6 +868,7 @@ $$ A = \begin{pmatrix} 1 & 1/2 \\ 1/2 & 1/3 \end{pmatrix}. $$
 $$ \operatorname{diag}\left( \begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix}, \dots, \begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix}, 0, \dots, 0 \right). $$
 每一个 $\begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix}$ 块贡献 2 个单位的秩，其余部分为 0。
 故总秩必为偶数。
+
 </details>
 
 ### 练习 H3：正定二次型的判别
@@ -879,9 +882,9 @@ $$ \operatorname{diag}\left( \begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix}, \dot
    对任意 $x \neq 0$，$x^T(A+B)x = x^TAx + x^TBx$。
    由于 $A, B$ 正定，故 $x^TAx > 0$ 且 $x^TBx > 0$，所以 $x^T(A+B)x > 0$。
 2. **$AB$ 不一定正定**：
-   甚至 $AB$ 可能不是对称矩阵。只有当 $AB=BA$ 时，$AB$ 才是对称的且正定。
-   反例：$A = \begin{pmatrix} 1 & 0.5 \\ 0.5 & 1 \end{pmatrix}, B = \begin{pmatrix} 1 & 0 \\ 0 & 2 \end{pmatrix}$。
-   $AB = \begin{pmatrix} 1 & 1 \\ 0.5 & 2 \end{pmatrix}$，不对称，故不谈论其（矩阵意义上的）正定性。
+甚至 $AB$ 可能不是对称矩阵。只有当 $AB=BA$ 时，$AB$ 才是对称的且正定。
+反例：$A = \begin{pmatrix} 1 & 0.5 \\ 0.5 & 1 \end{pmatrix}, B = \begin{pmatrix} 1 & 0 \\ 0 & 2 \end{pmatrix}$。
+$AB = \begin{pmatrix} 1 & 1 \\ 0.5 & 2 \end{pmatrix}$，不对称，故不谈论其（矩阵意义上的）正定性。
 </details>
 
 ### 练习 H4：双线性型的退化性
@@ -895,4 +898,5 @@ $B$ 非退化定义为：若 $B(x, y) = 0$ 对所有 $y$ 成立，则 $x=0$。
 即 $x^T A y = 0, \forall y \Rightarrow x^T A = 0$。
 这等价于齐次线性方程组 $A^T x = 0$ 只有零解。
 根据克拉默法则，这等价于 $\det(A^T) \neq 0$，即 $\det(A) \neq 0$。
+
 </details>

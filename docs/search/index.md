@@ -21,9 +21,9 @@ import { Search, Zap, Target, Thermometer, Trophy, Swords, Layers } from 'lucide
 
 1. 理解状态空间建模与搜索树复杂度控制。
 2. 掌握三种基本剪枝：可行性、最优性、搜索顺序。
-3. 学习 A* 的估价函数 $h(n)$ 设计原则与最优性证明。
+3. 学习 A\* 的估价函数 $h(n)$ 设计原则与最优性证明。
 4. 掌握博弈搜索中的对抗决策逻辑。
-5. 熟练运用迭代加深与 IDA* 进行时空权衡。
+5. 熟练运用迭代加深与 IDA\* 进行时空权衡。
 
 ---
 
@@ -40,4 +40,4 @@ import { Search, Zap, Target, Thermometer, Trophy, Swords, Layers } from 'lucide
 
 ---
 
-*“搜索的本质是在庞大的解空间中，通过智慧的约束找到那道唯一的解。”*
+_“搜索的本质是在庞大的解空间中，通过智慧的约束找到那道唯一的解。”_

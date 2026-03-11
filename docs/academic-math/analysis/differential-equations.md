@@ -19,6 +19,7 @@ import { motion } from 'framer-motion';
 在求解微分方程之前，首要问题是：解是否存在？是否唯一？
 
 ### 1. Picard 存在唯一性定理
+
 对于初值问题 (IVP): $\frac{dy}{dx} = f(x, y), y(x_0) = y_0$。
 
 <KnowledgeCard type="info" title="Picard-Lindelöf 定理">
@@ -28,6 +29,7 @@ $$|f(x, y_1) - f(x, y_2)| \le L |y_1 - y_2|$$
 </KnowledgeCard>
 
 ### 2. Gronwall 不等式 (估计的利器)
+
 若 $u(t) \le c + \int_a^t \beta(s)u(s)ds$，其中 $c \ge 0, \beta(s) \ge 0$，则：
 $$u(t) \le c \exp\left(\int_a^t \beta(s)ds\right)$$
 这是证明解的唯一性、对初值的连续依赖性以及稳定性分析的核心工具。
@@ -37,15 +39,18 @@ $$u(t) \le c \exp\left(\int_a^t \beta(s)ds\right)$$
 ## <Zap className="inline-block mr-2 mb-1 text-amber-500" /> 二、 一阶方程的初等积分法
 
 ### 1. 变量分离方程
+
 形式：$\frac{dy}{dx} = f(x)g(y)$。
 解法：$\int \frac{1}{g(y)} dy = \int f(x) dx + C$。
 
 ### 2. 一阶线性方程
+
 形式：$\frac{dy}{dx} + P(x)y = Q(x)$。
 **通解公式（常数变易法结果）：**
 $$y(x) = e^{-\int P(x)dx} \left[ \int Q(x) e^{\int P(x)dx} dx + C \right]$$
 
 ### 3. 伯努利 (Bernoulli) 方程
+
 形式：$\frac{dy}{dx} + P(x)y = Q(x)y^n \quad (n \neq 0, 1)$。
 变换：令 $z = y^{1-n}$，化为关于 $z$ 的线性方程：$\frac{dz}{dx} + (1-n)P(x)z = (1-n)Q(x)$。
 
@@ -54,12 +59,16 @@ $$y(x) = e^{-\int P(x)dx} \left[ \int Q(x) e^{\int P(x)dx} dx + C \right]$$
 ## <Layers className="inline-block mr-2 mb-1 text-purple-500" /> 三、 高阶线性微分方程
 
 ### 1. 线性相关性与 Wronski 行列式
+
 对于 $n$ 阶齐次线性方程 $y^{(n)} + a_{n-1}(x)y^{(n-1)} + \dots + a_0(x)y = 0$：
+
 - 若 $n$ 个解 $\{y_1, \dots, y_n\}$ 的 **Wronski 行列式** $W(x) \neq 0$，则它们构成**基础解系**。
 - **Liouville 公式：** $W(x) = W(x_0) \exp\left( -\int_{x_0}^x a_{n-1}(t) dt \right)$。
 
 ### 2. 常系数线性齐次方程
+
 特征方程：$P(\lambda) = \lambda^n + a_{n-1}\lambda^{n-1} + \dots + a_0 = 0$。
+
 - **单根 $\lambda$：** 对应解 $e^{\lambda x}$。
 - **$k$ 重根 $\lambda$：** 对应解 $\{e^{\lambda x}, x e^{\lambda x}, \dots, x^{k-1} e^{\lambda x}\}$。
 - **共轭复根 $\alpha \pm i\beta$：** 对应解 $\{e^{\alpha x}\cos\beta x, e^{\alpha x}\sin\beta x\}$。
@@ -69,12 +78,16 @@ $$y(x) = e^{-\int P(x)dx} \left[ \int Q(x) e^{\int P(x)dx} dx + C \right]$$
 ## <ShieldCheck className="inline-block mr-2 mb-1 text-green-500" /> 四、 稳定性理论 (Stability Theory)
 
 ### 1. 李雅普诺夫 (Lyapunov) 稳定性定义
+
 考虑动力系统 $\dot{\mathbf{x}} = \mathbf{f}(\mathbf{x})$，平衡点 $\mathbf{x}^* = \mathbf{0}$。
+
 - **稳定 (Stable)：** 微扰后轨道保持在邻域内。
 - **渐近稳定 (Asymptotically Stable)：** 微扰后轨道最终收敛至平衡点。
 
 ### 2. 李雅普诺夫直接法
+
 若存在正定函数 $V(\mathbf{x})$：
+
 - $\dot{V}(\mathbf{x}) \le 0 \implies$ **稳定**。
 - $\dot{V}(\mathbf{x}) < 0 \quad (\mathbf{x} \ne 0) \implies$ **渐近稳定**。
 
@@ -85,9 +98,11 @@ $$y(x) = e^{-\int P(x)dx} \left[ \int Q(x) e^{\int P(x)dx} dx + C \right]$$
 一阶偏微分方程 (PDE) 的通式为 $F(x, y, u, u_x, u_y) = 0$。
 
 ### 1. 拟线性方程 (Quasi-linear PDE)
+
 形式：$P(x, y, u)u_x + Q(x, y, u)u_y = R(x, y, u)$。
 
 ### 2. 特征线法 (Method of Characteristics)
+
 其核心思想是将 PDE 转化为一组 **常微分方程组 (Characteristic ODEs)**：
 $$ \frac{dx}{P} = \frac{dy}{Q} = \frac{du}{R} $$
 通过解这组 ODE，可以找到解曲面上的曲线。若已知初始条件 $u(\Gamma) = f(\Gamma)$，则可确定唯一解。
@@ -97,15 +112,18 @@ $$ \frac{dx}{P} = \frac{dy}{Q} = \frac{du}{R} $$
 ## <Waves className="inline-block mr-2 mb-1 text-blue-600" /> 六、 二阶线性偏微分方程
 
 二阶线性 PDE 的一般形式为：
-$$ A u_{xx} + 2B u_{xy} + C u_{yy} + D u_x + E u_y + Fu = G $$
+$$ A u*{xx} + 2B u*{xy} + C u\_{yy} + D u_x + E u_y + Fu = G $$
 
 ### 1. 分类 (Classification)
+
 根据判别式 $\Delta = B^2 - AC$：
+
 - **$\Delta > 0$：双曲型 (Hyperbolic)**。典型代表：**波动方程** $u_{tt} - a^2 u_{xx} = 0$。
 - **$\Delta = 0$：抛物型 (Parabolic)**。典型代表：**热传导方程** $u_t - a^2 u_{xx} = 0$。
 - **$\Delta < 0$：椭圆型 (Elliptic)**。典型代表：**拉普拉斯方程** $\Delta u = 0$。
 
 ### 2. 标准型与叠加原理
+
 由于线性性质，若 $u_1, u_2$ 是齐次方程的解，则 $c_1 u_1 + c_2 u_2$ 亦为解。
 
 ---
@@ -113,13 +131,16 @@ $$ A u_{xx} + 2B u_{xy} + C u_{yy} + D u_x + E u_y + Fu = G $$
 ## <Target className="inline-block mr-2 mb-1 text-orange-500" /> 七、 分离变量法与 Sturm-Liouville 理论
 
 ### 1. 分离变量法 (Separation of Variables)
+
 对于线性齐次边界值问题，设 $u(x, t) = X(x)T(t)$，代入 PDE 将其分解为两个独立的 ODE。
 例如对热传导方程 $u_t = k u_{xx}$，分解得：
 $$ \frac{T'}{kT} = \frac{X''}{X} = -\lambda $$
 
 ### 2. Sturm-Liouville (S-L) 理论
+
 在分离变量法中，空间部分通常归结为 **Sturm-Liouville 边值问题**：
 $$ \frac{d}{dx} \left[ p(x) \frac{dy}{dx} \right] + [q(x) + \lambda w(x)]y = 0 $$
+
 - **性质：** 特征值 $\lambda$ 是一组递增的实数列；不同特征值对应的特征函数在加权空间 $L_w^2$ 内**正交**。
 - **意义：** 保证了任何“良好”的函数都可以按特征函数系进行广义傅里叶展开。
 
@@ -130,11 +151,13 @@ $$ \frac{d}{dx} \left[ p(x) \frac{dy}{dx} \right] + [q(x) + \lambda w(x)]y = 0 $
 特殊函数通常作为特定坐标系下偏微分方程分离变量后的特征函数出现。
 
 ### 1. 勒让德多项式 (Legendre Polynomials) $P_n(x)$
+
 源自球坐标系下的拉普拉斯方程。满足：
 $$ (1-x^2)y'' - 2xy' + n(n+1)y = 0 $$
 其在 $[-1, 1]$ 上正交。
 
 ### 2. 贝塞尔函数 (Bessel Functions) $J_n(x)$
+
 源自柱坐标系下的波动或热传导方程。满足：
 $$ x^2 y'' + xy' + (x^2 - n^2)y = 0 $$
 

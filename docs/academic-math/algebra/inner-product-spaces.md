@@ -61,6 +61,7 @@ $$
    - $u_3 = x^2 - \frac{1}{3}$。
 
 得到著名的 **Legendre 多项式** 前三项（未单位化）。
+
 </details>
 
 ## 3. 正交变换与 Unitary 变换
@@ -69,6 +70,7 @@ $$
 - **Unitary 变换**（复）：保持内积不变，其矩阵满足 $A^*A = I$。
 
 性质：
+
 - 保持向量长度不变。
 - 特征值的模均为 1。
 - 不同特征值的特征向量必正交。
@@ -110,12 +112,15 @@ $$
 
 在 $\mathbb{R}^3$ 中取向量 $u = (\sqrt{a}, \sqrt{b}, \sqrt{c})$ 和 $v = (\frac{1}{\sqrt{a}}, \frac{1}{\sqrt{b}}, \frac{1}{\sqrt{c}})$。
 由 Cauchy-Schwarz 不等式：
+
 $$
 \langle u, v \rangle^2 \le \|u\|^2 \|v\|^2
 $$
+
 其中 $\langle u, v \rangle = \sqrt{a}\cdot\frac{1}{\sqrt{a}} + \dots = 1+1+1=3$。
 $\|u\|^2 = a+b+c$，$\|v\|^2 = \frac{1}{a} + \frac{1}{b} + \frac{1}{c}$。
 故 $3^2 \le (a+b+c)(\frac{1}{a} + \frac{1}{b} + \frac{1}{c})$，即得证。
+
 </details>
 
 ### 练习 2：正交矩阵判定
@@ -126,10 +131,13 @@ $\|u\|^2 = a+b+c$，$\|v\|^2 = \frac{1}{a} + \frac{1}{b} + \frac{1}{c}$。
 <summary>点击查看解答</summary>
 
 计算 $A^TA$：
+
 $$
 \begin{pmatrix} \cos\theta & \sin\theta \\ -\sin\theta & \cos\theta \end{pmatrix} \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix} = \begin{pmatrix} \cos^2\theta+\sin^2\theta & 0 \\ 0 & \sin^2\theta+\cos^2\theta \end{pmatrix} = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}
 $$
+
 故 $A$ 是正交矩阵。它在几何上表示平面上的旋转。
+
 </details>
 
 ### 练习 3：Hermitian 矩阵性质
@@ -143,6 +151,7 @@ $$
 则 $\langle Ax, x \rangle = \langle \lambda x, x \rangle = \lambda \langle x, x \rangle = \lambda \|x\|^2$。
 又因为 $\langle Ax, x \rangle = \langle x, A^*x \rangle = \langle x, Ax \rangle = \langle x, \lambda x \rangle = \bar{\lambda} \langle x, x \rangle = \bar{\lambda} \|x\|^2$。
 由于 $\|x\|^2 \neq 0$，故 $\lambda = \bar{\lambda}$，说明 $\lambda$ 是实数。
+
 </details>
 
 前往练习库：[/docs/exercises/math/algebra](/docs/exercises/math/algebra)

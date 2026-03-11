@@ -16,6 +16,7 @@ Codeforces 是全球最具影响力的算法竞赛平台。其题目风格以**�
 ## 🏗️ 核心建模体系
 
 ### 1. 构造性问题 (Constructive Algorithms)
+
 CF 的标志性题型。通常不需要复杂算法，但需要发现隐藏的不变量或对称性。
 
 - **核心思路**：
@@ -28,6 +29,7 @@ CF 的标志性题型。通常不需要复杂算法，但需要发现隐藏的�
 </KnowledgeCard>
 
 ### 2. 贪心与反悔贪心 (Greedy & Retrospective)
+
 CF 偏爱需要严谨证明的贪心，以及利用优先队列实现的“反悔”机制。
 
 - **经典模型**：
@@ -39,16 +41,22 @@ CF 偏爱需要严谨证明的贪心，以及利用优先队列实现的“反�
 ## 💡 思维 Trick 集锦
 
 ### 1. 逆向思维 (Reverse Thinking)
+
 当正向操作难以维护时，尝试**从后往前**考虑。
+
 - **应用场景**：删点连通性（转化为加点）、逆向动态规划、博弈论状态推导。
 
 ### 2. 贡献贡献法 (Contribution to Sum)
+
 不直接计算每个集合/序列的价值，而是计算**每个元素对总价值的贡献次数**。
+
 - **数学表达**：$\sum_{S \in \mathcal{F}} f(S) = \sum_{x \in X} \text{value}(x) \times \text{count}(x \in S)$。
 - **常见应用**：子序列求和、树上路径求和、期望线性性。
 
 ### 3. 根号分治 (Square Root Decomposition)
+
 根据数据规模 $B = \sqrt{N}$ 将问题分为两类处理。
+
 - **典型特征**：出现 $a_i \times b_i \le N$ 或对出现次数进行分类。
 
 ---
@@ -79,6 +87,7 @@ int main() {
     return 0;
 }
 ```
+
 </details>
 
 <details>
@@ -117,6 +126,7 @@ void dfs(int u, int p, bool keep) {
     if (!keep) update(u, p, -1);
 }
 ```
+
 </details>
 
 ---
@@ -124,12 +134,14 @@ void dfs(int u, int p, bool keep) {
 ## 📝 典型例题建模实战
 
 ### 例题 1：构造不变量
+
 **题目描述**：给定一个长度为 $n$ 的数组 $a$，每次可以选择两个下标 $i, j$，令 $a_i = a_i + 1, a_j = a_j - 1$。问最少操作多少次使得数组中所有数相等？
 
 <details>
 <summary>Check Solution</summary>
 
 **建模分析**：
+
 1. **不变量**：操作前后数组的总和 $S = \sum a_i$ 不变。
 2. **目标**：若 $S$ 能被 $n$ 整除，最终每个数应为 $S/n$。
 3. **策略**：所有大于 $S/n$ 的数必须减少，减少的总量即为操作次数。
@@ -147,15 +159,18 @@ void solve() {
     cout << ans << endl;
 }
 ```
+
 </details>
 
 ### 例题 2：贡献法应用
+
 **题目描述**：给定 $n$ 个点，求所有可能的非空子集的极差（最大值减最小值）之和。
 
 <details>
 <summary>Check Solution</summary>
 
 **建模分析**：
+
 1. **转化**：$\sum (\max(S) - \min(S)) = \sum \max(S) - \sum \min(S)$。
 2. **排序**：先将数组排序。
 3. **计算贡献**：
@@ -180,6 +195,7 @@ void solve() {
     cout << ans << endl;
 }
 ```
+
 </details>
 
 ---

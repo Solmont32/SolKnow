@@ -75,7 +75,10 @@ export default function EpsilonDeltaVisualizer() {
         </div>
       </div>
 
-      <div className="visualizer-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '2rem' }}>
+      <div
+        className="visualizer-grid"
+        style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '2rem' }}
+      >
         {/* 绘图区 */}
         <div
           style={{
@@ -206,7 +209,9 @@ export default function EpsilonDeltaVisualizer() {
               <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#3b82f6' }}>
                 误差阈值 ε (Epsilon)
               </span>
-              <span style={{ fontFamily: 'monospace', fontWeight: 800, color: '#3b82f6' }}>{epsilon.toFixed(3)}</span>
+              <span style={{ fontFamily: 'monospace', fontWeight: 800, color: '#3b82f6' }}>
+                {epsilon.toFixed(3)}
+              </span>
             </div>
             <input
               type="range"
@@ -236,7 +241,9 @@ export default function EpsilonDeltaVisualizer() {
               <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#8b5cf6' }}>
                 控制精度 δ (Delta)
               </span>
-              <span style={{ fontFamily: 'monospace', fontWeight: 800, color: '#8b5cf6' }}>{delta.toFixed(3)}</span>
+              <span style={{ fontFamily: 'monospace', fontWeight: 800, color: '#8b5cf6' }}>
+                {delta.toFixed(3)}
+              </span>
             </div>
             <div style={{ fontSize: '0.8rem', opacity: 0.8, lineHeight: 1.5 }}>
               当误差范围为 {epsilon.toFixed(2)} 时，

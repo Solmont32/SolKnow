@@ -23,9 +23,11 @@ $$F(x) = \int_{-\infty}^x f(t) \, dt$$
 ## 3. 数字特征 (Numerical Characteristics)
 
 ### 数学期望 (Expectation)
+
 $$E(X) = \int_{-\infty}^\infty x f(x) \, dx$$
 
 ### 方差 (Variance)
+
 $$Var(X) = \int_{-\infty}^\infty (x - E(X))^2 f(x) \, dx = E(X^2) - [E(X)]^2$$
 
 ## 4. 经典例题
@@ -43,6 +45,7 @@ $$E(X) = \frac{1}{\sqrt{2\pi}} \int_{-\infty}^\infty (\sigma t + \mu) e^{-t^2/2}
 $$E(X) = \frac{\sigma}{\sqrt{2\pi}} \int_{-\infty}^\infty t e^{-t^2/2} \, dt + \frac{\mu}{\sqrt{2\pi}} \int_{-\infty}^\infty e^{-t^2/2} \, dt$$
 由于被积函数 $t e^{-t^2/2}$ 是奇函数，其积分为 $0$；第二个积分为标准的正态分布积分，结果为 $\sqrt{2\pi}$：
 $$E(X) = 0 + \frac{\mu}{\sqrt{2\pi}} \cdot \sqrt{2\pi} = \mu$$
+
 </details>
 
 :::info 例题 2
@@ -56,6 +59,7 @@ $$E(X) = 0 + \frac{\mu}{\sqrt{2\pi}} \cdot \sqrt{2\pi} = \mu$$
 指数分布的 CDF 为 $F(x) = 1 - e^{-\lambda x}$ ($x \ge 0$)。
 $$1 - e^{-\lambda m} = 0.5 \implies e^{-\lambda m} = 0.5 \implies -\lambda m = \ln(0.5)$$
 $$m = \frac{\ln 2}{\lambda}$$
+
 </details>
 
 ---

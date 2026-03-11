@@ -17,6 +17,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 给定连通无向图 $G = (V, E)$，边权函数 $w: E \to \mathbb{R}$。
 
 ### 1. 切分定理 (Cut Property)
+
 **定义**：对于 $V$ 的任意非空真子集 $S$，称 $C = (S, V \setminus S)$ 为 $G$ 的一个**切分** (Cut)。连接 $S$ 与 $V \setminus S$ 的边集称为该切分的**割集** (Cut-set)。
 **定理**：若边 $e$ 是某个割集中的最小权值边，则必然存在一棵包含 $e$ 的最小生成树。
 <KnowledgeCard title="切分定理证明 (交换法)" icon={<BookOpen size={20} />}>
@@ -26,9 +27,11 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </KnowledgeCard>
 
 ### 2. 回路定理 (Cycle Property)
+
 **定理**：对于 $G$ 中的任意回路 $C$，若 $e$ 是 $C$ 中权值最大的边，则 $e$ 必然不包含在任何一棵 MST 中（若权值不唯一，则存在一棵不含它的 MST）。
 
 ### 3. 性质推论
+
 - **唯一性**：若图中所有边权均互不相同，则其 MST 是唯一的。
 - **瓶颈性**：最小生成树一定是**瓶颈生成树**（即最大边权最小的生成树）。反之不一定成立。
 
@@ -36,13 +39,13 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 ## 二、 <Workflow className="inline-block mr-2 mb-1 text-purple-500" /> 算法矩阵与复杂度分析
 
-<ComplexityAnalysis 
-  data={[
-    { algorithm: "Kruskal (Union-Find)", complexity: "O(E log E)", space: "O(V + E)", note: "适合稀疏图，边排序为主导" },
-    { algorithm: "Prim (Binary Heap)", complexity: "O(E log V)", space: "O(V + E)", note: "适合稠密图，逻辑类似 Dijkstra" },
-    { algorithm: "Prim (Fibonacci Heap)", complexity: "O(E + V log V)", space: "O(V)", note: "理论最优，实现复杂" },
-    { algorithm: "Boruvka", complexity: "O(E log V)", space: "O(V + E)", note: "适合并行化计算，每轮减少一半连通块" }
-  ]}
+<ComplexityAnalysis
+data={[
+{ algorithm: "Kruskal (Union-Find)", complexity: "O(E log E)", space: "O(V + E)", note: "适合稀疏图，边排序为主导" },
+{ algorithm: "Prim (Binary Heap)", complexity: "O(E log V)", space: "O(V + E)", note: "适合稠密图，逻辑类似 Dijkstra" },
+{ algorithm: "Prim (Fibonacci Heap)", complexity: "O(E + V log V)", space: "O(V)", note: "理论最优，实现复杂" },
+{ algorithm: "Boruvka", complexity: "O(E log V)", space: "O(V + E)", note: "适合并行化计算，每轮减少一半连通块" }
+]}
 />
 
 ---
@@ -50,6 +53,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## 三、 <Layers className="inline-block mr-2 mb-1 text-indigo-500" /> 进阶结构：Kruskal 重构树 (Ex-Tree)
 
 **构造算法**：
+
 1. 将边按权值从小到大排序。
 2. 遍历边 $(u, v, w)$，若 $u, v$ 不在同一连通块：
    - 新建节点 $P$，权值 $val[P] = w$。
@@ -57,10 +61,11 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
    - 将 $P$ 设为合并后连通块的新根。
 
 <KnowledgeCard title="重构树的核心性质" icon={<GitBranch size={20} />}>
+
 - **点数**：包含 $2n-1$ 个节点（$n$ 个原图叶子节点，$n-1$ 个权值节点）。
 - **堆性质**：若为最小生成树构造，则是一个大根堆。
 - **瓶颈路映射**：原图中 $u, v$ 两点间所有路径上**最大边权的最小值**，等于重构树中 $LCA(u, v)$ 的点权。
-</KnowledgeCard>
+  </KnowledgeCard>
 
 ---
 
@@ -115,12 +120,14 @@ pair<long long, bool> solve_mst(int n, vector<Edge>& edges) {
 ## 五、 <Target className="inline-block mr-2 mb-1 text-red-500" /> 精选练习与解析
 
 ### 练习 1：严格次小生成树
+
 给定无向图，求一棵总权值严格大于 MST 且权值最小的生成树。
 
 <details>
 <summary>Check Solution</summary>
 
 **算法流程**：
+
 1. **求 MST**：记总权值为 $W$。
 2. **倍增维护**：对 MST 维护倍增表，存储路径上的**最大边权 $M1$** 和**严格次大边权 $M2$**。
 3. **枚举替换**：遍历非树边 $(u, v, w)$：
@@ -132,6 +139,7 @@ pair<long long, bool> solve_mst(int n, vector<Edge>& edges) {
 </details>
 
 ### 练习 2：瓶颈生成树 (Bottleneck Spanning Tree)
+
 如何证明一棵 MST 必然是一棵瓶颈生成树？
 
 <details>
@@ -145,12 +153,14 @@ pair<long long, bool> solve_mst(int n, vector<Edge>& edges) {
 </details>
 
 ### 练习 3：生成树计数 (Matrix Tree Theorem)
+
 给定无向图，求其生成树的总数。
 
 <details>
 <summary>Check Solution</summary>
 
 **解析**：
+
 1. **构造拉普拉斯矩阵 $L$**：$L = D - A$，其中 $D$ 是度数矩阵，$A$ 是邻接矩阵。
 2. **定理内容**：该图的生成树个数等于 $L$ 的任意一个 $n-1$ 阶主余子式的行列式值。
 3. **计算**：利用高斯消元求行列式，复杂度 $O(n^3)$。

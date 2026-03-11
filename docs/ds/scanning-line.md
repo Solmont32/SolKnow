@@ -21,27 +21,32 @@ import { MoveRight, LayoutTemplate, BoxSelect, Maximize, Activity, Calculator } 
 扫描线处理的对象是几何对象的集合 $\mathcal{S} = \{O_1, O_2, \dots, O_n\}$。
 
 ### 1.1 事件点与切片
+
 - **Event (事件)**: 几何对象在扫描方向上的临界坐标（如矩形的左右边 $x_1, x_2$）。
 - **Slice (切片)**: 两个相邻事件点之间的区间。在该区间内，扫描方向正交的拓扑结构保持恒定。
 
 ### 1.2 积分算子
+
 设 $f(x)$ 为扫描线在坐标 $x$ 处的截面测度（如被覆盖的线段长度）。几何对象的测度（如面积）定义为：
-$$ \text{Measure} = \int_{x_{min}}^{x_{max}} f(x) dx = \sum_{i=1}^{m-1} f(x_i^+) \cdot (x_{i+1} - x_i) $$
-其中 $x_i, x_{i+1}$ 是相邻事件点。
+$$ \text{Measure} = \int*{x*{min}}^{x*{max}} f(x) dx = \sum*{i=1}^{m-1} f(x*i^+) \cdot (x*{i+1} - x*i) $$
+其中 $x_i, x*{i+1}$ 是相邻事件点。
 
 ---
 
 ## 2. 复杂度分析与数据完整性证明
 
 ### 2.1 复杂度证明
+
 **定理**：对于 $N$ 个矩形的面积并，扫描线算法的时间复杂度为 $O(N \log N)$。
 **证明**：
+
 1. **排序**: 事件点数量为 $2N$，排序代价 $O(N \log N)$。
 2. **离散化**: 纵坐标去重排序代价 $O(N \log N)$。
 3. **线段树操作**: 共 $2N$ 次 `update` 操作，每次 $O(\log N)$。
-总复杂度 $O(N \log N)$。空间复杂度主要取决于线段树和离散化数组，为 $O(N)$。
+   总复杂度 $O(N \log N)$。空间复杂度主要取决于线段树和离散化数组，为 $O(N)$。
 
 ### 2.2 数据完整性：标记永久化合法性
+
 **命题**：在矩形面积并中，不带 `push_down` 的线段树维护 `cnt` 是正确的。
 **证明**：
 矩形边界总是成对出现的入边 (+1) 和出边 (-1)。
@@ -54,6 +59,7 @@ $$ \text{Measure} = \int_{x_{min}}^{x_{max}} f(x) dx = \sum_{i=1}^{m-1} f(x_i^+)
 ## 4. 教材化例题与解析
 
 ### 例题 1：矩形面积并 (Atlantis)
+
 <details>
 <summary>Check Solution (C++ 实现)</summary>
 
@@ -65,9 +71,11 @@ void pushup(int u) {
 }
 // update 操作中仅修改 tr[u].cnt，随后调用 pushup
 ```
+
 </details>
 
 ### 例题 2：矩形周长并 (Picture)
+
 <details>
 <summary>Check Solution</summary>
 
@@ -80,6 +88,7 @@ struct Node {
 } tr[N << 3];
 // pushup 中：num[u] = num[ls] + num[rs] - (rc[ls] && lc[rs])
 ```
+
 </details>
 
 ---
@@ -91,11 +100,13 @@ struct Node {
 <summary>Check Solution</summary>
 
 **核心逻辑**：将每个点扩展为 $W \times H$ 的矩形，问题转化为求平面上一点被矩形覆盖的最大权值。使用扫描线维护区间最大值线段树。
+
 ```cpp
 // 事件点：点 x_i 对应区间 [x_i, x_i+W] 的入边和出边
 // 线段树：维护 y 轴区间 [y_i, y_i+H] 的增加权值 w_i
 // 答案：线段树全局最大值 tr[1].max
 ```
+
 </details>
 
 2. **[面积交 (k次覆盖)]** 维护被覆盖至少 2 次的区间长度。
@@ -103,6 +114,7 @@ struct Node {
 <summary>Check Solution</summary>
 
 **核心逻辑**：修改 `pushup`。
+
 - 若 `cnt >= 2`: `len2 = ys[r+1] - ys[l]`
 - 若 `cnt == 1`: `len2 = (l==r ? 0 : len1[ls] + len1[rs])`
 - 若 `cnt == 0`: `len2 = (l==r ? 0 : len2[ls] + len2[rs])`
@@ -113,6 +125,7 @@ struct Node {
 <summary>Check Solution</summary>
 
 **核心逻辑**：对 $z$ 轴进行扫描，切片变为二维矩形面积并问题。复杂度 $O(N^2 \log N)$ 或使用动态开点/持久化优化。
+
 </details>
 
 ---

@@ -48,7 +48,7 @@ $$U(P, f, \alpha) - L(P, f, \alpha) = \sum_{i=1}^n (M_i - m_i) \Delta \alpha_i <
 ### 2. 存在性定理
 
 - **定理 1 (连续性)**：若 $f \in \mathcal{C}[a, b]$ 且 $\alpha$ 单调增加，则 $f \in \mathcal{R}(\alpha)$。
-  - *证明简述*：利用 $f$ 在闭区间上的一致连续性，对任意 $\epsilon$，取 $\delta$ 使得 $\Delta x_i < \delta$ 时振幅 $\omega_i < \epsilon / (\alpha(b)-\alpha(a))$，则 $\sum \omega_i \Delta \alpha_i < \epsilon$。
+  - _证明简述_：利用 $f$ 在闭区间上的一致连续性，对任意 $\epsilon$，取 $\delta$ 使得 $\Delta x_i < \delta$ 时振幅 $\omega_i < \epsilon / (\alpha(b)-\alpha(a))$，则 $\sum \omega_i \Delta \alpha_i < \epsilon$。
 - **定理 2 (单调性)**：若 $f$ 单调且 $\alpha \in \mathcal{C}[a, b]$ 且单调，则 $f \in \mathcal{R}(\alpha)$。
 - **定理 3 (不可积判定)**：若 $f$ 与 $\alpha$ 在同一点 $c$ 处具有同侧不连续性，则 $f \notin \mathcal{R}(\alpha)$。
 
@@ -98,7 +98,9 @@ $$E[X] = \int_{-\infty}^{+\infty} x dF(x)$$
 ## 五、 深度例题解析
 
 ### 例题 1：多点跳跃的阶梯函数
+
 计算 $\int_0^3 x^2 d\lfloor x \rfloor$。
+
 <details>
 <summary>点击查看解析</summary>
 $\alpha(x) = \lfloor x \rfloor$ 在 $x=1, 2, 3$ 处具有跳跃。注意 $\lfloor x \rfloor$ 是右连续的。
@@ -109,7 +111,9 @@ $= 1^2 \cdot 1 + 2^2 \cdot 1 + 3^2 \cdot 1 = 14$。
 </details>
 
 ### 例题 2：复合测度计算
+
 计算 $\int_0^2 x d(x^2 + \lfloor x \rfloor)$。
+
 <details>
 <summary>点击查看解析</summary>
 利用线性性质：$\int x d(x^2) + \int x d\lfloor x \rfloor$。
@@ -134,4 +138,3 @@ $= 1^2 \cdot 1 + 2^2 \cdot 1 + 3^2 \cdot 1 = 14$。
 3. 提示：Lipschitz 条件蕴含 $\alpha$ 几乎处处可导且 $\alpha' \in L^\infty$。
 4. 提示：Cantor 函数在 $(0, 1)$ 上导数几乎处处为 0，但它是连续的且 $\alpha(0)=0, \alpha(1)=1$。利用分部积分：$\int x d\alpha = [x \alpha]_0^1 - \int_0^1 \alpha(x) dx$。由于 Cantor 函数关于 $(1/2, 1/2)$ 中心对称，$\int_0^1 \alpha(x) dx = 1/2$。故结果为 $1 - 1/2 = 1/2$。
 </details>
-

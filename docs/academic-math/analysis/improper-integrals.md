@@ -13,12 +13,14 @@ import { AreaChart, Activity, Percent, Crosshair, ChevronDownSquare } from 'luci
 ## 一、 基本定义与柯西准则
 
 ### 1. 柯西收敛准则 (Cauchy Criterion)
+
 <KnowledgeCard type="warning" title={<><Activity className="inline-block mr-2" /> 核心准则</>}>
 反常积分 $\int_a^{+\infty} f(x) dx$ 收敛的充要条件是：对任意 $\epsilon > 0$，存在 $A > a$，使得对于任意 $A_1, A_2 > A$，恒有：
 $$\left| \int_{A_1}^{A_2} f(x) dx \right| < \epsilon$$
 </KnowledgeCard>
 
 ### 2. 无穷限与瑕积分
+
 - **无穷限**：$\int_a^{+\infty} f(x) dx = \lim_{A \to +\infty} \int_a^A f(x) dx$。
 - **瑕积分**：若 $a$ 为瑕点，$\int_a^b f(x) dx = \lim_{\epsilon \to 0^+} \int_{a+\epsilon}^b f(x) dx$。
 
@@ -27,9 +29,11 @@ $$\left| \int_{A_1}^{A_2} f(x) dx \right| < \epsilon$$
 ## 二、 敛散性判别法
 
 ### 1. 非负函数的比较法
+
 若 $0 \le f(x) \le g(x)$，则 $\int g$ 收敛 $\implies \int f$ 收敛。
 
 ### 2. 变号函数的判别法
+
 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
   <KnowledgeCard type="info" title={<><Crosshair className="inline-block mr-2" /> Dirichlet 判别法</>}>
     1. $\int_a^A f(x)dx$ 有界；<br/>2. $g(x)$ 单调且 $g(x) \to 0$。
@@ -42,6 +46,7 @@ $$\left| \int_{A_1}^{A_2} f(x) dx \right| < \epsilon$$
 ---
 
 ## 三、 Cauchy 主值 (Principal Value)
+
 对于发散积分，若对称逼近的极限存在，称为主值 $P.V.$。
 例如：$P.V. \int_{-A}^A x dx = 0$，尽管 $\int_{-\infty}^{+\infty} x dx$ 发散。
 
@@ -55,12 +60,13 @@ $$\left| \int_{A_1}^{A_2} f(x) dx \right| < \epsilon$$
 判定 $\int_0^{+\infty} \frac{\sin x}{x^p}$ ($p > 0$) 的收敛性。
 <br/>
 **解析**：
+
 1. $x \to 0$ 时，若 $p < 2$，由 $\sin x \sim x$ 知是正常积分（或收敛瑕积分）。
 2. $x \to +\infty$ 时，令 $f(x) = \sin x, g(x) = 1/x^p$。
    - $\int \sin x$ 有界。
    - $1/x^p$ 单调趋于 0。
-故由 Dirichlet 判别法知积分收敛。
-</details>
+   故由 Dirichlet 判别法知积分收敛。
+   </details>
 
 <details>
 <summary><b>练习 2：瑕积分的判定</b></summary>
@@ -71,6 +77,7 @@ $$\left| \int_{A_1}^{A_2} f(x) dx \right| < \epsilon$$
 当 $x \to 0$ 时，$\ln(1+x) \sim x$。
 故被积函数 $\sim \frac{1}{x^{p+1}}$。
 由 $p$-积分判别法，当 $p+1 < 1$ 即 $p < 0$ 时收敛。
+
 </details>
 
 <details>
@@ -84,6 +91,7 @@ $P.V. = \lim_{\epsilon \to 0} (\int_{1/2}^{1-\epsilon} + \int_{1+\epsilon}^2) \f
 $= \lim (\ln|\ln(1-\epsilon)| - \ln|\ln(1/2)| + \ln|\ln 2| - \ln|\ln(1+\epsilon)|)$
 由于 $\ln(1 \pm \epsilon) \sim \pm \epsilon$，两项对数项抵消。
 结果为 $\ln|\ln 2| - \ln|\ln(1/2)| = 0$（由于 $\ln(1/2) = -\ln 2$）。
+
 </details>
 
 ---

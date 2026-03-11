@@ -186,8 +186,10 @@ $$
 <summary>点击查看解析与答案</summary>
 
 #### 解析过程
+
 设 $S = \{1, 2, \dots, 1000\}$，$A$ 为被 5 整除的集合，$B$ 为被 6 整除的集合，$C$ 为被 8 整除的集合。
 我们需要计算 $|S| - |A \cup B \cup C|$。
+
 1. 单个集合大小：$|A| = \lfloor 1000/5 \rfloor = 200$, $|B| = \lfloor 1000/6 \rfloor = 166$, $|C| = \lfloor 1000/8 \rfloor = 125$。
 2. 两两相交：
    - $|A \cap B| = \lfloor 1000/\operatorname{lcm}(5,6) \rfloor = \lfloor 1000/30 \rfloor = 33$。
@@ -199,6 +201,7 @@ $$
 5. 结果：$1000 - 400 = 600$。
 
 #### 答案
+
 600
 
 </details>

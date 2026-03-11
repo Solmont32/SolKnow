@@ -13,7 +13,9 @@ import KnowledgeCard from "@site/src/components/KnowledgeCard";
 几何证明的核心在于构建 **逻辑推理链**。每一条结论都必须有充分的依据。
 
 ### 1.1 演绎推理的基本形式
+
 通常采用 “因为... 所以...（依据）” 的结构：
+
 - **条件 (Premise)**：已知条件或已证结论。
 - **依据 (Justification)**：定义、公理或已证定理。
 - **结论 (Conclusion)**：逻辑推导的结果。
@@ -29,10 +31,12 @@ import KnowledgeCard from "@site/src/components/KnowledgeCard";
 ## 2. 三角形的全等与相似
 
 ### 2.1 全等三角形 (Congruence)
+
 - **判定方法**：$SAS, ASA, AAS, SSS, HL$。
 - **核心逻辑**：全等是对应边、角完全相等的表现。
 
 ### 2.2 相似三角形 (Similarity)
+
 - **判定方法**：两角相等、两边对应成比例且夹角相等、三边对应成比例。
 - **性质**：对应角相等，对应边成比例。
 - **面积比**：相似三角形的面积之比等于相似比的 **平方**。
@@ -57,6 +61,7 @@ import KnowledgeCard from "@site/src/components/KnowledgeCard";
 **解析：**
 设等腰 $\triangle ABC$ 中，$AB=AC$。
 **思路**：通过作辅助线构造全等三角形。
+
 1. 作 $\angle A$ 的平分线 $AD$ 交 $BC$ 于点 $D$。
 2. 在 $\triangle ABD$ 和 $\triangle ACD$ 中：
    - $AB = AC$（已知）
@@ -71,13 +76,14 @@ import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 **已知**：在 $Rt\triangle ABC$ 中，$\angle C = 90^\circ, AC=6, BC=8$，求斜边 $AB$ 上的高 $h$。
 **解析：**
+
 1. 首先计算斜边 $AB$：
    $AB = \sqrt{AC^2 + BC^2} = \sqrt{6^2 + 8^2} = 10$。
 2. 利用 **等面积法**：
    $S_{\triangle ABC} = \frac{1}{2} AC \cdot BC = \frac{1}{2} AB \cdot h$
 3. 代入数值：
-   $\frac{1}{2} \times 6 \times 8 = \frac{1}{2} \times 10 \times h$
-   $24 = 5h \implies h = 4.8$
+$\frac{1}{2} \times 6 \times 8 = \frac{1}{2} \times 10 \times h$
+$24 = 5h \implies h = 4.8$
 </details>
 
 <details>
@@ -85,6 +91,7 @@ import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 **已知**：如图，$AB \parallel CD, \angle B = \angle D$，求证：$AD \parallel BC$。
 **解析：**
+
 1. $\because AB \parallel CD$（已知）
 2. $\therefore \angle B + \angle C = 180^\circ$（两直线平行，同旁内角互补）
 3. $\because \angle B = \angle D$（已知）

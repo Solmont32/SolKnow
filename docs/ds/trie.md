@@ -19,6 +19,7 @@ import { Share2, Search, Type, Binary } from 'lucide-react';
 - **标记结尾**：每个节点通常包含一个布尔值或计数器，标记该节点是否为某个单词的结束。
 
 ### 复杂度分析
+
 - **插入/查询**：$O(L)$，其中 $L$ 是字符串长度。
 - **空间**：$O(N \cdot \Sigma)$，其中 $N$ 是节点总数，$\Sigma$ 是字符集大小。
 
@@ -29,7 +30,9 @@ import { Share2, Search, Type, Binary } from 'lucide-react';
 01-Trie 是 Trie 的一种特殊形式，用于处理二进制数值。每个节点只有两个子节点：`0` 和 `1`。
 
 ### 2.1 最大异或和
+
 通过 01-Trie，我们可以在 $O(\log V)$ 时间内找到与给定数值 $x$ 异或结果最大的数。
+
 - **策略**：在树中贪心地寻找与 $x$ 当前位**相反**的路径。如果相反位存在，则向该方向移动并更新结果；否则向相同位移动。
 
 ---
@@ -37,6 +40,7 @@ import { Share2, Search, Type, Binary } from 'lucide-react';
 ## 3. 经典例题
 
 ### 例题 1：最大异或对
+
 给定 $n$ 个非负整数，求其中两个数异或的最大值。
 
 <details>
@@ -88,6 +92,7 @@ int main() {
     return 0;
 }
 ```
+
 </details>
 
 ---

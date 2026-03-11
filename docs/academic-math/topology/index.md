@@ -9,7 +9,7 @@ import { Infinity, BookOpen, PenTool, Lightbulb, Compass, Share2, Code2, Layers 
 # <Infinity className="solknow-purple" style={{ verticalAlign: 'middle', marginRight: '10px' }} size={36} /> 点集拓扑学 (Point-Set Topology)
 
 > **"Topology is the study of properties that are preserved under continuous deformations."**
-> 
+>
 > 在数学分析中，我们习惯了 $\epsilon-\delta$ 语言。点集拓扑学则是将这些直观概念（如“靠近”、“连续”、“连通”）抽象化、公理化的过程。它是现代分析（泛函分析、实变函数）、微分几何以及代数拓扑的共同起点。
 
 ---
@@ -68,7 +68,7 @@ double metric(double x, double y) {
 
 int main() {
     double x = 1.0, y = 2.5, z = 4.0;
-    
+
     // 验证三角不等式: d(x, z) <= d(x, y) + d(y, z)
     double d_xz = metric(x, z);
     double d_xy = metric(x, y);
@@ -90,12 +90,12 @@ int main() {
 
 ## 跨领域映射 <Layers className="inline-block ml-1" />
 
-| 领域 | 对应概念 | 说明 |
-| :--- | :--- | :--- |
-| **计算机图形学** | 流形网格 (Manifold Mesh) | 使用拓扑局部欧氏性质描述 3D 模型表面。 |
-| **分布式系统** | 拓扑图 (Topology) | 节点间的连接关系决定了系统的容错性与一致性限制。 |
-| **数据科学** | TDA (拓扑数据分析) | 通过持续同调 (Persistent Homology) 发现高维数据中的形状。 |
-| **网络安全** | 路径连通性 | 分析网络图中各子网的连通关系以识别安全隔离边界。 |
+| 领域             | 对应概念                 | 说明                                                      |
+| :--------------- | :----------------------- | :-------------------------------------------------------- |
+| **计算机图形学** | 流形网格 (Manifold Mesh) | 使用拓扑局部欧氏性质描述 3D 模型表面。                    |
+| **分布式系统**   | 拓扑图 (Topology)        | 节点间的连接关系决定了系统的容错性与一致性限制。          |
+| **数据科学**     | TDA (拓扑数据分析)       | 通过持续同调 (Persistent Homology) 发现高维数据中的形状。 |
+| **网络安全**     | 路径连通性               | 分析网络图中各子网的连通关系以识别安全隔离边界。          |
 
 ---
 

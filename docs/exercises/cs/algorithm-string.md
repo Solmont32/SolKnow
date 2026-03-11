@@ -13,11 +13,11 @@ import { Target, Zap, Trophy, BarChart3, ChevronRight, Code2, Layers } from 'luc
 
 ## 🪜 练习阶梯与评价标准
 
-| 等级 | 难度目标 | 核心考察点 | 期望达成 |
-| :--- | :--- | :--- | :--- |
-| <span style={{ color: 'var(--ifm-color-success)' }}>● **Level A**</span> | 模板复现与哈希 | KMP next 数组、哈希碰撞处理 | 能够 5 分钟内写出 KMP |
-| <span style={{ color: 'var(--ifm-color-warning)' }}>● **Level B**</span> | 自动机与回文 | AC 自动机多模式匹配、Manacher 算法 | 理解 Fail 指针的转移本质 |
-| <span style={{ color: 'var(--ifm-color-danger)' }}>● **Level C**</span> | 后缀结构与综合 | 后缀数组 (SA)、后缀自动机 (SAM) | 具备处理子串统计与最长公共子串能力 |
+| 等级                                                                     | 难度目标       | 核心考察点                         | 期望达成                           |
+| :----------------------------------------------------------------------- | :------------- | :--------------------------------- | :--------------------------------- |
+| <span style={{ color: 'var(--ifm-color-success)' }}>● **Level A**</span> | 模板复现与哈希 | KMP next 数组、哈希碰撞处理        | 能够 5 分钟内写出 KMP              |
+| <span style={{ color: 'var(--ifm-color-warning)' }}>● **Level B**</span> | 自动机与回文   | AC 自动机多模式匹配、Manacher 算法 | 理解 Fail 指针的转移本质           |
+| <span style={{ color: 'var(--ifm-color-danger)' }}>● **Level C**</span>  | 后缀结构与综合 | 后缀数组 (SA)、后缀自动机 (SAM)    | 具备处理子串统计与最长公共子串能力 |
 
 ---
 
@@ -26,7 +26,9 @@ import { Target, Zap, Trophy, BarChart3, ChevronRight, Code2, Layers } from 'luc
 ### Level A：基础巩固 (Foundations)
 
 #### 练习 1：KMP 字符串匹配
+
 **题目描述**：给定一个模式串 $P$ 和一个文本串 $S$，请输出 $P$ 在 $S$ 中出现的所有起始下标。
+
 - **考察点**：`next` 数组的构造与匹配流程。
 
 <details>
@@ -66,10 +68,13 @@ int main() {
     return 0;
 }
 ```
+
 </details>
 
 #### 练习 2：字符串哈希 (String Hashing)
+
 **题目描述**：给定一个长度为 $n$ 的字符串，查询 $m$ 次，每次查询两段区间 $[l_1, r_1]$ 和 $[l_2, r_2]$ 的子串是否相同。
+
 - **核心思想**：$O(n)$ 预处理哈希前缀和，$O(1)$ 提取子串哈希值。
 
 <details>
@@ -91,13 +96,13 @@ int main() {
     int n, m;
     char str[N];
     scanf("%d%d%s", &n, &m, str + 1);
-    
+
     p[0] = 1;
     for (int i = 1; i <= n; i++) {
         p[i] = p[i - 1] * P;
         h[i] = h[i - 1] * P + str[i];
     }
-    
+
     while (m--) {
         int l1, r1, l2, r2;
         scanf("%d%d%d%d", &l1, &r1, &l2, &r2);
@@ -107,6 +112,7 @@ int main() {
     return 0;
 }
 ```
+
 </details>
 
 ---
@@ -114,7 +120,9 @@ int main() {
 ### Level B：综合提升 (Intermediate)
 
 #### 练习 3：AC 自动机（多模式匹配）
+
 **题目描述**：给定 $n$ 个单词和一篇文章，问每个单词在文章中出现了多少次。
+
 - **关键点**：在 Trie 树上建立 Fail 指针，并利用拓扑排序优化计数。
 
 <details>
@@ -145,7 +153,7 @@ void build() {
     queue<int> q;
     for (int i = 0; i < 26; i++)
         if (tr[0][i]) q.push(tr[0][i]);
-        
+
     while (q.size()) {
         int t = q.front();
         q.pop();
@@ -162,6 +170,7 @@ void build() {
 }
 // ... 篇幅原因省略部分实现
 ```
+
 </details>
 
 ---
@@ -169,7 +178,9 @@ void build() {
 ### Level C：竞赛挑战 (Advanced)
 
 #### 练习 4：后缀数组 (SA) - 最长公共前缀
+
 **题目描述**：给定一个字符串，求两个后缀 $Suffix(i)$ 和 $Suffix(j)$ 的最长公共前缀 (LCP)。
+
 - **核心工具**：使用倍增法构造 SA 数组和 $height$ 数组。
 
 <details>
@@ -219,11 +230,13 @@ void get_height() {
     }
 }
 ```
+
 </details>
 
 ---
 
 ## 🏆 训练建议
+
 1. **理解 Fail 的几何含义**：AC 自动机中的 Fail 指针本质上是在寻找最长的、且作为 Trie 中路径存在的、当前状态的后缀。
 2. **后缀结构的统一性**：后缀数组虽然难写，但配合 ST 表处理 LCP 问题的能力极强；后缀自动机 (SAM) 则是更强大的线性结构，建议同步掌握。
 3. **哈希作为保底**：在处理不涉及复杂子串关系的字符串问题时，双哈希往往能以极简的代码量过题。

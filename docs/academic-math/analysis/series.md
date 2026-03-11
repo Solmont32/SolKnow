@@ -26,6 +26,7 @@ import { Sigma, CheckCircle2, AlertCircle, HelpCircle, ArrowRightLeft, Binary } 
 ## 2. 正项级数判别法 (Positive Term Series)
 
 ### 2.1 基础判别法
+
 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
   <KnowledgeCard type="info" title={<><Sigma className="inline-block mr-2" /> 比较判别法</>}>
     $0 \leq a_n \leq b_n$: <br/> $\sum b_n$ 收敛 $\implies \sum a_n$ 收敛；<br/> $\sum a_n$ 发散 $\implies \sum b_n$ 发散。
@@ -52,10 +53,12 @@ import { Sigma, CheckCircle2, AlertCircle, HelpCircle, ArrowRightLeft, Binary } 
 ## 3. 任意项级数 (Series with Arbitrary Terms)
 
 ### 3.1 绝对收敛与条件收敛
+
 - **绝对收敛**：$\sum |a_n|$ 收敛。
 - **条件收敛**：$\sum a_n$ 收敛但 $\sum |a_n|$ 发散。
 
 ### 3.2 变号级数判别法
+
 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
   <KnowledgeCard type="warning" title={<><Binary className="inline-block mr-2" /> Dirichlet 判别法</>}>
     满足：<br/>1. $\sum a_n$ 的部分和有界；<br/>2. $\{b_n\}$ 单调且 $\lim b_n = 0$。<br/>则 $\sum a_n b_n$ 收敛。

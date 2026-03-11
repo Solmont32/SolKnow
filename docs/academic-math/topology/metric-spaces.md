@@ -14,7 +14,9 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## 1. 核心定义
 
 ### 定义 1.1 (度量)
+
 设 $X$ 是一个非空集合。若存在函数 $d: X \times X \to \mathbb{R}$，满足以下四条公理，则称 $d$ 是 $X$ 上的一个**度量 (Metric)**：
+
 1. **非负性**：$d(x, y) \geq 0$；
 2. **正定性**：$d(x, y) = 0 \iff x = y$；
 3. **对称性**：$d(x, y) = d(y, x)$；
@@ -51,10 +53,12 @@ $$d(f, g) = \max_{x \in [a, b]} |f(x) - g(x)|$$
 在度量空间中，我们通过“距离”来刻画“附近”。
 
 ### 定义 3.1 (邻域/开球)
+
 点 $x \in X$ 的 $r$-邻域定义为：
 $$B(x, r) = \{ y \in X \mid d(x, y) < r \}$$
 
 ### 定义 3.2 (开集与闭集)
+
 - **开集**：若集合 $U \subset X$ 的每一点都是其内点（即 $\forall x \in U, \exists \epsilon > 0, B(x, \epsilon) \subset U$），则称 $U$ 是开集。
 - **闭集**：若 $U$ 的补集 $X \setminus U$ 是开集，则称 $U$ 是闭集。
 
@@ -65,9 +69,11 @@ $$B(x, r) = \{ y \in X \mid d(x, y) < r \}$$
 完备性描述了一个空间“没有缝隙”，它是微积分得以建立的根本原因。
 
 ### 定义 4.1 (Cauchy 序列)
+
 序列 $\{x_n\}$ 称为 **Cauchy 序列**，如果 $\forall \epsilon > 0, \exists N, \forall m, n > N, d(x_m, x_n) < \epsilon$。
 
 ### 定义 4.2 (完备空间)
+
 如果度量空间 $X$ 中的每一个 Cauchy 序列都收敛于 $X$ 中的点，则称 $X$ 是**完备度量空间**。
 
 ---
@@ -75,12 +81,14 @@ $$B(x, r) = \{ y \in X \mid d(x, y) < r \}$$
 ## ✍️ 深度练习
 
 ### 练习 1：证明离散度量空间中，所有序列的 Cauchy 性质
+
 在离散度量空间中，什么样的序列是 Cauchy 序列？什么样的序列是收敛的？
 
 <details>
 <summary>Check Solution</summary>
 
 **解析：**
+
 1. **Cauchy 序列判定**：
    取 $\epsilon = 1/2$。若 $\{x_n\}$ 是 Cauchy 序列，则 $\exists N, \forall m, n > N, d(x_m, x_n) < 1/2$。
    由于在离散度量中，$d$ 只能取 $0$ 或 $1$，因此 $d(x_m, x_n) < 1/2$ 意味着 $d(x_m, x_n) = 0$，即 $x_m = x_n$。
@@ -95,12 +103,14 @@ $$B(x, r) = \{ y \in X \mid d(x, y) < r \}$$
 ---
 
 ### 练习 2：有理数集 $\mathbb{Q}$ 的非完备性
+
 证明 $\mathbb{Q}$（使用标准度量 $d(x, y) = |x-y|$）不是完备的。
 
 <details>
 <summary>Check Solution</summary>
 
 **证明：**
+
 1. 构造一个有理数序列 $\{q_n\}$，使其收敛于一个无理数（如 $\sqrt{2}$）。
 2. 例如，利用二分法或 Newton 迭代法构造 $q_{n+1} = \frac{1}{2}(q_n + \frac{2}{q_n})$，初值 $q_1=1$。
 3. 在 $\mathbb{R}$ 中，此序列收敛于 $\sqrt{2}$，因此它是 $\mathbb{R}$ 中的 Cauchy 序列。

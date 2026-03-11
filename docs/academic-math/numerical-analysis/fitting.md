@@ -27,13 +27,16 @@ $$S(a_0, \dots, a_n) = \sum_{i=1}^m [f(x_i) - y_i]^2 = \sum_{i=1}^m \left[ \sum_
 $$\frac{\partial S}{\partial a_k} = 0, \quad k = 0, 1, \dots, n$$
 
 ### 2.1 推导过程
+
 对 $a_k$ 求导得：
 $$2 \sum_{i=1}^m \left[ \sum_{j=0}^n a_j \phi_j(x_i) - y_i \right] \phi_k(x_i) = 0$$
 整理可得：
 $$\sum_{j=0}^n a_j \left( \sum_{i=1}^m \phi_j(x_i) \phi_k(x_i) \right) = \sum_{i=1}^m y_i \phi_k(x_i)$$
 
 ### 2.2 矩阵形式
+
 定义内积 $\langle u, v \rangle = \sum_{i=1}^m u(x_i) v(x_i)$，则上述方程组可写作：
+
 $$
 \begin{pmatrix}
 \langle \phi_0, \phi_0 \rangle & \dots & \langle \phi_n, \phi_0 \rangle \\
@@ -48,6 +51,7 @@ a_0 \\ \vdots \\ a_n
 \langle y, \phi_0 \rangle \\ \vdots \\ \langle y, \phi_n \rangle
 \end{pmatrix}
 $$
+
 这就是 **正规方程组**。
 
 ---
@@ -79,6 +83,7 @@ $$
 <summary>例 1：给定数据点 (1, 2), (2, 3), (3, 5)，用最小二乘法求拟合直线 $y = a+bx$。</summary>
 
 **解析：**
+
 1. 确定基函数：$\phi_0(1)=1, \phi_1(x)=x$。
 2. 计算内积：
    - $\langle \phi_0, \phi_0 \rangle = 1+1+1 = 3$
@@ -91,7 +96,7 @@ $$
 4. 求解：
    由 (1) 得 $a = \frac{10-6b}{3}$。代入 (2)：$2(10-6b) + 14b = 23 \Rightarrow 20 + 2b = 23 \Rightarrow b = 1.5$。
    $a = \frac{10-9}{3} = 1/3$。
-拟合直线为：$y = \frac{1}{3} + 1.5x$。
+   拟合直线为：$y = \frac{1}{3} + 1.5x$。
 
 </details>
 

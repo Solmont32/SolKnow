@@ -11,20 +11,21 @@ Git 是目前世界上最先进的分布式版本控制系统。无论是在算�
 ## 1. 核心概念
 
 Git 的工作流程围绕三个主要区域展开：
+
 1. **工作区 (Working Directory)**：你实际编辑文件的地方。
 2. **暂存区 (Staging Area / Index)**：准备提交的修改。
 3. **本地仓库 (Local Repository)**：保存所有版本历史的地方。
 
 ## 2. 常用基础指令 <Terminal className="inline-block ml-1" />
 
-| 指令 | 说明 |
-| :--- | :--- |
-| `git init` | 在当前目录初始化一个 Git 仓库 |
-| `git clone <url>` | 克隆远程仓库到本地 |
-| `git add <file>` | 将修改添加到暂存区 |
-| `git commit -m "msg"` | 将暂存区内容提交到本地仓库 |
-| `git status` | 查看当前工作区与暂存区的状态 |
-| `git log` | 查看提交历史记录 |
+| 指令                  | 说明                          |
+| :-------------------- | :---------------------------- |
+| `git init`            | 在当前目录初始化一个 Git 仓库 |
+| `git clone <url>`     | 克隆远程仓库到本地            |
+| `git add <file>`      | 将修改添加到暂存区            |
+| `git commit -m "msg"` | 将暂存区内容提交到本地仓库    |
+| `git status`          | 查看当前工作区与暂存区的状态  |
+| `git log`             | 查看提交历史记录              |
 
 ## 3. 最佳实践 <ShieldCheck className="inline-block ml-1" />
 

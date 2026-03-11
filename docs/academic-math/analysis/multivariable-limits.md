@@ -202,6 +202,7 @@ $$\frac{r^3\cos^3\theta + r^3\sin^3\theta}{r^2} = r(\cos^3\theta + \sin^3\theta)
 :::
 
 ### 练习 1：利用夹逼准则求极限
+
 求 $\lim_{(x, y) \to (0, 0)} \frac{x^2 y^2}{x^2 + y^2}$。
 
 <details>
@@ -217,12 +218,14 @@ $$0 \le \left| \frac{x^2 y^2}{x^2 + y^2} \right| = \left| \frac{x^2}{x^2 + y^2} 
 </details>
 
 ### 练习 2：累次极限与重极限的辨析
+
 设 $f(x, y) = \frac{x^2-y^2}{x^2+y^2}$，求其在 $(0,0)$ 处的累次极限与重极限。
 
 <details>
 <summary>点击查看解析</summary>
 
 **解析**：
+
 1. **累次极限**：
    - $\lim_{x \to 0} (\lim_{y \to 0} \frac{x^2-y^2}{x^2+y^2}) = \lim_{x \to 0} \frac{x^2}{x^2} = 1$。
    - $\lim_{y \to 0} (\lim_{x \to 0} \frac{x^2-y^2}{x^2+y^2}) = \lim_{y \to 0} \frac{-y^2}{y^2} = -1$。
@@ -232,6 +235,7 @@ $$0 \le \left| \frac{x^2 y^2}{x^2 + y^2} \right| = \left| \frac{x^2}{x^2 + y^2} 
 </details>
 
 ### 练习 3：极坐标在极限证明中的应用
+
 证明 $\lim_{(x, y) \to (0, 0)} (x^2 + y^2) \ln(x^2 + y^2) = 0$。
 
 <details>
@@ -249,6 +253,7 @@ $$\lim_{r \to 0^+} \frac{\ln r}{1/r^2} = \lim_{r \to 0^+} \frac{1/r}{-2/r^3} = \
 </details>
 
 ### 练习 4：二元函数的连续性判定
+
 讨论函数 $f(x, y) = \begin{cases} \frac{\sin(xy)}{x} & x \neq 0 \\ y & x = 0 \end{cases}$ 在 $(0, y_0)$ 点的连续性。
 
 <details>

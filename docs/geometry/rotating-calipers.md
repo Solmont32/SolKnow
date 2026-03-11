@@ -24,6 +24,7 @@ import { Waypoints, Zap, Activity, BookOpen, Scaling } from 'lucide-react';
 ## 2. 求解多边形直径 (Diameter)
 
 ### 2.1 算法推导
+
 1.  建立一个初始对踵点对（通常是 $y$ 坐标最小和最大的两个点）。
 2.  顺时针旋转平行线。每当平行线与某条边重合时，更新对踵点。
 3.  **计算实现**：利用面积的单调性。固定一条边 $P_i P_{i+1}$，在凸包上寻找距离该边最远的点 $P_j$。由于凸性，$P_j$ 的距离关于 $i$ 是单调的。
@@ -38,7 +39,7 @@ DB getDiameter(const vector<Point>& h) {
     int j = 2; // 最远点指针
     for (int i = 0; i < n; i++) {
         // 寻找距离边 h[i]-h[i+1] 最远的点 j
-        while (sign(cross(h[i+1] - h[i], h[j] - h[i]) - 
+        while (sign(cross(h[i+1] - h[i], h[j] - h[i]) -
                    cross(h[i+1] - h[i], h[(j+1)%n] - h[i])) < 0) {
             j = (j + 1) % n;
         }
@@ -56,9 +57,9 @@ DB getDiameter(const vector<Point>& h) {
 
 1.  矩形的一条边必然与凸包的一条边重合。
 2.  对于凸包的每一条边 $L$，维护三个极点：
-    -   **点 A**：距离 $L$ 最远的点（决定高度）。
-    -   **点 B**：在该方向投影最左的点。
-    -   **点 C**：在该方向投影最右的点。
+    - **点 A**：距离 $L$ 最远的点（决定高度）。
+    - **点 B**：在该方向投影最左的点。
+    - **点 C**：在该方向投影最右的点。
 3.  随着 $L$ 的旋转，A, B, C 均线性单调移动。
 
 </KnowledgeCard>
@@ -97,6 +98,7 @@ for (int i = 0; i < n; i++) {
     // 计算面积并更新最小结果
 }
 ```
+
 </details>
 
 <details>

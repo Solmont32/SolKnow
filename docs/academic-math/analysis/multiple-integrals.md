@@ -375,23 +375,26 @@ $3/4$
 :::
 
 ### 练习 1：利用对称性简化计算
+
 求 $\iint_D (x+y) dx dy$，其中 $D$ 为圆域 $x^2 + y^2 \le 1$。
 
 <details>
 <summary>点击查看解析</summary>
 
 **解析**：
+
 1. **分析区域对称性**：圆域 $D$ 关于 $x$ 轴和 $y$ 轴均对称。
 2. **分析函数奇偶性**：
    - 对于 $x$，区域对称且 $x$ 是奇函数，故 $\iint_D x dx dy = 0$。
    - 对于 $y$，区域对称且 $y$ 是奇函数，故 $\iint_D y dx dy = 0$。
 3. **结果**：
    原式 $= 0 + 0 = 0$。
-**结论**：充分利用奇偶性可瞬间得出结果。
+   **结论**：充分利用奇偶性可瞬间得出结果。
 
 </details>
 
 ### 练习 2：二重积分的换序技巧
+
 求 $\int_0^1 dx \int_{\sqrt{x}}^1 e^{y^3} dy$。
 
 <details>
@@ -399,6 +402,7 @@ $3/4$
 
 **解析**：
 内层积分 $\int e^{y^3} dy$ 无法用初等函数表示，必须交换积分次序。
+
 1. **确定区域**：$0 \le x \le 1, \sqrt{x} \le y \le 1$。
    边界为 $x=0, y=1, y^2=x$。
 2. **重新描述区域**：$0 \le y \le 1, 0 \le x \le y^2$。
@@ -406,17 +410,19 @@ $3/4$
    $\int_0^1 dy \int_0^{y^2} e^{y^3} dx = \int_0^1 y^2 e^{y^3} dy$
    令 $u = y^3, du = 3y^2 dy$。
    $\int_0^1 \frac{1}{3} e^u du = \frac{1}{3}(e - 1)$。
-**结论**：结果为 $\frac{1}{3}(e - 1)$。
+   **结论**：结果为 $\frac{1}{3}(e - 1)$。
 
 </details>
 
 ### 练习 3：极坐标在非圆域的应用
+
 计算 $\iint_D y dx dy$，其中 $D$ 是第一象限内由 $x^2+y^2=1, x^2+y^2=4$ 围成的环形区域。
 
 <details>
 <summary>点击查看解析</summary>
 
 **解析**：
+
 1. **极坐标范围**：$1 \le r \le 2, 0 \le \theta \le \pi/2$。
 2. **变换积分**：
    $\iint_D y dx dy = \int_0^{\pi/2} d\theta \int_1^2 (r \sin \theta) r dr$
@@ -427,12 +433,14 @@ $3/4$
 </details>
 
 ### 练习 4：三重积分的物理意义
+
 求密度为 $\rho = 1$ 的均匀圆柱体 $x^2+y^2 \le a^2, 0 \le z \le h$ 对原点 $(0,0,0)$ 处质量为 $m$ 的质点的引力在 $z$ 方向的分量。
 
 <details>
 <summary>点击查看解析</summary>
 
 **解析**：
+
 1. **引力公式分量**：$F_z = G m \iiint_\Omega \frac{z}{(x^2+y^2+z^2)^{3/2}} dV$。
 2. **采用柱坐标**：$0 \le \rho \le a, 0 \le \phi \le 2\pi, 0 \le z \le h$。
    $F_z = G m \int_0^{2\pi} d\phi \int_0^h z dz \int_0^a \frac{\rho}{(\rho^2+z^2)^{3/2}} d\rho$
@@ -441,7 +449,7 @@ $3/4$
 4. **计算中层积分**：
    $2\pi G m \int_0^h z (\frac{1}{z} - \frac{1}{\sqrt{a^2+z^2}}) dz = 2\pi G m \int_0^h (1 - \frac{z}{\sqrt{a^2+z^2}}) dz$
    $= 2\pi G m [ z - \sqrt{a^2+z^2} ]_0^h = 2\pi G m (h - \sqrt{a^2+h^2} + a)$。
-**结论**：引力 $z$ 分量为 $2\pi G m (a + h - \sqrt{a^2+h^2})$。
+   **结论**：引力 $z$ 分量为 $2\pi G m (a + h - \sqrt{a^2+h^2})$。
 
 </details>
 

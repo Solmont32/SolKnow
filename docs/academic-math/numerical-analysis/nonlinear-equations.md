@@ -25,12 +25,15 @@ import KnowledgeCard from "@site/src/components/KnowledgeCard";
 将 $f(x) = 0$ 改写为等价形式 $x = \phi(x)$。从 $x_0$ 出发，令 $x_{k+1} = \phi(x_k)$。
 
 ### 2.1 压缩映射原理
+
 **定理**：若 $\phi(x)$ 在 $[a, b]$ 上满足：
+
 1. $\phi(x) \in [a, b]$ 对于所有 $x \in [a, b]$；
 2. $|\phi'(x)| \le L < 1$ （压缩常数）；
-则迭代格式 $x_{k+1} = \phi(x_k)$ 对任意初始值 $x_0 \in [a, b]$ 均收敛。
+   则迭代格式 $x_{k+1} = \phi(x_k)$ 对任意初始值 $x_0 \in [a, b]$ 均收敛。
 
 ### 2.2 收敛阶 (Order of Convergence)
+
 若 $\phi'(x^*) = \phi''(x^*) = \dots = \phi^{(p-1)}(x^*) = 0$ 且 $\phi^{(p)}(x^*) \neq 0$，则该迭代法具有 **$p$ 阶收敛**。
 
 ---
@@ -41,9 +44,11 @@ Newton 法是利用 $f(x)$ 的一阶泰勒展开构造的迭代格式：
 $$x_{k+1} = x_k - \frac{f(x_k)}{f'(x_k)}$$
 
 ### 3.1 几何意义
+
 $x_{k+1}$ 是曲线 $y = f(x)$ 在点 $(x_k, f(x_k))$ 处切线与 $x$ 轴交点的横坐标。
 
 ### 3.2 局部平方收敛性
+
 **定理**：若 $x^*$ 是 $f(x)=0$ 的**单根**（即 $f'(x^*) \neq 0$），且 $f''(x)$ 连续，则 Newton 法在 $x^*$ 附近是**平方收敛**的（$p=2$）。
 
 <KnowledgeCard type="warning" title="重根陷阱">
@@ -68,6 +73,7 @@ $$x_{k+1} = x_k - \frac{f(x_k)(x_k - x_{k-1})}{f(x_k) - f(x_{k-1})}$$
 <summary>例 1：分析迭代格式 $x_{k+1} = \sqrt{x_k + 2}$ 求解 $x^2 - x - 2 = 0$ 正根的收敛性。</summary>
 
 **解析：**
+
 1. 该方程的正根为 $x^* = 2$。
 2. 迭代函数 $\phi(x) = \sqrt{x+2}$。
 3. 计算导数：$\phi'(x) = \frac{1}{2\sqrt{x+2}}$。

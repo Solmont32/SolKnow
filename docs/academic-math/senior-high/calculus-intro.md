@@ -7,7 +7,6 @@ import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 import { TrendingUp, Activity, Calculator, ArrowRightCircle } from 'lucide-react';
 
-
 # <Activity className="inline-block mr-2 mb-1" size={32} /> 函数与导数 (Functions & Derivatives)
 
 导数（Derivative）是现代数学研究函数局部变化率的核心工具，它将几何上的“切线斜率”与代数上的“变化率”完美统一。
@@ -15,6 +14,7 @@ import { TrendingUp, Activity, Calculator, ArrowRightCircle } from 'lucide-react
 ## 1. 导数的定义与几何意义
 
 ### <TrendingUp className="inline-block mr-1 mb-1" size={24} /> 1.1 平均变化率与瞬时变化率
+
 设函数 $y = f(x)$ 在区间 $[x_0, x_0 + \Delta x]$ 上有定义，则其平均变化率为：
 $$\frac{\Delta y}{\Delta x} = \frac{f(x_0 + \Delta x) - f(x_0)}{\Delta x}$$
 
@@ -22,6 +22,7 @@ $$\frac{\Delta y}{\Delta x} = \frac{f(x_0 + \Delta x) - f(x_0)}{\Delta x}$$
 $$f'(x_0) = \lim_{\Delta x \to 0} \frac{f(x_0 + \Delta x) - f(x_0)}{\Delta x}$$
 
 ### <ArrowRightCircle className="inline-block mr-1 mb-1" size={24} /> 1.2 几何意义
+
 函数 $f(x)$ 在点 $P(x_0, f(x_0))$ 处的导数 $f'(x_0)$ 等于曲线 $y = f(x)$ 在该点处 **切线的斜率** $k$。
 切线方程为：
 $$y - f(x_0) = f'(x_0)(x - x_0)$$
@@ -51,12 +52,14 @@ $$y - f(x_0) = f'(x_0)(x - x_0)$$
 ## 4. 深度例题解析
 
 ### <Calculator className="inline-block mr-1 mb-1" size={24} /> 例题：参数取值范围问题
+
 已知函数 $f(x) = \ln x - ax$ 在其定义域 $(0, +\infty)$ 内单调递减，求实数 $a$ 的取值范围。
 
 <details>
 <summary>点击查看详细解答 (Check Solution)</summary>
 
 **解：**
+
 1. **求导**：$f(x)$ 的定义域为 $(0, +\infty)$，其导函数为：
    $$f'(x) = \frac{1}{x} - a = \frac{1 - ax}{x}$$
 2. **列不等式**：由于 $f(x)$ 在 $(0, +\infty)$ 内单调递减，则对于 $\forall x \in (0, +\infty)$，恒有 $f'(x) \le 0$。
@@ -69,7 +72,8 @@ $$y - f(x_0) = f'(x_0)(x - x_0)$$
    由于要求在 **全定义域** $(0, +\infty)$ 内递减，意味着 $1 - ax \le 0$ 必须对任意 $x > 0$ 成立。这在 $a$ 为有限实数时显然不可能（当 $x \to 0^+$ 时，$1-ax \to 1$）。
    **结论**：不存在实数 $a$ 使得 $f(x) = \ln x - ax$ 在 $(0, +\infty)$ 上单调递减。
 
-*注：若题目改为在 $[1, +\infty)$ 上递减，则 $a \ge 1$。*
+_注：若题目改为在 $[1, +\infty)$ 上递减，则 $a \ge 1$。_
+
 </details>
 
 ---

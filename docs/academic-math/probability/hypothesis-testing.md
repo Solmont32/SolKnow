@@ -11,10 +11,12 @@ import KnowledgeCard from "@site/src/components/KnowledgeCard";
 ## 1. 基本原理与步骤
 
 ### 假设的建立
+
 - **原假设 ($H_0$)**：维持现状，除非证据确凿才拒绝。
 - **备择假设 ($H_1$)**：与 $H_0$ 对立。
 
 ### 检验过程
+
 1.  建立原假设 $H_0$ 与备择假设 $H_1$。
 2.  构造检验统计量 $T(X_1, \dots, X_n)$。
 3.  给定显著性水平 $\alpha$ (通常为 0.05 或 0.01)，确定拒绝域。
@@ -22,10 +24,10 @@ import KnowledgeCard from "@site/src/components/KnowledgeCard";
 
 ## 2. 两类错误 (Type I & II Errors)
 
-| 真实情况 | 接受 $H_0$ | 拒绝 $H_0$ |
-| :--- | :--- | :--- |
-| **$H_0$ 为真** | 正确决策 | **第一类错误 (弃真)** |
-| **$H_0$ 为假** | **第二类错误 (取伪)** | 正确决策 |
+| 真实情况       | 接受 $H_0$            | 拒绝 $H_0$            |
+| :------------- | :-------------------- | :-------------------- |
+| **$H_0$ 为真** | 正确决策              | **第一类错误 (弃真)** |
+| **$H_0$ 为假** | **第二类错误 (取伪)** | 正确决策              |
 
 <KnowledgeCard type="warning" title="不可兼得">
 在样本容量 $n$ 固定时，减小 $\alpha$ (第一类错误概率) 通常会导致 $\beta$ (第二类错误概率) 增大。
@@ -36,16 +38,19 @@ import KnowledgeCard from "@site/src/components/KnowledgeCard";
 假设总体 $X \sim N(\mu, \sigma^2)$，针对均值 $\mu$ 的双侧检验 ($H_0: \mu = \mu_0$)：
 
 ### $\sigma^2$ 已知 (Z-检验)
+
 检验统计量：$Z = \frac{\bar{X} - \mu_0}{\sigma/\sqrt{n}} \sim N(0, 1)$。
 拒绝域：$|Z| > z_{\alpha/2}$。
 
 ### $\sigma^2$ 未知 (T-检验)
+
 检验统计量：$T = \frac{\bar{X} - \mu_0}{S/\sqrt{n}} \sim t(n-1)$。
 拒绝域：$|T| > t_{\alpha/2}(n-1)$。
 
 ## 4. P-值 (P-value)
 
 **P-值** 是在原假设 $H_0$ 成立下，获得当前样本观测值或更极端观测值的概率。
+
 - 若 $P \le \alpha$，拒绝 $H_0$。
 - 若 $P > \alpha$，接受 $H_0$。
 

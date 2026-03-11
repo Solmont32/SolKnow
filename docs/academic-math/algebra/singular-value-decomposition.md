@@ -18,6 +18,7 @@ A = U \Sigma V^T
 $$
 
 其中：
+
 - **$U$**：其列向量称为 **左奇异向量**，是 $AA^T$ 的特征向量。
 - **$V$**：其列向量称为 **右奇异向量**，是 $A^TA$ 的特征向量。
 - **$\Sigma$**：对角线上的元素 $\sigma_1 \ge \sigma_2 \ge \dots \ge \sigma_r > 0$ 称为 **奇异值**，是 $A^TA$（或 $AA^T$）非零特征值的平方根。
@@ -25,6 +26,7 @@ $$
 ## 2. 几何意义
 
 SVD 说明任何线性变换都可以分解为三步：
+
 1. **旋转** ($V^T$): 将输入向量旋转到主轴方向。
 2. **拉伸** ($\Sigma$): 沿主轴方向进行不同比例的缩放。
 3. **再次旋转** ($U$): 将缩放后的结果旋转到输出空间的最终位置。
@@ -37,18 +39,21 @@ SVD 说明任何线性变换都可以分解为三步：
 ## 3. 紧凑型与截断 SVD
 
 ### 紧凑 SVD (Compact SVD)
+
 只保留非零奇异值。若 $A$ 的秩为 $r$，则：
-$$ A = U_r \Sigma_r V_r^T $$
-其中 $U_r \in M_{m \times r}$，$V_r \in M_{n \times r}$。
+$$ A = U*r \Sigma_r V_r^T $$
+其中 $U_r \in M*{m \times r}$，$V*r \in M*{n \times r}$。
 
 ### 截断 SVD (Truncated SVD)
+
 只保留前 $k$ 个最大的奇异值 ($k < r$)。这是 **最优低秩近似**（Eckart-Young 定理）：
-$$ A_k = \sum_{i=1}^k \sigma_i u_i v_i^T $$
+$$ A*k = \sum*{i=1}^k \sigma_i u_i v_i^T $$
 $A_k$ 是所有秩为 $k$ 的矩阵中离 $A$ 最近的一个（在 Frobenius 范数下）。
 
 ## 4. 应用示例：图像压缩
 
 一张 $1000 \times 1000$ 的灰度图可以看作一个矩阵。
+
 - 原始存储：$1,000,000$ 个像素。
 - 截断 SVD (取 $k=50$)：存储 $(1000+1000+1) \times 50 = 100,050$ 个数值。
 - **压缩比**：约 10:1，且通常能保留大部分视觉特征。
@@ -63,6 +68,7 @@ $A_k$ 是所有秩为 $k$ 的矩阵中离 $A$ 最近的一个（在 Frobenius �
 <summary>点击查看过程与答案</summary>
 
 虽然这是一个对角阵，但我们按步骤演示：
+
 1. 计算 $A^TA = \begin{pmatrix} 9 & 0 \\ 0 & 4 \end{pmatrix}$。
 2. 特征值为 $9, 4$，故奇异值为 $\sigma_1 = 3, \sigma_2 = 2$。
 3. $V$ 是 $A^TA$ 的特征向量：$v_1 = (1,0)^T, v_2 = (0,1)^T$。
@@ -70,13 +76,14 @@ $A_k$ 是所有秩为 $k$ 的矩阵中离 $A$ 最近的一个（在 Frobenius �
    - $u_1 = \frac{1}{3} \begin{pmatrix} 3 \\ 0 \end{pmatrix} = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$。
    - $u_2 = \frac{1}{2} \begin{pmatrix} 0 \\ -2 \end{pmatrix} = \begin{pmatrix} 0 \\ -1 \end{pmatrix}$。
 5. 结论：
-   $$ A = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix} \begin{pmatrix} 3 & 0 \\ 0 & 2 \end{pmatrix} \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}^T. $$
+$$ A = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix} \begin{pmatrix} 3 & 0 \\ 0 & 2 \end{pmatrix} \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}^T. $$
    注意 $U$ 里的 $-1$ 是为了保证 $U$ 是正交矩阵（且 $AV=U\Sigma$ 成立）。
 </details>
 
 ## 6. 配套练习
 
 ### 练习 1：奇异值的性质
+
 证明：若 $A$ 是对称且半正定的矩阵，则其奇异值等于其特征值。
 
 <details>
@@ -89,6 +96,7 @@ $A_k$ 是所有秩为 $k$ 的矩阵中离 $A$ 最近的一个（在 Frobenius �
 </details>
 
 ### 练习 2：Moore-Penrose 伪逆
+
 利用 SVD 定义 $A$ 的伪逆 $A^+$。
 
 <details>

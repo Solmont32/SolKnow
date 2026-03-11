@@ -29,15 +29,15 @@ ll dfs(int pos, int state, bool limit, bool lead) {
     if (pos == -1) return 1; // 填充完毕，返回 1
     // 注意：只有在无 limit 且无 lead 的情况下才能直接返回缓存，
     // 因为受限状态或前导零状态下的解是不通用的。
-    if (!limit && !lead && f[pos][state] != -1) return f[pos][state]; 
-    
+    if (!limit && !lead && f[pos][state] != -1) return f[pos][state];
+
     ll res = 0;
     int up = limit ? a[pos] : 9; // 确定当前位上限
     for (int i = 0; i <= up; i++) {
         // ... 根据条件剪枝/更新 state ...
         res += dfs(pos - 1, new_state, limit && (i == up), lead && (i == 0));
     }
-    
+
     if (!limit && !lead) f[pos][state] = res;
     return res;
 }
@@ -55,6 +55,7 @@ $$\text{solve}(L, R) = \text{solve}(R) - \text{solve}(L - 1)$$
 ## <ShieldCheck className="inline-block mr-2" /> 3. 综合练习与强化
 
 ### 练习 1：Windy 数
+
 统计 $[L, R]$ 内，相邻两位数字之差至少为 2 的数的个数。
 
 <details>
@@ -80,7 +81,7 @@ ll dfs(int pos, int pre, bool limit, bool lead) {
     int up = limit ? a[pos] : 9;
     for (int i = 0; i <= up; i++) {
         // 如果有前导零，则当前位 i 不受相邻差限制
-        if (!lead && abs(i - pre) < 2) continue; 
+        if (!lead && abs(i - pre) < 2) continue;
         res += dfs(pos - 1, i, limit && (i == up), lead && (i == 0));
     }
 
@@ -89,9 +90,11 @@ ll dfs(int pos, int pre, bool limit, bool lead) {
 }
 // ... solve 函数同上 ...
 ```
+
 </details>
 
 ### 练习 2：数字计数 (Digit Counting)
+
 统计区间 $[L, R]$ 内数字 $k \in [0, 9]$ 出现的总次数。
 
 <details>
@@ -117,12 +120,13 @@ ll dfs(int pos, int count, bool limit, bool lead, int k) {
     return res;
 }
 ```
+
 </details>
 
 ---
 
 ## 延伸挑战
+
 - [洛谷 P2602 [ZJOI2010] 数字计数](https://www.luogu.com.cn/problem/P2602)
 - [洛谷 P4127 [AHOI2009] 同类分布](https://www.luogu.com.cn/problem/P4127)（数位 DP 结合模运算状态）
 - [HDU 4352 XHcy's LIS](http://acm.hdu.edu.cn/showproblem.php?pid=4352)（数位 DP 嵌套状压记录 LIS）
-

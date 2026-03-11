@@ -62,12 +62,15 @@ $$
 &= \lambda\mu (x \otimes y)
 \end{aligned}
 $$
+
 因此，$A \otimes B$ 的特征值是 $A$ 和 $B$ 的特征值的两两乘积。
+
 </details>
 
 ## 6. 配套练习
 
 ### 练习 1：计算 Kronecker 积
+
 计算 $A = \begin{pmatrix} 1 & 2 \\ 0 & 3 \end{pmatrix}$ 与 $B = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$ 的张量积 $A \otimes B$。
 
 <details>
@@ -84,9 +87,11 @@ A \otimes B = \begin{pmatrix}
 0 & 0 & 3 & 0
 \end{pmatrix}.
 $$
+
 </details>
 
 ### 练习 2：纯张量的判定
+
 并非 $V \otimes W$ 中的所有向量都能写成 $v \otimes w$ 的形式。能写成此形式的称为 **纯张量 (Pure Tensor)** 或可分态。
 在 $\mathbb{R}^2 \otimes \mathbb{R}^2$ 中，判断 $z = e_1 \otimes e_1 + e_2 \otimes e_2$ 是否为纯张量。
 

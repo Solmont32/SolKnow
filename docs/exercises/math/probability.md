@@ -20,6 +20,7 @@ $$P(X > k) = \sum_{i=k+1}^\infty (1-p)^{i-1}p = p(1-p)^k \sum_{j=0}^\infty (1-p)
 于是：
 $$P(X > n+m | X > n) = \frac{P(X > n+m, X > n)}{P(X > n)} = \frac{P(X > n+m)}{P(X > n)} = \frac{(1-p)^{n+m}}{(1-p)^n} = (1-p)^m$$
 而 $P(X > m) = (1-p)^m$。得证。
+
 </details>
 
 ## 2. 连续型随机变量与数字特征
@@ -32,15 +33,17 @@ $$P(X > n+m | X > n) = \frac{P(X > n+m, X > n)}{P(X > n)} = \frac{P(X > n+m)}{P(
 <summary>查看答案</summary>
 
 $$E(X^n) = \int_0^a x^n \frac{1}{a} \, dx = \frac{1}{a} \left[ \frac{1}{n+1} x^{n+1} \right]_0^a = \frac{a^n}{n+1}$$
+
 </details>
 
 :::info 习题 2.2：联合分布与独立性
 设二维随机变量 $(X, Y)$ 的联合密度函数为：
 $$f(x, y) = \begin{cases} c(x+y), & 0 < x < 1, 0 < y < 1 \\ 0, & \text{其他} \end{cases}$$
+
 1. 求常数 $c$；
 2. 求 $X, Y$ 的边缘密度函数；
 3. 判断 $X, Y$ 是否独立。
-:::
+   :::
 
 <details>
 <summary>查看解答</summary>
@@ -57,6 +60,7 @@ $f_X(x) = \int_0^1 (x+y) \, dy = [xy + \frac{1}{2}y^2]_0^1 = x + \frac{1}{2}, \q
 **3. 独立性判断：**
 由于 $f_X(x) f_Y(y) = (x+\frac{1}{2})(y+\frac{1}{2}) = xy + \frac{1}{2}x + \frac{1}{2}y + \frac{1}{4} \neq x+y = f(x, y)$。
 因此 $X, Y$ **不独立**。
+
 </details>
 
 ## 3. 极限定理与特征函数
@@ -72,6 +76,7 @@ $f_X(x) = \int_0^1 (x+y) \, dy = [xy + \frac{1}{2}y^2]_0^1 = x + \frac{1}{2}, \q
 $$\phi_X(t) = \sum_{k=0}^\infty e^{itk} e^{-\lambda} \frac{\lambda^k}{k!} = e^{-\lambda} \sum_{k=0}^\infty \frac{(\lambda e^{it})^k}{k!}$$
 利用指数级数展开 $e^x = \sum \frac{x^n}{n!}$：
 $$\phi_X(t) = e^{-\lambda} e^{\lambda e^{it}} = e^{\lambda(e^{it}-1)}$$
+
 </details>
 
 :::info 习题 3.2：中心极限定理 (CLT) 的应用
@@ -89,6 +94,7 @@ $P(85 \le X \le 95) = P\left(\frac{85-90}{3} \le \frac{X-90}{3} \le \frac{95-90}
 $= P(-1.67 \le Z \le 1.67) = \Phi(1.67) - \Phi(-1.67) = 2\Phi(1.67) - 1$
 查表可知 $\Phi(1.67) \approx 0.9525$。
 $P \approx 2 \times 0.9525 - 1 = 0.905$。
+
 </details>
 
 ---

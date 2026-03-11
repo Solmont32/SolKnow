@@ -33,6 +33,7 @@ $$
 ## 2. 合同变换与标准形
 
 若存在可逆矩阵 $C$ 使 $C^TAC=B$，则称 $A,B$ **合同**，记作 $A \simeq B$。这对应于变量替换 $\mathbf{x}=C\mathbf{y}$，使得：
+
 $$
 Q(\mathbf{x}) = (C\mathbf{y})^TA(C\mathbf{y}) = \mathbf{y}^T(C^TAC)\mathbf{y} = \mathbf{y}^TB\mathbf{y}.
 $$
@@ -54,6 +55,7 @@ $$
 ## 4. 正定性与判别法
 
 实对称矩阵 $A$（或其二次型 $Q$）称为：
+
 - **正定**：对任意 $\mathbf{x} \neq 0$，$Q(\mathbf{x}) > 0$。
 - **半正定**：对任意 $\mathbf{x}$，$Q(\mathbf{x}) \ge 0$。
 
@@ -77,8 +79,9 @@ $$
 <summary>点击查看解答</summary>
 
 构造扩展矩阵 $\begin{pmatrix} A \\ I \end{pmatrix} = \begin{pmatrix} 1 & -1 \\ -1 & 2 \\ \hline 1 & 0 \\ 0 & 1 \end{pmatrix}$。
+
 1. 第一列加到第二列，同时第一行加到第二行：
-   $\begin{pmatrix} 1 & 0 \\ 0 & 1 \\ \hline 1 & 1 \\ 0 & 1 \end{pmatrix}$。
+$\begin{pmatrix} 1 & 0 \\ 0 & 1 \\ \hline 1 & 1 \\ 0 & 1 \end{pmatrix}$。
 此时 $A$ 已成对角阵，故 $C = \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}$。
 验证：$C^TAC = \begin{pmatrix} 1 & 0 \\ 1 & 1 \end{pmatrix} \begin{pmatrix} 1 & -1 \\ -1 & 2 \end{pmatrix} \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix} = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$。
 </details>
@@ -92,6 +95,7 @@ $$
 
 矩阵 $A = \begin{pmatrix} 1 & 1 & 1 \\ 1 & 1 & 1 \\ 1 & 1 & t \end{pmatrix}$。
 计算顺序主子式：
+
 - $\Delta_1 = 1 > 0$。
 - $\Delta_2 = \begin{vmatrix} 1 & 1 \\ 1 & 1 \end{vmatrix} = 0$。
 由于 $\Delta_2 = 0$，无论 $t$ 为何值，该二次型都**不可能是正定**的（正定要求所有顺序主子式严格大于 0）。
@@ -111,6 +115,7 @@ $$
 $Q = (y_1^2 - y_2^2) + (y_1-y_2)y_3 + (y_1+y_2)y_3 = y_1^2 - y_2^2 + 2y_1y_3$。
 继续配方：$Q = (y_1+y_3)^2 - y_2^2 - y_3^2$。
 令 $z_1 = y_1+y_3, z_2 = y_2, z_3 = y_3$，则 $Q = z_1^2 - z_2^2 - z_3^2$。
+
 - **秩**：3。
 - **正惯性指数**：1。
 - **负惯性指数**：2。
@@ -127,7 +132,7 @@ $Q = (y_1^2 - y_2^2) + (y_1-y_2)y_3 + (y_1+y_2)y_3 = y_1^2 - y_2^2 + 2y_1y_3$。
    则 $y^T(B^TAB)y = (By)^TA(By) = x^TAx$。
    因为 $A$ 正定，故 $x^TAx \ge 0$，所以 $B^TAB$ 半正定。
 2. 若 $\operatorname{rank}(B)=m$，则对 $y \neq 0$，必有 $x = By \neq 0$。
-   此时 $x^TAx > 0$，故 $B^TAB$ 正定。
+此时 $x^TAx > 0$，故 $B^TAB$ 正定。
 </details>
 
 ### 练习 3：负定判别
@@ -138,6 +143,7 @@ $Q = (y_1^2 - y_2^2) + (y_1-y_2)y_3 + (y_1+y_2)y_3 = y_1^2 - y_2^2 + 2y_1y_3$。
 <summary>点击查看解答</summary>
 
 顺序主子式：
+
 - $\Delta_1 = -1 < 0$。
 - $\Delta_2 = (-1)(-2) - 1^2 = 1 > 0$。
 满足 $(-1)^k \Delta_k > 0$（$-1$ 的奇数次方为负，偶数次方为正），故 $A$ 是**负定**的。

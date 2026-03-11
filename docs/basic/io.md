@@ -47,6 +47,7 @@ inline int read() {
     return x * f;
 }
 ```
+
 </details>
 
 ---

@@ -13,11 +13,11 @@ import { Target, Zap, Trophy, BarChart3, ChevronRight, Code2, Layers, Binary, Gi
 
 ## 🪜 练习阶梯与评价标准
 
-| 等级 | 难度目标 | 核心考察点 | 期望达成 |
-| :--- | :--- | :--- | :--- |
-| <span style={{ color: 'var(--ifm-color-success)' }}>● **Level A**</span> | 模型识别与状态定义 | 线性序列、简单背包 | 能准确写出状态转移方程 |
-| <span style={{ color: 'var(--ifm-color-warning)' }}>● **Level B**</span> | 状态压缩与维度转换 | 区间合并、树形归约、位运算状态 | 能够独立处理边界与初始化 |
-| <span style={{ color: 'var(--ifm-color-danger)' }}>● **Level C**</span> | 复杂建模与策略优化 | 数位逻辑、斜率优化、状态空间深度裁剪 | 具备解决 NOIP/ACM 中档及以上 DP 的能力 |
+| 等级                                                                     | 难度目标           | 核心考察点                           | 期望达成                               |
+| :----------------------------------------------------------------------- | :----------------- | :----------------------------------- | :------------------------------------- |
+| <span style={{ color: 'var(--ifm-color-success)' }}>● **Level A**</span> | 模型识别与状态定义 | 线性序列、简单背包                   | 能准确写出状态转移方程                 |
+| <span style={{ color: 'var(--ifm-color-warning)' }}>● **Level B**</span> | 状态压缩与维度转换 | 区间合并、树形归约、位运算状态       | 能够独立处理边界与初始化               |
+| <span style={{ color: 'var(--ifm-color-danger)' }}>● **Level C**</span>  | 复杂建模与策略优化 | 数位逻辑、斜率优化、状态空间深度裁剪 | 具备解决 NOIP/ACM 中档及以上 DP 的能力 |
 
 ---
 
@@ -26,6 +26,7 @@ import { Target, Zap, Trophy, BarChart3, ChevronRight, Code2, Layers, Binary, Gi
 ### 1. 线性 DP 与背包 (Linear & Knapsack)
 
 #### 练习 1：最长上升子序列 (LIS) - $O(n \log n)$ 优化
+
 **题目描述**：给定一个长度为 $n$ 的序列，求最长上升子序列的长度。要求使用贪心 + 二分实现 $O(n \log n)$。
 
 <details>
@@ -34,6 +35,7 @@ import { Target, Zap, Trophy, BarChart3, ChevronRight, Code2, Layers, Binary, Gi
 **解题思路**：
 维护一个数组 `q`，其中 `q[i]` 表示长度为 `i` 的上升子序列末尾元素的最小值。
 **C++ 代码实现**：
+
 ```cpp
 #include <iostream>
 #include <vector>
@@ -56,23 +58,28 @@ int main() {
     return 0;
 }
 ```
+
 </details>
 
 #### 练习 2：混合背包问题
+
 **题目描述**：有 $n$ 种物品和一个容量为 $V$ 的背包。物品分为三类：
+
 1. 每种仅有一个（0/1 背包）
 2. 每种有无限个（完全背包）
 3. 每种有有限个 $s_i$ 个（多重背包）
-求背包能装下的最大价值。
+   求背包能装下的最大价值。
 
 <details>
 <summary>Check Solution (C++ Implementation)</summary>
 
 **解题思路**：
+
 - 多重背包使用二进制拆分转化为 0/1 背包。
 - 根据物品类型分别调用 0/1 背包或完全背包的转移方程。
 
 **C++ 代码实现**：
+
 ```cpp
 #include <iostream>
 #include <vector>
@@ -106,6 +113,7 @@ int main() {
     return 0;
 }
 ```
+
 </details>
 
 ---
@@ -113,6 +121,7 @@ int main() {
 ### 2. 区间 DP 与树形 DP (Range & Tree)
 
 #### 练习 3：石子合并 (区间 DP 经典)
+
 **题目描述**：有 $n$ 堆石子排成一排，每次只能合并相邻的两堆，合并的代价为两堆石子重量之和。求将 $n$ 堆石子合并成一堆的最小代价。
 
 <details>
@@ -122,6 +131,7 @@ int main() {
 **转移方程**：`f[i][j] = min(f[i][k] + f[k+1][j] + sum(i, j))`。
 
 **C++ 代码实现**：
+
 ```cpp
 #include <iostream>
 
@@ -150,19 +160,23 @@ int main() {
     return 0;
 }
 ```
+
 </details>
 
 #### 练习 4：没有上司的舞会 (树形 DP)
+
 **题目描述**：某公司有 $n$ 名职员，呈树状结构。每名职员都有一个快乐指数。如果某个职员的上司参加舞会，那么该职员就不会参加。求舞会快乐指数之和的最大值。
 
 <details>
 <summary>Check Solution (C++ Implementation)</summary>
 
 **状态定义**：
+
 - `f[u][0]`：以 $u$ 为根的子树，且 $u$ 不参加的最优解。
 - `f[u][1]`：以 $u$ 为根的子树，且 $u$ 参加的最优解。
 
 **C++ 代码实现**：
+
 ```cpp
 #include <iostream>
 #include <vector>
@@ -202,6 +216,7 @@ int main() {
     return 0;
 }
 ```
+
 </details>
 
 ---
@@ -209,6 +224,7 @@ int main() {
 ### 3. 状压 DP 与数位 DP (State & Digit)
 
 #### 练习 5：蒙德里安的梦想 (状压 DP)
+
 **题目描述**：求把 $n \times m$ 的棋盘分割成若干个 $1 \times 2$ 的长方形，有多少种方案。
 
 <details>
@@ -219,6 +235,7 @@ int main() {
 **状态定义**：`f[i][j]` 表示第 $i$ 列，且从第 $i-1$ 列伸出来的横放长方形状态为 $j$ 的方案数。
 
 **C++ 代码实现**：
+
 ```cpp
 #include <iostream>
 #include <vector>
@@ -252,15 +269,17 @@ int main() {
                 for (int k = 0; k < 1 << n; k++)
                     if ((j & k) == 0 && st[j | k])
                         f[i][j] += f[i - 1][k];
-        
+
         cout << f[m][0] << endl;
     }
     return 0;
 }
 ```
+
 </details>
 
 #### 练习 6：Windy 数 (数位 DP)
+
 **题目描述**：不含前导零且相邻两个数字之差至少为 2 的正整数被称为 Windy 数。求在 $[A, B]$ 范围内有多少个 Windy 数。
 
 <details>
@@ -270,6 +289,7 @@ int main() {
 经典的数位 DP，通常使用 `memoization` (记忆化搜索) 模板实现。
 
 **C++ 代码实现**：
+
 ```cpp
 #include <iostream>
 #include <vector>
@@ -309,11 +329,13 @@ int main() {
     return 0;
 }
 ```
+
 </details>
 
 ---
 
 ## 🏆 建模心法
+
 1. **状态定义是灵魂**：如果转移推不动，通常是状态少记了维度（如无后效性被破坏）。
 2. **刷表法 vs 填表法**：大多数情况填表法（由已知推当前）更直观，但在状态稀疏时刷表法（由当前推未来）更高效。
 3. **滚动数组优化**：在空间吃紧时，观察 $f[i]$ 是否只依赖 $f[i-1]$。

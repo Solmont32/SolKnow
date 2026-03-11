@@ -16,6 +16,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 <KnowledgeCard title="图的数学定义" icon={<BookOpen size={20} />}>
 一个图被定义为一个二元组 $G = (V, E)$，其中：
+
 - $V = \{v_1, v_2, \dots, v_n\}$ 是一个非空的有限**顶点集** (Vertex Set)。
 - $E \subseteq \{\{u, v\} \mid u, v \in V, u \neq v\}$ 是**边集** (Edge Set)。
 
@@ -23,6 +24,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </KnowledgeCard>
 
 ### 核心拓扑属性
+
 - **连通性 (Connectivity)**：反映图中节点间的可达关系。
 - **度数 (Degree)**：无向图中关联边的数量；有向图中分为入度 ($\text{deg}^-$) 与出度 ($\text{deg}^+$)。
 - **稀疏度 (Sparsity)**：若 $|E| \ll |V|^2$，则称为稀疏图，通常采用邻接表存储。
@@ -46,19 +48,23 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 本章节系统化涵盖了从基础遍历到高级连通性的工业级算法实现：
 
 ### 1. 结构与遍历 (Foundations)
+
 - [**图的存储 (Representation)**](representation)：邻接矩阵、邻接表、**链式前向星**。
 - [**图的遍历 (Traversal)**](traversal)：DFS/BFS 的形式化理解与状态机应用。
 - [**拓扑排序 (Topological Sort)**](topo-sort)：DAG 上的偏序关系与动态规划。
 
 ### 2. 路径与优化 (Optimization)
+
 - [**最短路算法 (Shortest Path)**](shortest-path)：Dijkstra, Bellman-Ford, SPFA, Floyd 及**分层图**、**差分约束**建模。
 - [**最小生成树 (MST)**](mst)：Kruskal 与 Prim 算法及**切分定理**证明。
 
 ### 3. 连通性与约束 (Topology)
+
 - [**强连通分量 (SCC)**](tarjan)：Tarjan 算法、**缩点技巧**与**圆方树**构造。
 - [**2-SAT 问题**](sat)：利用强连通分量解决布尔逻辑约束。
 
 ### 4. 流量与匹配 (Flow & Matching)
+
 - [**二分图匹配 (Matching)**](bipartite-matching)：匈牙利算法、**Kőnig 定理**与覆盖问题对偶性。
 - [**网络流进阶 (Network Flow)**](network-flow)：最大流、最小割、**最小费用流**及其复杂建模。
 

@@ -74,8 +74,8 @@ import { Code2, Zap, Target, Layers, GitBranch, Binary, Repeat, Trophy } from 'l
 
 ## 编者按 (Editor's Note)
 
-> “算法不仅仅是代码，它是对问题结构的深刻洞察。”  
-> 
+> “算法不仅仅是代码，它是对问题结构的深刻洞察。”
+>
 > 在本章的学习中，请务必关注**单调性判定**与**空间换时间策略**。每一个看似简单的原语，在组合应用时都能爆发巨大的威力。
 
 <div className="mt-8 p-4 bg-gray-50 rounded-xl border border-dashed border-gray-300">

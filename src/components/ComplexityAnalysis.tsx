@@ -6,7 +6,12 @@ const complexities = [
   { label: 'O(1)', color: '#10b981', fn: (n: number) => 1, desc: '常数级' },
   { label: 'O(log n)', color: '#3b82f6', fn: (n: number) => Math.log2(n), desc: '对数级' },
   { label: 'O(n)', color: '#8b5cf6', fn: (n: number) => n, desc: '线性级' },
-  { label: 'O(n log n)', color: '#f59e0b', fn: (n: number) => n * Math.log2(n), desc: '线性对数级' },
+  {
+    label: 'O(n log n)',
+    color: '#f59e0b',
+    fn: (n: number) => n * Math.log2(n),
+    desc: '线性对数级',
+  },
   { label: 'O(n²)', color: '#ef4444', fn: (n: number) => n * n, desc: '平方级' },
 ];
 
@@ -107,14 +112,30 @@ export default function ComplexityAnalysis() {
             })}
 
             {/* 轴 */}
-            <line x1={padding} y1={height - padding} x2={width - padding} y2={height - padding} stroke="var(--ifm-color-emphasis-400)" strokeWidth="2" />
-            <line x1={padding} y1={height - padding} x2={padding} y2={padding} stroke="var(--ifm-color-emphasis-400)" strokeWidth="2" />
+            <line
+              x1={padding}
+              y1={height - padding}
+              x2={width - padding}
+              y2={height - padding}
+              stroke="var(--ifm-color-emphasis-400)"
+              strokeWidth="2"
+            />
+            <line
+              x1={padding}
+              y1={height - padding}
+              x2={padding}
+              y2={padding}
+              stroke="var(--ifm-color-emphasis-400)"
+              strokeWidth="2"
+            />
           </svg>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <div style={{ marginBottom: '1rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+            <div
+              style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}
+            >
               <span style={{ fontSize: '0.9rem', fontWeight: 700 }}>规模 $n$:</span>
               <span style={{ fontWeight: 800, color: 'var(--ifm-color-primary)' }}>{n}</span>
             </div>

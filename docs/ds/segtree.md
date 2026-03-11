@@ -24,11 +24,13 @@ import { Layers, Zap, ShieldCheck, BoxSelect, Code2, Sigma, Binary } from 'lucid
 线段树是对区间信息的二叉划分映射。设 $S = \{a_1, a_2, \dots, a_n\}$ 为原始序列，线段树定义了一个映射 $\mathcal{T}: \mathcal{I} \to M$，其中 $\mathcal{I}$ 是 $[1, n]$ 的所有子区间。
 
 ### 1.1 递归构造原语
+
 - **Build(L, R)**:
   - 若 $L=R$，创建叶节点 $u$，$\mathcal{T}(u) = a_L$。
   - 否则，递归构造 $mid = \lfloor (L+R)/2 \rfloor$ 的左子树与右子树，$\mathcal{T}(u) = \mathcal{T}(ls) \oplus \mathcal{T}(rs)$。
 
 ### 1.2 接口形式化定义
+
 - `query(l, r)`: $\bigoplus_{i=l}^r a_i \in M$。
 - `update(l, r, f)`: $\forall i \in [l, r], a_i \leftarrow f(a_i), f \in F$。
 
@@ -37,6 +39,7 @@ import { Layers, Zap, ShieldCheck, BoxSelect, Code2, Sigma, Binary } from 'lucid
 ## 2. 时空复杂度分摊分析
 
 ### 2.1 空间复杂度：4N 定律
+
 **定理**：在数组存储实现中，必须开辟 $4N$ 的空间以避免索引越界。
 **证明**：
 线段树是一棵高度为 $H = \lceil \log_2 N \rceil + 1$ 的二叉树。在数组索引中，索引最大值出现在最后一层。
@@ -44,6 +47,7 @@ import { Layers, Zap, ShieldCheck, BoxSelect, Code2, Sigma, Binary } from 'lucid
 由于 $2^{k+2} = 4 \cdot 2^k < 4N$，故 $4N$ 是安全的上界。
 
 ### 2.2 时间复杂度：$O(\log N)$ 剪枝证明
+
 **引理**：任何区间查询最多访问 $4 \log N$ 个节点。
 **证明**：在每一层递归中，只有与查询区间边界重合的节点会继续向下分裂。每一层最多只有 2 个这样的“边界节点”，故总访问节点数为 $O(H) = O(\log N)$。
 
@@ -54,19 +58,21 @@ import { Layers, Zap, ShieldCheck, BoxSelect, Code2, Sigma, Binary } from 'lucid
 **命题**：带懒标记的 `push_down` 操作保持线段树的不变量 $\mathcal{T}(u) = \mathcal{T}(ls) \oplus \mathcal{T}(rs)$。
 
 **证明**：
+
 1. **延迟性质**：设节点 $u$ 挂有标记 $f$。此时 $u$ 的真实值应为 $f(\mathcal{T}(u))$，但子节点 $ls, rs$ 的值尚未更新。
 2. **传播一致性**：执行 `push_down(u)` 时：
    - 更新子节点：$\mathcal{T}(ls) \leftarrow f(\mathcal{T}(ls)), \mathcal{T}(rs) \leftarrow f(\mathcal{T}(rs))$。
    - 传递标记：$tag_{ls} \leftarrow f \circ tag_{ls}, tag_{rs} \leftarrow f \circ tag_{rs}$。
 3. **结合律保证**：由算子分配律 $f(a \oplus b) = f(a) \oplus f(b)$，更新后的子节点满足：
    $\mathcal{T}(ls)_{new} \oplus \mathcal{T}(rs)_{new} = f(\mathcal{T}(ls)) \oplus f(\mathcal{T}(rs)) = f(\mathcal{T}(ls) \oplus \mathcal{T}(rs)) = f(\mathcal{T}(u)) = \mathcal{T}(u)_{new}$。
-证毕。
+   证毕。
 
 ---
 
 ## 4. 教材化例题与解析
 
 ### 例题 1：线段树上二分 (寻找阈值)
+
 <details>
 <summary>Check Solution</summary>
 
@@ -84,9 +90,11 @@ int find(int u, int l, int r, int qL, int qR, int k) {
     return res;
 }
 ```
+
 </details>
 
 ### 例题 2：区间乘法与加法 (多重标记)
+
 <details>
 <summary>Check Solution (C++ Implementation)</summary>
 
@@ -106,6 +114,7 @@ void pushdown(int u, int l, int r) {
     tr[u].mul = 1; tr[u].add = 0;
 }
 ```
+
 </details>
 
 ---
@@ -132,6 +141,7 @@ void update(int &u, long long l, long long r, int x, int v) {
     else update(tr[u].r, mid + 1, r, x, v);
 }
 ```
+
 </details>
 
 2. **[标记永久化]** 实现一个不支持 `push_down` 的区间加、区间求和线段树。
@@ -139,6 +149,7 @@ void update(int &u, long long l, long long r, int x, int v) {
 <summary>Check Solution</summary>
 
 **核心思想**：贡献法。每个节点的 `add` 标记表示对该子树所有元素的共同增量。
+
 ```cpp
 long long tag[N * 4], sum[N * 4];
 
@@ -163,6 +174,7 @@ long long query(int u, int l, int r, int qL, int qR, long long add) {
     return res;
 }
 ```
+
 </details>
 
 3. **[进阶]** **线段树分裂**：将一棵维护 $[1, N]$ 的权值线段树按权值 $k$ 分裂为两棵。
@@ -182,6 +194,7 @@ void split(int &u, int &v, int l, int r, int k) {
     push_up(u); push_up(v);
 }
 ```
+
 </details>
 
 ---

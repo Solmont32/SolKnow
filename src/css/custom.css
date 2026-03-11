@@ -52,11 +52,21 @@
 }
 
 /* SolKnow Color Utility Classes */
-.solknow-blue { color: #3b82f6 !important; }
-.solknow-purple { color: #8b5cf6 !important; }
-.solknow-amber { color: #f59e0b !important; }
-.solknow-red { color: #ef4444 !important; }
-.solknow-emerald { color: #10b981 !important; }
+.solknow-blue {
+  color: #3b82f6 !important;
+}
+.solknow-purple {
+  color: #8b5cf6 !important;
+}
+.solknow-amber {
+  color: #f59e0b !important;
+}
+.solknow-red {
+  color: #ef4444 !important;
+}
+.solknow-emerald {
+  color: #10b981 !important;
+}
 
 /* 全局滚动条样式 */
 ::-webkit-scrollbar {

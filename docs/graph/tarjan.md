@@ -15,13 +15,16 @@ Tarjan 算法是图论中处理连通性的核心工具。它通过一次深度�
 ## 一、 <Sigma className="inline-block mr-2 mb-1 text-blue-500" /> 核心理论体系
 
 ### 1. DFS 树与边分类
+
 在 DFS 过程中，有向图的边被划分为四类：
+
 - **树边 (Tree Edge)**：搜索树中的边。
 - **回边 (Back Edge)**：指向当前路径上祖先节点的边。
 - **前向边 (Forward Edge)**：指向子树中已访问节点的非树边。
 - **横叉边 (Cross Edge)**：指向已访问但非祖先节点的边。
 
 ### 2. 核心属性：dfn 与 low
+
 - **dfn[u]**：节点 $u$ 被访问的时间戳。
 - **low[u]**：节点 $u$ 及其子树通过**至多一条**回边或横叉边（且终点在当前栈中）能到达的最小 $dfn$ 值。
 
@@ -35,13 +38,13 @@ $low[u] = dfn[u]$ 意味着 $u$ 的子树无法通过任何边回溯到 $u$ 之�
 
 ## 二、 <Workflow className="inline-block mr-2 mb-1 text-purple-500" /> 算法矩阵与复杂度分析
 
-<ComplexityAnalysis 
-  data={[
-    { algorithm: "Tarjan (SCC)", complexity: "O(V + E)", space: "O(V + E)", note: "辅助栈一次 DFS，可直接得出拓扑序" },
-    { algorithm: "Tarjan (v-BCC)", complexity: "O(V + E)", space: "O(V + E)", note: "点双连通分量，割点判定" },
-    { algorithm: "Tarjan (e-BCC)", complexity: "O(V + E)", space: "O(V + E)", note: "边双连通分量，桥判定" },
-    { algorithm: "Kosaraju", complexity: "O(V + E)", space: "O(V + E)", note: "两次 DFS，适合理论证明" }
-  ]}
+<ComplexityAnalysis
+data={[
+{ algorithm: "Tarjan (SCC)", complexity: "O(V + E)", space: "O(V + E)", note: "辅助栈一次 DFS，可直接得出拓扑序" },
+{ algorithm: "Tarjan (v-BCC)", complexity: "O(V + E)", space: "O(V + E)", note: "点双连通分量，割点判定" },
+{ algorithm: "Tarjan (e-BCC)", complexity: "O(V + E)", space: "O(V + E)", note: "边双连通分量，桥判定" },
+{ algorithm: "Kosaraju", complexity: "O(V + E)", space: "O(V + E)", note: "两次 DFS，适合理论证明" }
+]}
 />
 
 ---
@@ -49,12 +52,15 @@ $low[u] = dfn[u]$ 意味着 $u$ 的子树无法通过任何边回溯到 $u$ 之�
 ## 三、 <ShieldAlert className="inline-block mr-2 mb-1 text-red-500" /> 无向图：割点与桥的判定
 
 ### 1. 割点 (Articulation Point)
+
 **条件**：
+
 - 若 $u$ 是 DFS 树的根：至少有两个子树。
 - 若 $u$ 非根：存在子节点 $v$ 使得 $low[v] \ge dfn[u]$。
-*直观理解*：$low[v] \ge dfn[u]$ 说明 $v$ 的子树没有指向 $u$ 的祖先的回边，移除 $u$ 后 $v$ 的子树将与外界断开。
+  _直观理解_：$low[v] \ge dfn[u]$ 说明 $v$ 的子树没有指向 $u$ 的祖先的回边，移除 $u$ 后 $v$ 的子树将与外界断开。
 
 ### 2. 桥 (Bridge)
+
 **条件**：存在子节点 $v$ 使得 $low[v] > dfn[u]$。
 
 ---
@@ -62,6 +68,7 @@ $low[u] = dfn[u]$ 意味着 $u$ 的子树无法通过任何边回溯到 $u$ 之�
 ## 四、 <LayoutGrid className="inline-block mr-2 mb-1 text-green-500" /> SCC 缩点与 DAG 转换
 
 强连通分量的一个核心性质是：**任何有向图在缩点（SCC Condensation）后必然得到一个 DAG**。
+
 - **拓扑序**：Tarjan 算法求出的 SCC ID 顺序（按出栈逆序）天然对应着缩点后 DAG 的一个**反拓扑序**。
 - **应用**：将复杂图转化为 DAG 后，可以运行动态规划。
 
@@ -110,8 +117,8 @@ class TarjanSCC {
     }
 
 public:
-    TarjanSCC(int _n) : n(_n), timer(0), scc_cnt(0), 
-        adj(n + 1), dfn(n + 1, 0), low(n + 1, 0), 
+    TarjanSCC(int _n) : n(_n), timer(0), scc_cnt(0),
+        adj(n + 1), dfn(n + 1, 0), low(n + 1, 0),
         scc_id(n + 1, 0), in_stack(n + 1, false) {}
 
     void add_edge(int u, int v) { adj[u].push_back(v); }
@@ -127,12 +134,14 @@ public:
 ## 六、 <Target className="inline-block mr-2 mb-1 text-red-500" /> 精选练习与解析
 
 ### 练习 1：2-SAT 问题判定
+
 给定一组变量 $x_i$ 及其约束 $(x_i \lor x_j)$，判定是否存在一组布尔赋值。
 
 <details>
 <summary>Check Solution</summary>
 
 **解析**：
+
 1. **构图**：将 $(A \lor B)$ 转化为 $(\neg A \to B)$ 和 $(\neg B \to A)$。
 2. **SCC 分解**：运行 Tarjan。
 3. **判定**：若存在变量 $i$ 使得 $x_i$ 和 $\neg x_i$ 在同一个 SCC 中，则无解。
@@ -141,12 +150,14 @@ public:
 </details>
 
 ### 练习 2：缩点后的 DAG 动态规划
+
 在有向图中，每个点有权值，求一条路径使得权值和最大（可重复经过点和边）。
 
 <details>
 <summary>Check Solution</summary>
 
 **解析**：
+
 1. **缩点**：由于同一个 SCC 内部的点可以互相到达并全部选取，将 SCC 缩为一个新点。
 2. **权值转换**：新点权值 = 原 SCC 内所有点权值之和。
 3. **DAG 最长路**：在新图上运行拓扑排序 + DP。$dp[v] = \max(dp[u] + val[v])$。
@@ -154,12 +165,14 @@ public:
 </details>
 
 ### 练习 3：无向图加边使其边双连通
+
 给定无向图，最少增加几条边使其没有桥？
 
 <details>
 <summary>Check Solution</summary>
 
 **解析**：
+
 1. **边双缩点**：找出所有桥，缩点后得到一棵树。
 2. **统计叶子**：设度数为 1 的节点数为 $L$。
 3. **结论**：最少加边数为 $\lceil L/2 \rceil$。

@@ -20,23 +20,27 @@ title: 极限定理 (Limit Theorems)
 大数定律描述的是样本均值的稳定性（依概率收敛于期望）。
 
 ### 切比雪夫不等式 (Chebyshev's Inequality)
+
 对于随机变量 $X$，若其期望 $E(X) = \mu$ 和方差 $Var(X) = \sigma^2$ 有限，则对任意 $\epsilon > 0$：
 $$P(|X - \mu| \ge \epsilon) \le \frac{\sigma^2}{\epsilon^2}$$
 
 ### 切比雪夫大数定律 (Chebyshev LLN)
+
 设 $X_1, X_2, \dots$ 是相互独立的随机变量序列，期望 $E(X_i) = \mu_i$ 且方差 $Var(X_i) = \sigma_i^2$ 满足 $\frac{1}{n^2} \sum \sigma_i^2 \to 0$，则：
 $$\frac{1}{n} \sum_{i=1}^n X_i - \frac{1}{n} \sum_{i=1}^n \mu_i \xrightarrow{P} 0$$
 
 ### 辛钦大数定律 (Khinchin LLN)
+
 若 $X_1, X_2, \dots$ 独立同分布且期望 $E(X_i) = \mu$ 存在，则：
 $$\bar{X}_n = \frac{1}{n} \sum_{i=1}^n X_i \xrightarrow{P} \mu$$
-*注：这是数理统计中样本均值作为总体期望一致估计量的理论根据。*
+_注：这是数理统计中样本均值作为总体期望一致估计量的理论根据。_
 
 ## 2. 中心极限定理 (Central Limit Theorem, CLT)
 
 中心极限定理描述了独立随机变量之和的分布趋向于正态分布（依分布收敛）。
 
 ### 林德伯格-勒维定理 (Lindeberg-Levy CLT)
+
 设 $X_1, X_2, \dots$ 是独立同分布的随机变量序列，$E(X_i) = \mu$，$Var(X_i) = \sigma^2 > 0$。则：
 $$Z_n = \frac{\sum_{i=1}^n X_i - n\mu}{\sqrt{n}\sigma} \xrightarrow{d} N(0, 1)$$
 
@@ -52,6 +56,7 @@ $$Z_n = \frac{\sum_{i=1}^n X_i - n\mu}{\sqrt{n}\sigma} \xrightarrow{d} N(0, 1)$$
 </details>
 
 ### 棣莫弗-拉普拉斯定理 (De Moivre-Laplace CLT)
+
 若 $S_n \sim B(n, p)$，则：
 $$\frac{S_n - np}{\sqrt{npq}} \xrightarrow{d} N(0, 1)$$
 

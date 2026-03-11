@@ -11,10 +11,13 @@ import { GitMerge, Users, Zap } from 'lucide-react';
 ## 1. 常见协作模式
 
 ### 1.1 Git Flow
+
 经典的分支管理模型，区分 `master` (生产), `develop` (开发), `feature` (特性), `hotfix` (修补) 等分支。
 
 ### 1.2 GitHub Flow
+
 更简洁的模型，适合 CI/CD 驱动的项目：
+
 1. 从 `main` 拉取新分支。
 2. 在新分支上提交代码。
 3. 发起 **Pull Request (PR)**。

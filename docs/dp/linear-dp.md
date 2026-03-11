@@ -22,17 +22,20 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## <Microscope className="inline-block mr-2" /> 1. 核心理论体系
 
 ### 1.1 最优子结构的形式化证明 (Formal Proof)
+
 **定理**：线性 DP 问题（以最长公共子序列 LCS 为例）满足最优子结构性质。
 
 **证明**：设序列 $X = \{x_1, \dots, x_m\}$ 和 $Y = \{y_1, \dots, y_n\}$，其 LCS 为 $Z = \{z_1, \dots, z_k\}$。
+
 1.  **若 $x_m = y_n$**，则 $z_k = x_m = y_n$，且 $Z_{k-1}$ 是 $X_{m-1}$ 和 $Y_{n-1}$ 的一个 LCS。
-    - *反证法*：若存在更长的公共子序列 $W$，其长度 $|W| > k-1$，则 $W \cup \{x_m\}$ 将是 $X$ 和 $Y$ 的长度大于 $k$ 的公共子序列，与 $Z$ 是 LCS 矛盾。
+    - _反证法_：若存在更长的公共子序列 $W$，其长度 $|W| > k-1$，则 $W \cup \{x_m\}$ 将是 $X$ 和 $Y$ 的长度大于 $k$ 的公共子序列，与 $Z$ 是 LCS 矛盾。
 2.  **若 $x_m \neq y_n$**，且 $z_k \neq x_m$，则 $Z$ 是 $X_{m-1}$ 和 $Y$ 的一个 LCS。
 3.  **若 $x_m \neq y_n$**，且 $z_k \neq y_n$，则 $Z$ 是 $X$ 和 $Y_{n-1}$ 的一个 LCS。
 
 上述推导表明，全局最优解必然由规模缩小的子问题的最优解构造而成，此即**最优子结构**。
 
 ### 1.2 无后效性的本质
+
 无后效性（No After-Effect）意味着：**“给定当前状态，未来的演进只取决于当前值，而与如何到达该状态的历史路径无关。”** 在代码实现中，这表现为状态转移方程只涉及较低阶的索引。
 
 ---
@@ -40,8 +43,10 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## <Layers className="inline-block mr-2" /> 2. 经典模型深度解析
 
 ### 2.1 最长公共子序列 (LCS) 的多维推导
+
 **状态定义**：$f[i][j]$ 表示 $A[1 \dots i]$ 与 $B[1 \dots j]$ 的 LCS 长度。
 **归纳步骤 (Inductive Step)**：
+
 1.  **匹配成功**：当 $A[i] = B[j]$ 时，$A[i]$ 必然可以作为 LCS 的末尾元素。
     $$f[i][j] = f[i-1][j-1] + 1$$
 2.  **匹配失败**：当 $A[i] \neq B[j]$ 时，LCS 可能出现在 $A[1 \dots i-1]$ 与 $B[1 \dots j]$ 中，或者 $A[1 \dots i]$ 与 $B[1 \dots j-1]$ 中。
@@ -49,7 +54,9 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 3.  **边界条件**：$f[0][j] = f[i][0] = 0$。
 
 ### 2.2 空间压缩：滚动数组 (Rolling Array)
+
 对于 LCS 转移方程 $f[i][j] = \dots f[i-1][\dots]$，我们发现当前行只依赖于上一行。
+
 - **二维空间**：$O(N \cdot M)$。
 - **压缩方案**：利用 $f[i \% 2][j]$ 或直接使用一维数组。
 - **一维实现注意点**：由于 $f[i][j]$ 依赖于 $f[i-1][j-1]$（左上方），若使用一维数组，更新 $j$ 时需要保留“旧的” $f[j-1]$。
@@ -57,6 +64,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ---
 
 ## <Zap className="inline-block mr-2" /> 3. 进阶优化：决策单调性初探
+
 在某些线性 DP 中，最优决策点 $j$ 随着 $i$ 的增加而单调移动。
 例如 $f[i] = \min_{0 \le j < i} \{ f[j] + w(j, i) \}$，若 $w(j, i)$ 满足四边形不等式，则可使用分治或单调队列优化至 $O(N \log N)$。
 
@@ -64,7 +72,8 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 ## <ShieldCheck className="inline-block mr-2" /> 4. 综合练习与强化
 
-### 练习 1：最长上升子序列 (LIS) 
+### 练习 1：最长上升子序列 (LIS)
+
 给定序列 $A$，求 LIS 长度。
 
 <details>
@@ -100,10 +109,13 @@ int main() {
     return 0;
 }
 ```
-*解析：维护一个单调递增的数组 d。对于新元素 x，若 x 大于 d 末尾，则延长；否则用 x 替换 d 中第一个大于等于 x 的数，以使子序列增长更慢。*
+
+_解析：维护一个单调递增的数组 d。对于新元素 x，若 x 大于 d 末尾，则延长；否则用 x 替换 d 中第一个大于等于 x 的数，以使子序列增长更慢。_
+
 </details>
 
 ### 练习 2：数字三角形 (Number Triangle)
+
 经典线性 DP，求从顶部到底部的路径最大和。
 
 <details>
@@ -133,10 +145,13 @@ int main() {
     return 0;
 }
 ```
-*解析：自底向上更新可以避免边界讨论，且最终答案即为 a[0][0]。*
+
+_解析：自底向上更新可以避免边界讨论，且最终答案即为 a[0][0]。_
+
 </details>
 
 ### 练习 3：最大子段和 (Maximum Subarray Sum)
+
 求序列中连续一段的和的最大值。
 
 <details>
@@ -166,12 +181,15 @@ int main() {
     return 0;
 }
 ```
-*解析：f[i] = max(a[i], f[i-1] + a[i])。由于 f[i] 只依赖 f[i-1]，空间优化为 O(1)。*
+
+_解析：f[i] = max(a[i], f[i-1] + a[i])。由于 f[i] 只依赖 f[i-1]，空间优化为 O(1)。_
+
 </details>
 
 ---
 
 ## 延伸挑战
+
 - [洛谷 P1091 合唱队形](https://www.luogu.com.cn/problem/P1091)（双向 LIS）
 - [洛谷 P1439 LCS 模板](https://www.luogu.com.cn/problem/P1439)（$O(N \log N)$ 技巧）
 - [AtCoder DP Contest F - LCS](https://atcoder.jp/contests/dp/tasks/dp_f)（构造最优方案）

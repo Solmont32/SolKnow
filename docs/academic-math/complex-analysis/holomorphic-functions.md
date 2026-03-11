@@ -16,11 +16,14 @@ import { Infinity, ShieldCheck, Target } from "lucide-react";
 ## 一、Cauchy 积分理论
 
 ### 1. Cauchy 积分定理
+
 若 $f(z)$ 在单连通区域 $D$ 内解析，则对 $D$ 内任一闭曲线 $C$：
 $$ \oint_C f(z) \, dz = 0 $$
+
 > **直观理解**：解析函数在区域内是“无源无漏”的保守场。
 
 ### 2. Cauchy 积分公式
+
 若 $f(z)$ 在区域 $D$ 内解析，$C$ 为其内部包围 $z_0$ 的闭曲线，则：
 $$ f(z_0) = \frac{1}{2\pi i} \oint_C \frac{f(z)}{z - z_0} \, dz $$
 <KnowledgeCard type="success" title="全纯函数的决定性">
@@ -32,14 +35,18 @@ $$ f(z_0) = \frac{1}{2\pi i} \oint_C \frac{f(z)}{z - z_0} \, dz $$
 ## 二、解析函数的“刚性”性质
 
 ### 1. 无穷可微性
+
 若 $f(z)$ 在区域 $D$ 内解析，则它在 $D$ 内具有任意阶导数，且：
 $$ f^{(n)}(z_0) = \frac{n!}{2\pi i} \oint_C \frac{f(z)}{(z - z_0)^{n+1}} \, dz $$
 
 ### 2. Liouville 定理
+
 **定理内容**：全平面上有界解析函数必为常数。
+
 > **推论**：非零常数的多项式在复数域内必有根（代数基本定理）。
 
 ### 3. 最大模原理
+
 若 $f(z)$ 在区域 $D$ 内解析且非恒等于常数，则 $|f(z)|$ 在 $D$ 的内部点处不能取得最大值。最大值必在边界上取得。
 
 ---
@@ -55,6 +62,7 @@ $$ f(z) = g(z) \quad (\forall z \in D) $$
 ## 🎯 经典练习
 
 ### 练习 1：利用平均值性质
+
 证明：若 $f(z)$ 解析，则 $f(z_0)$ 等于以 $z_0$ 为圆心的圆周上 $f(z)$ 的平均值。
 
 <details>
@@ -67,13 +75,14 @@ $$ f(z_0) = \frac{1}{2\pi i} \int_0^{2\pi} \frac{f(z_0 + Re^{i\theta})}{Re^{i\th
 </details>
 
 ### 练习 2：Liouville 定理的应用
+
 设 $f(z)$ 是整函数（全平面解析），且满足 $|f(z)| \le A + B|z|^k$，证明 $f(z)$ 是一个次数不超过 $k$ 的多项式。
 
 <details>
 <summary>点击查看解析</summary>
 
 考虑 $f^{(k+1)}(z_0)$ 的 Cauchy 估计：
-$$ |f^{(k+1)}(z_0)| = \left| \frac{(k+1)!}{2\pi i} \oint_{|z-z_0|=R} \frac{f(z)}{(z-z_0)^{k+2}} dz \right| \le \frac{(k+1)!}{R^{k+1}} (A + B(R+|z_0|)^k) $$
+$$ |f^{(k+1)}(z*0)| = \left| \frac{(k+1)!}{2\pi i} \oint*{|z-z_0|=R} \frac{f(z)}{(z-z_0)^{k+2}} dz \right| \le \frac{(k+1)!}{R^{k+1}} (A + B(R+|z_0|)^k) $$
 当 $R \to \infty$ 时，右侧趋于 0。
 故 $f^{(k+1)}(z) \equiv 0$，即 $f(z)$ 是次数 $\le k$ 的多项式。
 

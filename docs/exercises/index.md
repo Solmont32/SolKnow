@@ -4,21 +4,21 @@ sidebar_position: 1
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { 
-  BookOpen, 
-  Trophy, 
-  Code2, 
-  Infinity as InfinityIcon, 
-  Brain, 
-  ShieldCheck, 
-  ChevronRight,
-  Target,
-  BarChart3,
-  Layers,
-  Search,
-  GitBranch,
-  Terminal,
-  Cpu
+import {
+BookOpen,
+Trophy,
+Code2,
+Infinity as InfinityIcon,
+Brain,
+ShieldCheck,
+ChevronRight,
+Target,
+BarChart3,
+Layers,
+Search,
+GitBranch,
+Terminal,
+Cpu
 } from 'lucide-react';
 
 # SolKnow 综合练习库
@@ -140,12 +140,15 @@ import {
 ## 🛠️ 教材化功能特性
 
 ### 1. 阶梯式难度设计 (Ladders)
+
 我们将所有练习分为三个等级，确保学习曲线平滑：
+
 - <span style={{ color: 'var(--ifm-color-success)' }}>🟢 **基础巩固 (Level A)**</span>：聚焦核心概念的直接应用，对标课后基础题。
 - <span style={{ color: 'var(--ifm-color-warning)' }}>🟡 **综合提升 (Level B)**</span>：跨知识点结合，训练逻辑推理与综合运用能力。
 - <span style={{ color: 'var(--ifm-color-danger)' }}>🔴 **竞赛挑战 (Level C)**</span>：对标考研名校真题、数学竞赛或顶级算法竞赛难度。
 
 ### 2. 多层级折叠解析系统
+
 默认隐藏过程，防止“一眼看到答案”。点击 **Check Solution** 展开后，不仅有严密的数学证明，还有经过规范化的 **C++ 工业级实现** 与 **复杂度边界分析**。
 
 ---

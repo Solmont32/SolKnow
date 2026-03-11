@@ -30,18 +30,21 @@ $n=2$ 时即凸函数定义。假设 $n=k$ 成立，对于 $n=k+1$，将前 $k$ 
 ## 二、 经典三剑客：Young, Hölder, Minkowski
 
 ### 1. Young 不等式
+
 设 $p, q > 1, \frac{1}{p} + \frac{1}{q} = 1$，则对于 $a, b \ge 0$：
 $$ab \le \frac{a^p}{p} + \frac{b^q}{q}$$
 **证明**：对 $\ln$ 函数使用 Jensen 不等式（$\ln$ 是凹函数，或 $-\ln$ 是凸函数）：
 $\ln(\frac{1}{p}a^p + \frac{1}{q}b^q) \ge \frac{1}{p}\ln a^p + \frac{1}{q}\ln b^q = \ln a + \ln b = \ln(ab)$。
 
 ### 2. Hölder 不等式
+
 $$\sum |a_i b_i| \le \left( \sum |a_i|^p \right)^{1/p} \left( \sum |b_i|^q \right)^{1/q}$$
 **证明**：先标准化，设 $\sum |a_i|^p = 1, \sum |b_i|^q = 1$。对每一项 $|a_i b_i|$ 应用 Young 不等式：
 $|a_i b_i| \le \frac{|a_i|^p}{p} + \frac{|b_i|^q}{q}$。
 求和得：$\sum |a_i b_i| \le \frac{1}{p} + \frac{1}{q} = 1$。
 
 ### 3. Minkowski 不等式 (三角不等式的 $L^p$ 版)
+
 $$\left( \sum |a_i+b_i|^p \right)^{1/p} \le \left( \sum |a_i|^p \right)^{1/p} + \left( \sum |b_i|^p \right)^{1/p}$$
 **证明**：利用 $|a+b|^p = |a+b||a+b|^{p-1} \le |a||a+b|^{p-1} + |b||a+b|^{p-1}$，然后对右侧两项分别应用 Hölder 不等式。
 
@@ -67,6 +70,7 @@ $2(b-a)\int f g dx - 2(\int f dx)(\int g dx) \ge 0$。
 ## 四、 深度例题解析
 
 ### 例题 1：利用 Hölder 证明 AM-GM
+
 <details>
 <summary>点击查看解析</summary>
 设 $x_i > 0$，取 $p=n, a_i = x_i^{1/n}, b_i = 1$。

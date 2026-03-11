@@ -15,14 +15,18 @@ import { Zap, ShieldCheck, TrendingUp, GitMerge, Scale, Anchor, Layers } from 'l
 ## 一、 核心逻辑与数学证明
 
 ### 1. 适用条件 (Greedy Choice Property)
+
 一个问题若能通过贪心求解，通常需要满足以下两个数学特性：
+
 - **贪心选择性质**：全局最优解可以通过一系列局部最优（贪心）选择达到。
 - **最优子结构 (Optimal Substructure)**：问题的最优解包含其子问题的最优解。
 
 ### 2. 严谨证明技术 (Rigorous Proof Techniques)
 
 #### A. 微扰法 / 交换论证 (Exchange Argument)
+
 这是证明贪心正确性最通用的方法。
+
 1. **假设 (Hypothesis)**：存在一个最优解 $O$ 与我们的贪心解 $G$ 在某个位置不同。
 2. **定位 (Locate)**：找到第一个不同的选择点。
 3. **交换 (Exchange)**：交换 $O$ 中的两个元素（或修改某个选择），构造出一个新解 $O'$。
@@ -30,6 +34,7 @@ import { Zap, ShieldCheck, TrendingUp, GitMerge, Scale, Anchor, Layers } from 'l
 5. **归纳 (Induct)**：通过有限次交换，可将任意最优解转换为贪心解，而不降低解的质量。
 
 #### B. 贪心选择领先 (Greedy Stays Ahead)
+
 证明在算法的每一步，贪心解在某个关键指标上都不落后于任何其他可行解。
 
 ---
@@ -37,6 +42,7 @@ import { Zap, ShieldCheck, TrendingUp, GitMerge, Scale, Anchor, Layers } from 'l
 ## 二、 理论进阶：拟阵 (Matroid) 简介
 
 许多贪心算法的正确性源于**拟阵结构**。一个拟阵 $M = (S, I)$ 满足：
+
 1. **遗传性 (Hereditary)**：若 $A \in I$ 且 $B \subset A$，则 $B \in I$。
 2. **交换性 (Exchange Property)**：若 $A, B \in I$ 且 $|A| < |B|$，则 $\exists x \in B \setminus A$ 使得 $A \cup \{x\} \in I$。
 
@@ -46,18 +52,19 @@ import { Zap, ShieldCheck, TrendingUp, GitMerge, Scale, Anchor, Layers } from 'l
 
 ## 三、 算法性能分析 (Complexity)
 
-| 模型 | 核心瓶颈 | 时间复杂度 | 空间复杂度 |
-| :--- | :--- | :--- | :--- |
-| **区间问题** | 排序 | $O(N \log N)$ | $O(N)$ |
-| **Huffman 树** | 优先队列维护 | $O(N \log N)$ | $O(N)$ |
-| **Dijkstra** | 堆优化贪心扩展 | $O(E \log V)$ | $O(V+E)$ |
-| **Kruskal** | 边权排序 + 并查集 | $O(E \log E)$ | $O(E)$ |
+| 模型           | 核心瓶颈          | 时间复杂度    | 空间复杂度 |
+| :------------- | :---------------- | :------------ | :--------- |
+| **区间问题**   | 排序              | $O(N \log N)$ | $O(N)$     |
+| **Huffman 树** | 优先队列维护      | $O(N \log N)$ | $O(N)$     |
+| **Dijkstra**   | 堆优化贪心扩展    | $O(E \log V)$ | $O(V+E)$   |
+| **Kruskal**    | 边权排序 + 并查集 | $O(E \log E)$ | $O(E)$     |
 
 ---
 
 ## 四、 教材化例题
 
 ### 例题 1：耍杂技的牛 (微扰法深度应用)
+
 $N$ 头牛叠罗汉。牛 $i$ 危险值 = 其上方所有牛的重量之和 $W_{above} - S_i$。求最大危险值的最小值。
 
 <details>
@@ -67,6 +74,7 @@ $N$ 头牛叠罗汉。牛 $i$ 危险值 = 其上方所有牛的重量之和 $W_{
 
 **微扰法证明**：
 考虑相邻两头牛 $i$ 和 $i+1$。设它们上方的重量之和为 $W$。
+
 - **原顺序 $(i, i+1)$**：
   - 牛 $i$ 危险值：$V_1 = W - S_i$
   - 牛 $i+1$ 危险值：$V_2 = W + W_i - S_{i+1}$
@@ -89,6 +97,7 @@ $V'_2 = W + W_{i+1} - S_i$
 ## 五、 综合练习库
 
 ### 练习 1 : Huffman 编码 (最优前缀码)
+
 给定字符频率，构造总编码长度最短的二叉树。
 
 <details>
@@ -108,9 +117,11 @@ while (heap.size() > 1) {
     heap.push(a + b);
 }
 ```
+
 </details>
 
 ### 练习 2：排队打水 (排序不等式)
+
 $n$ 个人打水，每个人时间 $t_i$，求所有人等待时间之和的最小值。
 
 <details>
@@ -124,9 +135,11 @@ sort(t, t + n);
 long long res = 0;
 for (int i = 0; i < n; i++) res += (long long)t[i] * (n - i - 1);
 ```
+
 </details>
 
 ### 练习 3：均分纸牌
+
 $N$ 堆纸牌，每堆 $a_i$ 张。每次可将一堆的牌移到相邻堆。使所有堆相等的最少次数。
 
 <details>
@@ -143,6 +156,7 @@ for (int i = 0; i < n - 1; i++) {
     }
 }
 ```
+
 </details>
 
 ---

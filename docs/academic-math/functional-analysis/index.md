@@ -70,8 +70,8 @@ import { BookOpen, Target, Infinity, Code2, Layers, Cpu } from 'lucide-react';
 ## 推荐教材与资源
 
 - **教材**: 《泛函分析讲义》(张恭庆) - 国内经典教材，严谨深刻。
-- **Introductory**: *Introductory Functional Analysis with Applications* (Erwin Kreyszig) - 极其清晰的入门首选。
-- **Advanced**: *Functional Analysis* (Walter Rudin) - 现代数学的“圣经”级著作。
+- **Introductory**: _Introductory Functional Analysis with Applications_ (Erwin Kreyszig) - 极其清晰的入门首选。
+- **Advanced**: _Functional Analysis_ (Walter Rudin) - 现代数学的“圣经”级著作。
 
 ---
 
@@ -97,10 +97,10 @@ import { BookOpen, Target, Infinity, Code2, Layers, Cpu } from 'lucide-react';
 int main() {
     int n = 5; // 离散点数
     double h = 1.0 / n;
-    
+
     // K(x, t) = x + t
     auto K = [](double x, double t) { return x + t; };
-    
+
     std::cout << "离散化算子矩阵 (n=" << n << "):" << std::endl;
     std::cout << std::fixed << std::setprecision(3);
     for (int i = 0; i < n; ++i) {
@@ -112,7 +112,7 @@ int main() {
         }
         std::cout << std::endl;
     }
-    
+
     std::cout << "\n注：无限维算子的谱性质可以通过这种矩阵近似的本征值来观察。" << std::endl;
     return 0;
 }
@@ -124,12 +124,12 @@ int main() {
 
 ## 跨领域映射 <Layers className="inline-block ml-1" />
 
-| 领域 | 对应概念 | 说明 |
-| :--- | :--- | :--- |
-| **量子力学** | 算子谱论 | 物理观测量对应自伴算子，其谱对应测量结果。 |
-| **有限元分析 (FEA)** | Sobolev 空间 | 偏微分方程的弱解存在于带导数约束的赋范空间中。 |
-| **信号处理** | 滤波器设计 | 信号被视为 $L^2$ 空间中的点，滤波则是应用有界算子。 |
-| **机器学习** | 核方法 (RKHS) | 再生核 Hilbert 空间提供无限维特征映射的严密框架。 |
+| 领域                 | 对应概念      | 说明                                                |
+| :------------------- | :------------ | :-------------------------------------------------- |
+| **量子力学**         | 算子谱论      | 物理观测量对应自伴算子，其谱对应测量结果。          |
+| **有限元分析 (FEA)** | Sobolev 空间  | 偏微分方程的弱解存在于带导数约束的赋范空间中。      |
+| **信号处理**         | 滤波器设计    | 信号被视为 $L^2$ 空间中的点，滤波则是应用有界算子。 |
+| **机器学习**         | 核方法 (RKHS) | 再生核 Hilbert 空间提供无限维特征映射的严密框架。   |
 
 ---
 

@@ -401,7 +401,7 @@
 [2026-03-08 06:12:36] [ERR ] Cloud Deployment ALERT: chore: startup self-heal FAILED!
 [2026-03-08 06:12:36] [PLAN] No pending tasks. Initiating Docker planning...
 [2026-03-08 06:12:36] [INFO] Attempting pulse via local Docker (Model: default)...
-[2026-03-08 06:12:36] [ERR ] Docker API Call Failed. Check ERROR_LOG.md for details.
+[2026-03-08 06:12:36] [ERR ] Docker API Call Failed. Check ERROR*LOG.md for details.
 [2026-03-08 06:12:36] [ERR ] Planning failed or returned invalid format. Skipping...
 [2026-03-08 06:12:36] [ OK ] Batch queue cleared.
 [2026-03-08 06:39:11] [ OK ] Claude Code Engine V5.2 Initialized.
@@ -410,7 +410,7 @@
 [2026-03-08 06:39:13] [INFO] Pre-flight: Running local type-check...
 [2026-03-08 06:39:18] [EXE ] >>> [SYNC] Aligning changes with cloud...
 [2026-03-08 07:40:24] [INFO] git pull: From https://github.com/Solmont32/SolKnow
-[2026-03-08 07:40:24] [INFO] git pull: _ branch main -> FETCH_HEAD
+[2026-03-08 07:40:24] [INFO] git pull: * branch main -> FETCH*HEAD
 [2026-03-08 07:40:24] [INFO] git pull: Current branch main is up to date.
 [2026-03-08 07:40:28] [WARN] Skipped restoring temporary runtime stash stash@{3} due to local changes in: AUTOMATION_LOG.md
 [2026-03-08 07:40:28] [INFO] Dropped stale temporary runtime stash: stash@{3}
@@ -419,7 +419,7 @@
 [2026-03-08 08:12:19] [PLAN] No pending tasks. Running deep audit...
 [2026-03-08 08:12:19] [INFO] Attempting pulse with Codex [gpt-5.4] for planning...
 [2026-03-08 09:12:22] [INFO] git pull: From https://github.com/Solmont32/SolKnow
-[2026-03-08 09:12:22] [INFO] git pull: _ branch main -> FETCH_HEAD
+[2026-03-08 09:12:22] [INFO] git pull: * branch main -> FETCH_HEAD
 [2026-03-08 09:12:22] [INFO] git pull: Current branch main is up to date.
 [2026-03-08 09:12:26] [WARN] Skipped restoring temporary runtime stash stash@{0} due to local changes in: AUTOMATION_LOG.md
 [2026-03-08 09:12:27] [INFO] Dropped stale temporary runtime stash: stash@{0}
@@ -457,7 +457,7 @@
 [2026-03-08 23:19:37] [INFO] Pre-flight: Running local type-check...
 [2026-03-08 23:23:36] [EXE ] >>> [SYNC] Aligning changes with cloud...
 [2026-03-08 23:23:58] [ OK ] Batch queue cleared.
-[00:20:47] [ERR ] Loop Crash: parsing "(?s)## 寰呭姙瀛愪换鍔?.*?)(?=##|$)" - Too many )'s.
+[00:20:47] [ERR ] Loop Crash: parsing "(?s)## 寰呭姙瀛愪换鍔?._?)(?=##|$)" - Too many )'s.
 [00:27:02] [PLAN] Planning...
 [00:27:03] [ERR ] Error: A parameter cannot be found that matches parameter name 'join'.
 [00:28:35] [PLAN] Planning next sequence...
@@ -511,7 +511,7 @@
 [00:03:17] Completed: 完备化『计算几何：凸包算法、旋转卡壳』教材化结构：系统化叉积应用，配套多道折叠 C++ 解答例题与练习 (2026-03-10)
 [00:36:56] Completed: 完备化『数论基础与进阶：从欧几里得算法、筛法到莫比乌斯反演与杜教筛』教材化结构：系统化积性函数、数论变换与同余方程组，配套多道折叠 C++ 解答例题与练习 (2026-03-11)
 [00:44:51] Completed: 完备化『组合计数与博弈论：从容斥原理、生成函数到尼姆博弈与 SG 函数』教材化结构：系统化计数模型、Pólya 计数理论与动态博弈分析，配套多道折叠 C++ 解答例题与练习 (2026-03-11)
-[00:47:44] Completed: 完备化『搜索优化与启发式算法：从高效剪枝、双向搜索到 A*、IDA* 与模拟退火』教材化结构：系统化状态空间建模、估价函数设计与参数调优，配套多道折叠 C++ 解答例题与练习 (2026-03-11)
+[00:47:44] Completed: 完备化『搜索优化与启发式算法：从高效剪枝、双向搜索到 A_、IDA* 与模拟退火』教材化结构：系统化状态空间建模、估价函数设计与参数调优，配套多道折叠 C++ 解答例题与练习 (2026-03-11)
 [00:49:51] Completed: 完备化『概率期望与随机化算法：从期望 DP 到 Miller-Rabin 质数测试与 Pollard-Rho 分解』教材化结构：系统化期望推导、线性规划应用与随机化分解，配套多道折叠 C++ 解答例题与练习 (2026-03-11)
 [00:55:38] Completed: 完备化『SolKnow 综合练习库：全版块习题聚合与折叠代码解析系统』教材化结构：建立从基础到竞赛级的阶梯式练习，系统化多视角解法对比，对标教科书课后习题规范 (2026-03-11)
 [01:24:18] Completed: 完备化『基础算法：排序、二分、贪心与双指针/前缀和』教材化结构：系统化离散化策略、单调性应用与分治思想，配套多道折叠 C++ 解答例题与练习 (2026-03-11)
@@ -565,7 +565,7 @@
 [11:48:56] Completed: 完备化『竞赛策略与模板工厂 (CP)』：从 AtCoder/Codeforces 竞赛策略、时间管理到工业级 C++ 模板复用与工程化调试技巧，配套典型赛题解析与折叠代码实现 (2026-03-11)
 [11:51:45] Completed: 构建『全域综合练习库系统』：对标算法竞赛考纲，按知识点维度重构练习目录，集成系统化 C++ 代码解析、多道针对性练习与多层级折叠答案验证机制 (2026-03-11)
 [11:56:20] Completed: 完备化『数学算法精要：从数论、组合数学、博弈论到矩阵加速与概率期望』教材化结构：系统化公式推导、线性基构造与生成函数分析，配套多道折叠 C++ 解答例题与练习 (2026-03-11)
-[11:58:23] Completed: 完备化『搜索算法精要：从深度/广度优先搜索、启发式搜索到 A*、IDA* 与剪枝优化技巧』教材化结构：系统化搜索树剪枝证明、估价函数设计与时空复杂度收敛分析，配套多道折叠 C++ 解答例题与练习 (2026-03-11)
+[11:58:23] Completed: 完备化『搜索算法精要：从深度/广度优先搜索、启发式搜索到 A*、IDA\* 与剪枝优化技巧』教材化结构：系统化搜索树剪枝证明、估价函数设计与时空复杂度收敛分析，配套多道折叠 C++ 解答例题与练习 (2026-03-11)
 [12:07:07] Completed: 完备化『字符串算法精要：从 KMP、AC 自动机、Manacher 到后缀结构与哈希优化技巧』教材化结构：系统化失配指针性质证明、状态转移图分析与模式匹配复杂度推导，配套多道折叠 C++ 解答例题与练习 (2026-03-11)
 [12:08:49] Completed: 完备化『系统数学理论体系：从数学分析、高等代数到概率统计、拓扑学与实/复分析』教材化结构：系统化公理化体系构建、收敛性证明与同构映射解析，配套多道折叠 C++ 模拟验证与练习 (2026-03-11)
 [12:12:51] Completed: 完备化『基础算法精要：从二分搜索、贪心、排序到分治与双指针技巧』教材化结构：系统化单调性证明、贪心策略正确性分析与时空复杂度收敛推导，配套多道折叠 C++ 解答例题与练习 (2026-03-11)

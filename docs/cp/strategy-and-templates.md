@@ -7,7 +7,7 @@ import { Trophy, Zap, Bug, Code2, Clock, ShieldCheck, Factory, Lightbulb } from 
 
 # 竞赛策略与模板工厂：从工程化到极致思维
 
-> **"Algorithms are the soul, but engineering is the armor."** 
+> **"Algorithms are the soul, but engineering is the armor."**
 > 在顶级竞赛中，稳健的工程化习惯能让你在压力下保持 100% 的正确率。本章致力于将“竞赛”转化为“工业化生产线”。
 
 ---
@@ -17,13 +17,15 @@ import { Trophy, Zap, Bug, Code2, Clock, ShieldCheck, Factory, Lightbulb } from 
 不同平台的题目风格决定了不同的作战节奏。
 
 ### 1.1 平台特性分析
-| 平台 | 核心风格 | 策略重心 | 容错建议 |
-| :--- | :--- | :--- | :--- |
-| **Codeforces** | 构造、贪心、手速 | **快速迭代**：先写出暴力验证想法，再优化。 | 注意 Hack 机制，数组开大 2 倍。 |
-| **AtCoder** | 数学、计数、DP | **逻辑严密**：笔算证明正确性后再动手。 | 极少出现 Hack，AC 即胜。 |
-| **ICPC/CCPC** | 综合、工程、团队 | **并发执行**：一人敲代码，两人读题/手推。 | 极其看重罚时，避免多次提交错误。 |
+
+| 平台           | 核心风格         | 策略重心                                   | 容错建议                         |
+| :------------- | :--------------- | :----------------------------------------- | :------------------------------- |
+| **Codeforces** | 构造、贪心、手速 | **快速迭代**：先写出暴力验证想法，再优化。 | 注意 Hack 机制，数组开大 2 倍。  |
+| **AtCoder**    | 数学、计数、DP   | **逻辑严密**：笔算证明正确性后再动手。     | 极少出现 Hack，AC 即胜。         |
+| **ICPC/CCPC**  | 综合、工程、团队 | **并发执行**：一人敲代码，两人读题/手推。  | 极其看重罚时，避免多次提交错误。 |
 
 ### 1.2 黄金时间管理法 (The 15-30-60 Rule)
+
 - **前 15 分钟 (Blitz)**：快速扫描所有题目，识别“一眼题”并迅速击破。
 - **中 30 分钟 (Bottleneck)**：若某题思路卡壳超过 30 分钟，**强制跳题**或去洗手间（断片重连）。
 - **最后 60 分钟 (Checkpoint)**：严禁开启新难度题目。优先检查已完成代码的 `long long`、`0` 特判及空间限制。
@@ -33,11 +35,14 @@ import { Trophy, Zap, Bug, Code2, Clock, ShieldCheck, Factory, Lightbulb } from 
 ## 🛠️ II. 工程化调试与验证体系
 
 ### 2.1 编译器黑科技：Sanitizers
+
 在 `LOCAL` 环境下，开启编译选项以捕获隐藏 Bug：
+
 - `-fsanitize=undefined`：检测整数溢出、除零等未定义行为。
 - `-fsanitize=address`：检测越界、内存泄漏（数组越界的终结者）。
 
 ### 2.2 现代 C++ Debug 宏
+
 使用可变参数模板实现支持任意容器输出的调试器。
 
 ```cpp
@@ -99,6 +104,7 @@ int main() {
     return 0;
 }
 ```
+
 </details>
 
 <details>
@@ -124,6 +130,7 @@ struct Mint {
 };
 using mint = Mint<998244353>;
 ```
+
 </details>
 
 <details>
@@ -150,6 +157,7 @@ struct Fenwick {
     ll query(int i) { ll r = 0; for (; i; i -= i & -i) r += t[i]; return r; }
 };
 ```
+
 </details>
 
 ---
@@ -157,6 +165,7 @@ struct Fenwick {
 ## 💡 IV. 思维模型与典型赛题解析
 
 ### 4.1 二分答案的单调性建模
+
 **模型描述**：求解“最小化最大值”或“最大化最小值”问题，且判定函数 $f(x)$ 具备单调性。
 
 <KnowledgeCard type="info" title="典型例题：CF1623C">
@@ -165,6 +174,7 @@ struct Fenwick {
 </KnowledgeCard>
 
 ### 4.2 贡献法 (Contribution to Sum)
+
 **模型描述**：求所有子集/子段的某种价值之和，转化为求**每个元素对总价值的贡献次数**。
 
 <details>
@@ -172,6 +182,7 @@ struct Fenwick {
 
 **题目**：求所有非空子集的 (max - min) 之和。
 **解析**：
+
 1. 排序数组。
 2. 对于 $a_i$，它是多少个子集的 $\max$？（左侧选 $2^i$ 个）。
 3. 它是多少个子集的 $\min$？（右侧选 $2^{n-1-i}$ 个）。
@@ -183,6 +194,7 @@ struct Fenwick {
 ## 📝 V. 综合实战练习 (Comprehensive Exercises)
 
 ### 练习 1：对拍器实战
+
 **题目**：给定一个包含 $N$ 个整数的序列，求第 $K$ 大的连续子段和。
 **要求**：先写一个 $O(N^2 \log (\sum a_i))$ 的暴力，再尝试 $O(N \log (\sum a_i) \log N)$ 的优化版本，并使用对拍器验证。
 
@@ -190,6 +202,7 @@ struct Fenwick {
 <summary>Check Solution</summary>
 
 **解题要点**：
+
 - 二分答案 $S$。
 - 判定：有多少子段和 $\ge S$？
 - 使用树状数组维护前缀和的秩，将判定转化为 $O(N \log N)$。
@@ -202,15 +215,18 @@ bool check(ll mid, int n, int k, const vector<ll>& pref) {
     return count >= k;
 }
 ```
+
 </details>
 
 ### 练习 2：构造思维挑战
+
 **题目 (CF Style)**：构造一个长度为 $N$ 的排列 $P$，使得对于所有 $1 \le i < N$，$\gcd(P_i, P_{i+1}) > 1$。若无解输出 -1。
 
 <details>
 <summary>Check Solution</summary>
 
 **解题要点**：
+
 - 观察：偶数之间必然有 $\gcd \ge 2$。
 - 策略：先排所有偶数，再将奇数插入到能整除它们的偶数旁边（如 3 放在 6 旁边）。
 - 特判：$N < 6$ 时的特殊情况。

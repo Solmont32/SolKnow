@@ -54,10 +54,12 @@ $\prod (1 + a_n)$ 绝对收敛的充要条件是级数 $\sum a_n$ 绝对收敛�
 ## 三、 特殊函数的乘积展开
 
 ### 1. Sine 函数的 Euler 展开
+
 $$\sin \pi x = \pi x \prod_{n=1}^\infty \left( 1 - \frac{x^2}{n^2} \right)$$
 这是解决巴塞尔问题 ($\sum 1/n^2 = \pi^2/6$) 的金钥匙。
 
 ### 2. Gamma 函数的 Weierstrass 展开
+
 $$\frac{1}{\Gamma(z)} = ze^{\gamma z} \prod_{n=1}^\infty \left( 1 + \frac{z}{n} \right) e^{-z/n}$$
 
 ---
@@ -65,7 +67,9 @@ $$\frac{1}{\Gamma(z)} = ze^{\gamma z} \prod_{n=1}^\infty \left( 1 + \frac{z}{n} 
 ## 四、 深度例题解析
 
 ### 例题 1：条件收敛的判定
+
 讨论 $\prod (1 + \frac{(-1)^n}{\sqrt{n}})$ 的敛散性。
+
 <details>
 <summary>点击查看解析</summary>
 考察级数 $\sum \ln(1 + \frac{(-1)^n}{\sqrt{n}})$。

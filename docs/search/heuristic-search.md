@@ -13,12 +13,16 @@ import { Search, Zap, Target, Thermometer, Box, ArrowRightCircle, Layers, Shield
 ## 零、 <Layers className="inline-block mr-2 mb-1 text-blue-400" /> 系统化状态空间建模
 
 ### 1. 形式化定义与搜索树展开
+
 一个完备的搜索问题可定义为五元组 $\mathcal{M} = \langle S, A, T, s_0, G \rangle$。搜索的本质是在由 $T$ 诱导的有向图 $\mathcal{G} = (S, E)$ 中寻找从 $s_0$ 到 $G$ 的路径。
+
 - **状态空间规模**：若分支因子为 $b$，深度为 $d$，则搜索树节点总数 $|V| = \sum_{i=0}^d b^i = \frac{b^{d+1}-1}{b-1} \approx O(b^d)$。
 - **复杂度控制**：搜索算法的优劣取决于其在展开过程中**过滤无效节点**的能力。
 
 ### 2. 对称性破缺与同构状态合并
+
 若状态空间存在等价关系 $\sim$（如平移、翻转、旋转不变性），则只需搜索商空间 $S/\sim$。
+
 - **引理**：若代价函数 $c(s, a) = c(\sigma(s), \sigma(a))$ 且 $G$ 在变换 $\sigma$ 下不变，则最优解必在代表元集合中。
 
 ---
@@ -28,20 +32,26 @@ import { Search, Zap, Target, Thermometer, Box, ArrowRightCircle, Layers, Shield
 剪枝并非单纯的技巧，而是基于逻辑断言 (Logic Assertion) 的搜索空间缩减。
 
 ### 1. 可行性剪枝 (Feasibility Pruning)
+
 **定理 1**：若存在谓词 $P: S \to \{0, 1\}$，使得 $\forall s \in S, P(s) = 0 \implies (\forall \tau: s \xrightarrow{\tau} s', s' \notin G)$，则在搜索到 $s$ 且 $P(s)=0$ 时停止搜索是完备的。
+
 - **应用逻辑**：提前计算状态的“生存界限”（如迷宫中当前点到出口的连通性或步数限制）。
 
 ### 2. 最优性剪枝 (Optimality Pruning)
+
 **定理 2**：令 $g(s)$ 为从 $s_0$ 到 $s$ 的当前已知路径代价，$\hat{h}(s)$ 为从 $s$ 到 $G$ 的**代价下界**。若 $g(s) + \hat{h}(s) \ge \text{ans}_{best}$，则以 $s$ 为根的子树中不存在优于当前最优解的路径。
+
 - **证明**：由下界定义，$\forall s' \in \text{Subtree}(s) \cap G$，其总代价 $g(s') \ge g(s) + \text{dist}(s, s') \ge g(s) + \hat{h}(s) \ge \text{ans}_{best}$，故剪枝无损最优性。
 
 ### 3. 精选例题：[木棒拼接 - 系统化剪枝]
+
 > 给定 $n$ 根小木棒，拼接成若干长度相同的长木棒，求可能的最小长度。
 
 <details>
 <summary>Check Solution: 极限界剪枝 C++ 实现</summary>
 
 **核心剪枝逻辑分析**：
+
 1. **搜索顺序优化**：按长度降序排列。优先尝试长木棒可减少递归深度。
 2. **重复状态剪枝**：若当前长度失败，跳过后续所有相同长度。
 3. **关键边界剪枝**：
@@ -70,7 +80,7 @@ bool dfs(int cnt, int cur, int last) {
 
         // --- 核心剪枝证明应用 ---
         // 1. 若当前拼接位置 cur 为 0 且失败，说明第一个位置无法填充，直接回溯
-        if (cur == 0) return false; 
+        if (cur == 0) return false;
         // 2. 若当前刚好凑满 target 且后续失败，说明此长度方案不可行
         if (cur + a[i] == target) return false;
         // 3. 跳过相同长度
@@ -96,6 +106,7 @@ int main() {
     return 0;
 }
 ```
+
 </details>
 
 ---
@@ -103,21 +114,27 @@ int main() {
 ## 二、 <Target className="inline-block mr-2 mb-1 text-red-500" /> 启发式搜索：A* 与 IDA*
 
 ### 1. 估价函数 $h(s)$ 的设计原则
+
 估价函数 $h(s)$ 是将领域知识注入搜索的关键。
-- **可接受性 (Admissibility)**：$0 \le h(s) \le h^*(s)$。保证 A* 找到最优解。
+
+- **可接受性 (Admissibility)**：$0 \le h(s) \le h^*(s)$。保证 A\* 找到最优解。
 - **设计策略**：
   - **问题松弛 (Relaxation)**：移除某些约束得到更简单的子问题代价（如曼哈顿距离是忽略障碍物的棋盘距离）。
   - **子问题数据库 (Pattern Databases)**：预计算子问题的精确代价。
 
-### 2. A* 算法最优性证明
-设 $f(s) = g(s) + h(s)$。若 $h(s)$ 是可接受的，则 A* 首次弹出目标节点时必为最优路径。
-- **证明**：假设 A* 选出非最优目标 $G_{bad}$，此时 $g(G_{bad}) > g(G^*)$。
+### 2. A\* 算法最优性证明
+
+设 $f(s) = g(s) + h(s)$。若 $h(s)$ 是可接受的，则 A\* 首次弹出目标节点时必为最优路径。
+
+- **证明**：假设 A* 选出非最优目标 $G_{bad}$，此时 $g(G\_{bad}) > g(G^*)$。
   由于 $G^*$ 尚未弹出，其路径上必有一节点 $n$ 在 OpenList 中。
   $f(n) = g(n) + h(n) \le g(n) + h^*(n) = f^*(G^*) = g(G^*) < g(G_{bad})$。
   根据优先队列性质，$n$ 必在 $G_{bad}$ 之前弹出，矛盾。
 
 ### 3. IDA* (Iterative Deepening A*)
-结合了 DFS 的低空间消耗 ($O(d)$) 与 A* 的启发导向。
+
+结合了 DFS 的低空间消耗 ($O(d)$) 与 A\* 的启发导向。
+
 - **逻辑**：以 $f(s)$ 为深度限制进行限深 DFS。
 - **优势**：在状态空间极其庞大（如 15-Puzzle）且需要找最优解时，IDA* 远优于 A*。
 
@@ -125,11 +142,13 @@ int main() {
 
 ## 三、 <Microscope className="inline-block mr-2 mb-1 text-cyan-500" /> 时空复杂度与收敛分析
 
-### 1. A* 的复杂度收敛
-- **空间复杂度**：$O(b^d)$，需存储所有生成的节点。这是 A* 的主要瓶颈。
-- **时间复杂度**：取决于 $|h(s) - h^*(s)|$。若 $h(s) = h^*(s)$，则 A* 直接沿最优路径前进，时间 $O(d)$。若 $h(s) = 0$，退化为 Dijkstra $O(b^d)$。
+### 1. A\* 的复杂度收敛
+
+- **空间复杂度**：$O(b^d)$，需存储所有生成的节点。这是 A\* 的主要瓶颈。
+- **时间复杂度**：取决于 $|h(s) - h^*(s)|$。若 $h(s) = h^*(s)$，则 A\* 直接沿最优路径前进，时间 $O(d)$。若 $h(s) = 0$，退化为 Dijkstra $O(b^d)$。
 
 ### 2. 有效分支因子 (Effective Branching Factor)
+
 定义 $b^*$ 使得 $N = \frac{(b^*)^{d+1}-1}{b^*-1}$。良好的 $h(s)$ 能使 $b^*$ 接近 $1$。
 
 ---
@@ -137,6 +156,7 @@ int main() {
 ## 四、 <Cpu className="inline-block mr-2 mb-1 text-yellow-500" /> 高阶实战例题
 
 ### 例题 1：[15-Puzzle (15 数码) - IDA* 极限优化]
+
 > 在 $4 \times 4$ 网格中移动数字块使之有序。
 
 <details>
@@ -186,15 +206,18 @@ bool dfs(int g, int empty_pos, int pre) {
     return false;
 }
 ```
+
 </details>
 
 ### 例题 2：[K 短路问题 - A* + 可持久化左偏树]
+
 > 在有向图中求从 $S$ 到 $T$ 的第 $k$ 短路径长度。
 
 <details>
 <summary>Check Solution: A* 与 $h(s) = \text{dist}(s, T)$</summary>
 
 **算法逻辑**：
+
 1. 反向跑 Dijkstra 求出所有点到 $T$ 的最短路 $d(s)$，令 $h(s) = d(s)$。
 2. 优先队列维护 $(g(s) + h(s), s)$。
 3. 当节点 $T$ 第 $k$ 次被从队列弹出时，$g(T)$ 即为第 $k$ 短路。
@@ -214,6 +237,7 @@ while(!pq.empty()) {
     }
 }
 ```
+
 </details>
 
 ---
@@ -221,14 +245,18 @@ while(!pq.empty()) {
 ## 🎯 综合练习与挑战
 
 ### 练习 1：[迷宫搜宝 - 双向 BFS 优化]
+
 > 给定起点与终点，中间有若干障碍，求最短步数。
+
 <details>
 <summary>Check Solution: 双向扩展逻辑</summary>
 双向 BFS 可将搜索空间从 $O(b^d)$ 降至 $O(b^{d/2} + b^{d/2})$。
 </details>
 
 ### 练习 2：[数独求解器 - 最少剩余值 (MRV) 启发式]
+
 > 填满 9x9 数独。
+
 <details>
 <summary>Check Solution: 排序搜索顺序</summary>
 每次选择当前可选数字最少的格子进行填充，可极大提高剪枝效率。
@@ -236,4 +264,4 @@ while(!pq.empty()) {
 
 ---
 
-*“搜索的本质是在庞大的解空间中，通过智慧的约束找到那道唯一的解。从盲目搜索到启发式引导，是计算从『体力活』向『脑力活』的进化。”*
+_“搜索的本质是在庞大的解空间中，通过智慧的约束找到那道唯一的解。从盲目搜索到启发式引导，是计算从『体力活』向『脑力活』的进化。”_

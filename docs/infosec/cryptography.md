@@ -14,10 +14,12 @@ import { Lock, Key, Hash, ShieldCheck, History, Zap, ShieldAlert } from 'lucide-
 经典密码学主要依赖于**字符置换 (Substitution)** 和 **置换 (Transposition)**。
 
 ### 1.1 凯撒密码 (Caesar Cipher)
+
 - **原理**：将字母表平移 $k$ 位。$c \equiv m + k \pmod{26}$。
 - **破解**：由于密钥空间极小（仅 25 种可能），可通过穷举攻击轻松破解。
 
 ### 1.2 维吉尼亚密码 (Vigenère Cipher)
+
 - **原理**：多表替换密码，密钥循环使用。
 - **安全性分析**：虽然增加了复杂度，但由于其**周期性**，攻击者可以通过 **Kasiski 试验** 或 **重合指数 (Index of Coincidence)** 确定密钥长度，进而利用频率分析破解。
 
@@ -26,11 +28,13 @@ import { Lock, Key, Hash, ShieldCheck, History, Zap, ShieldAlert } from 'lucide-
 现代密码学的安全性建立在**单向陷门函数 (Trapdoor One-way Function)** 的存在性假设之上。
 
 ### 2.1 数论核心定理
+
 - **同余类环**：考虑环 $\mathbb{Z}/n\mathbb{Z}$，其可逆元构成的乘法群为 $(\mathbb{Z}/n\mathbb{Z})^\times$，阶数为 $\phi(n)$。
 - **欧拉定理 (Euler's Theorem)**：若 $\gcd(a, n) = 1$，则 $a^{\phi(n)} \equiv 1 \pmod n$。
 - **费马小定理**：作为欧拉定理的特例，若 $p$ 为质数，则 $a^{p-1} \equiv 1 \pmod p$。
 
 ### 2.2 计算困难性假设 (Hardness Assumptions)
+
 1. **大整数分解问题 (IFP)**：给定 $n = pq$，在多项式时间内求 $p, q$ 是困难的。
 2. **离散对数问题 (DLP)**：在有限群 $G$ 中，给定 $g, g^x \in G$，求 $x$。
 3. **椭圆曲线离散对数问题 (ECDLP)**：在椭圆曲线群 $E(\mathbb{F}_p)$ 上，给定点 $P$ 和 $Q = [k]P$，求标量 $k$。其计算复杂度远高于同等模数长度的 DLP。
@@ -40,11 +44,14 @@ import { Lock, Key, Hash, ShieldCheck, History, Zap, ShieldAlert } from 'lucide-
 ## 3. 对称加密：置换-置换网络 (SPN)
 
 ### 3.1 AES (Advanced Encryption Standard) 形式化
+
 AES 是一种基于 **SPN 结构** 的迭代分组加密算法。其状态可以用 $4 \times 4$ 的字节矩阵 $S$ 表示。
+
 - **层级变换**：$\text{Round}(S, K) = \text{AddRoundKey} \circ \text{MixColumns} \circ \text{ShiftRows} \circ \text{SubBytes}(S)$。
 - **安全性逻辑**：通过 `SubBytes` 引入非线性（S-Box），通过 `ShiftRows` 与 `MixColumns` 实现**扩散 (Diffusion)**，使得明文的微小变化能迅速影响整个密文空间。
 
 ### 3.2 工作模式与安全性
+
 - **ECB (Electronic Codebook)**：**不安全**。相同的明文块产生相同的密文块，暴露图像/结构信息。
 - **CBC (Cipher Block Chaining)**：引入 IV，每个块与前一个密文块异或。**注意**：容易受到 Padding Oracle 攻击。
 - **GCM (Galois/Counter Mode)**：提供 **AEAD**（关联数据的认证加密），目前 TLS 1.3 的主流。
@@ -54,6 +61,7 @@ AES 是一种基于 **SPN 结构** 的迭代分组加密算法。其状态可以
 ## 4. 非对称加密与 RSA 深度分析 (Asymmetric Encryption)
 
 ### 4.1 RSA 算法流程与正确性证明
+
 1. **公私钥生成**：
    - 选择大质数 $p, q$，计算 $n = pq$。
    - $\phi(n) = (p-1)(q-1)$。
@@ -62,18 +70,22 @@ AES 是一种基于 **SPN 结构** 的迭代分组加密算法。其状态可以
 2. **加解密**：$c = m^e \pmod n$, $m = c^d \pmod n$。
 
 **正确性证明**：
+
 - 目标：证明 $m^{ed} \equiv m \pmod n$。
 - 已知 $ed = k\phi(n) + 1$，则 $m^{ed} = m^{k\phi(n) + 1} = m \cdot (m^{\phi(n)})^k \pmod n$。
 - 若 $\gcd(m, n) = 1$，由欧拉定理 $m^{\phi(n)} \equiv 1 \pmod n$，故结论成立。
 - 若 $\gcd(m, n) > 1$，利用中国剩余定理 (CRT) 分别在 $\pmod p$ 和 $\pmod q$ 下讨论，结论依然成立。$\square$
 
 ### 4.2 椭圆曲线密码学 (ECC)
+
 椭圆曲线定义在有限域 $\mathbb{F}_p$ 上的方程为：
 $$E: y^2 = x^3 + ax + b \pmod p, \quad 4a^3 + 27b^2 \neq 0$$
+
 - **加法法则**：曲线上的点与无穷远点 $O$ 构成阿贝尔群。
 - **优势**：在提供相同安全强度的前提下，ECC 的密钥长度（如 256 位）远短于 RSA（如 3072 位），极大降低了计算与存储开销。
 
 ### 4.2 RSA 常见攻击模型
+
 - **低加密指数攻击 ($e=3$)**：若明文 $m$ 较小，满足 $m^3 < n$，则直接对密文开立方根即可获得明文。
 - **共模攻击 (Common Modulus Attack)**：若两个用户使用相同的 $n$ 但不同的 $e_1, e_2$ 加密同一明文 $m$，且 $\gcd(e_1, e_2) = 1$，则攻击者可在不知晓 $d$ 的情况下恢复 $m$。
 - **Wiener's Attack**：当私钥 $d < \frac{1}{3} n^{1/4}$ 时，可以利用连分数展开在多项式时间内分解 $n$。
@@ -85,12 +97,14 @@ $$E: y^2 = x^3 + ax + b \pmod p, \quad 4a^3 + 27b^2 \neq 0$$
 DH 用于在不安全信道上协商密钥。
 
 ### 5.1 交互流程
+
 1. Alice 与 Bob 协商大质数 $g, p$。
 2. Alice 生成私钥 $a$，发送 $A = g^a \pmod p$。
 3. Bob 生成私钥 $b$，发送 $B = g^b \pmod p$。
 4. 共享密钥 $K = B^a \pmod p = A^b \pmod p$。
 
 ### 5.2 攻防模型：中间人攻击 (MITM)
+
 - **威胁**：攻击者 Eve 截获 $A, B$，分别与 Alice 和 Bob 建立虚假的 DH 交换。
 - **对策**：必须引入**身份认证**（如数字签名或证书），构成 **Authenticated DH (STS 协议)**。
 
@@ -99,6 +113,7 @@ DH 用于在不安全信道上协商密钥。
 ## 6. 深度例题与练习 (Exercises)
 
 ### 例题 1：RSA 共模攻击验证 (C++)
+
 **题目**：已知两个密文 $c_1, c_2$ 分别使用 $(n, e_1)$ 和 $(n, e_2)$ 加密。请实现一个函数恢复明文 $m$。
 
 <details>
@@ -109,6 +124,7 @@ DH 用于在不安全信道上协商密钥。
 则 $c_1^{s_1} \cdot c_2^{s_2} \equiv (m^{e_1})^{s_1} \cdot (m^{e_2})^{s_2} \equiv m^{s_1 e_1 + s_2 e_2} \equiv m \pmod n$。
 
 **C++ 实现**：
+
 ```cpp
 #include <iostream>
 
@@ -152,20 +168,23 @@ int main() {
     long long n = 3233, e1 = 17, e2 = 13, m_orig = 42;
     long long c1 = power(m_orig, e1, n);
     long long c2 = power(m_orig, e2, n);
-    
+
     std::cout << "Recovered m: " << common_modulus_attack(c1, c2, e1, e2, n) << std::endl;
     return 0;
 }
 ```
+
 </details>
 
 ### 练习 1：维吉尼亚密码重合指数分析
+
 **题目**：解释为什么重合指数 (Index of Coincidence) 可以用来确定维吉尼亚密码的密钥长度。
 
 <details>
 <summary>点击查看解析 (Check Solution)</summary>
 
 **解析**：
+
 1. **重合指数** $IC$ 表示在一串文本中随机抽取两个字母相同的概率。
 2. 英文文本的 $IC \approx 0.0667$，而随机生成的字母序列 $IC \approx 1/26 \approx 0.0385$。
 3. 如果密钥长度为 $L$，我们将密文按 $L$ 分组。在每一组内，字母都是由同一个凯撒位移产生的，因此其分布符合英文特征，$IC$ 较高。
@@ -174,14 +193,15 @@ int main() {
 </details>
 
 ### 练习 2：哈希函数抗碰撞性分析
+
 **题目**：简述 SHA-1 碰撞攻击的原理及其对数字签名的影响。
 
 <details>
 <summary>点击查看解析 (Check Solution)</summary>
 
 **解析**：
+
 1. **原理**：SHA-1 存在数学上的弱点。2017 年 Google 演示了 **SHAttered 攻击**，利用差分分析在 $2^{63}$ 次尝试（远低于理想的 $2^{80}$）内找到了两份内容不同但哈希值相同的 PDF 文件。
 2. **对数字签名的影响**：数字签名的安全性依赖于哈希值的唯一性。如果攻击者能构造两个不同文档 $D_1, D_2$ 使得 $H(D_1) = H(D_2)$，则受害者对 $D_1$ 的签名将被视为对 $D_2$ 同样有效，导致**伪造攻击**。
 **对策**：全面迁移至 SHA-256 或 SHA-3。
 </details>
-

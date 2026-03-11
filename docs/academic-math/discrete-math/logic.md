@@ -12,6 +12,7 @@ import { Code2, Layers } from 'lucide-react';
 ## 1. 命题演算的形式定义
 
 一个形式化命题系统 $\mathcal{L}$ 由以下部分组成：
+
 1. **字母表**：命题变元 $p, q, r, \dots$ 和联结词 $\neg, \to, \dots$。
 2. **合式公式 (WFF)**：定义良好的逻辑表达式。
 3. **公理 (Axioms)**：系统内预设为真的公式。
@@ -22,12 +23,15 @@ import { Code2, Layers } from 'lucide-react';
 自然推理不设公理，而是为每个联结词定义“引入”和“消去”规则。
 
 ### 2.1 引入与消去规则
+
 - **$\land$-引入**：若有 $P$ 和 $Q$，可推得 $P \land Q$。
 - **$\to$-消去 (MP)**：从 $P \to Q$ 和 $P$ 推得 $Q$。
 - **$\neg$-消去 (归谬法)**：若从 $P$ 推导出矛盾，则推得 $\neg P$。
 
 ### 2.2 证明示例
+
 证明 $p \to q, \neg q \vdash \neg p$（否定后件律）：
+
 1. $p \to q$ (前提)
 2. $\neg q$ (前提)
 3. 假设 $p$:
@@ -38,16 +42,21 @@ import { Code2, Layers } from 'lucide-react';
 ## 3. 语义与证明论的关系
 
 ### 3.1 可靠性 (Soundness)
+
 若 $\Gamma \vdash A$（可通过规则推导），则 $\Gamma \models A$（语义上恒真）。
+
 > 系统导出的结果一定是正确的。
 
 ### 3.2 完备性 (Completeness)
+
 若 $\Gamma \models A$（语义上恒真），则 $\Gamma \vdash A$（可通过规则推导）。
+
 > 所有正确的真理都能被系统导出。
 
 ## 4. 谓词演算进阶
 
 在谓词逻辑中，形式系统增加了对量词的控制：
+
 - **全称特指 (UI)**: $\forall x A(x) \to A(t)$。
 - **存在泛化 (EG)**: $A(t) \to \exists x A(x)$。
 
@@ -70,7 +79,7 @@ import { Code2, Layers } from 'lucide-react';
 int main() {
     std::cout << "p\tq\tp -> q" << std::endl;
     std::cout << "--------------------" << std::endl;
-    
+
     bool vals[] = {true, false};
     for (bool p : vals) {
         for (bool q : vals) {
@@ -91,12 +100,12 @@ int main() {
 
 ## 6. 跨领域映射 <Layers className="inline-block ml-1" />
 
-| 领域 | 对应概念 | 说明 |
-| :--- | :--- | :--- |
-| **计算机体系结构** | 逻辑门 (AND, OR, NOT) | 命题逻辑的物理实现。 |
-| **程序设计** | 布尔表达式与短路求值 | `if (p && q)` 本质上是逻辑合取的应用。 |
-| **人工智能** | 知识表示与推理 (SAT Solver) | 自动推理系统解决复杂的逻辑约束满足问题。 |
-| **形式化方法** | 程序正确性证明 | 使用 Hoare 逻辑等形式系统确保代码无 Bug。 |
+| 领域               | 对应概念                    | 说明                                      |
+| :----------------- | :-------------------------- | :---------------------------------------- |
+| **计算机体系结构** | 逻辑门 (AND, OR, NOT)       | 命题逻辑的物理实现。                      |
+| **程序设计**       | 布尔表达式与短路求值        | `if (p && q)` 本质上是逻辑合取的应用。    |
+| **人工智能**       | 知识表示与推理 (SAT Solver) | 自动推理系统解决复杂的逻辑约束满足问题。  |
+| **形式化方法**     | 程序正确性证明              | 使用 Hoare 逻辑等形式系统确保代码无 Bug。 |
 
 ---
 
@@ -105,6 +114,7 @@ int main() {
 :::info 练习 1
 使用推理规则证明：$(p \to r) \land (q \to r) \equiv (p \lor q) \to r$。
 :::
+
 <details>
 <summary>查看证明</summary>
 
@@ -121,15 +131,17 @@ int main() {
    - 由前提推得 $r$。故 $p \to r$。
    - 同理可得 $q \to r$。
    - 合取即证。
-</details>
+   </details>
 
 :::info 练习 2
 判断下列公式是否为有效公式（恒真）：$\forall x P(x) \to \exists x P(x)$。
 :::
+
 <details>
 <summary>查看解析</summary>
 
 在**非空论域**中，该公式是恒真的。
+
 1. 假设论域中有个体 $a$。
 2. 若 $\forall x P(x)$ 为真，则 $P(a)$ 必为真。
 3. 因为存在个体 $a$ 使 $P(a)$ 为真，故 $\exists x P(x)$ 必为真。

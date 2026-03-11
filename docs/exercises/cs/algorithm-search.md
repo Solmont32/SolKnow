@@ -13,29 +13,32 @@ import { Target, Zap, ShieldCheck, BarChart3, ChevronRight, Code2, Layers, Searc
 
 ## 🪜 练习阶梯与评价标准
 
-| 等级 | 难度目标 | 核心考察点 | 期望达成 |
-| :--- | :--- | :--- | :--- |
-| <span style={{ color: 'var(--ifm-color-success)' }}>● **Level A**</span> | 状态空间缩减 | 搜索顺序优化、可行性/最优性剪枝 | 能够识别并剪掉 90% 以上的冗余分支 |
-| <span style={{ color: 'var(--ifm-color-warning)' }}>● **Level B**</span> | 状态建模创新 | 双向搜索 (Meet-in-the-middle)、迭代加深 | 能够处理状态空间达 $2^{40}$ 级别的搜索 |
-| <span style={{ color: 'var(--ifm-color-danger)' }}>● **Level C**</span> | 启发式设计 | A* 算法、IDA* 算法、估价函数 $h(n)$ 设计 | 能够设计出满足“可容性”的强约束估价函数 |
+| 等级                                                                     | 难度目标     | 核心考察点                               | 期望达成                               |
+| :----------------------------------------------------------------------- | :----------- | :--------------------------------------- | :------------------------------------- |
+| <span style={{ color: 'var(--ifm-color-success)' }}>● **Level A**</span> | 状态空间缩减 | 搜索顺序优化、可行性/最优性剪枝          | 能够识别并剪掉 90% 以上的冗余分支      |
+| <span style={{ color: 'var(--ifm-color-warning)' }}>● **Level B**</span> | 状态建模创新 | 双向搜索 (Meet-in-the-middle)、迭代加深  | 能够处理状态空间达 $2^{40}$ 级别的搜索 |
+| <span style={{ color: 'var(--ifm-color-danger)' }}>● **Level C**</span>  | 启发式设计   | A* 算法、IDA* 算法、估价函数 $h(n)$ 设计 | 能够设计出满足“可容性”的强约束估价函数 |
 
 ---
 
 ## 一、 基础剪枝与状态优化 (Level A)
 
 ### 练习 1：数字组合 - DFS 状态缩减
+
 给定 $N$ 个正整数 $a_i$，从中挑选若干数使其和为 $M$，求方案数。($N \le 20, M \le 1000$)
 
 <details>
 <summary>Check Solution (C++ Implementation)</summary>
 
 **解析**：
+
 1. **状态定义**：`dfs(u, current_sum)` 表示考虑到第 $u$ 个数，当前和为 `current_sum`。
 2. **优化策略**：
-    - **可行性剪枝**：若 `current_sum > M`，立即停止。
-    - **搜索顺序**：虽然此题方案数统计受顺序影响较小，但在最优化问题中，从大到小排列能更快触发剪枝。
+   - **可行性剪枝**：若 `current_sum > M`，立即停止。
+   - **搜索顺序**：虽然此题方案数统计受顺序影响较小，但在最优化问题中，从大到小排列能更快触发剪枝。
 
 **C++ 实现**：
+
 ```cpp
 #include <iostream>
 #include <algorithm>
@@ -64,19 +67,23 @@ int main() {
     cout << ans << endl;
 }
 ```
+
 </details>
 
 ### 练习 2：小猫爬山 - 搜索顺序与最优性剪枝
+
 $N$ 只猫，体重 $w_i$，缆车承重 $W$。求最少缆车数。
 
 <details>
 <summary>Check Solution (C++ Implementation)</summary>
 
 **解析**：
+
 1. **搜索顺序优化**：将猫按体重**降序排序**。重猫放置灵活度低，先处理能极大减少搜索树深层的分支数。
 2. **最优性剪枝**：记录当前已找到的最少车数 `min_cabs`。若当前已开 `k` 辆车且 $k \ge min\_cabs$，则剪枝。
 
 **C++ 实现**：
+
 ```cpp
 #include <iostream>
 #include <algorithm>
@@ -104,6 +111,7 @@ void dfs(int u, int k) {
     cabs[k] = 0;
 }
 ```
+
 </details>
 
 ---
@@ -111,6 +119,7 @@ void dfs(int u, int k) {
 ## 二、 进阶搜索模型 (Level B)
 
 ### 练习 3：送礼物 - 双向搜索与折半查找
+
 $N \le 45$ 件礼物，每件重 $G_i$，车承重 $W$。求最多能装多少重的礼物？
 
 <details>
@@ -119,11 +128,13 @@ $N \le 45$ 件礼物，每件重 $G_i$，车承重 $W$。求最多能装多少�
 **数学推导**：
 直接 DFS 复杂度 $O(2^{45})$ 过大。
 **折半搜索 (Meet-in-the-middle)**：将礼物分为两部分 $A$ ($22$ 件) 和 $B$ ($23$ 件)。
+
 1. 搜索 $A$ 所有组合重量，存储并排序。
 2. 搜索 $B$ 的组合重量 $X$，在 $A$ 的结果中二分查找最大的 $Y \le W - X$。
-复杂度：$O(2^{N/2} \cdot \log 2^{N/2})$。
+   复杂度：$O(2^{N/2} \cdot \log 2^{N/2})$。
 
 **C++ 实现**：
+
 ```cpp
 // 核心逻辑：两个 DFS + upper_bound
 void dfs1(int u, LL sum) {
@@ -133,9 +144,11 @@ void dfs1(int u, LL sum) {
 }
 // ... 第二次 DFS 时进行二分查找更新 ans
 ```
+
 </details>
 
-### 练习 4：排书 - IDA* 与后继关系估价
+### 练习 4：排书 - IDA\* 与后继关系估价
+
 给定 $N \le 15$ 本书的排列，每次可将一叠连续书抽出并插入他处。求 4 步内使有序的最少步数。
 
 <details>
@@ -145,6 +158,7 @@ void dfs1(int u, LL sum) {
 每次操作最多改变 3 个位置的后继关系。设当前不正确的后继关系总数为 $tot$，则 $h(n) = \lceil tot / 3 \rceil$。
 
 **C++ 代码实现**：
+
 ```cpp
 int f() {
     int tot = 0;
@@ -159,26 +173,30 @@ bool dfs(int depth) {
     // ... 尝试所有可能的区间切分与插入位置
 }
 ```
+
 </details>
 
 ---
 
 ## 三、 启发式与随机化搜索 (Level C)
 
-### 练习 5：第 K 短路 - A* 与优先队列
+### 练习 5：第 K 短路 - A\* 与优先队列
+
 给定有向图，求起点 $S$ 到终点 $T$ 的第 $K$ 短路长度。
 
 <details>
 <summary>Check Solution (C++ Implementation)</summary>
 
-**A* 建模**：
+**A\* 建模**：
+
 1. **估价函数 $h(n)$**：设 $h(n)$ 为节点 $n$ 到终点 $T$ 的真实最短距离（反向图 Dijkstra 预处理）。
 2. **性质**：当终点 $T$ 第 $K$ 次从优先队列中取出时，路径长度 $g$ 即为答案。
 
 **C++ 代码实现 (核心逻辑)**：
+
 ```cpp
 priority_queue<pair<int, pair<int, int>>> pq;
-pq.push({-(dist[S]), {0, S}}); 
+pq.push({-(dist[S]), {0, S}});
 while (!pq.empty()) {
     int f = -pq.top().first, g = -pq.top().second.first, u = pq.top().second.second;
     pq.pop();
@@ -187,9 +205,11 @@ while (!pq.empty()) {
     // ... 遍历邻边入队
 }
 ```
+
 </details>
 
-### 练习 6：八数码问题 (IDA* 优化)
+### 练习 6：八数码问题 (IDA\* 优化)
+
 **题目描述**：在 $3 \times 3$ 的棋盘上，摆有八个棋子，每个棋子上标有 $1 \dots 8$ 的数字，另有一个空格。求从初始状态到目标状态的最少步数。
 
 <details>
@@ -200,6 +220,7 @@ $$h(n) = \sum_{i=1}^8 (\text{dist\_x}(i) + \text{dist\_y}(i))$$
 曼哈顿距离是满足可容性 (Admissible) 的，因为每次移动一个棋子，总曼哈顿距离最多改变 1。
 
 **C++ 实现 (核心框架)**：
+
 ```cpp
 int get_h() {
     int res = 0;
@@ -218,19 +239,23 @@ bool dfs(int depth, int last_op) {
     // ... 四向移动，注意不走回头路
 }
 ```
+
 </details>
 
 ### 练习 7：井字棋 AI - Minimax 与 Alpha-Beta 剪枝
+
 实现一个在 $3 \times 3$ 井字棋中绝不会输的 AI。
 
 <details>
 <summary>Check Solution (C++ Implementation)</summary>
 
 **博弈搜索策略**：
+
 1. **极大极小搜索**：AI 试图最大化分数（自己赢 +10），玩家试图最小化分数（AI 输 -10）。
 2. **Alpha-Beta 剪枝**：维护 $\alpha$（已知的 AI 最小收益）和 $\beta$（已知的玩家最大损失）。若 $\alpha \ge \beta$，停止搜索该子树。
 
 **C++ 实现 (核心逻辑)**：
+
 ```cpp
 int evaluate(char b[3][3]) {
     // 检查行、列、对角线是否有人获胜
@@ -272,12 +297,13 @@ int minimax(char board[3][3], int depth, bool isMax, int alpha, int beta) {
     }
 }
 ```
-</details>
 
+</details>
 
 ---
 
 ## 🏆 训练建议
+
 1. **估价函数的“紧致性”**：估价函数 $h(n)$ 越接近真实值且不大于真实值，A*/IDA* 的效率越高。
 2. **IDA* vs A***：对于空间限制严格或状态数巨大的问题（如 15-puzzle），IDA* 优于 A*。
 3. **剪枝的艺术**：在写搜索代码前，先在草稿纸上罗列出：1. 搜索顺序；2. 可行性剪枝；3. 最优性剪枝；4. 排除等价冗余。

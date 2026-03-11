@@ -159,6 +159,7 @@ $$\int_\Omega d\omega = \int_{\partial \Omega} \omega$$
 </details>
 
 ### 例题 5：高斯公式在特殊通量计算中的应用
+
 计算通量 $\oiint_\Sigma \frac{x dy dz + y dz dx + z dx dy}{(x^2+y^2+z^2)^{3/2}}$，其中 $\Sigma$ 为包围原点的任意闭曲面。
 
 <details>
@@ -191,12 +192,14 @@ $$\int_\Omega d\omega = \int_{\partial \Omega} \omega$$
 :::
 
 ### 练习 1：第一类曲面积分计算
+
 计算 $\iint_\Sigma z dS$，其中 $\Sigma$ 为球面 $x^2+y^2+z^2=a^2$ 在 $z \ge 0$ 的部分。
 
 <details>
 <summary>点击查看解析</summary>
 
 **解析**：
+
 1. **参数化**：$z = \sqrt{a^2-x^2-y^2}$。
 2. **面积元**：$dS = \sqrt{1+z_x^2+z_y^2} dx dy = \frac{a}{\sqrt{a^2-x^2-y^2}} dx dy = \frac{a}{z} dx dy$。
 3. **积分计算**：
@@ -205,12 +208,14 @@ $$\int_\Omega d\omega = \int_{\partial \Omega} \omega$$
 </details>
 
 ### 练习 2：高斯公式求通量
+
 计算 $\oiint_\Sigma x dydz + y dzdx + z dxdy$，其中 $\Sigma$ 为球面 $x^2+y^2+z^2=a^2$ 的外侧。
 
 <details>
 <summary>点击查看解析</summary>
 
 **解析**：
+
 1. **散度**：$\text{div } \mathbf{F} = 1 + 1 + 1 = 3$。
 2. **高斯公式**：
    $\oiint_\Sigma \mathbf{F} \cdot d\mathbf{S} = \iiint_\Omega 3 dV = 3 \cdot \text{Vol}(\Omega)$。
@@ -220,12 +225,14 @@ $$\int_\Omega d\omega = \int_{\partial \Omega} \omega$$
 </details>
 
 ### 练习 3：斯托克斯公式应用
+
 计算 $\oint_\Gamma y dx + z dy + x dz$，其中 $\Gamma$ 为 $x+y=2, x^2+y^2+z^2=4$ 的交线。
 
 <details>
 <summary>点击查看解析</summary>
 
 **解析**：
+
 1. **旋度**：$\text{curl } \mathbf{F} = (-1, -1, -1)$。
 2. **选择曲面**：取交线所围成的平面部分 $\Sigma: x+y=2$ 在球面内的部分。
 3. **法向量**：平面 $x+y=2$ 的法向量为 $\mathbf{n} = (1, 1, 0) / \sqrt{2}$。
@@ -238,12 +245,14 @@ $$\int_\Omega d\omega = \int_{\partial \Omega} \omega$$
 </details>
 
 ### 练习 4：通量直接法（投影法）
+
 计算 $\iint_\Sigma x dy dz$，其中 $\Sigma$ 为 $x^2+y^2+z^2=a^2, x \ge 0$ 的右侧（向外）。
 
 <details>
 <summary>点击查看解析</summary>
 
 **解析**：
+
 1. **投影区域**：在 $yz$ 平面上的投影为 $y^2+z^2 \le a^2$。
 2. **函数代换**：$x = \sqrt{a^2-y^2-z^2}$。
 3. **方向**：向外侧意味着 $dydz$ 前取正号。

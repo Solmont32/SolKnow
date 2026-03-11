@@ -1,5 +1,5 @@
 ---
-title: "微分几何：局部曲线论、曲面曲率与张量计算 (Differential Geometry: Curves, Surfaces & Tensors)"
+title: '微分几何：局部曲线论、曲面曲率与张量计算 (Differential Geometry: Curves, Surfaces & Tensors)'
 ---
 
 import KnowledgeCard from "@site/src/components/KnowledgeCard";
@@ -23,6 +23,7 @@ import SupportingExercises from '@site/src/components/SupportingExercises';
 ### 1. Frenet 标架 (Frenet Frame)
 
 在每个正则点，标架 $\{\mathbf{T}, \mathbf{N}, \mathbf{B}\}$ 构成一个右手系单位正交基：
+
 - **切向量**：$\mathbf{T} = \mathbf{r}'(s)$
 - **主法向量**：$\mathbf{N} = \frac{\mathbf{r}''(s)}{\|\mathbf{r}''(s)\|}$，其方向指向曲线弯曲的一侧。
 - **副法向量**：$\mathbf{B} = \mathbf{T} \times \mathbf{N}$
@@ -97,9 +98,11 @@ $$K = \frac{R_{1212}}{g_{11}g_{22} - g_{12}^2}$$
 ## 四、Gauss-Bonnet 定理 (局部形式)
 
 对于曲面上由分段光滑曲线 $\partial \Omega$ 围成的区域 $\Omega$：
+
 $$
 \iint_{\Omega} K dA + \int_{\partial \Omega} k_g ds + \sum \alpha_i = 2\pi \chi(\Omega)
 $$
+
 - $k_g$：**测地曲率**，衡量曲线偏离测地线的程度。
 - $\chi(\Omega)$：区域的欧拉示性数。
 
@@ -108,6 +111,7 @@ $$
 ## 五、深度教材例题
 
 ### 例题 1：圆柱螺旋线的 Frenet 标架与曲率、挠率
+
 设 $\mathbf{r}(t) = (a\cos t, a\sin t, bt)$。求其 $\kappa$ 与 $\tau$。
 
 <details>
@@ -129,9 +133,11 @@ $\frac{d\mathbf{B}}{ds} = \frac{1}{c^2}(b\cos \frac{s}{c}, b\sin \frac{s}{c}, 0)
 由此得 $\tau = \frac{b}{c^2} = \frac{b}{a^2+b^2}$。
 
 **结论**：圆柱螺旋线的曲率与挠率均为常数。
+
 </details>
 
 ### 例题 2：Weingarten 映射与主曲率
+
 已知某曲面在点 $P$ 处的第一与第二基本形式矩阵分别为 $G = \text{diag}(1, \cos^2 u)$ 和 $L = \text{diag}(1, 1)$。求该点的主曲率。
 
 <details>
@@ -143,6 +149,7 @@ Weingarten 映射矩阵为 $h^i_j = L_{ik} g^{kj}$。
 
 矩阵的特征值即为主曲率：
 $k_1 = 1, k_2 = \sec^2 u$。
+
 </details>
 
 ---
@@ -150,6 +157,7 @@ $k_1 = 1, k_2 = \sec^2 u$。
 ## 六、进阶练习
 
 ### 练习 1：Frenet 标架恒等式证明
+
 证明：$\mathbf{r}''' \cdot (\mathbf{r}' \times \mathbf{r}'') = \kappa^2 \tau$。
 
 <details>
@@ -164,6 +172,7 @@ $k_1 = 1, k_2 = \sec^2 u$。
 </details>
 
 ### 练习 2：Christoffel 符号计算
+
 对于极坐标度量 $ds^2 = dr^2 + r^2 d\theta^2$，计算所有非零的 $\Gamma^k_{ij}$。
 
 <details>
@@ -172,6 +181,7 @@ $k_1 = 1, k_2 = \sec^2 u$。
 设 $u^1=r, u^2=\theta$。$g_{11}=1, g_{22}=r^2, g_{12}=0$。
 $g^{11}=1, g^{22}=1/r^2$。
 唯一不为零的导数是 $\partial_1 g_{22} = 2r$。
+
 - $\Gamma^1_{22} = \frac{1}{2} g^{11} (0 + 0 - \partial_1 g_{22}) = -r$。
 - $\Gamma^2_{12} = \Gamma^2_{21} = \frac{1}{2} g^{22} (\partial_1 g_{22} + 0 - 0) = 1/r$。
 其余均为零。

@@ -9,6 +9,7 @@ title: 抽样分布 (Sampling Distributions)
 ## 1. 常用统计量
 
 设 $X_1, X_2, \dots, X_n$ 为来自总体 $X$ 的简单随机样本。
+
 - **样本均值**: $\bar{X} = \frac{1}{n} \sum X_i$。
 - **样本方差**: $S^2 = \frac{1}{n-1} \sum (X_i - \bar{X})^2$。
 
@@ -21,6 +22,7 @@ title: 抽样分布 (Sampling Distributions)
 ## 3. 正态总体的样本分布
 
 若 $X \sim N(\mu, \sigma^2)$：
+
 1. $\bar{X} \sim N(\mu, \sigma^2/n)$。
 2. $\frac{(n-1)S^2}{\sigma^2} \sim \chi^2(n-1)$。
 3. $\bar{X}$ 与 $S^2$ 相互独立。

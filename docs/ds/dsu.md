@@ -22,12 +22,15 @@ import { GitMerge, Users, Zap, ShieldCheck, Sigma, Network } from 'lucide-react'
 并查集维护了一个集合序列的划分 $P = \{S_1, S_2, \dots, S_k\}$。设 $U = \{1, 2, \dots, n\}$ 为全集。
 
 ### 1.1 基本操作定义
+
 - **Find(x)**: 返回包含 $x$ 的唯一集合代表元 $\text{rep}(S_i)$。
 - **Union(x, y)**: 若 $\text{rep}(S_i) \neq \text{rep}(S_j)$，则 $P \leftarrow (P \setminus \{S_i, S_j\}) \cup \{S_i \cup S_j\}$。
 
 ### 1.2 数据完整性证明
+
 **命题**：并查集森林结构始终是一组互不相交的树，且根节点是该集合的唯一代表。
 **证明**：
+
 1. **初始状态**：每个节点自成一根，满足条件。
 2. **归纳步**：`Union(x, y)` 仅在 $x, y$ 的根节点 $r_x, r_y$ 不同时，将 $p[r_y] = r_x$。此操作仅合并两棵树且未引入环，故森林性质保持。
 
@@ -36,11 +39,14 @@ import { GitMerge, Users, Zap, ShieldCheck, Sigma, Network } from 'lucide-react'
 ## 2. 时空复杂度摊还证明
 
 ### 2.1 路径压缩与按秩合并
+
 **定理**：同时使用路径压缩和按秩（Rank/Size）合并，单次操作的均摊时间复杂度为 $O(\alpha(N))$，其中 $\alpha$ 是反阿克曼函数。
 
 ### 2.2 势能分析概要 (Tarjan 证明思路)
+
 定义节点的秩 $rank(x)$ 为以 $x$ 为根时树的最大高度上界。
 定义势能函数 $\Phi(x)$ 取决于 $rank(x)$ 与其父节点秩之差。
+
 1. **路径压缩**：每次 `find(x)` 会改变路径上所有节点的父节点，导致势能显著释放，补偿了遍历路径的代价。
 2. **收敛性**：由于秩的变化受限于 $\log N$ 或更小的层级划分，通过阿克曼函数的迭代定义，可以证明总代价被 $\alpha(N)$ 严格约束。
 
@@ -49,6 +55,7 @@ import { GitMerge, Users, Zap, ShieldCheck, Sigma, Network } from 'lucide-react'
 ## 3. 教材化例题与解析
 
 ### 例题 1：食物链 (综合逻辑关系)
+
 <details>
 <summary>Check Solution (扩展域做法)</summary>
 
@@ -65,9 +72,11 @@ if (t == 1) { // x, y 是同类
     else dsu.unite(x, y + n), dsu.unite(x + n, y + 2 * n), dsu.unite(x + 2 * n, y);
 }
 ```
+
 </details>
 
 ### 例题 2：动态加边连通性
+
 <details>
 <summary>Check Solution</summary>
 
@@ -82,6 +91,7 @@ for (auto& edge : edges) {
     }
 }
 ```
+
 </details>
 
 ---
@@ -104,6 +114,7 @@ void unite(int x, int y) {
     }
 }
 ```
+
 </details>
 
 2. **[带权并查集]** 维护节点到根的距离 $d[x]$。
@@ -119,6 +130,7 @@ int find(int x) {
     return root;
 }
 ```
+
 </details>
 
 3. **[进阶] 可撤销并查集 (Undoable DSU)**
@@ -126,6 +138,7 @@ int find(int x) {
 <summary>Check Solution</summary>
 
 **核心逻辑**：不使用路径压缩，仅用按秩合并。使用栈记录每次 `unite` 修改的 `p` 和 `sz` 状态。
+
 ```cpp
 struct Operation { int u, v, add_rank; };
 stack<Operation> st;
@@ -145,6 +158,7 @@ void undo() {
     rank[t.u] -= t.add_rank;
 }
 ```
+
 </details>
 
 ---

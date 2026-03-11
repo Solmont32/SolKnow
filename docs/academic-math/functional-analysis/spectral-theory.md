@@ -16,11 +16,13 @@ import KnowledgeCard from "@site/src/components/KnowledgeCard";
 设 $X$ 为 Banach 空间，$T \in \mathcal{B}(X)$。
 
 ### 1. 定义
+
 - **正则集 (Resolvent Set)**：$\rho(T) = \{ \lambda \in \mathbb{C} : T - \lambda I \text{ 是双射且有有界逆 } \}$。
 - **谱 (Spectrum)**：$\sigma(T) = \mathbb{C} \setminus \rho(T)$。
 - **谱半径 (Spectral Radius)**：$r(T) = \sup \{ |\lambda| : \lambda \in \sigma(T) \} = \lim_{n \to \infty} \|T^n\|^{1/n}$.
 
 ### 2. 谱的分类
+
 - **点谱 (Point Spectrum)** $\sigma_p(T)$：$T - \lambda I$ 不是单射（即 $\lambda$ 是特征值）。
 - **连续谱 (Continuous Spectrum)** $\sigma_c(T)$：$T - \lambda I$ 是单射，值域稠密但不是全空间。
 - **剩余谱 (Residual Spectrum)** $\sigma_r(T)$：$T - \lambda I$ 是单射，值域不稠密。
@@ -44,7 +46,9 @@ import KnowledgeCard from "@site/src/components/KnowledgeCard";
 线性算子 $K: X \to Y$ 若将有界集映射为列紧集（其闭包为紧集），则称为 **紧算子**。
 
 ### 1. Riesz-Schauder 理论
+
 对于紧算子 $K$：
+
 - 其谱 $\sigma(K)$ 是可列的，且至多以 0 为聚点。
 - 每一个非零谱成员 $\lambda \neq 0$ 都是特征值，且特征子空间是有限维的。
 
@@ -55,13 +59,15 @@ import KnowledgeCard from "@site/src/components/KnowledgeCard";
 谱定理是本章的最核心结论，它给出了算子的“广义对角化”形式。
 
 ### 1. 紧自伴算子的谱定理
+
 设 $H$ 是 Hilbert 空间，$T$ 是 $H$ 上的紧自伴算子。则存在规范正交基 $\{e_n\}$ 使得：
 $$ Tx = \sum_n \lambda_n \langle x, e_n \rangle e_n, \quad \forall x \in H. $$
 其中 $\lambda_n \in \mathbb{R}$ 为特征值且 $\lambda_n \to 0$。
 
 ### 2. 一般自伴算子的谱定理 (积分形式)
+
 对一般的有界自伴算子 $T$，存在唯一的 **谱测度 (Spectral Measure)** $E$，使得：
-$$ T = \int_{\sigma(T)} \lambda \, dE(\lambda). $$
+$$ T = \int\_{\sigma(T)} \lambda \, dE(\lambda). $$
 这相当于将无穷维空间分解为一系列“微分”特征子空间的直和。
 
 ---
@@ -69,6 +75,7 @@ $$ T = \int_{\sigma(T)} \lambda \, dE(\lambda). $$
 ## 五、精选例题
 
 ### 例 1：乘法算子的谱
+
 在 $L^2(0,1)$ 上定义 $Tf(t) = tf(t)$。求 $\sigma(T)$。
 
 <details>
@@ -86,6 +93,7 @@ $$ T = \int_{\sigma(T)} \lambda \, dE(\lambda). $$
 ## 六、分层练习
 
 ### 练习 1（算子多项式）
+
 证明：若 $\lambda \in \sigma(T)$，则对多项式 $P(z)$，有 $P(\lambda) \in \sigma(P(T))$。
 
 <details>
@@ -98,6 +106,7 @@ $$ T = \int_{\sigma(T)} \lambda \, dE(\lambda). $$
 </details>
 
 ### 练习 2（自伴性判定）
+
 证明：若 $T$ 是自伴算子且 $T^2 = 0$，则 $T = 0$。
 
 <details>
@@ -110,12 +119,14 @@ $$ T = \int_{\sigma(T)} \lambda \, dE(\lambda). $$
 </details>
 
 ### 练习 3（谱半径）
+
 给出 $2 \times 2$ 矩阵的例子，满足 $\|T\| > r(T)$。
 
 <details>
 <summary>点击查看答案</summary>
 
 考虑 $T = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}$。
+
 1. $T^2 = 0$，故所有特征值为 0，$r(T) = 0$。
 2. 但 $\|T\| = 1$ (考虑向量 $(0, 1)^T$)。
 3. 这说明范数控制谱，但谱不一定控制范数（除非是正规算子）。

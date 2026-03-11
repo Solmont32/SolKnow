@@ -24,11 +24,13 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## <Microscope className="inline-block mr-2" /> 1. 经典模型深度解析
 
 ### 1.1 石子合并 (Stone Merging)
+
 **问题**：有 $n$ 堆石子，合并相邻两堆的代价为重量和。
 **转移方程**：
 $$f[i][j] = \min_{i \le k < j} \{ f[i][k] + f[k+1][j] \} + \text{sum}(i, j)$$
 
 ### 1.2 矩阵链乘 (Matrix Chain Multiplication)
+
 **问题**：给定 $n$ 个矩阵的维数，求最少标量乘法次数。
 **状态设计**：$f[i][j]$ 为相乘 $A_i \dots A_j$ 的最小代价。
 **转移方程**：
@@ -47,6 +49,7 @@ $$f[i][j] = \min_{i \le k < j} \{ f[i][k] + f[k+1][j] + p_{i-1} \cdot p_k \cdot 
 ## <ShieldCheck className="inline-block mr-2" /> 3. 综合练习与强化
 
 ### 练习 1：能量项链
+
 两个珠子 $(m, r)$ 和 $(r, n)$ 合并产生 $m \times r \times n$ 的能量。求环形项链合并的最大能量。
 
 <details>
@@ -83,11 +86,13 @@ int main() {
     return 0;
 }
 ```
+
 </details>
 
 ---
 
 ## 延伸挑战
+
 - [洛谷 P1880 石子合并](https://www.luogu.com.cn/problem/P1880)
 - [洛谷 P1063 能量项链](https://www.luogu.com.cn/problem/P1063)
 - [洛谷 P3205 [HNOI2010] 合唱队](https://www.luogu.com.cn/problem/P3205)（区间 DP 状态讨论）

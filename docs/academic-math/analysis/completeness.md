@@ -55,25 +55,31 @@ import { ShieldCheck, Layers, Target, ZoomIn, Box, Infinity, Repeat, Anchor, Che
 这七大定理在逻辑上是**完全等价**的。为了体现其严密的逻辑结构，我们构建如下环形证明路径。
 
 ### (1) 确界原理 $\implies$ 单调有界原理
+
 **证明概要**：设 $\{a_n\}$ 递增且有上界。令集合 $S = \{a_n \mid n \in \mathbb{N}\}$。由确界原理，存在 $\beta = \sup S$。
 对 $\forall \epsilon > 0$，根据上确界定义，$\exists a_N \in S$ 使得 $a_N > \beta - \epsilon$。
 因 $\{a_n\}$ 递增，当 $n > N$ 时有 $\beta - \epsilon < a_N \leq a_n \leq \beta < \beta + \epsilon$。
 由极限定义，$\lim_{n \to \infty} a_n = \beta$。$\square$
 
 ### (2) 单调有界原理 $\implies$ 闭区间套定理
+
 **证明概要**：设 $[a_n, b_n]$ 为区间套。左端点序列 $\{a_n\}$ 递增且 $a_n < b_1$，故 $a_n \to \xi$；同理 $b_n \to \eta$。
 由 $b_n - a_n \to 0$ 知 $\xi = \eta$。该点即为唯一交点。$\square$
 
 ### (3) 闭区间套定理 $\implies$ 聚点定理
+
 **证明概要**：对有界无限点集 $S \subset [a, b]$，使用**二分法**。将 $[a, b]$ 平分为二，必有一半包含 $S$ 中无穷多个点。重复此过程构造闭区间套，由长度趋于 0 知交点 $\xi$ 是聚点。$\square$
 
 ### (4) 聚点定理 $\implies$ 有限覆盖定理
+
 **证明概要 (反证法)**：若 $[a, b]$ 的某开覆盖 $H$ 无有限子覆盖。不断二分得到闭区间套 $\{[a_n, b_n]\}$，其中每个区间都不能被 $H$ 的有限个元覆盖。交点 $\xi$ 必属于某个开集 $G \in H$。由于 $G$ 开，当 $n$ 充分大时 $[a_n, b_n] \subset G$，矛盾。$\square$
 
 ### (5) 有限覆盖定理 $\implies$ 柯西收敛准则
+
 **证明概要**：柯西序列 $\{x_n\}$ 必有界。若无极限，则对任意 $a$，存在邻域 $U_a$ 使得序列只有有限项进入。这些邻域覆盖了有界闭区间，取有限子覆盖，则序列只有有限项，矛盾。$\square$
 
 ### (6) 柯西收敛准则 $\implies$ 戴德金分割定理
+
 **证明概要**：利用分割 $(A, B)$ 构造出两列相互逼近的有理 Cauchy 序列，其共同极限点即为分割点。$\square$
 
 ---
@@ -81,6 +87,7 @@ import { ShieldCheck, Layers, Target, ZoomIn, Box, Infinity, Repeat, Anchor, Che
 ## 4. 深度教材化例题
 
 ### 例 1：极限点的性质分析
+
 **题目**：设 $S \subset \mathbb{R}$ 有界，证明 $\sup S$ 要么是 $S$ 的最大值，要么是 $S$ 的一个聚点。
 
 <details>
@@ -88,15 +95,17 @@ import { ShieldCheck, Layers, Target, ZoomIn, Box, Infinity, Repeat, Anchor, Che
 
 **证明**：
 令 $\beta = \sup S$。
+
 1. 若 $\beta \in S$，且不存在 $s \in S$ 使得 $s > \beta$，则 $\beta$ 是最大值。
 2. 若 $\beta \notin S$ 或我们要证明其为聚点：
-   对任意 $\epsilon > 0$，由上确界定义，存在 $x_1 \in S$ 使得 $\beta - \epsilon < x_1 \leq \beta$。
-   由于 $\beta = \sup S$，对于任何 $x_1 < \beta$，在 $(x_1, \beta]$ 内必然还存在 $x_2 \in S$。
-   重复此过程，可在 $\beta$ 的任意 $\epsilon$ 邻域内找到 $S$ 的无穷多个点。
-   因此 $\beta$ 是聚点。
+对任意 $\epsilon > 0$，由上确界定义，存在 $x_1 \in S$ 使得 $\beta - \epsilon < x_1 \leq \beta$。
+由于 $\beta = \sup S$，对于任何 $x_1 < \beta$，在 $(x_1, \beta]$ 内必然还存在 $x_2 \in S$。
+重复此过程，可在 $\beta$ 的任意 $\epsilon$ 邻域内找到 $S$ 的无穷多个点。
+因此 $\beta$ 是聚点。
 </details>
 
 ### 例 2：有限覆盖定理的构造性应用
+
 **题目**：证明若 $f$ 在 $[a, b]$ 上连续，则 $f$ 在 $[a, b]$ 上有界。
 
 <details>
@@ -108,6 +117,7 @@ import { ShieldCheck, Layers, Target, ZoomIn, Box, Infinity, Repeat, Anchor, Che
 由有限覆盖定理，存在有限个点 $x_1, \dots, x_k$，使得 $\bigcup_{i=1}^k U(x_i, \delta_{x_i}) \supset [a, b]$。
 在每个 $U(x_i, \delta_{x_i})$ 上 $f$ 有界（设界为 $M_i$），则在 $[a, b]$ 上 $f$ 的界为 $\max\{M_1, \dots, M_k\}$。
 故 $f$ 在 $[a, b]$ 上有界。
+
 </details>
 
 ---
@@ -120,6 +130,7 @@ import { ShieldCheck, Layers, Target, ZoomIn, Box, Infinity, Repeat, Anchor, Che
 证明：$\beta = \sup S \iff$ ($\forall x \in S, x \leq \beta$) 且 ($\forall n \in \mathbb{N}, \exists x_n \in S$ 使得 $x_n > \beta - 1/n$)。
 <br/>
 **解析**：这是确界定义从 $\epsilon$ 语言到数列语言的转换。后半部分保证了没有任何比 $\beta$ 小的数能成为上界。
+
 </details>
 
 <details>
@@ -131,6 +142,7 @@ import { ShieldCheck, Layers, Target, ZoomIn, Box, Infinity, Repeat, Anchor, Che
 不一定。考虑 $I_n = (0, 1/n)$。$I_1 \supset I_2 \supset \dots$，且长度趋于 0。
 但其交集 $\bigcap_{n=1}^\infty (0, 1/n) = \emptyset$。
 这说明“闭性”在完备性理论中至关重要。
+
 </details>
 
 <details>
@@ -140,6 +152,7 @@ import { ShieldCheck, Layers, Target, ZoomIn, Box, Infinity, Repeat, Anchor, Che
 <br/>
 **答案解析**：
 不一定。考虑整数集 $\mathbb{Z}$。它是无限集，但由于无界，任何实数的邻域内都只含有有限个整数。因此 $\mathbb{Z}$ 没有聚点。
+
 </details>
 
 <details>
@@ -149,6 +162,7 @@ import { ShieldCheck, Layers, Target, ZoomIn, Box, Infinity, Repeat, Anchor, Che
 <br/>
 **答案解析**：
 不存在。$\bigcup_{n=2}^\infty (1/n, 1) = (0, 1)$。任何有限子覆盖只能覆盖到 $\min(1/n_i)$，无法覆盖靠近 0 的区域。这再次强调了完备性定理通常与“闭区间”紧密结合。
+
 </details>
 
 ---
@@ -159,4 +173,3 @@ import { ShieldCheck, Layers, Target, ZoomIn, Box, Infinity, Repeat, Anchor, Che
 - **完备化 (Completion)**：数学家 Cantor 利用 Cauchy 序列类构造实数，而 Dedekind 利用分割构造实数。两者在同构意义下是唯一的。
 
 _编者注：理解了这七个定理的等价性，你就真正掌握了数学分析的“逻辑闭环”。_
-

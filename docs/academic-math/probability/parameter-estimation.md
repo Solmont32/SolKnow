@@ -13,11 +13,14 @@ import KnowledgeCard from "@site/src/components/KnowledgeCard";
 点估计是用样本统计量的某个确定值作为未知参数的估计值。
 
 ### 矩估计法 (Method of Moments, MOM)
+
 令样本矩等于总体矩，解出参数。
+
 - $\bar{X} = E(X)$
 - $\frac{1}{n} \sum X_i^2 = E(X^2)$
 
 ### 极大似然估计 (Maximum Likelihood Estimation, MLE)
+
 寻找使样本观测值出现概率最大的参数值。
 似然函数：$L(\theta) = \prod_{i=1}^n f(X_i; \theta)$。
 求解方法：取对数求导 $\frac{\partial \ln L(\theta)}{\partial \theta} = 0$。
@@ -37,6 +40,7 @@ import KnowledgeCard from "@site/src/components/KnowledgeCard";
 区间估计给出参数的一个范围 $[\hat{\theta}_1, \hat{\theta}_2]$，使得该范围包含真实参数的概率（置信水平）为 $1-\alpha$。
 
 ### 正态总体均值的置信区间 ($\mu$)
+
 - **$\sigma^2$ 已知**：
   $$\left[\bar{X} - z_{\alpha/2} \frac{\sigma}{\sqrt{n}}, \bar{X} + z_{\alpha/2} \frac{\sigma}{\sqrt{n}}\right]$$
 - **$\sigma^2$ 未知**：

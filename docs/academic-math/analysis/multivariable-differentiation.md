@@ -43,6 +43,7 @@ $$\lim_{(\Delta x, \Delta y) \to (0, 0)} \frac{\Delta z - [f_x(x_0, y_0)\Delta x
 > - **注意**：偏导数存在并不意味着函数连续，更不意味着可微。
 
 ### 深度例题 1：全微分存在性的严格判定
+
 判定 $f(x, y) = \sqrt{|xy|}$ 在 $(0, 0)$ 处的可微性。
 
 <details>
@@ -59,12 +60,14 @@ $$\lim_{(\Delta x, \Delta y) \to (0, 0)} \frac{\Delta z - [f_x(x_0, y_0)\Delta x
 </details>
 
 ### 深度例题 2：多元复合函数的高阶偏导
+
 设 $z = f(x+y, xy)$，其中 $f$ 具有二阶连续偏导数，求 $\frac{\partial^2 z}{\partial x \partial y}$。
 
 <details>
 <summary>点击查看解析</summary>
 
 令 $u = x+y, v = xy$。
+
 1. **一阶偏导**：
    $$\frac{\partial z}{\partial x} = f_u \cdot 1 + f_v \cdot y = f_u + yf_v$$
 2. **二阶偏导**（对 $y$ 求导）：
@@ -95,6 +98,7 @@ $$f(x_0+h, y_0+k) - f(x_0, y_0) \approx \frac{1}{2} (Ah^2 + 2Bhk + Ck^2)$$
 </details>
 
 ### 深度例题 4：方向导数的最值性质
+
 已知函数 $f(x, y) = x^2 + 2y^2$，求在点 $(1, 1)$ 处沿什么方向的方向导数最大，并求出该最大值。
 
 <details>
@@ -112,12 +116,14 @@ $$f(x_0+h, y_0+k) - f(x_0, y_0) \approx \frac{1}{2} (Ah^2 + 2Bhk + Ck^2)$$
 </details>
 
 ### 深度例题 5：隐函数的全微分计算
+
 设由方程 $x^2 + y^2 + z^2 - 3xyz = 0$ 确定的隐函数为 $z = z(x, y)$，求 $dz$。
 
 <details>
 <summary>点击查看解析</summary>
 
 令 $F(x, y, z) = x^2 + y^2 + z^2 - 3xyz$。
+
 1. **计算偏导**：
    $F_x = 2x - 3yz, F_y = 2y - 3xz, F_z = 2z - 3xy$。
 2. **求隐函数偏导**：
@@ -137,12 +143,14 @@ $$f(x_0+h, y_0+k) - f(x_0, y_0) \approx \frac{1}{2} (Ah^2 + 2Bhk + Ck^2)$$
 :::
 
 ### 练习 1：全微分定义的应用
+
 证明 $f(x, y) = x^2 + y^2$ 在原点 $(0, 0)$ 可微。
 
 <details>
 <summary>点击查看解析</summary>
 
 **解析**：
+
 1. $f(0, 0) = 0, f_x(0, 0) = 0, f_y(0, 0) = 0$。
 2. 构造极限：
    $$\lim_{(\Delta x, \Delta y) \to (0, 0)} \frac{f(\Delta x, \Delta y) - f(0, 0) - (0 \cdot \Delta x + 0 \cdot \Delta y)}{\sqrt{\Delta x^2 + \Delta y^2}}$$
@@ -152,27 +160,31 @@ $$f(x_0+h, y_0+k) - f(x_0, y_0) \approx \frac{1}{2} (Ah^2 + 2Bhk + Ck^2)$$
 </details>
 
 ### 练习 2：链式法则的高阶应用
+
 设 $z = f(x^2 - y^2)$，$f$ 可导，求 $y \frac{\partial z}{\partial x} + x \frac{\partial z}{\partial y}$。
 
 <details>
 <summary>点击查看解析</summary>
 
 **解析**：
+
 1. $\frac{\partial z}{\partial x} = f'(x^2 - y^2) \cdot (2x)$。
 2. $\frac{\partial z}{\partial y} = f'(x^2 - y^2) \cdot (-2y)$。
 3. 代入：
    $y(2x f') + x(-2y f') = 2xy f' - 2xy f' = 0$。
-**结论**：该表达式的值恒为 **0**。
+   **结论**：该表达式的值恒为 **0**。
 
 </details>
 
 ### 练习 3：切平面方程计算
+
 求曲面 $z = x^2 + y^2$ 在点 $(1, 2, 5)$ 处的切平面方程。
 
 <details>
 <summary>点击查看解析</summary>
 
 **解析**：
+
 1. 偏导数：$z_x = 2x, z_y = 2y$。
 2. 在点 $(1, 2)$ 处：$z_x = 2, z_y = 4$。
 3. 切平面方程：$z - z_0 = f_x(x-x_0) + f_y(y-y_0)$。
@@ -182,12 +194,14 @@ $$f(x_0+h, y_0+k) - f(x_0, y_0) \approx \frac{1}{2} (Ah^2 + 2Bhk + Ck^2)$$
 </details>
 
 ### 练习 4：拉格朗日乘数法基础
+
 求函数 $f(x, y) = xy$ 在约束条件 $x + y = 2$ 下的极值。
 
 <details>
 <summary>点击查看解析</summary>
 
 **解析**：
+
 1. 构造拉格朗日函数：$L(x, y, \lambda) = xy + \lambda(x + y - 2)$。
 2. 求偏导方程组：
    - $L_x = y + \lambda = 0 \implies y = -\lambda$

@@ -15,6 +15,7 @@ import { Target, ShieldCheck, Activity, BookOpen, Layers } from 'lucide-react';
 ## 1. 形式化描述与凸性证明
 
 ### 1.1 算术表示
+
 一个半平面可以表示为线性不等式：
 $$ax + by + c \ge 0$$
 在计算几何实现中，通常使用**有向直线**表示：直线左侧为有效半平面。
@@ -34,9 +35,9 @@ $$ax + by + c \ge 0$$
 
 1.  **极角排序**：将所有有向直线按极角排序。对于极角相同的直线，仅保留最左侧的一条（即最强约束）。
 2.  **双端队列维护**：
-    -   依次加入排序后的直线。
-    -   若当前直线与队列末尾两直线的交点在该直线右侧（不满足约束），则弹出队尾。
-    -   同理，弹出队首。
+    - 依次加入排序后的直线。
+    - 若当前直线与队列末尾两直线的交点在该直线右侧（不满足约束），则弹出队尾。
+    - 同理，弹出队首。
 3.  **闭合性处理**：最后用队首直线检查队尾，弹出冗余。
 
 ### 2.2 核心代码实现 (C++)
@@ -57,14 +58,14 @@ vector<Point> halfPlaneIntersection(vector<Line>& L) {
     int n = L.size(), head = 0, tail = 0;
     vector<Line> q(n + 10);
     vector<Point> p(n + 10);
-    
+
     // 1. 去除极角相同的冗余直线
     int m = 0;
     for (int i = 0; i < n; i++) {
         if (i > 0 && sign(L[i].ang - L[i-1].ang) == 0) continue;
         L[m++] = L[i];
     }
-    
+
     // 2. 双端队列维护
     for (int i = 0; i < m; i++) {
         while (tail - head > 1 && !onLeft(L[i], p[tail - 1])) tail--;
@@ -72,12 +73,12 @@ vector<Point> halfPlaneIntersection(vector<Line>& L) {
         q[tail++] = L[i];
         if (tail - head > 1) p[tail - 1] = getIntersect(q[tail - 2], q[tail - 1]);
     }
-    
+
     // 3. 闭合检查
     while (tail - head > 1 && !onLeft(q[head], p[tail - 1])) tail--;
     if (tail - head <= 2) return {}; // 交集为空或点/线
     p[head] = getIntersect(q[head], q[tail - 1]);
-    
+
     vector<Point> res;
     for (int i = head; i < tail; i++) res.push_back(p[i]);
     return res;
@@ -112,6 +113,7 @@ vector<Line> lines;
 for(int i = 0; i < n; i++) lines.push_back(Line(p[i], p[(i+1)%n]-p[i]));
 vector<Point> kernel = halfPlaneIntersection(lines);
 ```
+
 </details>
 
 <details>

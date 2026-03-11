@@ -16,7 +16,9 @@ import { Box, Layers, Zap, Search, Settings } from 'lucide-react';
 ## 1. 基础容器的深度挖掘
 
 ### 1.1 `std::priority_queue` 的自定义
+
 除了基础的大根堆，通过自定义比较器可以实现复杂的优先规则。
+
 ```cpp
 struct Node {
     int id, dist;
@@ -27,7 +29,9 @@ priority_queue<Node, vector<Node>, greater<Node>> pq;
 ```
 
 ### 1.2 `std::bitset` 的位运算加速
+
 `bitset` 能够将 $O(N)$ 的集合操作（交、并、差）优化为 $O(N/w)$，其中 $w$ 为机器字长（通常为 64）。
+
 - **应用场景**：状态压缩、图的连通性判定、背包问题优化。
 
 ---
@@ -37,7 +41,9 @@ priority_queue<Node, vector<Node>, greater<Node>> pq;
 `pb_ds` (Policy-Based Data Structures) 是 GCC 内置的一个高性能插件库，支持平衡树、哈希表、堆等。
 
 ### 2.1 高性能哈希表
+
 相比 `std::unordered_map`，`gp_hash_table` 在处理随机数据时速度快 3-5 倍。
+
 ```cpp
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/hash_policy.hpp>
@@ -47,7 +53,9 @@ gp_hash_table<int, int> table;
 ```
 
 ### 2.2 真正的“平衡树”：`tree`
+
 支持 $O(\log N)$ 的 `find_by_order` (找第 $k$ 大) 和 `order_of_key` (找排名)。
+
 ```cpp
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
@@ -64,10 +72,12 @@ int rank = s.order_of_key(10); // 返回 10 的排名
 ## 3. 性能优化与空间压缩
 
 ### 3.1 `std::vector` 的内存管理
+
 - `reserve(n)`：预分配空间，避免频繁重新分配导致的 $O(N)$ 拷贝。
 - `shrink_to_fit()`：释放未使用的预分配内存（C++11）。
 
 ### 3.2 自定义分配器 (Custom Allocator)
+
 在处理数百万个小对象时，默认的 `new/delete` 性能较差。使用静态数组模拟内存池是算法竞赛中的主流策略。
 
 ---
@@ -75,6 +85,7 @@ int rank = s.order_of_key(10); // 返回 10 的排名
 ## 4. 经典例题
 
 ### 例题 1：位运算优化 0/1 背包
+
 <details>
 <summary>Check Solution</summary>
 
@@ -89,6 +100,7 @@ for (int i = 0; i < n; i++)
     f |= (f << w[i]);
 if (f[V]) puts("Yes");
 ```
+
 </details>
 
 ---

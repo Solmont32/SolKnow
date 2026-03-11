@@ -15,18 +15,23 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## 一、 <Sigma className="inline-block mr-2 mb-1 text-blue-500" /> 形式化公理系统
 
 ### 1. 流网络与可行流
+
 给定有向图 $G=(V, E)$，每条边 $(u, v)$ 有容量 $c(u, v) \ge 0$。一个**可行流** $f: V \times V \to \mathbb{R}$ 必须满足：
+
 1. **容量限制 (Capacity Constraint)**：$\forall u, v \in V, f(u, v) \le c(u, v)$。
 2. **斜对称性 (Skew Symmetry)**：$\forall u, v \in V, f(u, v) = -f(v, u)$。
 3. **流量守恒 (Flow Conservation)**：对于所有 $u \in V - \{s, t\}$，$\sum_{v \in V} f(u, v) = 0$。
 
 ### 2. 残量网络与增广路 (Residual Network)
+
 - **残量网络 $G_f$**：由具有剩余容量的边组成的图。边 $(u, v)$ 的残量为 $c_f(u, v) = c(u, v) - f(u, v)$。
   - 注意：若 $f(u, v) > 0$，则在 $G_f$ 中存在反向边 $(v, u)$，其容量为 $f(u, v)$，代表可“回退”的流量。
 - **增广路 (Augmenting Path)**：残量网络 $G_f$ 中从源点 $s$ 到汇点 $t$ 的一条简单路径。
 
 ### 3. 最大流最小割定理 (Max-Flow Min-Cut Theorem)
+
 **定理**：对于一个流网络 $G$，下列三个陈述是等价的：
+
 1.  $f$ 是 $G$ 的一个最大流。
 2.  残量网络 $G_f$ 不包含任何增广路。
 3.  $|f| = c(S, T)$，其中 $(S, T)$ 是 $G$ 的某个最小割。
@@ -42,22 +47,25 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## 二、 <Workflow className="inline-block mr-2 mb-1 text-green-500" /> 算法收敛性与复杂度分析
 
 ### 1. 整数性定理 (Integrality Theorem)
+
 若流网络中所有容量均为整数，则存在一个最大流，其每一条边上的流量也均为整数。这是解决组合优化问题的数学基础。
 
 ### 2. Edmonds-Karp 算法收敛性
+
 Edmonds-Karp 算法通过 BFS 寻找最短增广路。其复杂度为 $O(VE^2)$，且**即使容量为实数也能收敛**。
 **关键证明点**：在 $G_f$ 中，$s$ 到任意节点 $v$ 的最短距离 $d_f(s, v)$ 是单调不减的。每次增广至少会使一条边从残量网络中消失，且该边恢复时距离必然增加。
 
 ### 3. Dinic 算法：分层图优化
+
 Dinic 算法通过**分层图**减少了增广路搜索的盲目性，并引入当前弧优化。
 
-<ComplexityAnalysis 
-  data={[
-    { algorithm: "Ford-Fulkerson", complexity: "O(E|f|)", space: "O(V+E)", note: "依赖于流量大小，实数容量可能不收敛" },
-    { algorithm: "Edmonds-Karp", complexity: "O(VE²)", space: "O(V+E)", note: "最短增广路，与流量无关" },
-    { algorithm: "Dinic (General)", complexity: "O(V²E)", space: "O(V+E)", note: "分层图 + 当前弧优化，实践性能极佳" },
-    { algorithm: "ISAP", complexity: "O(V²E)", space: "O(V+E)", note: "改进的预流推进思想，单次 BFS" }
-  ]}
+<ComplexityAnalysis
+data={[
+{ algorithm: "Ford-Fulkerson", complexity: "O(E|f|)", space: "O(V+E)", note: "依赖于流量大小，实数容量可能不收敛" },
+{ algorithm: "Edmonds-Karp", complexity: "O(VE²)", space: "O(V+E)", note: "最短增广路，与流量无关" },
+{ algorithm: "Dinic (General)", complexity: "O(V²E)", space: "O(V+E)", note: "分层图 + 当前弧优化，实践性能极佳" },
+{ algorithm: "ISAP", complexity: "O(V²E)", space: "O(V+E)", note: "改进的预流推进思想，单次 BFS" }
+]}
 />
 
 ---
@@ -65,15 +73,19 @@ Dinic 算法通过**分层图**减少了增广路搜索的盲目性，并引入�
 ## 三 <Landmark className="inline-block mr-2 mb-1 text-purple-500" /> 建模范式与复杂约束
 
 ### 1. 最大权闭合子图 (Max Weight Closure)
+
 给定带权点集，选择点 $u$ 必须选择其所有后继点。
 **转化结论**：$\text{最大权} = \sum_{w_i > 0} w_i - \text{最小割}$。
+
 - $S \to v$ (若 $w_v > 0$)，容量 $w_v$。
 - $v \to T$ (若 $w_v < 0$)，容量 $|w_v|$。
 - 原图依赖 $u \to v$，容量 $\infty$。
 
 ### 2. 最小割的性质：最小边数割
+
 若要求在保证最小割容量的前提下，使得**割边数量最少**。
 **方案**：将每条边的权值 $w$ 修改为 $w' = w \times (E+1) + 1$。
+
 - 此时最小割 $C = \sum (w_i \times (E+1) + 1) = \text{OldCut} \times (E+1) + \text{EdgeCount}$。
 - 由于 $\text{EdgeCount} \le E < E+1$，优先保证 $\text{OldCut}$ 最小，其次保证 $\text{EdgeCount}$ 最小。
 
@@ -157,26 +169,30 @@ public:
 ## 五、 <Target className="inline-block mr-2 mb-1 text-red-500" /> 精选练习与解析
 
 ### 练习 1：最大流最小割的方案构造
+
 求出最大流后，如何输出最小割集中的所有边？
 
 <details>
 <summary>Check Solution</summary>
 
 **解析**：
+
 1. **运行最大流**：得到最终的残量网络 $G_f$。
 2. **BFS 标记**：从源点 $s$ 开始在 $G_f$ 中进行一次 BFS/DFS，标记所有可达点，记为集合 $S$。
 3. **识别割边**：遍历原图中所有有向边 $(u, v)$，若 $u \in S$ 且 $v \notin S$，则该边属于最小割集。
-*注意：对于最小费用最大流，割的构造更为复杂。*
+   _注意：对于最小费用最大流，割的构造更为复杂。_
 
 </details>
 
 ### 练习 2：混合图欧拉回路
+
 给定既有有向边又有无向边的图，问是否能为无向边定向使其构成欧拉回路。
 
 <details>
 <summary>Check Solution</summary>
 
 **解析 (网络流建模)**：
+
 1. **预处理**：先对无向边随意定向。计算每个点的出入度差 $D_i = out\_i - in\_i$。
 2. **必要条件**：所有点的总度数必须为偶数且 $D_i$ 必须为偶数。
 3. **平衡流量**：
@@ -188,6 +204,7 @@ public:
 </details>
 
 ### 练习 3：Project Selection Problem (经典建模)
+
 有 $n$ 个项目和 $m$ 个仪器。做项目 $i$ 收益为 $p_i$，需要仪器集合 $R_i$。买仪器 $j$ 代价为 $c_j$。求最大利润。
 
 <details>
@@ -195,10 +212,12 @@ public:
 
 **解析**：
 这就是**最大权闭合子图**的直接应用。
+
 1. **点集**：项目为正权点，仪器为负权点。
 2. **连边**：从项目 $i$ 向其所需的所有仪器 $j$ 连容量为 $\infty$ 的边。
 3. **计算**：$\sum p_i - \text{MinCut}$。
-**C++ 代码片段**：
+   **C++ 代码片段**：
+
 ```cpp
 // 伪代码：建图逻辑
 for(int i=1; i<=n; ++i) dinic.add_edge(S, i, p[i]), total_profit += p[i];

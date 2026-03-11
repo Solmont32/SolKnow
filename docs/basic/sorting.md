@@ -17,11 +17,13 @@ import { Shuffle, GitBranch, Target, Zap, BarChart, Binary, Scale } from 'lucide
 **核心思想**：选取基准值 (Pivot)，通过 Partition 过程将区间划分为不相交的两部分，使得左区间所有元素均不大于右区间。
 
 ### 1. 算法逻辑
+
 1. **确定分界点** $x$。
 2. **调整区间 (Partition)**：使得左区间 $\le x$，右区间 $\ge x$。
 3. **递归处理**：分别对左右子区间排序。
 
 ### 2. 性能分析与主定理应用
+
 - **递推式**：$T(n) = 2T(n/2) + O(n)$ (理想情况)。
 - **复杂度**：平均 $O(n \log n)$。若基准值始终选取最大/最小值，退化为 $O(n^2)$。
 - **空间复杂度**：$O(\log n)$ (递归栈深度)。
@@ -47,6 +49,7 @@ void quick_sort(int q[], int l, int r) {
 **核心思想**：先递归使子序列有序，再通过线性时间复杂度合并两个有序序列。
 
 ### 1. 算法逻辑与稳定性证明
+
 1. **分解**：取 $mid = \lfloor (l + r) / 2 \rfloor$。
 2. **治理**：递归排序 $[l, mid]$ 和 $[mid + 1, r]$。
 3. **合并**：使用双指针 $O(n)$ 合并。
@@ -54,6 +57,7 @@ void quick_sort(int q[], int l, int r) {
 **稳定性**：由于在 `q[i] <= q[j]` 时优先选择左侧元素，相同元素的相对位置得以保持。
 
 ### 2. 时空开销分析
+
 - **时间**：严格 $O(n \log n)$，不受数据分布影响。
 - **空间**：$O(n)$，需要额外的辅助数组。
 
@@ -79,6 +83,7 @@ void merge_sort(int q[], int l, int r) {
 **定理**：任何基于比较的排序算法，在最坏情况下的时间复杂度至少为 $\Omega(n \log n)$。
 
 **证明 (决策树模型)**：
+
 1. 一个包含 $n$ 个元素的序列有 $n!$ 种可能的排列。
 2. 排序的过程可以看作在决策树中从根节点到达某个叶节点的过程。
 3. 决策树必须至少有 $n!$ 个叶节点才能区分所有排列。
@@ -91,7 +96,9 @@ void merge_sort(int q[], int l, int r) {
 ## 四、 综合练习库
 
 ### 练习 1：逆序对统计
+
 给定序列 $A$，求满足 $i < j$ 且 $A_i > A_j$ 的对数。
+
 <details>
 <summary>Check Solution</summary>
 
@@ -111,10 +118,13 @@ long long merge_sort(int l, int r) {
     return res;
 }
 ```
+
 </details>
 
 ### 练习 2：快速选择 (Quick Select)
+
 在 $O(n)$ 期望时间内寻找第 $k$ 小的数。
+
 <details>
 <summary>Check Solution</summary>
 
@@ -136,14 +146,18 @@ int quick_select(int l, int r, int k) {
     return quick_select(j + 1, r, k - sl);
 }
 ```
+
 </details>
 
 ### 练习 3：堆排序实现
+
 使用大根堆实现升序排序。
+
 <details>
 <summary>Check Solution</summary>
 
 **逻辑**：
+
 1. 构建大根堆 ($O(n)$)。
 2. 交换堆顶与末尾，收缩堆范围并向下调整 ($O(n \log n)$)。
 
@@ -155,6 +169,7 @@ void down(int u, int size) {
     if (u != t) { swap(h[u], h[t]); down(t, size); }
 }
 ```
+
 </details>
 
 ---

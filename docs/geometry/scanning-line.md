@@ -15,6 +15,7 @@ import { MoveRight, Zap, Activity, BookOpen, Layers } from 'lucide-react';
 ## 1. 核心模型：矩形面积并 (Area Union)
 
 ### 1.1 问题描述
+
 给定 $N$ 个坐标轴平行的矩形，求它们的并集面积。
 
 <KnowledgeCard type="algorithm" title="扫描线处理流程">
@@ -84,6 +85,7 @@ void update(int u, int l, int r, int val) {
 
 **题目要求**：求所有矩形并集的轮廓周长。
 **思路**：
+
 1.  垂直边的贡献：线段树维护区间覆盖的**段数**。
 2.  水平边的贡献：线段树维护本次更新前后 `len` 的变化量绝对值。
 

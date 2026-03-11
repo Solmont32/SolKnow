@@ -28,6 +28,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 **朴素做法**：枚举所有状态 $S$ ($2^n$)，再枚举所有状态 $s \in [0, 2^n)$，检查 $s$ 是否为 $S$ 的子集。总复杂度 $O(4^n)$。
 
 **高效做法**：
+
 ```cpp
 for (int S = 0; S < (1 << n); S++) {
     for (int s = S; s; s = (s - 1) & S) {
@@ -35,6 +36,7 @@ for (int S = 0; S < (1 << n); S++) {
     }
 }
 ```
+
 **复杂度证明**：
 总计算次数等于 $\sum_{k=0}^n \binom{n}{k} \cdot 2^k$。
 根据二项式定理 $(1+x)^n = \sum \binom{n}{k} x^k$，令 $x=2$，得：
@@ -48,13 +50,16 @@ $$(1+2)^n = 3^n$$
 **问题**：给定 $n$ 个点及其间的边权，求从点 0 到点 $n-1$ 经过每个点恰好一次的最短路径。
 
 ### 状态设计
+
 $f[state][i]$ 表示当前已访问点的集合为 $state$，且当前处于点 $i$ 的最短路径长度。
 
 ### 转移方程
+
 $$f[state][i] = \min_{j \in state, j \neq i} \{ f[state \setminus \{i\}][j] + dist(j, i) \}$$
 其中 $state \setminus \{i\}$ 可表示为 `state ^ (1 << i)`。
 
 ### 复杂度
+
 - 状态数：$2^n \cdot n$。
 - 转移：$O(n)$。
 - 总计：$O(2^n \cdot n^2)$。对比朴素排列搜索的 $O(n!)$，优化显著。
@@ -64,6 +69,7 @@ $$f[state][i] = \min_{j \in state, j \neq i} \{ f[state \setminus \{i\}][j] + di
 ## <Zap className="inline-block mr-2" /> 2. 工业级位运算技巧
 
 在状压 DP 中，高效的位运算是性能的关键：
+
 - `__builtin_popcount(x)`：统计 $x$ 中 1 的个数。
 - `x & -x` (Lowbit)：提取 $x$ 的最低位 1。
 - `for (int i = s; i; i = (i - 1) & s)`：**高效遍历子集**（复杂度 $O(3^n)$ 而非 $O(4^n)$）。
@@ -73,6 +79,7 @@ $$f[state][i] = \min_{j \in state, j \neq i} \{ f[state \setminus \{i\}][j] + di
 ## <ShieldCheck className="inline-block mr-2" /> 3. 综合练习与强化
 
 ### 练习 1：最短 Hamilton 路径
+
 给定权值矩阵，求从 0 到 $n-1$ 的最短 Hamilton 路径。
 
 <details>
@@ -112,9 +119,11 @@ int main() {
     return 0;
 }
 ```
+
 </details>
 
 ### 练习 2：蒙德里安的梦想 (棋盘覆盖)
+
 用 $1 \times 2$ 的骨牌铺满 $n \times m$ 的棋盘，求方案数。
 
 <details>
@@ -122,6 +131,7 @@ int main() {
 
 **核心逻辑**：
 $f[i][j]$ 表示第 $i$ 列的状态为 $j$（$j$ 的某位为 1 表示由第 $i-1$ 列横插过来的）。
+
 1.  横放确定后，剩下的空位必须能由竖放填满（即连续的空位必须是偶数）。
 2.  相邻两列状态必须兼容：`(j & k) == 0`。
 
@@ -140,11 +150,13 @@ for (int i = 0; i < (1 << n); i++) {
     st[i] = isValid;
 }
 ```
+
 </details>
 
 ---
 
 ## 延伸挑战
+
 - [洛谷 P1879 [USACO06NOV] Corn Fields G](https://www.luogu.com.cn/problem/P1879)（基础状压）
 - [洛谷 P2704 [NOI2001] 炮兵阵地](https://www.luogu.com.cn/problem/P2704)（三进制/多行依赖状压）
 - [POJ 2411 Mondriaan's Dream](http://poj.org/problem?id=2411)

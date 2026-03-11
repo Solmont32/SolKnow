@@ -13,11 +13,11 @@ import { Target, Zap, Trophy, BarChart3, ChevronRight, Code2, Layers, GitBranch,
 
 ## 🪜 练习阶梯与评价标准
 
-| 等级 | 难度目标 | 核心考察点 | 期望达成 |
-| :--- | :--- | :--- | :--- |
-| <span style={{ color: 'var(--ifm-color-success)' }}>● **Level A**</span> | 基础建模与遍历 | 链式前向星、Dijkstra、Kruskal | 能够 10 分钟内完成标准建图与最短路 |
-| <span style={{ color: 'var(--ifm-color-warning)' }}>● **Level B**</span> | 拓扑性质与连通性 | Tarjan SCC、割点/桥、拓扑排序 | 能够处理有向无环图与双连通分量转换 |
-| <span style={{ color: 'var(--ifm-color-danger)' }}>● **Level C**</span> | 流网络与匹配建模 | Dinic 最大流、最小割、二分图多重匹配 | 具备将复杂约束转化为流网络的能力 |
+| 等级                                                                     | 难度目标         | 核心考察点                           | 期望达成                           |
+| :----------------------------------------------------------------------- | :--------------- | :----------------------------------- | :--------------------------------- |
+| <span style={{ color: 'var(--ifm-color-success)' }}>● **Level A**</span> | 基础建模与遍历   | 链式前向星、Dijkstra、Kruskal        | 能够 10 分钟内完成标准建图与最短路 |
+| <span style={{ color: 'var(--ifm-color-warning)' }}>● **Level B**</span> | 拓扑性质与连通性 | Tarjan SCC、割点/桥、拓扑排序        | 能够处理有向无环图与双连通分量转换 |
+| <span style={{ color: 'var(--ifm-color-danger)' }}>● **Level C**</span>  | 流网络与匹配建模 | Dinic 最大流、最小割、二分图多重匹配 | 具备将复杂约束转化为流网络的能力   |
 
 ---
 
@@ -26,13 +26,16 @@ import { Target, Zap, Trophy, BarChart3, ChevronRight, Code2, Layers, GitBranch,
 ### 1. 最短路径与生成树 (Path & Tree)
 
 #### 练习 1：单源最短路 (Dijkstra + 堆优化)
+
 **题目描述**：给定 $n$ 个点 $m$ 条有向边，求起点 $S$ 到所有点的最短距离。
+
 - **限制**：$n, m \le 2 \times 10^5$，边权 $\ge 0$。
 
 <details>
 <summary>Check Solution (C++ Implementation)</summary>
 
 **C++ 代码实现**：
+
 ```cpp
 #include <iostream>
 #include <vector>
@@ -75,15 +78,18 @@ int dijkstra(int s, int n) {
     return dist[n] == 0x3f3f3f3f ? -1 : dist[n];
 }
 ```
+
 </details>
 
 #### 练习 2：最小生成树 (Kruskal 算法)
+
 **题目描述**：给定无向图，求 MST 的权值之和。
 
 <details>
 <summary>Check Solution (C++ Implementation)</summary>
 
 **C++ 代码实现**：
+
 ```cpp
 #include <iostream>
 #include <algorithm>
@@ -121,6 +127,7 @@ int main() {
     else cout << res << endl;
 }
 ```
+
 </details>
 
 ---
@@ -128,12 +135,14 @@ int main() {
 ### 2. 连通性与拓扑逻辑 (Connectivity)
 
 #### 练习 3：强连通分量 (Tarjan 算法)
+
 **题目描述**：给定有向图，求其中的强连通分量 (SCC)，并缩点转化为 DAG。
 
 <details>
 <summary>Check Solution (C++ Implementation)</summary>
 
 **C++ 代码实现**：
+
 ```cpp
 #include <iostream>
 #include <vector>
@@ -169,15 +178,18 @@ void tarjan(int u) {
     }
 }
 ```
+
 </details>
 
 #### 练习 4：拓扑排序 (Kahn 算法)
+
 **题目描述**：给定 DAG，输出其拓扑序列。
 
 <details>
 <summary>Check Solution (C++ Implementation)</summary>
 
 **C++ 代码实现**：
+
 ```cpp
 #include <iostream>
 #include <queue>
@@ -200,6 +212,7 @@ void topsort(int n, vector<int> g[], int d[]) {
     }
 }
 ```
+
 </details>
 
 ---
@@ -207,12 +220,14 @@ void topsort(int n, vector<int> g[], int d[]) {
 ### 3. 网络流与二分图 (Flow & Matching)
 
 #### 练习 5：最大流 (Dinic 算法)
+
 **题目描述**：给定源点 $S$ 和汇点 $T$，求网络的最大流量。
 
 <details>
 <summary>Check Solution (C++ Implementation)</summary>
 
 **C++ 代码实现**：
+
 ```cpp
 #include <iostream>
 #include <cstring>
@@ -270,15 +285,18 @@ int dinic() {
     return r;
 }
 ```
+
 </details>
 
 #### 练习 6：二分图最大匹配 (匈牙利算法)
+
 **题目描述**：给定二分图，求其最大匹配数。
 
 <details>
 <summary>Check Solution (C++ Implementation)</summary>
 
 **C++ 代码实现**：
+
 ```cpp
 #include <iostream>
 #include <cstring>
@@ -308,11 +326,13 @@ bool find(int x) {
     return false;
 }
 ```
+
 </details>
 
 ---
 
 ## 🏆 训练建议
+
 1. **建图是第一步**：掌握“拆点”、“分层图”、“补图”等高级建图技巧是解决复杂问题的关键。
 2. **理解算法背后的数学**：Dinic 的分层 BFS 保证了增广路径的性质，Tarjan 的 Low/Dfn 刻画了搜索树的回溯能力。
 3. **复杂度分析**：网络流的理论复杂度虽高，但在实际竞赛中由于常数极小，通常能处理远超理论限制的数据。

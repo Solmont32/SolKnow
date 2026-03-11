@@ -13,12 +13,14 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## 1. 插值法练习 (Interpolation)
 
 ### Q1: Lagrange 插值余项估计
+
 若利用 $n$ 阶 Lagrange 插值多项式 $L_n(x)$ 逼近 $f(x) = \sin(x)$，节点分布在 $[0, 1]$ 上。试求 $n=2$ 时的最大可能误差上界。
 
 <details>
 <summary>Check Solution</summary>
 
 **解析：**
+
 1. **余项公式**：$R_n(x) = \frac{f^{(n+1)}(\xi)}{(n+1)!} \omega_{n+1}(x)$。
 2. **导数估计**：对于 $f(x) = \sin(x)$，$f^{(3)}(x) = -\cos(x)$。在 $[0, 1]$ 上，$|f^{(3)}(x)| \le 1$。
 3. **多项式部分**：$\omega_3(x) = |x(x-x_1)(x-1)|$。
@@ -33,12 +35,14 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### Q2: Hermite 插值基础
+
 已知 $f(0)=0, f'(0)=1, f(1)=1$。构造满足上述三个条件的最低次插值多项式。
 
 <details>
 <summary>Check Solution</summary>
 
 **解析：**
+
 1. **设多项式形式**：由于有 3 个条件，设 $P(x) = ax^2 + bx + c$。
 2. **代入条件**：
    - $P(0)=0 \Rightarrow c=0$
@@ -55,12 +59,14 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## 2. 最小二乘法练习 (Fitting)
 
 ### Q3: 平方拟合推导
+
 给定数据 $(x_i, y_i)$，若采用拟合函数 $f(x) = ax^2$，试导出系数 $a$ 的最小二乘估计公式。
 
 <details>
 <summary>Check Solution</summary>
 
 **解析：**
+
 1. **目标函数**：$S(a) = \sum_{i=1}^m (ax_i^2 - y_i)^2$。
 2. **求导**：$\frac{dS}{da} = \sum_{i=1}^m 2(ax_i^2 - y_i) \cdot x_i^2 = 0$。
 3. **展开整理**：
@@ -75,12 +81,14 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## 3. 数值积分练习 (Integration)
 
 ### Q4: 复化梯形公式精度分析
+
 若要求计算 $\int_0^1 e^x dx$ 时误差不超过 $10^{-4}$，使用复化梯形公式至少需要多少个子区间 $m$？
 
 <details>
 <summary>Check Solution</summary>
 
 **解析：**
+
 1. **误差公式**：$|R_m| \le \frac{b-a}{12} h^2 M_2$，其中 $M_2 = \max |f''(x)|$。
 2. **计算参数**：
    - $f(x) = e^x, f''(x) = e^x \Rightarrow M_2 = e^1 \approx 2.718$。
@@ -95,33 +103,37 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### Q5: Simpson 公式的代数精度
+
 证明 Simpson 公式具有 3 次代数精度。
 
 <details>
 <summary>Check Solution</summary>
 
 **解析：**
+
 1. **定义验证**：公式为 $S = \frac{b-a}{6}[f(a) + 4f(\frac{a+b}{2}) + f(b)]$。
 2. **测试 $f(x)=1, x, x^2$**：根据 Newton-Cotes 定义，$n=2$ 的公式对 2 次多项式必精确。
 3. **测试 $f(x)=x^3$**：设 $[a, b] = [-1, 1]$，则中点为 0。
    - 准确值：$\int_{-1}^1 x^3 dx = 0$。
    - Simpson 值：$\frac{2}{6}[(-1)^3 + 4(0)^3 + 1^3] = \frac{1}{3}[-1 + 1] = 0$。
-   精确相等。
+     精确相等。
 4. **测试 $f(x)=x^4$**：
    - 准确值：$\int_{-1}^1 x^4 dx = 0.4$。
    - Simpson 值：$\frac{2}{6}[(-1)^4 + 4(0)^4 + 1^4] = \frac{1}{3}[1 + 1] = 2/3 \approx 0.666$。
-   不相等。
+     不相等。
 5. **结论**：具有 3 次代数精度。
 
 </details>
 
 ### Q6: Romberg 序列推导
+
 若复化梯形值 $T_0^{(0)}=1.0, T_0^{(1)}=0.9$，试求第一级 Richardson 外推值 $T_1^{(0)}$。
 
 <details>
 <summary>Check Solution</summary>
 
 **解析：**
+
 1. **公式**：$T_1^{(0)} = \frac{4 T_0^{(1)} - T_0^{(0)}}{3}$。
 2. **计算**：
    $T_1^{(0)} = \frac{4(0.9) - 1.0}{3} = \frac{3.6 - 1.0}{3} = \frac{2.6}{3} \approx 0.8667$。
@@ -134,12 +146,14 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## 4. 非线性方程练习 (Nonlinear Equations)
 
 ### Q7: Newton 迭代收敛阶分析
+
 设 $f(x) = x^2 - a = 0$，证明 Newton 迭代法 $x_{k+1} = \frac{1}{2}(x_k + \frac{a}{x_k})$ 在根 $\sqrt{a}$ 处是平方收敛的。
 
 <details>
 <summary>Check Solution</summary>
 
 **解析：**
+
 1. **迭代函数**：$\phi(x) = \frac{1}{2}(x + \frac{a}{x})$。
 2. **一阶导数**：$\phi'(x) = \frac{1}{2}(1 - \frac{a}{x^2})$。
    - 代入根 $x^* = \sqrt{a}$：$\phi'(\sqrt{a}) = \frac{1}{2}(1 - \frac{a}{a}) = 0$。
@@ -150,20 +164,21 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 </details>
 
 ### Q8: 三次样条插值边界条件
+
 已知 $n$ 个子区间的自然三次样条插值，为什么需要 $S''(x_0)=0$ 和 $S''(x_n)=0$ 才能唯一确定？
 
 <details>
 <summary>Check Solution</summary>
 
 **解析：**
+
 1. **参数计数**：每个区间是 3 次多项式，有 4 个系数，$n$ 个区间共 $4n$ 个待定参数。
 2. **内部约束**：
    - 节点处函数值：每个内部节点 2 个方程，端点各 1 个，共 $2(n-1) + 2 = 2n$ 个。
    - 一阶导数连续：$n-1$ 个内部节点。
    - 二阶导数连续：$n-1$ 个内部节点。
-   总计 $2n + (n-1) + (n-1) = 4n - 2$ 个方程。
+     总计 $2n + (n-1) + (n-1) = 4n - 2$ 个方程。
 3. **自由度**：$4n - (4n-2) = 2$。
 4. **结论**：我们需要额外 2 个方程来封闭方程组。自然边界条件提供的 $S''(x_0)=0$ 和 $S''(x_n)=0$ 恰好提供了这两个约束。
 
 </details>
-

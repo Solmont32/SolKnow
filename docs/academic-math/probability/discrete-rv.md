@@ -11,6 +11,7 @@ title: 离散型随机变量 (Discrete Random Variables)
 对于离散型随机变量 $X$，其概率分布可以用 **概率质量函数 (Probability Mass Function, PMF)** 来描述：
 $$P(X = x_i) = p_i, \quad i = 1, 2, \dots$$
 且满足：
+
 1. $p_i \ge 0$
 2. $\sum_{i} p_i = 1$
 
@@ -25,11 +26,13 @@ $$P(X = x_i) = p_i, \quad i = 1, 2, \dots$$
 ## 2. 数字特征 (Numerical Characteristics)
 
 ### 数学期望 (Expectation)
+
 离散型随机变量 $X$ 的数学期望定义为：
 $$E(X) = \sum_{i} x_i p_i$$
 （要求级数绝对收敛）。
 
 ### 方差 (Variance)
+
 方差描述随机变量取值的离散程度：
 $$Var(X) = E[(X - E(X))^2] = E(X^2) - [E(X)]^2$$
 
@@ -43,6 +46,7 @@ $$Var(X) = E[(X - E(X))^2] = E(X^2) - [E(X)]^2$$
 <summary>查看解析</summary>
 
 利用二项式定理或指标随机变量法：
+
 1. **期望**: $E(X) = np$。
 2. **方差**: $Var(X) = np(1-p)$。
 
@@ -50,6 +54,7 @@ $$Var(X) = E[(X - E(X))^2] = E(X^2) - [E(X)]^2$$
 设 $X = \sum_{i=1}^n X_i$，其中 $X_i$ 是第 $i$ 次试验成功的指标随机变量，$X_i \sim B(1, p)$。
 则 $E(X_i) = p$，$Var(X_i) = p(1-p)$。
 由于试验独立，$E(X) = \sum E(X_i) = np$，$Var(X) = \sum Var(X_i) = np(1-p)$。
+
 </details>
 
 :::info 例题 2
@@ -62,6 +67,7 @@ $$Var(X) = E[(X - E(X))^2] = E(X^2) - [E(X)]^2$$
 $$E(X) = \sum_{k=0}^\infty k \cdot \frac{\lambda^k e^{-\lambda}}{k!} = \sum_{k=1}^\infty \frac{\lambda^k e^{-\lambda}}{(k-1)!} = \lambda e^{-\lambda} \sum_{k=1}^\infty \frac{\lambda^{k-1}}{(k-1)!}$$
 令 $j = k-1$，则：
 $$E(X) = \lambda e^{-\lambda} \sum_{j=0}^\infty \frac{\lambda^j}{j!} = \lambda e^{-\lambda} \cdot e^\lambda = \lambda$$
+
 </details>
 
 ---

@@ -24,9 +24,11 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 当转移方程呈现 $f[i] = \min_{j < i} \{ f[j] + \dots + A(i)B(j) + \dots \}$ 的形式，且包含 $i, j$ 的乘积项时，简单的单调队列失效，此时需要斜率优化。
 
 ### 核心推导
+
 考虑 $f[i] = \min \{ f[j] + w(j, i) \}$。若能将其整理为：
 $$y_j = k_i \cdot x_j + b_i$$
 其中 $y_j, x_j$ 只与 $j$ 有关，$k_i$ 只与 $i$ 有关，$b_i$ 包含 $f[i]$。
+
 - **几何意义**：这相当于在平面直角坐标系中，有一堆点 $(x_j, y_j)$。我们要找一条斜率为 $k_i$ 的直线，使其经过某个点且截距 $b_i$ 最小。
 - **凸包维护**：最优决策点必然落在这些点的**下凸包**上。由于 $k_i$ 通常也具有单调性，我们可以用单调队列维护凸包上的相邻段斜率，实现 $O(N)$。
 
@@ -45,6 +47,7 @@ $$s[i][j-1] \le s[i][j] \le s[i+1][j]$$
 ## <ShieldCheck className="inline-block mr-2" /> 3. 综合练习与强化
 
 ### 练习 1：[NOI2007] 货币兑换 (斜率优化)
+
 这是斜率优化的进阶练习，涉及到 $x, y$ 和 $k$ 均不单调的情况。
 
 <details>
@@ -52,12 +55,14 @@ $$s[i][j-1] \le s[i][j] \le s[i+1][j]$$
 
 当斜率不单调时，无法使用单调队列。
 **方案**：
+
 1.  **CDQ 分治**：利用分治序保持时间序，并在合并时利用归并排序维护凸包。
 2.  **李超线段树**：维护线段的最值。
 3.  **动态凸包**（平衡树维护）。
 </details>
 
 ### 练习 2：[SDOI2012] 任务安排
+
 经典斜率优化题目。$f[i] = \min_{j < i} \{ f[j] + S \cdot (sumC[n] - sumC[j]) + sumT[i] \cdot (sumC[i] - sumC[j]) \}$。
 
 <details>
@@ -91,7 +96,7 @@ int main() {
         // 这里的斜率是 s + st[i]
         while (hh < tt && (Y(q[hh + 1]) - Y(q[hh])) <= (s + st[i]) * (X(q[hh + 1]) - X(q[hh])))
             hh++;
-        
+
         int j = q[hh];
         f[i] = f[j] + st[i] * (sc[i] - sc[j]) + (ll)s * (sc[n] - sc[j]);
 
@@ -103,11 +108,13 @@ int main() {
     return 0;
 }
 ```
+
 </details>
 
 ---
 
 ## 延伸挑战
+
 - [洛谷 P3195 [HNOI2008] 玩具装箱](https://www.luogu.com.cn/problem/P3195)（斜率优化入门）
 - [洛谷 P3628 [APIO2010] 特别行动队](https://www.luogu.com.cn/problem/P3628)
 - [洛谷 P4767 [IOI2000] 邮局](https://www.luogu.com.cn/problem/P4767)（四边形不等式）

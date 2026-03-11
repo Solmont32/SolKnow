@@ -20,15 +20,18 @@ import { GitBranch, Move, RotateCcw, Shuffle, Layers, Scissors, Repeat, Trending
 Splay 的核心在于通过伸展操作（Splaying）将目标节点提升至根节点，同时显著压缩路径上的树高。
 
 ### 1.1 双旋策略 (Zig-Zig) 的优越性
+
 在连续三点成链时，传统的 Zig-Zig 操作若仅进行两次单旋，无法改变路径的线性特征。Splay 规定：若父节点与祖父节点同向，**先旋转父节点，再旋转当前节点**。
 
 ### 1.2 均摊复杂度证明：势能分析法
+
 **定理**：Splay 操作的均摊复杂度为 $O(\log N)$。
 **证明概要**：
 定义节点的秩 $r(u) = \log(size(u))$，系统的势能 $\Phi = \sum r(u)$。
+
 1. 一次 Zig 操作的均摊代价为 $1 + 3(r'(u) - r(u))$。
 2. 一次 Zig-Zig 操作的均摊代价 $\le 3(r'(u) - r(u))$。
-通过对伸展路径上的所有步进行累加，利用伸缩求和，可得总均摊代价为 $O(r(root) - r(u)) = O(\log N)$。
+   通过对伸展路径上的所有步进行累加，利用伸缩求和，可得总均摊代价为 $O(r(root) - r(u)) = O(\log N)$。
 
 ---
 
@@ -37,6 +40,7 @@ Splay 的核心在于通过伸展操作（Splaying）将目标节点提升至根
 Treap 将 Binary Search Tree (BST) 的有序性与 Heap 的随机性结合，FHQ-Treap 进一步将其抽象为 `Split` 与 `Merge` 两个原语。
 
 ### 2.1 概率平衡性证明
+
 每个节点分配一个独立同分布的随机权值 $prio(u)$。
 **定理**：随机权值 Treap 的期望高度为 $O(\log N)$。
 **证明**：
@@ -49,6 +53,7 @@ Treap 将 Binary Search Tree (BST) 的有序性与 Heap 的随机性结合，FHQ
 ## 3. 教材化例题与解析
 
 ### 例题 1：区间翻转 (文艺平衡树)
+
 <details>
 <summary>Check Solution (Splay 实现)</summary>
 
@@ -65,9 +70,11 @@ void push_down(int x) {
     }
 }
 ```
+
 </details>
 
 ### 例题 2：动态排名与前驱后继
+
 <details>
 <summary>Check Solution (FHQ-Treap 实现)</summary>
 
@@ -95,6 +102,7 @@ int merge(int l, int r) {
     }
 }
 ```
+
 </details>
 
 ---
@@ -116,6 +124,7 @@ split(l, val - 1, l, m);
 m = merge(tr[m].ls, tr[m].rs); // 只删掉根节点
 root = merge(merge(l, m), r);
 ```
+
 </details>
 
 2. **[区间哈希]** 在平衡树上维护字符串，支持任意位置插入、删除字符，以及查询子串哈希。
@@ -124,6 +133,7 @@ root = merge(merge(l, m), r);
 
 **核心逻辑**：每个节点维护子树的哈希值 $H(u) = (H(ls) \cdot P^{size(rs)+1} + val(u) \cdot P^{size(rs)} + H(rs)) \pmod M$。
 通过 `split` 提取区间 $[L, R]$ 对应的子树，直接获取其 `hash` 字段。
+
 </details>
 
 3. **[进阶]** **可持久化平衡树**：实现支持历史版本回滚的有序集合。
@@ -131,6 +141,7 @@ root = merge(merge(l, m), r);
 <summary>Check Solution</summary>
 
 **核心逻辑**：基于 FHQ-Treap，在 `split` 和 `merge` 涉及节点修改时，新建节点（路径复制）。
+
 ```cpp
 int copy(int u) {
     if (!u) return 0;
@@ -140,6 +151,7 @@ int copy(int u) {
 }
 // 在 split 中调用: u = copy(u);
 ```
+
 </details>
 
 ---

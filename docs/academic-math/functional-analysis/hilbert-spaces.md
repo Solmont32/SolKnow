@@ -14,10 +14,12 @@ import KnowledgeCard from "@site/src/components/KnowledgeCard";
 ## 一、内积空间与 Hilbert 空间
 
 ### 1. 定义
+
 设 $H$ 为复线性空间。$H$ 上的 **内积** $\langle \cdot, \cdot \rangle: H \times H \to \mathbb{C}$ 满足正定性、共轭对称性与第一变元线性性。
 定义范数 $\|x\| = \sqrt{\langle x, x \rangle}$。若 $H$ 关于此范数完备，则称其为 **Hilbert 空间**。
 
 ### 2. 重要不等式与恒等式
+
 - **Cauchy-Schwarz 不等式**：$|\langle x, y \rangle| \le \|x\| \|y\|$。
 - **平行四边形公式**：$\|x+y\|^2 + \|x-y\|^2 = 2(\|x\|^2 + \|y\|^2)$。该公式是判定一个 Banach 空间是否为 Hilbert 空间的关键。
 
@@ -26,9 +28,11 @@ import KnowledgeCard from "@site/src/components/KnowledgeCard";
 ## 二、正交性与投影定理
 
 ### 1. 正交分解
+
 若 $\langle x, y \rangle = 0$，称 $x$ 与 $y$ **正交**，记作 $x \perp y$。
 
 ### 2. 投影定理
+
 设 $M$ 是 Hilbert 空间 $H$ 的闭子空间。则对任意 $x \in H$，存在唯一的 $y \in M$ 使得：
 $$ \|x - y\| = \operatorname{dist}(x, M). $$
 此时 $x-y \in M^\perp$，得到直和分解：$H = M \oplus M^\perp$。
@@ -38,6 +42,7 @@ $$ \|x - y\| = \operatorname{dist}(x, M). $$
 ## 三、Riesz 表示定理：对偶性的完美化身
 
 ### 1. 定理陈述
+
 设 $H$ 是 Hilbert 空间。对于任意有界线性泛函 $f \in X^*$，存在唯一的 $y \in H$ 使得：
 $$ f(x) = \langle x, y \rangle, \quad \forall x \in H. $$
 且满足 $\|f\| = \|y\|$。
@@ -48,10 +53,12 @@ $$ f(x) = \langle x, y \rangle, \quad \forall x \in H. $$
 ## 四、算子基础：伴随与特殊算子
 
 ### 1. 伴随算子 (Adjoint Operator)
+
 设 $T \in \mathcal{B}(H)$。存在唯一的 $T^* \in \mathcal{B}(H)$ 使得：
-$$ \langle Tx, y \rangle = \langle x, T^*y \rangle, \quad \forall x, y \in H. $$
+$$ \langle Tx, y \rangle = \langle x, T^\*y \rangle, \quad \forall x, y \in H. $$
 
 ### 2. 特殊算子类
+
 - **自伴算子 (Self-adjoint)**：$T = T^*$。
 - **正规算子 (Normal)**：$TT^* = T^*T$。
 - **酉算子 (Unitary)**：$TT^* = T^*T = I$。
@@ -62,6 +69,7 @@ $$ \langle Tx, y \rangle = \langle x, T^*y \rangle, \quad \forall x, y \in H. $$
 ## 五、精选例题
 
 ### 例 1：正交基的构造
+
 证明在可分 Hilbert 空间中，任何规范正交系都可以扩充为规范正交基。
 
 <details>
@@ -78,6 +86,7 @@ $$ \langle Tx, y \rangle = \langle x, T^*y \rangle, \quad \forall x, y \in H. $$
 ## 六、分层练习
 
 ### 练习 1（算子范数计算）
+
 设 $H = L^2(0,1)$，定义 $Tx(t) = \int_0^t x(s) \, ds$。求 $T^*$.
 
 <details>
@@ -90,6 +99,7 @@ $$ \langle Tx, y \rangle = \langle x, T^*y \rangle, \quad \forall x, y \in H. $$
 </details>
 
 ### 练习 2（投影算子判定）
+
 证明：线性算子 $P$ 是正交投影算子当且仅当 $P^2 = P$ 且 $\|P\| = 1$ (当 $P \neq 0$)。
 
 <details>

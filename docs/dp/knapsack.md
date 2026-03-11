@@ -24,26 +24,31 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 **定理**：0/1 背包问题满足最优子结构性质。
 
 **证明**：设 $S = \{x_1, x_2, \dots, x_n\}$ 是原问题的最优解，其中 $x_i \in \{0, 1\}$ 表示是否选择第 $i$ 个物品。
+
 1.  **若 $x_n = 0$**：则 $S' = \{x_1, \dots, x_{n-1}\}$ 必然是“容量为 $W$，前 $n-1$ 个物品”子问题的最优解。
-    - *反证*：若存在更优解 $S''$，则 $S'' \cup \{0\}$ 将优于 $S$，矛盾。
+    - _反证_：若存在更优解 $S''$，则 $S'' \cup \{0\}$ 将优于 $S$，矛盾。
 2.  **若 $x_n = 1$**：则 $S' = \{x_1, \dots, x_{n-1}\}$ 必然是“容量为 $W - w_n$，前 $n-1$ 个物品”子问题的最优解。
-    - *反证*：若存在更优解 $S''$，则 $S'' \cup \{1\}$ 的总价值将大于 $S$ 的总价值 $\sum_{i=1}^{n-1} v_i x_i + v_n$，矛盾。
+    - _反证_：若存在更优解 $S''$，则 $S'' \cup \{1\}$ 的总价值将大于 $S$ 的总价值 $\sum_{i=1}^{n-1} v_i x_i + v_n$，矛盾。
 
 ---
 
 ## <Layers className="inline-block mr-2" /> 2. 状态转移与空间优化推导
 
 ### 2.1 0/1 背包：逆序遍历的必然性
+
 **原始方程**：$f[i][j] = \max(f[i-1][j], f[i-1][j-w_i] + v_i)$。
 观察发现，$f[i][\dots]$ 仅依赖于 $f[i-1][\dots]$ 且 $j$ 依赖于比它小的索引。
 若使用一维数组 $g[j]$：
+
 - 更新 $g[j]$ 时，若我们希望它是 $f[i][j]$，则等号右边的 $g[j-w_i]$ 必须仍代表 $f[i-1][j-w_i]$。
 - 如果我们**正序**更新 $j$，那么在更新 $g[j]$ 之前，$g[j-w_i]$ 已经被更新成了 $f[i][j-w_i]$，这违反了 0/1 背包每个物品只能选一次的限制。
 - 因此，必须**逆序**更新 $j$，确保依赖的是“上一层”的数据。
 
 ### 2.2 完全背包：正序遍历的合理性
+
 **原始方程**：$f[i][j] = \max(f[i-1][j], f[i][j-w_i] + v_i)$。
 注意这里的第二项是 $f[i][\dots]$ 而不是 $f[i-1][\dots]$，因为物品可以无限选取。
+
 - 正序更新时，$g[j-w_i]$ 已经更新为当前层 $f[i][j-w_i]$，这恰好符合完全背包“可以重复选取当前物品”的逻辑。
 
 ---
@@ -51,9 +56,11 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 ## <Zap className="inline-block mr-2" /> 3. 进阶模型：多重背包优化
 
 ### 2.1 二进制拆分 ($O(NW \log C)$)
+
 将数量为 $C$ 的物品拆分为 $1, 2, 4, \dots, 2^k, R$ 个物品，其中 $R = C - (2^{k+1}-1)$。这些组合可以凑出 $[0, C]$ 间的任何整数。
 
 ### 2.2 单调队列优化 ($O(NW)$)
+
 对于 $f[j] = \max_{0 \le k \le c_i} \{ f[j - k \cdot w_i] + k \cdot v_i \}$。
 令 $j = q \cdot w_i + r$，代入得：
 $f[q \cdot w_i + r] = \max_{q-c_i \le k \le q} \{ f[k \cdot w_i + r] - k \cdot v_i \} + q \cdot v_i$
@@ -64,6 +71,7 @@ $f[q \cdot w_i + r] = \max_{q-c_i \le k \le q} \{ f[k \cdot w_i + r] - k \cdot v
 ## <ShieldCheck className="inline-block mr-2" /> 3. 综合练习与强化
 
 ### 练习 1：多重背包 (单调队列优化)
+
 物品 $i$ 有重量 $w_i$, 价值 $v_i$, 数量 $c_i$。求最大价值。
 
 <details>
@@ -97,9 +105,11 @@ int main() {
     return 0;
 }
 ```
+
 </details>
 
 ### 练习 2：二维费用背包 (Two-Dimensional Constraints)
+
 物品有重量 $w_i$ 和体积 $v_i$，背包容量 $W$ 和最大体积 $V$。
 
 <details>
@@ -115,12 +125,15 @@ for (int i = 0; i < n; i++) {
     }
 }
 ```
-*解析：由于是 0/1 背包，两个维度均需逆序遍历。*
+
+_解析：由于是 0/1 背包，两个维度均需逆序遍历。_
+
 </details>
 
 ---
 
 ## 延伸挑战
+
 - [洛谷 P1776 宝物筛选](https://www.luogu.com.cn/problem/P1776)（单调队列练习）
 - [洛谷 P1833 樱花](https://www.luogu.com.cn/problem/P1833)（混合背包）
 - [HDU 2191 多重背包模板](http://acm.hdu.edu.cn/showproblem.php?pid=2191)

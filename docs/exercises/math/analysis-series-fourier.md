@@ -14,12 +14,14 @@ description: 深入探讨数项级数、函数项级数、幂级数与 Fourier �
 [**理论回顾：第十二章 数项级数**](../../academic-math/analysis/series)
 
 ### 练习 12.1：Kummer/Raabe 判别法的应用
+
 讨论级数 $\sum_{n=1}^{\infty} \frac{n! e^n}{n^n}$ 的收敛性。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
+
 设通项为 $a_n$。考察比值：
 $$\frac{a_n}{a_{n+1}} = \frac{n! e^n}{n^n} \cdot \frac{(n+1)^{n+1}}{(n+1)! e^{n+1}} = \frac{(n+1)^n}{n^n e} = \frac{1}{e} (1 + \frac{1}{n})^n$$
 利用级数展开 $(1+\frac{1}{n})^n = e(1 - \frac{1}{2n} + \frac{11}{24n^2} + O(\frac{1}{n^3}))$：
@@ -30,17 +32,22 @@ $\lim_{n \to \infty} n(\frac{a_n}{a_{n+1}} - 1) = -\frac{1}{2}$。
 （注：此结果也可用 Stirling 公式直接得出 $a_n \sim \sqrt{2\pi n}$，通项不趋于 0，故发散。）
 
 #### 答案
+
 发散
+
 </details>
 
 ### 练习 12.2：绝对收敛与条件收敛
+
 讨论级数 $\sum_{n=2}^{\infty} \frac{(-1)^n}{n^p + (-1)^n}$ ($p > 0$) 的收敛性。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
+
 令 $a_n = \frac{(-1)^n}{n^p + (-1)^n}$。
+
 1. **绝对收敛性**：$|a_n| = \frac{1}{n^p + (-1)^n} \sim \frac{1}{n^p}$。故当 $p > 1$ 时绝对收敛。
 2. **条件收敛性**（考察 $0 < p \le 1$）：
    将通项展开：
@@ -52,37 +59,45 @@ $\lim_{n \to \infty} n(\frac{a_n}{a_{n+1}} - 1) = -\frac{1}{2}$。
    - 当 $0 < p \le 1/2$ 时，由于 $\sum \frac{1}{n^{2p}}$ 发散而其他项收敛，级数发散。
 
 #### 答案
+
 - $p > 1$：绝对收敛
 - $1/2 < p \le 1$：条件收敛
 - $0 < p \le 1/2$：发散
 </details>
 
 ### 练习 12.3：Dirichlet 判别法在正弦级数中的应用
+
 证明级数 $\sum_{n=2}^{\infty} \frac{\sin(nx)}{\ln n}$ 对任意固定的 $x \in (0, 2\pi)$ 均收敛。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
+
 利用 **Dirichlet 判别法**：
+
 1. **部分和有界性**：
    $|\sum_{k=2}^n \sin(kx)| = |\frac{\cos(3x/2) - \cos((n+1/2)x)}{2 \sin(x/2)}| \le \frac{1}{|\sin(x/2)|}$。
    当 $x \in (0, 2\pi)$ 时，$\sin(x/2) \neq 0$，故部分和序列有界。
 2. **单调性与极限**：
    数列 $b_n = \frac{1}{\ln n}$ 在 $n \ge 2$ 时单调递减趋于 0。
-故由 Dirichlet 判别法知级数收敛。
+   故由 Dirichlet 判别法知级数收敛。
 
 #### 答案
+
 收敛。
+
 </details>
 
 ### 练习 12.4：Cauchy 乘积的收敛性
+
 计算级数 $\sum_{n=0}^\infty \frac{x^n}{n!}$ 与自身（Cauchy 乘积）的和。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
+
 设 $a_n = \frac{x^n}{n!}$。Cauchy 乘积的通项 $c_n$ 为：
 $$c_n = \sum_{k=0}^n a_k a_{n-k} = \sum_{k=0}^n \frac{x^k}{k!} \frac{x^{n-k}}{(n-k)!}$$
 $$c_n = \frac{x^n}{n!} \sum_{k=0}^n \frac{n!}{k!(n-k)!} = \frac{x^n}{n!} \sum_{k=0}^n \binom{n}{k}$$
@@ -91,16 +106,20 @@ $$c_n = \frac{(2x)^n}{n!}$$
 由指数级数的展开知 $\sum c_n = e^{2x}$。这符合 $e^x \cdot e^x = e^{2x}$ 的恒等式。
 
 #### 答案
+
 $\sum_{n=0}^\infty \frac{(2x)^n}{n!}$ (即 $e^{2x}$)
+
 </details>
 
 ### 练习 12.5：Kummer 判别法的挑战
+
 判定级数 $\sum_{n=1}^\infty a_n$，其中 $a_n = \frac{1 \cdot 3 \cdot \dots \cdot (2n-1)}{2 \cdot 4 \cdot \dots \cdot (2n)} \cdot \frac{1}{2n+1}$。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
+
 计算比值：
 $$\frac{a_n}{a_{n+1}} = \frac{(2n-1)!!}{(2n)!!(2n+1)} \cdot \frac{(2n+2)!!(2n+3)}{(2n+1)!!} = \frac{(2n+2)(2n+3)}{(2n+1)(2n+1)}$$
 $$\frac{a_n}{a_{n+1}} = \frac{4n^2 + 10n + 6}{4n^2 + 4n + 1} = 1 + \frac{6n+5}{4n^2+4n+1} \approx 1 + \frac{3}{2n}$$
@@ -109,7 +128,9 @@ $K = \lim n(\frac{a_n}{a_{n+1}} - 1) = \lim \frac{6n^2+5n}{4n^2+4n+1} = \frac{3}
 由于 $3/2 > 1$，级数收敛。
 
 #### 答案
+
 收敛
+
 </details>
 
 ---
@@ -119,12 +140,14 @@ $K = \lim n(\frac{a_n}{a_{n+1}} - 1) = \lim \frac{6n^2+5n}{4n^2+4n+1} = \frac{3}
 [**理论回顾：第十三章 函数列与函数项级数**](../../academic-math/analysis/function-sequences)
 
 ### 练习 13.1：一致收敛的判别 (M-判别法)
+
 讨论级数 $\sum_{n=1}^{\infty} \frac{n^2 x}{1 + n^4 x^2}$ 在 $[0, 1]$ 上的收敛性。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
+
 1. **逐点收敛**：当 $x=0$ 时，$f_n(0)=0 \to 0$。当 $x > 0$ 时，$f_n(x) \sim \frac{n^2 x}{n^4 x^2} = \frac{1}{n^2 x}$，级数收敛。
 2. **一致收敛性**：考察 $u_n(x) = \frac{n^2 x}{1 + n^4 x^2}$ 的极值。
    $u_n'(x) = \frac{n^2(1+n^4 x^2) - n^2 x(2n^4 x)}{(1+n^4 x^2)^2} = \frac{n^2(1 - n^4 x^2)}{(1+n^4 x^2)^2}$。
@@ -134,16 +157,20 @@ $K = \lim n(\frac{a_n}{a_{n+1}} - 1) = \lim \frac{6n^2+5n}{4n^2+4n+1} = \frac{3}
    注：但在 $[a, 1]$ ($a > 0$) 上是一致收敛的。
 
 #### 答案
+
 逐点收敛，但在 $[0, 1]$ 上不一致收敛。
+
 </details>
 
 ### 练习 13.2：Dini 定理与紧致性
+
 设 $f_n(x)$ 为紧集 $K$ 上的连续函数列，且 $f_n(x) \searrow f(x)$（单调递减趋于连续函数 $f$）。证明 $f_n \rightrightarrows f$。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
+
 1. 令 $g_n(x) = f_n(x) - f(x)$。则 $g_n \in C(K)$ 且 $g_n(x) \searrow 0$。
 2. 对任意 $\epsilon > 0$，定义集合 $K_n = \{x \in K \mid g_n(x) \ge \epsilon\}$。
 3. 由于 $g_n$ 连续，$K_n$ 是 $K$ 中的相对闭集。由于 $K$ 紧，故 $K_n$ 是紧集。
@@ -155,7 +182,9 @@ $K = \lim n(\frac{a_n}{a_{n+1}} - 1) = \lim \frac{6n^2+5n}{4n^2+4n+1} = \frac{3}
 9. 证毕。
 
 #### 答案
+
 证毕。
+
 </details>
 
 ---
@@ -165,12 +194,14 @@ $K = \lim n(\frac{a_n}{a_{n+1}} - 1) = \lim \frac{6n^2+5n}{4n^2+4n+1} = \frac{3}
 [**理论回顾：第十四章 幂级数**](../../academic-math/analysis/power-series)
 
 ### 练习 14.1：收敛半径与边界行为
+
 求级数 $\sum_{n=1}^{\infty} \frac{(n!)^2}{(2n)!} x^n$ 的收敛半径，并讨论在收敛圆周上的行为。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
+
 1. **收敛半径**：
    $R = \lim_{n \to \infty} \frac{a_n}{a_{n+1}} = \lim_{n \to \infty} \frac{(n!)^2}{(2n)!} \cdot \frac{(2n+2)!}{((n+1)!)^2} = \lim_{n \to \infty} \frac{(2n+1)(2n+2)}{(n+1)^2} = 4$。
 2. **端点考察** ($x=4$)：
@@ -180,17 +211,22 @@ $K = \lim n(\frac{a_n}{a_{n+1}} - 1) = \lim \frac{6n^2+5n}{4n^2+4n+1} = \frac{3}
    通项趋向于无穷大，故在 $x=4$ 处发散。同理在 $x=-4$ 处也发散。
 
 #### 答案
+
 $R=4$；在 $x = \pm 4$ 处均发散。
+
 </details>
 
 ### 练习 14.2：利用幂级数求数项级数和
+
 计算 $\sum_{n=0}^{\infty} \frac{n^2+1}{2^n}$。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
+
 考虑幂级数 $f(x) = \sum_{n=0}^\infty (n^2+1)x^n$。已知 $\sum_{n=0}^\infty x^n = \frac{1}{1-x}$ ($|x|<1$)。
+
 1. 求导：$\sum n x^{n-1} = \frac{1}{(1-x)^2} \implies \sum n x^n = \frac{x}{(1-x)^2}$。
 2. 再求导：$\sum n^2 x^{n-1} = \frac{(1-x)^2 + 2x(1-x)}{(1-x)^4} = \frac{1+x}{(1-x)^3} \implies \sum n^2 x^n = \frac{x(1+x)}{(1-x)^3}$。
 3. 综合：$f(x) = \frac{x(1+x)}{(1-x)^3} + \frac{1}{1-x} = \frac{x+x^2 + (1-x)^2}{(1-x)^3} = \frac{1-x+x^2}{(1-x)^3}$。
@@ -198,7 +234,9 @@ $R=4$；在 $x = \pm 4$ 处均发散。
    $f(1/2) = \frac{1 - 1/2 + 1/4}{(1 - 1/2)^3} = \frac{3/4}{1/8} = 6$。
 
 #### 答案
+
 $6$
+
 </details>
 
 ---
@@ -208,12 +246,14 @@ $6$
 [**理论回顾：第十五章 傅里叶级数**](../../academic-math/analysis/fourier-series)
 
 ### 练习 15.1：Gibbs 现象的计算
+
 考察 $f(x) = \text{sgn}(x)$ 在 $[-\pi, \pi]$ 上的 Fourier 级数。计算 $S_n(x)$ 在跳跃间断点附近的“峰值”。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
+
 1. **Fourier 展开**：$f(x) \sim \frac{4}{\pi} \sum_{k=1}^\infty \frac{\sin(2k-1)x}{2k-1}$。
 2. **考察 $S_n(x)$**：$S_n(x) = \frac{2}{\pi} \int_0^x \frac{\sin 2nt}{\sin t} dt$ (近似)。
 3. 第一个极大值出现在 $x = \pi / (2n)$ 附近。
@@ -221,16 +261,20 @@ $6$
 5. 理论跳跃高度为 1，多出的部分约为 $17.9\%$，这就是 **Gibbs 现象**。
 
 #### 答案
+
 峰值极限约为 $1.179$。
+
 </details>
 
 ### 练习 15.2：Parseval 等式应用
+
 利用 $f(x) = x^2$ 在 $[-\pi, \pi]$ 上的展开，求 $\sum_{n=1}^{\infty} \frac{1}{n^4}$。
 
 <details>
 <summary>点击查看解析与答案</summary>
 
 #### 解析
+
 1. **Fourier 展开**：
    $x^2 = \frac{\pi^2}{3} + 4 \sum_{n=1}^\infty \frac{(-1)^n}{n^2} \cos nx$。
 2. **应用 Parseval 等式**：$\frac{1}{\pi} \int_{-\pi}^\pi |f(x)|^2 dx = \frac{a_0^2}{2} + \sum_{n=1}^\infty (a_n^2 + b_n^2)$。
@@ -241,7 +285,9 @@ $6$
    $\sum_{n=1}^\infty \frac{1}{n^4} = \frac{\pi^4}{90}$。
 
 #### 答案
+
 $\pi^4/90$
+
 </details>
 
 ---

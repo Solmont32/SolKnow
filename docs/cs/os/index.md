@@ -23,32 +23,40 @@ import { Layers, Activity, HardDrive, Cpu } from 'lucide-react';
 ## 2. 进程与线程管理 (Processes & Threads)
 
 ### 2.1 进程 (Process)
+
 资源分配的基本单位，拥有独立的虚拟地址空间。
+
 - **PCB (Process Control Block)**：内核维护的进程元数据（PID, 状态, 优先级, 文件描述符表）。
 
 ### 2.2 线程 (Thread)
+
 CPU 调度的基本单位，共享所属进程的内存空间。
+
 - **LWP (Light Weight Process)**：Linux 中的线程实现方式。
 
 ### 2.3 调度算法 (Scheduling)
+
 - **CFS (Completely Fair Scheduler)**：Linux 默认调度器，基于红黑树维护虚拟运行时间。
 - **实时调度**：FIFO, Round Robin。
 
 ## 3. 内存管理 (Memory Management)
 
 ### 3.1 虚拟内存 (Virtual Memory)
+
 为每个进程提供一个连续、私有的地址空间，其本质是 **页表 (Page Table)** 的映射。
 
 - **MMU (Memory Management Unit)**：硬件级地址转换。
 - **TLB (Translation Lookaside Buffer)**：页表项的高速缓存。
 
 ### 3.2 分页机制 (Paging)
+
 - **缺页异常 (Page Fault)**：当访问的虚拟页不在物理内存中时，触发中断由内核从磁盘调入。
 - **页面置换算法**：LRU (最近最少使用), FIFO, LFU。
 
 ## 4. 并发与同步 (Concurrency & Synchronization)
 
 多线程环境下保护共享资源的机制：
+
 - **互斥锁 (Mutex)**：睡眠等待，适合长时任务。
 - **自旋锁 (Spinlock)**：忙等待，适合短时、内核态任务。
 - **信号量 (Semaphore)**：PV 操作，控制资源数量。
@@ -59,7 +67,9 @@ CPU 调度的基本单位，共享所属进程的内存空间。
 ## 5. 深度例题与练习 (Exercises)
 
 ### 例题 1：Fork 进程计数
+
 **题目**：以下程序在 Linux 下执行后，一共会产生多少个进程（包括父进程）？
+
 ```cpp
 #include <unistd.h>
 int main() {
@@ -74,6 +84,7 @@ int main() {
 <summary>点击查看解析 (Check Solution)</summary>
 
 **解析**：
+
 1. 初始 1 个进程。
 2. 第一个 `fork()`：产生 1 个新进程，总计 $2^1 = 2$。
 3. 第二个 `fork()`：原有 2 个进程各产生 1 个，总计 $2^2 = 4$。
@@ -82,12 +93,14 @@ int main() {
 </details>
 
 ### 练习 1：生产者-消费者模型实现 (C++)
+
 **题目**：使用 `std::mutex` 和 `std::condition_variable` 实现一个简单的有界缓冲区（容量为 5）。
 
 <details>
 <summary>点击查看解析 (Check Solution)</summary>
 
 **代码实现**：
+
 ```cpp
 #include <iostream>
 #include <vector>
@@ -124,15 +137,18 @@ public:
     }
 };
 ```
+
 </details>
 
 ### 练习 2：银行家算法 (Banker's Algorithm)
+
 **题目**：给定 5 个进程和 3 类资源（A, B, C），若当前剩余资源为 (3, 3, 2)，某进程请求 (1, 0, 2)，如何判定该状态是否安全？
 
 <details>
 <summary>点击查看解析 (Check Solution)</summary>
 
 **解析步骤**：
+
 1. **安全性检查**：寻找一个序列，使得每个进程的需求都能被当前剩余资源 + 已分配资源满足。
 2. **逻辑推导**：
    - 模拟分配请求。
@@ -140,4 +156,4 @@ public:
    - 遍历进程，检查 `Need <= Available`。
    - 若能完成，回收资源 `Available = Available + Allocation`。
    - 如果能找出一个完整序列，则状态安全，否则不安全。
-</details>
+   </details>

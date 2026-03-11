@@ -21,33 +21,41 @@ $$(x_i \text{ is } A) \lor (x_j \text{ is } B)$$
 2-SAT 的核心在于将逻辑表达式转化为有向图中的“推导”关系。
 
 ### 1. 变量拆分
+
 对于每个布尔变量 $x_i$，我们拆分为两个点：
--   $i$：代表 $x_i$ 为真 (true)。
--   $i+n$：代表 $x_i$ 为假 (false)。
+
+- $i$：代表 $x_i$ 为真 (true)。
+- $i+n$：代表 $x_i$ 为假 (false)。
 
 ### 2. 边（蕴含关系）的建立
+
 逻辑等价式：$(P \lor Q) \iff (\neg P \implies Q) \land (\neg Q \implies P)$。
 因此，对于约束 $(x_i \text{ is } A) \lor (x_j \text{ is } B)$：
--   若 $x_i$ 不满足 $A$，则 $x_j$ 必须满足 $B$。
--   若 $x_j$ 不满足 $B$，则 $x_i$ 必须满足 $A$。
+
+- 若 $x_i$ 不满足 $A$，则 $x_j$ 必须满足 $B$。
+- 若 $x_j$ 不满足 $B$，则 $x_i$ 必须满足 $A$。
 
 **示例**：$(x_i = \text{true}) \lor (x_j = \text{false})$
--   建立边：$(x_i = \text{false}) \to (x_j = \text{false})$
--   建立边：$(x_j = \text{true}) \to (x_i = \text{true})$
+
+- 建立边：$(x_i = \text{false}) \to (x_j = \text{false})$
+- 建立边：$(x_j = \text{true}) \to (x_i = \text{true})$
 
 ---
 
 ## 三、 求解算法：SCC 缩点
 
 ### 1. 判定定理
+
 **2-SAT 问题有解，当且仅当对于任意变量 $x_i$，其代表“真”的点与代表“假”的点不在同一个强连通分量 (SCC) 中。**
 
--   **理由**：如果在同一个 SCC 中，说明 $x_i \implies \dots \implies \neg x_i$ 且 $\neg x_i \implies \dots \implies x_i$，产生矛盾。
+- **理由**：如果在同一个 SCC 中，说明 $x_i \implies \dots \implies \neg x_i$ 且 $\neg x_i \implies \dots \implies x_i$，产生矛盾。
 
 ### 2. 构造可行解
+
 若有解，我们可以通过 SCC 的拓扑序（Tarjan 算法求出的 `id[u]` 越小，拓扑序越靠后）来确定赋值：
--   若 `id[i] < id[i+n]`，则 $x_i = \text{false}$。
--   若 `id[i] > id[i+n]`，则 $x_i = \text{true}$。
+
+- 若 `id[i] < id[i+n]`，则 $x_i = \text{false}$。
+- 若 `id[i] > id[i+n]`，则 $x_i = \text{true}$。
 
 ---
 
@@ -114,6 +122,7 @@ struct TwoSAT {
 ## 五、 配套练习（答案折叠）
 
 ### 练习 1（逻辑转化）
+
 若要求 $x_i$ 必须为真，在 2-SAT 图中应该如何连边？
 
 <details>
@@ -128,6 +137,7 @@ struct TwoSAT {
 </details>
 
 ### 练习 2（判定）
+
 已知 SCC 结果：变量 $x_1$ 为真的点属于 SCC 2，为假的点属于 SCC 5。若 SCC 编号越小表示拓扑序越靠后，则 $x_1$ 应取什么值？
 
 <details>

@@ -34,11 +34,11 @@ Andrew 算法是 Graham 扫描法的变体，通过维护**单调链**的方式�
 
 1.  **排序**：按 $x$ 坐标为主键、$y$ 坐标为次键进行升序排列。
 2.  **构造下凸壳 (Lower Hull)**：
-    -   从左往右遍历排序后的点。
-    -   维护一个栈，当新加入点 $P_i$ 使得栈顶三个点（$S_{top-1}, S_{top}, P_i$）不满足**左转**关系（叉积 $\le 0$）时，弹出栈顶。
+    - 从左往右遍历排序后的点。
+    - 维护一个栈，当新加入点 $P_i$ 使得栈顶三个点（$S_{top-1}, S_{top}, P_i$）不满足**左转**关系（叉积 $\le 0$）时，弹出栈顶。
 3.  **构造上凸壳 (Upper Hull)**：
-    -   从右往左重复上述过程。
-    -   注意：上凸壳的起点是排序后的最后一个点。
+    - 从右往左重复上述过程。
+    - 注意：上凸壳的起点是排序后的最后一个点。
 
 </KnowledgeCard>
 
@@ -94,7 +94,7 @@ bool isInsideConvex(const vector<Point>& h, Point p) {
     // 边界快速检查
     if (sign(cross(h[1] - h[0], p - h[0])) < 0) return false;
     if (sign(cross(h[n-1] - h[0], p - h[0])) > 0) return false;
-    
+
     int l = 1, r = n - 2, pos = 1;
     while (l <= r) {
         int mid = (l + r) >> 1;
@@ -105,6 +105,7 @@ bool isInsideConvex(const vector<Point>& h, Point p) {
     return sign(cross(h[pos+1] - h[pos], p - h[pos])) >= 0;
 }
 ```
+
 </details>
 
 <details>
@@ -121,6 +122,7 @@ DB getPolygonPerimeter(const vector<Point>& h) {
     return res;
 }
 ```
+
 </details>
 
 <KnowledgeCard type="tip" title="习题库推荐">

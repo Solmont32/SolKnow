@@ -23,11 +23,13 @@ import { Sigma, Zap, Layers, BoxSelect, Binary } from 'lucide-react';
 树状数组利用整数的二进制表示，将区间 $[1, n]$ 划分为若干个长度为 $2^k$ 的子区间。
 
 ### 1.1 Lowbit 函数
+
 定义 $\text{lowbit}(x)$ 为 $x$ 的二进制表示中最低位的 $1$ 及其后面的 $0$ 构成的数值：
 $$\text{lowbit}(x) = x \mathbin{\&} (-x)$$
 **证明**：在补码表示下，$-x = \sim x + 1$。按位与后，只有最低位 $1$ 被保留。
 
 ### 1.2 索引映射规则
+
 - **维护区间**: $tr[x]$ 维护的是原数组在半开半闭区间 $(x - \text{lowbit}(x), x]$ 上的和。
 - **查询前缀和**: $S[x] = tr[x] + tr[x - \text{lowbit}(x)] + \dots$。由于每次减少 $\text{lowbit}(x)$，复杂度为 $O(\log N)$。
 - **单点更新**: 当 $A[x]$ 增加 $v$ 时，受影响的 $tr[i]$ 序列为 $x, x + \text{lowbit}(x), (x + \text{lowbit}(x)) + \text{lowbit}(x + \text{lowbit}(x)), \dots$。
@@ -37,16 +39,20 @@ $$\text{lowbit}(x) = x \mathbin{\&} (-x)$$
 ## 2. 进阶：区间维护体系
 
 ### 2.1 区间修改，区间查询
+
 利用差分数组 $D[i] = A[i] - A[i-1]$：
 $$A[i] = \sum_{j=1}^i D[j]$$
 前缀和 $S[n]$ 为：
 $$S[n] = \sum_{i=1}^n \sum_{j=1}^i D[j] = \sum_{j=1}^n D[j] \cdot (n - j + 1) = (n+1) \sum D[j] - \sum j \cdot D[j]$$
 因此，只需维护两个树状数组：
+
 1. `tr1[j]` 维护 $D[j]$ 的前缀和。
 2. `tr2[j]` 维护 $j \cdot D[j]$ 的前缀和。
 
 ### 2.2 二维树状数组 (2D BIT)
+
 对于 $N \times M$ 矩阵，单点更新与区域查询的复杂度均为 $O(\log N \log M)$。
+
 - **Update(x, y, v)**: 双重循环按 $\text{lowbit}$ 向上。
 - **Query(x, y)**: 双重循环按 $\text{lowbit}$ 向下（容斥原理同二维前缀和）。
 
@@ -55,6 +61,7 @@ $$S[n] = \sum_{i=1}^n \sum_{j=1}^i D[j] = \sum_{j=1}^n D[j] \cdot (n - j + 1) = 
 ## 3. 教材化例题与解析
 
 ### 例题 1：逆序对统计 (动态权值)
+
 <details>
 <summary>Check Solution</summary>
 
@@ -92,7 +99,7 @@ int main() {
     }
     sort(nums.begin(), nums.end());
     nums.erase(unique(nums.begin(), nums.end()), nums.end());
-    
+
     long long ans = 0;
     for (int i = n - 1; i >= 0; i--) {
         int x = lower_bound(nums.begin(), nums.end(), a[i]) - nums.begin() + 1;
@@ -103,9 +110,11 @@ int main() {
     return 0;
 }
 ```
+
 </details>
 
 ### 例题 2：区间修改与区间和 (差分原理)
+
 <details>
 <summary>Check Solution</summary>
 
@@ -139,6 +148,7 @@ LL range_query(int l, int r) {
     return sum(r) - sum(l - 1);
 }
 ```
+
 </details>
 
 ---

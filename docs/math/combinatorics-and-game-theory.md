@@ -9,149 +9,132 @@ import { Sigma, FunctionSquare, Layers, Binary, Infinity, Zap, Cpu, Gamepad2, Ta
 # 组合计数与博弈论 (Combinatorics & Game Theory)
 
 <motion.div
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.5 }}
-  className="text-gray-600 dark:text-gray-400 mb-8"
->
-本篇文档系统化构建了从基础计数、容斥原理，到线性基、母函数与博弈均衡的完备体系。涵盖了代数恒等式证明与模型转换的核心逻辑。
-</motion.div>
+initial={{ opacity: 0, y: 20 }}
+animate={{ opacity: 1, y: 0 }}
+transition={{ duration: 0.5 }}
+className="text-gray-600 dark:text-gray-400 mb-8"
+
+> 本篇文档系统化构建了从基础计数、容斥原理，到线性基、母函数与博弈均衡的完备体系。涵盖了代数恒等式证明与模型转换的核心逻辑。
+> </motion.div>
 
 ---
 
-## 1. 组合计数与生成函数 (Generating Functions)
+## 1. 组合计数模型与严密推导
 
-### 1.1 普通生成函数 (OGF)
-对于序列 $a_0, a_1, a_2, \dots$，其 **OGF** 定义为 $A(x) = \sum_{i=0}^\infty a_i x^i$。
-- **组合意义**：用于解决**无序**组合问题（如背包、硬币找零、整数拆分）。
-- **典型变换**：$\frac{1}{1-x} = \sum_{i=0}^\infty x^i$（代表选取任意个相同物品）。
-- **Catalan 数推导**：递推式 $C_{n+1} = \sum_{i=0}^n C_i C_{n-i}$ 对应卷积 $C(x) = 1 + x C^2(x)$。
+### 1.1 第二类 Stirling 数 (Stirling Numbers of the Second Kind)
 
-### 1.2 指数生成函数 (EGF)
-对于序列 $a_0, a_1, a_2, \dots$，其 **EGF** 定义为 $\hat{A}(x) = \sum_{i=0}^\infty a_i \frac{x^i}{i!}$。
-- **组合意义**：用于解决**有序**排列问题。
-- **指数性质**：$e^x = \sum_{i=0}^\infty \frac{x^i}{i!}$（代表选取任意个有序物品）。
-- **错排问题 (Derangement)**：
-  每个元素不能在原位，对应 EGF 为 $D(x) = \frac{e^{-x}}{1-x}$。
-  展开得 $d_n = n! \sum_{i=0}^n \frac{(-1)^i}{i!}$。
+$S(n, k)$ 表示将 $n$ 个有区别的球放入 $k$ 个无区别的盒子的方案数（盒子不为空）。
+**递推式**：$S(n, k) = S(n-1, k-1) + k \cdot S(n-1, k)$。
+**通项公式 (基于容斥)**：
+$$ S(n, k) = \frac{1}{k!} \sum\_{i=0}^k (-1)^i \binom{k}{i} (k-i)^n $$
+**证明**：先考虑 $k$ 个有区别的盒子。总方案为 $k^n$。设性质 $P_i$ 为第 $i$ 个盒子为空，利用容斥原理求出至少有一个盒子为空的方案数，进而求出所有盒子均不空的方案。最后除以 $k!$。
 
-### 1.3 容斥原理与二项式反演
-**二项式反演证明**：
-设 $f(n) = \sum_{i=0}^n \binom{n}{i} g(i)$，利用 OGF：$F(x) = \sum f(n) \frac{x^n}{n!}, G(x) = \sum g(n) \frac{x^n}{n!}$。
-则 $F(x) = G(x) \cdot e^x \implies G(x) = F(x) \cdot e^{-x}$。
-展开即得 $g(n) = \sum_{i=0}^n (-1)^{n-i} \binom{n}{i} f(i)$。
+### 1.2 Catalan 数及其几何证明
 
----
+$C_n = \frac{1}{n+1} \binom{2n}{n}$。
+**折线法推导**：
+考虑从 $(0,0)$ 到 $(n,n)$ 且不穿过直线 $y=x$ 的路径数（仅能向右或向上）。
+总路径为 $\binom{2n}{n}$。
+穿过 $y=x$ 的路径必然接触过 $y=x+1$。将路径在**第一次**接触 $y=x+1$ 后的部分关于 $y=x+1$ 对称。
+对称后的终点变为 $(n-1, n+1)$。
+不合法路径数 = $\binom{n+n}{n-1} = \binom{2n}{n-1}$。
+故 $C_n = \binom{2n}{n} - \binom{2n}{n-1} = \frac{(2n)!}{n!n!} - \frac{(2n)!}{(n-1)!(n+1)!} = \frac{(2n)!}{n!(n+1)!} ( (n+1) - n ) = \frac{1}{n+1} \binom{2n}{n}$。
 
-## 2. 线性基 (Linear Basis) 进阶
+### 1.3 Prüfer 序列与 Cayley 公式
 
-线性基是线性空间在异或运算下的基。
+**Prüfer 序列**：将 $n$ 个有标号节点的树映射为长度 $n-2$ 的序列。
 
-### 2.1 构造与性质
-- **插入 (Insert)**：$O(\log V)$。
-- **合并 (Merge)**：将一个线性基的所有元素插入另一个，复杂度 $O(\log^2 V)$。
-- **查询第 $k$ 小异或和**：
-  1. 对线性基进行高斯消元，使其每一位 $p_i$ 的第 $j$ 位 ($j \neq i$) 均为 0。
-  2. 设消元后非零位共有 $cnt$ 个，第 $j$ 个非零位为 $d_j$。
-  3. 若 $k$ 的二进制第 $j$ 位为 1，则答案异或上 $d_j$。
-
-<details>
-<summary>Check Implementation (第 k 小查询)</summary>
-
-```cpp
-void rebuild() {
-    for (int i = 60; i >= 0; i--)
-        for (int j = i - 1; j >= 0; j--)
-            if (p[i] >> j & 1) p[i] ^= p[j];
-    for (int i = 0; i <= 60; i++)
-        if (p[i]) d[cnt++] = p[i];
-}
-long long query_kth(long long k) {
-    if (has_zero) k--; // 处理子集异或和为 0 的情况
-    if (k >= (1LL << cnt)) return -1;
-    long long res = 0;
-    for (int i = 0; i < cnt; i++)
-        if (k >> i & 1) res ^= d[i];
-    return res;
-}
-```
-</details>
+- **Cayley 公式**：$n$ 个点的有标号树共有 $n^{n-2}$ 种。
+- **性质**：度数为 $d_i$ 的节点在 Prüfer 序列中出现 $d_i-1$ 次。
 
 ---
 
-## 3. 博弈论模型系统
+## 2. 生成函数与多项式计数
 
-### 3.1 斯普拉格-格隆迪定理 (SG Theorem)
-任何公平组合游戏（ICG）都可以转化为 Nim 游戏的一个堆。
-- **mex 函数**：$mex(S)$ 表示集合 $S$ 中未出现的最小非负整数。
-- **SG 值**：$SG(u) = mex(\{SG(v) \mid u \to v\})$。
-- **组合游戏**：$SG(G_1 + G_2) = SG(G_1) \oplus SG(G_2)$。
+### 2.1 普通生成函数 (OGF) 应用
 
-### 3.2 常见博弈变体
-- **Anti-Nim**：取走最后一颗石子的人输。
-  结论：当 (所有堆 SG 异或和不为 0 且存在一堆石子 > 1) 或 (所有堆 SG 异或和为 0 且所有堆石子均为 1) 时先手必胜。
+对于硬币找零问题：$A(x) = \prod_{i=1}^k \frac{1}{1-x^{v_i}}$。
+$x^n$ 的系数即为找零 $n$ 元的方案数。
+
+### 2.2 指数生成函数 (EGF) 与排列
+
+若有 $k$ 种物品，第 $i$ 种选取 $c_i$ 个且满足约束，则排列方案的 EGF 为 $\prod (\sum_{j \in S_i} \frac{x^j}{j!})$。
+
+---
+
+## 3. 线性基与博弈论进阶
+
+### 3.1 线性基性质
+
+线性基是线性空间在异或运算下的基，支持 $O(\log V)$ 插入与 $O(\log V)$ 最大值查询。
+**性质**：线性基中的元素异或出的结果集合与原数集异或出的结果集合完全相同。
+
+### 3.2 Nim 游戏必胜策略证明
+
+定理：Nim 游戏先手必胜当且仅当 $a_1 \oplus a_2 \oplus \dots \oplus a_n \neq 0$。
+**证明**：
+
+1. **终局**：所有 $a_i=0$，异或和为 0，先手必败。
+2. **异或和不为 0 时**：设异或和为 $S \neq 0$。取 $S$ 的最高位 $k$，必存在 $a_i$ 的第 $k$ 位为 1。令 $a_i' = a_i \oplus S < a_i$。将 $a_i$ 变为 $a_i'$ 后，新的异或和为 $S \oplus a_i \oplus a_i' = 0$。
+3. **异或和为 0 时**：改变任意一堆 $a_i$ 为 $a_i'$，新的异或和 $0 \oplus a_i \oplus a_i' \neq 0$。
 
 ---
 
 ## 4. 综合练习与 C++ 解答
 
-### 练习 1：[WC2011] 最大XOR和路径
-给定一个无向图，求从 1 到 $n$ 的路径上边权异或和的最大值。
-**解析**：任选一条 1 到 $n$ 的路径，路径上的异或和可以通过异或上图中的任何一个环来改变。
-1. 找出图中所有的基本环。
-2. 将环的异或和插入线性基。
-3. 贪心查询路径异或和的最大值。
+### 练习 1：[TJOI2015] 配合 (Stirling 数 + 容斥)
+
+将 $n$ 个有标号球放入 $m$ 个有标号盒子，每个盒子至少有 $k$ 个球。
+**解析**：使用 EGF。每个盒子的生成函数为 $F(x) = \sum_{i=k}^\infty \frac{x^i}{i!}$。答案为 $n! [x^n] F(x)^m$。
+
+### 练习 2：[HNOI2008] 越狱 (基础计数)
+
+$m$ 种宗教，$n$ 个房间，求至少有两个相邻房间宗教相同的方案数。
+**解析**：总方案 $m^n$。所有相邻都不同方案：$m(m-1)^{n-1}$。答案：$m^n - m(m-1)^{n-1}$。
 
 <details>
 <summary>Check Solution (C++)</summary>
 
 ```cpp
-void dfs(int u, long long res) {
-    vis[u] = 1; dist[u] = res;
-    for (auto edge : adj[u]) {
-        if (!vis[edge.v]) dfs(edge.v, res ^ edge.w);
-        else lb.insert(res ^ edge.w ^ dist[edge.v]);
+long long qpow(long long a, long long b) {
+    long long res = 1;
+    a %= 100003;
+    while (b) {
+        if (b & 1) res = res * a % 100003;
+        a = a * a % 100003;
+        b >>= 1;
     }
+    return res;
 }
-// 主函数调用 lb.query_max(dist[n])
 ```
+
 </details>
 
-### 练习 2：[CQOI2014] 数三角形
+### 练习 3：[BZOJ 3167] 拓扑排序计数 (树形 DP + 组合)
+
+给定一棵树，边有方向，求拓扑序个数。
+**解析**：设 $f[u][i]$ 表示以 $u$ 为根的子树，拓扑序中 $u$ 排在第 $i$ 位的方案数。转移时利用组合数合并子树序。
+
+### 练习 4：[WC2011] 最大XOR和路径 (线性基应用)
+
+给定一个无向图，求从 1 到 $n$ 的路径上边权异或和的最大值。
+**解析**：任选一条路径，通过异或上图中的环来改变。环的异或和插入线性基，贪心查询最大值。
+
+### 练习 5：[CQOI2014] 数三角形 (几何计数)
+
 在 $N \times M$ 的网格点中选三个点构成三角形的方案数。
-**解析**：总选法 - 三点共线。
-三点共线分为：水平、垂直、斜线。
-斜线数量利用 $\gcd(\Delta x, \Delta y) - 1$ 计算。
+**解析**：总方案 $\binom{(N+1)(M+1)}{3}$ 减去共线情况（水平、垂直、斜线）。
 
-<details>
-<summary>Check Solution (思路)</summary>
+### 练习 6：[Luogu P4705] 玩游戏 (生成函数进阶)
 
-1. 总方案：$\binom{(N+1)(M+1)}{3}$。
-2. 水平共线：$(N+1) \binom{M+1}{3}$。
-3. 垂直共线：$(M+1) \binom{N+1}{3}$。
-4. 斜线共线：$2 \sum_{i=1}^N \sum_{j=1}^M (N-i+1)(M-j+1)(\gcd(i, j)-1)$。
-</details>
-
-### 练习 3：[Luogu P4705] 玩游戏 (生成函数进阶)
-给定序列 $A, B$，求对于所有 $k \in [1, L]$，$\frac{1}{nm} \sum_{i=1}^n \sum_{j=1}^m (a_i + b_j)^k \pmod{998244353}$。
-**解析**：利用二项式定理展开并转化为 $k$ 次幂和。
-$(a_i + b_j)^k = \sum_{p=0}^k \binom{k}{p} a_i^p b_j^{k-p}$。
-$\sum_{i, j} (a_i + b_j)^k = \sum_{p=0}^k \binom{k}{p} (\sum a_i^p) (\sum b_j^{k-p})$。
-这是一个卷积形式，利用生成函数 $F(x) = \sum \frac{\sum a_i^p}{p!} x^p$ 加速计算。
-
-<details>
-<summary>Check Solution (核心思想)</summary>
-
-1. 计算 $k$ 次幂和：利用 $S(x) = \sum \frac{1}{1 - a_i x} = \sum \frac{-a_i}{x^{-1} - a_i} = \frac{d}{dx} \ln \prod (1 - a_i x)$。
-2. 利用分治 NTT 或 多项式求逆/对数 求解 $S(x)$。
-3. 对 $A, B$ 分别求出幂和序列，卷积求答案。
-</details>
+求对于所有 $k \in [1, L]$，$\frac{1}{nm} \sum_{i=1}^n \sum_{j=1}^m (a_i + b_j)^k \pmod{998244353}$。
+**解析**：利用二项式定理展开并转化为 $k$ 次幂和卷积，使用多项式对数/求逆加速。
 
 <motion.div
-  initial={{ opacity: 0 }}
-  whileInView={{ opacity: 1 }}
-  className="mt-12 p-6 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl border border-indigo-100 dark:border-indigo-800"
->
-<Shapes className="text-indigo-500 mb-2" />
-**大师寄语**：组合数学不仅仅是计数，更是寻找集合间的映射。博弈论则告诉我们，所有的竞争在某种高度上都是一种代数结构的对抗。
-</motion.div>
+initial={{ opacity: 0 }}
+whileInView={{ opacity: 1 }}
+className="mt-12 p-6 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl border border-indigo-100 dark:border-indigo-800"
+
+> <Shapes className="text-indigo-500 mb-2" />
+> **大师寄语**：组合数学不仅仅是计数，更是寻找集合间的映射。博弈论则告诉我们，所有的竞争在某种高度上都是一种代数结构的对抗。
+> </motion.div>

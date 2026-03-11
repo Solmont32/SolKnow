@@ -5,25 +5,27 @@ sidebar_position: 0
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 import { motion } from 'framer-motion';
-import { 
-  Sigma, 
-  Infinity as InfinityIcon, 
-  Layers, 
-  Box, 
-  Target, 
-  Zap,
-  Code2,
-  Database,
-  Binary
+import {
+Sigma,
+Infinity as InfinityIcon,
+Layers,
+Box,
+Target,
+Zap,
+Code2,
+Database,
+Binary
 } from 'lucide-react';
 
 # 全阶学术数学专题：从初等竞赛到现代分析
 
-<motion.div 
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.5 }}
+<motion.div
+initial={{ opacity: 0, y: 20 }}
+animate={{ opacity: 1, y: 0 }}
+transition={{ duration: 0.5 }}
+
 >
+
   <blockquote>
     数学是研究“结构”的科学。本专题致力于打造一个从 K-12 竞赛数学无缝衔接至现代数学分析、高等代数与泛函分析的全阶梯学习系统。我们强调<b>公理化推导</b>、<b>跨领域映射</b>与<b>计算验证</b>的深度整合。
   </blockquote>
@@ -77,13 +79,13 @@ import {
 
 ## 🔗 跨领域数学映射 (Cross-domain Mapping)
 
-| 数学领域 | 计算机科学 (CS) | 物理/工程 (Physics) | 核心概念 |
-| :--- | :--- | :--- | :--- |
-| **群论** | 对称加密、纠错码 | 粒子物理、晶体学 | 对称性 (Symmetry) |
-| **线性代数** | 机器学习、图形学 | 量子力学、结构力学 | 线性映射 (Linearity) |
-| **图论** | 网络流、社交网络 | 电路分析、化学键 | 连接性 (Connectivity) |
-| **微积分** | 梯度下降、信号处理 | 经典力学、电磁场 | 连续变化 (Calculus) |
-| **布尔代数** | 数字电路、编译原理 | 控制系统 | 逻辑运算 (Logic) |
+| 数学领域     | 计算机科学 (CS)    | 物理/工程 (Physics) | 核心概念              |
+| :----------- | :----------------- | :------------------ | :-------------------- |
+| **群论**     | 对称加密、纠错码   | 粒子物理、晶体学    | 对称性 (Symmetry)     |
+| **线性代数** | 机器学习、图形学   | 量子力学、结构力学  | 线性映射 (Linearity)  |
+| **图论**     | 网络流、社交网络   | 电路分析、化学键    | 连接性 (Connectivity) |
+| **微积分**   | 梯度下降、信号处理 | 经典力学、电磁场    | 连续变化 (Calculus)   |
+| **布尔代数** | 数字电路、编译原理 | 控制系统            | 逻辑运算 (Logic)      |
 
 ---
 
@@ -92,6 +94,7 @@ import {
 在 SolKnow 中，我们相信**“能够写成代码的数学才是真正理解的数学”**。每一个核心专题均配套了 C++ 验证示例。
 
 ### 示例：数值分析中的 Newton-Raphson 迭代
+
 验证 $f(x) = x^2 - 2$ 的根向 $\sqrt{2}$ 的二阶收敛。
 
 <details>
@@ -108,7 +111,7 @@ import {
 int main() {
     double x = 1.0; // 初始猜测
     const double target = std::sqrt(2.0);
-    
+
     std::cout << std::fixed << std::setprecision(15);
     std::cout << "Target sqrt(2): " << target << "\n\n";
     std::cout << "Iter\tValue\t\t\tError" << std::endl;
@@ -117,7 +120,7 @@ int main() {
     for (int i = 0; i < 6; ++i) {
         double error = std::abs(x - target);
         std::cout << i << "\t" << x << "\t" << error << std::endl;
-        
+
         // x_{n+1} = x_n - f(x_n)/f'(x_n)
         // f(x) = x^2 - 2, f'(x) = 2x
         x = x - (x * x - 2.0) / (2.0 * x);

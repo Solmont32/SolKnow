@@ -18,19 +18,23 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 <div className="analysis-toc-grid">
 
 ### 1. 多项式插值 (Polynomial Interpolation)
+
 - **[Lagrange 插值与 Newton 插值](interpolation)**：从基函数构造到差商递推，解决“过点”问题。
 - **样条插值 (Spline Interpolation)**：引入分段多项式与连续性约束，有效克服 Runge 现象。
 - **误差估计**：Rolle 定理在插值余项中的精妙应用。
 
 ### 2. 函数拟合 (Function Fitting)
+
 - **[最小二乘法 (Least Squares Method)](fitting)**：处理带噪声的数据，求解超定方程组的全局最优解。
 - **正规方程组**：从几何投影视角理解误差平方和最小化。
 
 ### 3. 数值积分 (Numerical Integration)
+
 - **[Newton-Cotes 公式](integration)**：从等距节点出发，构建代数精度驱动的求积准则。
 - **Romberg 算法**：利用 Richardson 外推法实现精度的跃迁与收敛加速。
 
 ### 4. 非线性方程数值解 (Nonlinear Equations)
+
 - **[迭代法与 Newton 法](nonlinear-equations)**：从二分法到切线法，探究非线性根搜索的高效路径。
 - **收敛性分析**：不动点迭代的压缩映射原理与收敛阶判定。
 

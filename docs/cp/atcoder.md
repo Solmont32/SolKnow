@@ -16,6 +16,7 @@ AtCoder 是来自日本的高质量算法竞赛平台。其题目以**简洁的�
 ## 🏗️ 核心建模体系
 
 ### 1. 计数问题 (Counting Problems)
+
 AtCoder 的核心特色。通常涉及排列组合、动态规划与生成函数。
 
 - **核心工具**：
@@ -28,6 +29,7 @@ AtCoder 的核心特色。通常涉及排列组合、动态规划与生成函数
 </KnowledgeCard>
 
 ### 2. 概率与期望 (Probability & Expectation)
+
 利用期望的线性性 ($E[X+Y] = E[X] + E[Y]$) 简化复杂随机过程。
 
 - **经典模型**：
@@ -39,14 +41,19 @@ AtCoder 的核心特色。通常涉及排列组合、动态规划与生成函数
 ## 💡 思维 Trick 集锦
 
 ### 1. 反射原理 (Reflection Principle)
+
 处理带限制的路径计数（如：不能跨越 $y=x$ 的路径）。
+
 - **Trick**：将非法路径通过轴对称转化为终点对称后的合法路径。
 
 ### 2. 双射法 (Bijective Proofs)
+
 证明两个集合等势（方案数相等）。
+
 - **应用**：将复杂的约束条件转化为更易计数的结构（如将括号序列转化为格点路径）。
 
 ### 3. DP 状态压缩与优化
+
 AtCoder 经常考察对 DP 转移的极致优化（如：斜率优化、数据结构优化、分治 FFT）。
 
 ---
@@ -69,6 +76,7 @@ struct Mint {
 };
 typedef Mint<998244353> mint;
 ```
+
 </details>
 
 <details>
@@ -101,6 +109,7 @@ ll nCr(int n, int r) {
     return fact[n] * invFact[r] % MOD * invFact[n-r] % MOD;
 }
 ```
+
 </details>
 
 ---
@@ -108,12 +117,14 @@ ll nCr(int n, int r) {
 ## 📝 典型例题建模实战
 
 ### 例题 1：期望的线性性
+
 **题目描述**：给定 $N$ 个硬币，第 $i$ 个硬币正面朝上的概率为 $p_i$。求正面朝上的硬币数量的期望值。
 
 <details>
 <summary>Check Solution</summary>
 
 **建模分析**：
+
 1. **定义变量**：设 $X_i$ 为指示变量，若第 $i$ 个硬币正面朝上则 $X_i = 1$，否则 $X_i = 0$。
 2. **总期望**：$E[\sum X_i] = \sum E[X_i]$。
 3. **单个期望**：$E[X_i] = 1 \times P(X_i=1) + 0 \times P(X_i=0) = p_i$。
@@ -130,15 +141,18 @@ void solve() {
     printf("%.10f\n", ans);
 }
 ```
+
 </details>
 
 ### 例题 2：容斥原理进阶
+
 **题目描述**：求长度为 $N$，元素在 $[1, M]$ 之间，且 $\gcd(a_1, a_2, ..., a_N) = 1$ 的序列个数。
 
 <details>
 <summary>Check Solution</summary>
 
 **建模分析**：
+
 1. **定义 $f(g)$**：最大公约数为 $g$ 的序列个数。
 2. **定义 $F(g)$**：最大公约数为 $g$ 的倍数的序列个数。显然 $F(g) = (M/g)^N$。
 3. **关系**：$F(g) = \sum_{g|d} f(d)$。
@@ -156,6 +170,7 @@ void solve() {
     cout << ans << endl;
 }
 ```
+
 </details>
 
 ---

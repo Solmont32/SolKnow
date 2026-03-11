@@ -24,6 +24,7 @@ title: 数理统计练习题 (Statistics Exercises)
 于是 $Y_1, \dots, Y_n$ 相互独立。
 注意到 $(n-1)S^2 = \sum_{i=1}^n X_i^2 - n\bar{X}^2 = \sum_{i=1}^n Y_i^2 - Y_1^2 = \sum_{i=2}^n Y_i^2$。
 由于 $Y_1$ 与 $Y_2, \dots, Y_n$ 独立，故 $\bar{X}$ 与 $S^2$ 独立。
+
 </details>
 
 ## 2. 参数估计
@@ -42,6 +43,7 @@ $$\ell(\lambda) = \ln L(\lambda) = \sum_{i=1}^n x_i \ln \lambda - n\lambda - \su
 对 $\lambda$ 求导：
 $$\frac{d\ell}{d\lambda} = \frac{\sum x_i}{\lambda} - n = 0$$
 解得 $\hat{\lambda} = \bar{X}$。
+
 </details>
 
 ---

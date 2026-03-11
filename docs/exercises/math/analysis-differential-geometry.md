@@ -14,6 +14,7 @@ description: 面向 Frenet 标架、基本形式与 Gauss-Bonnet 定理的教材
 ## 一、空间曲线论 (Frenet 标架)
 
 ### 练习 1：Frenet 标架的显式计算 {#dg-1}
+
 求曲线 $\mathbf{r}(t) = (a\cos t, a\sin t, bt)$（圆柱螺旋线）在任意点 $t$ 处的 Frenet 标架 $\{\mathbf{T}, \mathbf{N}, \mathbf{B}\}$。
 
 <details>
@@ -33,9 +34,11 @@ $\mathbf{B} = \frac{\mathbf{r}' \times \mathbf{r}''}{\|\mathbf{r}' \times \mathb
 $\mathbf{N} = \mathbf{B} \times \mathbf{T} = (-\cos t, -\sin t, 0)$。
 
 **结论**：主法向量始终指向 $z$ 轴（中心轴）。
+
 </details>
 
 ### 练习 2：Frenet-Serret 公式应用 {#dg-2}
+
 若一条曲线的所有切线都通过一个固定点，证明该曲线是直线。
 
 <details>
@@ -48,6 +51,7 @@ $\mathbf{T}(s) + \lambda'(s) \mathbf{T}(s) + \lambda(s) \mathbf{T}'(s) = \mathbf
 利用 Frenet 公式 $\mathbf{T}' = \kappa \mathbf{N}$：
 $(1 + \lambda'(s)) \mathbf{T}(s) + \lambda(s) \kappa \mathbf{N}(s) = \mathbf{0}$
 由于 $\mathbf{T}$ 与 $\mathbf{N}$ 正交且线性无关，其系数必须均为 0：
+
 1. $\lambda(s) \kappa = 0$
 2. $1 + \lambda'(s) = 0$
 从 (2) 得 $\lambda(s) = -s + c \neq 0$。
@@ -60,6 +64,7 @@ $(1 + \lambda'(s)) \mathbf{T}(s) + \lambda(s) \kappa \mathbf{N}(s) = \mathbf{0}$
 ## 二、曲面内蕴几何 (基本形式)
 
 ### 练习 3：旋转面的第一基本形式 {#weingarten-map-exercise}
+
 设曲线在 $xz$ 平面内为 $x = f(u), z = g(u)$，绕 $z$ 轴旋转生成曲面 $\mathbf{r}(u,v) = (f(u)\cos v, f(u)\sin v, g(u))$。求其第一基本形式。
 
 <details>
@@ -75,9 +80,11 @@ $F = \mathbf{r}_u \cdot \mathbf{r}_v = 0$（说明经线与纬线正交）
 $G = \mathbf{r}_v \cdot \mathbf{r}_v = f^2$
 
 **结论**：$I = ((f')^2 + (g')^2) du^2 + f^2 dv^2$。
+
 </details>
 
 ### 练习 4：高斯曲率计算 {#riemann-curvature-basics}
+
 计算正交参数网下（即 $F=0$）的高斯曲率公式。若 $E=1, G=f^2(u)$，证明 $K = -f''(u)/f(u)$。
 
 <details>
@@ -89,6 +96,7 @@ $K = -\frac{1}{2\sqrt{EG}} \left[ \frac{\partial}{\partial u}\left(\frac{G_u}{\s
 $E_v = 0, \sqrt{EG} = f$
 $K = -\frac{1}{2f} \left[ \frac{\partial}{\partial u}\left(\frac{2f f'}{f}\right) + 0 \right] = -\frac{1}{2f} (2f'') = -\frac{f''(u)}{f(u)}$。
 **应用**：若 $f(u) = e^u$（伪球面局部），则 $K = -e^u/e^u = -1$。
+
 </details>
 
 ---
@@ -96,6 +104,7 @@ $K = -\frac{1}{2f} \left[ \frac{\partial}{\partial u}\left(\frac{2f f'}{f}\right
 ## 三、Gauss-Bonnet 与综合应用
 
 ### 练习 5：球面三角形的面积 {#dg-5}
+
 利用 Gauss-Bonnet 定理证明：半径为 $R$ 的球面上，三个内角为 $A, B, C$ 的球面三角形的面积为 $S = R^2(A + B + C - \pi)$。
 
 <details>
@@ -105,6 +114,7 @@ $K = -\frac{1}{2f} \left[ \frac{\partial}{\partial u}\left(\frac{2f f'}{f}\right
 对球面区域 $\Omega$ 使用 Gauss-Bonnet 定理：
 $\iint_{\Omega} K dA + \int_{\partial \Omega} k_g ds + \sum \text{外角}_i = 2\pi$
 **Step 2: 代入参数**
+
 1. 球面高斯曲率 $K = 1/R^2$，故 $\iint K dA = \frac{1}{R^2} Area(\Omega)$。
 2. 球面三角形的边是大圆弧，大圆是球面的测地线，故 $k_g = 0$，积分项消失。
 3. 顶点的外角分别为 $\pi-A, \pi-B, \pi-C$。
@@ -116,6 +126,7 @@ $S = R^2(A+B+C - \pi)$。
 </details>
 
 ### 练习 6：测地线的判定 {#dg-6}
+
 在圆柱面 $x^2+y^2=R^2$ 上，证明任何螺旋线都是测地线。
 
 <details>
@@ -128,6 +139,7 @@ $S = R^2(A+B+C - \pi)$。
 两者共线，证毕。
 **方法二：变分判定**
 将圆柱面展开为平面，螺旋线变为直线。由于平面上的直线是测地线，且等距变换保持测地线性质，故原螺旋线为测地线。
+
 </details>
 
 ---
