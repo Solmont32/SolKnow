@@ -66,7 +66,7 @@ int merge(int u, int v, int l, int r) {
 <summary>Check Solution</summary>
 
 **题目描述**：支持单点修改，查询区间内第一个 $\ge k$ 的位置。
-**解析**：利用线段树维护区间最大值。若 `tr[u<<1].max >= k` 则向左递归，否则向右。
+**解析**：利用线段树维护区间最大值。若 `tr[u&lt;&lt;1].max >= k` 则向左递归，否则向右。
 
 ```cpp
 int find(int u, int l, int r, int qL, int qR, int k) {
