@@ -368,7 +368,7 @@ const sidebars: SidebarsConfig = {
         { type: 'category', collapsible: true, collapsed: true, label: 'C/C++', link: {type: 'doc', id: 'cs/cpp/index'}, items: ['cs/cpp/oop-basics', 'cs/cpp/modern-cpp'] },
         { type: 'doc', id: 'cs/os/index', label: '操作系统' },
         { type: 'doc', id: 'cs/network/index', label: '计算机网络' },
-        { type: 'doc', id: 'cs/system-architecture-and-primitives', label: '系统架构与工程原语' },
+        { type: 'doc', id: 'cs/computer-system-essentials', label: '计算机系统精要' },
       ],
     },
   ],
