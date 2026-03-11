@@ -27,7 +27,10 @@ $$
 
 ### 2. 最短路的最优子结构 (Optimal Substructure)
 **定理**：若 $p = \langle v_1, v_2, \dots, v_k \rangle$ 是从 $v_1$ 到 $v_k$ 的最短路，则对于任意 $1 \le i \le j \le k$，子路径 $p_{ij} = \langle v_i, \dots, v_j \rangle$ 也是从 $v_i$ 到 $v_j$ 的最短路。
-*证明（反证法）*：若存在更短子路径 $p'_{ij}$，则用 $p'_{ij}$ 替换 $p$ 中的 $p_{ij}$ 可得到更短的 $v_1 \to v_k$ 路径，与原假设矛盾。
+*证明 (反证法)*：若存在更短子路径 $p'_{ij}$，则用 $p'_{ij}$ 替换 $p$ 中的 $p_{ij}$ 可得到更短的 $v_1 \to v_k$ 路径，与 $p$ 是最短路的前提矛盾。
+
+### 3. 三角不等式 (Triangle Inequality)
+对于任意边 $(u, v) \in E$，最短路权值满足：$\delta(s, v) \le \delta(s, u) + w(u, v)$。这是所有最短路算法收敛的数学依据。
 
 ---
 
@@ -37,10 +40,10 @@ $$
   data={[
     { algorithm: "BFS (Unit weight)", complexity: "O(V + E)", space: "O(V)", note: "仅限等权图" },
     { algorithm: "Dijkstra (Binary Heap)", complexity: "O(E log V)", space: "O(V + E)", note: "不可处理负权边" },
-    { algorithm: "Dijkstra (Fibonacci Heap)", complexity: "O(E + V log V)", space: "O(V + E)", note: "理论最优，常数较大" },
     { algorithm: "Bellman-Ford", complexity: "O(VE)", space: "O(V)", note: "可处理负权边与负环" },
-    { algorithm: "SPFA", complexity: "O(kE) [Average]", space: "O(V)", note: "易被特殊构造的数据卡成 O(VE)" },
-    { algorithm: "Floyd-Warshall", complexity: "O(V³)", space: "O(V²)", note: "全源最短路，插点 DP" }
+    { algorithm: "SPFA", complexity: "O(kE) [Avg]", space: "O(V)", note: "Bellman-Ford 的队列优化版" },
+    { algorithm: "Floyd-Warshall", complexity: "O(V³)", space: "O(V²)", note: "全源最短路，插点 DP" },
+    { algorithm: "Johnson", complexity: "O(VE + VE log V)", space: "O(V+E)", note: "含负权边的全源最短路" }
   ]}
 />
 
@@ -48,136 +51,131 @@ $$
 
 ## 三、 <Activity className="inline-block mr-2 mb-1 text-green-500" /> 核心算法深度解析
 
-### 1. Dijkstra 算法：贪心与非负性保证
+### 1. Dijkstra 算法：贪心与非负性
 Dijkstra 维护一个集合 $S$，其中包含已确定最短路的顶点。
-**贪心策略**：每次从未确定集合 $V-S$ 中选取 $dist$ 最小的节点 $u$，并对其出边进行松弛。
-
-<KnowledgeCard title="Dijkstra 最优性证明要点" icon={<BookOpen size={20} />}>
-**证明思路 (归纳法)**：
-假设 $S$ 中的点均已获得最短路值。当选取 $u \in V-S$ 时，若存在更短路径 $s \to x \to u$（其中 $x \in V-S$），由于所有边权 $w \ge 0$，则 $dist(x)$ 必然小于等于 $dist(u)$。而算法保证了 $u$ 是 $V-S$ 中最小的，产生矛盾。
-**结论**：只要存在负权边，贪心策略失效。
+<KnowledgeCard title="Dijkstra 正确性证明" icon={<BookOpen size={20} />}>
+**证明要点**：
+假设 $S$ 是当前已确定最短路的点集。算法每次选取 $u \in V \setminus S$ 中 $dist[u]$ 最小的点。
+若存在另一条更短路径 $s \to \dots \to x \to y \to \dots \to u$（其中 $x \in S, y \notin S$），则 $dist[y] = dist[x] + w(x, y)$。由于所有边权 $w \ge 0$，且 $dist[u]$ 是 $V \setminus S$ 中最小的，必有 $dist[u] \le dist[y]$。因此该替代路径不可能更短。
+**结论**：若存在负权边，贪心序失效，必须使用松弛算法。
 </KnowledgeCard>
 
-### 2. Bellman-Ford 与 SPFA：松弛定理
-所有基于松弛的算法都遵循：$dist[v] = \min(dist[v], dist[u] + w(u, v))$。
-- **Bellman-Ford**：进行 $n-1$ 轮全边松弛。若第 $n$ 轮仍能松弛，说明存在负环。
-- **SPFA**：仅对发生变化的节点进行松弛，利用队列维护。
+### 2. Floyd-Warshall：动态规划视角
+状态定义：$dp[k][i][j]$ 表示经过前 $k$ 个节点作为中间点时，$i$ 到 $j$ 的最短距离。
+转移方程：$dp[k][i][j] = \min(dp[k-1][i][j], dp[k-1][i][k] + dp[k-1][k][j])$。
+空间优化：由于 $k$ 层仅依赖 $k-1$ 层，可压缩至 $O(V^2)$。
+
+### 3. Bellman-Ford 与松弛性质
+**收敛性质**：在一个含有 $n$ 个点的图中，不含负环的最短路最多包含 $n-1$ 条边。
+**判定负环**：若在第 $n$ 次全边松弛中仍有 $dist$ 减小，则图中必然存在从源点可达的负环。
 
 ---
 
-## 四、 <Link className="inline-block mr-2 mb-1 text-amber-500" /> 建模进阶：差分约束与分层图
+## 四、 <Link className="inline-block mr-2 mb-1 text-amber-500" /> 建模进阶：Johnson 算法与差分约束
 
-### 1. 差分约束系统 (System of Difference Constraints)
-将不等式 $x_j - x_i \le w_{ij}$ 转化为图论语言：从 $i$ 向 $j$ 连一条权值为 $w_{ij}$ 的有向边。
-- **求最大值**：跑 $s$ 到各点的最短路（限制越多，值越小）。
-- **求最小值**：跑 $s$ 到各点的最长路（条件越多，值越大）。
+### 1. Johnson 算法：权值重标定 (Reweighting)
+为了在含负权边的图上跑全源最短路，Johnson 算法通过势能函数 $h(v)$ 将边权 $w(u, v)$ 转化为 $w'(u, v) = w(u, v) + h(u) - h(v) \ge 0$。
+1. 新增源点 $s'$ 连向所有点，边权 0。
+2. 跑一遍 Bellman-Ford 求得 $s'$ 到各点的最短路作为 $h(v)$。
+3. 转化边权后，对每个点跑 Dijkstra。
+4. 最终距离还原：$dist(u, v) = dist'(u, v) + h(v) - h(u)$。
 
-### 2. 分层图最短路 (Layered Graph)
-适用于“有 $K$ 次机会改变边权”的问题。
-**核心思想**：状态定义从 $dist[u]$ 扩展为 $dist[u][k]$，表示到达节点 $u$ 且已使用了 $k$ 次特权的代价。
-**转移方程**：
-1. **不使用特权**：$dist[v][k] = \min(dist[v][k], dist[u][k] + w(u, v))$
-2. **使用特权**：$dist[v][k+1] = \min(dist[v][k+1], dist[u][k] + w'(u, v))$
+### 2. 差分约束系统 (System of Difference Constraints)
+将不等式 $x_j - x_i \le w_{ij}$ 转化为边 $i \to j$ 权值 $w_{ij}$。
+- **最大值问题**：$\max(x_i - x_j)$ 对应 $j \to i$ 的最短路。
+- **无解判定**：对应图中存在负环。
 
 ---
 
-## 五、 工业级 C++ 模版 (堆优化 Dijkstra)
+## 五、 工业级 C++ 模板 (全能型 Dijkstra)
 
 ```cpp
-#include <iostream>
 #include <vector>
 #include <queue>
+#include <algorithm>
 
 using namespace std;
 
 /**
- * @brief 工业级堆优化 Dijkstra 模板
+ * @brief 工业级堆优化 Dijkstra
  * 复杂度: O(E log V)
- * 适用: 非负权单源最短路
+ * 能够处理大规模稀疏图
  */
-const long long INF = 0x3f3f3f3f3f3f3f3fLL;
-
-struct Edge {
-    int to;
-    long long w;
-};
-
-struct Node {
-    int u;
-    long long d;
-    bool operator>(const Node& other) const { return d > other.d; }
-};
-
-vector<long long> dijkstra(int n, int s, const vector<vector<Edge>>& adj) {
-    vector<long long> dist(n + 1, INF);
-    priority_queue<Node, vector<Node>, greater<Node>> pq;
-
-    dist[s] = 0;
-    pq.push({s, 0});
-
-    while (!pq.empty()) {
-        Node top = pq.top(); pq.pop();
-        int u = top.u;
-        if (top.d > dist[u]) continue; // 懒惰删除：若当前距离已不是最优，跳过
-
-        for (const auto& e : adj[u]) {
-            if (dist[u] + e.w < dist[e.to]) {
-                dist[e.to] = dist[u] + e.w;
-                pq.push({e.to, dist[e.to]});
+template<typename T = long long>
+struct Dijkstra {
+    const T INF = numeric_limits<T>::max();
+    struct Edge { int to; T w; };
+    vector<vector<Edge>> adj;
+    
+    Dijkstra(int n) : adj(n + 1) {}
+    
+    void add_edge(int u, int v, T w) { adj[u].push_back({v, w}); }
+    
+    vector<T> solve(int s, int n) {
+        vector<T> dist(n + 1, INF);
+        using P = pair<T, int>;
+        priority_queue<P, vector<P>, greater<P>> pq;
+        
+        dist[s] = 0;
+        pq.push({0, s});
+        
+        while(!pq.empty()) {
+            auto [d, u] = pq.top(); pq.pop();
+            if(d > dist[u]) continue;
+            for(auto& e : adj[u]) {
+                if(dist[u] + e.w < dist[e.to]) {
+                    dist[e.to] = dist[u] + e.w;
+                    pq.push({dist[e.to], e.to});
+                }
             }
         }
+        return dist;
     }
-    return dist;
-}
+};
 ```
 
 ---
 
-## 六、 <Target className="inline-block mr-2 mb-1 text-red-500" /> 精选练习与深度解析
+## 六、 <Target className="inline-block mr-2 mb-1 text-red-500" /> 精选练习与解析
 
-### 练习 1：边权取对数转换
-给定正权图，求一条路径使得边权**乘积**最小。
-
-<details>
-<summary>Check Solution</summary>
-
-**解析**：
-最小化 $\prod w_i$ 等价于最小化 $\ln(\prod w_i) = \sum \ln w_i$。
-1. **转化**：建立新权值 $w'_{ij} = \ln w_{ij}$。
-2. **算法**：由于 $w > 0$ 则 $\ln w$ 可能为负，但若原意是求**正数乘积最小**，通常 $w \ge 1$（此时 $\ln w \ge 0$ 用 Dijkstra），若存在 $0 < w < 1$，则会出现负边权，需使用 SPFA 检查负环。
-3. **还原**：最终答案为 $e^{dist[T]}$。
-
-</details>
-
-### 练习 2：瓶颈路径问题 (Minimax Path)
-求一条路径，使得路径上经过的**最大边权**在所有路径中最小。
-
-<details>
-<summary>Check Solution</summary>
-
-**方案一：二分答案 + BFS/DFS (通用)**
-1. 二分可能的最大权值 $W$。
-2. 仅保留 $w \le W$ 的边，检查连通性。复杂度 $O((V+E) \log (\max W))$。
-
-**方案二：Kruskal 变体 (MST 思想)**
-1. 将边按权值从小到大排序。
-2. 逐一加边，直到 $S$ 与 $T$ 首次连通。此时加入的边权即为答案。
-
-**方案三：Dijkstra 变体**
-修改松弛操作：$dist[v] = \min(dist[v], \max(dist[u], w(u, v)))$。
-
-</details>
-
-### 练习 3：第 K+1 大边最小化 (分层图经典)
-[POJ 3662] 给定图，可以免费修建 $K$ 条路，求剩下的路中最大权值的最小值。
+### 练习 1：负权边下的最短路
+给定一个含负权边但不含负环的图，求单源最短路。
 
 <details>
 <summary>Check Solution</summary>
 
 **解析**：
-这是 **二分答案 + 最短路** 的经典组合。
-1. **二分**：设当前猜测的最大权值为 $L$。
-2. **建图**：若原边权 $w_i > L$，则该边权值设为 1（表示需要消耗一次免费名额）；若 $w_i \le L$，则权值设为 0。
-3. **判定**：运行 $0/1 \text{ BFS}$ 或 Dijkstra。若 $dist[T] \le K$，说明存在方案使得超过 $L$ 的边数不超过 $K$，即 $L$ 可行。
+不能使用 Dijkstra，必须使用 **Bellman-Ford** 或其优化版 **SPFA**。
+1. **SPFA 流程**：使用队列维护待松弛的点。
+2. **风险点**：SPFA 在网格图或特殊构造的“菊花图”中复杂度会退化为 $O(VE)$。
+3. **安全选择**：若数据规模较小，Bellman-Ford 更稳健。
+
+</details>
+
+### 练习 2：最长路问题 (DAG Longest Path)
+求一个 DAG 中两点间的最长路径。
+
+<details>
+<summary>Check Solution</summary>
+
+**解析**：
+1. **取负法**：将所有边权 $w$ 变为 $-w$，然后跑最短路。
+2. **DP 法**：利用拓扑序，状态转移为 $f[v] = \max(f[v], f[u] + w(u, v))$。
+*注意：若图中含正环，最长路问题是 NP-Hard 的。*
+
+</details>
+
+### 练习 3：分层图建模 - 飞行路线
+有 $n$ 个城市和 $m$ 条航线，可以免费乘坐 $k$ 次航线。求 $s \to t$ 最小花费。
+
+<details>
+<summary>Check Solution</summary>
+
+**解析**：
+构建 $k+1$ 层图。
+1. **同层连边**：第 $i$ 层内按照原图连边，权值为航线价格。
+2. **跨层连边**：从第 $i$ 层的 $u$ 向第 $i+1$ 层的 $v$ 连边，权值为 $0$（代表使用了一次免费机会）。
+3. **目标**：求第 $0$ 层 $s$ 到各层 $t$ 的最短路最小值。
+**复杂度**：$O(kE \log (kV))$。
 
 </details>
