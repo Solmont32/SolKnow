@@ -14,7 +14,7 @@ import { Cpu, Layout, Layers, Lightbulb, Binary, Share2, Microscope, Activity, S
 | 操作 | 代码实现 | 数学含义 |
 | :--- | :--- | :--- |
 | **检查元素 $i$** | `(S >> i) & 1` | $i \in S$ |
-| **加入元素 $i$** | `S | (1 << i)` | $S \cup \{i\}$ |
+| **加入元素 $i$** | `S \| (1 << i)` | $S \cup \{i\}$ |
 | **移除元素 $i$** | `S & ~(1 << i)` | $S \setminus \{i\}$ |
 | **全集** | `(1 << n) - 1` | $U = \{0, 1, \dots, n-1\}$ |
 
