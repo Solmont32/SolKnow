@@ -1,130 +1,162 @@
 ---
-title: 网络流进阶
+title: 网络流算法与工业级建模
 ---
 
-import { GitMerge, Zap, Activity, ShieldCheck, Layers, Landmark } from 'lucide-react';
+import { GitMerge, Zap, Activity, ShieldCheck, Layers, Landmark, ArrowRightLeft, Maximize } from 'lucide-react';
 
-# <GitMerge className="inline-block mr-2 mb-1 text-blue-500" /> 网络流进阶 (Advanced Network Flow)
+# <GitMerge className="inline-block mr-2 mb-1 text-blue-500" /> 网络流 (Network Flow)
 
-本篇在基础最大流之上，探讨复杂的网络建模技巧与最小费用最大流算法。
-
-## 一、 <Layers className="inline-block mr-2 mb-1 text-blue-400" /> 建模技巧：点边转化
-
-### 1. 点权转化为边权 (Node Splitting)
-**场景**：每个点 $u$ 有通过能力的限制 $cap(u)$。
-**做法**：将点 $u$ 拆分为入点 $u_{in}$ 和出点 $u_{out}$。
--   所有进入 $u$ 的边连向 $u_{in}$。
--   所有从 $u$ 出发的边连向 $u_{out}$。
--   在 $u_{in}$ 和 $u_{out}$ 之间连一条容量为 $cap(u)$ 的有向边。
-
-### 2. 最大权闭合子图 (Project Selection)
-**场景**：有若干项目，选项目 $i$ 获益 $w_i$（可正可负），但项目间有依赖关系：选 $i$ 必须选 $j$。
-**建模**：
-1.  建立源点 $S$ 和汇点 $T$。
-2.  若 $w_i > 0$，连边 $(S, i)$，容量为 $w_i$。
-3.  若 $w_i < 0$，连边 $(i, T)$，容量为 $-w_i$。
-4.  若选 $i$ 依赖 $j$，连边 $(i, j)$，容量为 $\infty$。
-**结论**：**最大收益 = 所有正收益之和 - 最小割容量**。
+网络流是组合优化中的核心模型。它不仅能解决物流传输问题，还能通过**对偶性 (Duality)** 解决各种覆盖与独立集问题。
 
 ---
 
-## 二、 <Landmark className="inline-block mr-2 mb-1 text-amber-500" /> 最小费用最大流 (MCMF)
+## 一、 <Maximize className="inline-block mr-2 mb-1 text-blue-400" /> 核心定理：最大流最小割 (Max-Flow Min-Cut)
 
-当网络中的边除了容量 $c$ 外，还有单位流量费用 $cost$ 时，我们需要在保证流量最大的前提下，使总费用 $\sum f(i, j) \cdot cost(i, j)$ 最小。
+**定理内容**：在一个有向图中，从源点 $S$ 到汇点 $T$ 的最大流量等于将 $S$ 和 $T$ 分开的最小割集的容量之和。
+- **直观理解**：一个系统的最大产出受限于其最薄弱的环节（瓶颈）。
+- **应用逻辑**：当你无法直接求一个集合的最小值时，尝试构建一个网络并求其最大流。
 
-### 1. 算法：SPFA 增广
-核心思想：将 Dinic 中的 BFS 替换为 **SPFA**，寻找关于“单位费用”的最短路作为增广路。
--   **反向边处理**：反向边的容量为 0，费用为 $-cost$。
+---
 
-### 2. C++ 实现模板
+## 二、 <Zap className="inline-block mr-2 mb-1 text-amber-500" /> 算法体系
+
+| 算法 | 核心机制 | 复杂度 | 备注 |
+| :--- | :--- | :--- | :--- |
+| **Edmonds-Karp** | BFS 寻找增广路 | $O(VE^2)$ | 基础实现 |
+| **Dinic** | 分层图 + 多路增广 | $O(V^2E)$ | **工业界主流选择** |
+| **ISAP** | 动态修改标号 BFS | $O(V^2E)$ | 效率略高于 Dinic |
+| **HLPP** | 最高标号预流推进 | $O(V^2\sqrt{E})$ | 理论复杂度最优 |
+
+---
+
+## 三、 <ArrowRightLeft className="inline-block mr-2 mb-1 text-purple-500" /> 进阶模型：有上下界的网络流 (Circulation with Bounds)
+
+**场景**：每条边 $(u, v)$ 不仅有上限 $c_{uv}$，还有下限 $l_{uv}$，要求 $l_{uv} \le f_{uv} \le c_{uv}$ 且满足流量守恒。
+
+**转化步骤**：
+1. **流量修正**：每条边实际容量改为 $c_{uv} - l_{uv}$。
+2. **偏差调整**：
+   - 令 $D(u) = \sum l_{in} - \sum l_{out}$。
+   - 若 $D(u) > 0$，从辅助源 $S'$ 连向 $u$，容量为 $D(u)$。
+   - 若 $D(u) < 0$，从 $u$ 连向辅助汇 $T'$，容量为 $-D(u)$。
+3. **判可行流**：运行 $S' \to T'$ 最大流。若所有 $S'$ 发出的边均满流，则存在可行流。
+
+---
+
+## 四、 <Activity className="inline-block mr-2 mb-1 text-green-500" /> Dinic 算法工业级模板
+
 ```cpp
-struct MCMF {
-    struct Edge { int to, nxt, cap, flow, cost; } e[M];
-    int head[N], dist[N], pre[N], edge[N], tot = 1;
-    bool in_q[N];
+#include <vector>
+#include <queue>
+#include <algorithm>
 
-    void add(int u, int v, int c, int w) {
-        e[++tot] = {v, head[u], c, 0, w}; head[u] = tot;
-        e[++tot] = {u, head[v], 0, 0, -w}; head[v] = tot;
+using namespace std;
+
+const long long INF = 1e18;
+
+struct Dinic {
+    struct Edge {
+        int to, rev;
+        long long cap;
+    };
+    vector<vector<Edge>> g;
+    vector<int> level, iter;
+
+    Dinic(int n) : g(n), level(n), iter(n) {}
+
+    void add_edge(int from, int to, long long cap) {
+        g[from].push_back({to, (int)g[to].size(), cap});
+        g[to].push_back({from, (int)g[from].size() - 1, 0});
     }
 
-    bool spfa(int s, int t, int &flow, int &cost) {
-        memset(dist, 0x3f, sizeof(dist));
-        memset(in_q, 0, sizeof(in_q));
-        queue<int> q; q.push(s); dist[s] = 0; in_q[s] = 1;
-        pre[t] = -1;
+    bool bfs(int s, int t) {
+        fill(level.begin(), level.end(), -1);
+        level[s] = 0;
+        queue<int> q;
+        q.push(s);
         while (!q.empty()) {
-            int u = q.front(); q.pop(); in_q[u] = 0;
-            for (int i = head[u]; i; i = e[i].nxt) {
-                if (e[i].cap > e[i].flow && dist[e[i].to] > dist[u] + e[i].cost) {
-                    dist[e[i].to] = dist[u] + e[i].cost;
-                    pre[e[i].to] = u; edge[e[i].to] = i;
-                    if (!in_q[e[i].to]) { q.push(e[i].to); in_q[e[i].to] = 1; }
+            int u = q.front(); q.pop();
+            for (auto& e : g[u]) {
+                if (e.cap > 0 && level[e.to] < 0) {
+                    level[e.to] = level[u] + 1;
+                    q.push(e.to);
                 }
             }
         }
-        if (pre[t] == -1) return false;
-        int d = 1e9;
-        for (int i = t; i != s; i = pre[i]) d = min(d, e[edge[i]].cap - e[edge[i]].flow);
-        flow += d; cost += d * dist[t];
-        for (int i = t; i != s; i = pre[i]) {
-            e[edge[i]].flow += d;
-            e[edge[i] ^ 1].flow -= d;
-        }
-        return true;
+        return level[t] != -1;
     }
 
-    pair<int, int> solve(int s, int t) {
-        int flow = 0, cost = 0;
-        while (spfa(s, t, flow, cost));
-        return {flow, cost};
+    long long dfs(int u, int t, long long f) {
+        if (u == t) return f;
+        for (int& i = iter[u]; i < g[u].size(); ++i) {
+            Edge& e = g[u][i];
+            if (e.cap > 0 && level[u] < level[e.to]) {
+                long long d = dfs(e.to, t, min(f, e.cap));
+                if (d > 0) {
+                    e.cap -= d;
+                    g[e.to][e.rev].cap += d;
+                    return d;
+                }
+            }
+        }
+        return 0;
+    }
+
+    long long max_flow(int s, int t) {
+        long long flow = 0;
+        while (bfs(s, t)) {
+            fill(iter.begin(), iter.end(), 0);
+            long long f;
+            while ((f = dfs(s, t, INF)) > 0) flow += f;
+        }
+        return flow;
     }
 };
 ```
 
 ---
 
-## 三、 综合建模案例：有向无环图 (DAG) 最小路径覆盖
+## 五、 配套练习 (折叠解答)
 
-**问题**：给定一个 DAG，求最少需要多少条路径才能覆盖所有顶点。
-**模型转化**：
-1.  拆点：将每个点 $u$ 拆分为 $u_{in}$ 和 $u_{out}$。
-2.  连边：原图边 $(u, v)$ 变为网络中的 $(u_{out}, v_{in})$，容量为 1。
-3.  源汇：$S \to u_{out}$，容量 1；$v_{in} \to T$，容量 1。
-**结论**：**最小路径数 = 总顶点数 - 二分图最大匹配数**。
-
----
-
-## 四、 配套练习（答案折叠）
-
-### 练习 1（建模）
-如何求一个图的“最大权独立集”？（已知该图是二分图）
+### 练习 1：最小割应用
+给定一个网格，某些格子有障碍。求最少去掉多少个非障碍格子，使得起点与终点不连通。
 
 <details>
-<summary>点击查看过程与答案</summary>
+<summary>查看解析</summary>
 
 **分析**：
-在二分图中：
-1. 最大权独立集 = 所有权值之和 - 最小权顶点覆盖。
-2. 最小权顶点覆盖可以通过最小割求解。
-**建模**：
-- $S \to U_i$，容量为点权。
-- $W_j \to T$，容量为点权。
-- 若 $U_i, W_j$ 有边，连 $U_i \to W_j$ 容量 $\infty$。
-最大收益 = 总权值 - 最小割。
-
-**答案**：转化为二分图的最小割问题，利用“总权值 - 最小割”求解。
+这是“最小点割集”问题。
+1. **点转边**：将每个格子 $u$ 拆分为 $u_{in}, u_{out}$，连边 $(u_{in}, u_{out}, 1)$。如果是障碍格，容量设为 $\infty$。
+2. **网格建边**：相邻格子 $u, v$ 连边 $(u_{out}, v_{in}, \infty)$。
+3. **求解**：运行 $S_{out} \to T_{in}$ 的最大流，结果即为最小割。
 
 </details>
 
-### 练习 2（算法应用）
-在 MCMF 中，如果存在负权环，SPFA 会发生什么？
+### 练习 2：最大权闭合子图
+有 $n$ 个实验，每个实验获利 $p_i$；做实验需要若干仪器，每个仪器成本 $c_j$。求最大利润。
 
 <details>
-<summary>点击查看过程与答案</summary>
+<summary>查看解析</summary>
 
-**分析**：SPFA 会进入死循环，无法得出最短路。在普通的网络流问题中，由于流量限制，负权环通常需要先进行消圈处理（Cycle Canceling）或利用初始流消除负权边。
+**分析**：
+1. $S \to 实验_i$，容量为 $p_i$。
+2. $仪器_j \to T$，容量为 $c_j$。
+3. $实验_i \to 所需仪器_j$，容量为 $\infty$。
+**结论**：最大利润 = $\sum p_i - 最小割$。
 
-**答案**：SPFA 无法终止，算法失效。
+</details>
+
+### 练习 3：二分图匹配与网络流
+如何用网络流描述二分图的最大匹配？
+
+<details>
+<summary>查看解析</summary>
+
+**分析**：
+1. 建立超级源点 $S$ 和超级汇点 $T$。
+2. $S \to$ 二分图左侧所有点，容量 1。
+3. 二分图右侧所有点 $\to T$，容量 1。
+4. 原图中的边由左向右连，容量 1。
+最大流的结果即为最大匹配数。
 
 </details>
