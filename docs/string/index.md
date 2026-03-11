@@ -67,6 +67,19 @@ import { Code2, Zap, Hash, Repeat, GitBranch, Layers, Search } from 'lucide-reac
   </a>
 </div>
 
+---
+
+## 🎯 关联练习与实战
+
+<div className="solknow-card border border-green-200 p-4 rounded-lg bg-green-50/10">
+  <div className="flex items-center gap-2 mb-2 text-green-600 font-bold">
+    <Trophy size={18} />
+    <span>算法竞赛习题库：字符串算法专题</span>
+  </div>
+  <p className="text-sm text-gray-600">包含 KMP、Manacher、AC 自动机与后缀自动机 (SAM) 阶梯练习。</p>
+  <a href="/docs/exercises/cs/algorithm-string" className="button button--outline button--success button--sm">进入练习库 →</a>
+</div>
+
 ## 学习路线图
 
 1. **基础匹配**：掌握 KMP 与前缀函数的递推。

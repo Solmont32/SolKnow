@@ -51,9 +51,52 @@ import { Network, GitBranch, Map, Share2, Target, Zap } from 'lucide-react';
 
 ---
 
-## 四、 练习库
+## 🎯 关联练习与实战
 
-- [算法竞赛练习：最短路专题](/docs/exercises/cs/algorithm-shortest-path)
-- [算法竞赛练习：最小生成树专题](/docs/exercises/cs/algorithm-mst)
-- [算法竞赛练习：拓扑排序专题](/docs/exercises/cs/algorithm-topo-sort)
-- [算法竞赛练习：连通性专题 (Tarjan)](/docs/exercises/cs/algorithm-scc)
+<div className="row">
+  <div className="col col--6">
+    <div className="solknow-card border border-green-200 p-4 rounded-lg bg-green-50/10 mb-4">
+      <div className="flex items-center gap-2 mb-2 text-green-600 font-bold">
+        <Trophy size={18} />
+        <span>最短路算法专题</span>
+      </div>
+      <a href="/docs/exercises/cs/algorithm-shortest-path" className="button button--outline button--success button--sm">进入练习库 →</a>
+    </div>
+  </div>
+  <div className="col col--6">
+    <div className="solknow-card border border-green-200 p-4 rounded-lg bg-green-50/10 mb-4">
+      <div className="flex items-center gap-2 mb-2 text-green-600 font-bold">
+        <Trophy size={18} />
+        <span>最小生成树专题</span>
+      </div>
+      <a href="/docs/exercises/cs/algorithm-mst" className="button button--outline button--success button--sm">进入练习库 →</a>
+    </div>
+  </div>
+  <div className="col col--6">
+    <div className="solknow-card border border-green-200 p-4 rounded-lg bg-green-50/10 mb-4">
+      <div className="flex items-center gap-2 mb-2 text-green-600 font-bold">
+        <Trophy size={18} />
+        <span>拓扑排序与 DAG</span>
+      </div>
+      <a href="/docs/exercises/cs/algorithm-topo-sort" className="button button--outline button--success button--sm">进入练习库 →</a>
+    </div>
+  </div>
+  <div className="col col--6">
+    <div className="solknow-card border border-green-200 p-4 rounded-lg bg-green-50/10 mb-4">
+      <div className="flex items-center gap-2 mb-2 text-green-600 font-bold">
+        <Trophy size={18} />
+        <span>连通性与 Tarjan</span>
+      </div>
+      <a href="/docs/exercises/cs/algorithm-scc" className="button button--outline button--success button--sm">进入练习库 →</a>
+    </div>
+  </div>
+</div>
+
+<div className="solknow-card border border-green-200 p-4 rounded-lg bg-green-50/10">
+  <div className="flex items-center gap-2 mb-2 text-green-600 font-bold">
+    <Trophy size={18} />
+    <span>网络流建模进阶</span>
+  </div>
+  <p className="text-sm text-gray-600">包含最大流、最小割及其经典建模案例。</p>
+  <a href="/docs/exercises/cs/algorithm-network-flow" className="button button--outline button--success button--sm">进入练习库 →</a>
+</div>

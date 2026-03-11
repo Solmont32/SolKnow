@@ -6,13 +6,188 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # 练习库：高级数据结构
 
-本库包含线段树、树状数组、平衡树与可持久化结构的深度练习题，旨在通过实战巩固理论知识。
+本库包含线段树、树状数组、并查集、ST 表、堆、平衡树与可持久化结构的深度练习题，旨在通过实战巩固理论知识。
 
 ---
 
-## 1. 线段树 (Segment Tree)
+## 1. 基础结构：并查集与堆 (Basic DS)
 
-### 练习 1：区间乘法与加法 (P3373)
+### 练习 1：合并集合 (P3367 - 并查集模板)
+维护 $N$ 个集合，支持合并两个集合、查询两个元素是否在同一集合。
+
+<details>
+<summary>Check Solution</summary>
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int N = 100010;
+int p[N];
+
+int find(int x) {
+    if (p[x] != x) p[x] = find(p[x]);
+    return p[x];
+}
+
+int main() {
+    int n, m;
+    scanf("%d%d", &n, &m);
+    for (int i = 1; i <= n; i++) p[i] = i;
+    while (m--) {
+        int z, x, y;
+        scanf("%d%d%d", &z, &x, &y);
+        if (z == 1) p[find(x)] = find(y);
+        else {
+            if (find(x) == find(y)) puts("Y");
+            else puts("N");
+        }
+    }
+    return 0;
+}
+```
+</details>
+
+### 练习 2：堆排序 (P3378 - 堆模板)
+维护一个最小堆，支持插入、查询最小值、删除最小值。
+
+<details>
+<summary>Check Solution</summary>
+
+```cpp
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+const int N = 1000010;
+int h[N], sz;
+
+void down(int u) {
+    int t = u;
+    if (u * 2 <= sz && h[u * 2] < h[t]) t = u * 2;
+    if (u * 2 + 1 <= sz && h[u * 2 + 1] < h[t]) t = u * 2 + 1;
+    if (u != t) {
+        swap(h[u], h[t]);
+        down(t);
+    }
+}
+
+void up(int u) {
+    while (u / 2 && h[u / 2] > h[u]) {
+        swap(h[u / 2], h[u]);
+        u /= 2;
+    }
+}
+
+int main() {
+    int m;
+    scanf("%d", &m);
+    while (m--) {
+        int op, x;
+        scanf("%d", &op);
+        if (op == 1) {
+            scanf("%d", &x);
+            h[++sz] = x;
+            up(sz);
+        } else if (op == 2) printf("%d\n", h[1]);
+        else {
+            h[1] = h[sz--];
+            down(1);
+        }
+    }
+    return 0;
+}
+```
+</details>
+
+---
+
+## 2. 树状数组与 ST 表 (BIT & ST)
+
+### 练习 3：树状数组 1 (P3374 - 单点修改，区间查询)
+维护一个序列，支持单点加、区间求和。
+
+<details>
+<summary>Check Solution</summary>
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int N = 500010;
+int n, m;
+int tr[N];
+
+int lowbit(int x) { return x & -x; }
+
+void add(int x, int v) {
+    for (int i = x; i <= n; i += lowbit(i)) tr[i] += v;
+}
+
+int query(int x) {
+    int res = 0;
+    for (int i = x; i; i -= lowbit(i)) res += tr[i];
+    return res;
+}
+
+int main() {
+    scanf("%d%d", &n, &m);
+    for (int i = 1; i <= n; i++) {
+        int x;
+        scanf("%d", &x);
+        add(i, x);
+    }
+    while (m--) {
+        int op, x, y;
+        scanf("%d%d%d", &op, &x, &y);
+        if (op == 1) add(x, y);
+        else printf("%d\n", query(y) - query(x - 1));
+    }
+    return 0;
+}
+```
+</details>
+
+### 练习 4：ST 表 (P3865 - RMQ 模板)
+维护一个序列，支持 $O(1)$ 查询区间最大值。
+
+<details>
+<summary>Check Solution</summary>
+
+```cpp
+#include <iostream>
+#include <algorithm>
+#include <cmath>
+using namespace std;
+
+const int N = 100010, M = 20;
+int f[N][M], lg[N];
+
+int main() {
+    int n, m;
+    scanf("%d%d", &n, &m);
+    for (int i = 1; i <= n; i++) scanf("%d", &f[i][0]);
+    for (int i = 2; i <= n; i++) lg[i] = lg[i >> 1] + 1;
+    for (int j = 1; j < M; j++)
+        for (int i = 1; i + (1 << j) - 1 <= n; i++)
+            f[i][j] = max(f[i][j - 1], f[i + (1 << (j - 1))][j - 1]);
+    
+    while (m--) {
+        int l, r;
+        scanf("%d%d", &l, &r);
+        int k = lg[r - l + 1];
+        printf("%d\n", max(f[l][k], f[r - (1 << k) + 1][k]));
+    }
+    return 0;
+}
+```
+</details>
+
+---
+
+## 3. 线段树 (Segment Tree)
+
+### 练习 5：区间乘法与加法 (P3373)
 维护一个序列，支持区间加、区间乘、区间求和。
 
 <details>
@@ -82,10 +257,10 @@ LL query(int u, int l, int r) {
 
 ---
 
-## 2. 平衡树 (Balanced Tree)
+## 4. 平衡树 (Balanced Tree)
 
-### 练习 1：列队 (Splay / Treap)
-维护一个动态序列，支持插入、删除、区间翻转。
+### 练习 6：区间翻转 (P3391 - Splay)
+维护一个序列，支持区间翻转。
 
 <details>
 <summary>Check Solution (Splay Implementation)</summary>
@@ -138,14 +313,32 @@ void splay(int x, int k) {
     }
     if (!k) root = x;
 }
+
+int get_k(int k) {
+    int u = root;
+    while (u) {
+        pushdown(u);
+        if (tr[tr[u].s[0]].size >= k) u = tr[u].s[0];
+        else if (tr[tr[u].s[0]].size + 1 == k) return u;
+        else k -= tr[tr[u].s[0]].size + 1, u = tr[u].s[1];
+    }
+    return 0;
+}
+
+void output(int u) {
+    pushdown(u);
+    if (tr[u].s[0]) output(tr[u].s[0]);
+    if (tr[u].v >= 1 && tr[u].v <= n) printf("%d ", tr[u].v);
+    if (tr[u].s[1]) output(tr[u].s[1]);
+}
 ```
 </details>
 
 ---
 
-## 3. 可持久化结构 (Persistent)
+## 5. 可持久化结构 (Persistent)
 
-### 练习 1：最大异或和 (Persistent Trie)
+### 练习 7：最大异或和 (Persistent Trie)
 支持在给定历史版本中查询与 $x$ 异或最大的数。
 
 <details>
@@ -183,3 +376,4 @@ int query(int root, int val, int k, int limit) {
 }
 ```
 </details>
+

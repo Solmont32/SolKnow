@@ -24,4 +24,18 @@ import { Search, Zap, Target, Thermometer } from 'lucide-react';
 
 ---
 
+## 🎯 关联练习与实战
+
+<div className="solknow-card border border-green-200 p-4 rounded-lg bg-green-50/10">
+  <div className="flex items-center gap-2 mb-2 text-green-600 font-bold">
+    <Trophy size={18} />
+    <span>算法竞赛习题库：搜索与启发式专题</span>
+  </div>
+  <p className="text-sm text-gray-600">包含 DFS 剪枝、BFS 优化、A* 搜索、IDA* 与模拟退火专项练习。</p>
+  <a href="/docs/exercises/cs/algorithm-search" className="button button--outline button--success button--sm">进入练习库 →</a>
+</div>
+
+---
+
 *“搜索的本质是在庞大的解空间中，通过智慧的约束找到那道唯一的解。”*
+

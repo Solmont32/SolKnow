@@ -109,6 +109,19 @@ bool onSegment(Point p, Point a, Point b) {
 
 ---
 
+---
+
+## 🎯 关联练习与实战
+
+<div className="solknow-card border border-green-200 p-4 rounded-lg bg-green-50/10">
+  <div className="flex items-center gap-2 mb-2 text-green-600 font-bold">
+    <Trophy size={18} />
+    <span>算法竞赛习题库：计算几何专题</span>
+  </div>
+  <p className="text-sm text-gray-600">包含向量原语、凸包构造、旋转卡壳与半平面交的工业级 C++ 实现练习。</p>
+  <a href="/docs/exercises/cs/algorithm-geometry" className="button button--outline button--success button--sm">进入练习库 →</a>
+</div>
+
 ## 6. 模块索引
 
 - <Waypoints className="inline-block w-4 h-4 mr-1 text-blue-500" /> [凸包算法 (Convex Hull)](convex-hull) - $O(N \log N)$ 的边界构建。

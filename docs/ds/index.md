@@ -29,4 +29,18 @@
   <BilibiliEmbed bvid="BV1pE41197be" />
 </div>
 
+---
+
+## 🎯 关联练习与实战
+
+<div className="solknow-card border border-green-200 p-4 rounded-lg bg-green-50/10">
+  <div className="flex items-center gap-2 mb-2 text-green-600 font-bold">
+    <Trophy size={20} />
+    <span>算法竞赛习题库：高级数据结构专题</span>
+  </div>
+  <p className="text-sm text-gray-600">对标教科书课后习题，提供阶梯式难度练习与全量 C++ 折叠解析。</p>
+  <a href="/docs/exercises/cs/algorithm-ds" className="button button--outline button--success button--sm">进入练习库 →</a>
+</div>
+
 _编者注：掌握数据结构的关键不在于背诵模板，而在于理解其背后的**代数性质**（如结合律、分配律）与**空间拓扑**。_
+

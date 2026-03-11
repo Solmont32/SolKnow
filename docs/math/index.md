@@ -1,11 +1,12 @@
-# 竞赛数学 (CP Math)
+---
 
-针对编程竞赛的数学知识。
+## 🎯 关联练习与实战
 
-## 目录
-
-- [快速幂与模数类 (ModInt)](modint)
-- [数论基础与进阶](number-theory)
-- [组合计数与博弈论](combinatorics-and-game-theory)
-- [概率期望与随机化算法](probability-and-randomized-algorithms)
-- [矩阵加速 (Matrix Exponentiation)](matrix-fast-pow)
+<div className="solknow-card border border-green-200 p-4 rounded-lg bg-green-50/10">
+  <div className="flex items-center gap-2 mb-2 text-green-600 font-bold">
+    <Trophy size={18} />
+    <span>算法竞赛习题库：数论与数学专题</span>
+  </div>
+  <p className="text-sm text-gray-600">包含素数筛、欧几里得、同余、组合计数与博弈论专项练习。</p>
+  <a href="/docs/exercises/cs/algorithm-number-theory" className="button button--outline button--success button--sm">进入练习库 →</a>
+</div>

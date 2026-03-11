@@ -59,6 +59,19 @@ import { Code2, Zap, Target, Layers, GitBranch, Binary, Repeat } from 'lucide-re
 
 ---
 
+## 🎯 关联练习与实战
+
+<div className="solknow-card border border-green-200 p-4 rounded-lg bg-green-50/10">
+  <div className="flex items-center gap-2 mb-2 text-green-600 font-bold">
+    <Trophy size={20} />
+    <span>算法竞赛习题库：基础算法与线性结构</span>
+  </div>
+  <p className="text-sm text-gray-600">对标教科书课后习题，提供阶梯式难度练习与全量 C++ 折叠解析。</p>
+  <a href="/docs/exercises/cs/algorithm-basic" className="button button--outline button--success button--sm">进入练习库 →</a>
+</div>
+
+---
+
 ## 编者按 (Editor's Note)
 
 > “算法不仅仅是代码，它是对问题结构的深刻洞察。”  
