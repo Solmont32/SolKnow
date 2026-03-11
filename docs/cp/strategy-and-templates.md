@@ -1,247 +1,227 @@
 ---
-title: 竞赛策略与模板工厂：从工程化到极致思维
+title: 竞赛策略与工程模板：从代码复用优化到标准化验证
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { Trophy, Zap, Bug, Code2, Clock, ShieldCheck, Factory, Lightbulb } from 'lucide-react';
+import { Trophy, Zap, Bug, Code2, Clock, ShieldCheck, Factory, Lightbulb, Brain, Gauge, Repeat, SearchCheck } from 'lucide-react';
 
-# 竞赛策略与模板工厂：从工程化到极致思维
+# 竞赛策略与工程模板：从代码复用优化到标准化验证
 
 > **"Algorithms are the soul, but engineering is the armor."**
-> 在顶级竞赛中，稳健的工程化习惯能让你在压力下保持 100% 的正确率。本章致力于将“竞赛”转化为“工业化生产线”。
+> 在顶级竞赛（ICPC/World Finals/OI）中，稳健的工程化习惯与心理调控能力是决定胜负的最后 1%。本章旨在构建一套工业级的算法竞赛方法论。
 
 ---
 
-## 🏗️ I. 平台博弈与时间管理策略
+## 🧠 I. 竞赛心理博弈与状态管理 (Mental Game Theory)
 
-不同平台的题目风格决定了不同的作战节奏。
+竞赛本质上是有限时间内的**博弈论应用**。除了技术实力，心理素质决定了上限。
 
-### 1.1 平台特性分析
+### 1.1 期望管理与止损逻辑
 
-| 平台           | 核心风格         | 策略重心                                   | 容错建议                         |
-| :------------- | :--------------- | :----------------------------------------- | :------------------------------- |
-| **Codeforces** | 构造、贪心、手速 | **快速迭代**：先写出暴力验证想法，再优化。 | 注意 Hack 机制，数组开大 2 倍。  |
-| **AtCoder**    | 数学、计数、DP   | **逻辑严密**：笔算证明正确性后再动手。     | 极少出现 Hack，AC 即胜。         |
-| **ICPC/CCPC**  | 综合、工程、团队 | **并发执行**：一人敲代码，两人读题/手推。  | 极其看重罚时，避免多次提交错误。 |
+在 5 小时的比赛中，情绪波动呈现周期性特征。
+- **冷启动 (Cold Start)**：前 30 分钟。心态：求稳。策略：先写最简单的签到题，通过第一个 AC 建立“正反馈循环”。
+- **瓶颈期 (Plateau)**：第 60-180 分钟。心态：焦虑。策略：若某题思路卡壳 30 分钟，执行**强制上下文切换**（洗手间、喝水、甚至完全不看题 2 分钟）。
+- **搏命时刻 (Clutch Moment)**：最后 60 分钟。心态：急躁。策略：禁止开启新模型。**回滚检查**已 AC 题目的潜在风险（如 `long long` 溢出）。
 
-### 1.2 黄金时间管理法 (The 15-30-60 Rule)
+### 1.2 风险控制矩阵
 
-- **前 15 分钟 (Blitz)**：快速扫描所有题目，识别“一眼题”并迅速击破。
-- **中 30 分钟 (Bottleneck)**：若某题思路卡壳超过 30 分钟，**强制跳题**或去洗手间（断片重连）。
-- **最后 60 分钟 (Checkpoint)**：严禁开启新难度题目。优先检查已完成代码的 `long long`、`0` 特判及空间限制。
-
----
-
-## 🛠️ II. 工程化调试与验证体系
-
-### 2.1 编译器黑科技：Sanitizers
-
-在 `LOCAL` 环境下，开启编译选项以捕获隐藏 Bug：
-
-- `-fsanitize=undefined`：检测整数溢出、除零等未定义行为。
-- `-fsanitize=address`：检测越界、内存泄漏（数组越界的终结者）。
-
-### 2.2 现代 C++ Debug 宏
-
-使用可变参数模板实现支持任意容器输出的调试器。
-
-```cpp
-#ifdef LOCAL
-#include "debug.h" // 包含自定义的容器输出逻辑
-#define dbg(...) cerr << "[" << #__VA_ARGS__ << "]:", debug_out(__VA_ARGS__)
-#else
-#define dbg(...) 42
-#endif
-```
-
-<KnowledgeCard type="warning" title="生产安全建议">
-在提交代码前，确保所有 `cerr` 或调试输出被关闭。频繁的 I/O 会导致 TLE（Time Limit Exceeded）。
-</KnowledgeCard>
+| 行为类型 | 风险等级 | 收益预估 | 决策准则 |
+| :--- | :--- | :--- | :--- |
+| **重写核心模块** | 极高 | 消除潜在隐患 | 仅当现有代码已完全无法调试且时间 > 45min 时执行 |
+| **特判暴力补丁** | 中 | 挽救 80% 测试点 | 当正解思路模棱两可且接近封榜时，果断拼写暴力 |
+| **更换算法模型** | 高 | 寻找全局最优解 | 必须在纸上重推复杂度，严禁盲目尝试 |
 
 ---
 
-## 🏭 III. 模板工厂：核心工程原语
+## 🛠️ II. 工程化调试与形式化校验 (Engineering & Verification)
 
-一套优秀的模板应当具备：**低耦合、零冲突、高效率**。
+### 2.1 形式化校验流程 (Formal Verification)
 
-<details>
-<summary>1. 万能工业头文件 (The Ultimate Boilerplate)</summary>
+在编写复杂模板（如 SAM, LCT）后，应执行以下校验步骤：
+1.  **定义域检查**：所有数组下标是否严格符合 $[0, MAXN)$？
+2.  **不变性校验 (Invariants)**：例如，在并查集操作后，`p[find(x)] == find(x)` 必须成立；在 Splay 旋转后，BST 性质是否保持？
+3.  **对拍 (Stress Testing)**：编写简单的 $O(N^2)$ 暴力与 $O(N \log N)$ 的模板进行随机数据对比。
 
-```cpp
-#include <bits/stdc++.h>
-using namespace std;
-
-// 常用简写
-using ll = long long;
-using pii = pair<int, int>;
-using vi = vector<int>;
-#define pb push_back
-#define all(x) (x).begin(), (x).end()
-#define sz(x) (int)(x).size()
-
-// 快速 I/O (基于 fread/fwrite)
-struct FastIO {
-    static const int S = 1 << 21;
-    char buf[S], *p1, *p2;
-    inline char getc() { return p1 == p2 && (p2 = (p1 = buf) + fread(buf, 1, S, stdin), p1 == p2) ? EOF : *p1++; }
-    inline int read() {
-        int x = 0, f = 1; char ch = getc();
-        while (!isdigit(ch)) { if (ch == '-') f = -1; ch = getc(); }
-        while (isdigit(ch)) { x = x * 10 + ch - '0'; ch = getc(); }
-        return x * f;
+```bash
+# 典型的对拍脚本 (PowerShell)
+for ($i=1; ; $i++) {
+    ./gen.exe > in.txt
+    ./sol.exe < in.txt > out.txt
+    ./std.exe < in.txt > ans.txt
+    if (Compare-Object (Get-Content out.txt) (Get-Content ans.txt)) {
+        Write-Host "Found Bug at Case $i" -ForegroundColor Red
+        break
     }
-} io;
-
-void solve() {
-    // 逻辑入口
-}
-
-int main() {
-    // 针对交互题需关闭 fastio 或使用 endl
-    ios::sync_with_stdio(false); cin.tie(nullptr);
-    int t = 1; cin >> t;
-    while (t--) solve();
-    return 0;
+    Write-Host "Passed Case $i" -ForegroundColor Green
 }
 ```
 
-</details>
+### 2.2 现代 C++ Debug 环境配置
 
-<details>
-<summary>2. 模数自动机 (Modular Int Struct)</summary>
-
-处理计数问题时，避免手动添加 `% MOD`。
-
-```cpp
-template<int MOD>
-struct Mint {
-    int v;
-    Mint(ll _v = 0) { v = _v % MOD; if (v < 0) v += MOD; }
-    Mint& operator+=(Mint o) { v += o.v; if (v >= MOD) v -= MOD; return *this; }
-    Mint& operator-=(Mint o) { v -= o.v; if (v < 0) v += MOD; return *this; }
-    Mint& operator*=(Mint o) { v = (ll)v * o.v % MOD; return *this; }
-    friend Mint pow(Mint a, ll b) { Mint res = 1; for (; b; b >>= 1, a *= a) if (b & 1) res *= a; return res; }
-    friend Mint inv(Mint a) { return pow(a, MOD - 2); }
-    Mint& operator/=(Mint o) { return *this *= inv(o); }
-    friend Mint operator+(Mint a, Mint b) { return a += b; }
-    friend Mint operator-(Mint a, Mint b) { return a -= b; }
-    friend Mint operator*(Mint a, Mint b) { return a *= b; }
-    friend Mint operator/(Mint a, Mint b) { return a /= b; }
-};
-using mint = Mint<998244353>;
-```
-
-</details>
-
-<details>
-<summary>3. 基础数据结构：并查集与树状数组 (DSU & Fenwick)</summary>
-
-```cpp
-// 并查集 (含路径压缩与按秩合并)
-struct DSU {
-    vector<int> p;
-    DSU(int n) : p(n + 1) { iota(all(p), 0); }
-    int find(int x) { return p[x] == x ? x : p[x] = find(p[x]); }
-    bool merge(int x, int y) {
-        x = find(x), y = find(y);
-        if (x == y) return false;
-        p[x] = y; return true;
-    }
-};
-
-// 树状数组 (维护区间和)
-struct Fenwick {
-    int n; vector<ll> t;
-    Fenwick(int _n) : n(_n), t(_n + 1) {}
-    void add(int i, ll x) { for (; i <= n; i += i & -i) t[i] += x; }
-    ll query(int i) { ll r = 0; for (; i; i -= i & -i) r += t[i]; return r; }
-};
-```
-
-</details>
+利用编译器的静态与动态检查能力：
+- `-D_GLIBCXX_DEBUG`：开启 STL 容器越界检查（对 `vector`, `deque` 极其有效）。
+- `-Wall -Wextra -Wshadow`：捕捉变量名覆盖等低级逻辑错误。
 
 ---
 
-## 💡 IV. 思维模型与典型赛题解析
+## ⏱️ III. 复杂度预估与常数优化 (Complexity & Constants)
 
-### 4.1 二分答案的单调性建模
+### 3.1 极限性能预估
 
-**模型描述**：求解“最小化最大值”或“最大化最小值”问题，且判定函数 $f(x)$ 具备单调性。
+竞赛环境下的 CPU 主频约为 2.5GHz-3.5GHz。通常可以按照以下标准预估（1 秒限制）：
+- $O(N^2)$：$N \approx 5000$。
+- $O(N \log N)$：$N \approx 5 \times 10^5$。
+- $O(N)$：$N \approx 5 \times 10^7$。
 
-<KnowledgeCard type="info" title="典型例题：CF1623C">
-**题目**：有 $n$ 堆石头，可以从第 $i$ 堆移动一定数量到 $i-1$ 和 $i-2$。求所有堆中最小石头数的最大值。
-**核心思路**：二分答案 $X$，判定是否能使所有堆 $\ge X$。关键在于**逆向处理**：从后往前移动石头。
+<KnowledgeCard type="warning" title="常数警示">
+STL 容器（如 `std::map`, `std::set`）的常数极大，通常比手写 Hash 或树状数组慢 3-10 倍。在 $N=10^6$ 且时限紧张时，应优先使用 `std::vector` 配合排序或手写 `unordered_map`。
 </KnowledgeCard>
 
-### 4.2 贡献法 (Contribution to Sum)
+### 3.2 常数优化黑科技
 
-**模型描述**：求所有子集/子段的某种价值之和，转化为求**每个元素对总价值的贡献次数**。
+1.  **循环展开 (Loop Unrolling)**：减少条件跳转。
+2.  **访存优化**：利用 CPU Cache L1/L2。多维数组尽量保证最后一位下标连续访问（$a[i][j]$ 而非 $a[j][i]$）。
+3.  **Fast I/O**：使用 `fread` 代替 `cin`。
+
+```cpp
+inline char getc() {
+    static char buf[1 << 20], *p1 = buf, *p2 = buf;
+    return p1 == p2 && (p2 = (p1 = buf) + fread(buf, 1, 1 << 20, stdin), p1 == p2) ? EOF : *p1++;
+}
+template <typename T>
+inline void read(T &x) {
+    x = 0; int f = 1; char ch = getc();
+    while (!isdigit(ch)) { if (ch == '-') f = -1; ch = getc(); }
+    while (isdigit(ch)) { x = x * 10 + ch - '0'; ch = getc(); }
+    x *= f;
+}
+```
+
+---
+
+## 🏭 IV. 标准化模板库：代码复用优化
+
+一套工业级的模板库应具备**模块化 (Modular)** 与 **类型无关 (Generic)**。
 
 <details>
-<summary>典型赛题解析：子序列宽度之和</summary>
+<summary>1. 线性基与高斯消元集成 (Linear Basis)</summary>
 
-**题目**：求所有非空子集的 (max - min) 之和。
-**解析**：
+```cpp
+struct LinearBasis {
+    ll d[64];
+    LinearBasis() { memset(d, 0, sizeof(d)); }
+    bool insert(ll x) {
+        for (int i = 62; i >= 0; i--) {
+            if (!(x >> i)) continue;
+            if (!d[i]) { d[i] = x; return true; }
+            x ^= d[i];
+        }
+        return false;
+    }
+    ll query_max() {
+        ll res = 0;
+        for (int i = 62; i >= 0; i--) res = max(res, res ^ d[i]);
+        return res;
+    }
+};
+```
 
-1. 排序数组。
-2. 对于 $a_i$，它是多少个子集的 $\max$？（左侧选 $2^i$ 个）。
-3. 它是多少个子集的 $\min$？（右侧选 $2^{n-1-i}$ 个）。
-4. $Ans = \sum a_i \times (2^i - 2^{n-1-i})$。
+</details>
+
+<details>
+<summary>2. 动态规划优化：斜率优化模版 (Slope Optimization)</summary>
+
+用于处理形如 $dp[i] = \min \{ dp[j] + w(j, i) \}$ 且具备决策单调性的问题。
+
+```cpp
+struct Line {
+    ll k, b;
+    ll eval(ll x) { return k * x + b; }
+};
+// 李超线段树：维护函数包络
+struct LiChaoTree {
+    Line t[MAXN << 2];
+    void update(int p, int l, int r, Line v) {
+        int mid = (l + r) >> 1;
+        if (v.eval(mid) < t[p].eval(mid)) swap(v, t[p]);
+        if (l == r) return;
+        if (v.eval(l) < t[p].eval(l)) update(p << 1, l, mid, v);
+        else update(p << 1 | 1, mid + 1, r, v);
+    }
+};
+```
+
 </details>
 
 ---
 
 ## 📝 V. 综合实战练习 (Comprehensive Exercises)
 
-### 练习 1：对拍器实战
+### 练习 1：形式化校验实战
 
-**题目**：给定一个包含 $N$ 个整数的序列，求第 $K$ 大的连续子段和。
-**要求**：先写一个 $O(N^2 \log (\sum a_i))$ 的暴力，再尝试 $O(N \log (\sum a_i) \log N)$ 的优化版本，并使用对拍器验证。
+**题目**：实现一个带懒标记的线段树，支持区间加、区间乘、区间求和。
+**要求**：推导两个懒标记（add, mul）的维护公式，并说明为什么乘法标记必须先作用于加法标记。
 
 <details>
 <summary>Check Solution</summary>
 
-**解题要点**：
-
-- 二分答案 $S$。
-- 判定：有多少子段和 $\ge S$？
-- 使用树状数组维护前缀和的秩，将判定转化为 $O(N \log N)$。
+**推导过程**：
+假设当前值为 $V$，乘法标记为 $m$，加法标记为 $a$。
+操作序列：$V \to V \times m_1 + a_1$。
+再次操作 $(m_2, a_2)$：
+$(V \times m_1 + a_1) \times m_2 + a_2 = V \times (m_1 m_2) + (a_1 m_2 + a_2)$。
+因此：
+- 新乘法标记：$m_{new} = m_{old} \times m_2$
+- 新加法标记：$a_{new} = a_{old} \times m_2 + a_2$
 
 ```cpp
-bool check(ll mid, int n, int k, const vector<ll>& pref) {
-    Fenwick ft(200005); // 离散化后的树状数组
-    ll count = 0;
-    // ... 判定逻辑
-    return count >= k;
+void pushdown(int p) {
+    if (lazy_mul[p] == 1 && lazy_add[p] == 0) return;
+    auto apply = [&](int c, ll m, ll a) {
+        sum[c] = (sum[c] * m + a * len[c]) % MOD;
+        lazy_mul[c] = (lazy_mul[c] * m) % MOD;
+        lazy_add[c] = (lazy_add[c] * m + a) % MOD;
+    };
+    apply(p << 1, lazy_mul[p], lazy_add[p]);
+    apply(p << 1 | 1, lazy_mul[p], lazy_add[p]);
+    lazy_mul[p] = 1; lazy_add[p] = 0;
 }
 ```
 
 </details>
 
-### 练习 2：构造思维挑战
+### 练习 2：复杂度预估挑战
 
-**题目 (CF Style)**：构造一个长度为 $N$ 的排列 $P$，使得对于所有 $1 \le i < N$，$\gcd(P_i, P_{i+1}) > 1$。若无解输出 -1。
+**题目**：给定 $N=2 \times 10^5$ 的序列，执行 $Q=2 \times 10^5$ 次操作，每次询问区间 $[L, R]$ 内出现频率最高元素的频率。时限 1.0s。
+**思考**：使用莫队算法（Mo's Algorithm）的复杂度为 $O((N+Q)\sqrt{N}) \approx 4 \times 10^5 \times 447 \approx 1.7 \times 10^8$。在 1.0s 内是否可行？如何优化块大小？
 
 <details>
 <summary>Check Solution</summary>
 
-**解题要点**：
+**分析与优化**：
+1.  **理论计算**：$1.7 \times 10^8$ 操作次数在莫队这种纯访存操作中略显吃力。
+2.  **块大小优化**：传统 $\sqrt{N}$ 并非最优，应设为 $N/\sqrt{Q} \approx 450$。
+3.  **奇偶排序**：减少 $R$ 指针的回扫距离。
+```cpp
+sort(q + 1, q + Q + 1, [&](const Query &a, const Query &b) {
+    if (a.block != b.block) return a.block < b.block;
+    return (a.block & 1) ? (a.r < b.r) : (a.r > b.r);
+});
+```
+4.  **结论**：配合奇偶排序与块大小调优，1.0s 内可稳过。
 
-- 观察：偶数之间必然有 $\gcd \ge 2$。
-- 策略：先排所有偶数，再将奇数插入到能整除它们的偶数旁边（如 3 放在 6 旁边）。
-- 特判：$N < 6$ 时的特殊情况。
 </details>
 
 ---
 
 ## 🏆 进阶路径建议
 
-1. **模版内化**：不仅要会复制，更要手写实现 10 次以上，直到形成肌肉记忆。
-2. **读 Editorial 的艺术**：对比官方解法与自己的解法，重点学习**复杂度证明**而非代码实现。
-3. **心理韧性训练**：在 Virtual Contest 中模拟真实比赛的紧张感。
+1.  **构建私人库**：在 GitHub 维护一个专属模板库，不仅是代码，更要有对应的**复杂度分析**。
+2.  **模拟封榜环境**：练习在不看排名、不看测试反馈（Gym 环境）下的心理稳定性。
+3.  **阅读工业源码**：如 LLVM 或 Linux 内核的底层优化，理解现代 CPU 的流水线工作方式。
 
 <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-  <a className="button button--primary button--lg" href="/docs/cp/codeforces">
-    前往 CF 实战指南 <Zap size={20} style={{ marginLeft: '8px' }} />
+  <a className="button button--primary button--lg" href="/docs/cp/strategy-and-templates">
+    回顾基础策略 <Repeat size={20} style={{ marginLeft: '8px' }} />
   </a>
 </div>
