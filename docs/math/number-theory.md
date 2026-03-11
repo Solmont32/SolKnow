@@ -24,10 +24,6 @@ import { Hash, Lock, Sigma, Infinity, Code2, Zap, Layers, Binary, Cpu, FunctionS
 ### 1.1 整除 (Divisibility)
 **定义**：对于整数 $a, b$ ($a \neq 0$)，若存在整数 $k$ 使得 $b = ak$，则称 $a$ 整除 $b$，记作 $a \mid b$。
 
-**性质**：
-1. **传递性**：若 $a \mid b$ 且 $b \mid c$，则 $a \mid c$。
-2. **线性组合性**：若 $a \mid b$ 且 $a \mid c$，则对于任意整数 $u, v$，有 $a \mid (ub + vc)$。
-
 ### 1.2 最大公约数 (GCD) 与欧几里得算法
 **定理 (Euclidean Algorithm)**：$\gcd(a, b) = \gcd(b, a \pmod b)$。
 **证明**：
@@ -36,20 +32,21 @@ import { Hash, Lock, Sigma, Infinity, Code2, Zap, Layers, Binary, Cpu, FunctionS
 若 $d \mid b$ 且 $d \mid r$，则 $d \mid (kb + r)$，即 $d \mid a$。
 因此 $(a, b)$ 与 $(b, r)$ 的公因子集合完全相同，最大公约数亦相同。
 
-### 1.3 算术基本定理 (Fundamental Theorem of Arithmetic)
-**定理**：任一大于 1 的自然数 $n$ 都可以唯一地分解为有限个素数的乘积：
-$$n = p_1^{a_1} p_2^{a_2} \dots p_k^{a_k} \quad (p_1 < p_2 < \dots < p_k)$$
+### 1.3 扩展欧几里得算法 (EXGCD)
+用于求解 $ax + by = \gcd(a, b)$ 的一组整数解 $(x, y)$。
+**推导**：
+当 $b=0$ 时，$\gcd(a, 0)=a$，此时 $x=1, y=0$。
+当 $b>0$ 时，设 $bx' + (a \bmod b)y' = g$，
+由于 $a \bmod b = a - \lfloor a/b \rfloor b$，
+代入得 $bx' + (a - \lfloor a/b \rfloor b)y' = g \implies ay' + b(x' - \lfloor a/b \rfloor y') = g$。
+故 $x = y', y = x' - \lfloor a/b \rfloor y'$。
 
 ---
 
 ## 2. 素数分布与筛法系统
 
-### 2.1 素数分布
-**素数定理 (PNT)**：当 $x \to \infty$ 时，不大于 $x$ 的素数个数 $\pi(x) \approx \frac{x}{\ln x}$。
-
-### 2.2 线性筛 (Euler Sieve)
+### 2.1 线性筛 (Euler Sieve)
 **核心原理**：每个合数仅由其 **最小质因子** 筛去一次。
-线性筛不仅能找出素数，还可以在 $O(n)$ 时间内预处理出所有 **积性函数**。
 
 <details>
 <summary>C++ 线性筛全量积性函数模板 (μ, φ, d)</summary>
@@ -88,20 +85,28 @@ void sieve(int n) {
 
 ---
 
-## 3. 同余系与模运算
+## 3. 同余方程与定理
 
-### 3.1 欧拉函数 (Euler's Totient Function)
-$\phi(n)$ 表示小于等于 $n$ 且与 $n$ 互质的正整数个数。
-**公式**：$\phi(n) = n \prod_{i=1}^k (1 - \frac{1}{p_i})$。
+### 3.1 费马小定理与欧拉定理
+- **费马小定理**：若 $p$ 为质数，$\gcd(a, p) = 1$，则 $a^{p-1} \equiv 1 \pmod p$。
+- **欧拉定理**：若 $\gcd(a, m) = 1$，则 $a^{\phi(m)} \equiv 1 \pmod m$。
 
-### 3.2 欧拉定理与费马小定理
-- **欧拉定理**：若 $\gcd(a, n) = 1$，则 $a^{\phi(n)} \equiv 1 \pmod n$。
-- **费马小定理**：若 $p$ 为质数，则 $a^{p-1} \equiv 1 \pmod p$ (对于 $a$ 不是 $p$ 的倍数)。
+### 3.2 中国剩余定理 (CRT)
+求解同余方程组：
+$$x \equiv a_i \pmod{m_i} \quad (i=1 \dots k)$$
+其中 $m_i$ 两两互质。
+**构造性证明**：
+令 $M = \prod m_i, M_i = M/m_i$。由于 $\gcd(M_i, m_i) = 1$，存在 $t_i$ 使得 $M_i t_i \equiv 1 \pmod{m_i}$。
+解为 $x = \sum a_i M_i t_i \pmod M$。
 
-### 3.3 乘法逆元 (Multiplicative Inverse)
-若 $ax \equiv 1 \pmod m$，则称 $x$ 为 $a$ 在模 $m$ 意义下的逆元。
-- **求法 1 (EXGCD)**：$ax + my = 1$。
-- **求法 2 (费马小定理)**：$x = a^{m-2} \pmod m$ (仅限 $m$ 为质数)。
+### 3.3 卢卡斯定理 (Lucas Theorem)
+用于求大组合数模小质数：
+$$\binom{n}{m} \equiv \binom{\lfloor n/p \rfloor}{\lfloor m/p \rfloor} \binom{n \bmod p}{m \bmod p} \pmod p$$
+
+### 3.4 BSGS (Baby-step Giant-step)
+求解高次同余方程 $a^x \equiv b \pmod p$（$p$ 为质数）。
+**原理**：令 $x = iB - j$，其中 $B = \lceil \sqrt{p} \rceil, 0 \le i, j < B$。
+方程变为 $(a^B)^i \equiv b \cdot a^j \pmod p$。先枚举 $j$ 存哈希表，再枚举 $i$ 查找。
 
 ---
 
@@ -109,51 +114,64 @@ $\phi(n)$ 表示小于等于 $n$ 且与 $n$ 互质的正整数个数。
 
 ### 4.1 狄利克雷卷积 (Dirichlet Convolution)
 $$(f * g)(n) = \sum_{d \mid n} f(d)g\left(\frac{n}{d}\right)$$
-- $\mu * I = \epsilon$ (莫比乌斯反演的基础)
-- $\phi * I = Id$
-
-### 4.2 杜教筛核心
-求 $S(n) = \sum_{i=1}^n f(i)$。找到 $g$ 使得 $(f*g)$ 的前缀和易求：
-$$g(1)S(n) = \sum_{i=1}^n (f * g)(i) - \sum_{d=2}^n g(d) S(\lfloor \frac{n}{d} \rfloor)$$
+- **性质**：交换律、结合律、分配律。
+- **恒等式**：$\mu * I = \epsilon, \phi * I = Id, \mu * Id = \phi$。
 
 ---
 
-## 5. 综合练习与解答 (Folded Examples)
+## 5. 综合练习与解答
 
-### 例题 1：五指山 (EXGCD 求解线性同余方程)
-大圣在 $n$ 个点的环上，步长为 $d$，从 $x$ 到 $y$，最少跳几次？即求解 $x + kd \equiv y \pmod n$。
+### 例题 1：[SDOI2011] 计算器 (三合一：快速幂、EXGCD、BSGS)
+给定 $y, z, p$，分别求解：
+1. $y^z \pmod p$
+2. $xy \equiv z \pmod p$
+3. $y^x \equiv z \pmod p$
 
 <details>
 <summary>Check Solution (C++)</summary>
 
 ```cpp
-// 转化方程为 kd - Mn = y - x，即 aX + bY = c
-long long a = d, b = n, c = (y - x % n + n) % n;
-long long X, Y, g = exgcd(a, b, X, Y);
-if (c % g) cout << "Impossible" << endl;
-else {
-    long long mod = b / g;
-    cout << (X * (c / g) % mod + mod) % mod << endl;
+long long qpow(long long a, long long b, long long p) {
+    long long res = 1;
+    for (; b; b >>= 1, a = a * a % p) if (b & 1) res = res * a % p;
+    return res;
+}
+
+void solve_linear(long long y, long long z, long long p) {
+    long long x, k, g = exgcd(y, p, x, k);
+    if (z % g) puts("Orz, I cannot find x!");
+    else cout << (x * (z / g) % (p / g) + (p / g)) % (p / g) << endl;
+}
+
+long long bsgs(long long a, long long b, long long p) {
+    map<long long, long long> mp;
+    long long m = ceil(sqrt(p)), t = b;
+    for (int j = 0; j < m; j++, t = t * a % p) mp[t] = j;
+    a = qpow(a, m, p); t = a;
+    for (int i = 1; i <= m; i++, t = t * a % p)
+        if (mp.count(t)) return i * m - mp[t];
+    return -1;
 }
 ```
 </details>
 
-### 例题 2：[SDOI2008] 沙拉公主的困惑 (欧拉函数性质)
-求 $1 \dots N!$ 中与 $M!$ 互质的数有多少个 ($M \le N$)。
-**解析**：答案为 $\frac{N!}{M!} \phi(M!) \pmod P$。
+### 例题 2：[CQOI2007] 余数求和 (数论分块)
+计算 $\sum_{i=1}^n (k \bmod i)$。
+**解析**：$k \bmod i = k - i \lfloor k/i \rfloor$。原式变为 $nk - \sum_{i=1}^n i \lfloor k/i \rfloor$。
+利用 $\lfloor k/i \rfloor$ 在一定范围内保持不变的性质（数论分块），复杂度 $O(\sqrt{n})$。
 
 <details>
 <summary>Check Solution (C++)</summary>
 
 ```cpp
-// 答案 = N! * prod_{p <= M} (p-1)/p
-long long solve(int n, int m, int p) {
-    long long res = fact[n];
-    for (int i = 1; i <= cnt && primes[i] <= m; i++) {
-        res = res * (primes[i] - 1) % p * inv(primes[i], p) % p;
-    }
-    return res;
+long long n, k, ans;
+ans = n * k;
+for (long long l = 1, r; l <= n; l = r + 1) {
+    if (k / l) r = min(n, k / (k / l));
+    else r = n;
+    ans -= (k / l) * (l + r) * (r - l + 1) / 2;
 }
+cout << ans << endl;
 ```
 </details>
 
