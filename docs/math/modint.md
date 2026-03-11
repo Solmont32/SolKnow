@@ -19,54 +19,39 @@ import { Hash, Zap, ShieldCheck, Scale, Cpu, Binary } from 'lucide-react';
 
 ---
 
-## 1. 基础定义与性质
+## 1. 基础理论
 
-### 1.1 同余 (Congruence)
-**定义**：若 $m \mid (a - b)$，则称 $a$ 与 $b$ 对模 $m$ 同余，记作 $a \equiv b \pmod m$。
+### 1.1 乘法逆元 (Multiplicative Inverse)
+若 $ax \equiv 1 \pmod m$，则称 $x$ 为 $a$ 在模 $m$ 下的乘法逆元。
+- **线性求逆元**：$inv[i] = (p - \lfloor p/i \rfloor) \cdot inv[p \pmod i] \pmod p$。
+- **离线求任意 $n$ 个数逆元**：
+  设 $s_i = \prod_{j=1}^i a_j$，先求出 $s_n$ 的逆元 $inv\_s_n$，则 $inv\_s_{i-1} = inv\_s_i \cdot a_i$，$inv\_a_i = inv\_s_i \cdot s_{i-1}$。
 
-### 1.2 运算律
-对于 $a \equiv b \pmod m$ 和 $c \equiv d \pmod m$：
-1. **加法**：$a + c \equiv b + d \pmod m$
-2. **减法**：$a - c \equiv b - d \pmod m$
-3. **乘法**：$ac \equiv bd \pmod m$
-4. **幂次**：$a^k \equiv b^k \pmod m$
-5. **除法**：若 $ac \equiv bc \pmod m$ 且 $\gcd(c, m) = 1$，则 $a \equiv b \pmod m$。
+### 1.2 中国剩余定理 (CRT)
+用于求解同余方程组 $x \equiv a_i \pmod{m_i}$，其中 $m_i$ 两两互质。
+**构造解**：$x = \sum a_i M_i t_i \pmod M$，其中 $M = \prod m_i, M_i = M/m_i$，$t_i$ 为 $M_i$ 模 $m_i$ 的逆元。
 
----
-
-## 2. 乘法逆元 (Multiplicative Inverse)
-
-### 2.1 定义
-若 $ax \equiv 1 \pmod m$，则称 $x$ 为 $a$ 在模 $m$ 下的乘法逆元，记作 $a^{-1}$。
-**存在性**：$a$ 在模 $m$ 下存在逆元当且仅当 $\gcd(a, m) = 1$。
-
-### 2.2 求解方法
-1. **费马小定理**（$m$ 为质数）：$a^{m-2} \equiv a^{-1} \pmod m$。
-2. **扩展欧几里得算法**：求解 $ax + my = 1$ 的 $x$。
-3. **线性求逆元**：求 $1 \dots n$ 对模 $p$ 的所有逆元。
-   推导：设 $p = ki + r$ ($r < i, k = \lfloor p/i \rfloor$)。
-   $ki + r \equiv 0 \pmod p \implies r \equiv -ki \pmod p$。
-   两边同乘 $i^{-1} r^{-1}$ 得 $i^{-1} \equiv -k r^{-1} \pmod p$。
-   即 $inv[i] = (p - \lfloor p/i \rfloor) \cdot inv[p \pmod i] \pmod p$。
+### 1.3 扩展中国剩余定理 (ExCRT)
+当 $m_i$ 不互质时，采用两两合并法。
+对于 $x \equiv r_1 \pmod{m_1}$ 和 $x \equiv r_2 \pmod{m_2}$：
+$x = m_1 k_1 + r_1 = m_2 k_2 + r_2 \implies m_1 k_1 - m_2 k_2 = r_2 - r_1$。
+利用 EXGCD 求解 $k_1$，合并为 $x \equiv R \pmod{lcm(m_1, m_2)}$。
 
 ---
 
-## 3. 高级同余定理
+## 2. 组合数取模定理
 
-### 3.1 威尔逊定理 (Wilson's Theorem)
-$(p-1)! \equiv -1 \pmod p$ 当且仅当 $p$ 为质数。
+### 2.1 卢卡斯定理 (Lucas Theorem)
+若 $p$ 为质数，则：
+$$ \binom{n}{m} \equiv \binom{\lfloor n/p \rfloor}{\lfloor m/p \rfloor} \cdot \binom{n \pmod p}{m \pmod p} \pmod p $$
+**应用**：求解 $n, m$ 很大但 $p$ 较小的组合数取模。
 
-### 3.2 阶与原根 (Order & Primitive Roots)
-**阶 (Order)**：满足 $a^x \equiv 1 \pmod m$ 的最小正整数 $x$ 称为 $a$ 模 $m$ 的阶，记作 $\text{ord}_m(a)$。
-**原根 (Primitive Root)**：若 $\text{ord}_m(g) = \phi(m)$，则称 $g$ 是模 $m$ 的一个原根。
-- **性质**：若 $m$ 有原根，则共有 $\phi(\phi(m))$ 个原根。
-- **存在性**：$m = 2, 4, p^k, 2p^k$ 时存在原根（$p$ 为奇质数）。
+### 2.2 扩展卢卡斯 (ExLucas)
+当 $p$ 不是质数时，对 $p$ 进行质因数分解 $p = \prod p_i^{k_i}$，分别求出对 $p_i^{k_i}$ 的模，最后用 CRT 合并。
 
 ---
 
-## 4. 工业级 C++ 实现：ModInt 类
-
-在算法竞赛中，封装一个 `ModInt` 类可以极大减少溢出和取模错误。
+## 3. 工业级 C++ 实现：ModInt 类
 
 <details>
 <summary>Check Implementation (ModInt)</summary>
@@ -87,9 +72,48 @@ struct ModInt {
         for (; b; b >>= 1, a *= a) if (b & 1) res *= a;
         return res;
     }
-    ModInt inv() const { return pow(mod - 2); } // 仅限 mod 为质数
+    ModInt inv() const { return pow(mod - 2); }
 };
 ```
+</details>
+
+---
+
+## 4. 综合练习与 C++ 解答
+
+### 练习 1：[曹冲养猪] (CRT 基础)
+求解同余方程组。
+
+<details>
+<summary>Check Solution (C++)</summary>
+
+```cpp
+long long CRT() {
+    long long M = 1, ans = 0;
+    for (int i = 1; i <= n; i++) M *= m[i];
+    for (int i = 1; i <= n; i++) {
+        long long Mi = M / m[i], x, y;
+        exgcd(Mi, m[i], x, y);
+        ans = (ans + a[i] * Mi * (x < 0 ? x + m[i] : x)) % M;
+    }
+    return (ans + M) % M;
+}
+```
+</details>
+
+### 练习 2：[古代猪文] (Lucas + CRT 综合)
+求 $g^{\sum_{d|n} \binom{n}{d}} \pmod{999911659}$。
+**解析**：指数部分对 $999911658$ 取模。该数分解为 $2 \times 3 \times 467 \times 28559$。
+分别用 Lucas 求出对四个质数的模，再用 CRT 合并。
+
+<details>
+<summary>Check Solution (思路)</summary>
+
+1. 判定 $g \pmod P = 0$ 的特殊情况。
+2. 预处理四个质数的阶乘。
+3. 对每个 $d|n$，计算 $\binom{n}{d} \pmod{p_i}$。
+4. CRT 合并得到指数 $X$。
+5. 答案为 $g^X \pmod P$。
 </details>
 
 <motion.div

@@ -14,36 +14,33 @@ import { Sigma, FunctionSquare, Target, Zap, Binary, Infinity, Cpu, Code2, Hash,
   transition={{ duration: 0.5 }}
   className="text-gray-600 dark:text-gray-400 mb-8"
 >
-本篇章构建了从离散概率基础到复杂状态空间期望建模的完备体系。我们将深入探讨期望的线性性、条件期望以及随机化算法在处理大数问题中的工业级应用。
+本篇章构建了从离散概率基础到复杂状态空间期望建模的完备体系。我们将深入探讨期望的线性性、条件期望、Min-Max 容斥以及随机化算法在处理大数问题中的工业级应用。
 </motion.div>
 
 ---
 
-## 1. 期望的线性性与指示变量
+## 1. 期望的线性性与容斥
 
 ### 1.1 核心定理
-对于任意随机变量 $X_1, X_2, \dots, X_n$，有：
-$$E\left[\sum_{i=1}^n X_i\right] = \sum_{i=1}^n E[X_i]$$
-**注意**：该性质不需要变量相互独立。
+对于任意随机变量 $X_1, X_2, \dots, X_n$，有 $E[\sum X_i] = \sum E[X_i]$。
+对于独立事件 $A, B$，有 $P(A \cap B) = P(A)P(B)$，$E[XY] = E[X]E[Y]$。
 
-### 1.2 指示变量法 (Indicator Variables)
-定义 $I_A$ 为事件 $A$ 的指示变量，若 $A$ 发生则 $I_A=1$，否则 $I_A=0$。
-则 $E[I_A] = P(A)$。
+### 1.2 Min-Max 容斥 (Min-Max Expectation)
+对于集合 $S$ 中的随机变量，设其出现时间为 $X_i$：
+$$ E[\max(S)] = \sum_{\emptyset \neq T \subseteq S} (-1)^{|T|-1} E[\min(T)] $$
+**意义**：将“出现最晚”的问题转化为“出现最早”的问题，常用于状态压缩 DP。
 
 ---
 
-## 2. 经典模型推导
+## 2. 随机化算法 (Randomized Algorithms)
 
-### 2.1 赠券收集问题 (Coupon Collector's Problem)
-有 $n$ 种不同的赠券，每步随机获得一种。求收集齐所有赠券的期望步数 $E$。
-**推导**：
-设已收集 $i$ 种，收集到第 $i+1$ 种新赠券的概率为 $p_i = \frac{n-i}{n}$。
-这是一个几何分布，期望步数为 $1/p_i = \frac{n}{n-i}$。
-总期望 $E = \sum_{i=0}^{n-1} \frac{n}{n-i} = n \sum_{j=1}^n \frac{1}{j} \approx n \ln n$。
+### 2.1 Miller-Rabin 素性测试
+利用费马小定理 $a^{p-1} \equiv 1 \pmod p$ 与二次探测定理进行概率性判素。
+复杂度：$O(k \log^3 n)$，其中 $k$ 为测试底数个数。
 
-### 2.2 随机游走 (Random Walk)
-在一维数轴上，从 0 出发，每次 50% 向左/向右走一步，到达 $N$ 或 $-M$ 停止。
-**结论**：到达 $N$ 的概率为 $\frac{M}{N+M}$，步数期望为 $NM$。
+### 2.2 Pollard-Rho 大整数分解
+利用生日悖论在 $O(n^{1/4} \log n)$ 时间内寻找 $n$ 的一个非平凡因子。
+核心：$x_{i} = (x_{i-1}^2 + c) \pmod n$，检查 $\gcd(|x_i - x_j|, n) > 1$。
 
 ---
 
@@ -78,30 +75,54 @@ void gauss(int n) {
 
 ## 4. 综合练习与解答
 
-### 例题 1：[HNOI2013] 游走
-给定一个无向简单图，从 1 号点出发，随机游走，到 $n$ 号点停止。给每条边编号，使得期望总得分最小（得分 = 边编号 $\times$ 经过次数）。
-**解析**：
-1. 求每个点的期望经过次数 $E_u$（高斯消元）。
-2. 每条边 $(u, v)$ 的期望经过次数 $E_e = \frac{E_u}{deg(u)} + \frac{E_v}{deg(v)}$。
-3. 对 $E_e$ 贪心排序，赋小值给大的 $E_e$。
+### 练习 1：[HAOI2015] 按位或 (Min-Max 容斥)
+给定 $n$ 个数位，每秒以概率 $p_i$ 选出一个集合，求所有位都被选中的期望时间。
+**解析**：设 $S$ 为所有数位的集合。求 $E[\max(S)]$。
+$E[\min(T)]$ 表示 $T$ 中任一位被选中的期望时间，即 $E[\min(T)] = \frac{1}{\sum_{U \cap T \neq \emptyset} p_U} = \frac{1}{1 - \sum_{U \subseteq \complement T} p_U}$。
+内层求和可用 FWT (Fast Walsh-Hadamard Transform) 优化。
 
 <details>
-<summary>Check Solution (方程组构造)</summary>
+<summary>Check Solution (代码核心)</summary>
 
 ```cpp
-// 对于点 u (u < n)
-a[u][u] = 1.0;
-for (int v : adj[u]) {
-    if (v != n) a[u][v] = -1.0 / deg[v];
+// 1. FWT 求出子集和
+fwt(p, 1);
+// 2. Min-Max 容斥
+for (int i = 1; i < (1 << n); i++) {
+    double sum_p = p[((1 << n) - 1) ^ i];
+    if (1.0 - sum_p < eps) continue; // 无法达到此状态
+    double e_min = 1.0 / (1.0 - sum_p);
+    if (cnt[i] & 1) ans += e_min;
+    else ans -= e_min;
 }
-if (u == 1) a[u][n+1] = 1.0; // 起点
 ```
 </details>
 
-### 例题 2：[SHOI2014] 概率充电器
+### 练习 2：[CQOI2012] 模拟退火 (Pollard-Rho 应用)
+*注：此题实为分解质因数。*
+给定 $N \le 10^{18}$，求其最大质因子。
+
+<details>
+<summary>Check Solution (Pollard-Rho 核心)</summary>
+
+```cpp
+long long pollard_rho(long long n) {
+    long long x = rand() % (n - 2) + 2, y = x, c = rand() % (n - 1) + 1, d = 1;
+    while (d == 1) {
+        x = (__int128(x) * x + c) % n;
+        y = (__int128(y) * y + c) % n;
+        y = (__int128(y) * y + c) % n;
+        d = gcd(abs(x - y), n);
+        if (d == n) return pollard_rho(n); // 失败重试
+    }
+    return d;
+}
+```
+</details>
+
+### 练习 3：[SHOI2014] 概率充电器
 $n$ 个点由 $n-1$ 条边连接成树，每个点 $i$ 有 $q_i$ 概率直接充电，每条边 $(u, v)$ 有 $p_{uv}$ 概率导电。求期望充电点数。
 **解析**：期望线性性 $\implies E = \sum P(\text{点 } i \text{ 有电})$。
-$P(i \text{ 有电}) = 1 - P(i \text{ 没电})$。
 $i$ 没电 $\iff$ $i$ 没直接充电且所有邻居都没能给它充电。利用树形 DP 两次扫描（自底向上 + 自顶向下）。
 
 <details>

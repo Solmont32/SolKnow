@@ -19,16 +19,20 @@ import { Sigma, FunctionSquare, Zap, Cpu, Layers, Binary, Infinity, Code2, Hash,
 
 ---
 
-## 1. 线性递推的矩阵化
+## 1. 线性递推的代数优化
 
-### 1.1 齐次线性递推
-对于 $f_n = a f_{n-1} + b f_{n-2}$，其转移矩阵构造为：
-$$\begin{bmatrix} f_n \\ f_{n-1} \end{bmatrix} = \begin{bmatrix} a & b \\ 1 & 0 \end{bmatrix} \begin{bmatrix} f_{n-1} \\ f_{n-2} \end{bmatrix}$$
-计算 $f_n$ 对应矩阵的 $n-1$ 次幂。
+### 1.1 矩阵快速幂基础
+对于齐次线性递推 $f_n = \sum_{i=1}^k a_i f_{n-i}$，其状态转移矩阵为 $k \times k$。
+复杂度：$O(k^3 \log n)$。
 
-### 1.2 非齐次线性递推
-对于 $f_n = a f_{n-1} + b f_{n-2} + c$，引入常数项 1 进入状态向量：
-$$\begin{bmatrix} f_n \\ f_{n-1} \\ 1 \end{bmatrix} = \begin{bmatrix} a & b & c \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} f_{n-1} \\ f_{n-2} \\ 1 \end{bmatrix}$$
+### 1.2 Cayley-Hamilton 定理与特征多项式
+**定理**：对于 $k \times k$ 矩阵 $M$，其特征多项式 $P(\lambda) = \det(\lambda I - M)$ 满足 $P(M) = 0$。
+**优化意义**：
+$M^n \pmod{P(M)}$ 可以将 $M^n$ 转化为 $M^0, M^1, \dots, M^{k-1}$ 的线性组合。
+计算 $x^n \pmod{P(x)}$ 仅需 $O(k \log k \log n)$（利用多项式取模）。
+
+### 1.3 Berlekamp-Massey 算法
+当递推式未知时，BM 算法可以从序列的前 $2k$ 项中求出最短线性递推式。
 
 ---
 
@@ -42,18 +46,11 @@ struct Matrix {
     int n;
     long long m[105][105];
     Matrix(int _n = 0) : n(_n) { memset(m, 0, sizeof(m)); }
-    
-    static Matrix identity(int n) {
-        Matrix res(n);
-        for (int i = 0; i < n; i++) res.m[i][i] = 1;
-        return res;
-    }
-
     Matrix operator*(const Matrix& b) const {
         Matrix res(n);
         for (int i = 0; i < n; i++)
             for (int k = 0; k < n; k++) {
-                if (!m[i][k]) continue; // 稀疏矩阵优化
+                if (!m[i][k]) continue;
                 for (int j = 0; j < n; j++)
                     res.m[i][j] = (res.m[i][j] + m[i][k] * b.m[k][j]) % MOD;
             }
@@ -65,45 +62,61 @@ struct Matrix {
 
 ---
 
-## 3. 进阶应用：Min-Plus 卷积
+## 3. 进阶应用：广义矩阵乘法
 
-在图论中，设 $W$ 为邻接矩阵，$W_{ij}$ 表示 $i \to j$ 的边权。
-定义 **广义矩阵乘法**：$(A \otimes B)_{ij} = \min_{k} (A_{ik} + B_{kj})$。
-则 $W^k$ 的 $(i, j)$ 项表示从 $i$ 到 $j$ 经过恰好 $k$ 条边的最短路径。
-这在求解 **恰好经过 $k$ 条边的最短路** 问题中具有 $O(N^3 \log k)$ 的极佳性能。
+### 3.1 Min-Plus 卷积
+$(A \otimes B)_{ij} = \min_{k} (A_{ik} + B_{kj})$。
+用于求解**恰好经过 $L$ 条边的最短路**。
+
+### 3.2 动态 DP (DDP)
+将树上 DP 转化为矩阵链乘，利用线段树维护矩阵，支持 $O(\log n)$ 单点修改状态。
 
 ---
 
 ## 4. 综合练习与解答
 
-### 例题 1：[TJOI2017] 可乐
-一个有向图，每秒可以停在原地、走到相邻城市或自爆（进入一个虚点）。求 $t$ 秒的方案数。
-**解析**：构建 $N+1$ 阶转移矩阵（$N$ 个点 + 1 个自爆点）。
+### 练习 1：[USACO07RELAY] Cow Relays
+给定无向图，求从 $S$ 到 $E$ 恰好经过 $K$ 条边的最短路。
+**解析**：离散化点后，使用 Min-Plus 卷积进行矩阵快速幂。
 
 <details>
-<summary>Check Solution (转移矩阵构造)</summary>
+<summary>Check Solution (C++)</summary>
 
 ```cpp
-// 矩阵构造
-for (int i = 1; i <= n; i++) {
-    mat.m[i][i] = 1; // 停在原地
-    mat.m[i][0] = 1; // 自爆（0 为虚点）
-    for (int v : adj[i]) mat.m[i][v] = 1; // 走到相邻城市
+Matrix operator*(const Matrix& a, const Matrix& b) {
+    Matrix c; memset(c.m, 0x3f, sizeof(c.m));
+    for (int k = 1; k <= cnt; k++)
+        for (int i = 1; i <= cnt; i++)
+            for (int j = 1; j <= cnt; j++)
+                c.m[i][j] = min(c.m[i][j], a.m[i][k] + b.m[k][j]);
+    return c;
 }
-mat.m[0][0] = 1; // 自爆点状态保持
 ```
 </details>
 
-### 例题 2：斐波那契数列前缀和
-求 $S_n = \sum_{i=1}^n F_i$。
-**解析**：利用 $S_n = S_{n-1} + F_n = S_{n-1} + F_{n-1} + F_{n-2}$。
-状态向量：$[F_n, F_{n-1}, S_n]^T$。
+### 练习 2：[NOI2020] 美食家
+图中有边权，每个城市有美食值，某些时间点有嘉年华。求 $T$ 时刻最大美食值。
+**解析**：边权 $w \in [1, 5]$，将每个点拆成 5 个点，转化为 $5N$ 阶矩阵。嘉年华时刻分段处理。
 
 <details>
-<summary>Check Solution (转移矩阵)</summary>
+<summary>Check Solution (思路)</summary>
 
-$$\begin{bmatrix} 1 & 1 & 0 \\ 1 & 0 & 0 \\ 1 & 1 & 1 \end{bmatrix}$$
-第一行更新 $F_n$，第二行更新 $F_{n-1}$，第三行利用新算出的 $F_n$ 更新 $S_n$。
+1. 拆点：$u \to u_1 \to u_2 \to u_3 \to u_4$（边权均为 0），原边 $(u, v, w)$ 变为 $u_{w-1} \to v$（边权为 $c_v$）。
+2. 构建 $(5N) \times (5N)$ 转移矩阵。
+3. 预处理矩阵的 $2^k$ 次幂。
+4. 按嘉年华时间排序，分段进行向量与矩阵的乘法（$O((5N)^2 \log T)$）。
+</details>
+
+### 练习 3：[Luogu P4719] 动态 DP 模板
+给定树，点带权，支持单点修改，求最大独立集。
+**解析**：树链剖分 + 矩阵维护。
+
+<details>
+<summary>Check Solution (矩阵定义)</summary>
+
+对于节点 $u$ 的 $g_{u,0}, g_{u,1}$（轻儿子贡献），定义：
+$$ \begin{bmatrix} f_{u,0} \\ f_{u,1} \end{bmatrix} = \begin{bmatrix} g_{u,0} & g_{u,0} \\ g_{u,1} & -\infty \end{bmatrix} \otimes \begin{bmatrix} f_{v,0} \\ f_{v,1} \end{bmatrix} $$
+利用线段树维护重链上的矩阵乘积。
 </details>
 
 <motion.div
