@@ -1,6 +1,5 @@
 import React from 'react';
-import { BookOpen, ChevronRight, ExternalLink, Target } from 'lucide-react';
-import clsx from 'clsx';
+import { ChevronRight, ExternalLink, Target } from 'lucide-react';
 import Link from '@docusaurus/Link';
 
 interface ExerciseItem {
@@ -21,7 +20,7 @@ interface SupportingExercisesProps {
  */
 export default function SupportingExercises({
   exercises,
-  topic = '数学分析',
+  topic: _topic = '数学分析',
   fileId = 'analysis',
 }: SupportingExercisesProps) {
   const basePath = `/docs/exercises/math/${fileId}`;

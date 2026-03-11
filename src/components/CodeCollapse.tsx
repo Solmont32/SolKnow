@@ -1,7 +1,6 @@
 import React, { useState, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronRight, ChevronDown, Terminal, Code2 } from 'lucide-react';
-import clsx from 'clsx';
+import { ChevronRight, ChevronDown, Terminal } from 'lucide-react';
 
 interface CodeCollapseProps {
   children: ReactNode;

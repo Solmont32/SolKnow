@@ -1,9 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Activity, Info, TrendingUp } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
 
 const complexities = [
-  { label: 'O(1)', color: '#10b981', fn: (n: number) => 1, desc: '常数级' },
+  { label: 'O(1)', color: '#10b981', fn: (_n: number) => 1, desc: '常数级' },
   { label: 'O(log n)', color: '#3b82f6', fn: (n: number) => Math.log2(n), desc: '对数级' },
   { label: 'O(n)', color: '#8b5cf6', fn: (n: number) => n, desc: '线性级' },
   {
@@ -24,9 +24,6 @@ export default function ComplexityAnalysis() {
   const width = 400;
   const height = 300;
   const padding = 40;
-
-  const xScale = (val: number) => padding + (val / 100) * (width - 2 * padding);
-  const yScale = (val: number) => height - padding - (val / 10000) * (height - 2 * padding);
 
   // 限制 y 轴最大值以便观察
   const safeYScale = (val: number) => {

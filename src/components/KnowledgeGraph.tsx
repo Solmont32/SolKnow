@@ -1,12 +1,9 @@
-import React, { useCallback, useRef, useEffect, useState, useMemo } from 'react';
+import React, { useCallback, useRef, useEffect, useState } from 'react';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import { graphData, Node, Link } from '../data/graphData';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { useHistory } from '@docusaurus/router';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ChevronRight,
-  Target,
   Maximize2,
   RotateCcw,
   BookOpen,
@@ -17,12 +14,17 @@ import {
   Youtube,
 } from 'lucide-react';
 
+interface ForceGraph2DInstance {
+  centerAt: (x: number, y: number, duration?: number) => void;
+  zoom: (scale: number, duration?: number) => void;
+  zoomToFit: (duration?: number, padding?: number) => void;
+}
+
 const KnowledgeGraphInner = () => {
   const history = useHistory();
-  const fgRef = useRef<any>(null);
-  const [ForceGraph2D, setForceGraph2D] = useState<any>(null);
+  const fgRef = useRef<ForceGraph2DInstance | null>(null);
+  const [ForceGraph2D, setForceGraph2D] = useState<React.ComponentType<any> | null>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
   const [focusNode, setFocusNode] = useState<Node | null>(null);
-  const [hoverNode, setHoverNode] = useState<Node | null>(null);
   const [highlightNodes, setHighlightNodes] = useState(new Set());
   const [highlightLinks, setHighlightLinks] = useState(new Set());
 
@@ -41,12 +43,14 @@ const KnowledgeGraphInner = () => {
       const neighbors = new Set();
       const links = new Set();
 
-      graphData.links.forEach((link: any) => {
-        if (link.source.id === node.id || link.source === node.id) {
-          neighbors.add(link.target.id || link.target);
+      graphData.links.forEach((link: Link) => {
+        const sourceId = typeof link.source === 'string' ? link.source : link.source.id;
+        const targetId = typeof link.target === 'string' ? link.target : link.target.id;
+        if (sourceId === node.id) {
+          neighbors.add(targetId);
           links.add(link);
-        } else if (link.target.id === node.id || link.target === node.id) {
-          neighbors.add(link.source.id || link.source);
+        } else if (targetId === node.id) {
+          neighbors.add(sourceId);
           links.add(link);
         }
       });
@@ -57,7 +61,7 @@ const KnowledgeGraphInner = () => {
   };
 
   const handleNodeClick = useCallback(
-    (node: any) => {
+    (node: Node & { x: number; y: number }) => {
       if (focusNode?.id === node.id) {
         // Double click or click on focused node -> Navigate
         if (node.path) history.push(node.path);
@@ -126,12 +130,12 @@ const KnowledgeGraphInner = () => {
         nodeLabel="name"
         nodeRelSize={6}
         linkDirectionalParticles={2}
-        linkDirectionalParticleSpeed={(d) => d.value * 0.005}
-        linkColor={(link: any) =>
+        linkDirectionalParticleSpeed={(d: Link) => d.value * 0.005}
+        linkColor={(link: Link) =>
           highlightLinks.has(link) ? 'var(--ifm-color-primary)' : 'var(--ifm-color-emphasis-200)'
         }
-        linkWidth={(link: any) => (highlightLinks.has(link) ? 3 : 1)}
-        nodeCanvasObject={(node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
+        linkWidth={(link: Link) => (highlightLinks.has(link) ? 3 : 1)}
+        nodeCanvasObject={(node: Node & { x: number; y: number; color?: string }, ctx: CanvasRenderingContext2D, globalScale: number) => {
           const isHighlighted = highlightNodes.has(node.id);
           const isFocused = focusNode?.id === node.id;
 
@@ -178,7 +182,6 @@ const KnowledgeGraphInner = () => {
         }}
         onNodeClick={handleNodeClick}
         onBackgroundClick={resetView}
-        onNodeHover={(node: any) => setHoverNode(node)}
         cooldownTicks={100}
         d3AlphaDecay={0.02}
         d3VelocityDecay={0.3}
