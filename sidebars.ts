@@ -326,6 +326,7 @@ const sidebars: SidebarsConfig = {
       label: '人工智能',
       link: {type: 'doc', id: 'ai/index'},
       items: [
+        { type: 'doc', id: 'ai/higher-math-and-ai', label: '高等数学与 AI 原语' },
         { type: 'doc', id: 'ai/machine-learning', label: '机器学习' },
         { type: 'doc', id: 'ai/deep-learning', label: '深度学习' },
         { type: 'doc', id: 'ai/nlp', label: '自然语言处理' },
