@@ -3,8 +3,8 @@ title: 最短路算法与建模进阶
 ---
 
 import { Compass, Navigation, Zap, Layers, AlertCircle, Share2, Link, Workflow, Activity, ShieldCheck, Sigma } from 'lucide-react';
-import { ComplexityAnalysis } from '@site/src/components/ComplexityAnalysis';
-import { KnowledgeCard } from '@site/src/components/KnowledgeCard';
+import ComplexityAnalysis from '@site/src/components/ComplexityAnalysis';
+import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # <Compass className="inline-block mr-2 mb-1 text-blue-600" /> 最短路算法 (Shortest Path)
 

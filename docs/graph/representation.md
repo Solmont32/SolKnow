@@ -3,7 +3,7 @@ title: 图的存储
 ---
 
 import { Database, Layers, Share2, Zap, LayoutList } from 'lucide-react';
-import { ComplexityAnalysis } from '@site/src/components/ComplexityAnalysis';
+import ComplexityAnalysis from '@site/src/components/ComplexityAnalysis';
 
 # <Database className="inline-block mr-2 mb-1 text-blue-500" /> 图的存储 (Graph Representation)
 

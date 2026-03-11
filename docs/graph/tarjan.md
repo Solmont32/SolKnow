@@ -3,8 +3,8 @@ title: Tarjan 算法与连通性理论
 ---
 
 import { GitMerge, Layers, ShieldAlert, Share2, Zap, LayoutGrid, CircleDot, Network, GitBranch } from 'lucide-react';
-import { ComplexityAnalysis } from '@site/src/components/ComplexityAnalysis';
-import { KnowledgeCard } from '@site/src/components/KnowledgeCard';
+import ComplexityAnalysis from '@site/src/components/ComplexityAnalysis';
+import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # <GitMerge className="inline-block mr-2 mb-1 text-purple-600" /> Tarjan 算法与连通性 (Connectivity)
 

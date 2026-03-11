@@ -3,7 +3,7 @@ title: 拓扑排序与依赖建模
 ---
 
 import { ListOrdered, GitMerge, CheckCircle, AlertTriangle, Zap, ArrowRight, Activity, LayoutList } from 'lucide-react';
-import { ComplexityAnalysis } from '@site/src/components/ComplexityAnalysis';
+import ComplexityAnalysis from '@site/src/components/ComplexityAnalysis';
 
 # <ListOrdered className="inline-block mr-2 mb-1 text-blue-600" /> 拓扑排序 (Topological Sort)
 

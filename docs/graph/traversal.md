@@ -3,7 +3,7 @@ title: 图的遍历与基础搜索
 ---
 
 import { Share2, Zap, Search, Waypoints, Activity, Compass } from 'lucide-react';
-import { ComplexityAnalysis } from '@site/src/components/ComplexityAnalysis';
+import ComplexityAnalysis from '@site/src/components/ComplexityAnalysis';
 
 # <Share2 className="inline-block mr-2 mb-1 text-blue-500" /> 图的遍历 (Traversal)
 

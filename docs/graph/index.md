@@ -4,7 +4,7 @@ sidebar_position: 1
 ---
 
 import { Network, Target, GitBranch, Zap, Trophy, BookOpen, Sigma, Boxes, Workflow, Globe } from 'lucide-react';
-import { KnowledgeCard } from '@site/src/components/KnowledgeCard';
+import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # <Network className="inline-block mr-2 mb-1 text-blue-600" /> 图论算法系统 (Graph Theory Systems)
 

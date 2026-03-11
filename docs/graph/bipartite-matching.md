@@ -3,8 +3,8 @@ title: 二分图匹配与覆盖理论
 ---
 
 import { GitMerge, Zap, Activity, ShieldCheck, Users, Link, Target, Layout, Sigma, CheckCircle } from 'lucide-react';
-import { ComplexityAnalysis } from '@site/src/components/ComplexityAnalysis';
-import { KnowledgeCard } from '@site/src/components/KnowledgeCard';
+import ComplexityAnalysis from '@site/src/components/ComplexityAnalysis';
+import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # <GitMerge className="inline-block mr-2 mb-1 text-pink-500" /> 二分图理论 (Bipartite Graph Theory)
 

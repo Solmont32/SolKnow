@@ -3,8 +3,8 @@ title: 网络流算法与复杂建模
 ---
 
 import { GitMerge, Zap, Activity, ShieldCheck, Layers, Landmark, ArrowRightLeft, Maximize, Sigma, Workflow } from 'lucide-react';
-import { ComplexityAnalysis } from '@site/src/components/ComplexityAnalysis';
-import { KnowledgeCard } from '@site/src/components/KnowledgeCard';
+import ComplexityAnalysis from '@site/src/components/ComplexityAnalysis';
+import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # <GitMerge className="inline-block mr-2 mb-1 text-blue-500" /> 网络流 (Network Flow)
 
