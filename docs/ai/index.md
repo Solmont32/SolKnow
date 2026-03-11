@@ -18,7 +18,8 @@ AI 领域目前由数据驱动的**机器学习**、架构驱动的**深度学�
 
 ### 核心理论体系
 
-- [高等数学与 AI 原语：从代数结构到深度学习](./higher-math-and-ai) <!-- 核心数学基础 -->
+- [高等数学与 AI 原语：从代数结构到深度学习](./higher-math-and-ai)
+- [AI/LLM 架构专题：从卷积到 Transformer 与算子优化](./llm-architecture-deep-dive)
 - [机器学习：统计建模与算法基础](./machine-learning)
 - [深度学习：神经网络与感知机进阶](./deep-learning)
 
