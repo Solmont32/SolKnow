@@ -1,61 +1,52 @@
 ---
-title: 搜索算法与启发式策略 (Search Algorithms & Heuristics)
+title: 搜索算法精要 (Search Algorithms & Heuristics)
 ---
 
-import { Search, Zap, Target, Thermometer, Box, ArrowRightCircle, Layers, ShieldCheck, Activity, Cpu, Database, Swords } from 'lucide-react';
+import { Search, Zap, Target, Thermometer, Box, ArrowRightCircle, Layers, ShieldCheck, Activity, Cpu, Database, Swords, Microscope, TrendingUp } from 'lucide-react';
 
 # <Target className="inline-block mr-2 mb-1 text-purple-500" /> 搜索算法与启发式策略
 
-搜索 (Search) 是解决复杂决策、组合最优化及路径规划问题的普适性框架。在计算复杂性理论视角下，许多 NP-Hard 问题在缺乏多项式时间解法时，必须遍历**状态空间 (State Space)**。本章旨在探讨如何通过严密的数学建模、状态空间压缩、估价函数诱导以及时空权衡，将指数级复杂度降至工程可接受范围。
+搜索 (Search) 是解决复杂决策、组合最优化及路径规划问题的普适性框架。从算法深度来看，搜索不仅是“遍历”，更是对**状态空间 (State Space)** 的代数结构与拓扑特性的深度挖掘。本章旨在探讨如何通过严密的数学建模、剪枝证明、估价函数诱导以及时空权衡，将指数级复杂度降至工程可接受范围。
 
 ---
 
-## 零、 <Layers className="inline-block mr-2 mb-1 text-blue-400" /> 系统化状态空间建模与复杂度控制
+## 零、 <Layers className="inline-block mr-2 mb-1 text-blue-400" /> 系统化状态空间建模
 
-### 1. 状态空间的形式化定义
-一个完备的搜索问题可定义为五元组 $\mathcal{M} = \langle S, A, T, s_0, G \rangle$：
-- $S$：有限或无限的**状态集**。
-- $A(s)$：状态 $s$ 下的**合法动作集**。
-- $T: S \times A \to S$：**状态转移函数**。
-- $s_0 \in S$：**初始状态**。
-- $G \subseteq S$：**目标状态集**。
+### 1. 形式化定义与搜索树展开
+一个完备的搜索问题可定义为五元组 $\mathcal{M} = \langle S, A, T, s_0, G \rangle$。搜索的本质是在由 $T$ 诱导的有向图 $\mathcal{G} = (S, E)$ 中寻找从 $s_0$ 到 $G$ 的路径。
+- **状态空间规模**：若分支因子为 $b$，深度为 $d$，则搜索树节点总数 $|V| = \sum_{i=0}^d b^i = \frac{b^{d+1}-1}{b-1} \approx O(b^d)$。
+- **复杂度控制**：搜索算法的优劣取决于其在展开过程中**过滤无效节点**的能力。
 
-**搜索树 (Search Tree)** 是从 $s_0$ 出发，通过 $T$ 展开的虚拟结构。其规模由**分支因子 $b$**（平均 $|A(s)|$）和**目标深度 $d$** 决定，总节点数 $O(b^d)$ 呈指数爆炸。
-
-### 2. 状态压缩与位运算 (State Compression)
-当状态由多个二进制特征（如集合包含关系、开关状态）组成时，利用位掩码 (Bitmask) 可实现 $O(1)$ 的状态转移与空间极小化。
-- **技巧**：使用 `int` 或 `long long` 的位表示集合，配合 `__builtin_ctz` 或 `lowbit` 加速查找。
-
-### 3. 对称性破缺 (Symmetry Breaking)
-若状态空间存在群作用下的对称性，应仅保留其**等效类代表元**。
-- **定理**：若状态空间在变换 $\sigma$ 下不变且代价等价，则搜索树中只需处理满足 $s \preceq \sigma(s)$ 的分支。
+### 2. 对称性破缺与同构状态合并
+若状态空间存在等价关系 $\sim$（如平移、翻转、旋转不变性），则只需搜索商空间 $S/\sim$。
+- **引理**：若代价函数 $c(s, a) = c(\sigma(s), \sigma(a))$ 且 $G$ 在变换 $\sigma$ 下不变，则最优解必在代表元集合中。
 
 ---
 
-## 一、 <ShieldCheck className="inline-block mr-2 mb-1 text-green-500" /> 搜索树优化：系统化剪枝策略
+## 一、 <ShieldCheck className="inline-block mr-2 mb-1 text-green-500" /> 搜索树剪枝：数学证明与系统化准则
 
-剪枝的核心是在不影响正确性的前提下，利用逻辑断言提前终止对无效子树的访问。
+剪枝并非单纯的技巧，而是基于逻辑断言 (Logic Assertion) 的搜索空间缩减。
 
-### 1. 剪枝分类与形式化准则
+### 1. 可行性剪枝 (Feasibility Pruning)
+**定理 1**：若存在谓词 $P: S \to \{0, 1\}$，使得 $\forall s \in S, P(s) = 0 \implies (\forall \tau: s \xrightarrow{\tau} s', s' \notin G)$，则在搜索到 $s$ 且 $P(s)=0$ 时停止搜索是完备的。
+- **应用逻辑**：提前计算状态的“生存界限”（如迷宫中当前点到出口的连通性或步数限制）。
 
-| 策略类别 | 判定准则 (Predicate) | 优化逻辑 |
-| :--- | :--- | :--- |
-| **可行性剪枝 (Feasibility)** | $\nexists \, \tau: s \xrightarrow{\tau} G$ | 若当前状态通过任何动作序列都无法到达目标，立即回溯。 |
-| **最优性剪枝 (Optimality)** | $g(s) + f_{low}(s) \ge \text{ans}_{best}$ | 若当前代价 + 理想最小余下代价已劣于已知最优，则剪枝。 |
-| **搜索顺序优化 (Ordering)** | $\arg \min_{a \in A} \text{Size}(\text{Subtree}(T(s, a)))$ | 优先搜索“限制最强”的分支（如 Sudoku 中剩余选项最少的格子）。 |
-| **排除冗余 (Redundancy)** | $s \in \text{Hash表}$ | 记录已访问状态，避免在图搜索中陷入死循环或重复计算。 |
+### 2. 最优性剪枝 (Optimality Pruning)
+**定理 2**：令 $g(s)$ 为从 $s_0$ 到 $s$ 的当前已知路径代价，$\hat{h}(s)$ 为从 $s$ 到 $G$ 的**代价下界**。若 $g(s) + \hat{h}(s) \ge \text{ans}_{best}$，则以 $s$ 为根的子树中不存在优于当前最优解的路径。
+- **证明**：由下界定义，$\forall s' \in \text{Subtree}(s) \cap G$，其总代价 $g(s') \ge g(s) + \text{dist}(s, s') \ge g(s) + \hat{h}(s) \ge \text{ans}_{best}$，故剪枝无损最优性。
 
-### 2. 精选例题：[木棒拼接 - 极限界剪枝]
-> 给定 $n$ 根小木棒，要求将其拼接成若干长度相同的长木棒，求可能的最小长度。
+### 3. 精选例题：[木棒拼接 - 系统化剪枝]
+> 给定 $n$ 根小木棒，拼接成若干长度相同的长木棒，求可能的最小长度。
 
 <details>
-<summary>Check Solution: 深度剪枝 C++ 实现</summary>
+<summary>Check Solution: 极限界剪枝 C++ 实现</summary>
 
-**核心剪枝逻辑**：
-1. **搜索顺序**：从长到短排序。
-2. **相同长度去重**：若当前木棒不符合要求，跳过后续相同长度的木棒。
-3. **空位首根失败**：若拼入第一根木棒就失败，则当前总长度必然非法。
-4. **末尾填满失败**：若填满最后一根木棒后后续失败，则当前总长度非法。
+**核心剪枝逻辑分析**：
+1. **搜索顺序优化**：按长度降序排列。优先尝试长木棒可减少递归深度。
+2. **重复状态剪枝**：若当前长度失败，跳过后续所有相同长度。
+3. **关键边界剪枝**：
+   - 若拼入的第一根木棒就失败，则当前总长度必然非法（因为这根木棒终究要被用掉）。
+   - 若填满最后一根木棒后后续失败，则当前总长度非法（等价性证明：改用更短的组合填满该位置只会更劣）。
 
 ```cpp
 #include <iostream>
@@ -77,18 +68,23 @@ bool dfs(int cnt, int cur, int last) {
         if (dfs(cnt, cur + a[i], i)) return true;
         vis[i] = 0;
 
-        // 核心剪枝
-        if (cur == 0 || cur + a[i] == target) return false;
+        // --- 核心剪枝证明应用 ---
+        // 1. 若当前拼接位置 cur 为 0 且失败，说明第一个位置无法填充，直接回溯
+        if (cur == 0) return false; 
+        // 2. 若当前刚好凑满 target 且后续失败，说明此长度方案不可行
+        if (cur + a[i] == target) return false;
+        // 3. 跳过相同长度
         while (i > 0 && a[i] == a[i - 1]) i--;
     }
     return false;
 }
 
 int main() {
+    ios::sync_with_stdio(false);
     while (cin >> n && n) {
         total = 0;
         for (int i = 0; i < n; i++) { cin >> a[i]; total += a[i]; }
-        sort(a, a + n);
+        sort(a, a + n); // 从小到大排，DFS 中从后往前扫即为从大到小
         for (target = a[n - 1]; target <= total; target++) {
             if (total % target == 0) {
                 m = total / target;
@@ -104,65 +100,87 @@ int main() {
 
 ---
 
-## 二 <Target className="inline-block mr-2 mb-1 text-red-500" /> 启发式搜索：A* 与 IDA*
+## 二、 <Target className="inline-block mr-2 mb-1 text-red-500" /> 启发式搜索：A* 与 IDA*
 
-### 1. A* 算法的最优性证明
-定义 $f(n) = g(n) + h(n)$。
-- **可接受性 (Admissibility)**：若 $h(n) \le h^*(n)$（实际最小代价），则 A* 一定能找到最短路。
-- **一致性 (Consistency)**：若 $h(n) \le c(n, a, n') + h(n')$，则 $f(n)$ 随路径非递减。
+### 1. 估价函数 $h(s)$ 的设计原则
+估价函数 $h(s)$ 是将领域知识注入搜索的关键。
+- **可接受性 (Admissibility)**：$0 \le h(s) \le h^*(s)$。保证 A* 找到最优解。
+- **设计策略**：
+  - **问题松弛 (Relaxation)**：移除某些约束得到更简单的子问题代价（如曼哈顿距离是忽略障碍物的棋盘距离）。
+  - **子问题数据库 (Pattern Databases)**：预计算子问题的精确代价。
 
-**证明（可接受性）**：假设 A* 选出了非最优目标 $G_2$（即 $g(G_2) > g(G^*)$）。在弹出 $G_2$ 时，最优路径上必存在一节点 $n$ 在队列中。
-$f(n) = g(n) + h(n) \le g(n) + h^*(n) = f^*(n) = g(G^*) < g(G_2) = f(G_2)$。
-由于 $f(n) < f(G_2)$，队列应优先弹出 $n$ 而非 $G_2$，矛盾。
+### 2. A* 算法最优性证明
+设 $f(s) = g(s) + h(s)$。若 $h(s)$ 是可接受的，则 A* 首次弹出目标节点时必为最优路径。
+- **证明**：假设 A* 选出非最优目标 $G_{bad}$，此时 $g(G_{bad}) > g(G^*)$。
+  由于 $G^*$ 尚未弹出，其路径上必有一节点 $n$ 在 OpenList 中。
+  $f(n) = g(n) + h(n) \le g(n) + h^*(n) = f^*(G^*) = g(G^*) < g(G_{bad})$。
+  根据优先队列性质，$n$ 必在 $G_{bad}$ 之前弹出，矛盾。
 
-### 2. IDA* (Iterative Deepening A*)
-IDA* 是 IDDFS 与 $f(n)$ 估价的结合，主要解决 A* 空间消耗大的问题。
-- **核心逻辑**：设定 $f$-limit，若当前 $g(s) + h(s) > \text{limit}$ 则回溯，并记录最小的越界 $f$ 值作为下一轮 limit。
+### 3. IDA* (Iterative Deepening A*)
+结合了 DFS 的低空间消耗 ($O(d)$) 与 A* 的启发导向。
+- **逻辑**：以 $f(s)$ 为深度限制进行限深 DFS。
+- **优势**：在状态空间极其庞大（如 15-Puzzle）且需要找最优解时，IDA* 远优于 A*。
 
-### 3. 精选例题：[八数码问题 - IDA* 与 逆序对性质]
+---
+
+## 三、 <Microscope className="inline-block mr-2 mb-1 text-cyan-500" /> 时空复杂度与收敛分析
+
+### 1. A* 的复杂度收敛
+- **空间复杂度**：$O(b^d)$，需存储所有生成的节点。这是 A* 的主要瓶颈。
+- **时间复杂度**：取决于 $|h(s) - h^*(s)|$。若 $h(s) = h^*(s)$，则 A* 直接沿最优路径前进，时间 $O(d)$。若 $h(s) = 0$，退化为 Dijkstra $O(b^d)$。
+
+### 2. 有效分支因子 (Effective Branching Factor)
+定义 $b^*$ 使得 $N = \frac{(b^*)^{d+1}-1}{b^*-1}$。良好的 $h(s)$ 能使 $b^*$ 接近 $1$。
+
+---
+
+## 四、 <Cpu className="inline-block mr-2 mb-1 text-yellow-500" /> 高阶实战例题
+
+### 例题 1：[15-Puzzle (15 数码) - IDA* 极限优化]
+> 在 $4 \times 4$ 网格中移动数字块使之有序。
+
 <details>
-<summary>Check Solution: IDA* 实现与哈希优化</summary>
+<summary>Check Solution: IDA* 与 线性冲突优化</summary>
 
-**估价函数**：使用各数码到目标位置的曼哈顿距离之和。
-**性质剪枝**：八数码问题的逆序对奇偶性在空格平移（左右不改变，上下改变偶数列数）下具有不变性（或确定变化规律），可提前排除 50% 的不可达状态。
+**核心优化：线性冲突 (Linear Conflict)**
+若两数字在同一行且目标也在该行，但它们当前的左右顺序与目标相反，则它们必须多出至少 2 步交叉移动。这使 $h(s)$ 更接近 $h^*(s)$。
 
 ```cpp
 #include <iostream>
+#include <vector>
 #include <cmath>
 
 using namespace std;
 
-int board[9], limit, next_limit;
-int target[9] = {1, 2, 3, 4, 5, 6, 7, 8, 0};
+int board[16], limit;
+int dx[] = {-1, 1, 0, 0}, dy[] = {0, 0, -1, 1};
 
 int get_h() {
     int h = 0;
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < 16; i++) {
         if (board[i] == 0) continue;
-        int val = board[i] - 1;
-        h += abs(i / 3 - val / 3) + abs(i % 3 - val % 3);
+        int target_x = (board[i] - 1) / 4;
+        int target_y = (board[i] - 1) % 4;
+        h += abs(i / 4 - target_x) + abs(i % 4 - target_y);
     }
+    // 此外可加入 Linear Conflict 优化...
     return h;
 }
 
 bool dfs(int g, int empty_pos, int pre) {
     int h = get_h();
-    if (g + h > limit) {
-        next_limit = min(next_limit, g + h);
-        return false;
-    }
+    if (g + h > limit) return false;
     if (h == 0) return true;
 
-    int dx[] = {-1, 1, 0, 0}, dy[] = {0, 0, -1, 1};
-    int r = empty_pos / 3, c = empty_pos % 3;
+    int r = empty_pos / 4, c = empty_pos % 4;
     for (int i = 0; i < 4; i++) {
-        if (i == (pre ^ 1)) continue; // 不往回走
+        if ((i ^ 1) == pre) continue;
         int nx = r + dx[i], ny = c + dy[i];
-        if (nx >= 0 && nx < 3 && ny >= 0 && ny < 3) {
-            int n_pos = nx * 3 + ny;
-            swap(board[empty_pos], board[n_pos]);
-            if (dfs(g + 1, n_pos, i)) return true;
-            swap(board[empty_pos], board[n_pos]);
+        if (nx >= 0 && nx < 4 && ny >= 0 && ny < 4) {
+            int next_pos = nx * 4 + ny;
+            swap(board[empty_pos], board[next_pos]);
+            if (dfs(g + 1, next_pos, i)) return true;
+            swap(board[empty_pos], board[next_pos]);
         }
     }
     return false;
@@ -170,103 +188,50 @@ bool dfs(int g, int empty_pos, int pre) {
 ```
 </details>
 
----
-
-## 三、 <Swords className="inline-block mr-2 mb-1 text-blue-600" /> 博弈搜索 (Adversarial Search)
-
-在零和博弈（Zero-Sum Game）中，玩家 A 试图最大化收益，玩家 B 试图最小化 A 的收益。
-
-### 1. Minimax 算法与 Alpha-Beta 剪枝
-- **Minimax**：递归计算子节点的最优值。
-- **Alpha-Beta 剪枝**：
-  - $\alpha$：当前节点及祖先节点已发现的 **Max** 玩家的下界。
-  - $\beta$：当前节点及祖先节点已发现的 **Min** 玩家的上界。
-  - **剪枝条件**：若 $\alpha \ge \beta$，则当前子树不可能影响最终结果。
-
-### 2. 时空增强：置换表与启发式排序
-- **置换表 (Transposition Table)**：利用 Zobrist Hashing 记录已搜过的博弈状态。
-- **杀手启发式 (Killer Heuristic)**：优先尝试在同层其他分支中导致剪枝的动作。
-
----
-
-## 四、 <Activity className="inline-block mr-2 mb-1 text-orange-400" /> 现代启发式：模拟退火 (Simulated Annealing)
-
-对于连续或极大规模离散优化，若搜索树不可构建，可利用物理退火原理。
-- **Metropolis 准则**：若新解更优则接受；若更劣，以 $P = e^{-\Delta E / T}$ 的概率接受。
-- **参数控制**：初温 $T_0$、冷却系数 $\alpha \in [0.95, 0.999]$、末温 $T_{end}$。
-
----
-
-## 🎯 综合练习与实战
-
-### 练习 1：[骑士巡逻问题 - Warnsdorff 启发式]
-> 在 $N \times N$ 的棋盘上，骑士不重复地走遍所有格子的路径。
+### 例题 2：[K 短路问题 - A* + 可持久化左偏树]
+> 在有向图中求从 $S$ 到 $T$ 的第 $k$ 短路径长度。
 
 <details>
-<summary>Check Solution: Warnsdorff 规则</summary>
+<summary>Check Solution: A* 与 $h(s) = \text{dist}(s, T)$</summary>
 
-**策略**：每次优先选择“下一步可选位置最少”的格子。这是一种典型的贪心启发式，极大地减小了分支回溯概率。
+**算法逻辑**：
+1. 反向跑 Dijkstra 求出所有点到 $T$ 的最短路 $d(s)$，令 $h(s) = d(s)$。
+2. 优先队列维护 $(g(s) + h(s), s)$。
+3. 当节点 $T$ 第 $k$ 次被从队列弹出时，$g(T)$ 即为第 $k$ 短路。
 
 ```cpp
-// 核心逻辑：排序下一步动作
-struct Move {
-    int x, y, degree;
-    bool operator<(const Move& other) const { return degree < other.degree; }
-};
-
-int get_degree(int x, int y) {
-    int d = 0;
-    for(int i=0; i<8; i++) {
-        int nx = x + dx[i], ny = y + dy[i];
-        if(is_valid(nx, ny) && !vis[nx][ny]) d++;
+// 伪代码逻辑
+priority_queue<Node> pq;
+pq.push({0 + dist_to_T[S], S, 0});
+int cnt = 0;
+while(!pq.empty()) {
+    Node u = pq.top(); pq.pop();
+    if (u.id == T) {
+        if (++cnt == K) return u.g;
     }
-    return d;
+    for (auto& edge : adj[u.id]) {
+        pq.push({u.g + edge.w + dist_to_T[edge.to], edge.to, u.g + edge.w});
+    }
 }
 ```
 </details>
 
-### 练习 2：[井字棋对抗 - Alpha-Beta 搜索]
-> 实现一个无懈可击的井字棋 AI。
+---
 
+## 🎯 综合练习与挑战
+
+### 练习 1：[迷宫搜宝 - 双向 BFS 优化]
+> 给定起点与终点，中间有若干障碍，求最短步数。
 <details>
-<summary>Check Solution: Alpha-Beta 实现</summary>
+<summary>Check Solution: 双向扩展逻辑</summary>
+双向 BFS 可将搜索空间从 $O(b^d)$ 降至 $O(b^{d/2} + b^{d/2})$。
+</details>
 
-```cpp
-int minimax(int board[3][3], int depth, bool isMax, int alpha, int beta) {
-    int score = evaluate(board);
-    if (score == 10 || score == -10 || !isMovesLeft(board)) return score;
-
-    if (isMax) {
-        int best = -1000;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (board[i][j] == 0) {
-                    board[i][j] = 1;
-                    best = max(best, minimax(board, depth + 1, !isMax, alpha, beta));
-                    board[i][j] = 0;
-                    alpha = max(alpha, best);
-                    if (beta <= alpha) break;
-                }
-            }
-        }
-        return best;
-    } else {
-        int best = 1000;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (board[i][j] == 0) {
-                    board[i][j] = 2;
-                    best = min(best, minimax(board, depth + 1, !isMax, alpha, beta));
-                    board[i][j] = 0;
-                    beta = min(beta, best);
-                    if (beta <= alpha) break;
-                }
-            }
-        }
-        return best;
-    }
-}
-```
+### 练习 2：[数独求解器 - 最少剩余值 (MRV) 启发式]
+> 填满 9x9 数独。
+<details>
+<summary>Check Solution: 排序搜索顺序</summary>
+每次选择当前可选数字最少的格子进行填充，可极大提高剪枝效率。
 </details>
 
 ---
