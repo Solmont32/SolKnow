@@ -5,6 +5,7 @@ title: "第二章：数列极限 (Limits of Sequences)"
 import Details from '@theme/Details';
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 import SupportingExercises from '@site/src/components/SupportingExercises';
+import { Code2, Layers } from 'lucide-react';
 
 # 第二章：数列极限
 

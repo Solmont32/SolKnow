@@ -3,6 +3,8 @@ title: 命题演算与形式系统 (Propositional Calculus)
 description: 命题逻辑、形式证明系统（希尔伯特系统、自然推理）与完备性
 ---
 
+import { Code2, Layers } from 'lucide-react';
+
 # 命题演算与形式系统
 
 命题逻辑不仅是符号化的思维，其核心是构建**形式演算系统**。在本章中，我们将讨论如何从公理或推理规则出发，系统化地推导出所有逻辑真理。

@@ -4,7 +4,7 @@ description: 现代分析学与几何学的基石，从度量空间到抽象拓�
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { Infinity, BookOpen, PenTool, Lightbulb, Compass, Share2 } from 'lucide-react';
+import { Infinity, BookOpen, PenTool, Lightbulb, Compass, Share2, Code2, Layers } from 'lucide-react';
 
 # <Infinity className="solknow-purple" style={{ verticalAlign: 'middle', marginRight: '10px' }} size={36} /> 点集拓扑学 (Point-Set Topology)
 

@@ -5,7 +5,7 @@ description: 系统梳理复分析核心理论，从 Cauchy-Riemann 方程到留
 
 import KnowledgeCard from "@site/src/components/KnowledgeCard";
 import { motion } from "framer-motion";
-import { Box, Code2, Infinity, Target, Zap } from "lucide-react";
+import { Box, Code2, Infinity, Target, Zap, Layers } from "lucide-react";
 
 # 复变函数：解析函数与留数理论
 

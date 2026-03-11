@@ -3,6 +3,7 @@ title: 高中数学竞赛 (Senior High Math Competition)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import { Code2, Layers } from 'lucide-react';
 
 # 高中数学竞赛 (Senior High Math Competition)
 

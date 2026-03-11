@@ -2,6 +2,8 @@
 title: 概率论与数理统计 (Probability & Statistics)
 ---
 
+import { Code2, Layers } from 'lucide-react';
+
 # 概率论与数理统计 (Probability & Statistics)
 
 概率论与数理统计是研究随机现象数量规律的数学分支。本教程从公理化体系出发，涵盖随机变量、极限定理，并深入到数理统计的核心推断方法。
