@@ -1,5 +1,5 @@
 ---
-title: 数据结构 (Data Structures): 信息的拓扑与优化
+title: "数据结构 (Data Structures): 信息的拓扑与优化"
 sidebar_position: 1
 ---
 
