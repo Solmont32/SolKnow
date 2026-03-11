@@ -56,7 +56,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 ### 3. 连通性与约束 (Topology)
 - [**强连通分量 (SCC)**](tarjan)：Tarjan 算法、**缩点技巧**与**圆方树**构造。
-- [**2-SAT 问题**](2-sat)：利用强连通分量解决布尔逻辑约束。
+- [**2-SAT 问题**](sat)：利用强连通分量解决布尔逻辑约束。
 
 ### 4. 流量与匹配 (Flow & Matching)
 - [**二分图匹配 (Matching)**](bipartite-matching)：匈牙利算法、**Kőnig 定理**与覆盖问题对偶性。
