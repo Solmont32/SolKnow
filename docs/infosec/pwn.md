@@ -1,114 +1,126 @@
 ---
-title: 二进制安全与漏洞利用 (PWN & Exploitation)
+title: 二进制安全与逆向工程 (PWN & Reverse Engineering)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { Terminal, ShieldAlert, Zap, Cpu } from 'lucide-react';
+import { Terminal, ShieldAlert, Zap, Cpu, Search, FileCode } from 'lucide-react';
 
-# 二进制安全与漏洞利用
+# 二进制安全与逆向工程
 
-> **核心逻辑**：PWN 是通过对程序逻辑漏洞、内存管理缺陷的利用，劫持程序控制流（Control Flow Hijacking），最终获取系统执行权限。
+> **核心逻辑**：PWN 是通过对程序逻辑漏洞、内存管理缺陷的利用，劫持程序控制流（Control Flow Hijacking）或篡改关键数据。逆向工程则是分析二进制程序行为、还原逻辑的基础。
 
-## 1. 内存破坏基础 (Memory Corruption)
+## 1. 逆向工程基础 (Reverse Engineering)
 
-### 1.1 栈溢出 (Stack Overflow)
-最经典的漏洞类型。由于未对局部变量长度进行检查，攻击者可以覆盖函数返回地址。
-- **目标**：覆盖 `rip` (x86_64) 或 `eip` (x86)。
+逆向工程是攻防的前置步骤，分为静态分析与动态调试。
 
-### 1.2 堆漏洞 (Heap Exploits)
-由于堆管理器（如 `ptmalloc`）的复杂性，产生的漏洞更为隐蔽。
-- **Use-After-Free (UAF)**：访问已释放的内存。
-- **Double Free**：释放同一块内存两次，破坏堆链表。
-- **Heap Overflow**：覆盖相邻堆块的元数据。
+### 1.1 静态分析 (Static Analysis)
+- **工具**：IDA Pro, Ghidra, Binary Ninja。
+- **目标**：还原函数逻辑、识别结构体、查找硬编码字符串。
+- **汇编基础**：掌握 x86_64 寄存器（`rax`, `rdi`, `rsi` 等）与调用约定（`System V AMD64 ABI`）。
 
-## 2. 控制流劫持技术 (Exploitation Techniques)
-
-### 2.1 Ret2Libc
-在 **NX (No-Execute)** 保护开启时，无法直接在栈上执行代码。攻击者通过跳转到已加载的系统库函数（如 `system`）并构造参数来执行命令。
-
-### 2.2 ROP (Return Oriented Programming)
-利用程序中已有的代码片段（称为 **Gadgets**，以 `ret` 结尾）拼接成攻击逻辑。
-- **寻找 Gadget**：`pop rdi; ret` 是构造 `system("/bin/sh")` 的常用起点。
-
-### 2.3 GOT 与 PLT 劫持
-- **PLT (Procedure Linkage Table)**：跳转表。
-- **GOT (Global Offset Table)**：存储函数真实地址。
-- **攻击**：修改 GOT 表项指向恶意地址，使得调用库函数时执行攻击代码。
+### 1.2 动态调试 (Dynamic Debugging)
+- **工具**：GDB (搭配 Pwndbg/GEF 插件)。
+- **操作**：断点 (`b`)、单步执行 (`si`/`ni`)、查看内存 (`x/gx addr`)、查看栈帧 (`backtrace`)。
 
 ---
 
-## 3. 现代保护机制 (Mitigations)
+## 2. 内存破坏与漏洞原理解析 (Vulnerabilities)
 
-| 缩写 | 全称 | 作用 | 绕过方式 |
-| :--- | :--- | :--- | :--- |
-| **NX** | No-Execute | 禁止数据段执行 | ROP, Ret2Libc |
-| **ASLR** | Address Space Layout Randomization | 地址空间随机化 | 信息泄露 (Memory Leak) |
-| **Canary** | Stack Smash Protector | 栈溢出金丝雀校验 | 泄露 Canary, 覆盖跳转 |
-| **PIE** | Position Independent Executable | 代码段随机化 | 泄露基地址 |
+### 2.1 栈溢出 (Stack Overflow)
+由于未对输入长度进行边界检查，覆盖了栈上的返回地址。
+- **Root Cause**：`gets()`, `scanf("%s")`, `strcpy()` 等危险函数的使用。
+
+### 2.2 格式化字符串 (Format String)
+- **原理**：`printf(user_input)` 允许用户传入控制符（如 `%p`, `%x`, `%n`）。
+- **危害**：
+  - **信息泄露**：使用 `%p` 泄露栈上地址（绕过 ASLR/Canary）。
+  - **任意写**：使用 `%n` 将已打印字符数写入指定地址，修改 GOT 表或返回地址。
+
+### 2.3 堆漏洞：UAF 与 Double Free
+- **Use-After-Free (UAF)**：指针被 `free` 后未置空（悬挂指针），再次使用该指针可能访问到已被分配给其他用途的内存。
+- **Double Free**：释放同一块内存两次，导致堆管理器（Fastbin/Tcache）的链表形成环路，从而实现任意地址分配。
 
 ---
 
-## 4. 深度例题与练习 (Exercises)
+## 3. 控制流劫持技术 (Exploitation)
 
-### 例题 1：简单栈溢出偏移计算
-**题目**：假设函数内部定义了 `char buf[64];`。在 x86_64 架构下，要覆盖返回地址，至少需要输入多少字节？
+### 3.1 ROP (Return Oriented Programming)
+在 **NX** 开启时，通过拼接 Gadgets 绕过。
+- **Magic Gadget (One-gadget)**：Libc 中存在直接执行 `execve("/bin/sh", NULL, NULL)` 的单条跳转指令，通常是最高效的利用手段。
+
+### 3.2 SROP (Sigreturn Oriented Programming)
+利用 `sigreturn` 系统调用在栈上恢复伪造的寄存器上下文，从而一次性控制所有寄存器。
+
+---
+
+## 4. 攻防模型：漏洞缓解与绕过 (Mitigations)
+
+| 保护机制 | 绕过策略 |
+| :--- | :--- |
+| **NX (Stack Unexecutable)** | ROP, Ret2Libc |
+| **ASLR (Address Randomization)** | Memory Leak (泄露 Libc 基址或栈地址) |
+| **Canary (Stack Guard)** | Leak Canary (格式化字符串) 或覆盖非关键变量 |
+| **PIE (Code Randomization)** | 泄露代码段地址 |
+| **RELRO (Read-Only GOT)** | **Partial**: 修改 GOT；**Full**: 修改 `__malloc_hook` 或返回地址 |
+
+---
+
+## 5. 深度例题与练习 (Exercises)
+
+### 例题 1：格式化字符串任意读 (C++)
+**题目**：假设程序存在 `printf(buf);` 漏洞。如何利用该漏洞读取栈上第 6 个参数的值？
 
 <details>
 <summary>点击查看解析 (Check Solution)</summary>
 
 **解析**：
-1. **buf 长度**：64 字节。
-2. **Saved RBP**：64 位系统下 RBP 占用 8 字节。
-3. **返回地址 (RIP)**：位于 Saved RBP 之后。
-**结论**：总偏移 = $64 \text{ (buf)} + 8 \text{ (rbp)} = 72$ 字节。第 73-80 字节将覆盖返回地址。
+在 x86_64 下，`printf` 的前 6 个参数分别通过 `rdi`, `rsi`, `rdx`, `rcx`, `r8`, `r9` 传递。从第 7 个参数（即 `printf` 内部视角下的偏移）开始存放在栈上。
+**Payload**：`%6$p`。
+其中 `6` 是相对于格式化字符串起始位置的偏移。在很多 CTF 题目中，如果 `buf` 本身就在栈上，可以通过 `%n$p` 遍历查找。
 </details>
 
-### 练习 1：ROP 链构造模拟 (C++)
-**题目**：给定以下 Gadgets 地址，请构造调用 `system("/bin/sh")` 的执行序列（假设 `/bin/sh` 地址已知）。
-- `pop_rdi_ret`: `0x400600`
-- `system_addr`: `0x400500`
-- `bin_sh_addr`: `0x600100`
+### 练习 1：栈溢出绕过 Canary 逻辑模拟
+**题目**：如果一个程序开启了 Canary 保护，但存在一个**数组越界读**漏洞和一个**栈溢出**漏洞。请简述攻击步骤。
 
 <details>
 <summary>点击查看解析 (Check Solution)</summary>
 
-**Payload 构造逻辑**：
-1. 覆盖返回地址为 `pop_rdi_ret` (`0x400600`)。
-2. 在栈上放置 `bin_sh_addr` (`0x600100`)。执行 `pop rdi` 后，`rdi` 将指向 "/bin/sh"。
-3. 在栈上放置 `system_addr` (`0x400500`)。`ret` 指令执行后跳转到 `system`。
+**攻击步骤**：
+1. **泄露 Canary**：利用数组越界读漏洞，读取存放 Canary 的位置（通常在 `rbp-0x8`），获取其随机值。
+2. **构造 Payload**：在栈溢出填充时，将泄露出的真实 Canary 填回正确位置，使得函数退出时的校验通过。
+3. **覆盖 RIP**：在补全 Canary 后，继续覆盖 Saved RBP 和 Return Address 为 ROP 链起始地址。
+</details>
 
-**C++ 逻辑模拟代码**：
+### 练习 2：堆 UAF 漏洞利用 (C++ 模拟)
+**题目**：阅读以下代码，分析如何通过 `uaf_ptr` 劫持控制流。
+
 ```cpp
-#include <iostream>
-#include <vector>
-#include <cstdint>
+struct Note {
+    void (*print_func)(const char*);
+    char content[16];
+};
 
-int main() {
-    std::vector<uint64_t> stack_payload;
-    
-    // 假设前面的填充已经完成
-    stack_payload.push_back(0x400600); // pop rdi; ret
-    stack_payload.push_back(0x600100); // Address of "/bin/sh"
-    stack_payload.push_back(0x400500); // Address of system()
-    
-    std::cout << "Payload (Hex): ";
-    for(auto addr : stack_payload) {
-        printf("%lx ", addr);
-    }
-    std::cout << std::endl;
-    return 0;
-}
+void safe_print(const char* s) { std::cout << s << std::endl; }
+void malicious_shell(const char* s) { system("/bin/sh"); }
+
+Note* n1 = new Note();
+n1->print_func = safe_print;
+delete n1; // n1 变成悬挂指针
+
+// 此时分配一个新的对象
+long long* n2 = new long long( (long long)malicious_shell );
+// 如果 n2 占用了 n1 原先的 print_func 空间...
+n1->print_func("Hello"); // 触发劫持
 ```
-</details>
-
-### 练习 2：GOT 表覆盖原理
-**题目**：为什么在 Full RELRO (Read-Only Relocations) 开启的情况下，无法进行 GOT 表劫持？
 
 <details>
 <summary>点击查看解析 (Check Solution)</summary>
 
 **解析**：
-1. **Partial RELRO**：只有部分重定位表只读，GOT 表（尤其是 `.got.plt`）依然可写。
-2. **Full RELRO**：在程序启动时，动态链接器会解析所有符号，并将整个 GOT 表标记为**只读 (Read-Only)**。
-**结论**：由于 GOT 表无法被写入，攻击者无法通过覆盖表项来劫持控制流。
+1. `n1` 被释放后，其所在的内存块进入堆管理器的空闲链表。
+2. 当分配 `n2` 时，堆管理器会复用刚刚释放的内存块以提高效率。
+3. 如果 `n2` 的内容（即 `malicious_shell` 的地址）正好覆盖了原 `n1->print_func` 的位置。
+4. 调用 `n1->print_func()` 时，程序实际上跳转到了 `malicious_shell`。
+**防御**：`delete` 后立即将指针置为 `nullptr`。
 </details>
+
