@@ -6,36 +6,33 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 import BilibiliEmbed from '@site/src/components/BilibiliEmbed';
 import { GitBranch, Move, RotateCcw, Shuffle, Layers, Scissors, Repeat } from 'lucide-react';
 
-# 平衡树 (Balanced Tree)
+# 平衡树 (Balanced Tree): 动态维护有序集
 
 <KnowledgeCard type="info" title="核心目标">
-平衡树（主要是平衡二叉搜索树，BST）旨在通过特定的调整机制（旋转或分裂重构），确保树的高度始终维持在 $O(\log N)$，从而保证插入、删除和查询操作的效率。
+平衡二叉搜索树（BBST）旨在通过特定的调整机制，确保树的高度始终维持在 $O(\log N)$，从而保证插入、删除和查询操作的效率。
 </KnowledgeCard>
 
 ---
 
-## 1. Splay (伸展树)
+## 1. 平衡维护策略分类
 
-Splay 是一种通过**伸展操作 (Splaying)** 将节点提升至根位置的自适应平衡树。其核心在于：频繁访问的节点会靠近根部。
+平衡树的维护逻辑可分为三大流派：
 
-### 1.1 旋转操作 (Rotate)
-核心在于保持 BST 性质的同时改变节点层级。设 $x$ 为要旋转的节点，$y$ 为其父节点。
-- **Zig (单旋)**：当 $y$ 为根时，直接通过一次旋转提升 $x$。
-- **Zig-Zig (同向双旋)**：$x, y, z$ 在同一直线上。需先旋转 $y$，再旋转 $x$。
-- **Zig-Zag (异向双旋)**：$x, y, z$ 呈折线状。需旋转两次 $x$。
+| 策略 | 代表结构 | 核心原理 | 优点 | 缺点 |
+| :--- | :--- | :--- | :--- | :--- |
+| **旋转式 (Rotation)** | AVL, Red-Black, **Splay** | 利用左旋/右旋改变节点层级 | 严格平衡 (AVL) 或自适应访问 (Splay) | 实现复杂，Splay 常数大 |
+| **分裂合并式 (Split-Merge)** | **FHQ-Treap** | 基于随机权值的分裂与合并 | 极易实现，天然支持可持久化 | 依赖随机数，常数稍大 |
+| **重构式 (Rebuilding)** | Scapegoat Tree | 局部不平衡时暴力重建子树 | 无需旋转，思想朴素 | 复杂度为均摊 $O(\log N)$ |
 
-<KnowledgeCard type="warning" title="关键细节">
-在 Splay 中，同向旋转必须**先旋转父节点**再旋转当前节点，否则树的高度无法得到有效压缩，复杂度将退化。
-</KnowledgeCard>
+---
+
+## 2. Splay (伸展树)
+
+### 2.1 伸展操作与势能分析
+Splay 的核心在于 `splay(x, k)`，将节点 $x$ 旋转至 $k$ 的下方。
+**定理**：采用 Zig-Zig 和 Zig-Zag 双旋策略，Splay 操作的均摊复杂度为 $O(\log N)$。
 
 ```cpp
-struct Node {
-    int s[2], p, v;
-    int sz, rev; // 区间翻转标记
-} tr[MAXN];
-
-void push_up(int x) { tr[x].sz = tr[tr[x].s[0]].sz + tr[tr[x].s[1]].sz + 1; }
-
 void rotate(int x) {
     int y = tr[x].p, z = tr[y].p;
     int k = (tr[y].s[1] == x);
@@ -44,158 +41,82 @@ void rotate(int x) {
     tr[x].s[k ^ 1] = y; tr[y].p = x;
     push_up(y); push_up(x);
 }
-
-void splay(int x, int k) {
-    while (tr[x].p != k) {
-        int y = tr[x].p, z = tr[y].p;
-        if (z != k)
-            (tr[y].s[1] == x) ^ (tr[z].s[1] == y) ? rotate(x) : rotate(y);
-        rotate(x);
-    }
-    if (!k) root = x;
-}
 ```
+
+### 2.2 维护序列：区间操作
+Splay 维护序列时，第 $k$ 个元素对应树中中序遍历的第 $k$ 个节点。区间 $[L, R]$ 可通过将 $L-1$ 伸展至根，$R+1$ 伸展至根的右子节点来提取（即根右儿子的左子树）。
 
 ---
 
-## 2. FHQ-Treap (无旋 Treap)
+## 3. FHQ-Treap (无旋 Treap)
 
-由范浩强发明，通过 `Split`（分裂）和 `Merge`（合并）两个核心操作维护平衡。
+### 3.1 概率平衡证明
+Treap 给每个节点分配随机权值 $priority$，使其在满足 BST 性质的同时满足大根堆性质。
+**证明**：随机插入 $N$ 个节点形成的 Treap，其期望高度为 $O(\log N)$。
 
-### 2.1 分裂方式
-- **按值分裂 (By Value)**：用于维护普通 BST，支持插入、删除、排名查询。
-- **按排名分裂 (By Size)**：用于维护序列（如区间翻转、区间修改）。
-
-### 2.2 核心实现
+### 3.2 核心操作：Split & Merge
 ```cpp
-void split(int u, int sz, int &l, int &r) { // 按排名分裂
+void split(int u, int val, int &l, int &r) { // 按值分裂
     if (!u) { l = r = 0; return; }
-    push_down(u);
-    if (tr[tr[u].l].sz < sz) {
-        l = u;
-        split(tr[u].r, sz - tr[tr[u].l].sz - 1, tr[u].r, r);
+    if (tr[u].v <= val) {
+        l = u; split(tr[u].r, val, tr[u].r, r);
     } else {
-        r = u;
-        split(tr[u].l, sz, l, tr[u].l);
+        r = u; split(tr[u].l, val, l, tr[u].l);
     }
     push_up(u);
 }
-
-int merge(int l, int r) {
-    if (!l || !r) return l + r;
-    if (tr[l].key > tr[r].key) {
-        push_down(l);
-        tr[l].r = merge(tr[l].r, r);
-        push_up(l); return l;
-    } else {
-        push_down(r);
-        tr[r].l = merge(l, tr[r].l);
-        push_up(r); return r;
-    }
-}
 ```
 
 ---
 
-## 3. 经典例题
+## 4. 空间压缩与性能优化
 
-### 例题 1：文艺平衡树 (区间翻转)
-给定序列 $1, 2, \dots, n$，$m$ 次操作，每次翻转区间 $[l, r]$。
+- **节点回收 (Garbage Collection)**：对于频繁删除操作的平衡树，可将废弃节点索引存入栈中，下次申请时重用。
+- **动态树 (LCT) 预演**：平衡树是维护动态图连通性的基石。
 
+---
+
+## 5. 经典例题
+
+### 例题 1：普通平衡树 (Top 6 操作)
 <details>
-<summary>Check Solution (Splay Implementation)</summary>
+<summary>Check Solution (FHQ-Treap)</summary>
+
+**要求**：插入、删除、求 $x$ 的排名、求排名 $k$ 的数、求前驱、求后继。
 
 ```cpp
-#include <iostream>
-#include <algorithm>
-using namespace std;
-
-const int N = 100010;
-int n, m;
-struct Node {
-    int s[2], p, v;
-    int sz, rev;
-} tr[N];
-int root, idx;
-
-void push_up(int x) { tr[x].sz = tr[tr[x].s[0]].sz + tr[tr[x].s[1]].sz + 1; }
-
-void push_down(int x) {
-    if (tr[x].rev) {
-        swap(tr[x].s[0], tr[x].s[1]);
-        tr[tr[x].s[0]].rev ^= 1;
-        tr[tr[x].s[1]].rev ^= 1;
-        tr[x].rev = 0;
-    }
-}
-
-void rotate(int x) {
-    int y = tr[x].p, z = tr[y].p;
-    int k = tr[y].s[1] == x;
-    tr[z].s[tr[z].s[1] == y] = x; tr[x].p = z;
-    tr[y].s[k] = tr[x].s[k ^ 1]; tr[tr[x].s[k ^ 1]].p = y;
-    tr[x].s[k ^ 1] = y; tr[y].p = x;
-    push_up(y); push_up(x);
-}
-
-void splay(int x, int k) {
-    while (tr[x].p != k) {
-        int y = tr[x].p, z = tr[y].p;
-        if (z != k)
-            (tr[y].s[1] == x) ^ (tr[z].s[1] == y) ? rotate(x) : rotate(y);
-        rotate(x);
-    }
-    if (!k) root = x;
-}
-
+// 核心逻辑演示
 void insert(int v) {
-    int u = root, p = 0;
-    while (u) p = u, u = tr[u].s[v > tr[u].v];
-    u = ++idx;
-    if (p) tr[p].s[v > tr[p].v] = u;
-    tr[u].p = p; tr[u].v = v; tr[u].sz = 1;
-    splay(u, 0);
+    int l, r;
+    split(root, v, l, r);
+    root = merge(merge(l, new_node(v)), r);
 }
 
-int get_kth(int k) {
-    int u = root;
-    while (1) {
-        push_down(u);
-        if (tr[tr[u].s[0]].sz >= k) u = tr[u].s[0];
-        else if (tr[tr[u].s[0]].sz + 1 == k) return u;
-        else k -= tr[tr[u].s[0]].sz + 1, u = tr[u].s[1];
-    }
-}
-
-void output(int u) {
-    push_down(u);
-    if (tr[u].s[0]) output(tr[u].s[0]);
-    if (tr[u].v >= 1 && tr[u].v <= n) printf("%d ", tr[u].v);
-    if (tr[u].s[1]) output(tr[u].s[1]);
-}
-
-int main() {
-    scanf("%d%d", &n, &m);
-    for (int i = 0; i <= n + 1; i++) insert(i); // 哨兵节点
-    while (m--) {
-        int l, r;
-        scanf("%d%d", &l, &r);
-        l = get_kth(l), r = get_kth(r + 2);
-        splay(l, 0); splay(r, l);
-        tr[tr[r].s[0]].rev ^= 1;
-    }
-    output(root);
-    return 0;
+void remove(int v) {
+    int l, r, p;
+    split(root, v, l, r);
+    split(l, v - 1, l, p);
+    p = merge(tr[p].l, tr[p].r); // 删除一个节点
+    root = merge(merge(l, p), r);
 }
 ```
 </details>
 
+### 例题 2：区间最大子段和 (动态版)
+<details>
+<summary>Check Solution</summary>
+
+**题目描述**：在平衡树上维护区间，支持插入、删除、修改，查询区间最大子段和。
+**解析**：在每个节点维护 `sum`, `lmax`, `rmax`, `tmax`，类似于线段树的合并逻辑，但在平衡树旋转/分裂时更新。
+</details>
+
 ---
 
-## 4. 练习库
+## 6. 综合练习
 
-- **练习 1：NOI 维修数列** - 综合考察平衡树对区间的维护（翻转、求和、最大子段和）。
-- **练习 2：二逼平衡树 (树套树)** - 考察在外部线段树节点上维护平衡树。
+1. **[维护序列]** 实现区间翻转与区间加。
+2. **[性能优化]** 实现带节点回收池的平衡树。
+3. **[进阶]** **文艺平衡树+最大子段和**：NOI 维修数列。
 
 ---
 
