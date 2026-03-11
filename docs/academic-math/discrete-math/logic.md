@@ -131,7 +131,7 @@ int main() {
    - 由前提推得 $r$。故 $p \to r$。
    - 同理可得 $q \to r$。
    - 合取即证。
-   </details>
+</details>
 
 :::info 练习 2
 判断下列公式是否为有效公式（恒真）：$\forall x P(x) \to \exists x P(x)$。

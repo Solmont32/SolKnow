@@ -156,4 +156,4 @@ public:
    - 遍历进程，检查 `Need <= Available`。
    - 若能完成，回收资源 `Available = Available + Allocation`。
    - 如果能找出一个完整序列，则状态安全，否则不安全。
-   </details>
+</details>

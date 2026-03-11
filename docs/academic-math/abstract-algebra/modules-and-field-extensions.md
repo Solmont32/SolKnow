@@ -111,7 +111,8 @@ $$\mathbb{F}_{p^n} \cong \mathbb{F}_p[x] / (f(x))$$
    - $[\mathbb{Q}(\sqrt[3]{2}):\mathbb{Q}] = 3$（最小多项式为 $x^3-2$）。
    - 由于 $\omega$ 满足 $x^2+x+1=0$，且在实域 $\mathbb{Q}(\sqrt[3]{2})$ 上无根，故 $[K:\mathbb{Q}(\sqrt[3]{2})] = 2$。
    - 由乘法公式 $[K:\mathbb{Q}] = 3 \times 2 = 6$。
-   </details>
+
+</details>
 
 :::info 例题 2 (有限域构造)
 构造 4 元域 $\mathbb{F}_4$。
