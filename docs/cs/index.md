@@ -10,5 +10,6 @@
 - [Python 脚本编程](python/)
 - [计算机组织与结构](organization/)
 - [操作系统原理](os/)
-- [数据结构 (理论篇)](ds/)
 - [计算机网络](network/)
+- [系统架构与工程原语](system-architecture-and-primitives)
+- [数据结构 (理论篇)](ds/)
