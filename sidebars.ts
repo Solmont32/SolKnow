@@ -8,8 +8,9 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       collapsible: true,
       collapsed: true,
-      label: '平台专题',
+      label: '竞赛实战与工程化',
       items: [
+        { type: 'doc', id: 'cp/strategy-and-templates', label: '竞赛策略与工程化模版' },
         { type: 'doc', id: 'cp/codeforces', label: 'Codeforces' },
         { type: 'doc', id: 'cp/atcoder', label: 'AtCoder' },
       ],
