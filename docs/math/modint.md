@@ -133,4 +133,5 @@ className="mt-12 p-6 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border
 
 > <Binary className="text-purple-500 mb-2" />
 > **大师寄语**：在模的世界里，无穷被折叠进了有限。理解逆元，就是理解如何在旋转的钟表盘上寻找退回起点的路径。
-> </motion.div>
+
+</motion.div>

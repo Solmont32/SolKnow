@@ -37,7 +37,8 @@ _直观理解_：增广路始于未匹配点，交替经过非匹配边和匹配
 3. 令 $L_{vis}, R_{vis}$ 分别为左右侧被访问的点集。
 4. **最小覆盖集 $C = (L \setminus L_{vis}) \cup R_{vis}$**。
 5. 可以证明 $|C| = |M|$ 且 $C$ 覆盖了所有边。
-   </KnowledgeCard>
+
+</KnowledgeCard>
 
 ---
 

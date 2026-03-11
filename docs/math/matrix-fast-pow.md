@@ -137,4 +137,5 @@ className="mt-12 p-6 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-a
 
 > <Zap className="text-amber-500 mb-2" />
 > **大师寄语**：矩阵是高维空间的华尔兹。当你把递推式写成矩阵的那一刻，时间复杂度已经完成了从线性到对数的跨越。
-> </motion.div>
+
+</motion.div>

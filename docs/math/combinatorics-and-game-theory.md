@@ -137,4 +137,5 @@ className="mt-12 p-6 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl border border
 
 > <Shapes className="text-indigo-500 mb-2" />
 > **大师寄语**：组合数学不仅仅是计数，更是寻找集合间的映射。博弈论则告诉我们，所有的竞争在某种高度上都是一种代数结构的对抗。
-> </motion.div>
+
+</motion.div>
