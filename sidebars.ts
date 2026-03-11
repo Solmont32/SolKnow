@@ -169,6 +169,7 @@ const sidebars: SidebarsConfig = {
           collapsed: true,
           label: '大学数学 (University Math)',
           items: [
+            { type: 'doc', id: 'academic-math/modern-synthesis', label: '现代数学分析与高等代数 (Modern Synthesis)' },
             { 
               type: 'category', 
               collapsible: true,
