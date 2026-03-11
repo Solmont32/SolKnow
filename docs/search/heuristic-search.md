@@ -24,6 +24,7 @@ import { Search, Zap, Target, Thermometer, Box, ArrowRightCircle, Layers, Shield
 
 **复杂度量化分析**：
 若分支因子为 $b$（每个节点的平均后继数），搜索深度为 $d$，则搜索树节点总数 $|V| = \sum_{i=0}^d b^i = \frac{b^{d+1}-1}{b-1}$。
+
 - **时间复杂度**：$O(b^d)$，呈指数级增长。
 - **空间复杂度**：DFS 为 $O(d)$，BFS 为 $O(b^d)$。
 
@@ -113,8 +114,8 @@ int main() {
 
 **定理 3**：若 $h(s)$ 是可接受的，则 A\* 首次弹出目标节点时必为最优。
 **证明**：假设 A* 选出非最优目标 $G_{bad}$。此时路径上必有一节点 $n$ 在 OpenList 中。
-$f(n) = g(n) + h(n) \le g(n) + h^*(n) = f^*(G^*) = g(G^*) < g(G_{bad})$。
-根据优先队列性质，$n$ 必在 $G_{bad}$ 之前弹出，矛盾。
+$f(n) = g(n) + h(n) \le g(n) + h^*(n) = f^_(G^_) = g(G^\*) < g(G*{bad})$。
+根据优先队列性质，$n$ 必在 $G*{bad}$ 之前弹出，矛盾。
 
 ### 3. IDA* (Iterative Deepening A*)
 
@@ -134,9 +135,10 @@ $$V(s) = \begin{cases} \text{Utility}(s) & \text{if IsTerminal}(s) \\ \max_{a \i
 ### 2. Alpha-Beta 剪枝优化
 
 引入两个边界 $[\alpha, \beta]$：
+
 - $\alpha$：MAX 节点已发现的当前最高下界。
 - $\beta$：MIN 节点已发现的当前最低上界。
-**剪枝条件**：若在某个节点发现 $\alpha \ge \beta$，则该子树不再需要搜索。
+  **剪枝条件**：若在某个节点发现 $\alpha \ge \beta$，则该子树不再需要搜索。
 
 <details>
 <summary>Check Solution: Alpha-Beta 剪枝通用模板</summary>
@@ -212,12 +214,14 @@ int solve(int mask, int u) {
 
 设搜索生成的节点总数为 $N$，目标深度为 $d$，有效分支因子 $b^*$ 满足：
 $N + 1 = \sum_{i=0}^d (b^*)^i$
+
 - 理想情况下，$h(s)$ 越精确，$b^*$ 越接近 $1$。
 - **性能评估**：通过比较不同启发式函数在相同问题上的 $b^*$ 来量化搜索效率。
 
 ### 2. IDDFS 的时空权衡
 
 **迭代加深深度优先搜索 (IDDFS)**：
+
 - **空间**：$O(d)$。
 - **时间**：$\sum_{i=1}^d b^i = \frac{b^{d+1}-b}{b-1} \approx O(b^d)$。虽然底层节点被重复访问，但在 $b \ge 2$ 时，最后一层的开销占主导地位，总体常数项仅比 BFS 略大。
 
@@ -226,9 +230,11 @@ $N + 1 = \sum_{i=0}^d (b^*)^i$
 ## 🎯 综合练习与挑战
 
 ### 练习 1：[八数码问题 - A* 与 曼哈顿距离]
+
 > 使用 A\* 算法求解八数码，对比曼哈顿距离与错位数估价函数的 $b^*$。
 
 ### 练习 2：[井字棋 - Minimax 与 完美决策]
+
 > 实现一个不会输的井字棋 AI，并尝试应用 Alpha-Beta 剪枝。
 
 ---

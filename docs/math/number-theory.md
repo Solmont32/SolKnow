@@ -12,10 +12,10 @@ import { Hash, Lock, Sigma, Infinity, Code2, Zap, Layers, Binary, Cpu, FunctionS
 initial={{ opacity: 0, y: 20 }}
 animate={{ opacity: 1, y: 0 }}
 transition={{ duration: 0.5 }}
-className="text-gray-600 dark:text-gray-400 mb-8"
+className="text-gray-600 dark:text-gray-400 mb-8">
 
-> 本篇文档系统化构建了从基础整除、同余系，到莫比乌斯反演、二次剩余与高阶筛法的工业级数论知识体系。数论不仅是数学的桂冠，更是现代公钥密码学的逻辑基石。
-> </motion.div>
+ 本篇文档系统化构建了从基础整除、同余系，到莫比乌斯反演、二次剩余与高阶筛法的工业级数论知识体系。数论不仅是数学的桂冠，更是现代公钥密码学的逻辑基石。
+</motion.div>
 
 ---
 
@@ -291,8 +291,8 @@ long long get_mu(int n) {
 <motion.div
 initial={{ opacity: 0 }}
 whileInView={{ opacity: 1 }}
-className="mt-12 p-6 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-amber-100 dark:border-amber-800"
+className="mt-12 p-6 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-amber-100 dark:border-amber-800">
 
-> <FlaskConical className="text-amber-500 mb-2" />
-> **大师寄语**：数论不仅仅是处理数字，更是处理结构。当你能通过 Dirichlet 卷积看穿函数的相互作用时，你便掌握了调和级数背后的规律。
-> </motion.div>
+<FlaskConical className="text-amber-500 mb-2" />
+**大师寄语**：数论不仅仅是处理数字，更是处理结构。当你能通过 Dirichlet 卷积看穿函数的相互作用时，你便掌握了调和级数背后的规律。
+</motion.div>

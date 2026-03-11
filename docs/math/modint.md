@@ -12,10 +12,10 @@ import { Hash, Zap, ShieldCheck, Scale, Cpu, Binary } from 'lucide-react';
 initial={{ opacity: 0, y: 20 }}
 animate={{ opacity: 1, y: 0 }}
 transition={{ duration: 0.5 }}
-className="text-gray-600 dark:text-gray-400 mb-8"
+className="text-gray-600 dark:text-gray-400 mb-8">
 
-> 模运算（Modular Arithmetic）是数论的基础，也是现代密码学和计算机科学的基石。它不仅定义了整数集合上的等价关系，还通过同余类构成了环与域的代数结构。
-> </motion.div>
+ 模运算（Modular Arithmetic）是数论的基础，也是现代密码学和计算机科学的基石。它不仅定义了整数集合上的等价关系，还通过同余类构成了环与域的代数结构。
+</motion.div>
 
 ---
 

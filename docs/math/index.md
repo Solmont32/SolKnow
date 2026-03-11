@@ -12,10 +12,10 @@ import { Sigma, Hash, Zap, Infinity, Gamepad2, Binary, Scale, Trophy } from 'luc
 initial={{ opacity: 0, y: 20 }}
 animate={{ opacity: 1, y: 0 }}
 transition={{ duration: 0.5 }}
-className="text-gray-600 dark:text-gray-400 mb-8"
+className="text-gray-600 dark:text-gray-400 mb-8">
 
-> 数学是算法竞赛的灵魂。从精妙的整除理论到复杂的组合模型，本板块致力于构建一个严谨且具有工业级实用性的数学知识体系。
-> </motion.div>
+ 数学是算法竞赛的灵魂。从精妙的整除理论到复杂的组合模型，本板块致力于构建一个严谨且具有工业级实用性的数学知识体系。
+</motion.div>
 
 ---
 
@@ -54,8 +54,8 @@ className="text-gray-600 dark:text-gray-400 mb-8"
 <motion.div
 initial={{ opacity: 0 }}
 whileInView={{ opacity: 1 }}
-className="mt-12 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800"
+className="mt-12 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800">
 
-> <Scale className="text-blue-500 mb-2" />
-> **大师寄语**：在数学的世界里，没有模糊的“差不多”。每一个推导都必须无懈可击，每一个结论都必须经过逻辑的洗礼。
-> </motion.div>
+<Scale className="text-blue-500 mb-2" />
+**大师寄语**：在数学的世界里，没有模糊的“差不多”。每一个推导都必须无懈可击，每一个结论都必须经过逻辑的洗礼。
+</motion.div>

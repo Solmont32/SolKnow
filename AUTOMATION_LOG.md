@@ -419,7 +419,7 @@
 [2026-03-08 08:12:19] [PLAN] No pending tasks. Running deep audit...
 [2026-03-08 08:12:19] [INFO] Attempting pulse with Codex [gpt-5.4] for planning...
 [2026-03-08 09:12:22] [INFO] git pull: From https://github.com/Solmont32/SolKnow
-[2026-03-08 09:12:22] [INFO] git pull: * branch main -> FETCH_HEAD
+[2026-03-08 09:12:22] [INFO] git pull: * branch main -> FETCH*HEAD
 [2026-03-08 09:12:22] [INFO] git pull: Current branch main is up to date.
 [2026-03-08 09:12:26] [WARN] Skipped restoring temporary runtime stash stash@{0} due to local changes in: AUTOMATION_LOG.md
 [2026-03-08 09:12:27] [INFO] Dropped stale temporary runtime stash: stash@{0}
@@ -457,7 +457,7 @@
 [2026-03-08 23:19:37] [INFO] Pre-flight: Running local type-check...
 [2026-03-08 23:23:36] [EXE ] >>> [SYNC] Aligning changes with cloud...
 [2026-03-08 23:23:58] [ OK ] Batch queue cleared.
-[00:20:47] [ERR ] Loop Crash: parsing "(?s)## 寰呭姙瀛愪换鍔?._?)(?=##|$)" - Too many )'s.
+[00:20:47] [ERR ] Loop Crash: parsing "(?s)## 寰呭姙瀛愪换鍔?.*?)(?=##|$)" - Too many )'s.
 [00:27:02] [PLAN] Planning...
 [00:27:03] [ERR ] Error: A parameter cannot be found that matches parameter name 'join'.
 [00:28:35] [PLAN] Planning next sequence...
@@ -511,7 +511,7 @@
 [00:03:17] Completed: 完备化『计算几何：凸包算法、旋转卡壳』教材化结构：系统化叉积应用，配套多道折叠 C++ 解答例题与练习 (2026-03-10)
 [00:36:56] Completed: 完备化『数论基础与进阶：从欧几里得算法、筛法到莫比乌斯反演与杜教筛』教材化结构：系统化积性函数、数论变换与同余方程组，配套多道折叠 C++ 解答例题与练习 (2026-03-11)
 [00:44:51] Completed: 完备化『组合计数与博弈论：从容斥原理、生成函数到尼姆博弈与 SG 函数』教材化结构：系统化计数模型、Pólya 计数理论与动态博弈分析，配套多道折叠 C++ 解答例题与练习 (2026-03-11)
-[00:47:44] Completed: 完备化『搜索优化与启发式算法：从高效剪枝、双向搜索到 A_、IDA* 与模拟退火』教材化结构：系统化状态空间建模、估价函数设计与参数调优，配套多道折叠 C++ 解答例题与练习 (2026-03-11)
+[00:47:44] Completed: 完备化『搜索优化与启发式算法：从高效剪枝、双向搜索到 A\_、IDA* 与模拟退火』教材化结构：系统化状态空间建模、估价函数设计与参数调优，配套多道折叠 C++ 解答例题与练习 (2026-03-11)
 [00:49:51] Completed: 完备化『概率期望与随机化算法：从期望 DP 到 Miller-Rabin 质数测试与 Pollard-Rho 分解』教材化结构：系统化期望推导、线性规划应用与随机化分解，配套多道折叠 C++ 解答例题与练习 (2026-03-11)
 [00:55:38] Completed: 完备化『SolKnow 综合练习库：全版块习题聚合与折叠代码解析系统』教材化结构：建立从基础到竞赛级的阶梯式练习，系统化多视角解法对比，对标教科书课后习题规范 (2026-03-11)
 [01:24:18] Completed: 完备化『基础算法：排序、二分、贪心与双指针/前缀和』教材化结构：系统化离散化策略、单调性应用与分治思想，配套多道折叠 C++ 解答例题与练习 (2026-03-11)

@@ -23,14 +23,14 @@ import { Target, Zap, ShieldCheck, BarChart3, ChevronRight, Code2, Layers, Lock 
 
 ## 🎯 考点覆盖模型 (Knowledge Matrix)
 
-| 知识模块         | 核心考点                             | 关联习题   | 推荐等级 |
-| :--------------- | :----------------------------------- | :--------- | :------- |
-| **注入漏洞**     | SQL 盲注推导、二次注入、OS 命令注入  | 练习 1     | Level A  |
-| **跨站脚本**     | 反射/存储型 XSS、DOM XSS、CSP 绕过   | 练习 2     | Level A  |
-| **服务端请求**   | SSRF 探测内网、Gopher 协议利用       | 练习 3     | Level B  |
-| **身份认证**     | JWT 签名伪造、Session 劫持           | 练习 5     | Level B  |
-| **反序列化**     | PHP POP 链构造、Java 原生反序列化    | 练习 4     | Level C  |
-| **文件安全**     | 任意文件读取、文件上传黑白名单绕过   | 练习 6     | Level B  |
+| 知识模块       | 核心考点                            | 关联习题 | 推荐等级 |
+| :------------- | :---------------------------------- | :------- | :------- |
+| **注入漏洞**   | SQL 盲注推导、二次注入、OS 命令注入 | 练习 1   | Level A  |
+| **跨站脚本**   | 反射/存储型 XSS、DOM XSS、CSP 绕过  | 练习 2   | Level A  |
+| **服务端请求** | SSRF 探测内网、Gopher 协议利用      | 练习 3   | Level B  |
+| **身份认证**   | JWT 签名伪造、Session 劫持          | 练习 5   | Level B  |
+| **反序列化**   | PHP POP 链构造、Java 原生反序列化   | 练习 4   | Level C  |
+| **文件安全**   | 任意文件读取、文件上传黑白名单绕过  | 练习 6   | Level B  |
 
 ---
 
@@ -60,12 +60,12 @@ import { Target, Zap, ShieldCheck, BarChart3, ChevronRight, Code2, Layers, Lock 
 void safe_query(sqlite3* db, std::string user_id) {
     sqlite3_stmt* stmt;
     const char* sql = "SELECT name FROM users WHERE id = ?;";
-    
+
     // 1. 预编译 SQL 模板
     if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) == SQLITE_OK) {
         // 2. 绑定参数（由引擎处理转义，彻底杜绝注入）
         sqlite3_bind_text(stmt, 1, user_id.c_str(), -1, SQLITE_STATIC);
-        
+
         // 3. 执行
         while (sqlite3_step(stmt) == SQLITE_ROW) {
             std::cout << "User Found: " << sqlite3_column_text(stmt, 0) << std::endl;
@@ -110,6 +110,7 @@ void safe_query(sqlite3* db, std::string user_id) {
 
 **进阶绕过**：
 若过滤了 `127.0.0.1`，可尝试：
+
 - 十进制地址：`http://2130706433/`
 - 短链接重定向绕过。
 

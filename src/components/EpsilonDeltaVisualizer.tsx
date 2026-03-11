@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Sliders, Eye, Target, Zap, Activity } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Zap, Activity } from 'lucide-react';
 
 /**
  * EpsilonDeltaVisualizer
