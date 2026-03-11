@@ -2,111 +2,105 @@
 title: 图的存储
 ---
 
-import { Database, Layers, Share2, Zap } from 'lucide-react';
+import { Database, Layers, Share2, Zap, LayoutList } from 'lucide-react';
+import { ComplexityAnalysis } from '@site/src/components/ComplexityAnalysis';
 
 # <Database className="inline-block mr-2 mb-1 text-blue-500" /> 图的存储 (Graph Representation)
 
-在图论算法中，如何高效地在计算机中表示图 $G=(V, E)$ 是后续所有算法实现的基础。
+在图论算法中，如何高效地在计算机中表示图 $G=(V, E)$ 是后续所有算法实现的基础。存储结构的选择直接影响算法的时空复杂度及其常数表现。
+
+---
 
 ## 一、 <Layers className="inline-block mr-2 mb-1 text-blue-400" /> 邻接矩阵 (Adjacency Matrix)
 
 ### 1. 定义
-使用一个二维数组 `g[N][N]`。若从 $u$ 到 $v$ 有一条边，则 `g[u][v] = w`（$w$ 为权值）；若无边，则为一个特殊标记（如 $0$ 或 $\infty$）。
+使用二维数组 `g[N][N]`。对于加权图：
+- `g[u][v] = w`（若存在边 $(u, v)$，权值为 $w$）
+- `g[u][v] = INF`（若不存在边）
 
-### 2. 特点
-- **空间复杂度**: $O(n^2)$。
-- **查询边**: $O(1)$。
-- **遍历邻居**: $O(n)$。
-- **适用场景**: 稠密图 ($m \approx n^2$) 或点数较小 ($n \le 500$)。
+### 2. 特性分析
+<ComplexityAnalysis time="查询边 O(1), 遍历邻居 O(V)" space="O(V^2)" />
 
-## 二、 邻接表 (Adjacency List)
+- **适用场景**：点数较小（$N \le 1000$）或稠密图。
+- **优势**：查询两点间是否有边极其迅速。
+
+---
+
+## 二、 <LayoutList className="inline-block mr-2 mb-1 text-purple-500" /> 邻接表 (Adjacency List)
 
 ### 1. 定义
-为每个点维护一个列表，存储从该点出发的所有边。在 C++ 中通常使用 `std::vector<Edge> adj[N]` 实现。
+为每个点维护一个变长列表（如 `std::vector`），存储从该点出发的所有边信息。
 
-### 2. 特点
-- **空间复杂度**: $O(n+m)$。
-- **遍历邻居**: $O(\text{deg}(u))$。
-- **适用场景**: 稀疏图 ($m \ll n^2$)，绝大多数竞赛题目的通用选择。
+### 2. 特性分析
+<ComplexityAnalysis time="查询边 O(deg(u)), 遍历邻居 O(deg(u))" space="O(V + E)" />
 
-## 三、 链式前向星 (Chain Forward Star)
+- **适用场景**：绝大多数竞赛题目的通用选择，尤其是稀疏图。
+- **注意**：`std::vector` 的频繁扩容可能在极端数据下产生常数开销。
+
+---
+
+## 三、 <Zap className="inline-block mr-2 mb-1 text-amber-500" /> 链式前向星 (Static Adjacency List)
 
 ### 1. 核心思想
-**链式前向星**是静态化的邻接表。它通过数组模拟链表，避免了 `std::vector` 的动态扩容开销，是工业级算法竞赛中的首选结构。
+**链式前向星**是邻接表的静态数组实现。它通过预分配数组模拟链表，是工业级算法竞赛中的**首选结构**。
 
-### 2. 数据结构定义
+### 2. 数据结构实现 (C++)
 ```cpp
-int head[N];    // head[u] 存储点 u 的最后一条出边的编号
-int ver[M];     // ver[i] 存储第 i 条边的终点
-int nxt[M];     // nxt[i] 存储与第 i 条边同起点的“下一条边”的编号
-int edge[M];    // edge[i] 存储第 i 条边的权值
-int tot;        // 当前边的总编号（计数器）
+int head[N], ver[M], nxt[M], edge[M], tot;
 
-// 初始化
-void init() {
-    memset(head, 0, sizeof(head));
-    tot = 0;
+void add_edge(int u, int v, int w) {
+    ver[++tot] = v;
+    edge[tot] = w;
+    nxt[tot] = head[u];
+    head[u] = tot;
 }
 
-// 加边 (Add Edge)
-void add(int u, int v, int w) {
-    ver[++tot] = v;    // 记录终点
-    edge[tot] = w;     // 记录权值
-    nxt[tot] = head[u]; // 当前边的下一条边是原先 head[u] 指向的边
-    head[u] = tot;     // 更新 head[u] 为当前边
-}
-```
-
-### 3. 遍历方式
-```cpp
+// 遍历邻居
 for (int i = head[u]; i; i = nxt[i]) {
-    int v = ver[i];
-    int w = edge[i];
-    // 处理边 (u, v, w)
+    int v = ver[i], w = edge[i];
+    // logic
 }
 ```
 
-### 4. 关键技巧：成对变换 (Pairing)
-在处理无向图或网络流时，经常需要快速找到一条边的“反向边”。
-- 若初始 `tot = 1`，则第 $i$ 条边的反向边编号为 `i ^ 1`。
-- 加边时成对加入：`add(u, v, w); add(v, u, 0);`。
+### 3. 关键技巧：成对变换 (Pairing)
+在加边时令 `tot = 1`（或 0），将反向边紧随正向边加入。
+- **性质**：边 `i` 的反向边编号即为 `i ^ 1`。
+- **应用**：网络流中快速更新残量网络。
+
+---
 
 ## 四、 存储方式选型对比
 
 | 特性 | 邻接矩阵 | 邻接表 (`vector`) | 链式前向星 |
 | :--- | :--- | :--- | :--- |
-| **空间** | $O(n^2)$ | $O(n+m)$ | $O(n+m)$ |
-| **增删边** | $O(1)$ | $O(1)$ (均摊) | $O(1)$ |
-| **查重边** | $O(1)$ | $O(\text{deg}(u))$ | $O(\text{deg}(u))$ |
-| **内存连续性** | 极佳 | 较差 | 较好 |
-| **反向边查找** | $O(1)$ | 需额外记录 | $O(1)$ (成对变换) |
+| **空间效率** | 低 ($V^2$) | 高 ($V+E$) | **最高** ($V+E$) |
+| **遍历邻居** | 慢 ($V$) | 快 ($deg(u)$) | 快 ($deg(u)$) |
+| **查询边是否存在** | **极快** ($1$) | 慢 ($deg(u)$) | 慢 ($deg(u)$) |
+| **反向边定位** | 容易 | 困难 | **极易** (XOR 1) |
 
 ---
 
-## 配套练习（答案折叠）
+## 配套练习 (折叠解答)
 
-### 练习 1（基础）
-在链式前向星中，如果我们要存储一个有 10,000 个点和 50,000 条边的**无向图**，数组 `ver` 和 `nxt` 的大小至少应开到多少？
-
+### 练习 1：重边处理
+在邻接矩阵中，如果存在重边（同一对点间多条边），应该如何存储？
 <details>
-<summary>点击查看过程与答案</summary>
+<summary>点击查看解析</summary>
 
-无向图每一条边需要存储两次（$u \to v$ 和 $v \to u$）。
-$M = 50,000 \times 2 = 100,000$。
-
-**答案**：至少 100,000。
+**方案**：
+通常在最短路问题中，我们只需保留权值**最小**的那条边：
+`g[u][v] = min(g[u][v], new_weight);`
+如果是计数问题，则邻接矩阵无法直接处理，需改用邻接表。
 
 </details>
 
-### 练习 2（进阶）
-为什么在网络流算法中，链式前向星比 `vector` 更具优势？
-
+### 练习 2：内存连续性
+为什么链式前向星在某些情况下比 `vector<vector<int>>` 快？
 <details>
-<summary>点击查看过程与答案</summary>
+<summary>点击查看解析</summary>
 
-1. **成对变换**：通过 `i ^ 1` 可以在 $O(1)$ 时间内找到反向边，直接修改残量。
-2. **效率**：避免了 `vector` 的 push_back 开销，且在处理大规模增广时常数更小。
-
-**答案**：主要在于成对变换查找反向边的极高效率。
+**原因**：
+1. **减少内存分配**：`vector` 在扩容时会涉及内存重新分配和拷贝，而链式前向星是预分配的。
+2. **缓存友好性**：静态数组在内存中是连续分布的，CPU 缓存命中率更高。
 
 </details>

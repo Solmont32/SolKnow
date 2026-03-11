@@ -1,170 +1,163 @@
 ---
-title: 最短路算法与图论建模
+title: 最短路算法与建模进阶
 ---
 
-import { Compass, Navigation, Zap, Layers, AlertCircle, Share2, Link, Workflow, Activity } from 'lucide-react';
+import { Compass, Navigation, Zap, Layers, AlertCircle, Share2, Link, Workflow, Activity, ShieldCheck, Sigma } from 'lucide-react';
+import { ComplexityAnalysis } from '@site/src/components/ComplexityAnalysis';
+import { KnowledgeCard } from '@site/src/components/KnowledgeCard';
 
 # <Compass className="inline-block mr-2 mb-1 text-blue-600" /> 最短路算法 (Shortest Path)
 
-在离散数学中，最短路问题不仅是几何意义上的距离最小化，更是**状态空间中转移代价的最优化**。本篇将从基础算法演进至工业级建模技巧。
+最短路问题是图论建模中最具生命力的研究方向之一。它不仅解决几何空间中的距离问题，更是**状态空间中转移代价的最优化**。
 
 ---
 
-## 一、 <Workflow className="inline-block mr-2 mb-1 text-blue-500" /> 数学定义与形式化描述
+## 一、 <Sigma className="inline-block mr-2 mb-1 text-blue-500" /> 形式化定义
 
-给定加权有向图 $G = (V, E, w)$，其中 $w: E \to \mathbb{R}$ 为权函数。路径 $p = (v_0, v_1, \dots, v_k)$ 的权值为 $w(p) = \sum_{i=1}^k w(v_{i-1}, v_i)$。
+给定加权图 $G = (V, E, w)$，其中 $w: E \to \mathbb{R}$ 为权函数。路径 $p = (v_0, v_1, \dots, v_k)$ 的权值为 $w(p) = \sum_{i=1}^k w(v_{i-1}, v_i)$。
 **最短路权值** $\delta(u, v)$ 定义为：
-- $\min \{w(p) : u \xrightarrow{p} v\}$ （若存在路径）
-- $\infty$ （若不存在路径）
-- $-\infty$ （若存在从 $u$ 可达且可达 $v$ 的负权环）
+- $\min \{w(p) : u \xrightarrow{p} v\}$ （若存在通路）
+- $\infty$ （若不可达）
+- $-\infty$ （若存在从 $u$ 可达且可达 $v$ 的**负权环**）
 
 ---
 
-## 二、 <Navigation className="inline-block mr-2 mb-1 text-blue-500" /> 核心算法矩阵
+## 二、 <Workflow className="inline-block mr-2 mb-1 text-purple-500" /> 核心算法矩阵
 
-| 算法 | 类型 | 边权约束 | 复杂度 | 适用场景 |
+| 算法 | 类型 | 边权约束 | 复杂度 | 核心思想 |
 | :--- | :--- | :--- | :--- | :--- |
-| **BFS** | 单源 (SSSP) | 无权 / 等权 | $O(V+E)$ | 最小步数搜索 |
-| **Dijkstra** | 单源 (SSSP) | **非负权** | $O(E \log V)$ | 绝大多数非负权图 |
-| **Bellman-Ford** | 单源 (SSSP) | 无限制 | $O(VE)$ | 负权边、负环检测 |
-| **SPFA** | 单源 (SSSP) | 无限制 | 平均 $O(kE)$ | 稀疏图、差分约束 |
-| **Floyd-Warshall**| 全源 (APSP) | 无限制 | $O(V^3)$ | 小规模图全源路径 |
+| **BFS** | SSSP | 无权 / 等权 | $O(V+E)$ | 逐层扩张 (Level Expansion) |
+| **Dijkstra** | SSSP | **非负权** | $O(E \log V)$ | 贪心策略 + 优先级队列 |
+| **Bellman-Ford** | SSSP | 无限制 | $O(VE)$ | 动态规划 + 松弛操作 |
+| **SPFA** | SSSP | 无限制 | 平均 $O(kE)$ | 队列优化版 Bellman-Ford |
+| **Floyd-Warshall**| APSP | 无限制 | $O(V^3)$ | 插点 DP ($k$ 为中间跳板) |
 
 ---
 
-## 三、 <Link className="inline-block mr-2 mb-1 text-purple-500" /> 建模进阶：差分约束系统
+## 三、 <Activity className="inline-block mr-2 mb-1 text-green-500" /> 核心算法深度解析
 
-**定义**：给定 $n$ 个变量 $x_1, \dots, x_n$ 和 $m$ 个约束条件 $x_j - x_i \le w_{ij}$。求一组可行解。
+### 1. Floyd-Warshall：插点 DP 的精髓
+状态定义：$dp[k][i][j]$ 表示仅允许使用前 $k$ 个点作为中间跳板，从 $i$ 到 $j$ 的最短路。
+**转移方程**：
+$dp[k][i][j] = \min(dp[k-1][i][j], \ dp[k-1][i][k] + dp[k-1][k][j])$
+*注：空间上可压缩至二维数组。*
 
-**转化逻辑**：
-1. 不等式 $x_j \le x_i + w_{ij}$ 与最短路中的**松弛操作** $dist[j] \le dist[i] + w_{ij}$ 形式一致。
-2. 建立图：对于每个约束，连边 $(i, j)$，权值为 $w_{ij}$。
+### 2. SPFA 与 负环判定
+SPFA (Shortest Path Faster Algorithm) 是 Bellman-Ford 的启发式队列优化。
+**负环准则**：若某个点入队次数超过 $n$ 次（或路径边数 $\ge n$），则图中必然存在负环。
+
+---
+
+## 四、 <Link className="inline-block mr-2 mb-1 text-amber-500" /> 建模进阶：差分约束系统
+
+**定义**：给定 $m$ 个不等式 $x_j - x_i \le w_{ij}$，求变量 $x$ 的可行解。
+
+<KnowledgeCard title="差分约束与最短路映射" icon={<ShieldCheck size={20} />}>
+不等式 $x_j \le x_i + w_{ij}$ 与最短路的松弛性质 $dist[j] \le dist[i] + w(i, j)$ 结构完全对等。
+1. **建图**：对于每个约束，建立 $i \to j$ 的有向边，权值为 $w_{ij}$。
+2. **求解**：运行单源最短路（如 SPFA）。
 3. **结论**：
-   - 若图中无负环，则 $dist[i]$ 即为一组可行解。
-   - 若图中存在负环，则该不等式组**无解**。
+   - 若无负环，$dist[i]$ 即为满足约束的一组解。
+   - 若有负环，说明不等式组相互矛盾，**无解**。
+</KnowledgeCard>
 
 ---
 
-## 四、 <Layers className="inline-block mr-2 mb-1 text-amber-500" /> 建模进阶：分层图 (Layered Graph)
+## 五、 <Layers className="inline-block mr-2 mb-1 text-indigo-500" /> 建模进阶：分层图 (Layered Graph)
 
-当问题包含 **$K$ 次决策机会**（如免费过路、费用减半）时，单层图无法表达“决策状态”。
+当决策过程中伴随**有限次特殊操作**（如：免费 $K$ 次、翻倍 $K$ 次）时，需要构建分层图。
 
 **构造法则**：
-1. 建立 $K+1$ 层原图的拷贝。
-2. **层内边**：连接 $(u_i, v_i, w)$，表示普通移动。
-3. **层间边**：连接 $(u_i, v_{i+1}, 0)$ 或 $(u_i, v_{i+1}, w/2)$，表示使用了一次决策权力。
-4. **终点**：答案通常为 $\min_{i=0}^K \{dist[T_i]\}$。
+1. **状态复制**：将原图复制 $K+1$ 层。
+2. **决策转换**：
+   - **普通移动**：层内连边 $(u_i, v_i, w)$。
+   - **使用特殊权利**：层间连边 $(u_i, v_{i+1}, 0)$ 或 $(u_i, v_{i+1}, w')$。
+3. **结果**：答案为 $\min_{i=0}^K \{dist[T_i]\}$。
 
 ---
 
-## 五、 <Activity className="inline-block mr-2 mb-1 text-green-500" /> 工业级 C++ 实现 (Dijkstra + 路径还原)
+## 六、 工业级 C++ 实现 (堆优化 Dijkstra)
 
 ```cpp
 #include <iostream>
 #include <vector>
 #include <queue>
-#include <algorithm>
 
 using namespace std;
 
 const long long INF = 1e18;
 
 struct Edge {
-    int to;
-    int weight;
+    int to, weight;
 };
 
-/**
- * @brief Dijkstra 算法实现 (堆优化版)
- * @param start 起点
- * @param g 邻接表表示的图
- * @param dist 存储最短距离
- * @param parent 存储路径前驱，用于路径还原
- */
-void dijkstra(int start, const vector<vector<Edge>>& g, vector<long long>& dist, vector<int>& parent) {
-    int n = g.size();
-    dist.assign(n, INF);
-    parent.assign(n, -1);
-    
-    using Node = pair<long long, int>; // {distance, vertex}
-    priority_queue<Node, vector<Node>, greater<Node>> pq;
+vector<long long> dijkstra(int n, int start, const vector<vector<Edge>>& adj) {
+    vector<long long> dist(n + 1, INF);
+    priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<>> pq;
 
     dist[start] = 0;
     pq.push({0, start});
 
     while (!pq.empty()) {
-        auto [d, u] = pq.top();
-        pq.pop();
-
+        auto [d, u] = pq.top(); pq.pop();
         if (d > dist[u]) continue;
 
-        for (const auto& edge : g[u]) {
-            if (dist[u] + edge.weight < dist[edge.to]) {
-                dist[edge.to] = dist[u] + edge.weight;
-                parent[edge.to] = u;
-                pq.push({dist[edge.to], edge.to});
+        for (auto& e : adj[u]) {
+            if (dist[u] + e.weight < dist[e.to]) {
+                dist[e.to] = dist[u] + e.weight;
+                pq.push({dist[e.to], e.to});
             }
         }
     }
-}
-
-/**
- * @brief 还原最短路径
- */
-vector<int> restore_path(int target, const vector<int>& parent) {
-    vector<int> path;
-    for (int v = target; v != -1; v = parent[v])
-        path.push_back(v);
-    reverse(path.begin(), path.end());
-    return path;
+    return dist;
 }
 ```
 
 ---
 
-## 六、 配套练习 (折叠解答)
+## 七、 配套练习 (折叠解答)
 
-### 练习 1：最短路计数
-给定一个无权图，如何计算从 $S$ 到 $T$ 的最短路径条数？
-
-<details>
-<summary>查看解析</summary>
-
-**分析**：
-由于是无权图，最短路即 BFS 的层数。
-1. 在 BFS 过程中，维护 `count[v]`。
-2. 初始化 `count[S] = 1`。
-3. 当遍历到边 $(u, v)$ 时：
-   - 若 `dist[v]` 未访问：`dist[v] = dist[u] + 1`, `count[v] = count[u]`。
-   - 若 `dist[v] == dist[u] + 1`：`count[v] += count[u]`。
-**复杂度**：$O(V+E)$。
-
-</details>
-
-### 练习 2：多约束差分
-变量满足 $x_i - x_j \le 5$ 且 $x_i - x_j \ge 2$。如何建边？
+### 练习 1：边权取对数
+给定正权图，求一条路径使得边权**乘积**最小。
 
 <details>
-<summary>查看解析</summary>
+<summary>点击查看解析</summary>
 
 **分析**：
-差分约束要求形式为 $A - B \le C$。
-1. $x_i - x_j \le 5 \implies$ 连边 $(j, i, 5)$。
-2. $x_i - x_j \ge 2 \implies x_j - x_i \le -2 \implies$ 连边 $(i, j, -2)$。
-注意负权边的出现意味着必须使用 SPFA 或 Bellman-Ford。
-
-</details>
-
-### 练习 3：边权取对数
-给定一个正权图，求一条路径使得路径上所有边权的**乘积**最小。
-
-<details>
-<summary>查看解析</summary>
-
-**分析**：
-最小化 $\prod w_i$ 等价于最小化 $\log(\prod w_i) = \sum \log(w_i)$。
+最小化 $\prod w_i$ 等价于最小化 $\sum \log(w_i)$。
 1. 将所有边权 $w$ 替换为 $\log(w)$。
 2. 运行 Dijkstra 算法。
-3. 最终结果为 $\exp(dist[T])$。
+3. 最终答案为 $\exp(dist[T])$。
+*注意：$\log(w)$ 始终非负当 $w \ge 1$；若有 $0 < w < 1$，会出现负权边，需改用 SPFA。*
+
+</details>
+
+### 练习 2：路径上的最大边权最小
+如何求一条从 $S$ 到 $T$ 的路径，使得路径上经过的**最大边权**最小？
+
+<details>
+<summary>点击查看解析</summary>
+
+**方案一：二分答案**
+1. 二分最大边权 $X$。
+2. 将所有 $w > X$ 的边暂时屏蔽，检查 $S, T$ 是否连通。
+
+**方案二：修改 Dijkstra**
+1. 松弛操作改为：$dist[v] = \min(dist[v], \max(dist[u], w(u, v)))$。
+2. 运行 Dijkstra 即可。
+
+</details>
+
+### 练习 3：第 $K+1$ 长边的最小值
+在分层图中，如果允许 $K$ 条边免费，求路径上剩下的边中最大权的最小值。
+
+<details>
+<summary>点击查看解析</summary>
+
+**分析**：
+这是一个典型的“二分 + 最短路”组合。
+1. 二分最大边权限制 $L$。
+2. 建图：若原边权 $w > L$，则视为权值为 1 的边（需使用一次免费机会）；若 $w \le L$，视为权值为 0。
+3. 运行最短路，若 $dist[T] \le K$，则 $L$ 可行。
 
 </details>
