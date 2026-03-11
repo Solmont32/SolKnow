@@ -7,7 +7,7 @@ import { Target, Zap, Trophy, BarChart3, ChevronRight, Brain, Layers, Cpu } from
 
 # 深度学习实战练习 (Deep Learning Exercises)
 
-> **“神经网络的强大源于其层层递进的非线性变换。”** —— 本专题聚焦神经网络底层机制、架构优化及大规模分布式训练原理。
+> **“神经网络的强大源于其层层递进的非线性变换。”** —— 本专题聚焦神经网络底层机制、架构优化及大规模分布式训练原理，配套 C++ 算子级模拟。
 
 ---
 
@@ -18,6 +18,19 @@ import { Target, Zap, Trophy, BarChart3, ChevronRight, Brain, Layers, Cpu } from
 | <span style={{ color: 'var(--ifm-color-success)' }}>● **Level A**</span> | 张量运算与 BP  | 反向传播、激活函数、卷积计算     | 理解梯度流动的物理本质    |
 | <span style={{ color: 'var(--ifm-color-warning)' }}>● **Level B**</span> | 模型设计与正则 | BN/LN 原理、Dropout、ResNet 结构 | 具备解决梯度消失/爆炸能力 |
 | <span style={{ color: 'var(--ifm-color-danger)' }}>● **Level C**</span>  | 架构创新与工程 | Transformer 缩放点积、分布式 SGD | 理解现代 LLM 底层设计逻辑 |
+
+---
+
+## 🎯 考点覆盖模型 (Knowledge Matrix)
+
+| 知识模块         | 核心考点                             | 关联习题   | 推荐等级 |
+| :--------------- | :----------------------------------- | :--------- | :------- |
+| **反向传播**     | 自动微分原理、梯度链式法则矩阵化     | 练习 1, 6  | Level A  |
+| **卷积神经网络** | 感受野计算、参数量推导、空洞卷积     | 练习 2     | Level A  |
+| **正则化与归一化**| BN 推理偏差、LayerNorm 原理          | 练习 3     | Level B  |
+| **残差结构**     | 恒等映射证明、梯度流优化             | 练习 4     | Level B  |
+| **注意力机制**   | Scaled Dot-Product 统计学意义        | 练习 5     | Level C  |
+| **优化器算法**   | Momentum, Adam, 学习率调度           | 练习 7     | Level C  |
 
 ---
 
@@ -107,6 +120,53 @@ import { Target, Zap, Trophy, BarChart3, ChevronRight, Brain, Layers, Cpu } from
 **统计学解释**：
 假设 $Q$ 和 $K$ 的分量是独立且均值为 0、方差为 1 的随机变量。则点积 $q \cdot k = \sum_{i=1}^{d_k} q_i k_i$ 的均值为 0，方差为 $d_k$。
 当 $d_k$ 很大时，点积的量级会变得非常大，导致经过 softmax 后梯度落入饱和区（极小），引发梯度消失。除以 $\sqrt{d_k}$ 可以将方差重新缩放到 1，使 softmax 的输入处于敏感区，确保梯度平稳。
+
+</details>
+
+#### 练习 6：手写神经网络反向传播 (C++ Implementation)
+
+**题目描述**：实现一个简单的 2 层 MLP（全连接网络）在 C++ 中的前馈过程。
+
+<details>
+<summary>Check Solution (C++ Neural Engine Simulation)</summary>
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+// 简单激活函数
+double sigmoid(double x) { return 1.0 / (1.0 + exp(-x)); }
+
+struct Layer {
+    int in, out;
+    vector<vector<double>> W;
+    vector<double> b, a;
+
+    Layer(int i, int o) : in(i), out(o), W(o, vector<double>(i, 0.1)), b(o, 0), a(o, 0) {}
+
+    void forward(const vector<double>& input) {
+        for (int i = 0; i < out; i++) {
+            double sum = b[i];
+            for (int j = 0; j < in; j++) sum += W[i][j] * input[j];
+            a[i] = sigmoid(sum);
+        }
+    }
+};
+
+int main() {
+    vector<double> input = {0.5, 0.3};
+    Layer layer1(2, 3);
+    layer1.forward(input);
+
+    cout << "Output Activations: ";
+    for (double val : layer1.a) cout << val << " ";
+    cout << endl;
+    return 0;
+}
+```
 
 </details>
 

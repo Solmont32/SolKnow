@@ -3,11 +3,11 @@ title: 机器学习实战练习 (Machine Learning Exercises)
 sidebar_position: 1
 ---
 
-import { Target, Zap, Trophy, BarChart3, ChevronRight, Brain, Layers } from 'lucide-react';
+import { Target, Zap, Trophy, BarChart3, ChevronRight, Brain, Layers, Cpu } from 'lucide-react';
 
 # 机器学习实战练习 (Machine Learning Exercises)
 
-> **“只有推导过每一个公式，才能真正理解模型的灵魂。”** —— 本专题涵盖从线性模型到集成学习的深度理论推导与算法实现。
+> **“只有推导过每一个公式，才能真正理解模型的灵魂。”** —— 本专题涵盖从线性模型到集成学习的深度理论推导与工业级 C++ 模拟实现。
 
 ---
 
@@ -21,31 +21,73 @@ import { Target, Zap, Trophy, BarChart3, ChevronRight, Brain, Layers } from 'luc
 
 ---
 
+## 🎯 考点覆盖模型 (Knowledge Matrix)
+
+| 知识模块         | 核心考点                             | 关联习题   | 推荐等级 |
+| :--------------- | :----------------------------------- | :--------- | :------- |
+| **监督学习基础** | 正规方程推导、梯度下降收敛性         | 练习 1, 6  | Level A  |
+| **分类模型**     | 逻辑回归梯度、决策树分裂准则         | 练习 2, 7  | Level A  |
+| **核方法与 SVM** | KKT 条件、对偶问题转换、核函数定义   | 练习 3     | Level B  |
+| **降维与特征**   | PCA 方差最大化证明、SVD 分解         | 练习 4     | Level B  |
+| **集成学习**     | AdaBoost 权重更新、GBDT 残差学习     | 练习 5     | Level C  |
+| **概率模型**     | EM 算法收敛性、高斯混合模型 (GMM)    | 练习 8     | Level C  |
+
+---
+
 ## 📂 核心习题库
 
 ### Level A：基础巩固 (Foundations)
 
-#### 练习 1：正规方程 (Normal Equation) 的推导
+#### 练习 1：正规方程 (Normal Equation) 的推导与实现
 
-**题目描述**：设模型为 $y = Xw + \epsilon$，其中 $X \in \mathbb{R}^{n \times d}$ 是设计矩阵，$y \in \mathbb{R}^n$ 是目标向量。请证明使得损失函数 $J(w) = \frac{1}{2} \|Xw - y\|^2_2$ 最小化的权重向量 $w^*$ 满足正规方程 $X^T X w = X^T y$。
+**题目描述**：设模型为 $y = Xw + \epsilon$。证明损失函数 $J(w) = \frac{1}{2} \|Xw - y\|^2_2$ 的极小值点满足 $X^T X w = X^T y$。并在 C++ 中模拟实现该计算过程。
 
 <details>
-<summary>Check Solution (Mathematical Derivation)</summary>
+<summary>Check Solution (Math & C++ Implementation)</summary>
 
-**推导过程**：
+**数学推导**：
+1. **展开**：$J(w) = \frac{1}{2} (w^T X^T X w - 2 w^T X^T y + y^T y)$。
+2. **求梯度**：$\nabla_w J(w) = X^T X w - X^T y$。
+3. **令梯度为 0**：$X^T X w = X^T y$。
 
-1. **展开损失函数**：
-   $$J(w) = \frac{1}{2} (Xw - y)^T (Xw - y) = \frac{1}{2} (w^T X^T X w - 2 w^T X^T y + y^T y)$$
-2. **对 $w$ 求梯度** $\nabla_w J(w)$：
-   依据矩阵微积分规则：$\frac{\partial (w^T A w)}{\partial w} = (A + A^T)w$ 且 $\frac{\partial (a^T w)}{\partial w} = a$。
-   $$\nabla_w J(w) = \frac{1}{2} (2 X^T X w - 2 X^T y) = X^T X w - X^T y$$
-3. **极值条件**：
-   令梯度等于 0：
-   $$X^T X w - X^T y = 0 \implies X^T X w = X^T y$$
-4. **结论**：
-   如果 $X^T X$ 可逆，则 $w^* = (X^T X)^{-1} X^T y$。
+**C++ 工业级模拟 (基于 Eigen 库思想)**：
 
-**复杂度分析**：计算 $(X^T X)^{-1}$ 的复杂度约为 $O(d^3)$，因此当特征维度 $d$ 非常大时，通常改用梯度下降法。
+```cpp
+#include <iostream>
+#include <vector>
+#include <Eigen/Dense> // 假设使用 Eigen 处理矩阵运算
+
+using namespace Eigen;
+using namespace std;
+
+/**
+ * @brief 使用正规方程求解线性回归权重
+ * @param X 设计矩阵 (n x d)
+ * @param y 目标向量 (n x 1)
+ * @return VectorXd 权重向量 w
+ */
+VectorXd solve_normal_equation(const MatrixXd& X, const VectorXd& y) {
+    // w = (X^T * X)^-1 * X^T * y
+    // 在实际工程中，通常使用 LDLT 或 QR 分解代替直接求逆以提高数值稳定性
+    return (X.transpose() * X).ldlt().solve(X.transpose() * y);
+}
+
+int main() {
+    MatrixXd X(4, 2);
+    X << 1, 1,
+         1, 2,
+         2, 2,
+         2, 3;
+    VectorXd y(4);
+    y << 6, 8, 9, 11;
+
+    VectorXd w = solve_normal_equation(X, y);
+    cout << "Learned weights: \n" << w << endl;
+    return 0;
+}
+```
+
+**复杂度分析**：矩阵乘法 $O(nd^2)$，矩阵求逆/分解 $O(d^3)$。当 $d > 10000$ 时不建议使用。
 
 </details>
 
@@ -74,8 +116,6 @@ import { Target, Zap, Trophy, BarChart3, ChevronRight, Brain, Layers } from 'luc
 
 **题目描述**：简述为什么在处理高维特征时，SVM 往往求解对偶问题而不是原始问题？
 
-- **提示**：从核函数 (Kernel Function) 和计算复杂度的角度回答。
-
 <details>
 <summary>Check Solution</summary>
 
@@ -89,7 +129,7 @@ import { Target, Zap, Trophy, BarChart3, ChevronRight, Brain, Layers } from 'luc
 
 #### 练习 4：主成分分析 (PCA) 的优化目标
 
-**题目描述**：PCA 旨在寻找一个投影方向 $u$（$\|u\|_2 = 1$），使得投影后的数据方差最大。请用拉格朗日乘子法证明该方向 $u$ 是协方差矩阵 $\Sigma = \frac{1}{n} X^T X$ 的最大特征值对应的特征向量。
+**题目描述**：PCA 旨在寻找一个投影方向 $u$（$\|u\|_2 = 1$），使得投影后的数据方差最大。请用拉格朗日乘子法证明该方向 $u$ 是协方差矩阵 $\Sigma$ 的最大特征值对应的特征向量。
 
 <details>
 <summary>Check Solution</summary>
@@ -110,7 +150,7 @@ import { Target, Zap, Trophy, BarChart3, ChevronRight, Brain, Layers } from 'luc
 
 #### 练习 5：AdaBoost 权值更新公式推导
 
-**题目描述**：在 AdaBoost 算法中，每一轮样本权值的更新公式为 $D_{t+1}(i) = \frac{D_t(i)}{Z_t} \exp(-\alpha_t y_i G_t(x_i))$。请证明，如果选择 $\alpha_t = \frac{1}{2} \ln \frac{1-e_t}{e_t}$，可以最小化当前轮的指数损失。
+**题目描述**：证明在 AdaBoost 算法中，选择 $\alpha_t = \frac{1}{2} \ln \frac{1-e_t}{e_t}$ 可以最小化指数损失。
 
 <details>
 <summary>Check Solution</summary>
@@ -120,6 +160,52 @@ AdaBoost 实际上是在最小化指数损失函数 $\sum \exp(-y_i F(x_i))$。
 在第 $t$ 步，我们要最小化 $E = \sum_{i=1}^n \exp(-y_i (F_{t-1}(x_i) + \alpha G(x_i)))$。
 令 $w_i^{(t)} = \exp(-y_i F_{t-1}(x_i))$，则 $E = \sum_{i: y_i=G(x_i)} w_i^{(t)} e^{-\alpha} + \sum_{i: y_i \neq G(x_i)} w_i^{(t)} e^{\alpha}$。
 令 $e_t = \frac{\sum_{y_i \neq G(x_i)} w_i^{(t)}}{\sum w_i^{(t)}}$，对 $\alpha$ 求导并令其为 0，即可得到 $\alpha_t = \frac{1}{2} \ln \frac{1-e_t}{e_t}$。
+
+</details>
+
+#### 练习 6：手写线性回归梯度下降 (C++ Implementation)
+
+**题目描述**：实现一个不依赖外部库的简单线性回归梯度下降算法，支持 $L2$ 正则化。
+
+<details>
+<summary>Check Solution (Pure C++ Implementation)</summary>
+
+```cpp
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+struct LinearRegression {
+    double w = 0, b = 0;
+    double lr = 0.01;
+    double lambda = 0.1; // L2 正则化系数
+
+    void train(const vector<double>& x, const vector<double>& y, int epochs) {
+        int n = x.size();
+        for (int e = 0; e < epochs; e++) {
+            double dw = 0, db = 0;
+            for (int i = 0; i < n; i++) {
+                double pred = w * x[i] + b;
+                dw += (pred - y[i]) * x[i];
+                db += (pred - y[i]);
+            }
+            // 更新参数 (包含 L2 梯度 lambda * w)
+            w -= lr * (dw / n + lambda * w);
+            b -= lr * (db / n);
+        }
+    }
+};
+
+int main() {
+    vector<double> x = {1, 2, 3, 4, 5};
+    vector<double> y = {2, 4, 6, 8, 10};
+    LinearRegression model;
+    model.train(x, y, 1000);
+    cout << "Final w: " << model.w << ", b: " << model.b << endl;
+    return 0;
+}
+```
 
 </details>
 

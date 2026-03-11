@@ -21,34 +21,57 @@ import { Target, Zap, ShieldCheck, BarChart3, ChevronRight, Code2, Layers, Lock 
 
 ---
 
+## 🎯 考点覆盖模型 (Knowledge Matrix)
+
+| 知识模块         | 核心考点                             | 关联习题   | 推荐等级 |
+| :--------------- | :----------------------------------- | :--------- | :------- |
+| **注入漏洞**     | SQL 盲注推导、二次注入、OS 命令注入  | 练习 1     | Level A  |
+| **跨站脚本**     | 反射/存储型 XSS、DOM XSS、CSP 绕过   | 练习 2     | Level A  |
+| **服务端请求**   | SSRF 探测内网、Gopher 协议利用       | 练习 3     | Level B  |
+| **身份认证**     | JWT 签名伪造、Session 劫持           | 练习 5     | Level B  |
+| **反序列化**     | PHP POP 链构造、Java 原生反序列化    | 练习 4     | Level C  |
+| **文件安全**     | 任意文件读取、文件上传黑白名单绕过   | 练习 6     | Level B  |
+
+---
+
 ## 📂 核心习题库
 
 ### Level A：基础巩固 (Foundations)
 
-#### 练习 1：SQL 注入 - 盲注推导
+#### 练习 1：SQL 注入 - 盲注推导与防御
 
 **题目描述**：后端 SQL 语句为 `SELECT name FROM users WHERE id = '$id'`。页面不回显数据，仅返回“Success”或“Fail”。如何通过盲注获取数据库名长度？
 
 <details>
-<summary>Check Solution (Payload Analysis)</summary>
+<summary>Check Solution (Payload & Defense)</summary>
 
 **核心逻辑**：
 利用布尔盲注，通过 `length()` 和 `ascii()` 函数配合 `substr()` 逐字猜解。
 **Payload 示例**：
 `id=1' AND (length(database()) > 5) -- +`
 
-- 若返回 Success，说明长度 > 5。
-- 通过二分法可快速确定长度。
-
-**防御代码 (C++ 预编译模拟)**：
+**防御代码 (C++ 参数化查询模拟)**：
 
 ```cpp
-void safe_query(sqlite3* db, string user_id) {
+#include <iostream>
+#include <string>
+#include <sqlite3.h> // 模拟 SQLite
+
+void safe_query(sqlite3* db, std::string user_id) {
     sqlite3_stmt* stmt;
     const char* sql = "SELECT name FROM users WHERE id = ?;";
-    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
-    sqlite3_bind_text(stmt, 1, user_id.c_str(), -1, SQLITE_STATIC);
-    // 执行查询，参数化自动处理转义
+    
+    // 1. 预编译 SQL 模板
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) == SQLITE_OK) {
+        // 2. 绑定参数（由引擎处理转义，彻底杜绝注入）
+        sqlite3_bind_text(stmt, 1, user_id.c_str(), -1, SQLITE_STATIC);
+        
+        // 3. 执行
+        while (sqlite3_step(stmt) == SQLITE_ROW) {
+            std::cout << "User Found: " << sqlite3_column_text(stmt, 0) << std::endl;
+        }
+    }
+    sqlite3_finalize(stmt);
 }
 ```
 
@@ -68,16 +91,13 @@ void safe_query(sqlite3* db, string user_id) {
 **方案 2：SVG 标签**
 `Payload: <svg onload=alert(1)>`
 
-**防御建议**：
-使用 `CSP (Content Security Policy)` 限制脚本来源，或对输出进行 HTML 实体编码。
-
 </details>
 
 ---
 
 ### Level B：综合提升 (Intermediate)
 
-#### 练习 3：SSRF (服务端请求伪造) 探测
+#### 练习 3：SSRF (服务端请求伪造) 探测内网
 
 **题目描述**：某应用提供“获取远程图片”功能，URL 参数为 `image_url`。如何通过此接口探测内网 80 端口的服务？
 
@@ -88,36 +108,27 @@ void safe_query(sqlite3* db, string user_id) {
 修改 `image_url` 指向内网地址。
 `Payload: ?image_url=http://127.0.0.1:80/admin`
 
-- 若返回 403/404，说明端口开放。
-- 若连接超时或拒绝连接，说明端口关闭。
-
 **进阶绕过**：
 若过滤了 `127.0.0.1`，可尝试：
-
 - 十进制地址：`http://2130706433/`
-- 短链接绕过
-- DNS 重绑定 (DNS Rebinding)
+- 短链接重定向绕过。
+
 </details>
 
 ---
 
 ### Level C：竞赛挑战 (Advanced)
 
-#### 练习 4：反序列化漏洞 - PHP 魔法方法
+#### 练习 4：反序列化漏洞 - PHP POP 链构造
 
-**题目描述**：在 PHP 反序列化中，`__destruct()`、`__wakeup()` 和 `__toString()` 的调用时机分别是什么？如何构造 POP 链实现 RCE？
+**题目描述**：如何构造 POP 链实现 RCE？简述 `__destruct()` 在其中的作用。
 
 <details>
 <summary>Check Solution</summary>
 
-**魔法方法时机**：
-
-1. `__wakeup()`：执行 `unserialize()` 时，先于后续代码调用。
-2. `__destruct()`：对象销毁（脚本结束或被显式销毁）时调用。
-3. `__toString()`：对象被当作字符串使用（如 `echo $obj`）时调用。
-
-**POP 链构造逻辑**：
-寻找一个 `__destruct` 能够触发 `__toString`，而 `__toString` 又调用了其他类中包含敏感操作（如 `eval()` 或 `file_put_contents()`）的方法。
+**核心逻辑**：
+寻找一个 `__destruct` 能够触发 `__toString`（如 `echo $this->obj`），而 `__toString` 又调用了其他类中包含敏感操作（如 `eval()` 或 `system()`）的方法。
+POP 链（Property-Oriented Programming）即利用对象属性的相互引用，在反序列化触发的自动执行路径中拼接出攻击载荷。
 
 </details>
 
@@ -125,6 +136,5 @@ void safe_query(sqlite3* db, string user_id) {
 
 ## 🏆 实验室规范
 
-1. **合法性原则**：所有练习必须在授权的本地环境或隔离容器中进行。严禁对非授权目标进行测试。
-2. **深度审计**：不仅要学会使用自动化工具（Sqlmap, Burp Suite），更要能通过阅读源码理解漏洞成因。
-3. **闭环修复**：每发现一个漏洞，必须提交对应的代码加固方案。
+1. **合法性原则**：所有练习必须在授权的本地环境或隔离容器中进行。
+2. **闭环修复**：每发现一个漏洞，必须提交对应的代码加固方案。

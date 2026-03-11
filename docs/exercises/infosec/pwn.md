@@ -1,23 +1,35 @@
 ---
-title: 二进制安全与 Pwn 专项强化练习
-sidebar_label: 二进制安全
+title: 二进制安全 (PWN) 专项强化练习
+sidebar_label: PWN 基础
 ---
 
 import { Target, Zap, ShieldCheck, BarChart3, ChevronRight, Code2, Layers, Cpu } from 'lucide-react';
 
-# 二进制安全与 Pwn 专项强化练习 (Pwn Lab)
+# 二进制安全 (PWN) 专项强化练习
 
-> **“在指令流的裂隙中，重构程序的逻辑。”** —— 本专题涵盖缓冲区溢出、格式化字符串漏洞、堆利用与现代系统防御绕过 (DEP/ASLR/PIE)。
+> **“在内存的荒原上，每一比特都是博弈的筹码。”** —— 本专题涵盖缓冲区溢出、格式化字符串及堆漏洞利用，侧重 Linux 环境下的 C/C++ 内存安全分析。
 
 ---
 
 ## 🪜 练习阶梯与评价标准
 
-| 等级                                                                     | 难度目标     | 核心考察点                                     | 期望达成                       |
-| :----------------------------------------------------------------------- | :----------- | :--------------------------------------------- | :----------------------------- |
-| <span style={{ color: 'var(--ifm-color-success)' }}>● **Level A**</span> | 基础溢出利用 | 栈溢出覆盖返回地址、调用后门函数               | 能够手动计算偏移并构造 Payload |
-| <span style={{ color: 'var(--ifm-color-warning)' }}>● **Level B**</span> | 现代防御绕过 | ROP (返回导向编程)、Libc 泄漏、格式化字符串    | 理解系统安全机制的本质缺陷     |
-| <span style={{ color: 'var(--ifm-color-danger)' }}>● **Level C**</span>  | 堆利用进阶   | Fastbin Attack、Unsorted Bin Leak、Tcache 劫持 | 具备处理复杂内存管理漏洞能力   |
+| 等级                                                                     | 难度目标       | 核心考察点                                | 期望达成                        |
+| :----------------------------------------------------------------------- | :------------- | :---------------------------------------- | :------------------------------ |
+| <span style={{ color: 'var(--ifm-color-success)' }}>● **Level A**</span> | 内存基础破坏   | 栈溢出 (Ret2text)、Shellcode 注入         | 理解函数调用栈与返回地址覆写    |
+| <span style={{ color: 'var(--ifm-color-warning)' }}>● **Level B**</span> | 现代保护绕过   | ROP 链构造、Ret2libc、格式化字符串漏洞    | 掌握绕过 NX、ASLR 等保护的方法  |
+| <span style={{ color: 'var(--ifm-color-danger)' }}>● **Level C**</span>  | 堆利用与内核   | Use-After-Free、Heap Overflow、Kernel PWN | 理解堆分配器 (glibc malloc) 机制 |
+
+---
+
+## 🎯 考点覆盖模型 (Knowledge Matrix)
+
+| 知识模块         | 核心考点                             | 关联习题   | 推荐等级 |
+| :--------------- | :----------------------------------- | :--------- | :------- |
+| **栈溢出**       | 返回地址覆盖、JMP ESP 技巧           | 练习 1     | Level A  |
+| **ROP 链**       | Gadget 寻找、系统调用号配置          | 练习 2     | Level B  |
+| **格式化字符串** | 任意地址读/写、 Canary 泄露          | 练习 3     | Level B  |
+| **堆安全**       | Bin 链表破坏、Tcache poisoning       | 练习 4     | Level C  |
+| **安全机制**     | NX/DEP、ASLR 绕过策略                | 练习 5     | Level B  |
 
 ---
 
@@ -25,37 +37,42 @@ import { Target, Zap, ShieldCheck, BarChart3, ChevronRight, Code2, Layers, Cpu }
 
 ### Level A：基础巩固 (Foundations)
 
-#### 练习 1：经典栈溢出 (Ret2text)
+#### 练习 1：经典的栈溢出模拟 (Buffer Overflow)
 
-**题目描述**：给定一个 32 位二进制程序，存在 `gets(buf)` 漏洞。已知 `buf` 距离返回地址的偏移为 44 字节。程序中有一个隐藏函数 `backdoor()`，地址为 `0x08048500`。请构造 Payload 劫持执行流。
+**题目描述**：给定一个 C 程序片段，输入缓冲区为 64 字节，目标是覆写返回地址以执行 `get_shell()` 函数。
 
 <details>
-<summary>Check Solution (Payload Construction)</summary>
+<summary>Check Solution (Logic & C++ Simulation)</summary>
 
-**核心逻辑**：
-通过填充 44 字节的垃圾数据，覆盖原有的返回地址为 `backdoor()` 的起始地址。
-**Payload 构造 (Python 脚本)**：
-
-```python
-from pwn import *
-# Payload = 'A' * 44 + p32(0x08048500)
-payload = b"A" * 44 + p32(0x08048500)
-p = process("./level1")
-p.sendline(payload)
-p.interactive()
-```
-
-**防御代码 (C++ 修复示例)**：
+**漏洞代码 (Vulnerable Snippet)**：
 
 ```cpp
-void safe_input() {
-    char buf[32];
-    // 使用 fgets 限制输入长度，防止溢出
-    if (fgets(buf, sizeof(buf), stdin)) {
-        // ... 处理输入
-    }
+#include <iostream>
+#include <cstring>
+
+void get_shell() {
+    std::cout << "Success! Shell Spawned." << std::endl;
+}
+
+void vulnerable_function() {
+    char buffer[64];
+    // 使用危险的 gets (模拟)
+    std::cin >> buffer; 
+}
+
+int main() {
+    vulnerable_function();
+    return 0;
 }
 ```
+
+**利用思路**：
+1. **偏移计算**：Payload = `A` * 64 + `EBP` (4/8字节) + `get_shell_address`。
+2. **栈布局分析**：当 `buffer` 溢出时，数据会向上覆盖栈帧中的 `Saved EBP` 和 `Return Address`。
+
+**防御修复**：
+- 使用 `fgets()` 或 `std::string` 限制输入长度。
+- 开启 `Stack Canary` (Stack Cookie) 保护。
 
 </details>
 
@@ -63,43 +80,33 @@ void safe_input() {
 
 ### Level B：综合提升 (Intermediate)
 
-#### 练习 2：格式化字符串漏洞 (Leak Memory)
+#### 练习 2：Ret2libc 绕过 NX 保护
 
-**题目描述**：程序存在 `printf(user_input)` 漏洞。目标是泄漏栈上的 Canary 值或 Libc 基址。
+**题目描述**：当栈不可执行 (NX Enabled) 时，无法直接执行 Shellcode。如何利用 libc 中的 `system("/bin/sh")` 实现 RCE？
 
 <details>
 <summary>Check Solution</summary>
 
-**利用原理**：
-`printf` 允许使用 `%p`, `%x` 等格式化符读取栈上的内容。
-
-- `%p`：以十六进制输出。
-- `%n`：将已输出的字符数写入指定地址（可用于改写变量）。
-
-**Payload 探测**：
-输入 `%p.%p.%p.%p.%p.%p` 可以观察栈上寄存器与内存分布。
-通过计算偏移，如 `%13$p`，可直接定位到指定的敏感数据。
+**利用逻辑**：
+1. **泄露基址**：利用 `puts` 或 `printf` 泄露一个已知函数的 GOT 地址。
+2. **计算偏移**：`libc_base = leaked_addr - offset_in_libc`。
+3. **寻找 Gadget**：寻找 `pop rdi; ret` 等片段，将 `"/bin/sh"` 的地址放入 `RDI` 寄存器作为 `system` 的参数。
+4. **触发调用**：返回地址覆盖为 `system_addr`。
 
 </details>
 
-#### 练习 3：ROP (返回导向编程) 绕过 NX
+#### 练习 3：格式化字符串任意地址写
 
-**题目描述**：在开启了 NX (不可执行栈) 的情况下，无法直接执行 Shellcode。如何利用程序中的 `pop rdi; ret` 指令片段调用 `system("/bin/sh")`？
+**题目描述**：程序存在 `printf(user_input)`。如何利用 `%n` 修改变量 `count` 的值为 100？
 
 <details>
 <summary>Check Solution</summary>
 
-**ROP 链构造 (x64)**：
-
-1. `pop rdi; ret`：将参数 "/bin/sh" 加载到 `rdi` 寄存器。
-2. `bin_sh_addr`：字符串地址。
-3. `system_addr`：Libc 中 `system` 函数的地址。
-
-**Python 构造示例**：
-
-```python
-rop_chain = p64(pop_rdi_ret) + p64(bin_sh_addr) + p64(system_addr)
-```
+**Payload 结构**：
+`Payload: [count_address] + %96c + %k$n`
+- 其中 `k` 是 `count_address` 在栈上的偏移位置。
+- `%96c` 输出了 96 个字符，加上前面地址的 4 字节（32位下），共 100 字节。
+- `%n` 将已输出的字节数 (100) 写入到第 `k` 个参数对应的地址中。
 
 </details>
 
@@ -107,23 +114,20 @@ rop_chain = p64(pop_rdi_ret) + p64(bin_sh_addr) + p64(system_addr)
 
 ### Level C：竞赛挑战 (Advanced)
 
-#### 练习 4：堆利用之 Use-After-Free (UAF)
+#### 练习 4：Use-After-Free (UAF) 基础
 
-**题目描述**：简述 UAF 漏洞的成因，并描述如何通过释放再申请的操作劫持函数指针。
+**题目描述**：简述 UAF 漏洞的成因，并说明如何通过劫持虚函数表 (vtable) 实现代码执行。
 
 <details>
 <summary>Check Solution</summary>
 
-**成因**：
-当对象被 `free` 后，程序没有将指针置为 `NULL` (Dangling Pointer)，且后续代码继续使用了该指针。
-
-**利用流程**：
-
-1. 申请对象 A，其结构包含一个函数指针。
-2. 释放对象 A（进入 `tcache` 或 `fastbin`）。
-3. 申请相同大小的对象 B，输入内容。由于堆管理器的分配机制，B 将占据 A 原有的内存块。
-4. 对象 B 的内容覆盖了 A 的函数指针。
-5. 原程序调用 A 的指针，实际上执行了被 B 篡改后的恶意指令。
+**核心原理解析**：
+1. **成因**：程序释放 (free) 了堆内存，但未将指向该内存的指针置为 NULL。随后程序再次访问 (use) 该指针。
+2. **劫持 vtable**：
+   - 申请一个包含虚函数的 C++ 对象 A。
+   - 释放对象 A。
+   - 申请一个大小相同的数据块 B，并填入精心构造的伪造虚函数表地址。
+   - 调用对象 A 的虚函数，此时 CPU 会跳转到 B 中指定的恶意地址。
 
 </details>
 
@@ -131,6 +135,6 @@ rop_chain = p64(pop_rdi_ret) + p64(bin_sh_addr) + p64(system_addr)
 
 ## 🏆 实验室规范
 
-1. **静态分析优先**：利用 IDA Pro/Ghidra 彻底理解程序的汇编逻辑与内存布局。
-2. **动态调试配合**：使用 GDB (配合 Pwndbg 或 Gef) 观察 Payload 注入后的寄存器状态。
-3. **版本匹配**：注意不同版本 GLIBC (如 2.23 vs 2.31) 中堆管理策略的差异。
+1. **工具链**：掌握 `gdb-pwndbg`、`pwntools` 与 `checksec` 的协同使用。
+2. **底层视角**：理解汇编指令 (`push`, `pop`, `call`, `ret`) 对栈指针 `ESP/RSP` 的真实影响。
+3. **安全开发**：PWN 的终点是安全。所有漏洞利用应伴随对 `FORTIFY_SOURCE` 等现代防御机制的研究。
