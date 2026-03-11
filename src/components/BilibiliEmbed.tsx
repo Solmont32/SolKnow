@@ -1,5 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
+import { motion } from 'framer-motion';
+import { Youtube } from 'lucide-react';
 
 type BilibiliProps = {
   bvid?: string;
@@ -8,6 +10,7 @@ type BilibiliProps = {
   t?: number;
   highQuality?: boolean;
   className?: string;
+  caption?: string;
 };
 
 /**
@@ -21,6 +24,7 @@ export default function BilibiliEmbed({
   t = 0,
   highQuality = true,
   className,
+  caption,
 }: BilibiliProps) {
   const params = new URLSearchParams();
   if (bvid) params.set('bvid', bvid);
@@ -35,19 +39,26 @@ export default function BilibiliEmbed({
   const src = `https://player.bilibili.com/player.html?${params.toString()}`;
 
   return (
-    <div className={clsx('bilibili-embed-container', className)} style={{ margin: '2rem 0' }}>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+      className={clsx('bilibili-embed-container', className)}
+      style={{ margin: '2.5rem 0' }}
+    >
       <div
         className="bilibili-embed-inner"
         style={{
           position: 'relative',
           width: '100%',
           paddingTop: '56.25%', // 16:9 黄金比例
-          borderRadius: '16px',
+          borderRadius: '20px',
           overflow: 'hidden',
           backgroundColor: 'var(--ifm-color-emphasis-100)',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+          boxShadow: 'var(--solknow-card-shadow)',
           border: '1px solid var(--ifm-color-emphasis-200)',
-          transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+          transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
         }}
       >
         <iframe
@@ -63,10 +74,26 @@ export default function BilibiliEmbed({
             left: 0,
             width: '100%',
             height: '100%',
-            opacity: 0.95,
           }}
         />
       </div>
-    </div>
+      {caption && (
+        <div
+          style={{
+            marginTop: '1rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            color: 'var(--ifm-color-emphasis-600)',
+            fontSize: '0.85rem',
+            fontStyle: 'italic',
+          }}
+        >
+          <Youtube size={14} className="solknow-red" />
+          <span>{caption}</span>
+        </div>
+      )}
+    </motion.div>
   );
 }
