@@ -31,7 +31,6 @@ $$AS(S) = \sum_{i} w_i \cdot V_i$$
 ## 2. 核心漏洞的形式化逻辑分析
 
 ### 2.1 注入攻击：上下文冲突模型 (Context Conflict)
-
 注入的本质是**控制流与数据流的非预期交织**。
 
 **形式化描述**：
@@ -39,18 +38,29 @@ $$AS(S) = \sum_{i} w_i \cdot V_i$$
 - 安全状态：$P(C, I)$ 的语法树 $G$ 的拓扑结构由 $C$ 预定义，且 $I$ 仅作为 $G$ 的叶子节点。
 - 注入状态：$I$ 包含元字符，使得 $P(C, I)$ 生成了新的语法分支 $G'$。
 
-### 2.2 XSS 的形式化防御：内容安全策略 (CSP)
+---
 
-CSP 通过白名单机制，限制了浏览器执行代码的权限。
+## 3. 漏洞触发链一致性分析 (Vulnerability Chains)
 
-**逻辑规则验证**：
-利用形式化逻辑检查 CSP 策略是否存在漏洞。例如，`script-src 'self' 'unsafe-inline'` 在逻辑上等价于放弃了对注入脚本的执行拦截。
+在复杂的 Web 应用中，单一漏洞往往不足以达成 RCE，攻击者需要通过**一致性利用链**来跨越多个信任边界。
+
+### 3.1 SSRF 到 RCE 的逻辑链
+**攻击向量**：后端服务器请求受控。
+1. **边界探测**：通过 SSRF 探测内网活跃 IP 与开放端口（如 Redis 6379）。
+2. **协议转换**：利用 `gopher://` 协议封装 Redis 的 RESP 协议报文。
+3. **状态持久化**：通过 Redis 的 `CONFIG SET dir` 指令改写 `crontab` 或 Web 目录。
+4. **触发执行**：等待定时任务触发或访问写入的 Webshell。
+
+### 3.2 SQL 注入到系统控制 (SQLi to OS Command)
+在特定数据库环境（如 MSSQL 或具有 UDF 的 MySQL）中：
+- **链条**：`SQLi` $\to$ `xp_cmdshell` 或 `INTO OUTFILE` $\to$ `System Shell`。
+- **一致性约束**：要求数据库进程拥有对目标目录的写入权限，且相关扩展存储过程未被禁用。
 
 ---
 
-## 3. 身份验证协议的形式化验证 (Formal Verification)
+## 4. 身份验证协议的形式化验证 (Formal Verification)
 
-### 3.1 OAuth 2.0 状态机一致性
+### 4.1 OAuth 2.0 状态机一致性
 OAuth 2.0 的授权码模式可以建模为一个有限状态机 (FSM)。
 
 - **安全性属性**：
@@ -58,96 +68,49 @@ OAuth 2.0 的授权码模式可以建模为一个有限状态机 (FSM)。
   - **一次性**：`authorization_code` 必须仅能使用一次。
   - **绑定性**：Token 必须与特定的 `client_id` 和 `redirect_uri` 强绑定。
 
-### 3.2 JWT 安全性深度评估
-JWT 的安全性依赖于对 `alg` 字段的强制性约束。
-- **攻击向量**：`alg: none` 或非对称加密降级为对称加密（Key Confusion 攻击）。
-- **防御**：在协议层实现**硬编码算法白名单**。
-
 ---
 
-## 4. 深度模拟演示 (C++ Security Logic)
+## 5. 深度模拟演示 (C++ Security Logic)
 
-### 4.1 访问控制模型：RBAC 权限一致性验证器
+### 5.1 漏洞检测：XSS 负载消毒器模拟
 <details>
-<summary>点击查看 C++ 实现：基于 RBAC 的形式化权限校验模拟</summary>
+<summary>点击查看 C++ 实现：基于黑名单与转义的 XSS 防御逻辑</summary>
 
 ```cpp
 #include <iostream>
 #include <string>
 #include <vector>
-#include <map>
-#include <set>
-
-// 形式化定义：权限 (P), 角色 (R), 用户 (U)
-class RBAC_System {
-    std::map<std::string, std::set<std::string>> role_permissions;
-    std::map<std::string, std::set<std::string>> user_roles;
-
-public:
-    void add_permission(std::string role, std::string perm) {
-        role_permissions[role].insert(perm);
-    }
-    
-    void assign_role(std::string user, std::string role) {
-        user_roles[user].insert(role);
-    }
-
-    // 形式化验证：u 是否拥有权限 p
-    bool has_permission(std::string user, std::string perm) {
-        if (user_roles.find(user) == user_roles.end()) return false;
-        
-        for (const auto& role : user_roles[user]) {
-            if (role_permissions[role].count(perm)) return true;
-        }
-        return false;
-    }
-};
-
-int main() {
-    RBAC_System sys;
-    sys.add_permission("admin", "delete_user");
-    sys.add_permission("editor", "edit_post");
-    
-    sys.assign_role("Alice", "editor");
-    
-    std::cout << "Alice can delete_user? " << (sys.has_permission("Alice", "delete_user") ? "Yes" : "No") << std::endl;
-    std::cout << "Alice can edit_post? " << (sys.has_permission("Alice", "edit_post") ? "Yes" : "No") << std::endl;
-    return 0;
-}
-```
-</details>
-
-### 4.2 Web 路径穿越防御：规范化路径验证器
-<details>
-<summary>点击查看 C++ 实现：防御 Directory Traversal 的逻辑验证</summary>
-
-```cpp
-#include <iostream>
-#include <string>
-#include <filesystem>
 #include <algorithm>
 
-namespace fs = std::filesystem;
-
-// 核心逻辑：验证输入路径是否逃逸了基础目录 (Base Directory)
-bool is_path_safe(const std::string& base_dir, const std::string& user_path) {
-    try {
-        fs::path base = fs::canonical(base_dir);
-        fs::path target = fs::weakly_canonical(base / user_path);
-        
-        // 验证 target 是否以 base 为前缀
-        auto [it_base, it_target] = std::mismatch(base.begin(), base.end(), target.begin());
-        return it_base == base.end();
-    } catch (...) {
-        return false;
+std::string sanitize_html(std::string input) {
+    // 1. 转义关键字符
+    std::string output = "";
+    for (char c : input) {
+        switch (c) {
+            case '<': output += "&lt;"; break;
+            case '>': output += "&gt;"; break;
+            case '&': output += "&amp;"; break;
+            case '\"': output += "&quot;"; break;
+            case '\'': output += "&#39;"; break;
+            default: output += c;
+        }
     }
+    
+    // 2. 移除恶意标签（示例）
+    std::vector<std::string> blacklist = {"<script>", "<iframe>", "javascript:"};
+    for (const auto& tag : blacklist) {
+        size_t pos;
+        while ((pos = output.find(tag)) != std::string::npos) {
+            output.erase(pos, tag.length());
+        }
+    }
+    return output;
 }
 
 int main() {
-    std::string root = "./static_files";
-    std::string malicious = "../../etc/passwd";
-    
-    std::cout << "Path safety: " << (is_path_safe(root, malicious) ? "Safe" : "UNSAFE") << std::endl;
+    std::string payload = "<script>alert('xss')</script><img src=x onerror=alert(1)>";
+    std::cout << "Original: " << payload << std::endl;
+    std::cout << "Sanitized: " << sanitize_html(payload) << std::endl;
     return 0;
 }
 ```
@@ -155,31 +118,32 @@ int main() {
 
 ---
 
-## 5. 综合练习 (Advanced Exercises)
+## 6. 综合练习 (Advanced Exercises)
 
-### 练习 1：OAuth 2.0 状态泄露分析
-**题目**：在 OAuth 2.0 中，如果不使用 `state` 参数，系统会面临什么攻击？请从 CSRF 的角度进行解释。
+### 练习 1：JWT 密钥混淆攻击 (Key Confusion)
+**题目**：如果一个应用支持 RSA 签名（公钥解密），但没有校验 `alg` 字段。攻击者如何利用该应用的**公钥**伪造一个管理员 Token？
 
 <details>
 <summary>点击查看解析</summary>
 
 **解析**：
-1. **攻击过程**：攻击者首先自己发起一个授权请求，获取到一个合法的 `code`。但他不完成最后一步，而是将回调 URL（包含他的 `code`）发送给受害者。
-2. **受害者触发**：受害者点击链接，其浏览器会携带受害者的 Session 访问 Client 的回调端点。
-3. **绑定错误**：Client 服务器收到 `code`，去 AS 换取 Token，并将其绑定到受害者的账户上。结果是，受害者的账户绑定了攻击者的第三方社交账号。
-4. **防御**：`state` 参数作为一个不可预测的随机值，由 Client 发送并在回调时校验一致性，确保了授权流的起始与终结来自同一个会话。
+1. **漏洞原理**：应用预期使用 `RS256`（非对称），但攻击者将 `alg` 改为 `HS256`（对称）。
+2. **利用链**：
+   - 攻击者获取应用的 **RSA 公钥**（通常是公开的）。
+   - 攻击者使用该公钥作为 **HMAC 的密钥** 来签名 Token。
+   - 服务器收到 Token，看到 `HS256`，误以为密钥是存储在本地的秘密。但由于逻辑缺陷，它使用了 RSA 公钥进行 HMAC 校验。
+   - 由于攻击者拥有该公钥，他可以生成任何内容的有效 Token。
+3. **防御**：强制指定算法类型，不依赖 Header 中的 `alg` 字段。
 </details>
 
-### 练习 2：SSRF 漏洞的内网边界推导
-**题目**：假设一个 Web 服务器可以访问内网 IP `10.0.0.1` 的管理接口。如果该服务器存在一个 URL 跳转漏洞，是否必然导致 SSRF？如何通过形式化边界防御？
+### 练习 2：CORS 策略逃逸
+**题目**：配置 `Access-Control-Allow-Origin: *` 与 `Access-Control-Allow-Credentials: true` 是否可以共存？如果不能，为什么？
 
 <details>
 <summary>点击查看解析</summary>
 
 **解析**：
-1. **必然性**：不一定。URL 跳转如果是前端 `location.href` 跳转，不涉及后端请求，则不构成 SSRF。只有后端服务器（如 `curl`, `urllib`）去请求用户输入的 URL 时才构成 SSRF。
-2. **形式化防御**：
-   - **协议白名单**：仅允许 `http`, `https`，禁止 `file://`, `gopher://`。
-   - **IP 范围校验**：通过 DNS 解析后的结果进行检查，而非原始输入（防止 DNS Rebinding）。
-   - **逻辑边界**：设置内网隔离区 (DMZ)，禁止 Web 服务器主动发起对核心生产网段的连接。
+1. **浏览器限制**：现代浏览器出于安全考虑，禁止这两个配置同时出现。
+2. **原因**：如果允许共存，则互联网上任何网站都可以发起携带受害者 Cookie 的跨域请求，并读取响应内容。这相当于完全绕过了**同源策略 (SOP)**。
+3. **后果**：如果配置冲突，浏览器会直接报错并拒绝该跨域请求。
 </details>

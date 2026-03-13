@@ -21,143 +21,90 @@ import { motion } from 'framer-motion';
 $$P(C=c | M=m) = P(K = c \oplus m) = \frac{1}{|\mathcal{K}|}$$
 利用贝叶斯公式推导出后验概率等于先验概率：
 $$P(M=m | C=c) = \frac{P(C=c | M=m) P(M=m)}{P(C=c)} = \frac{\frac{1}{|\mathcal{K}|} P(M=m)}{\frac{1}{|\mathcal{K}|}} = P(M=m)$$
-**结论**：观察到密文 $c$ 后，敌手对明文分布的认知没有任何提升。
+**结论**：观察到密文 $c$ 后，敌手对明文分布的认知没有任何提升（互信息 $I(M;C) = 0$）。
 
 ---
 
 ## 2. 数论困难问题与形式化推导 (Hard Problems)
 
-### 2.1 椭圆曲线标量乘法 (ECSM) 与同构安全性
+### 2.1 离散对数问题 (DLP) 与 DDH 假设
+在循环群 $\mathbb{G}$ 中，已知 $g$ 和 $g^x$，求解 $x$ 被称为 **DLP**。
+- **计算性 Diffie-Hellman (CDH)**：已知 $(g, g^a, g^b)$，求解 $g^{ab}$。
+- **判定性 Diffie-Hellman (DDH)**：区分 $(g, g^a, g^b, g^{ab})$ 与 $(g, g^a, g^b, g^z)$，其中 $z \leftarrow \mathbb{Z}_q$。
+- **关系**：$DDH \le CDH \le DLP$。即 DDH 是最容易被攻破的（安全性假设最强）。
+
+### 2.2 椭圆曲线标量乘法 (ECSM)
 椭圆曲线在素数域 $\mathbb{F}_p$ 上的方程为 $y^2 = x^3 + ax + b \pmod p$。
 - **加法法则**：给定 $P, Q \in E(\mathbb{F}_p)$，直线 $PQ$ 与曲线的第三个交点关于 $x$ 轴的对称点即为 $P+Q$。
-- **ECDLP 困难性**：已知 $Q = [k]P$，求解 $k$。
-- **安全性边界**：对于 $n$ 位素数域，ECC 提供 $n/2$ 位的安全强度（抗 Rho 攻击）。
-
-### 2.2 容错学习问题 (LWE) - 格密码之基
-LWE 是后量子密码学 (PQC) 的核心。给定 $n, q$ 和分布 $\chi$：
-- **判定性 LWE**：区分 $(A, As+e)$ 与 $(A, u)$，其中 $e \leftarrow \chi$ 是噪声。
-- **约简证明**：Regev 证明了 LWE 的安全性可以等价约简到格中的**最短向量问题 (SVP)** 的量子硬度。
-- **数学意义**：格规约算法（如 LLL）的复杂度随维数 $n$ 指数级增长。
+- **安全性边界**：对于 $n$ 位素数域，ECC 提供 $n/2$ 位的安全强度（抗 Pollard's Rho 攻击）。
 
 ---
 
-## 3. 形式化安全性约简 (Security Reductions)
+## 3. 形式化安全性约简与证明 (Security Reductions)
 
-### 3.1 约简的思想 (Reduction Paradigm)
-我们证明“协议 $P$ 是安全的”，实际上是证明：**“如果存在一个有效的敌手 $\mathcal{A}$ 能攻破 $P$，那么我们就能构建一个算法 $\mathcal{B}$ 利用 $\mathcal{A}$ 来攻破某个公认的数学难题 $H$。”**
+### 3.1 IND-CPA 安全性证明：ElGamal 加密
+**定义**：一个方案是 IND-CPA 安全的，如果任何多项式时间敌手在选择明文攻击下的优势 $Adv_{\mathcal{A}}^{IND-CPA}$ 是可忽略的。
+
+**证明（约简到 DDH）**：
+1. 假设存在敌手 $\mathcal{A}$ 以不可忽略的优势攻破 ElGamal。
+2. 构建算法 $\mathcal{B}$ 解决 DDH：输入 $(g, A=g^a, B=g^b, Z)$。
+3. $\mathcal{B}$ 将公钥设为 $pk=A$，发送给 $\mathcal{A}$。
+4. $\mathcal{A}$ 返回 $m_0, m_1$。$\mathcal{B}$ 随机选 $b \in \{0,1\}$，计算挑战密文 $C = (B, Z \cdot m_b)$。
+5. 如果 $Z=g^{ab}$，则 $C$ 是 $m_b$ 的合法加密。
+6. 如果 $Z$ 是随机值，则 $C$ 与 $m_b$ 统计独立。
+7. $\mathcal{B}$ 根据 $\mathcal{A}$ 的输出判断 $Z$ 是否为 $g^{ab}$。$\mathcal{A}$ 的优势直接转化为 $\mathcal{B}$ 的 DDH 优势。
+
+### 3.2 数字签名的安全性：EUF-CMA
+**定义**：**存在性不可伪造性 (Existential Unforgeability under Chosen Message Attack)**。
+- 敌手可以获得任意消息 $m_i$ 的签名 $\sigma_i$。
+- 目标：生成一个从未请求过签名的消息 $m^*$ 及其合法签名 $\sigma^*$。
+- **RSA-PSS**：通过引入随机盐和哈希掩码（MGF），证明了在随机预言机模型下可以约简到 RSA 难题。
 
 ---
 
 ## 4. 深度模拟演示 (C++ Security Engineering)
 
-### 4.1 格规约：LLL 算法模拟工具
+### 4.1 哈希函数抗碰撞性证明模拟
 <details>
-<summary>点击查看 C++ 实现：LLL 算法（格密码分析核心工具）</summary>
+<summary>点击查看 C++ 实现：生日攻击 (Birthday Attack) 的概率模拟</summary>
 
 ```cpp
 #include <iostream>
 #include <vector>
-#include <cmath>
-#include <Eigen/Dense> // 需 Eigen 库进行矩阵运算
+#include <unordered_map>
+#include <random>
+#include <iomanip>
 
-using namespace Eigen;
-
-// Gram-Schmidt 正交化
-MatrixXd gram_schmidt(const MatrixXd& B) {
-    int n = B.cols();
-    MatrixXd star = MatrixXd::Zero(B.rows(), n);
-    for (int i = 0; i < n; ++i) {
-        star.col(i) = B.col(i);
-        for (int j = 0; j < i; ++j) {
-            double mu = B.col(i).dot(star.col(j)) / star.col(j).squaredNorm();
-            star.col(i) -= mu * star.col(j);
+// 模拟 n 位哈希值的碰撞概率
+void birthday_paradox_simulation(int hash_bits, int trials) {
+    long long space_size = 1LL << hash_bits;
+    int collisions = 0;
+    
+    for (int t = 0; t < trials; ++t) {
+        std::unordered_map<long long, bool> seen;
+        std::mt19937_64 rng(t);
+        std::uniform_int_distribution<long long> dist(0, space_size - 1);
+        
+        int count = 0;
+        while (true) {
+            long long val = dist(rng);
+            if (seen.count(val)) break;
+            seen[val] = true;
+            count++;
         }
+        collisions += count;
     }
-    return star;
-}
-
-// LLL 算法核心：δ = 0.75
-void lll_reduction(MatrixXd& B, double delta = 0.75) {
-    int n = B.cols();
-    int k = 1;
-    while (k < n) {
-        // 1. Size Reduction
-        MatrixXd star = gram_schmidt(B);
-        for (int j = k - 1; j >= 0; --j) {
-            double mu = B.col(k).dot(star.col(j)) / star.col(j).squaredNorm();
-            if (std::abs(mu) > 0.5) {
-                B.col(k) -= std::round(mu) * B.col(j);
-                star = gram_schmidt(B);
-            }
-        }
-        // 2. Lovász Condition
-        double mu_k_k1 = B.col(k).dot(star.col(k-1)) / star.col(k-1).squaredNorm();
-        if (star.col(k).squaredNorm() >= (delta - mu_k_k1 * mu_k_k1) * star.col(k-1).squaredNorm()) {
-            k++;
-        } else {
-            B.col(k).swap(B.col(k-1));
-            k = std::max(k - 1, 1);
-        }
-    }
+    
+    double avg_count = (double)collisions / trials;
+    std::cout << "Bits: " << hash_bits << ", Space: " << space_size << "\n";
+    std::cout << "Avg attempts for collision: " << std::fixed << std::setprecision(2) << avg_count << "\n";
+    std::cout << "Theoretical (sqrt(pi/2 * N)): " << std::sqrt(1.253 * space_size) << "\n";
 }
 
 int main() {
-    MatrixXd basis(3, 3);
-    basis << 1, 1, 1, 
-             -1, 0, 2, 
-             3, 5, 6;
-    
-    std::cout << "Original Basis:\n" << basis << std::endl;
-    lll_reduction(basis);
-    std::cout << "LLL Reduced Basis:\n" << basis << std::endl;
+    birthday_paradox_simulation(16, 100);
+    birthday_paradox_simulation(20, 100);
     return 0;
-}
-```
-</details>
-
-### 4.2 费马小定理与 Miller-Rabin 质数测试器
-<details>
-<summary>点击查看 C++ 实现：工业级大质数生成逻辑</summary>
-
-```cpp
-#include <iostream>
-#include <boost/multiprecision/cpp_int.hpp>
-#include <boost/random.hpp>
-
-using namespace boost::multiprecision;
-
-// 快速幂 a^b mod m
-cpp_int power(cpp_int a, cpp_int b, cpp_int m) {
-    cpp_int res = 1;
-    a %= m;
-    while (b > 0) {
-        if (b % 2 == 1) res = (res * a) % m;
-        a = (a * a) % m;
-        b /= 2;
-    }
-    return res;
-}
-
-bool miller_rabin(cpp_int n, int k = 40) {
-    if (n < 2) return false;
-    if (n == 2 || n == 3) return true;
-    if (n % 2 == 0) return false;
-
-    cpp_int r = 0, d = n - 1;
-    while (d % 2 == 0) { d /= 2; r++; }
-
-    for (int i = 0; i < k; i++) {
-        cpp_int a = 2 + rand() % (n - 4);
-        cpp_int x = power(a, d, n);
-        if (x == 1 || x == n - 1) continue;
-        bool composite = true;
-        for (int j = 0; j < r - 1; j++) {
-            x = (x * x) % n;
-            if (x == n - 1) { composite = false; break; }
-        }
-        if (composite) return false;
-    }
-    return true;
 }
 ```
 </details>
@@ -166,33 +113,31 @@ bool miller_rabin(cpp_int n, int k = 40) {
 
 ## 5. 综合练习 (Advanced Exercises)
 
-### 练习 1：RSA OAEP 填充的安全性
-**题目**：为什么简单的 RSA 加密 $c = m^e \pmod n$ 不是 IND-CCA2 安全的？OAEP (Optimal Asymmetric Encryption Padding) 是如何解决这个问题的？
+### 练习 1：公钥基础设施 (PKI) 与中间人攻击 (MITM)
+**题目**：虽然 RSA/ECC 在数学上是安全的，但为什么在缺乏 PKI 的情况下，敌手仍能通过替换 $pk$ 来解密通信内容？请描述其逻辑链。
 
 <details>
-<summary>点击查看形式化解析</summary>
+<summary>点击查看解析</summary>
 
 **解析**：
-1. **同态性缺陷**：原生 RSA 具有乘法同态性，$E(m_1) \cdot E(m_2) = (m_1 m_2)^e = E(m_1 m_2)$。敌手可以截获 $c = m^e$，构造 $c' = c \cdot 2^e = (2m)^e$，发送给解密服务器得到 $2m$，从而恢复 $m$。
-2. **OAEP 机制**：引入 Feistel 网络结构，将明文 $m$ 与随机盐 $r$ 通过两个哈希函数 $G, H$ 进行混合。
-   - $X = m00\dots0 \oplus G(r)$
-   - $Y = r \oplus H(X)$
-   - 最终加密 $E(X|Y)$。
-3. **效果**：OAEP 破坏了代数结构，使得密文具有“全体或全无”特性（All-or-Nothing），且任何位元的改动都会导致解密后的格式校验失败，从而实现 IND-CCA2 安全。
+1. **身份绑定缺失**：公钥算法本身只保证“持有私钥者可解密”，而不保证“持有私钥者是 Alice”。
+2. **攻击链**：
+   - 敌手 $E$ 截获 Alice 发给 Bob 的公钥 $pk_A$。
+   - $E$ 将自己的公钥 $pk_E$ 发送给 Bob，声称这是 Alice 的公钥。
+   - Bob 用 $pk_E$ 加密消息 $m$。
+   - $E$ 截获密文，用 $sk_E$ 解密获得 $m$。
+3. **防御**：引入 **CA (Certificate Authority)** 对 $(Identity, pk)$ 的绑定关系进行数字签名。
 </details>
 
-### 练习 2：判定性 Diffie-Hellman (DDH) 与 ElGamal
-**题目**：证明如果 DDH 假设成立，则 ElGamal 方案在随机预言机模型下满足 IND-CPA 安全。
+### 练习 2：散列函数的长度扩展攻击 (Length Extension)
+**题目**：对于基于 Merkle–Damgård 结构的哈希（如 MD5, SHA-1, SHA-256），为什么 $Hash(key \| message)$ 作为 MAC 是不安全的？
 
 <details>
-<summary>点击查看证明过程</summary>
+<summary>点击查看解析</summary>
 
-**证明（约简法）**：
-1. 假设存在敌手 $\mathcal{A}$ 能攻破 ElGamal。
-2. 我们构建算法 $\mathcal{B}$ 解决 DDH：输入为 $(g, g^a, g^b, Z)$。
-3. $\mathcal{B}$ 将公钥设为 $pk = g^a$，挑战密文设为 $C = (g^b, Z \cdot m_b)$。
-4. 如果 $Z = g^{ab}$，则 $C$ 是完美的 ElGamal 密文。
-5. 如果 $Z$ 是随机数，则密文与明文完全解耦，敌手获胜概率严格为 $1/2$。
-6. 因此，敌手 $\mathcal{A}$ 的优势直接转化为 $\mathcal{B}$ 解决 DDH 的优势。
-$\square$
+**解析**：
+1. **结构特性**：MD 结构中，$Hash(M)$ 的输出实际上是处理完最后一个块后的内部状态。
+2. **攻击逻辑**：已知 $H = Hash(secret \| m)$，即使不知道 $secret$，敌手也可以从 $H$ 开始，继续吸收附加消息 $m_{ext}$。
+3. **伪造结果**：$Hash(secret \| m \| padding \| m_{ext})$ 可以直接计算出来。
+4. **防御**：使用 **HMAC**：$Hash( (K \oplus opad) \| Hash((K \oplus ipad) \| m) )$。
 </details>
