@@ -123,7 +123,49 @@ $$H_{2n}-H_n=\frac1{n+1}+\cdots+\frac1{2n}>n\cdot\frac1{2n}=\frac12.$$
 
 ---
 
-## 三、计算验证：C++ 数值观测 <Code2 className="inline-block ml-1" />
+## 三、 系统化极限定义证明 (Systematic Definition Proofs)
+
+在分析学中，证明 $\lim_{n\to\infty} a_n = A$ 的核心在于**寻找 $N(\epsilon)$ 的显式构造**。
+
+### 1. $\epsilon$-$N$ 证明的标准范式 (The Standard Paradigm)
+
+1.  **分析阶段 (Scratch Work)**：考察不等式 $|a_n - A| < \epsilon$。
+2.  **放大技术 (Bounding)**：通过适当放大，使得左侧变为一个关于 $n$ 的简单函数（如 $C/n$）。
+3.  **确定 $N$**：由简单函数 $< \epsilon$ 解出 $n > g(\epsilon)$。
+4.  **书写阶段 (Formal Proof)**：从“任意 $\epsilon > 0$”开始，取 $N = \max(\dots)$，写出完整推导过程。
+
+### 2. 常用放大策略 (Bounding Strategies)
+
+| 场景 | 策略 | 示例 |
+| :--- | :--- | :--- |
+| **多项式分式** | 放大分子，缩小分母 | $\frac{n^2+1}{n^3-2} \le \frac{2n^2}{n^3/2} = \frac{4}{n}$ (当 $n$ 足够大) |
+| **根式差** | 分子有理化 | $\sqrt{n+1}-\sqrt{n} = \frac{1}{\sqrt{n+1}+\sqrt{n}} < \frac{1}{2\sqrt{n}}$ |
+| **指数/阶乘** | 利用 Bernoulli 不等式或归纳 | $q^n \to 0 (|q|<1)$ 利用 $(1+h)^n \ge 1+nh$ |
+
+### 3. 高阶证明例题
+
+**例题 5：证明乘积极限的严密性**  
+已知 $\lim a_n = A, \lim b_n = B$，证明 $\lim (a_n b_n) = AB$。
+
+:::note[点击查看严密证明过程]
+
+**分析**：我们需要控制 $|a_n b_n - AB| = |a_n b_n - A b_n + A b_n - AB| \le |b_n||a_n - A| + |A||b_n - B|$。
+
+**证明**：
+1. 因为 $\{b_n\}$ 收敛，故其有界，即存在 $M > 0$ 使得 $|b_n| \le M$。
+2. 对任意 $\epsilon > 0$：
+   - 存在 $N_1$，当 $n > N_1$ 时，$|a_n - A| < \frac{\epsilon}{2M}$。
+   - 存在 $N_2$，当 $n > N_2$ 时，$|b_n - B| < \frac{\epsilon}{2(|A|+1)}$ (加 1 防止 $A=0$)。
+3. 取 $N = \max(N_1, N_2)$，则当 $n > N$ 时：
+   $$|a_n b_n - AB| \le M \cdot \frac{\epsilon}{2M} + |A| \cdot \frac{\epsilon}{2(|A|+1)} < \frac{\epsilon}{2} + \frac{\epsilon}{2} = \epsilon.$$
+证毕。
+
+:::
+
+---
+
+## 四、 计算验证：C++ 数值观测 <Code2 className="inline-block ml-1" />
+
 
 在分析学中，数值模拟能帮助我们直观感受收敛的速度。
 
@@ -164,17 +206,18 @@ int main() {
 
 ---
 
-## 四、跨领域映射 <Layers className="inline-block ml-1" />
+## 五、 跨领域映射 <Layers className="inline-block ml-1" />
 
-| 领域         | 对应概念                 | 说明                                           |
-| :----------- | :----------------------- | :--------------------------------------------- |
-| **算法分析** | 渐近时间复杂度 $O(f(n))$ | 本质上是研究函数在大 $n$ 下的阶数极限。        |
-| **信号处理** | 采样定理与极限           | 连续信号向离散采样的逼近过程。                 |
-| **物理学**   | 热力学极限               | 研究粒子数 $N \to \infty$ 时宏观量的统计行为。 |
+| 领域 | 对应概念 | 说明 |
+| :--- | :--- | :--- |
+| **算法分析** | 渐近时间复杂度 $O(f(n))$ | 本质上是研究函数在大 $n$ 下的阶数极限。 |
+| **信号处理** | 采样定理与极限 | 连续信号向离散采样的逼近过程。 |
+| **物理学** | 热力学极限 | 研究粒子数 $N \to \infty$ 时宏观量的统计行为。 |
 
 ---
 
-## 五、章内练习（折叠答案）
+## 六、 章内练习（折叠答案）
+
 
 ### 练习 1：定义法
 
@@ -247,7 +290,7 @@ exercises={[
 ]}
 />
 
-## 四、练习库入口
+## 七、 练习库入口
 
 - [前四章基础专题练习（新）](/docs/exercises/math/analysis-foundations)
 - [数学分析综合练习库](/docs/exercises/math/analysis)

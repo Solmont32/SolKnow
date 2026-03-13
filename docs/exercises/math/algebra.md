@@ -832,7 +832,44 @@ $$
 
 </details>
 
-## H. 双线性型与二次型深度进阶
+## J. 数值模拟与验证练习 <Code2 className="inline-block ml-1" />
+
+### 练习 J1：[数值] 幂次变换与稳态分析
+
+设线性变换 $T: \mathbb{R}^2 \to \mathbb{R}^2$ 的矩阵为 $A = \begin{pmatrix} 0.8 & 0.3 \\ 0.2 & 0.7 \end{pmatrix}$（这是一个随机矩阵）。编写 C++ 程序计算 $A^n v$ 当 $n \to \infty$ 时的趋势，并验证其是否收敛到特征值为 1 的特征向量方向。
+
+<details>
+<summary>点击查看 C++ 参考实现与解析</summary>
+
+**解析**：该矩阵的特征值为 1 和 0.5。由于 1 是最大特征值，迭代 $A^n v$ 会趋向于特征值为 1 的特征空间（即稳态）。
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <iomanip>
+
+int main() {
+    double x = 100.0, y = 0.0; // 初始向量
+    double A[2][2] = {{0.8, 0.3}, {0.2, 0.7}};
+    
+    std::cout << "Iter\tx\t\ty" << std::endl;
+    std::cout << "-----------------------------------" << std::endl;
+    for (int i = 0; i <= 20; ++i) {
+        std::cout << i << "\t" << std::fixed << std::setprecision(5) 
+                  << x << "\t" << y << std::endl;
+        
+        double next_x = A[0][0] * x + A[0][1] * y;
+        double next_y = A[1][0] * x + A[1][1] * y;
+        x = next_x;
+        y = next_y;
+    }
+    
+    std::cout << "\n稳态比值 x/y 应接近 0.3/0.2 = 1.5" << std::endl;
+    return 0;
+}
+```
+
+</details>
 
 ### 练习 H1：双线性型的度量矩阵
 

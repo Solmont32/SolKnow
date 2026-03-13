@@ -252,6 +252,50 @@ $h(0)=-1<0,\ h(1)=1>0$，由介值定理存在 $\xi\in(0,1)$ 使 $h(\xi)=0$。
 
 ---
 
+---
+
+## 数值模拟与验证练习 <Code2 className="inline-block ml-1" />
+
+### 练习 14：[数值] 验证 Wallis 乘积公式
+
+已知 Wallis 公式：
+$$ \lim_{n \to \infty} \prod_{k=1}^n \frac{4k^2}{4k^2-1} = \frac{\pi}{2} $$
+编写 C++ 程序验证该公式的收敛过程并计算相对误差。
+
+<details>
+<summary>点击查看 C++ 参考实现与解析</summary>
+
+**解析**：该公式提供了一种通过有理数序列逼近 $\pi$ 的方法。在程序中，我们通过迭代计算前 $n$ 项的乘积。
+
+```cpp
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+
+int main() {
+    const double PI_HALF = M_PI / 2.0;
+    double product = 1.0;
+    
+    std::cout << std::fixed << std::setprecision(10);
+    std::cout << "Target PI/2: " << PI_HALF << "\n\n";
+    std::cout << "n\t\tApproximation\t\tError" << std::endl;
+    
+    for (int n = 1; n <= 1000000; ++n) {
+        double term = (4.0 * n * n) / (4.0 * n * n - 1.0);
+        product *= term;
+        
+        if (n == 10 || n == 100 || n == 1000 || n == 10000 || n == 100000 || n == 1000000) {
+            std::cout << n << "\t\t" << product << "\t\t" << std::abs(product - PI_HALF) << std::endl;
+        }
+    }
+    return 0;
+}
+```
+
+</details>
+
+---
+
 ## 延伸入口
 
 - [第一章 实数集与函数](/docs/academic-math/analysis/real-numbers-and-functions)

@@ -60,7 +60,91 @@ $$Z_n = \frac{\sum_{i=1}^n X_i - n\mu}{\sqrt{n}\sigma} \xrightarrow{d} N(0, 1)$$
 若 $S_n \sim B(n, p)$，则：
 $$\frac{S_n - np}{\sqrt{npq}} \xrightarrow{d} N(0, 1)$$
 
-## 3. 经典练习
+## 4. 概率测度收敛性验证 (Convergence Verification)
+
+理解收敛性的核心在于掌握不同强弱程度的收敛定义及其蕴含关系。
+
+### (1) 收敛性的蕴含关系 (Implications)
+1. **$L^p$ 收敛 ($p \ge 1$) $\implies$ 依概率收敛 ($P \to$)**
+2. **几乎处处收敛 ($a.s. \to$) $\implies$ 依概率收敛 ($P \to$)**
+3. **依概率收敛 ($P \to$) $\implies$ 依分布收敛 ($d \to$)**
+
+**注意**：反向蕴含一般不成立。例如，依分布收敛到常数时，可以推导出依概率收敛。
+
+### (2) 斯卢茨基定理 (Slutsky's Theorem)
+若 $X_n \xrightarrow{d} X$ 且 $Y_n \xrightarrow{P} c$（常数），则：
+- $X_n + Y_n \xrightarrow{d} X + c$
+- $X_n Y_n \xrightarrow{d} cX$
+- $X_n / Y_n \xrightarrow{d} X / c$ （若 $c \neq 0$）
+
+---
+
+## 5. 计算验证：大数定律与中心极限定理模拟 <Code2 className="inline-block ml-1" />
+
+通过蒙特卡洛模拟，我们可以直观看到样本均值如何趋向于正态分布（CLT）以及如何稳定在期望值（LLN）。
+
+<details>
+<summary>点击查看 C++ 验证代码</summary>
+
+```cpp
+#include <iostream>
+#include <random>
+#include <vector>
+#include <numeric>
+#include <cmath>
+#include <iomanip>
+
+/**
+ * @brief 模拟中心极限定理
+ * 独立生成 n 个 U(0, 1) 分布的变量，计算均值，观测其分布。
+ */
+int main() {
+    std::mt19937 gen(42);
+    std::uniform_real_distribution<> dis(0.0, 1.0);
+
+    const int num_simulations = 10000; // 模拟次数
+    const int n_values[] = {1, 10, 100, 1000}; // 样本容量
+
+    std::cout << "--- LLN & CLT Simulation ---" << std::endl;
+    std::cout << std::fixed << std::setprecision(6);
+
+    for (int n : n_values) {
+        double total_sum = 0;
+        double sum_sq_diff = 0;
+        std::vector<double> means;
+
+        for (int i = 0; i < num_simulations; ++i) {
+            double sum = 0;
+            for (int j = 0; j < n; ++j) {
+                sum += dis(gen);
+            }
+            double mean = sum / n;
+            means.push_back(mean);
+            total_sum += mean;
+        }
+
+        double final_mean = total_sum / num_simulations;
+        // 计算模拟均值的标准差
+        for (double m : means) sum_sq_diff += std::pow(m - final_mean, 2);
+        double std_dev = std::sqrt(sum_sq_diff / num_simulations);
+
+        std::cout << "n = " << n 
+                  << "\t Sample Mean: " << final_mean 
+                  << "\t Std Dev: " << std_dev << std::endl;
+    }
+
+    std::cout << "\n注：对于 U(0,1)，期望 mu=0.5, 方差 sigma^2=1/12." << std::endl;
+    std::cout << "由 CLT, 样本均值的标准差应接近 sqrt((1/12)/n)." << std::endl;
+
+    return 0;
+}
+```
+
+</details>
+
+---
+
+## 6. 经典练习
 
 :::info 练习 1
 某高校共有 1000 名学生。每名学生在校用餐的概率为 0.6，且各学生是否用餐相互独立。问食堂至少应准备多少份午餐，才能以 95% 以上的概率保证不缺餐？ ($\Phi(1.645) = 0.95$)

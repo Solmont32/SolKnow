@@ -99,4 +99,67 @@ $P \approx 2 \times 0.9525 - 1 = 0.905$。
 
 ---
 
+## 4. 数值模拟与验证练习 <Code2 className="inline-block ml-1" />
+
+:::info 习题 4.1：[数值] 伯恩斯坦多项式与一致收敛
+利用大数定律，证明对于 $[0,1]$ 上的连续函数 $f(x)$，伯恩斯坦多项式 $B_n(x) = \sum_{k=0}^n f(k/n) \binom{n}{k} x^k (1-x)^{n-k}$ 在 $[0,1]$ 上一致收敛于 $f(x)$。并编写 C++ 程序模拟该收敛过程。
+:::
+
+<details>
+<summary>点击查看 C++ 参考实现与解析</summary>
+
+**解析**：伯恩斯坦多项式的构造本质上是基于二项分布 $B(n, x)$ 的期望。$B_n(x) = E[f(X_n/n)]$，其中 $X_n \sim B(n, x)$。根据大数定律，$X_n/n \xrightarrow{P} x$，由 $f$ 的连续性（在闭区间上一致连续）可推导出一致收敛。
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <iomanip>
+
+// 目标函数 f(x) = sin(PI * x)
+double f(double x) {
+    return std::sin(M_PI * x);
+}
+
+// 计算组合数 C(n, k)
+double combinations(int n, int k) {
+    if (k < 0 || k > n) return 0;
+    if (k == 0 || k == n) return 1;
+    if (k > n / 2) k = n - k;
+    double res = 1;
+    for (int i = 1; i <= k; ++i) {
+        res = res * (n - i + 1) / i;
+    }
+    return res;
+}
+
+// 计算第 n 阶伯恩斯坦多项式在 x 处的值
+double bernstein(int n, double x) {
+    double res = 0;
+    for (int k = 0; k <= n; ++k) {
+        double term = f((double)k / n) * combinations(n, k) * std::pow(x, k) * std::pow(1 - x, n - k);
+        res += term;
+    }
+    return res;
+}
+
+int main() {
+    double x_test = 0.5;
+    std::cout << "Approximating sin(PI * 0.5) = 1.0" << std::endl;
+    std::cout << "n\tBernstein(n, 0.5)\tError" << std::endl;
+    
+    int n_values[] = {5, 10, 20, 50, 100};
+    for (int n : n_values) {
+        double val = bernstein(n, x_test);
+        std::cout << n << "\t" << std::fixed << std::setprecision(6) 
+                  << val << "\t\t" << std::abs(val - 1.0) << std::endl;
+    }
+    return 0;
+}
+```
+
+</details>
+
+---
+
 _本练习库由 SolKnow 系统自动生成。_

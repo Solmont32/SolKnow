@@ -214,7 +214,83 @@ $$
 
 $$
 
-## 5. 配套练习（折叠答案）
+## 6. 线性变换的代数结构与同态分析 (Homomorphism Analysis)
+
+线性变换不仅仅是从 $V$ 到 $W$ 的映射，其全体构成了一个丰富的代数结构。
+
+### (1) 线性映射空间 $\mathcal{L}(V, W)$
+设 $V, W$ 是 $\mathbb{F}$ 上的向量空间。全体从 $V$ 到 $W$ 的线性映射构成的集合 $\mathcal{L}(V, W)$ 在映射加法和数乘下仍构成一个向量空间。
+- **维数定理**：若 $\dim V = n, \dim W = m$，则 $\dim \mathcal{L}(V, W) = mn$。
+- **同构性**：$\mathcal{L}(V, W) \cong M_{m \times n}(\mathbb{F})$。一旦选定基，每个线性变换唯一对应一个矩阵。
+
+### (2) 线性变换代数 $\operatorname{End}(V)$
+当 $V = W$ 时，$\mathcal{L}(V, V)$ 记作 $\operatorname{End}(V)$（自同态环）。除了向量空间结构，它还对**映射复合**（乘法）封闭，构成一个**结合代数**。
+- **乘法性质**：$T(S+R) = TS + TR$，$(TS)R = T(SR)$。
+- **不可交换性**：一般情况下 $TS \neq ST$。
+
+### (3) 同态基本定理
+线性变换是向量空间的**同态**。
+- $T(av+bw) = aT(v) + bT(w)$。
+- 每一个线性变换都诱导了一个同构：$V / \ker T \cong \operatorname{Im} T$。
+
+---
+
+## 7. 计算验证：线性变换复合模拟 <Code2 className="inline-block ml-1" />
+
+在程序中，线性变换的复合对应于矩阵乘法。
+
+<details>
+<summary>点击查看 C++ 验证代码</summary>
+
+```cpp
+#include <iostream>
+#include <vector>
+
+using Matrix = std::vector<std::vector<double>>;
+
+/**
+ * @brief 模拟线性变换复合 (矩阵乘法)
+ */
+Matrix multiply(const Matrix& A, const Matrix& B) {
+    int m = A.size(), n = A[0].size(), p = B[0].size();
+    Matrix C(m, std::vector<double>(p, 0));
+    for (int i = 0; i < m; ++i)
+        for (int j = 0; j < p; ++j)
+            for (int k = 0; k < n; ++k)
+                C[i][j] += A[i][k] * B[k][j];
+    return C;
+}
+
+void printMatrix(const Matrix& M, const std::string& name) {
+    std::cout << name << ":\n";
+    for (const auto& row : M) {
+        for (double val : row) std::cout << val << " ";
+        std::cout << "\n";
+    }
+}
+
+int main() {
+    // T1: 旋转 90 度 (R^2 -> R^2)
+    Matrix T1 = {{0, -1}, {1, 0}};
+    // T2: 缩放 (2, 3)
+    Matrix T2 = {{2, 0}, {0, 3}};
+
+    // 复合 T = T2 * T1 (先旋转后缩放)
+    Matrix T = multiply(T2, T1);
+
+    printMatrix(T1, "Rotation T1");
+    printMatrix(T2, "Scaling T2");
+    printMatrix(T, "Composed T = T2 * T1");
+
+    return 0;
+}
+```
+
+</details>
+
+---
+
+## 8. 配套练习（折叠答案）
 
 ### 练习 1
 
