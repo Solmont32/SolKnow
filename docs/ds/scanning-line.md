@@ -4,7 +4,7 @@ sidebar_position: 9
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { MoveRight, LayoutTemplate, BoxSelect, Maximize, Activity, Calculator } from 'lucide-react';
+import { MoveRight, LayoutTemplate, BoxSelect, Maximize, Activity, Calculator, MousePointer2 } from 'lucide-react';
 
 # 扫描线技巧 (Scanning Line): 降维打击的代数实现
 
@@ -22,14 +22,14 @@ import { MoveRight, LayoutTemplate, BoxSelect, Maximize, Activity, Calculator } 
 
 ### 1.1 事件点与切片
 
-- **Event (事件)**: 几何对象在扫描方向上的临界坐标（如矩形的左右边 $x_1, x_2$）。
+- **Event (事件)**: 几何对象在扫描方向上的临界坐标。
 - **Slice (切片)**: 两个相邻事件点之间的区间。在该区间内，扫描方向正交的拓扑结构保持恒定。
 
-### 1.2 积分算子
+### 1.2 离散积分算子
 
-设 $f(x)$ 为扫描线在坐标 $x$ 处的截面测度（如被覆盖的线段长度）。几何对象的测度（如面积）定义为：
-$$ \text{Measure} = \int*{x*{min}}^{x*{max}} f(x) dx = \sum*{i=1}^{m-1} f(x*i^+) \cdot (x*{i+1} - x*i) $$
-其中 $x_i, x*{i+1}$ 是相邻事件点。
+几何对象的测度（如面积）定义为：
+$$ \text{Measure} = \int_{x_{min}}^{x_{max}} f(x) dx = \sum_{i=1}^{m-1} \text{Query}(\mathcal{T}, x_i, x_{i+1}) \cdot (x_{i+1} - x_i) $$
+其中 $\mathcal{T}$ 为维护截面信息的线段树。
 
 ---
 
@@ -39,20 +39,26 @@ $$ \text{Measure} = \int*{x*{min}}^{x*{max}} f(x) dx = \sum*{i=1}^{m-1} f(x*i^+)
 
 **定理**：对于 $N$ 个矩形的面积并，扫描线算法的时间复杂度为 $O(N \log N)$。
 **证明**：
-
-1. **排序**: 事件点数量为 $2N$，排序代价 $O(N \log N)$。
-2. **离散化**: 纵坐标去重排序代价 $O(N \log N)$。
-3. **线段树操作**: 共 $2N$ 次 `update` 操作，每次 $O(\log N)$。
-   总复杂度 $O(N \log N)$。空间复杂度主要取决于线段树和离散化数组，为 $O(N)$。
+1. **排序**: 事件点 $2N$，代价 $O(N \log N)$。
+2. **离散化**: 纵坐标去重，代价 $O(N \log N)$。
+3. **线段树操作**: $2N$ 次 `update`，每次 $O(\log N)$。
+总复杂度 $O(N \log N)$，空间复杂度 $O(N)$。
 
 ### 2.2 数据完整性：标记永久化合法性
 
 **命题**：在矩形面积并中，不带 `push_down` 的线段树维护 `cnt` 是正确的。
 **证明**：
-矩形边界总是成对出现的入边 (+1) 和出边 (-1)。
-由于任一子区间的 `cnt` 只会在其完全包含的修改中增减，且入边一定早于出边被处理，因此 `cnt` 始终非负。
-当 `cnt[u] > 0` 时，该区间被完全覆盖；当 `cnt[u] == 0` 时，长度由子节点决定。
-这一“自下而上”的逻辑完美闭环，无需下传标记，避免了不必要的常数开销。
+由于矩形边界总是成对出现（+1 入边，-1 出边），且任一子区间的 `cnt` 只会在其完全包含的修改中增减，因此 `cnt` 始终非负。
+当 `cnt[u] > 0` 时，该区间被完全覆盖；当 `cnt[u] == 0` 时，长度由子节点决定。这一“自下而上”的逻辑避免了标记传播的开销，确保了 $O(1)$ 的 `push_up`。
+
+---
+
+## 3. 高维扩展：三维扫描线
+
+对于长方体并体积计算，将 $z$ 轴作为扫描维度。
+1. 将所有长方体的 $z$ 轴坐标作为事件点排序。
+2. 两个相邻 $z$ 事件点之间的切片是一个“厚度”固定的二维面积并问题。
+3. 复杂度：$O(N^2 \log N)$。若使用**可持久化线段树**或**分块优化**，可进一步优化特定查询。
 
 ---
 
@@ -69,7 +75,6 @@ void pushup(int u) {
     else if (tr[u].l != tr[u].r) tr[u].len = tr[u << 1].len + tr[u << 1 | 1].len;
     else tr[u].len = 0;
 }
-// update 操作中仅修改 tr[u].cnt，随后调用 pushup
 ```
 
 </details>
@@ -79,14 +84,25 @@ void pushup(int u) {
 <details>
 <summary>Check Solution</summary>
 
-**解析**：需要维护 `num`（独立段数）以计算横向边，以及 `len` 的变化量以计算纵向边。
+**解析**：需要维护 `num`（独立段数）以计算横向边，以及 `len` 的变化量。
 
 ```cpp
 struct Node {
     int l, r, cnt, len, num;
-    bool lc, rc; // 左右端点是否被覆盖
+    bool lc, rc; 
 } tr[N << 3];
-// pushup 中：num[u] = num[ls] + num[rs] - (rc[ls] && lc[rs])
+void pushup(int u) {
+    if (tr[u].cnt) {
+        tr[u].len = ys[tr[u].r + 1] - ys[tr[u].l];
+        tr[u].num = 1; tr[u].lc = tr[u].rc = 1;
+    } else if (tr[u].l != tr[u].r) {
+        tr[u].len = tr[u << 1].len + tr[u << 1 | 1].len;
+        tr[u].num = tr[u << 1].num + tr[u << 1 | 1].num - (tr[u << 1].rc && tr[u << 1 | 1].lc);
+        tr[u].lc = tr[u << 1].lc; tr[u].rc = tr[u << 1 | 1].rc;
+    } else {
+        tr[u].len = tr[u].num = tr[u].lc = tr[u].rc = 0;
+    }
+}
 ```
 
 </details>
@@ -99,32 +115,23 @@ struct Node {
 <details>
 <summary>Check Solution</summary>
 
-**核心逻辑**：将每个点扩展为 $W \times H$ 的矩形，问题转化为求平面上一点被矩形覆盖的最大权值。使用扫描线维护区间最大值线段树。
-
-```cpp
-// 事件点：点 x_i 对应区间 [x_i, x_i+W] 的入边和出边
-// 线段树：维护 y 轴区间 [y_i, y_i+H] 的增加权值 w_i
-// 答案：线段树全局最大值 tr[1].max
-```
+**核心逻辑**：将每个点扩展为 $W \times H$ 的矩形，转化为求平面上一点被矩形覆盖的最大权值。线段树维护区间最大值。
 
 </details>
 
-2. **[面积交 (k次覆盖)]** 维护被覆盖至少 2 次的区间长度。
+2. **[面积交 (至少覆盖 k 次)]** 维护被覆盖至少 $k$ 次的区间长度。
 <details>
 <summary>Check Solution</summary>
 
-**核心逻辑**：修改 `pushup`。
+**核心逻辑**：修改 `pushup`。记录 `len[0...k]`，其中 `len[i]` 表示被覆盖至少 $i$ 次的长度。
 
-- 若 `cnt >= 2`: `len2 = ys[r+1] - ys[l]`
-- 若 `cnt == 1`: `len2 = (l==r ? 0 : len1[ls] + len1[rs])`
-- 若 `cnt == 0`: `len2 = (l==r ? 0 : len2[ls] + len2[rs])`
 </details>
 
-3. **[进阶] 三维扫描线**：计算长方体并体积。
+3. **[进阶] 动态扫描线**：支持矩形动态插入与删除，实时查询总面积。
 <details>
 <summary>Check Solution</summary>
 
-**核心逻辑**：对 $z$ 轴进行扫描，切片变为二维矩形面积并问题。复杂度 $O(N^2 \log N)$ 或使用动态开点/持久化优化。
+**核心思想**：使用**动态开点线段树**配合**标记永久化**。或者将时间作为第三维，转化为三维扫描线问题。
 
 </details>
 

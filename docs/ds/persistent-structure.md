@@ -3,7 +3,7 @@ title: 可持久化数据结构 (Persistent Structures)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { History, Save, Layers, Share2, GitBranch, Clock } from 'lucide-react';
+import { History, Save, Layers, Share2, GitBranch, Clock, Database } from 'lucide-react';
 
 # 可持久化数据结构: 时间与空间的博弈
 
@@ -18,17 +18,16 @@ import { History, Save, Layers, Share2, GitBranch, Clock } from 'lucide-react';
 
 ## 1. 系统化抽象数据类型 (ADT) 推导
 
-设 $D$ 为一个基础数据结构（如线段树、数组），其操作集为 $O$。可持久化版本 $\mathcal{P}(D)$ 的定义如下：
-
-- **版本集 $V$**: 记录所有历史状态。
-- **Update(v, op)**: 在版本 $v$ 的基础上执行 $op \in O$，生成新版本 $v' \in V$。
-- **Query(v, q)**: 在版本 $v$ 上执行查询 $q$。
-
 ### 1.1 路径复制 (Path Copying) 的代数本质
 
 对于树形结构，修改一个节点 $u$ 会影响其所有祖先的拓扑关系。
 为了保证历史版本 $v$ 的不可变性，路径复制算法规定：
 $\forall p \in \text{path}(root, u)$，创建 $p$ 的副本 $p'$，使得新版本的 $root'$ 能够索引到修改后的 $u'$，同时共享未被修改的侧向子树。
+
+### 1.2 可持久化数组的退化
+
+可持久化数组通常通过可持久化线段树实现。单次修改代价为 $O(\log N)$ 空间。
+**Fat Node 方案**: 在每个节点记录 `(version, value)` 列表。查询复杂度提升至 $O(\log V)$，但空间常数显著降低。
 
 ---
 
@@ -37,12 +36,13 @@ $\forall p \in \text{path}(root, u)$，创建 $p$ 的副本 $p'$，使得新版�
 ### 2.1 时空复杂度证明
 
 **定理**：对于高度为 $H$ 的树，路径复制单次修改的时间与空间复杂度均为 $O(H)$。
-**证明**：每次修改仅创建从根到叶子的单一路径节点。在线段树中，$H = \log N$，故空间增长量为 $O(\log N)$。对于 $M$ 次修改，总空间复杂度为 $O(N + M \log N)$。
+**证明**：每次修改仅创建从根到叶子的单一路径节点。在线段树中，$H = \log N$，故空间增长量为 $O(\log N)$。
+**分摊空间优化**: 在 Full Persistence 中，若修改操作遵循特定的拓扑序，可以利用**原子化操作记录**（类似 AOF 日志）配合定期快照，实现 $O(1)$ 均摊空间开销。
 
 ### 2.2 数据完整性 (不可变性) 证明
 
 **命题**：结构共享不会导致旧版本的意外修改。
-**证明**：在函数式实现中，所有更新操作均返回新创建的节点引用，且任何对节点的写操作仅作用于新分配的内存空间。由于旧版本的根节点及其路径引用链未发生任何改变，其指向的数据拓扑保持恒定。
+**证明**：在函数式实现中，所有更新操作均返回新创建的节点引用。任何对节点的写操作仅作用于新分配的内存空间。由于旧版本的根节点及其路径引用链未发生任何改变，其指向的数据拓扑保持恒定（Referential Transparency）。
 
 ---
 
@@ -53,14 +53,10 @@ $\forall p \in \text{path}(root, u)$，创建 $p$ 的副本 $p'$，使得新版�
 <details>
 <summary>Check Solution (C++ 实现)</summary>
 
-**题目描述**：多次询问区间 $[L, R]$ 内第 $k$ 小的数。
-**核心逻辑**：利用主席树维护数值权值。利用前缀和思想 $T_R - T_{L-1}$ 提取区间信息。
-
 ```cpp
 int update(int p, int l, int r, int x) {
     int q = ++idx;
-    tr[q] = tr[p];
-    tr[q].cnt++;
+    tr[q] = tr[p]; tr[q].cnt++;
     if (l == r) return q;
     int mid = l + r >> 1;
     if (x <= mid) tr[q].l = update(tr[p].l, l, mid, x);
@@ -79,19 +75,21 @@ int query(int u, int v, int l, int r, int k) {
 
 </details>
 
-### 例题 2：可持久化并查集
+### 例题 2：可持久化并查集 (按秩合并)
 
 <details>
 <summary>Check Solution</summary>
 
-**解析**：由于路径压缩涉及多点修改，改用**按秩合并**维护 $O(\log N)$ 深度。使用主席树维护 `parent` 数组实现可持久化数组。
+**解析**：不能使用路径压缩（会破坏历史版本），必须使用**按秩合并**保证树高 $O(\log N)$。
 
 ```cpp
-// 查找操作：在版本 v 的主席树上查找 fa[x]
-int find(int ver, int x) {
-    int f = query(root[ver], 1, n, x).fa;
-    if (f == x) return x;
-    return find(ver, f); // 无法路径压缩
+void merge(int &v_old, int &v_new, int a, int b) {
+    int ra = find(v_old, a), rb = find(v_old, b);
+    if (ra == rb) { v_new = v_old; return; }
+    if (tr[ra].dep > tr[rb].dep) swap(ra, rb);
+    // 将 ra 接到 rb 下，更新 v_new 的主席树
+    v_new = update_fa(v_old, ra, rb);
+    if (tr[ra].dep == tr[rb].dep) v_new = update_dep(v_new, rb);
 }
 ```
 
@@ -101,45 +99,37 @@ int find(int ver, int x) {
 
 ## 4. 综合练习与解答
 
-1. **[树上主席树]** 查询树上路径 $(u, v)$ 的第 $k$ 小值。
+1. **[树上主席树]** 查询路径 $(u, v)$ 的第 $k$ 小值。
 <details>
 <summary>Check Solution</summary>
 
-**核心逻辑**：利用树上差分。路径信息为 $T_u + T_v - T_{lca} - T_{fa[lca]}$。
-
-```cpp
-int cnt = tr[tr[u].l].cnt + tr[tr[v].l].cnt - tr[tr[lc].l].cnt - tr[tr[flc].l].cnt;
-```
+**核心逻辑**：树上差分。对应的主席树为 $T_u + T_v - T_{lca} - T_{fa[lca]}$。
 
 </details>
 
-2. **[区间最大异或]** 可持久化 Trie 维护前缀异或值。
+2. **[动态主席树]** 支持单点修改与区间排名。
 <details>
 <summary>Check Solution</summary>
 
-**核心逻辑**：类似主席树，每个版本维护到当前位置的 0/1 字典树路径，通过 $T_R - T_{L-1}$ 判断路径是否存在。
+**核心逻辑**：树状数组套主席树。外层 BIT 维护位置，内层线段树维护权值。
 
 ```cpp
-// 在 [L, R] 范围内查找 x 的最大异或对
-for (int i = 23; i >= 0; i--) {
-    int v = (x >> i) & 1;
-    if (tr[tr[r].s[v ^ 1]].cnt - tr[tr[l].s[v ^ 1]].cnt > 0) {
-        res += (1 << i);
-        r = tr[r].s[v ^ 1], l = tr[l].s[v ^ 1];
-    } else r = tr[r].s[v], l = tr[l].s[v];
+void add(int x, int v) {
+    for (int i = x; i <= n; i += lowbit(i))
+        update(roots[i], 1, M, v, 1);
 }
 ```
 
 </details>
 
-3. **[进阶] 动态主席树**：支持带单点修改的区间第 $k$ 小。
+3. **[进阶] 历史记录索引**：实现一个高性能的文件版本控制系统元数据存储。
 <details>
 <summary>Check Solution</summary>
 
-**核心逻辑**：树状数组套主席树。外层树状数组维护位置 $i$ 的修改，内层主席树维护权值分布。复杂度 $O(M \log^2 N)$。
+**核心思想**：利用 Full Persistence Treap 存储文件路径树。每次 Commit 对应一次全局根节点的持久化更新。
 
 </details>
 
 ---
 
-_编者注：可持久化结构的精髓在于对“副作用”的严格管控。它不仅是算法竞赛的利器，更是函数式编程与现代数据库（如 MVCC 机制）的核心数学基础。_
+_编者注：可持久化结构的精髓在于对“副作用”的严格管控。它不仅是算法竞赛的利器，更是现代数据库（如 MVCC 机制）与函数式编程的核心数学基础。_
