@@ -3,28 +3,27 @@ title: 计算机科学精要 (Computer Science Essentials)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { Cpu, Network, Activity, Layers, Zap, HardDrive, Shield, Box, Code2, Infinity, Monitor, Youtube, Terminal, Workflow } from 'lucide-react';
+import { Cpu, Network, Activity, Layers, Zap, HardDrive, Shield, Box, Code2, Infinity, Monitor, Youtube, Terminal, Workflow, Binary, MemoryStick, Microscope } from 'lucide-react';
 
-# 计算机科学精要：从体系结构到软件工程规范
+# 计算机科学精要：从底层原语到协议一致性
 
-> **核心哲学**：计算机系统是人类构建的最复杂的抽象层级。理解系统的关键在于洞察“冯·诺依曼架构”的确定性逻辑、内核资源的并发权衡、网络协议的拓扑收敛，以及软件工程中的熵减规范。
+> **核心哲学**：计算机系统是人类构建的最复杂的抽象层级。理解系统的关键在于洞察“冯·诺依曼架构”的确定性逻辑、指针模型的形式化定义、内存一致性的权衡，以及网络协议状态机的闭环验证。
 
 ---
 
-## 1. 体系结构：冯·诺依曼架构的逻辑完备性
+## 1. 体系结构：冯·诺依曼架构与底层原语
 
-冯·诺依曼架构（Von Neumann Architecture）奠定了现代通用计算的基础，其核心是“存储程序控制”原理。
+冯·诺依曼架构奠定了现代通用计算的基础，其核心是“存储程序控制”原理与显式的内存寻址模型。
 
 ### 1.1 五大组件与逻辑拓扑
 
 1.  **运算器 (ALU)**：执行算术与逻辑运算。
 2.  **控制器 (CU)**：解析指令并生成控制信号序列。
 3.  **存储器 (Memory)**：统一存储指令（代码）与数据。
-4.  **输入设备 (Input)**。
-5.  **输出设备 (Output)**。
+4.  **输入/输出设备 (I/O)**。
 
 **逻辑证明：图灵完备性归约**
-冯·诺依曼架构通过在存储器中维护状态，并利用控制器实现条件跳转，满足了图灵机的基本要素：无限磁带（虚拟内存）、读写头（PC 指令指针）与有限状态转移函数（CU）。
+冯·诺依曼架构满足了图灵机的基本要素：无限磁带（虚拟内存）、读写头（PC 指令指针）与有限状态转移函数（CU）。
 
 ### 1.2 指令执行的原子时序
 
@@ -33,25 +32,46 @@ $$Cycle = Fetch \to Decode \to Execute \to WriteBack$$
 
 -   **Fetch**: $MAR \leftarrow PC; MBR \leftarrow Memory[MAR]; IR \leftarrow MBR; PC \leftarrow PC + 1$
 -   **Decode**: $CU \text{ 解析 } IR \text{ 中的操作码与寻址方式}$
--   **Execute**: $ALU \text{ 执行运算; 状态寄存器更新}$
+
+### 1.3 底层原语：指针模型的形式化证明
+指针不仅是地址，更是类型化内存访问的抽象算子。
+
+**定义 (Pointer Formalism)**:
+设 $M$ 为字节寻址的线性地址空间，$M \subseteq [0, 2^N-1]$。类型 $T$ 的大小为 $size(T)$。
+指针 $p$ 是一个二元组 $(base, T)$，其中 $base \in M$。
+解引用算子 $* : Pointer \to Value$ 定义为：
+$$*(base, T) = \text{Interpret}_T(M[base \dots base + size(T) - 1])$$
+
+**内存安全定理 (Memory Safety Theorem)**:
+若程序 $P$ 在执行流中满足以下不变式，则称该程序是 **空间安全 (Spatially Safe)** 的：
+$$\forall \text{ access } *(base, T), [base, base + size(T) - 1] \subseteq \text{AllocatedRegions}$$
+**证明思路**：利用循环不变式（Loop Invariant）证明索引 $i$ 在 $O(1)$ 或 $O(n)$ 时间内的演化始终满足 $0 \le i < Bound$。
 
 ---
 
-## 2. 操作系统：进程/线程安全分析 (Concurrency Safety)
+## 2. 操作系统：内存一致性与并发安全
 
 并发安全性是操作系统研究的核心，其本质是在共享资源上的互斥访问保证。
 
-### 2.1 安全性 (Safety) 与 活跃性 (Liveness) 证明
+### 2.1 内存一致性模型 (Memory Consistency Models)
 
-在并发模型中，我们必须同时证明两个属性：
-1.  **安全性 (Safety)**：性质 $P$ 在所有可达状态下始终为真（例如：不会有两个线程同时处于临界区）。
-2.  **活跃性 (Liveness)**：性质 $Q$ 最终会变为真（例如：请求锁的线程最终一定能获得锁，无死锁）。
+在多核系统中，内存一致性决定了读写操作在不同核心间的可见顺序。
+1.  **顺序一致性 (Sequential Consistency)**：所有线程看到的执行顺序与全局某个全序一致。
+2.  **弱一致性 (Weak Consistency/TSO)**：允许写缓冲区 (Store Buffer) 导致重排序，仅在同步点保证一致。
 
-### 2.2 互斥锁 (Mutex) 的数学抽象
+**一致性分析：MESI 协议状态转换**
+- **M (Modified)**: 块已修改，仅在此 Cache 中。
+- **E (Exclusive)**: 块未修改，仅在此 Cache 中。
+- **S (Shared)**: 块未修改，存在于多个 Cache 中。
+- **I (Invalid)**: 块无效。
+通过总线嗅探 (Bus Snooping) 维持全局一致性状态机。
 
-设 $S$ 为临界区状态，线程集合为 $T = \{T_1, T_2, ..., T_n\}$。
-互斥性质定义为：
-$$\forall t \in \text{Time}, |\{T_i \in T \mid T_i \text{ is in Critical Section at } t\}| \le 1$$
+### 2.2 堆完整性分析 (Heap Integrity)
+
+堆内存分配器（如 `ptmalloc`）通过元数据链表管理空间。
+**安全性逻辑验证**：
+$$\forall block, block \to next \to prev == block$$
+若攻击者破坏了 $block \to next$ 指针（缓冲区溢出），则在 `unlink` 操作时会触发 **任意地址写 (Arbitrary Write)**，导致系统崩溃或权限提升。
 
 ### 2.3 C++ 并发模拟：原子操作验证
 
@@ -65,6 +85,7 @@ std::atomic<int> counter(0); // 原子计数器保证 Safety
 
 void increment(int iterations) {
     for (int i = 0; i < iterations; ++i) {
+        // memory_order_relaxed 提供最低限度的一致性保证
         counter.fetch_add(1, std::memory_order_relaxed);
     }
 }
@@ -79,16 +100,14 @@ int main() {
     }
 
     for (auto& t : threads) t.join();
-
     std::cout << "Final count: " << counter << std::endl;
-    // 验证：counter == num_threads * iterations
     return 0;
 }
 ```
 
 ---
 
-## 3. 计算机网络：协议分层与收敛性证明
+## 3. 计算机网络：协议状态机逻辑验证
 
 网络协议的设计目标是在异构、不可靠的物理媒介上构建确定性的通信逻辑。
 
@@ -96,133 +115,139 @@ int main() {
 
 协议栈可以看作是一个嵌套的函数映射 $f_{layer}$：
 $$Message_{Physical} = f_{L1}(f_{L2}(f_{L3}(f_{L4}(Data_{App}))))$$
-每一层通过添加 **报文首部 (Header)** 进行 **封装 (Encapsulation)**，其逆过程为 **解封装 (Decapsulation)**。这种层间独立性保证了系统的可扩展性。
+每一层通过添加 **报文首部 (Header)** 进行 **封装 (Encapsulation)**。
 
-### 3.2 路由协议收敛性 (Routing Convergence)
+### 3.2 协议状态机 (FSM) 逻辑验证
 
-**收敛定义**：在一个静态拓扑中，经过有限次路由信息交换，所有路由器的路由表不再发生变化，且路径是最优的。
+TCP 协议的正确性由其有限状态机定义。
+**状态集合 $S$**: $\{CLOSED, LISTEN, SYN\_SENT, SYN\_RCVD, ESTABLISHED, \dots\}$
+**转换函数 $\delta(s, e) \to (s', a)$**:
+- $(LISTEN, \text{receive SYN}) \to (SYN\_RCVD, \text{send SYN+ACK})$
+- $(SYN\_SENT, \text{receive SYN+ACK}) \to (ESTABLISHED, \text{send ACK})$
 
-**距离矢量协议 (RIP) 的收敛推导 (Bellman-Ford)**：
-设 $d_i(j)$ 为节点 $i$ 到 $j$ 的最短距离估计，则更新方程为：
-$$d_i(j) = \min_{v \in Neighbors(i)} \{cost(i, v) + d_v(j)\}$$
-由于权值 $cost > 0$，该迭代过程在 $N-1$ 次交换内（其中 $N$ 为节点数）必然收敛到全局最优解。
+**逻辑收敛性证明：三次握手**
+设 $C$ 和 $S$ 分别为客户端和服务器。
+1. $C \to S: SYN(x)$
+2. $S \to C: SYN(y), ACK(x+1)$
+3. $C \to S: ACK(y+1)$
+**证明**：三次交互是建立双向可靠信道的最小代价，它使得双方都确认了对方的收发能力。两次握手无法防止失效的旧 SYN 包导致的“假性连接”，导致状态无法收敛到一致。
 
 ---
 
-## 4. 软件工程：代码规范与系统化设计
+## 4. 软件工程：核心库实现与系统化设计
 
-软件工程不仅是编写代码，更是对软件生命周期的复杂性管理。
+软件工程通过抽象（Abstraction）与封装（Encapsulation）管理代码熵。
 
-### 4.1 SOLID 原则与解耦逻辑
+### 4.1 C++ 核心库原语实现：`SimplePtr` (智能指针)
 
--   **S**ingle Responsibility (单一职责)：一个类应仅有一个引起变化的原因。
--   **O**pen/Closed (开闭原则)：对扩展开放，对修改封闭。
--   **L**iskov Substitution (里氏替换)：子类必须能替换其基类。
--   **I**nterface Segregation (接口隔离)。
--   **D**ependency Inversion (依赖倒置)：高层模块不应依赖低层模块。
+```cpp
+template <typename T>
+class SimpleUniquePtr {
+private:
+    T* ptr;
+public:
+    explicit SimpleUniquePtr(T* p = nullptr) : ptr(p) {}
+    ~SimpleUniquePtr() { delete ptr; }
 
-### 4.2 软件熵 (Software Entropy)
+    // 禁止拷贝，保证唯一所有权 (Ownership Invariant)
+    SimpleUniquePtr(const SimpleUniquePtr&) = delete;
+    SimpleUniquePtr& operator=(const SimpleUniquePtr&) = delete;
 
-随着系统的演进，如果不进行持续重构，其内部复杂度（熵）会单调增加。
-**规范化手段**：
-1.  **持续集成 (CI)**：通过自动化测试抑制错误蔓延。
-2.  **代码评审 (Code Review)**：知识共享并维持一致性标准。
-3.  **设计模式 (Design Patterns)**：利用经过验证的模板处理常见复杂性。
+    // 移动构造函数 (Move Semantics)
+    SimpleUniquePtr(SimpleUniquePtr&& other) noexcept : ptr(other.ptr) {
+        other.ptr = nullptr;
+    }
+
+    T& operator*() const { return *ptr; }
+    T* operator->() const { return ptr; }
+};
+```
 
 ---
 
 ## 5. 综合练习与验证 (Exercises)
 
-### 练习 1：冯·诺依曼瓶颈量化分析
+### 练习 1：指针算术与内存越界证明
 
-**题目**：假设 CPU 频率为 $4GHz$，每条指令平均需要 $2$ 个周期。总线宽度为 $64$ 位，频率为 $800MHz$。计算该系统是否存在“存储墙 (Memory Wall)”问题，即总线带宽是否满足 CPU 指令流的需求？
-
-<details>
-<summary>Check Solution</summary>
-
-**解析**：
-1.  **CPU 指令流需求**：
-    -   每秒指令数 = $4GHz / 2 = 2 \times 10^9$ 指令/秒。
-    -   假设每条指令（含数据）平均需要访问 $8$ 字节（64位），总带宽需求 = $2 \times 10^9 \times 8B = 16 GB/s$。
-2.  **总线实际带宽**：
-    -   带宽 = $800MHz \times 8B = 6.4 GB/s$。
-3.  **结论**：$6.4 < 16$。系统存在显著的存储瓶颈。CPU 必须通过多级 Cache 减少对总线的依赖。
-</details>
-
-### 练习 2：信号量实现互斥的正确性证明
-
-**题目**：使用信号量 $S$（初始值为 1）保护临界区。证明不会出现两个进程同时进入。
+**题目**：考虑 C++ 代码 `int a[5]; int* p = a + 6;`。根据指针模型定义，分析 `*p` 的安全性。
 
 <details>
 <summary>Check Solution</summary>
 
 **解析**：
-1.  **定义**：$P(S)$ 操作为 $S \leftarrow S-1$，若 $S < 0$ 则阻塞。$V(S)$ 操作为 $S \leftarrow S+1$，若 $S \le 0$ 则唤醒。
-2.  **不变式证明**：
-    设 $n_{in}$ 为临界区内的进程数，$n_{wait}$ 为阻塞在信号量队列中的进程数。
-    则有：$S = 1 - (n_{in} + n_{wait})$。
-3.  **边界分析**：
-    -   由于 $n_{wait} \ge 0$，则 $1 - n_{in} \ge S$。
-    -   当有进程在临界区内时，$S \le 0$。
-    -   若 $n_{in} = 2$，则 $S = 1 - 2 - n_{wait} = -1 - n_{wait} \le -1$。
-    -   但信号量的逻辑保证只有当 $S$ 减 1 后仍 $\ge 0$ 才能进入，或者被 $V$ 唤醒。当第一个进程进入后 $S=0$，第二个进程执行 $P(S)$ 导致 $S=-1$ 并阻塞。
-4.  **结论**：$n_{in}$ 永远无法达到 2。
+1.  **分配区域分析**：`a` 分配的区域为 $[base, base + 5 \times sizeof(int) - 1]$。
+2.  **指针计算**：`p` 的 `base` 为 $base + 6 \times sizeof(int)$。
+3.  **安全性验证**：访问区间 $[base + 6\text{size}, base + 7\text{size} - 1]$ 与 `AllocatedRegions` 的交集为空。
+4.  **结论**：违反 **Memory Safety Theorem**。在 C++ 标准中这属于未定义行为 (Undefined Behavior)，在底层可能导致段错误 (Segmentation Fault) 或脏数据读取。
 </details>
 
-### 练习 3：TCP 三次握手的状态收敛验证
+### 练习 2：MESI 协议状态演化
 
-**题目**：解释为什么两次握手不能保证连接状态的确定性（收敛）？
+**题目**：核心 A 读地址 X (状态 I -> E)，核心 B 读地址 X。请描述两个核心中该 Cache 块的状态变化。
 
 <details>
 <summary>Check Solution</summary>
 
 **解析**：
-1.  **场景模拟**：Client 发送 SYN1，但在网络中滞留。Client 超时重发 SYN2，建立连接并关闭。
-2.  **失效问题**：此时滞留的 SYN1 到达 Server，Server 发送 ACK。若只有两次握手，Server 认为连接已建立并分配资源。
-3.  **结论**：三次握手强制 Client 对 Server 的 ACK 进行确认，使双方都确认对方已准备好，从而过滤掉失效的历史连接请求。
+1.  **初始状态**：A: I, B: I。
+2.  **A 读 X**：A 发起读请求，由于 B 也没有，A 从内存读取，状态变为 **E (Exclusive)**。
+3.  **B 读 X**：B 发起读请求，A 嗅探到该请求。由于 A 拥有 E 状态，它将状态降级为 **S (Shared)** 并提供数据。B 收到数据后状态也变为 **S**。
+4.  **结论**：最终状态为 A: S, B: S。保证了多核之间数据的一致性视图。
 </details>
 
-### 练习 4：C++ 模拟进程饥饿 (Starvation)
+### 练习 3：手写 `std::vector` 的扩容逻辑
 
-**题目**：编写一个简单的优先级调度模拟，展示低优先级进程可能遭遇的饥饿现象。
+**题目**：实现一个简易 `SimpleVector`，重点展示内存重新分配与构造函数一致性。
 
 <details>
 <summary>Check Solution</summary>
 
 ```cpp
-#include <iostream>
-#include <queue>
-#include <string>
+template <typename T>
+class SimpleVector {
+    T* data;
+    size_t sz;
+    size_t cap;
 
-struct Process {
-    std::string name;
-    int priority;
-};
-
-void simulate_scheduling() {
-    auto cmp = [](Process a, Process b) { return a.priority < b.priority; };
-    std::priority_queue<Process, std::vector<Process>, decltype(cmp)> pq(cmp);
-
-    pq.push({"LowPrio", 1});
-    
-    // 模拟源源不断的高优先级任务进入
-    for (int i = 0; i < 5; ++i) {
-        pq.push({"HighPrio_" + std::to_string(i), 10});
-        std::cout << "Added High Priority Job " << i << std::endl;
-    }
-
-    while (!pq.empty()) {
-        Process current = pq.top();
-        pq.pop();
-        std::cout << "Executing: " << current.name << " (Prio: " << current.priority << ")" << std::endl;
-        
-        // 模拟执行过程中又有高优先级任务到达
-        static int count = 5;
-        if (count < 8) {
-            pq.push({"HighPrio_" + std::to_string(count++), 10});
+    void reserve(size_t new_cap) {
+        if (new_cap <= cap) return;
+        T* new_data = static_cast<T*>(::operator new(new_cap * sizeof(T)));
+        for (size_t i = 0; i < sz; ++i) {
+            new (new_data + i) T(std::move(data[i])); // 移动元素
+            data[i].~T(); // 销毁旧元素
         }
+        ::operator delete(data);
+        data = new_data;
+        cap = new_cap;
     }
-}
+
+public:
+    SimpleVector() : data(nullptr), sz(0), cap(0) {}
+    ~SimpleVector() {
+        for (size_t i = 0; i < sz; ++i) data[i].~T();
+        ::operator delete(data);
+    }
+
+    void push_back(const T& val) {
+        if (sz == cap) reserve(cap == 0 ? 1 : cap * 2);
+        new (data + sz) T(val); // placement new
+        sz++;
+    }
+};
 ```
-**解析**：只要高优先级任务的到达速率大于处理速率，低优先级任务将永远无法获得 CPU，这就是活跃性（Liveness）受损的典型体现。
+**解析**：此实现展示了手动管理内存生命周期的核心：`operator new` 分配原始内存，`placement new` 调用构造函数，显式析构函数调用，以及 `operator delete` 释放内存。
+</details>
+
+### 练习 4：网络状态机自连接 (Self-connection) 悖论
+
+**题目**：如果一台机器自己连接自己 (Source Port == Dest Port)，TCP 状态机会如何演化？
+
+<details>
+<summary>Check Solution</summary>
+
+**解析**：
+1.  **过程**：机器发送 SYN。由于目的地是自己且端口匹配，它会收到这个 SYN。
+2.  **状态转移**：`SYN_SENT` 状态收到 SYN 后，根据 FSM 会转入 `SYN_RCVD` 状态并发送 `SYN+ACK`。
+3.  **收敛**：随后它收到自己发的 `SYN+ACK`，状态转入 `ESTABLISHED`。
+4.  **结论**：这就是 TCP 的 **Simultaneous Open (同时打开)** 逻辑，证明了 TCP 状态机在闭环反馈下的鲁棒性。
 </details>
