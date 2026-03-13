@@ -20,21 +20,37 @@ className="text-gray-600 dark:text-gray-400 mb-8">
 ---
 
 ## 1. 核心理论体系与严密证明
+### 1.1 算术基本定理 (Fundamental Theorem of Arithmetic, FTA)
 
-### 1.1 算术基本定理 (Fundamental Theorem of Arithmetic)
+**定理表述**：任何大于 1 的整数 $n$ 都可以唯一地表示为一系列素数的乘积：
+$n = p_1^{e_1} p_2^{e_2} \dots p_k^{e_k}$，其中 $p_1 < p_2 < \dots < p_k$ 为素数，$e_i \in \mathbb{Z}^+$。
 
-任何大于 1 的正整数 $n$ 都可以唯一地分解为素数的乘积：
-$n = p_1^{e_1} p_2^{e_2} \dots p_k^{e_k}$
+**系统化推导过程**：
 
-**存在性证明**：
-对 $n$ 使用强数学归纳法。若 $n$ 为素数，结论显然；若 $n$ 为合数，则 $n=ab$ ($1 < a, b < n$)，由归纳假设 $a, b$ 可分解，故 $n$ 可分解。
+#### 1. 存在性证明 (Existence)
+我们使用强数学归纳法证明：
+- **基础步**：$n=2$ 是素数，结论成立。
+- **归纳步**：假设对于所有 $2 \le k < n$ 结论均成立。
+  - 若 $n$ 为素数，则 $n=n^1$ 已经是素因子分解。
+  - 若 $n$ 为合数，则存在 $1 < a, b < n$ 使得 $n = ab$。由归纳假设，$a$ 和 $b$ 都可以分解为素数乘积。将两者的分解合并，即可得到 $n$ 的素因子分解。
 
-**唯一性证明 (Euclid's Lemma)**：
-关键在于：若 $p|ab$ 且 $p$ 为素数，则 $p|a$ 或 $p|b$。
-假设 $n$ 有两种分解 $p_1 \dots p_r = q_1 \dots q_s$。由 $p_1 | q_1 \dots q_s$ 知 $p_1$ 必等于某个 $q_j$（设为 $q_1$），消去后继续归纳。
+#### 2. 关键引理：欧几里得引理 (Euclid's Lemma)
+若素数 $p$ 满足 $p \mid ab$，则 $p \mid a$ 或 $p \mid b$。
+**证明**：若 $p \nmid a$，则 $\gcd(p, a) = 1$。根据裴蜀定理，存在整数 $x, y$ 使得 $px + ay = 1$。
+等式两边同乘 $b$：$pbx + aby = b$。
+因为 $p \mid pbx$ 且 $p \mid aby$（由已知 $p \mid ab$），故 $p$ 整除它们的和，即 $p \mid b$。
+
+#### 3. 唯一性证明 (Uniqueness)
+假设 $n$ 有两种不同的素因子分解：
+$n = p_1 p_2 \dots p_r = q_1 q_2 \dots q_s$
+- 由 $p_1 \mid n$ 知 $p_1 \mid q_1 q_2 \dots q_s$。根据欧几里得引理，$p_1$ 必然整除某个 $q_j$。
+- 由于 $q_j$ 也是素数，故 $p_1 = q_j$。
+- 将 $p_1$ 和 $q_j$ 从等式两边消去，得到 $p_2 \dots p_r = \dots q_{j-1} q_{j+1} \dots q_s$。
+- 重复此过程，最终所有的因子都会一一对应相等，且 $r=s$。
+
+---
 
 ### 1.2 同余类与剩余系 (Congruence & Residue Systems)
-
 **代数结构定义**：
 - **模 $n$ 剩余类环 $\mathbb{Z}/n\mathbb{Z}$**：由 $\{0, 1, \dots, n-1\}$ 构成的加法交换群与乘法半群。
 - **乘法群 $(\mathbb{Z}/n\mathbb{Z})^\times$**：由与 $n$ 互质的剩余类构成的阿贝尔群，其阶数为 $\phi(n)$。
@@ -385,6 +401,60 @@ void solve() {
         r1 = (r1 % m1 + m1) % m1;
     }
     cout << (long long)r1 << endl;
+}
+```
+
+</details>
+
+### 练习 6：[P3807] 卢卡斯定理 (Lucas Theorem)
+
+对于质数 $p$，计算 $\binom{n+m}{n} \pmod p$。
+
+<details>
+<summary>Check Solution (思路)</summary>
+
+1. **定理**：$\binom{n}{m} \equiv \binom{n/p}{m/p} \binom{n \pmod p}{m \pmod p} \pmod p$。
+2. 递归求解 $\binom{n/p}{m/p}$，基本情况为 $m=0$ 时返回 1。
+3. 预处理阶乘及其逆元以加速 $\binom{n \pmod p}{m \pmod p}$ 的计算。
+</details>
+
+<details>
+<summary>Check Solution (C++)</summary>
+
+```cpp
+#include <iostream>
+using namespace std;
+typedef long long ll;
+
+ll qpow(ll a, ll b, ll p) {
+    ll res = 1;
+    while (b) {
+        if (b & 1) res = res * a % p;
+        a = a * a % p;
+        b >>= 1;
+    }
+    return res;
+}
+
+ll C(ll n, ll m, ll p) {
+    if (m > n) return 0;
+    if (m > n / 2) m = n - m;
+    ll a = 1, b = 1;
+    for (int i = 0; i < m; i++) {
+        a = a * (n - i) % p;
+        b = b * (i + 1) % p;
+    }
+    return a * qpow(b, p - 2, p) % p;
+}
+
+ll lucas(ll n, ll m, ll p) {
+    if (!m) return 1;
+    return lucas(n / p, m / p, p) * C(n % p, m % p, p) % p;
+}
+
+void solve() {
+    ll n, m, p; cin >> n >> m >> p;
+    cout << lucas(n + m, n, p) << endl;
 }
 ```
 

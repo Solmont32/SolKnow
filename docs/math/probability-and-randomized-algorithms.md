@@ -21,12 +21,24 @@ className="text-gray-600 dark:text-gray-400 mb-8">
 
 ## 1. 期望的线性性与指示变量
 
-### 1.1 期望线性性的严密证明
+### 1.1 期望线性性的严密证明与一致性
 
-**定理**：对于任意随机变量 $X, Y$，均有 $E[X+Y] = E[X] + E[Y]$。
-**证明**：
-$E[X+Y] = \sum_x \sum_y (x+y) P(x, y) = \sum_x x \sum_y P(x, y) + \sum_y y \sum_x P(x, y) = E[X] + E[Y]$。
-该性质的强大之处在于其**不依赖变量间的独立性**。
+**定理**：对于任意随机变量 $X, Y$（即使它们不独立），均有 $E[X+Y] = E[X] + E[Y]$。
+
+**证明 (连续型随机变量视角)**：
+设 $X, Y$ 的联合概率密度函数为 $f(x, y)$。
+$$
+\begin{aligned}
+E[X+Y] &= \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} (x+y) f(x, y) \, dx \, dy \\
+&= \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} x f(x, y) \, dx \, dy + \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} y f(x, y) \, dx \, dy \\
+&= \int_{-\infty}^{\infty} x \left( \int_{-\infty}^{\infty} f(x, y) \, dy \right) \, dx + \int_{-\infty}^{\infty} y \left( \int_{-\infty}^{\infty} f(x, y) \, dx \right) \, dy \\
+&= \int_{-\infty}^{\infty} x f_X(x) \, dx + \int_{-\infty}^{\infty} y f_Y(y) \, dy \\
+&= E[X] + E[Y]
+\end{aligned}
+$$
+其中 $f_X(x)$ 和 $f_Y(y)$ 分别为 $X$ 和 $Y$ 的边缘概率密度。
+
+**性质补充**：该性质的强大之处在于其**不依赖变量间的独立性**。
 
 ### 1.2 指示随机变量 (Indicator Random Variables)
 
@@ -41,6 +53,23 @@ $E[X] = \sum_{i<j} E[X_{i,j}] = \binom{n}{2} \cdot \frac{1}{2} = \frac{n(n-1)}{4
 
 $E[X] = E[E[X|Y]] = \sum_y E[X|Y=y] P(Y=y)$。
 这在解决多阶段随机过程中极度有效。
+
+---
+
+### 1.4 期望线性收敛验证 (Expected Linear Convergence)
+
+在随机化优化（如随机梯度下降 SGD 或随机增量算法）中，我们关注期望意义下的收敛速度。
+
+**定义 (期望线性收敛)**：若随机序列 $X_t$ 满足：
+$E[\|X_{t+1} - X^*\|^2] \le \rho E[\|X_t - X^*\|^2] + \sigma_t^2$
+且 $0 < \rho < 1$，则称序列在期望意义下线性收敛到最优解 $X^*$（受限于噪声项 $\sigma_t$）。
+
+**验证：随机增量法的复杂度收敛**：
+对于最小覆盖圆问题，第 $i$ 个点引起外层循环更新的概率为 $P_i = 3/i$。
+- **层 1**：$O(n)$。
+- **层 2**：$\sum_{i=1}^n P_i \cdot O(i) = \sum \frac{3}{i} \cdot i = O(n)$。
+- **层 3**：$\sum_{i=1}^n P_i \cdot \left( \sum_{j=1}^i P_j \cdot O(j) \right) = O(n)$。
+这种层层递进的线性期望结构保证了算法在 $O(n)$ 时间内收敛。
 
 ---
 
@@ -202,6 +231,50 @@ Matrix qpow(Matrix a, ll b) {
         b >>= 1;
     }
     return res;
+}
+```
+
+</details>
+
+### 练习 8：[P1297] 单选错位 (Expectation of Matching)
+
+$n$ 道题，第 $i$ 道有 $a_i$ 个选项。某人做完后将答案错位（第 $i$ 道的答案填到了第 $i+1$ 道，第 $n$ 道填到第 1 道），求期望得分。
+
+<details>
+<summary>Check Solution (思路)</summary>
+
+1. 定义指示变量 $X_i$：第 $i$ 道题（错位后对应的题）是否正确。
+2. 考虑第 $i$ 题和第 $i+1$ 题。错位后，原第 $i$ 题的答案填到了第 $i+1$ 题。
+3. 只有当原第 $i$ 题选的项在第 $i+1$ 题的选项范围内，且该项正好是第 $i+1$ 题的正确答案时才得分。
+4. 概率 $P(X_{i+1}=1) = \frac{1}{\max(a_i, a_{i+1})}$。
+5. 总期望 $E = \sum P(X_i) = \sum_{i=1}^{n-1} \frac{1}{\max(a_i, a_{i+1})} + \frac{1}{\max(a_n, a_1)}$。
+</details>
+
+<details>
+<summary>Check Solution (C++)</summary>
+
+```cpp
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+const int MAXN = 10000005;
+int a[MAXN];
+
+void solve() {
+    int n, A, B, C;
+    scanf("%d %d %d %d %d", &n, &A, &B, &C, &a[1]);
+    for (int i = 2; i <= n; i++)
+        a[i] = ((long long)a[i - 1] * A + B) % 100000001;
+    for (int i = 1; i <= n; i++)
+        a[i] = a[i] % C + 1;
+
+    double ans = 0;
+    for (int i = 1; i < n; i++)
+        ans += 1.0 / max(a[i], a[i + 1]);
+    ans += 1.0 / max(a[n], a[1]);
+    printf("%.3f\n", ans);
 }
 ```
 

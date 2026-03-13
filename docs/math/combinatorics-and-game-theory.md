@@ -40,10 +40,32 @@ $S(n, k)$ 表示将 $n$ 个有区别的球放入 $k$ 个无区别的盒子的方
 **通项公式 (基于容斥)**：
 $$ S(n, k) = \frac{1}{k!} \sum_{i=0}^k (-1)^i \binom{k}{i} (k-i)^n $$
 
-### 1.3 Catalan 数与折线法
+### 1.3 计数模型一致性分析 (Twelvefold Way)
+
+计数问题的核心在于区分**球**是否有别、**盒子**是否有别，以及**放置规则**（无限制、单射、满射）。以下是 12 种基本计数模型的一致性归纳：
+
+| 规则 \ 元素 | $n$ 球有别, $k$ 盒有别 | $n$ 球无别, $k$ 盒有别 | $n$ 球有别, $k$ 盒无别 | $n$ 球无别, $k$ 盒无别 |
+| :--- | :--- | :--- | :--- | :--- |
+| **无限制** | $k^n$ | $\binom{n+k-1}{k-1}$ | $\sum_{i=1}^k S(n, i)$ | $p_k(n+k)$ |
+| **单射** ($n \le k$) | $P(k, n)$ | $\binom{k}{n}$ | $[n \le k]$ | $[n \le k]$ |
+| **满射** ($n \ge k$) | $k! S(n, k)$ | $\binom{n-1}{k-1}$ | $S(n, k)$ | $p_k(n)$ |
+
+- **$n$ 球无别, $k$ 盒有别 (无限制)**：隔板法，等价于 $x_1 + \dots + x_k = n$ 的非负整数解个数。
+- **$n$ 球有别, $k$ 盒无别 (满射)**：即第二类 Stirling 数 $S(n, k)$ 的定义。
+- **$n$ 球无别, $k$ 盒无别 (满射)**：即整数拆分 $p_k(n)$，表示将 $n$ 拆分为 $k$ 个正整数之和。
+
+---
+
+### 1.4 Catalan 数与折线法 (Reflectance Principle)
 
 $C_n = \frac{1}{n+1} \binom{2n}{n}$。
-**不越过 $y=x$ 的路径证明**：利用反射原理，穿过 $y=x$ 的路径等价于从 $(0,0)$ 到 $(n-1, n+1)$ 的所有路径。
+**严密证明 (反射原理)**：
+考虑从 $(0,0)$ 到 $(n,n)$ 的路径，步长为 $(1,0)$ 或 $(0,1)$，且不越过直线 $y=x$。
+1. **总路径数**：$\binom{2n}{n}$。
+2. **非法路径数**：越过 $y=x$ 的路径至少触碰一次 $y=x+1$。
+3. **反射构造**：设非法路径首次触碰 $y=x+1$ 的点为 $P$。将 $P$ 之前的路径关于 $y=x+1$ 对称，起点 $(0,0)$ 变为 $(-1,1)$。
+4. **一一对应**：非法路径总数等于从 $(-1,1)$ 到 $(n,n)$ 的路径数，即 $\binom{2n}{n-1}$。
+5. **最终结果**：$C_n = \binom{2n}{n} - \binom{2n}{n-1} = \frac{1}{n+1} \binom{2n}{n}$。
 
 ---
 
@@ -273,6 +295,89 @@ void poly_inv(int n, vector<ll>& a, vector<ll>& b) {
     ll inv_len = qpow(len, MOD - 2, MOD);
     for (int i = 0; i < n; i++) b[i] = b[i] * inv_len % MOD;
     for (int i = n; i < len; i++) b[i] = 0;
+}
+```
+
+</details>
+
+### 练习 7：[P5395] 第二类 Stirling 数 (Stirling Number II)
+
+给定 $n$，求 $S(n, i)$ 对于 $0 \le i \le n$。
+
+<details>
+<summary>Check Solution (思路)</summary>
+
+1. 利用容斥原理通项公式：$S(n, k) = \frac{1}{k!} \sum_{i=0}^k (-1)^i \binom{k}{i} (k-i)^n$。
+2. 展开组合数：$S(n, k) = \sum_{i=0}^k \frac{(-1)^i}{i!} \cdot \frac{(k-i)^n}{(k-i)!}$。
+3. 这是一个卷积形式：令 $A_i = \frac{(-1)^i}{i!}$，$B_i = \frac{i^n}{i!}$。
+4. 使用 NTT 计算卷积 $C = A * B$，则 $S(n, k) = C_k$。
+</details>
+
+<details>
+<summary>Check Solution (C++)</summary>
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+const int MOD = 998244353;
+typedef long long ll;
+
+ll qpow(ll a, ll b) {
+    ll res = 1;
+    while (b) {
+        if (b & 1) res = res * a % MOD;
+        a = a * a % MOD;
+        b >>= 1;
+    }
+    return res;
+}
+
+void ntt(vector<ll>& a, int type) {
+    int n = a.size();
+    for (int i = 1, j = 0; i < n; i++) {
+        int bit = n >> 1;
+        for (; j & bit; bit >>= 1) j ^= bit;
+        j ^= bit;
+        if (i < j) swap(a[i], a[j]);
+    }
+    for (int mid = 1; mid < n; mid <<= 1) {
+        ll Wn = qpow(3, (MOD - 1) / (mid << 1));
+        if (type == -1) Wn = qpow(Wn, MOD - 2);
+        for (int j = 0; j < n; j += (mid << 1)) {
+            ll w = 1;
+            for (int k = 0; k < mid; k++, w = w * Wn % MOD) {
+                ll x = a[j + k], y = w * a[j + k + mid] % MOD;
+                a[j + k] = (x + y) % MOD;
+                a[j + k + mid] = (x - y + MOD) % MOD;
+            }
+        }
+    }
+    if (type == -1) {
+        ll inv = qpow(n, MOD - 2);
+        for (int i = 0; i < n; i++) a[i] = a[i] * inv % MOD;
+    }
+}
+
+void solve() {
+    int n; cin >> n;
+    int len = 1; while (len <= 2 * n) len <<= 1;
+    vector<ll> A(len), B(len);
+    vector<ll> fact(n + 1), inv(n + 1);
+    fact[0] = 1; for (int i = 1; i <= n; i++) fact[i] = fact[i - 1] * i % MOD;
+    inv[n] = qpow(fact[n], MOD - 2); for (int i = n - 1; i >= 0; i--) inv[i] = inv[i + 1] * (i + 1) % MOD;
+
+    for (int i = 0; i <= n; i++) {
+        A[i] = (i % 2 ? MOD - inv[i] : inv[i]);
+        B[i] = qpow(i, n) * inv[i] % MOD;
+    }
+    ntt(A, 1); ntt(B, 1);
+    for (int i = 0; i < len; i++) A[i] = A[i] * B[i] % MOD;
+    ntt(A, -1);
+    for (int i = 0; i <= n; i++) cout << A[i] << " ";
+    cout << endl;
 }
 ```
 
