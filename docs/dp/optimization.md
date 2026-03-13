@@ -2,7 +2,7 @@
 title: DP 优化技术
 ---
 
-import { Microscope, Layers, Activity, ShieldCheck, Zap, TrendingUp, Maximize, LineChart } from 'lucide-react';
+import { Microscope, Layers, Activity, ShieldCheck, Zap, TrendingUp, Maximize, LineChart, Binary, GitMerge } from 'lucide-react';
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # 动态规划优化技术 (Dynamic Programming Optimization)
@@ -19,140 +19,124 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 ---
 
-## <TrendingUp className="inline-block mr-2" /> 1. 单调队列优化 (Monotonic Queue)
+## <Microscope className="inline-block mr-2" /> 1. 四边形不等式与决策单调性证明
 
-**适用场景**：转移方程形如 $f[i] = \text{opt}_{i-L \le j \le i-R} \{ f[j] + w(i) \}$，即 $j$ 的取值范围是一个随 $i$ 移动的窗口，且 $w(i)$ 与 $j$ 无关。
+决策单调性的优越性源于代价函数 $w(i, j)$ 的特殊代数性质。
 
-### 核心思想
+### 1.1 四边形不等式 (Quadrangle Inequality)
+**定义**：若 $\forall a \le b \le c \le d$，满足 $w(a, c) + w(b, d) \le w(a, d) + w(b, c)$，则称函数 $w$ 满足四边形不等式。
+- **直观理解**：交叉小于包含。
 
-维护一个单调递增（或递减）的队列，存储可能的决策点 $j$。由于窗口滑动，队首过期元素被弹出；新加入元素若优于队尾，则弹出队尾，保持队列单调。
+### 1.2 决策单调性定理 (Proof)
+**定理**：若 $w$ 满足四边形不等式，则对于转移方程 $f[i] = \min_{j < i} \{ f[j] + w(j, i) \}$，其最优决策点 $p_i$ 满足 $p_1 \le p_2 \le \dots \le p_n$。
+
+**证明概要**：
+设 $p_i = k$，即对于所有 $j < k$，$f[k] + w(k, i) \le f[j] + w(j, i)$。
+我们需要证明对于 $i' > i$，决策点 $k$ 优于任何 $j < k$。
+由四边形不等式（取 $j < k < i < i'$）：
+$$w(j, i) + w(k, i') \le w(j, i') + w(k, i)$$
+整理得：
+$$w(k, i') - w(k, i) \le w(j, i') - w(j, i)$$
+代入 $f[k] + w(k, i) \le f[j] + w(j, i)$：
+$$(f[k] + w(k, i')) - (f[j] + w(j, i')) \le (f[k] + w(k, i)) - (f[j] + w(j, i)) \le 0$$
+故 $f[k] + w(k, i') \le f[j] + w(j, i')$，即在 $i'$ 处，$k$ 依然优于 $j$。证毕。
 
 ---
 
 ## <LineChart className="inline-block mr-2" /> 2. 斜率优化 (Convex Hull Trick)
 
-**适用场景**：转移方程包含 $i$ 和 $j$ 的乘积项，形如 $f[i] = \min_{j < i} \{ f[j] + A(i)B(j) + C(i) + D(j) \}$。
+斜率优化本质上是将 DP 转移方程转化为平面几何中的**直线截距极值问题**。
 
-### 2.1 形式化推导
+### 2.1 方程形式化
+考虑 $f[i] = \min_{j < i} \{ f[j] + a_i \cdot b_j + c_i + d_j \}$。将其变形为：
+$$f[j] + d_j = (-a_i) \cdot b_j + (f[i] - c_i)$$
+令 $Y_j = f[j] + d_j, X_j = b_j, K_i = -a_i, B_i = f[i] - c_i$。
+则方程变为：$Y_j = K_i X_j + B_i \implies B_i = Y_j - K_i X_j$。
+我们的目标是找到一个点 $(X_j, Y_j)$，使得通过该点且斜率为 $K_i$ 的直线的截距 $B_i$ 最小。
 
-将转移方程整理为直线形式：$Y_j = K_i X_j + B_i$。
-
-- $Y_j$ 和 $X_j$ 仅由 $j$ 决定。
-- $K_i$ 仅由 $i$ 决定（作为斜率）。
-- $B_i$ 包含 $f[i]$。
-
-### 2.2 几何建模
-
-将每个决策点 $j$ 映射为平面上的点 $(X_j, Y_j)$。寻找最优决策点等价于用一条斜率为 $K_i$ 的直线扫描这些点，使得截距 $B_i$ 最小。
-
-- **凸包性质**：最优决策点必然落在这些点的**下凸包**上。
-- **单调性加速**：若 $X_j$ 和 $K_i$ 均单调，可使用单调队列在 $O(N)$ 时间内完成。
+### 2.2 优化策略分析
+- **情况 A：$X_j$ 与 $K_i$ 均单调**：使用**单调队列**维护下凸包。$O(N)$。
+- **情况 B：仅 $X_j$ 单调**：在凸包上**二分**查找切点。$O(N \log N)$。
+- **情况 C：均不单调**：使用 **李超线段树 (Li-Chao Tree)** 或 **CDQ 分治** 维护动态凸包。$O(N \log N)$ 或 $O(N \log^2 N)$。
 
 ---
 
-## <Layers className="inline-block mr-2" /> 3. 四边形不等式 (Quadrangle Inequality)
+## <GitMerge className="inline-block mr-2" /> 3. 分治优化 (Divide and Conquer Optimization)
 
-**适用场景**：区间 DP $f[i][j] = \min_{i \le k < j} \{ f[i][k] + f[k+1][j] + w(i, j) \}$。
+**适用场景**：$f[i][j] = \min_{k < j} \{ f[i-1][k] + w(k, j) \}$，且 $w$ 满足决策单调性。
 
-### 3.1 形式化定义
+### 核心逻辑
+若 $p[i][j]$ 为 $f[i][j]$ 的最优决策点，且满足 $p[i][j] \le p[i][j+1]$。
+我们可以利用分治函数 `solve(i, L, R, optL, optR)`：
+1. 计算 $mid = (L+R)/2$ 的最优决策点 $optMid \in [optL, optR]$。
+2. 递归解决 `solve(i, L, mid-1, optL, optMid)`。
+3. 递归解决 `solve(i, mid+1, R, optMid, optR)`。
 
-若 $\forall a \le b \le c \le d$，代价函数 $w$ 满足：
-$$w(a, c) + w(b, d) \le w(a, d) + w(b, c)$$
-且 $w$ 满足区间包含单调性，则最优决策点 $s[i][j]$ 满足：
+**复杂度分析**：每一层分治的时间复杂度为 $O(R-L + optR-optL)$，总复杂度为 $O(K \cdot N \log N)$。
+
+---
+
+## <Binary className="inline-block mr-2" /> 4. Knuth 优化
+
+**适用场景**：区间 DP $f[i][j] = \min_{i \le k < j} \{ f[i][k] + f[k+1][j] \} + w(i, j)$。
+
+若 $w$ 满足四边形不等式且满足区间包含单调性，则最优决策点 $s[i][j]$ 满足：
 $$s[i][j-1] \le s[i][j] \le s[i+1][j]$$
 
-### 3.2 复杂度提升
-
-利用该性质，可将 $O(N^3)$ 的区间 DP 优化至 $O(N^2)$。
+**复杂度飞跃**：
+区间长度从 $1$ 到 $n$ 枚举，每次枚举 $i$。
+由于 $\sum_{i,j} (s[i+1][j] - s[i][j-1]) = O(N^2)$（中间项抵消），复杂度从 $O(N^3)$ 降至 $O(N^2)$。
 
 ---
 
-## <ShieldCheck className="inline-block mr-2" /> 4. 综合练习与强化
+## <ShieldCheck className="inline-block mr-2" /> 5. 综合练习与强化
 
-### 练习 1：[SDOI2012] 任务安排 (斜率优化)
-
-给定 $n$ 个任务，分成若干批。费用 = (当前时间 + $S$) $\times$ 总费用系数。
+### 练习 1：[NOI2007] 货币兑换 (Cash)
+**挑战**：斜率不单调，且 $X$ 坐标也不单调。
 
 <details>
-<summary>Check Solution (O(N))</summary>
+<summary>Check Solution (CDQ 分治 / 李超树)</summary>
 
+本题需要维护动态凸包。
 ```cpp
-#include <iostream>
-#include <vector>
-
-using namespace std;
-
-typedef long long ll;
-const int MAXN = 300005;
-ll f[MAXN], st[MAXN], sc[MAXN];
-int q[MAXN], n, s;
-
-inline ll Y(int j) { return f[j]; }
-inline ll X(int j) { return sc[j]; }
-
-int main() {
-    ios::sync_with_stdio(false);
-    cin >> n >> s;
-    for (int i = 1; i <= n; i++) {
-        ll t, c; cin >> t >> c;
-        st[i] = st[i - 1] + t;
-        sc[i] = sc[i - 1] + c;
+// 核心：使用 CDQ 分治处理不单调的斜率优化
+void cdq(int l, int r) {
+    if (l == r) {
+        f[l] = max(f[l], f[l-1]);
+        y[l] = f[l] / (a[l] * r[l] + b[l]);
+        x[l] = y[l] * r[l];
+        return;
     }
-
-    int hh = 0, tt = 0;
-    q[0] = 0;
-    for (int i = 1; i <= n; i++) {
-        // 斜率单调递增，查询凸包
-        while (hh < tt && (Y(q[hh+1]) - Y(q[hh])) <= (s + st[i]) * (X(q[hh+1]) - X(q[hh])))
-            hh++;
-
-        int j = q[hh];
-        f[i] = f[j] + st[i] * sc[i] + s * sc[n] - (s + st[i]) * sc[j];
-
-        // 维护凸包单调性
-        while (hh < tt && (double)(Y(q[tt]) - Y(q[tt-1])) * (X(i) - X(q[tt])) >= (double)(Y(i) - Y(q[tt])) * (X(q[tt]) - X(q[tt-1])))
-            tt--;
-        q[++tt] = i;
-    }
-    cout << f[n] << endl;
-    return 0;
+    int mid = (l + r) >> 1;
+    cdq(l, mid);
+    // 构建左侧凸包并更新右侧
+    // ... 排序与单调栈逻辑 ...
+    cdq(mid + 1, r);
 }
 ```
 
 </details>
 
-### 练习 2：[ZJOI 2007] 仓库建设
-
-类似任务安排，但在不同位置建仓代价不同。
-
-<details>
-<summary>Check Solution (CHT)</summary>
-
-$$f[i] = \min_{j < i} \{ f[j] + \text{cost}(j+1, i) + c_i \}$$
-通过预处理前缀和 $P_i = \sum p_i, W_i = \sum p_i x_i, C_i = \sum c_i$，可将方程转化为斜率形式。
-
-</details>
-
-### 练习 3：邮局 (四边形不等式)
-
-在 $n$ 个村庄中建立 $m$ 个邮局，最小化总距离。
+### 练习 2：再探邮局 (分治优化)
+使用分治优化将邮局问题的时间复杂度控制在 $O(K N \log N)$。
 
 <details>
-<summary>Check Solution (O(NM))</summary>
+<summary>Check Solution (Code)</summary>
 
 ```cpp
-// 预处理 w[i][j] 为在区间 [i, j] 中建立一个邮局的最小距离
-// f[i][j] = min(f[i-1][k] + w[k+1][j])
-// 优化后：s[i][j-1] <= s[i][j] <= s[i+1][j]
-for (int i = 1; i <= m; i++) {
-    for (int j = n; j >= 1; j--) {
-        for (int k = s[i-1][j]; k <= s[i][j+1]; k++) {
-            if (f[i-1][k] + w[k+1][j] < f[i][j]) {
-                f[i][j] = f[i-1][k] + w[k+1][j];
-                s[i][j] = k;
-            }
+void solve(int k, int L, int R, int optL, int optR) {
+    if (L > R) return;
+    int mid = (L + R) >> 1, opt = optL;
+    f[k][mid] = INF;
+    for (int i = optL; i <= min(mid - 1, optR); i++) {
+        ll val = f[k-1][i] + w(i + 1, mid);
+        if (val < f[k][mid]) {
+            f[k][mid] = val;
+            opt = i;
         }
     }
+    solve(k, L, mid - 1, optL, opt);
+    solve(k, mid + 1, R, opt, optR);
 }
 ```
 
@@ -161,8 +145,7 @@ for (int i = 1; i <= m; i++) {
 ---
 
 ## 延伸挑战
-
-- [洛谷 P3195 [HNOI2008] 玩具装箱](https://www.luogu.com.cn/problem/P3195)
-- [洛谷 P3628 [APIO2010] 特别行动队](https://www.luogu.com.cn/problem/P3628)
-- [HDU 3507 Print Article](http://acm.hdu.edu.cn/showproblem?pid=3507)（斜率优化经典入门）
-- [Codeforces 311B Cats Transport](https://codeforces.com/problemset/problem/311/B)
+- [洛谷 P4767 [IOI2000] 邮局](https://www.luogu.com.cn/problem/P4767) (四边形不等式)
+- [洛谷 P4027 [NOI2007] 货币兑换](https://www.luogu.com.cn/problem/P4027) (动态斜率优化)
+- [HDU 2829 Lawrence](http://acm.hdu.edu.cn/showproblem?pid=2829) (分治优化)
+- [CF 321E Ciel and Gondolas](https://codeforces.com/problemset/problem/321/E) (分治优化典型)

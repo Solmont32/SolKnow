@@ -95,6 +95,7 @@ const sidebars: SidebarsConfig = {
         'dp/range-dp',
         'dp/tree-dp',
         'dp/digit-dp',
+        'dp/plug-dp',
         'dp/state-compression-dp',
         'dp/optimization',
       ],

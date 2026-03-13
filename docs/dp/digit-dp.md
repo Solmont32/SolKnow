@@ -2,7 +2,7 @@
 title: 数位 DP
 ---
 
-import { Microscope, Layers, Activity, ShieldCheck, Zap, Hash, Binary, ArrowRightLeft } from 'lucide-react';
+import { Microscope, Layers, Activity, ShieldCheck, Zap, Hash, Binary, ArrowRightLeft, Target, BarChart } from 'lucide-react';
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # 数位动态规划 (Digit Dynamic Programming)
@@ -31,15 +31,30 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 - **`limit` (上界限制)**：布尔值。若为 `true`，当前位可选范围受限于原数对应位；若为 `false`，则可选 `0-9`。
 - **`lead` (前导零)**：布尔值。用于区分数值 `0` 与占位符 `0`。在统计数字出现次数或相邻属性（如 Windy 数）时必不可少。
 
-### 1.2 递归转移形式化 (Recursive Transition)
+---
 
-$$f(\text{pos, state, limit, lead}) = \sum_{d=0}^{\text{upper}} f(\text{pos}-1, \text{next\_state}, \text{limit}', \text{lead}')$$
+## <BarChart className="inline-block mr-2" /> 2. 状态空间分析与复杂度收敛
+
+数位 DP 的效率源于其**极高的状态重用率**。
+
+### 2.1 状态空间规模 (State Space)
+设总位数为 $D$（对于 $10^{18}$ 的数，$D \approx 18$），业务状态数为 $S$。
+- **总状态数**：$D \times S \times 2 \times 2$。
+- **记忆化核心**：仅当 `limit = false` 且 `lead = false` 时，状态才具有普适性，可以存入 `f[pos][state]`。
+- **复杂度**：$O(D \cdot S \cdot 10)$。相比于 $10^D$ 的暴力枚举，实现了从指数级到多项式级的跨越。
+
+### 2.2 属性总和扩展 (Sum of Attributes)
+若题目要求统计“所有满足条件的数的平方和”，状态需维护三元组：
+- `cnt`: 方案数。
+- `sum`: 数值之和。
+- `sqr`: 数值平方和。
+通过 $(a+b)^2 = a^2 + 2ab + b^2$ 进行转移。
 
 ---
 
-## <Layers className="inline-block mr-2" /> 2. 工业级标准实现模板
+## <Layers className="inline-block mr-2" /> 3. 工业级标准实现模板
 
-记忆化搜索是数位 DP 的首选实现方式，逻辑清晰且易于处理复杂约束。
+记忆化搜索是数位 DP 的首选实现方式。
 
 ```cpp
 typedef long long ll;
@@ -47,14 +62,15 @@ ll f[20][MAX_STATE];
 int digits[20];
 
 ll dfs(int pos, int state, bool limit, bool lead) {
-    if (pos == 0) return 1; // 填充完成，找到一个合法方案
+    if (pos == 0) return 1; // 填充完成
+    // 只有在不受限且非前导零时才从记忆化数组读取
     if (!limit && !lead && f[pos][state] != -1) return f[pos][state];
 
     ll res = 0;
     int up = limit ? digits[pos] : 9;
     for (int i = 0; i <= up; i++) {
         // 剪枝或状态转移逻辑
-        res += dfs(pos - 1, new_state, limit && (i == up), lead && (i == 0));
+        res += dfs(pos - 1, next_state, limit && (i == up), lead && (i == 0));
     }
 
     if (!limit && !lead) f[pos][state] = res;
@@ -64,91 +80,45 @@ ll dfs(int pos, int state, bool limit, bool lead) {
 
 ---
 
-## <ShieldCheck className="inline-block mr-2" /> 3. 综合练习与强化
+## <ShieldCheck className="inline-block mr-2" /> 4. 综合练习与强化
 
-### 练习 1：Windy 数 (经典)
-
-统计 $[L, R]$ 内，相邻两位数字之差至少为 2 的数的个数。
+### 练习 1：[AHOI2009] 同类分布
+统计 $[L, R]$ 中能被其各位数字之和整除的数的个数。
 
 <details>
 <summary>Check Solution (C++)</summary>
 
+**分析**：数字之和最大为 $9 \times 18 = 162$。我们需要枚举可能的数字之和 $S_{target}$。
 ```cpp
-#include <iostream>
-#include <vector>
-#include <cmath>
-#include <cstring>
-
-using namespace std;
-
-typedef long long ll;
-ll f[12][12];
-int a[12];
-
-ll dfs(int pos, int pre, bool limit, bool lead) {
-    if (pos == 0) return 1;
-    if (!limit && !lead && f[pos][pre] != -1) return f[pos][pre];
-
+ll dfs(int pos, int sum, int rem, bool limit, bool lead, int target) {
+    if (pos == 0) return (sum == target && rem == 0);
+    if (!limit && !lead && f[pos][sum][rem] != -1) return f[pos][sum][rem];
+    
     ll res = 0;
     int up = limit ? a[pos] : 9;
     for (int i = 0; i <= up; i++) {
-        if (!lead && abs(i - pre) < 2) continue;
-        res += dfs(pos - 1, i, limit && (i == up), lead && (i == 0));
+        res += dfs(pos-1, sum+i, (rem*10+i)%target, limit && (i==up), lead && (i==0), target);
     }
-
-    if (!limit && !lead) f[pos][pre] = res;
-    return res;
-}
-
-ll solve(ll x) {
-    int len = 0;
-    while (x) a[++len] = x % 10, x /= 10;
-    memset(f, -1, sizeof f);
-    return dfs(len, 11, true, true); // 11 表示初始状态无前驱
-}
-
-int main() {
-    ll l, r; cin >> l >> r;
-    cout << solve(r) - solve(l - 1) << endl;
-    return 0;
+    return limit || lead ? res : f[pos][sum][rem] = res;
 }
 ```
 
 </details>
 
-### 练习 2：数字计数 (ZJOI 2010)
-
-统计区间 $[L, R]$ 内 $0-9$ 各个数字出现的总次数。
+### 练习 2：[SCOI2009] 生日礼物 (数位 DP + 状压)
+统计相邻位数字之差 $\le 2$ 且包含所有数字 $0-9$ 的方案。
 
 <details>
-<summary>Check Solution (O(10 * digits))</summary>
+<summary>Check Solution (Bitmask)</summary>
 
-```cpp
-// target 为当前统计的数字 (0-9)
-ll dfs(int pos, ll count, bool limit, bool lead, int target) {
-    if (pos == 0) return count;
-    if (!limit && !lead && f[pos][count] != -1) return f[pos][count];
-
-    ll res = 0;
-    int up = limit ? a[pos] : 9;
-    for (int i = 0; i <= up; i++) {
-        ll next_count = count;
-        if (!lead || i != 0) { // 排除前导零
-            if (i == target) next_count++;
-        }
-        res += dfs(pos - 1, next_count, limit && (i == up), lead && (i == 0), target);
-    }
-    if (!limit && !lead) f[pos][count] = res;
-    return res;
-}
-```
+状态：`f[pos][last_digit][mask]`。其中 `mask` 记录已使用的数字。
 
 </details>
 
 ---
 
 ## 延伸挑战
-
-- [洛谷 P4127 [AHOI2009] 同类分布](https://www.luogu.com.cn/problem/P4127)（状态需包含数字和与余数）
-- [洛谷 P3413 SAC#1 - 萌数](https://www.luogu.com.cn/problem/P3413)（判断回文前缀）
-- [HDU 4352 XHcy's LIS](http://acm.hdu.edu.cn/showproblem?pid=4352)（数位 DP 嵌套状压记录 LIS）
+- [洛谷 P4127 [AHOI2009] 同类分布](https://www.luogu.com.cn/problem/P4127)
+- [洛谷 P3306 [SDOI2013] 随机数生成器](https://www.luogu.com.cn/problem/P3306) (结合 BSGS)
+- [HDU 4352 XHcy's LIS](http://acm.hdu.edu.cn/showproblem?pid=4352)
+- [CF 628D Magic Numbers](https://codeforces.com/problemset/problem/628/D) (偶数位为特定数字)
