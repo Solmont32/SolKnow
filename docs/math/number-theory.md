@@ -94,6 +94,83 @@ $x \equiv a_i \pmod{m_i}$ 有解的充要条件是 $\gcd(m_i, m_j) \mid (a_i - a
 要使 $f(r + t p^k) \equiv 0 \pmod{p^{k+1}}$，只需 $\frac{f(r)}{p^k} + f'(r) t \equiv 0 \pmod p$。
 由于 $f'(r) \not\equiv 0 \pmod p$，其逆元存在，故 $t$ 唯一确定。这展现了同余解从低幂向高幂收敛的过程。
 
+### 1.8 素性检验与大数分解 (Miller-Rabin & Pollard's Rho)
+
+**Miller-Rabin 算法：收敛性与错误界分析**
+对于大奇数 $n$，设 $n-1 = 2^s \cdot d$ ($d$ 为奇数)。Miller-Rabin 基于费马小定理的逆命题及二次探测定理：
+若 $x^2 \equiv 1 \pmod p$，则 $x \equiv \pm 1 \pmod p$。
+1. 随机选择基 $a \in [2, n-2]$。
+2. 计算 $x = a^d \pmod n$。若 $x \equiv 1$ 或 $x \equiv n-1$，则 $n$ 通过测试。
+3. 否则，重复计算 $x = x^2 \pmod n$ 共 $s-1$ 次。若某次出现 $x \equiv n-1$，则通过。
+4. **错误率界限**：对于合数 $n$，单次测试通过（即误判为素数）的概率不超过 $1/4$。若进行 $k$ 轮测试，误报率为 $(1/4)^k$。对于 $n < 2^{64}$，选取特定基 $\{2, 3, 5, 7, 11, 13, 17, 19, 23\}$ 即可实现确定性判定。
+
+**Pollard's Rho 算法：生日悖论启发式收敛**
+利用 $f(x) = (x^2 + c) \pmod n$ 构造伪随机序列。
+**核心逻辑**：若 $d = \gcd(|x_i - x_j|, n) > 1$，则 $d$ 是 $n$ 的一个非平凡因子。
+**收敛分析**：根据生日悖论，期望在 $O(n^{1/4})$ 步内找到环。配合 Brent 优化（倍增检查）可显著提升效率。
+
+<details>
+<summary>Check Solution (Miller-Rabin + Pollard's Rho C++)</summary>
+
+```cpp
+#include <iostream>
+#include <algorithm>
+#include <random>
+
+typedef __int128_t int128;
+typedef long long ll;
+
+ll qpow(ll a, ll b, ll m) {
+    ll res = 1;
+    a %= m;
+    while (b) {
+        if (b & 1) res = (int128)res * a % m;
+        a = (int128)a * a % m;
+        b >>= 1;
+    }
+    return res;
+}
+
+bool miller_rabin(ll n, ll a) {
+    if (qpow(a, n - 1, n) != 1) return false;
+    ll d = n - 1;
+    while (!(d & 1)) {
+        d >>= 1;
+        ll x = qpow(a, d, n);
+        if (x == n - 1) return true;
+        if (x != 1) return false;
+    }
+    return true;
+}
+
+bool is_prime(ll n) {
+    if (n < 2) return false;
+    static ll bases[] = {2, 3, 5, 7, 11, 13, 17, 19, 23};
+    for (ll a : bases) {
+        if (n == a) return true;
+        if (!miller_rabin(n, a)) return false;
+    }
+    return true;
+}
+
+ll pollard_rho(ll n) {
+    if (n == 4) return 2;
+    if (is_prime(n)) return n;
+    std::mt19937_64 rng(std::random_device{}());
+    while (true) {
+        ll c = rng() % (n - 1) + 1;
+        auto f = [&](ll x) { return ((int128)x * x + c) % n; };
+        ll x = rng() % n, y = f(x);
+        while (x != y) {
+            ll d = std::gcd(std::abs(x - y), n);
+            if (d > 1) return d;
+            x = f(x), y = f(f(y));
+        }
+    }
+}
+```
+</details>
+
 ---
 
 ## 2. 积性函数与 Dirichlet 卷积

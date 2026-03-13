@@ -65,6 +65,18 @@ $E[X] = E[E[X|Y]] = \sum_y E[X|Y=y] P(Y=y)$。
 1. **高斯消元**：处理一般图，$O(n^3)$。
 2. **树形递推**：对于树结构，设 $E_u = A_u E_{fa} + B_u$，利用子节点信息递推 $A_u, B_u$，$O(n)$。
 
+### 3.1 马尔可夫链状态转移校验 (Markov Chain Validation)
+
+**状态转移矩阵 $P$**：
+设 $P_{ij} = P(X_{t+1}=j \mid X_t=i)$，则 $P$ 为随机矩阵（行和为 1）。
+**稳态分布证明 (Stationary Distribution)**：
+若 $\pi P = \pi$，且 $\sum \pi_i = 1$，则称 $\pi$ 为稳态分布。
+1. **存在性**：根据 Perron-Frobenius 定理，随机矩阵 $P$ 的最大特征值为 1，对应的左特征向量即为稳态。
+2. **唯一性与收敛性**：若马尔可夫链满足**不可约性 (Irreducibility)** 和 **非周期性 (Aperiodicity)**，则从任意初始分布 $\pi^{(0)}$ 出发，均有 $\lim_{n \to \infty} \pi^{(0)} P^n = \pi$。
+
+**校验方法**：
+对于大规模离散系统，可使用矩阵快速幂 $P^{2^k}$ 或解线性方程组 $(I - P^T)\pi = 0$ 进行数值验证或精确解析。
+
 ---
 
 ## 4. 综合练习与 C++ 解答
@@ -159,6 +171,41 @@ $E[L_i^2] = p_i(E[(L_{i-1}+1)^2]) = p_i(E[L_{i-1}^2] + 2E[L_{i-1}] + 1)$。
 
 无向图，求边权分配使得期望总得分最小。
 **解析**：先求点被经过的期望次数 $f[u] = \sum_{v \in adj(u)} \frac{f[v]}{d(v)}$。然后计算边的期望次数 $g(u, v) = \frac{f[u]}{d(u)} + \frac{f[v]}{d(v)}$。贪心分配权值。
+
+### 练习 7：[ABC 297G] Constrained Nim 2 (马尔可夫链稳态思想)
+
+虽然 Nim 是组合博弈，但状态转移分析可抽象为马尔可夫过程。考虑从 $i$ 转移到 $j$ 的路径，求 $SG(n)$。
+
+<details>
+<summary>Check Solution (矩阵快速幂求稳态/转移 C++)</summary>
+
+```cpp
+// 示例：计算状态转移矩阵的 n 次幂以达到稳态
+struct Matrix {
+    double mat[MAXN][MAXN];
+    Matrix() { memset(mat, 0, sizeof mat); }
+    Matrix operator * (const Matrix &b) const {
+        Matrix res;
+        for (int i = 0; i < n; i++)
+            for (int k = 0; k < n; k++)
+                for (int j = 0; j < n; j++)
+                    res.mat[i][j] += mat[i][k] * b.mat[k][j];
+        return res;
+    }
+};
+
+Matrix qpow(Matrix a, ll b) {
+    Matrix res; for (int i = 0; i < n; i++) res.mat[i][i] = 1;
+    while (b) {
+        if (b & 1) res = res * a;
+        a = a * a;
+        b >>= 1;
+    }
+    return res;
+}
+```
+
+</details>
 
 <motion.div
 initial={{ opacity: 0 }}

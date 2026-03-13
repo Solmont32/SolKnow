@@ -88,6 +88,45 @@ $$ N = \frac{1}{|G|} \sum_{g \in G} m^{c(g)} $$
 $$ B_{k+1} \equiv B_k - \frac{1/B_k - F}{-1/B_k^2} \equiv B_k(2 - F B_k) \pmod{x^{2k}} $$
 **收敛性**：牛顿迭代在每次迭代中使得有效项数倍增，复杂度满足 $T(n) = T(n/2) + O(n \log n) = O(n \log n)$。
 
+### 2.4 生成函数的一致性证明与形式收敛 (Consistency & Convergence)
+
+**形式幂级数环 $\mathbb{K}[[x]]$**：
+定义两个序列 $a, b$ 的加法为逐项加，乘法为 Cauchy 卷积 $(a*b)_n = \sum_{i=0}^n a_i b_{n-i}$。
+**一致性证明 (组合意义)**：
+1. **加法**：$A(x) + B(x)$ 对应两个互斥集合（或带标记的对象集）的并集。
+2. **乘法**：$A(x) \cdot B(x)$ 对应将总资源 $n$ 拆分为两个有序部分，分别赋予结构 $A$ 和 $B$。
+3. **指数对象 $\exp(F(x))$**：
+   $$ \exp(F(x)) = \sum_{k=0}^\infty \frac{F(x)^k}{k!} $$
+   **证明**：$F(x)^k/k!$ 表示将 $n$ 个元素拆分为 $k$ 个有标号连通块的方案数。除以 $k!$ 则消去了连通块的顺序，从而得到无序集合。
+
+**形式收敛性 (Formal Convergence)**：
+在 $\mathbb{K}[[x]]$ 中，序列 $f_k(x)$ 收敛于 $f(x)$，当且仅当对于任意 $N$，存在 $K$ 使得对所有 $k > K$，$f_k(x) \equiv f(x) \pmod{x^N}$。
+这解释了为何我们可以处理无穷和，只要项的最低次数趋于无穷即可。
+
+<details>
+<summary>Check Solution (多项式 Exp/Ln C++)</summary>
+
+```cpp
+// 多项式 Ln: B(x) = ln(A(x)) = \int A'(x)/A(x) dx
+void poly_ln(int *a, int *b, int n) {
+    poly_inv(a, tmp, n);
+    poly_derivative(a, tmp2, n);
+    poly_mul(tmp, tmp2, tmp, n);
+    poly_integral(tmp, b, n);
+}
+
+// 多项式 Exp: B(x) = exp(A(x)) -> ln(B(x)) - A(x) = 0, 牛顿迭代
+void poly_exp(int *a, int *b, int n) {
+    if (n == 1) { b[0] = 1; return; }
+    poly_exp(a, b, (n + 1) >> 1);
+    poly_ln(b, tmp, n);
+    for (int i = 0; i < n; i++) tmp[i] = (a[i] - tmp[i] + MOD) % MOD;
+    tmp[0] = (tmp[0] + 1) % MOD;
+    poly_mul(b, tmp, b, n);
+}
+```
+</details>
+
 ---
 
 ## 3. 博弈论与平衡状态
