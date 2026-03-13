@@ -4,7 +4,7 @@ title: 数论：从整除、同余到积性函数与高阶反演
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 import { motion } from 'framer-motion';
-import { Hash, Lock, Sigma, Infinity, Code2, Zap, Layers, Binary, Cpu, FunctionSquare, ShieldCheck, Scale, FlaskConical } from 'lucide-react';
+import { Hash, Lock, Sigma, Infinity, Code2, Zap, Layers, Binary, Cpu, FunctionSquare, ShieldCheck, Scale, FlaskConical, Box, Component } from 'lucide-react';
 
 # 数论基础与进阶 (Number Theory)
 
@@ -33,33 +33,40 @@ $n = p_1^{e_1} p_2^{e_2} \dots p_k^{e_k}$
 关键在于：若 $p|ab$ 且 $p$ 为素数，则 $p|a$ 或 $p|b$。
 假设 $n$ 有两种分解 $p_1 \dots p_r = q_1 \dots q_s$。由 $p_1 | q_1 \dots q_s$ 知 $p_1$ 必等于某个 $q_j$（设为 $q_1$），消去后继续归纳。
 
-**推论：约数函数的积性**
+### 1.2 同余类与剩余系 (Congruence & Residue Systems)
 
-- 约数个数 $d(n) = \prod (e_i+1)$。
-- 约数和 $\sigma(n) = \prod \frac{p_i^{e_i+1}-1}{p_i-1}$。
-- **证明**：考虑 $n, m$ 互质，其质因子集合不交，约数集合 $D(nm) = \{d_1 d_2 \mid d_1|n, d_2|m\}$，映射 $(d_1, d_2) \to d_1 d_2$ 为双射，故 $d(nm) = d(n)d(m)$。
+**代数结构定义**：
+- **模 $n$ 剩余类环 $\mathbb{Z}/n\mathbb{Z}$**：由 $\{0, 1, \dots, n-1\}$ 构成的加法交换群与乘法半群。
+- **乘法群 $(\mathbb{Z}/n\mathbb{Z})^\times$**：由与 $n$ 互质的剩余类构成的阿贝尔群，其阶数为 $\phi(n)$。
 
-### 1.2 欧拉定理与费马小定理
+### 1.3 欧拉定理与费马小定理
 
 **欧拉定理**：若 $\gcd(a, n) = 1$，则 $a^{\phi(n)} \equiv 1 \pmod n$。
 
-**证明**：
-设 $[1, n]$ 中与 $n$ 互质的数集为 $R = \{r_1, r_2, \dots, r_{\phi(n)}\}$。
-由于 $\gcd(a, n) = 1$，集合 $aR = \{ar_1, ar_2, \dots, ar_{\phi(n)}\} \pmod n$ 也是 $n$ 的简化剩余系。
-因此：$\prod ar_i \equiv \prod r_i \pmod n \implies a^{\phi(n)} (\prod r_i) \equiv \prod r_i \pmod n$。
-由于 $\gcd(\prod r_i, n) = 1$，约去得 $a^{\phi(n)} \equiv 1 \pmod n$。
+**证明 (群论视角)**：
+由于 $\gcd(a, n) = 1$，则 $a \in (\mathbb{Z}/n\mathbb{Z})^\times$。根据拉格朗日定理，群中任何元素的阶必然整除群的阶。故 $a^{\phi(n)} \equiv e \equiv 1 \pmod n$。
 
 **费马小定理**：若 $p$ 为素数且 $p \nmid a$，则 $a^{p-1} \equiv 1 \pmod p$。
 
-### 1.3 中国剩余定理 (CRT)
+### 1.4 原根 (Primitive Roots)
 
-设 $m_1, m_2, \dots, m_k$ 两两互质，方程组 $x \equiv a_i \pmod{m_i}$ 在 $\pmod M$ ($M=\prod m_i$) 下有唯一解。
+**定义**：若 $a$ 模 $n$ 的阶 $\text{ord}_n(a) = \phi(n)$，则称 $a$ 为模 $n$ 的一个原根。
+**存在性定理**：模 $n$ 有原根当且仅当 $n \in \{2, 4, p^k, 2p^k\}$，其中 $p$ 为奇素数。
 
-**构造性证明**：
-令 $M_i = M/m_i$，则 $\gcd(M_i, m_i) = 1$。
-存在 $t_i$ 使得 $M_i t_i \equiv 1 \pmod{m_i}$（利用扩展欧几里得算法）。
-令 $x = \sum a_i M_i t_i$，则对于任意 $j$，当 $i \neq j$ 时 $M_i \equiv 0 \pmod{m_j}$；当 $i = j$ 时 $M_j t_j \equiv 1 \pmod{m_j}$。
-故 $x \equiv a_j \cdot 1 = a_j \pmod{m_j}$。
+**判定法则**：
+对于 $n$，其原根 $g$ 满足：对于 $\phi(n)$ 的所有质因子 $q$，均有 $g^{\phi(n)/q} \not\equiv 1 \pmod n$。
+
+### 1.5 二次剩余 (Quadratic Residues)
+
+对于 $x^2 \equiv a \pmod p$，若有解则 $a$ 是模 $p$ 的二次剩余。
+**勒让德符号 (Legendre Symbol)**：
+$$ \left(\frac{a}{p}\right) = \begin{cases} 1 & a \text{ 是二次剩余} \\ -1 & a \text{ 是二次非剩余} \\ 0 & p|a \end{cases} $$
+
+**欧拉准则 (Euler's Criterion)**：$\left(\frac{a}{p}\right) \equiv a^{(p-1)/2} \pmod p$。
+
+**二次互反律 (Law of Quadratic Reciprocity)**：
+对于不同奇素数 $p, q$：
+$$ \left(\frac{p}{q}\right) \left(\frac{q}{p}\right) = (-1)^{\frac{p-1}{2} \cdot \frac{q-1}{2}} $$
 
 ---
 
@@ -67,57 +74,29 @@ $n = p_1^{e_1} p_2^{e_2} \dots p_k^{e_k}$
 
 ### 2.1 莫比乌斯函数 $\mu(n)$
 
-定义：
+**定义**：$\mu(n) = \begin{cases} 1 & n=1 \\ (-1)^k & n=p_1 \dots p_k \\ 0 & \text{其他} \end{cases}$
 
-- $\mu(1) = 1$
-- 若 $n = p_1 \dots p_k$（无平方因子），$\mu(n) = (-1)^k$
-- 否则 $\mu(n) = 0$
+**性质证明**：$\sum_{d|n} \mu(d) = [n=1]$。
+利用二项式展开：$\sum_{i=0}^k \binom{k}{i}(-1)^i = (1-1)^k = 0$。
 
-**核心性质证明**：$\sum_{d|n} \mu(d) = [n=1]$。
+### 2.2 Dirichlet 卷积
 
-- $n=1$ 时显然。
-- $n > 1$ 时，设 $n$ 有 $k$ 个不同质因子。只有不含平方因子的约数 $d$ 贡献非零。
-  选择 $i$ 个质因子组成的约数共有 $\binom{k}{i}$ 个，其 $\mu$ 值为 $(-1)^i$。
-  总和为 $\sum_{i=0}^k \binom{k}{i} (-1)^i = (1-1)^k = 0$。
-
-### 2.2 Dirichlet 卷积与常用积性函数
-
-**常用积性函数表**：
-- **单位元**：$\epsilon(n) = [n=1]$。
-- **恒等函数**：$1(n) = 1$。
-- **幂函数**：$Id_k(n) = n^k$。其中 $Id(n) = n$。
-- **约数个数**：$d(n) = (1 * 1)(n)$。
-- **约数和**：$\sigma(n) = (1 * Id)(n)$。
-- **欧拉函数**：$\phi(n)$，满足 $\phi * 1 = Id$。
-- **莫比乌斯函数**：$\mu(n)$，满足 $\mu * 1 = \epsilon$。
-
-**Dirichlet 卷积常用恒等式证明**：
-1. **$\phi = \mu * Id$**：
-   由 $\phi * 1 = Id$。两边同时卷积 $\mu$：
-   $\phi * 1 * \mu = Id * \mu \implies \phi * (1 * \mu) = Id * \mu \implies \phi * \epsilon = Id * \mu \implies \phi = Id * \mu$。
-   即：$\phi(n) = \sum_{d|n} d \cdot \mu(n/d)$。
-
-2. **$d = 1 * 1$ 与 $\sigma = 1 * Id$**：
-   这些是定义式。利用积性，若 $f, g$ 为积性函数，则 $f * g$ 亦为积性函数。
-   对于 $n = p^e$：
-   $d(p^e) = \sum_{i=0}^e 1 \cdot 1 = e+1$。
-   $\sigma(p^e) = \sum_{i=0}^e p^i = \frac{p^{e+1}-1}{p-1}$。
+$(f * g)(n) = \sum_{d|n} f(d)g(n/d)$。
+- **恒等元**：$\epsilon(n) = [n=1]$。
+- **逆元**：若 $f(1) \neq 0$，则 $f$ 存在 Dirichlet 逆元 $f^{-1}$。
+- **重要关系**：$\mu * 1 = \epsilon, \phi * 1 = Id, \mu * Id = \phi$。
 
 ---
 
 ## 3. 高阶技术：杜教筛与反演进阶
 
-### 3.1 杜教筛收敛性与构造技巧
+### 3.1 杜教筛 (Du's Sieve)
 
-求解 $S(n) = \sum_{i=1}^n f(i)$，若能找到 $g, h$ 使得 $h = f * g$ 且 $g, h$ 的前缀和易求。
-则 $g(1)S(n) = \sum_{i=1}^n h(i) - \sum_{d=2}^n g(d)S(\lfloor n/d \rfloor)$。
+求解 $S(n) = \sum_{i=1}^n f(i)$，利用卷积 $h = f * g$：
+$$ g(1)S(n) = \sum_{i=1}^n h(i) - \sum_{d=2}^n g(d)S(\lfloor n/d \rfloor) $$
+复杂度通过预处理前 $n^{2/3}$ 项可优化至 $O(n^{2/3})$。
 
-**构造示例**：
-- 求 $\mu$ 前缀和：取 $g=1, h=\mu*1=\epsilon$。
-- 求 $\phi$ 前缀和：取 $g=1, h=\phi*1=Id$。
-- 求 $i \cdot \phi(i)$ 前缀和：取 $g=Id, h=(i\phi) * Id = \sum_{d|n} (d\phi(d) \cdot \frac{n}{d}) = n \sum_{d|n} \phi(d) = n^2$。
-
-### 3.2 莫比乌斯反演的两种形式
+### 3.2 莫比乌斯反演 (Mobius Inversion)
 
 1. **约数形式**：$g(n) = \sum_{d|n} f(d) \iff f(n) = \sum_{d|n} \mu(n/d)g(d)$。
 2. **倍数形式**：$g(n) = \sum_{n|d} f(d) \iff f(n) = \sum_{n|d} \mu(d/n)g(d)$。
@@ -126,17 +105,18 @@ $n = p_1^{e_1} p_2^{e_2} \dots p_k^{e_k}$
 
 ## 4. 综合练习与 C++ 解答
 
-### 练习 1：[NOI2010] 能量采集 (反演基础)
+### 练习 1：[P3306] 随机数生成器 (BSGS 应用)
 
-求 $\sum_{i=1}^n \sum_{j=1}^m (2\gcd(i, j) - 1)$。
+求 $x_{i+1} \equiv (ax_i + b) \pmod p$ 首次达到 $t$ 的最小 $i$。
 
 <details>
 <summary>Check Solution (思路)</summary>
 
-1. 原式 $= 2 \sum_{i=1}^n \sum_{j=1}^m \gcd(i, j) - nm$。
-2. 设 $G(k) = \sum_{i=1}^n \sum_{j=1}^m [\gcd(i, j) = k] = \sum_{i=1}^{\lfloor n/k \rfloor} \sum_{j=1}^{\lfloor m/k \rfloor} [\gcd(i, j) = 1]$。
-3. 利用 $\phi * 1 = Id$，$\sum \gcd(i, j) = \sum \sum_{d|\gcd(i, j)} \phi(d) = \sum_{d=1}^{\min(n,m)} \phi(d) \lfloor n/d \rfloor \lfloor m/d \rfloor$。
-4. 数论分块即可。
+1. 当 $a=0$：只需判断 $b \equiv t$。
+2. 当 $a=1$：$x_n = x_1 + (n-1)b \equiv t$，线性同余方程。
+3. 当 $a>1$：利用等比数列求和 $x_n = a^{n-1}x_1 + b\frac{a^{n-1}-1}{a-1} \equiv t$。
+4. 整理得 $a^{n-1}(x_1 + \frac{b}{a-1}) \equiv t + \frac{b}{a-1} \pmod p$。
+5. 使用 BSGS (Baby-step Giant-step) 求解离散对数。
 </details>
 
 <details>
@@ -144,63 +124,14 @@ $n = p_1^{e_1} p_2^{e_2} \dots p_k^{e_k}$
 
 ```cpp
 #include <iostream>
-#include <algorithm>
+#include <cmath>
+#include <map>
 using namespace std;
 
-const int MAXN = 50005;
-int mu[MAXN], sum[MAXN], primes[MAXN], cnt;
-bool st[MAXN];
+typedef long long ll;
 
-void precompute(int n) {
-    mu[1] = 1;
-    for (int i = 2; i <= n; i++) {
-        if (!st[i]) {
-            primes[cnt++] = i;
-            mu[i] = -1;
-        }
-        for (int j = 0; primes[j] <= n / i; j++) {
-            st[i * primes[j]] = true;
-            if (i % primes[j] == 0) break;
-            mu[i * primes[j]] = -mu[i];
-        }
-    }
-    for (int i = 1; i <= n; i++) sum[i] = sum[i - 1] + mu[i];
-}
-
-long long calc(int n, int m) {
-    long long res = 0;
-    int limit = min(n, m);
-    for (int l = 1, r; l <= limit; l = r + 1) {
-        r = min({limit, n / (n / l), m / (m / l)});
-        res += (long long)(sum[r] - sum[l - 1]) * (n / l) * (m / l);
-    }
-    return res;
-}
-
-int main() {
-    precompute(50000);
-    int T, a, b, c, d, k;
-    scanf("%d", &T);
-    while (T--) {
-        scanf("%d%d%d%d%d", &a, &b, &c, &d, &k);
-        printf("%lld\n", calc(b / k, d / k) - calc((a - 1) / k, d / k) - calc(b / k, (c - 1) / k) + calc((a - 1) / k, (c - 1) / k));
-    }
-    return 0;
-}
-```
-
-</details>
-
-### 练习 2：[Luogu P3807] Lucas 定理模板
-
-求 $\binom{n+m}{n} \pmod p$，其中 $p$ 为素数且较小。
-
-<details>
-<summary>Check Solution (C++)</summary>
-
-```cpp
-long long qpow(long long a, long long b, int p) {
-    long long res = 1;
+ll qpow(ll a, ll b, ll p) {
+    ll res = 1;
     while (b) {
         if (b & 1) res = res * a % p;
         a = a * a % p;
@@ -209,109 +140,100 @@ long long qpow(long long a, long long b, int p) {
     return res;
 }
 
-long long C(long long n, long long m, int p) {
-    if (m > n) return 0;
-    if (m > n - m) m = n - m;
-    long long a = 1, b = 1;
-    for (int i = 0; i < m; i++) {
-        a = a * (n - i) % p;
-        b = b * (i + 1) % p;
+ll bsgs(ll a, ll b, ll p) {
+    if (1 % p == b % p) return 0;
+    map<ll, ll> hash;
+    ll m = ceil(sqrt(p));
+    ll t = b % p;
+    for (int j = 0; j < m; j++) {
+        hash[t] = j;
+        t = t * a % p;
     }
-    return a * qpow(b, p - 2, p) % p;
+    a = qpow(a, m, p);
+    t = 1;
+    for (int i = 1; i <= m; i++) {
+        t = t * a % p;
+        if (hash.count(t)) return i * m - hash[t];
+    }
+    return -1;
 }
 
-long long lucas(long long n, long long m, int p) {
-    if (!m) return 1;
-    return C(n % p, m % p, p) * lucas(n / p, m / p, p) % p;
+void solve() {
+    ll p, a, b, x, t;
+    cin >> p >> a >> b >> x >> t;
+    if (x == t) { cout << 1 << endl; return; }
+    if (a == 0) {
+        if (b == t) cout << 2 << endl;
+        else cout << -1 << endl;
+        return;
+    }
+    if (a == 1) {
+        if (!b) cout << -1 << endl;
+        else {
+            ll val = (t - x % p + p) % p;
+            ll inv = qpow(b, p - 2, p);
+            cout << val * inv % p + 1 << endl;
+        }
+        return;
+    }
+    ll inv_a1 = qpow(a - 1, p - 2, p);
+    ll constant = b * inv_a1 % p;
+    ll target = (t + constant) % p;
+    ll start = (x + constant) % p;
+    if (!start) {
+        if (!target) cout << 1 << endl;
+        else cout << -1 << endl;
+        return;
+    }
+    ll res = bsgs(a, target * qpow(start, p - 2, p) % p, p);
+    if (res == -1) cout << -1 << endl;
+    else cout << res + 1 << endl;
 }
 ```
 
 </details>
 
-### 练习 3：曹冲养猪 (CRT 模板)
+### 练习 2：[P4549] 裴蜀定理 (Bezout's Identity)
 
-给定 $n$ 个同余方程 $x \equiv a_i \pmod{m_i}$，$m_i$ 两两互质，求最小正整数解。
+求 $\sum a_i x_i = S$ 的最小正整数 $S$。
+**定理**：$S = \gcd(a_1, a_2, \dots, a_n)$。
+
+### 练习 3：[P3846] BSGS 模板
+
+求解 $a^x \equiv b \pmod p$，其中 $p$ 为质数。
+
+### 练习 4：[P5491] 二次剩余 (Cipolla 算法)
+
+求 $x^2 \equiv n \pmod p$ 的所有解。
 
 <details>
 <summary>Check Solution (C++)</summary>
 
 ```cpp
-typedef __int128_t int128; // 处理潜在溢出
-
-void exgcd(long long a, long long b, long long &x, long long &y) {
-    if (!b) { x = 1, y = 0; return; }
-    exgcd(b, a % b, y, x);
-    y -= a / b * x;
+// Cipolla 算法核心实现
+struct Complex { ll r, i; };
+ll W;
+Complex mul(Complex a, Complex b, ll p) {
+    return { (a.r * b.r % p + a.i * b.i % p * W % p) % p, (a.r * b.i % p + a.i * b.r % p) % p };
 }
 
-long long crt() {
-    long long M = 1, ans = 0;
-    for (int i = 1; i <= n; i++) M *= m[i];
-    for (int i = 1; i <= n; i++) {
-        long long Mi = M / m[i], x, y;
-        exgcd(Mi, m[i], x, y);
-        ans = (ans + (int128)a[i] * Mi * (x % m[i] + m[i]) % m[i]) % M;
+ll cipolla(ll n, ll p) {
+    n %= p;
+    if (qpow(n, (p - 1) / 2, p) == p - 1) return -1; // 无解
+    ll a;
+    while (true) {
+        a = rand() % p;
+        W = (a * a % p - n + p) % p;
+        if (qpow(W, (p - 1) / 2, p) == p - 1) break;
     }
-    return (ans + M) % M;
-}
-```
-
-</details>
-
-### 练习 4：[Luogu P3327] 约数个数和
-
-求 $\sum_{i=1}^n \sum_{j=1}^m d(ij)$。
-
-<details>
-<summary>Check Solution (思路)</summary>
-
-1. 利用恒等式 $d(ij) = \sum_{u|i} \sum_{v|j} [gcd(u, v) = 1]$。
-2. 原式 $= \sum_{u=1}^n \sum_{v=1}^m [gcd(u, v) = 1] \lfloor n/u \rfloor \lfloor m/v \rfloor$。
-3. 利用反演：$\sum_{x=1}^{\min(n, m)} \mu(x) (\sum_{u=1}^{\lfloor n/x \rfloor} \lfloor n/ux \rfloor) (\sum_{v=1}^{\lfloor m/x \rfloor} \lfloor m/vx \rfloor)$。
-4. 令 $F(N) = \sum_{i=1}^N \lfloor N/i \rfloor$，则结果为 $\sum_{x=1}^{\min(n, m)} \mu(x) F(\lfloor n/x \rfloor) F(\lfloor m/x \rfloor)$。
-5. 预处理 $\mu$ 前缀和与 $F(N)$，数论分块求解。
-</details>
-
-### 练习 5：[SDOI2014] 数表 (动态莫比乌斯反演)
-
-求 $\sum_{i=1}^n \sum_{j=1}^m \sigma_1(gcd(i, j))$，且满足 $\sigma_1(gcd(i, j)) \le a$。
-
-<details>
-<summary>Check Solution (核心逻辑)</summary>
-
-```cpp
-// 核心：离线处理查询，按 a 升序排序
-// 树状数组 bit 维护 g(T) = \sum_{d|T, \sigma(d) \le a} \sigma(d)\mu(T/d)
-for (auto q : queries) {
-    while (it != sigma_list.end() && it->val <= q.a) {
-        for (int j = it->d; j <= N; j += it->d)
-            bit.add(j, it->val * mu[j / it->d]);
-        it++;
+    Complex res = { 1, 0 }, base = { a, 1 };
+    ll b = (p + 1) / 2;
+    while (b) {
+        if (b & 1) res = mul(res, base, p);
+        base = mul(base, base, p);
+        b >>= 1;
     }
-    ans[q.id] = query_block(q.n, q.m);
-}
-```
-
-</details>
-
-### 练习 6：[SDOI2015] 约数个数和 (杜教筛应用)
-
-求 $\sum_{i=1}^n \phi(i)$ 和 $\sum_{i=1}^n \mu(i)$，$n \le 10^9$。
-
-<details>
-<summary>Check Solution (代码片段)</summary>
-
-```cpp
-map<int, long long> m_mu, m_phi;
-long long get_mu(int n) {
-    if (n <= MAXN) return sum_mu[n];
-    if (m_mu.count(n)) return m_mu[n];
-    long long res = 1;
-    for (int l = 2, r; l <= n; l = r + 1) {
-        r = n / (n / l);
-        res -= 1LL * (r - l + 1) * get_mu(n / l);
-    }
-    return m_mu[n] = res;
+    return res.r;
 }
 ```
 
@@ -325,3 +247,4 @@ className="mt-12 p-6 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-a
 <FlaskConical className="text-amber-500 mb-2" />
 **大师寄语**：数论不仅仅是处理数字，更是处理结构。当你能通过 Dirichlet 卷积看穿函数的相互作用时，你便掌握了调和级数背后的规律。
 </motion.div>
+
