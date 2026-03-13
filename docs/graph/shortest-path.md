@@ -1,198 +1,149 @@
 ---
-title: 最短路算法：理论体系与建模进阶
+title: 最短路理论体系：松弛、对偶与势能函数
 ---
 
 import { Compass, Navigation, Zap, Layers, AlertCircle, Share2, Link, Workflow, Activity, ShieldCheck, Sigma, BookOpen, Clock, Target } from 'lucide-react';
 import ComplexityAnalysis from '@site/src/components/ComplexityAnalysis';
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
-# <Compass className="inline-block mr-2 mb-1 text-blue-600" /> 最短路算法 (Shortest Path Theory)
+# <Compass className="inline-block mr-2 mb-1 text-blue-600" /> 最短路理论 (Shortest Path Theory)
 
-最短路问题不仅是图论建模的基础，更是**动态规划 (DP)** 在特殊状态空间（有环图）下的表现形式。本章将从严格的数学定义出发，深入探讨从非负权图贪心策略到负权图松弛理论的演进。
-
----
-
-## 一、 <Sigma className="inline-block mr-2 mb-1 text-blue-500" /> 形式化定义与公理化性质
-
-### 1. 最短路权值定义
-
-给定带权有向图 $G = (V, E, w)$，路径 $p = \langle v_0, v_1, \dots, v_k \rangle$ 的权值 $w(p) = \sum_{i=1}^k w(v_{i-1}, v_i)$。
-单源最短路权值 $\delta(s, v)$ 为：
-
-$$
-\delta(s, v) = \begin{cases}
-\min \{w(p) : s \xrightarrow{p} v\} & \text{if a path exists} \\
-\infty & \text{if } v \text{ is unreachable} \\
--\infty & \text{if a reachable negative cycle exists}
-\end{cases}
-$$
-
-### 2. 最短路的最优子结构 (Optimal Substructure)
-
-**定理**：若 $p = \langle v_1, v_2, \dots, v_k \rangle$ 是从 $v_1$ 到 $v_k$ 的最短路，则对于任意 $1 \le i \le j \le k$，子路径 $p_{ij} = \langle v_i, \dots, v_j \rangle$ 也是从 $v_i$ 到 $v_j$ 的最短路。
-_证明 (反证法)_：若存在更短子路径 $p'_{ij}$，则用 $p'_{ij}$ 替换 $p$ 中的 $p_{ij}$ 可得到更短的 $v_1 \to v_k$ 路径，与 $p$ 是最短路的前提矛盾。
-
-### 3. 三角不等式 (Triangle Inequality)
-
-对于任意边 $(u, v) \in E$，最短路权值满足：$\delta(s, v) \le \delta(s, u) + w(u, v)$。这是所有最短路算法收敛的数学依据。
+最短路问题不仅是离散数学的经典课题，更是**对偶理论**在图论中的完美体现。本章将从形式化松弛 (Relaxation) 理论出发，深入探讨从 Dijkstra 的贪心收敛到 Johnson 算法的势能变换。
 
 ---
 
-## 二、 <Workflow className="inline-block mr-2 mb-1 text-purple-500" /> 算法选型矩阵与复杂度边界
+## 一、 <Sigma className="inline-block mr-2 mb-1 text-blue-500" /> 形式化理论体系
 
-<ComplexityAnalysis
-data={[
-{ algorithm: "BFS (Unit weight)", complexity: "O(V + E)", space: "O(V)", note: "仅限等权图" },
-{ algorithm: "Dijkstra (Binary Heap)", complexity: "O(E log V)", space: "O(V + E)", note: "不可处理负权边" },
-{ algorithm: "Bellman-Ford", complexity: "O(VE)", space: "O(V)", note: "可处理负权边与负环" },
-{ algorithm: "SPFA", complexity: "O(kE) [Avg]", space: "O(V)", note: "Bellman-Ford 的队列优化版" },
-{ algorithm: "Floyd-Warshall", complexity: "O(V³)", space: "O(V²)", note: "全源最短路，插点 DP" },
-{ algorithm: "Johnson", complexity: "O(VE + VE log V)", space: "O(V+E)", note: "含负权边的全源最短路" }
-]}
-/>
+### 1. 三角不等式与松弛操作
+对于边 $(u, v) \in E$，最短路权值 $\delta(s, v)$ 必须满足：
+$$\delta(s, v) \le \delta(s, u) + w(u, v)$$
+**松弛操作 (Relaxation)**：对于估计值 $d[v]$，若执行 $d[v] = \min(d[v], d[u] + w(u, v))$，其本质是向不动点 $\delta$ 的逼近。
+
+### 2. 线性规划对偶 (LP Duality)
+单源最短路问题可建模为如下线性规划：
+- **目标**：$\max \sum_{v \in V} d[v]$
+- **约束**：$d[v] - d[u] \le w(u, v), \forall (u, v) \in E$ 且 $d[s] = 0$。
+此问题的对偶即为**最小费用流**的一种特殊形式。
 
 ---
 
-## 三、 <Activity className="inline-block mr-2 mb-1 text-green-500" /> 核心算法深度解析
+## 二、 <Workflow className="inline-block mr-2 mb-1 text-purple-500" /> 核心算法深度证明
 
-### 1. Dijkstra 算法：贪心与非负性
-
-Dijkstra 维护一个集合 $S$，其中包含已确定最短路的顶点。
-<KnowledgeCard title="Dijkstra 正确性证明" icon={<BookOpen size={20} />}>
-**证明要点**：
-假设 $S$ 是当前已确定最短路的点集。算法每次选取 $u \in V \setminus S$ 中 $dist[u]$ 最小的点。
-若存在另一条更短路径 $s \to \dots \to x \to y \to \dots \to u$（其中 $x \in S, y \notin S$），则 $dist[y] = dist[x] + w(x, y)$。由于所有边权 $w \ge 0$，且 $dist[u]$ 是 $V \setminus S$ 中最小的，必有 $dist[u] \le dist[y]$。因此该替代路径不可能更短。
-**结论**：若存在负权边，贪心序失效，必须使用松弛算法。
+### 1. Dijkstra 的贪心收敛性
+<KnowledgeCard title="非负权前提下的归纳证明" icon={<BookOpen size={20} />}>
+**命题**：每次从 $V \setminus S$ 中取出 $d[u]$ 最小的点，必有 $d[u] = \delta(s, u)$。
+**证明**：假设 $u$ 是第一个不满足该命题的点。考虑 $s \to u$ 的真实最短路 $p$。路径 $p$ 必在某处离开 $S$，设第一条跨越 $S$ 与 $V \setminus S$ 的边为 $(x, y)$。
+由于 $x \in S$，有 $d[x] = \delta(s, x)$。松弛后 $d[y] = \delta(s, x) + w(x, y) = \delta(s, y)$。
+因为边权非负，$\delta(s, y) \le \delta(s, u)$。而算法选取了 $u$ 而非 $y$，说明 $d[u] \le d[y]$。
+从而 $d[u] = d[y] = \delta(s, u)$，与假设矛盾。
 </KnowledgeCard>
 
-### 2. Floyd-Warshall：动态规划视角
-
-状态定义：$dp[k][i][j]$ 表示经过前 $k$ 个节点作为中间点时，$i$ 到 $j$ 的最短距离。
-转移方程：$dp[k][i][j] = \min(dp[k-1][i][j], dp[k-1][i][k] + dp[k-1][k][j])$。
-空间优化：由于 $k$ 层仅依赖 $k-1$ 层，可压缩至 $O(V^2)$。
-
-### 3. Bellman-Ford 与松弛性质
-
-**收敛性质**：在一个含有 $n$ 个点的图中，不含负环的最短路最多包含 $n-1$ 条边。
-**判定负环**：若在第 $n$ 次全边松弛中仍有 $dist$ 减小，则图中必然存在从源点可达的负环。
+### 2. Johnson 算法：势能函数的妙用
+为了处理负权边并运行全源 Dijkstra，我们引入势能函数 $h(v)$：
+- 定义新边权 $w'(u, v) = w(u, v) + h(u) - h(v)$。
+- **目标**：寻找 $h(v)$ 使得 $w'(u, v) \ge 0$。
+- **解法**：由三角不等式 $h(v) \le h(u) + w(u, v)$ 知，$h(v)$ 可取源点到各点的最短路长度。
 
 ---
 
-## 四、 <Link className="inline-block mr-2 mb-1 text-amber-500" /> 建模进阶：Johnson 算法与差分约束
+## 三、 <Activity className="inline-block mr-2 mb-1 text-green-500" /> 建模进阶：差分约束系统
 
-### 1. Johnson 算法：权值重标定 (Reweighting)
+差分约束系统是形式化逻辑向图论转化的桥梁。
 
-为了在含负权边的图上跑全源最短路，Johnson 算法通过势能函数 $h(v)$ 将边权 $w(u, v)$ 转化为 $w'(u, v) = w(u, v) + h(u) - h(v) \ge 0$。
+### 1. 标准形式
+给定 $m$ 个约束：$x_j - x_i \le c_k$。
+- **转化**：连边 $(i, j)$，权值为 $c_k$。
+- **结论**：若图中存在**负环**，则系统无解；否则最短路即为一组可行解。
 
-1. 新增源点 $s'$ 连向所有点，边权 0。
-2. 跑一遍 Bellman-Ford 求得 $s'$ 到各点的最短路作为 $h(v)$。
-3. 转化边权后，对每个点跑 Dijkstra。
-4. 最终距离还原：$dist(u, v) = dist'(u, v) + h(v) - h(u)$。
-
-### 2. 差分约束系统 (System of Difference Constraints)
-
-将不等式 $x_j - x_i \le w_{ij}$ 转化为边 $i \to j$ 权值 $w_{ij}$。
-
-- **最大值问题**：$\max(x_i - x_j)$ 对应 $j \to i$ 的最短路。
-- **无解判定**：对应图中存在负环。
+### 2. 技巧：最大值 vs 最小值
+- 求 $x_i - x_j$ 的**最大值**：跑 $j \to i$ 的最短路。
+- 求 $x_i - x_j$ 的**最小值**：跑 $j \to i$ 的最长路（等价于不等式取反跑最短路）。
 
 ---
 
-## 五、 工业级 C++ 模板 (全能型 Dijkstra)
+## 四、 工业级 C++ 实现 (带负环判定)
 
 ```cpp
-#include <vector>
-#include <queue>
-#include <algorithm>
-
-using namespace std;
-
 /**
- * @brief 工业级堆优化 Dijkstra
- * 复杂度: O(E log V)
- * 能够处理大规模稀疏图
+ * @brief SPFA 算法：支持负权边与负环判定
+ * 复杂度: 平均 O(kE), 最坏 O(VE)
  */
-template<typename T = long long>
-struct Dijkstra {
-    const T INF = numeric_limits<T>::max();
-    struct Edge { int to; T w; };
-    vector<vector<Edge>> adj;
+bool spfa(int s, int n, vector<long long>& dist) {
+    dist.assign(n + 1, INF);
+    vector<int> cnt(n + 1, 0);
+    vector<bool> in_queue(n + 1, false);
+    queue<int> q;
 
-    Dijkstra(int n) : adj(n + 1) {}
-
-    void add_edge(int u, int v, T w) { adj[u].push_back({v, w}); }
-
-    vector<T> solve(int s, int n) {
-        vector<T> dist(n + 1, INF);
-        using P = pair<T, int>;
-        priority_queue<P, vector<P>, greater<P>> pq;
-
-        dist[s] = 0;
-        pq.push({0, s});
-
-        while(!pq.empty()) {
-            auto [d, u] = pq.top(); pq.pop();
-            if(d > dist[u]) continue;
-            for(auto& e : adj[u]) {
-                if(dist[u] + e.w < dist[e.to]) {
-                    dist[e.to] = dist[u] + e.w;
-                    pq.push({dist[e.to], e.to});
+    dist[s] = 0; q.push(s); in_queue[s] = true;
+    while (!q.empty()) {
+        int u = q.front(); q.pop(); in_queue[u] = false;
+        for (auto& e : adj[u]) {
+            if (dist[e.to] > dist[u] + e.w) {
+                dist[e.to] = dist[u] + e.w;
+                if (!in_queue[e.to]) {
+                    q.push(e.to); in_queue[e.to] = true;
+                    if (++cnt[e.to] >= n) return false; // 存在负环
                 }
             }
         }
-        return dist;
     }
-};
+    return true;
+}
 ```
 
 ---
 
-## 六、 <Target className="inline-block mr-2 mb-1 text-red-500" /> 精选练习与解析
+## 五 <Target className="inline-block mr-2 mb-1 text-red-500" /> 精选练习与解析
 
-### 练习 1：负权边下的最短路
-
-给定一个含负权边但不含负环的图，求单源最短路。
+### 练习 1：最短路计数 (Modulo $10^9+7$)
+给定无向图，求 $1$ 到各点的最短路条数。
 
 <details>
 <summary>Check Solution</summary>
 
 **解析**：
-不能使用 Dijkstra，必须使用 **Bellman-Ford** 或其优化版 **SPFA**。
+在 Dijkstra 或 BFS 的过程中维护 `cnt[v]`。
+- 若 `dist[v] > dist[u] + w`：更新 `dist[v]` 并设 `cnt[v] = cnt[u]`。
+- 若 `dist[v] == dist[u] + w`：`cnt[v] = (cnt[v] + cnt[u]) % MOD`。
 
-1. **SPFA 流程**：使用队列维护待松弛的点。
-2. **风险点**：SPFA 在网格图或特殊构造的“菊花图”中复杂度会退化为 $O(VE)$。
-3. **安全选择**：若数据规模较小，Bellman-Ford 更稳健。
+```cpp
+// C++ 核心逻辑
+if (dist[v] > d + w) {
+    dist[v] = d + w;
+    cnt[v] = cnt[u];
+    pq.push({dist[v], v});
+} else if (dist[v] == d + w) {
+    cnt[v] = (cnt[v] + cnt[u]) % MOD;
+}
+```
 
 </details>
 
-### 练习 2：最长路问题 (DAG Longest Path)
-
-求一个 DAG 中两点间的最长路径。
+### 练习 2：分层图建模 - 魔法药剂
+可以使 $K$ 条边的权值变为 $0$。
 
 <details>
 <summary>Check Solution</summary>
 
 **解析**：
-
-1. **取负法**：将所有边权 $w$ 变为 $-w$，然后跑最短路。
-2. **DP 法**：利用拓扑序，状态转移为 $f[v] = \max(f[v], f[u] + w(u, v))$。
-   _注意：若图中含正环，最长路问题是 NP-Hard 的。_
+建立 $K+1$ 层图。
+- 节点 $(u, k)$ 表示在 $u$ 点且剩余 $k$ 次魔法。
+- 边 $(u, k) \xrightarrow{w} (v, k)$。
+- 边 $(u, k) \xrightarrow{0} (v, k-1)$。
+**复杂度**：$O(K(V+E) \log (KV))$。
 
 </details>
 
-### 练习 3：分层图建模 - 飞行路线
-
-有 $n$ 个城市和 $m$ 条航线，可以免费乘坐 $k$ 次航线。求 $s \to t$ 最小花费。
+### 练习 3：第 K 短路问题 (A*)
+求 $s \to t$ 的第 $K$ 短路径权值。
 
 <details>
 <summary>Check Solution</summary>
 
 **解析**：
-构建 $k+1$ 层图。
-
-1. **同层连边**：第 $i$ 层内按照原图连边，权值为航线价格。
-2. **跨层连边**：从第 $i$ 层的 $u$ 向第 $i+1$ 层的 $v$ 连边，权值为 $0$（代表使用了一次免费机会）。
-3. **目标**：求第 $0$ 层 $s$ 到各层 $t$ 的最短路最小值。
-   **复杂度**：$O(kE \log (kV))$。
+利用 $A^*$ 搜索。
+- **估价函数 $h(u)$**：$u$ 到 $t$ 的真实最短路（反向 Dijkstra 预处理）。
+- **优先级**：$f(u) = g(u) + h(u)$。
+- **停止条件**：当 $t$ 第 $K$ 次从堆中弹出时，其 $g(t)$ 即为所求。
 
 </details>

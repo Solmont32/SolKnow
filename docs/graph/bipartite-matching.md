@@ -1,5 +1,5 @@
 ---
-title: 二分图理论：匹配、覆盖与对偶性
+title: 二分图理论：匹配、覆盖与稳定婚姻
 ---
 
 import { GitMerge, Zap, Activity, ShieldCheck, Users, Link, Target, Layout, Sigma, CheckCircle, BookOpen, Workflow } from 'lucide-react';
@@ -8,103 +8,97 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # <GitMerge className="inline-block mr-2 mb-1 text-pink-500" /> 二分图匹配 (Bipartite Matching)
 
-二分图匹配不仅是组合优化的核心，更是网络流理论在特殊结构下的精简表现。它通过一系列对偶定理揭示了匹配（Matching）、覆盖（Covering）与独立集（Independent Set）之间的对称之美。
+二分图匹配不仅是组合优化的核心，更是**对偶性 (Duality)** 的直观体现。本章将从 Berge 增广路定理出发，探讨 Kőnig 定理、Hall 结婚定理，以及在博弈论中广泛应用的稳定婚姻算法。
 
 ---
 
 ## 一、 <Sigma className="inline-block mr-2 mb-1 text-blue-500" /> 核心理论体系
 
-### 1. 二分图判定定理
+### 1. Kőnig 定理：匹配与覆盖的对偶
+在二分图中：
+$$\text{最大匹配数} = \text{最小顶点覆盖数}$$
+这一结论是**最大流最小割定理**在二分图上的特例。
 
-**定理**：无向图 $G$ 是二分图的充要条件是 $G$ 中不存在任何**奇环** (Odd Cycle)。
-**证明要点**：利用 BFS/DFS 进行染色（二染色），若在染色过程中发现相邻节点颜色相同，则必存在奇环。
-
-### 2. Berge 增广路定理
-
-**定理**：匹配 $M$ 是最大匹配 $\iff$ 图中不存在关于 $M$ 的**增广路**。
-_直观理解_：增广路始于未匹配点，交替经过非匹配边和匹配边，并终于另一个未匹配点。通过将增广路上的边状态反转，匹配数必然增加 $1$。
-
-### 3. Hall 结婚定理 (Hall's Marriage Theorem)
-
-**定理**：二分图 $G=(L \cup R, E)$ 存在覆盖 $L$ 的匹配 $\iff \forall S \subseteq L, |N(S)| \ge |S|$，其中 $N(S)$ 是 $S$ 的邻域。
-
-<KnowledgeCard title="Kőnig 定理证明简述" icon={<BookOpen size={20} />}>
-**定理**：在二分图中，**最大匹配数 = 最小顶点覆盖数**。
-**构造性证明**：
-
-1. 跑一遍最大匹配，记为 $M$。
-2. 从左侧所有未匹配点出发，跑增广路（仅标记访问过的点）。
-3. 令 $L_{vis}, R_{vis}$ 分别为左右侧被访问的点集。
-4. **最小覆盖集 $C = (L \setminus L_{vis}) \cup R_{vis}$**。
-5. 可以证明 $|C| = |M|$ 且 $C$ 覆盖了所有边。
-
-</KnowledgeCard>
+### 2. Hall 结婚定理 (Hall's Marriage Theorem)
+二分图 $G=(L \cup R, E)$ 存在覆盖 $L$ 的匹配的充要条件是：
+$$\forall S \subseteq L, |N(S)| \ge |S|$$
+其中 $N(S)$ 是 $S$ 的邻域。
+- **直观理解**：任何一个子集都有足够多的外部连接点。
 
 ---
 
-## 二、 <Workflow className="inline-block mr-2 mb-1 text-purple-500" /> 算法选型与复杂度边界
+## 二、 <Workflow className="inline-block mr-2 mb-1 text-purple-500" /> 稳定婚姻问题 (Gale-Shapley)
 
-<ComplexityAnalysis
-data={[
-{ algorithm: "Hungary (DFS)", complexity: "O(VE)", space: "O(V + E)", note: "实现最简，中小规模首选" },
-{ algorithm: "Hopcroft-Karp", complexity: "O(E sqrt{V})", space: "O(V + E)", note: "分层增广，大规模图效率极高" },
-{ algorithm: "Dinic (Flow based)", complexity: "O(E sqrt{V})", space: "O(V + E)", note: "在单位容量网络中表现卓越" }
-]}
-/>
+在带权匹配的背景下，若每方都有偏好列表，寻找一个**稳定匹配**（不存在任何一对男女相互偏好优于当前伴侣）。
 
----
+### 1. 算法流程 (男方求婚视角)
+1. 每个未订婚的男性向其偏好列表中最优先且未拒绝过他的女性求婚。
+2. 女性在所有求婚者中选择最偏好的一个暂时订婚，拒绝其余人。
+3. 被拒绝的男性继续向下一位求婚。
 
-## 三、 <Layout className="inline-block mr-2 mb-1 text-indigo-500" /> 四项核心指标与 Dilworth 定理
-
-1. **最大匹配数 = 最小顶点覆盖数**。
-2. **最大独立集数 = 总点数 - 最大匹配数**。
-3. **最小边覆盖数 = 总点数 - 最大匹配数**（无孤立点）。
-4. **Dilworth 定理**：偏序集的最少不相交链覆盖数 = 其最大反链长度。
-   - 在 DAG 中，**最小不相交路径覆盖 = 顶点数 - 拆点二分图最大匹配数**。
+### 2. 结论
+- **收敛性**：算法必在 $O(n^2)$ 内结束。
+- **最优性**：该算法产生的是**男方最优**的稳定匹配。
 
 ---
 
-## 四、 工业级 C++ 实现 (匈牙利算法)
+## 三、 <Zap className="inline-block mr-2 mb-1 text-amber-500" /> 一般图匹配：带花树算法 (Blossom Algorithm)
+
+二分图没有奇环，因此 DFS 找增广路是可靠的。但在一般图中，**奇环**的存在会导致增广路搜索进入死循环。
+- **核心思想**：当发现奇环（花）时，将其缩为一个点，并在找到增广路后再展开。
+- **复杂度**：$O(V^2 E)$。
+
+---
+
+## 四、 工业级 C++ 实现 (Hopcroft-Karp 范式)
 
 ```cpp
-#include <vector>
-#include <algorithm>
-
-using namespace std;
-
 /**
- * @brief 匈牙利算法实现
- * 复杂度: O(VE)
+ * @brief Hopcroft-Karp 算法：二分图最大匹配
+ * 复杂度: O(E sqrt{V})
  */
-class BipartiteMatcher {
-    int nl, nr;
-    vector<vector<int>> adj;
-    vector<int> match_r, vis;
-    int timer;
+struct HopcroftKarp {
+    vector<int> g[N], match_l, match_r, dist;
+    int n, m;
+
+    bool bfs() {
+        queue<int> q;
+        dist.assign(n + 1, -1);
+        for (int i = 1; i <= n; ++i) {
+            if (match_l[i] == 0) {
+                dist[i] = 0; q.push(i);
+            }
+        }
+        bool found = false;
+        while (!q.empty()) {
+            int u = q.front(); q.pop();
+            for (int v : g[u]) {
+                if (match_r[v] == 0) found = true;
+                else if (dist[match_r[v]] == -1) {
+                    dist[match_r[v]] = dist[u] + 1;
+                    q.push(match_r[v]);
+                }
+            }
+        }
+        return found;
+    }
 
     bool dfs(int u) {
-        for (int v : adj[u]) {
-            if (vis[v] == timer) continue;
-            vis[v] = timer;
-            if (match_r[v] == -1 || dfs(match_r[v])) {
-                match_r[v] = u;
+        for (int v : g[u]) {
+            if (match_r[v] == 0 || (dist[match_r[v]] == dist[u] + 1 && dfs(match_r[v]))) {
+                match_l[u] = v; match_r[v] = u;
                 return true;
             }
         }
+        dist[u] = -1;
         return false;
     }
 
-public:
-    BipartiteMatcher(int _nl, int _nr) : nl(_nl), nr(_nr),
-        adj(nl + 1), match_r(nr + 1, -1), vis(nr + 1, 0), timer(0) {}
-
-    void add_edge(int u, int v) { adj[u].push_back(v); }
-
     int solve() {
         int res = 0;
-        for (int i = 1; i <= nl; i++) {
-            timer++;
-            if (dfs(i)) res++;
+        while (bfs()) {
+            for (int i = 1; i <= n; ++i)
+                if (match_l[i] == 0 && dfs(i)) res++;
         }
         return res;
     }
@@ -115,49 +109,39 @@ public:
 
 ## 五、 <Target className="inline-block mr-2 mb-1 text-red-500" /> 精选练习与解析
 
-### 练习 1：最大权独立集 (二分图)
-
-给定二分图，每个点有正权值，选出一组互不相邻的点使得权值和最大。
+### 练习 1：完美匹配判定
+给定 $2n$ 个点，判定是否存在大小为 $n$ 的匹配。
 
 <details>
 <summary>Check Solution</summary>
 
 **解析**：
-
-1. **转化**：最大权独立集 = 总权值 - 最小权顶点覆盖。
-2. **建模**：
-   - $S \to L_i$，容量 $w(L_i)$。
-   - $R_j \to T$，容量 $w(R_j)$。
-   - 原图边 $L_i \to R_j$，容量 $\infty$。
-3. **计算**：$\sum w - \text{MaxFlow}$。
+直接运行 Hopcroft-Karp 或 Dinic，检查结果是否等于 $n$。
+- **高级视角**：利用 **Tutte 矩阵** 和随机化算法（Schwartz-Zippel Lemma）可以在 $O(n^\omega)$ 时间内判定（$\omega$ 为矩阵乘法常数）。
 
 </details>
 
-### 练习 2：最小路径覆盖 (可相交)
-
-在 DAG 中求最少路径数覆盖所有点，路径可相交。
+### 练习 2：最少不相交路径覆盖 (DAG)
+在 DAG 中用最少的路径覆盖所有顶点。
 
 <details>
 <summary>Check Solution</summary>
 
 **解析**：
-
-1. **传递闭包**：若 $u \to \dots \to v$，则在图中补边 $u \to v$。
-2. **转化**：在补全后的图中求**不可相交路径覆盖**。
-3. **结论**：路径数 = $n$ - 拆点二分图最大匹配。
+1. **拆点**：每个点 $u$ 拆为 $u_{out}$ 和 $u_{in}$。
+2. **连边**：若原图有 $u \to v$，则连边 $u_{out} \to v_{in}$。
+3. **结论**：路径数 = $n$ - 最大匹配数。
+   - **直观理解**：每增加一个匹配边，就减少了一个路径的起点。
 
 </details>
 
-### 练习 3：矩阵 0-1 覆盖
-
-给定 $0-1$ 矩阵，最少选多少行和列覆盖所有 $1$？
+### 练习 3：最大独立集 (一般图)
+一般图的最大独立集是 NP-Hard 的，为什么二分图可以做？
 
 <details>
 <summary>Check Solution</summary>
 
 **解析**：
-
-1. **建模**：行看作左侧点，列看作右侧点。若 $(i, j)=1$，连边 $i \to j$。
-2. **结论**：本题即求最小顶点覆盖，由 Kőnig 定理知，答案等于最大匹配数。
+因为二分图具有**全单模性 (Total Unimodularity)**，其对应的线性规划松弛解必然是整数。这使得最大匹配（对偶问题）可以通过多项式时间算法解决，进而通过 $V - \text{MaxMatch}$ 得到结果。
 
 </details>
