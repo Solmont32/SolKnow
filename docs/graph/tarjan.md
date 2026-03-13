@@ -22,16 +22,30 @@ Tarjan 算法是图论中处理连通性的基石。它不仅能在线性时间�
 - **横叉边 (Cross Edge)**：指向已访问但非祖先也非后裔节点的边。
 
 ### 2. 时间戳与追溯值
-- **dfn[u]**：$u$ 被搜索到的绝对时间戳（搜索序）。
-- **low[u]**：$u$ 通过一条后向边或横叉边能到达的**最小 dfn 祖先**。
+**定义 1.1 (dfn)**：$dfn[u]$ 为节点 $u$ 在 DFS 过程中的访问序。
+**定义 1.2 (low)**：$low[u]$ 定义为 $u$ 所在的子树仅通过**一条非树边**能到达的最小 $dfn$ 值：
+$$low[u] = \min \begin{cases} dfn[u] \\ \min \{ dfn[v] \mid (u, v) \text{ 为后向边/横叉边} \} \\ \min \{ low[v] \mid (u, v) \text{ 为树边} \} \end{cases}$$
 
 ---
 
-## 二、 <ShieldCheck className="inline-block mr-2 mb-1 text-green-500" /> 强连通分量 (SCC) 的逻辑验证
+## 二、 <ShieldCheck className="inline-block mr-2 mb-1 text-green-500" /> 连通性性质推导
 
-强连通分量的本质是 DFS 树上的一个子结构，满足任意两点互达。
+### 1. 割点 (Cut-vertex) 的判定
+**定理 2.1**：在无向图 $G$ 的 DFS 树中，节点 $u$ 是割点当且仅当满足以下任一条件：
+1. **$u$ 为根节点**：且在 DFS 树中至少有两个子节点。
+2. **$u$ 非根节点**：且存在至少一个子节点 $v$，满足 $low[v] \ge dfn[u]$。
 
-### 1. 判定准则：为什么 `low[u] == dfn[u]` 是根？
+**推导要点**：
+- 若 $low[v] \ge dfn[u]$，说明 $v$ 及其子树没有办法跳过 $u$ 访问到 $u$ 的祖先。一旦删去 $u$，$v$ 所在的分支将与图的其余部分断开。
+
+### 2. 桥 (Bridge) 的判定
+**定理 2.2**：无向边 $(u, v)$ 是桥当且仅当 $(u, v)$ 是 DFS 树上的树边，且满足：
+$$low[v] > dfn[u]$$
+
+**证明**：
+若 $low[v] > dfn[u]$，说明从 $v$ 子树出发的所有边都无法到达 $u$ 或 $u$ 之前的节点。因此，除了树边 $(u, v)$ 之外，不存在任何路径连接 $v$ 的子树与 $u$ 所在的外部区域。
+
+### 3. 强连通分量 (SCC) 的逻辑验证
 **命题**：如果 $low[u] = dfn[u]$，则 $u$ 是一个强连通分量在 DFS 树中最先被访问的节点（根）。
 
 **逻辑验证**：
@@ -115,16 +129,33 @@ struct TarjanBCC {
 ## 五、 <Target className="inline-block mr-2 mb-1 text-red-500" /> 精选练习与解析
 
 ### 练习 1：圆方树 (Block-Cut Tree)
-如何查询无向图中两点间所有简单路径的交集？
+如何查询无向图中两点间所有简单路径的必经点？
 
 <details>
 <summary>Check Solution</summary>
 
 **解析**：
 1. **构建圆方树**：
-   - 原图点为“圆点”。
-   - 每个 v-BCC 建立一个“方点”，向该 BCC 内的所有圆点连边。
-2. **性质**：圆方树上圆点 $u, v$ 路径上的所有**圆点**，即为原图中 $u, v$ 间所有简单路径的必经点。
+   - 原图中的 $N$ 个点为“圆点”。
+   - 对每个 v-BCC 建立一个“方点”，向该 BCC 内的所有圆点连边。
+2. **性质**：
+   - 任意两点 $u, v$ 在原图中的**所有简单路径交集**即为圆方树上 $u, v$ 路径中的所有**圆点**。
+3. **计算**：通过 LCA 求得树上路径，统计路径上的圆点数量。
+
+```cpp
+/**
+ * @brief 构建圆方树核心逻辑
+ */
+void build_tree() {
+    for (int i = 1; i <= bcc_cnt; ++i) {
+        int square_node = n + i;
+        for (int u : bcc[i]) {
+            tree[square_node].push_back(u);
+            tree[u].push_back(square_node);
+        }
+    }
+}
+```
 
 </details>
 
@@ -140,20 +171,38 @@ struct TarjanBCC {
 - 若 $A$ 与 $B$ 冲突，则连边 $A \to \neg B$ 和 $B \to \neg A$。
 - 跑 Tarjan 判定并构造解。
 
+```cpp
+// 判定逻辑
+for (int i = 1; i <= n; ++i) {
+    if (scc[i * 2] == scc[i * 2 + 1]) return false; // 冲突
+}
+```
+
 </details>
 
-### 练习 3：寻找所有桥并输出
-给定大规模无向图，输出所有桥。
+### 练习 3：寻找所有桥并输出 (处理重边)
+给定大规模无向图，输出所有桥。注意图中可能存在重边。
 
 <details>
 <summary>Check Solution</summary>
 
 **解析**：
-直接使用 Tarjan 的桥判定准则。注意在有重边的情况下，不能简单判断 `v == p`，而应判断**边的编号**。
+直接使用 Tarjan 的桥判定准则。在有重边的情况下，不能简单判断 `v == p`，而应判断**进入该点的边的编号**，避免通过当前边的反向边回到父亲。
 
 ```cpp
-// 核心逻辑：处理重边
-if (edge_id == (in_edge ^ 1)) continue;
+void dfs(int u, int in_edge) {
+    dfn[u] = low[u] = ++timer;
+    for (auto& e : adj[u]) {
+        if (e.id == (in_edge ^ 1)) continue; // 关键：跳过反向边
+        if (!dfn[e.to]) {
+            dfs(e.to, e.id);
+            low[u] = min(low[u], low[e.to]);
+            if (low[e.to] > dfn[u]) is_bridge[e.id] = true;
+        } else {
+            low[u] = min(low[u], dfn[e.to]);
+        }
+    }
+}
 ```
 
 </details>

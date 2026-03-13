@@ -34,19 +34,33 @@ $$\text{Proof: } f(S, T) = \sum_{u \in S} \sum_{v \in T} f(u, v) = \sum_{u \in S
 
 ## 二、 <ShieldCheck className="inline-block mr-2 mb-1 text-indigo-500" /> 最大流最小割定理 (Max-Flow Min-Cut Theorem)
 
-该定理是网络流理论的基石，建立了组合优化中原问题与对偶问题的桥梁。
+该定理是网络流理论的基石，建立了组合优化中原问题（最大流）与对偶问题（最小割）的桥梁。
 
-### 1. 核心命题
-以下三个命题是等价的：
+### 1. 定理陈述与等价性
+**定理 2.1**：在流网络 $G$ 中，以下三个命题是等效的：
 1. $f$ 是 $G$ 的一个最大流。
-2. 残量网络 $G_f$ 不包含任何增广路径。
+2. 残量网络 $G_f$ 不包含任何从 $s$ 到 $t$ 的增广路径。
 3. 存在某个割 $(S, T)$，使得 $|f| = c(S, T)$。
 
-### 2. 逻辑验证：割集的收敛性
-由于对于任意流 $f$ 和任意割 $(S, T)$，始终满足 $|f| \le c(S, T)$。
-当增广路径消失时，令 $S$ 为 $G_f$ 中从 $s$ 可达的点集，$T = V \setminus S$。
-此时对于 $\forall u \in S, v \in T$，必有 $c_f(u, v) = 0$（否则 $v$ 可达），即 $f(u, v) = c(u, v)$。
-由引理知 $|f| = f(S, T) = c(S, T)$，达到上界。
+### 2. 形式化证明 (Formal Proof)
+我们将证明路径 $1 \Rightarrow 2 \Rightarrow 3 \Rightarrow 1$：
+
+- **$1 \Rightarrow 2$ (反证法)**：
+  若 $G_f$ 包含增广路径 $p$，则可以沿着 $p$ 推送 $\min_{e \in p} c_f(e) > 0$ 的流量，得到一个更大的流 $f' = f + f_p$，这与 $f$ 是最大流矛盾。
+
+- **$2 \Rightarrow 3$ (构造法)**：
+  假设 $G_f$ 不包含从 $s$ 到 $t$ 的增广路径。定义 $S = \{ v \in V \mid s \text{ 在 } G_f \text{ 中可达 } v \}$，$T = V \setminus S$。
+  由于 $t$ 不可达，故 $s \in S, t \in T$，$(S, T)$ 构成一个割。
+  对于任意 $u \in S, v \in T$，边 $(u, v)$ 在 $G_f$ 中的残量容量 $c_f(u, v)$ 必须为 $0$（否则 $v$ 应在 $S$ 中）。
+  由残量网络定义：
+  1. 若 $(u, v) \in E$，则 $c_f(u, v) = c(u, v) - f(u, v) = 0 \Rightarrow f(u, v) = c(u, v)$。
+  2. 若 $(v, u) \in E$，则 $c_f(u, v) = f(v, u) = 0 \Rightarrow f(v, u) = 0$。
+  因此，穿过割的净流量为：
+  $$|f| = f(S, T) = \sum_{u \in S} \sum_{v \in T} f(u, v) - \sum_{v \in T} \sum_{u \in S} f(v, u) = \sum_{(u,v) \in E, u \in S, v \in T} c(u, v) - 0 = c(S, T)$$
+
+- **$3 \Rightarrow 1$ (界限法)**：
+  由于对于任意可行流 $f'$ 和任意割 $(S, T)$，均满足 $|f'| \le c(S, T)$。
+  若存在 $f$ 使得 $|f| = c(S, T)$，则 $|f|$ 已达到所有割容量的下界（即流量的上界），故 $f$ 必为最大流。
 
 ---
 
@@ -134,7 +148,7 @@ struct MCMF {
 
 ## 五、 <Target className="inline-block mr-2 mb-1 text-red-500" /> 精选练习与解析
 
-### 练习 1：最小割模型 - 方格取数 (2)
+### 练习 1：最小割模型 - 最大权独立集 (方格取数)
 给定 $N \times M$ 的方格，每个点有权值。选择某些点，使得选出的点互不相邻，且总权值最大。
 
 <details>
@@ -142,16 +156,40 @@ struct MCMF {
 
 **解析**：
 1. **二分图性质**：方格图是天然的二分图（按 $x+y$ 奇偶性染色）。
-2. **转化**：最大独立集 = 总权值 - 最小覆盖。
+2. **转化**：最大权独立集 = 总权值 - 最小权点覆盖。
 3. **建模**：
-   - $S \to \text{黑点}$，容量为点权。
-   - $\text{白点} \to T$，容量为点权。
+   - $S \to \text{黑点} (x+y \equiv 0 \pmod 2)$，容量为点权。
+   - $\text{白点} (x+y \equiv 1 \pmod 2) \to T$，容量为点权。
    - 相邻黑白点连边，容量 $\infty$。
 4. **计算**：$\sum \text{Weight} - \text{MaxFlow}$。
 
+```cpp
+/**
+ * @brief 最大权独立集建模
+ */
+long long solve() {
+    long long sum = 0;
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 1; j <= m; ++j) {
+            sum += w[i][j];
+            if ((i + j) % 2 == 0) {
+                dinic.add_edge(S, id(i, j), w[i][j]);
+                for (auto& d : dirs) {
+                    int ni = i + d.x, nj = j + d.y;
+                    if (valid(ni, nj)) dinic.add_edge(id(i, j), id(ni, nj), INF);
+                }
+            } else {
+                dinic.add_edge(id(i, j), T, w[i][j]);
+            }
+        }
+    }
+    return sum - dinic.max_flow(S, T);
+}
+```
+
 </details>
 
-### 练习 2：费用流模型 - 修理店问题
+### 练习 2：费用流模型 - 修理店 (平均等待时间)
 有 $n$ 个顾客需要修理 $m$ 种仪器，修理工 $j$ 修仪器 $i$ 耗时 $t_{ij}$。求平均等待时间最少。
 
 <details>
@@ -161,11 +199,29 @@ struct MCMF {
 关键在于：修理工 $j$ 修第 $k$ 个人的贡献是其耗时加上后面所有人的等待时间。
 - 将每个修理工 $j$ 拆成 $n$ 个点 $V_{j, k}$，表示“修理工 $j$ 在修倒数第 $k$ 个仪器”。
 - 连边 $(i, V_{j, k})$，权值为 $k \times t_{ij}$，容量为 $1$。
-- 求最小费用流量为 $n$ 的流。
+- **目标**：求流量为 $n$ 的最小费用。
+
+```cpp
+/**
+ * @brief 费用流建模：拆分修理工时间维度
+ */
+void build_mcmf() {
+    for (int j = 1; j <= M; ++j) { // 修理工
+        for (int k = 1; k <= N; ++k) { // 倒数第 k 个
+            int worker_node = get_id(j, k);
+            mcmf.add_edge(worker_node, T, 1, 0);
+            for (int i = 1; i <= N; ++i) { // 顾客
+                mcmf.add_edge(i, worker_node, 1, k * t[i][j]);
+            }
+        }
+    }
+    for (int i = 1; i <= N; ++i) mcmf.add_edge(S, i, 1, 0);
+}
+```
 
 </details>
 
-### 练习 3：上下界可行流 - 矩阵填充
+### 练习 3：有源汇上下界可行流 - 矩阵填充
 给定矩阵行列之和的范围，判定是否存在满足要求的非负整数矩阵。
 
 <details>
@@ -174,7 +230,11 @@ struct MCMF {
 **解析**：
 这是一个典型的**有源汇上下界可行流**问题。
 1. **建模**：行看作点 $R_i$，列看作点 $C_j$。
-2. **约束**：$S \to R_i$ 容量为 $[RowSum_i, RowSum_i]$，各行各列交点 $R_i \to C_j$ 容量为 $[L_{ij}, R_{ij}]$。
-3. **转化**：构建附加源汇 $S', T'$，若附加边满流则存在可行矩阵。
+2. **约束**：
+   - $S \to R_i$ 容量为 $[RowSum_i, RowSum_i]$。
+   - $C_j \to T$ 容量为 $[ColSum_j, ColSum_j]$。
+   - $R_i \to C_j$ 容量为 $[L_{ij}, R_{ij}]$。
+3. **转化**：引入附加源汇 $S', T'$。对边 $(u, v)$ 容量 $[l, c]$，拆为 $(u, v)$ 容量 $c-l$，及辅助边平衡流量。
+4. **判定**：若从 $S'$ 到 $T'$ 的最大流等于所有下界之和，则存在可行解。
 
 </details>

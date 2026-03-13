@@ -12,22 +12,37 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 ---
 
-## 一、 <Sigma className="inline-block mr-2 mb-1 text-blue-500" /> 形式化理论体系
+## 一、 <Sigma className="inline-block mr-2 mb-1 text-blue-500" /> 形式化松弛理论 (Formal Relaxation Theory)
 
-### 1. 三角不等式与松弛操作
-对于边 $(u, v) \in E$，最短路权值 $\delta(s, v)$ 必须满足：
-$$\delta(s, v) \le \delta(s, u) + w(u, v)$$
-**松弛操作 (Relaxation)**：对于估计值 $d[v]$，若执行 $d[v] = \min(d[v], d[u] + w(u, v))$，其本质是向不动点 $\delta$ 的逼近。
-- **收敛属性**：一旦 $d[v] = \delta(s, v)$，后续松弛不会改变该值。
+最短路算法的核心在于对**三角不等式 (Triangle Inequality)** 的迭代满足。对于带权图 $G=(V, E, w)$，令 $\delta(s, v)$ 为源点 $s$ 到 $v$ 的真实最短距离。
 
-### 2. 线性规划对偶与势能
-最短路问题可视为 LP 问题的离散特例：
-- **约束**：$d[v] - d[u] \le w(u, v), \forall (u, v) \in E$。
-- **Bellman-Ford 的最优性原理**：在没有负环的情况下，任意最短路最多包含 $|V|-1$ 条边。因此，循环 $|V|-1$ 次松弛必然收敛。若第 $|V|$ 次松弛仍能减小 $d[v]$，则图中存在**负权环路**。
+### 1. 松弛算子与不变性 (Invariant)
+**定义 (Relaxation)**：对于边 $(u, v) \in E$，松弛操作 $\text{RELAX}(u, v, w)$ 定义为：
+$$\text{if } d[v] > d[u] + w(u, v) \text{ then } d[v] = d[u] + w(u, v)$$
+
+<KnowledgeCard title="引理 1.1：下界不变性 (Lower-bound Property)" icon={<ShieldCheck size={20} />}>
+对于所有 $v \in V$，在初始化 $d[s]=0, d[v \neq s]=\infty$ 后，执行任意次数的松弛操作，始终满足 $d[v] \ge \delta(s, v)$。且一旦 $d[v]$ 达到 $\delta(s, v)$，它将不再改变。
+**证明要点**：
+对松弛次数施加归纳法。初始时成立。假设在第 $k$ 次松弛前成立，考虑 $\text{RELAX}(u, v, w)$。
+由归纳假设 $d[u] \ge \delta(s, u)$，则 $d[u] + w(u, v) \ge \delta(s, u) + w(u, v)$。
+由三角不等式 $\delta(s, u) + w(u, v) \ge \delta(s, v)$，故 $d[u] + w(u, v) \ge \delta(s, v)$。
+松弛后 $d[v] = \min(d[v]_{old}, d[u] + w(u, v)) \ge \delta(s, v)$。
+</KnowledgeCard>
+
+### 2. 路径松弛性质 (Path-Relaxation Property)
+**引理 1.2**：设 $p = \langle v_0, v_1, \dots, v_k \rangle$ 是从 $v_0=s$ 到 $v_k$ 的一条最短路径。若对该路径上的边依次执行松弛操作 $\text{RELAX}(v_0, v_1), \text{RELAX}(v_1, v_2), \dots, \text{RELAX}(v_{k-1}, v_k)$，则无论这些操作之间插入了多少其他松弛操作，最终必有 $d[v_k] = \delta(s, v_k)$。
+
+### 3. Bellman-Ford 收敛性证明
+**定理 1.3**：若图 $G$ 不含从 $s$ 可达的负权环，则在执行 $|V|-1$ 轮全边松弛后，对于所有从 $s$ 可达的 $v \in V$，均有 $d[v] = \delta(s, v)$。
+**证明**：
+考虑 $s \to v$ 的一条最短路 $p$。由于无负环，$p$ 最多包含 $|V|-1$ 条边。
+在第 $i$ 轮全边松弛中，必包含了对 $p$ 中第 $i$ 条边 $(v_{i-1}, v_i)$ 的松弛。
+根据**路径松弛性质**，第 $i$ 轮后 $d[v_i] = \delta(s, v_i)$。
+当 $i = |V|-1$ 时，$d[v] = \delta(s, v)$ 获证。
 
 ---
 
-## 二、 <Workflow className="inline-block mr-2 mb-1 text-purple-500" /> 核心算法深度证明
+## 二、 <Workflow className="inline-block mr-2 mb-1 text-purple-500" /> 核心算法深度分析
 
 ### 1. Dijkstra 的贪心收敛性
 <KnowledgeCard title="非负权前提下的归纳证明" icon={<BookOpen size={20} />}>
@@ -119,22 +134,55 @@ if (dist[v] > d + w) {
 
 </details>
 
-### 练习 2：分层图建模 - 魔法药剂
-可以使 $K$ 条边的权值变为 $0$。
+### 练习 2：分层图建模 - 魔法飞行
+在 $N$ 个城市之间飞行，可以使 $K$ 条航线的费用变为 $0$。求从 $1$ 到 $N$ 的最小费用。
 
 <details>
 <summary>Check Solution</summary>
 
 **解析**：
-建立 $K+1$ 层图。
-- 节点 $(u, k)$ 表示在 $u$ 点且剩余 $k$ 次魔法。
-- 边 $(u, k) \xrightarrow{w} (v, k)$。
-- 边 $(u, k) \xrightarrow{0} (v, k-1)$。
-**复杂度**：$O(K(V+E) \log (KV))$。
+建立 $K+1$ 层图。节点 $(u, k)$ 表示在 $u$ 点且已使用了 $k$ 次免费机会。
+- **层内边**：$(u, k) \xrightarrow{w} (v, k)$。
+- **层间边**：$(u, k) \xrightarrow{0} (v, k+1)$。
+最终结果为 $\min_{k=0}^K \{ d(N, k) \}$。
+
+```cpp
+/**
+ * @brief 分层图 Dijkstra 范式
+ */
+struct Node {
+    int u, k; long long d;
+    bool operator>(const Node& o) const { return d > o.d; }
+};
+
+void solve() {
+    priority_queue<Node, vector<Node>, greater<Node>> pq;
+    memset(dist, 0x3f, sizeof dist);
+    dist[1][0] = 0;
+    pq.push({1, 0, 0});
+
+    while (!pq.empty()) {
+        auto [u, k, d] = pq.top(); pq.pop();
+        if (d > dist[u][k]) continue;
+        for (auto& e : adj[u]) {
+            // 正常走边
+            if (dist[e.v][k] > d + e.w) {
+                dist[e.v][k] = d + e.w;
+                pq.push({e.v, k, dist[e.v][k]});
+            }
+            // 使用免费机会
+            if (k < K && dist[e.v][k+1] > d) {
+                dist[e.v][k+1] = d;
+                pq.push({e.v, k+1, dist[e.v][k+1]});
+            }
+        }
+    }
+}
+```
 
 </details>
 
-### 练习 3：第 K 短路问题 (A*)
+### 练习 3：第 K 短路问题 (A* Algorithm)
 求 $s \to t$ 的第 $K$ 短路径权值。
 
 <details>
@@ -142,8 +190,35 @@ if (dist[v] > d + w) {
 
 **解析**：
 利用 $A^*$ 搜索。
-- **估价函数 $h(u)$**：$u$ 到 $t$ 的真实最短路（反向 Dijkstra 预处理）。
+- **启发式函数 $h(u)$**：$u$ 到 $t$ 的真实最短路（在反图上以 $t$ 为源跑一次 Dijkstra 预处理）。
 - **优先级**：$f(u) = g(u) + h(u)$。
-- **停止条件**：当 $t$ 第 $K$ 次从堆中弹出时，其 $g(t)$ 即为所求。
+- **核心结论**：当汇点 $t$ 第 $K$ 次被弹出优先队列时，当前的 $g(t)$ 即为第 $K$ 短路。
+
+```cpp
+/**
+ * @brief A* 启发式搜索求第 K 短路
+ */
+struct State {
+    int u; long long g, f;
+    bool operator>(const State& o) const { return f > o.f; }
+};
+
+long long a_star(int s, int t, int k) {
+    if (s == t) k++; // 起点即终点特判
+    priority_queue<State, vector<State>, greater<State>> pq;
+    pq.push({s, 0, h[s]});
+    int cnt = 0;
+    while (!pq.empty()) {
+        auto [u, g, f] = pq.top(); pq.pop();
+        if (u == t) {
+            if (++cnt == k) return g;
+        }
+        for (auto& e : adj[u]) {
+            pq.push({e.v, g + e.w, g + e.w + h[e.v]});
+        }
+    }
+    return -1;
+}
+```
 
 </details>
