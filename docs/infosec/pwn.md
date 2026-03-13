@@ -1,155 +1,170 @@
 ---
-title: 二进制安全与逆向工程 (PWN & Reverse Engineering)
+title: 二进制安全精要 (Binary Security & PWN)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { Terminal, ShieldAlert, Zap, Cpu, Search, FileCode } from 'lucide-react';
+import { Terminal, ShieldAlert, Zap, Cpu, Search, FileCode, Binary, Activity } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-# 二进制安全与逆向工程
+# 二进制安全：从冯·诺依曼缺陷到指令级对抗
 
-> **核心逻辑**：PWN 是通过对程序逻辑漏洞、内存管理缺陷的利用，劫持程序控制流（Control Flow Hijacking）或篡改关键数据。逆向工程则是分析二进制程序行为、还原逻辑的基础。
+> **核心公理**：在经典的冯·诺依曼架构下，指令与数据在同一内存空间内无法从物理层面区分。PWN 的本质即是诱导处理器将**恶意数据**解释为**合法指令**。
 
-## 1. 逆向工程基础 (Reverse Engineering)
+## 1. 内存破坏的形式化建模
 
-逆向工程是攻防的前置步骤，分为静态分析与动态调试。
+### 1.1 缓冲区溢出 (Buffer Overflow) 的量化
 
-### 1.1 静态分析 (Static Analysis)
+设缓冲区起始地址为 $B$，容量为 $N$。写操作的输入流为 $S$，长度为 $L$。
+- **安全不变式**：$\forall i \in [0, L-1], \text{Addr}(S[i]) \in [B, B+N-1]$。
+- **违规触发**：当 $L > N$ 且写入偏移 $i \ge N$ 时，目标地址可能覆盖**控制数据**（如返回地址 $RET$）。
 
-- **工具**：IDA Pro, Ghidra, Binary Ninja。
-- **目标**：还原函数逻辑、识别结构体、查找硬编码字符串。
-- **汇编基础**：掌握 x86_64 寄存器（`rax`, `rdi`, `rsi` 等）与调用约定（`System V AMD64 ABI`）。
+### 1.2 攻击面向量评估 (Binary Attack Vector)
 
-### 1.2 动态调试 (Dynamic Debugging)
-
-- **工具**：GDB (搭配 Pwndbg/GEF 插件)。
-- **操作**：断点 (`b`)、单步执行 (`si`/`ni`)、查看内存 (`x/gx addr`)、查看栈帧 (`backtrace`)。
-
----
-
-## 2. 内存破坏与漏洞原理解析 (Vulnerabilities)
-
-### 2.1 栈溢出形式化建模 (Stack Overflow Modeling)
-
-考虑一个典型的栈帧布局。当函数调用发生时，栈指针 $RSP$ 向低地址增长：
-
-1. **参数传递**：前 6 个参数入寄存器，其余入栈。
-2. **返回地址 (RET)**：调用者下一条指令地址被压入。
-3. **保存的 RBP**：调用者的基址指针。
-4. **局部变量**：如 `char buf[N]`。
-
-**脆弱性方程**：
-若输入长度为 $L$，缓冲区长度为 $N$。当 $L > N$ 且缺乏边界检查时，溢出发生：
-$$\text{Memory}[RBP + 8] = \text{Input}[N + \text{Padding} \dots L]$$
-攻击者的目标是覆盖 $\text{Memory}[RBP + 8]$ 以劫持执行流。
-
-### 2.2 格式化字符串 (Format String)
-
-- **原理**：`printf(user_input)` 允许用户传入控制符（如 `%p`, `%x`, `%n`）。
-- **危害**：
-  - **信息泄露**：使用 `%p` 泄露栈上地址（绕过 ASLR/Canary）。
-  - **任意写**：使用 `%n` 将已打印字符数写入指定地址，修改 GOT 表或返回地址。
-
-### 2.3 堆漏洞：UAF 与 Double Free
-
-- **Use-After-Free (UAF)**：指针被 `free` 后未置空（悬挂指针），再次使用该指针可能访问到已被分配给其他用途的内存。
-- **Double Free**：释放同一块内存两次，导致堆管理器（Fastbin/Tcache）的链表形成环路，从而实现任意地址分配。
+二进制程序的攻击面可以通过以下维度量化：
+1. **输入向量 (Input Vector)**：外部可控输入（命令行参数、环境变量、网络 Socket）。
+2. **缓解缺失度 (Mitigation Delta)**：
+   - $M_{nx} \in \{0, 1\}$（数据不可执行）
+   - $M_{aslr} \in \{0, 1\}$（地址空间随机化）
+   - $M_{canary} \in \{0, 1\}$（栈金丝雀）
 
 ---
 
-## 3. 控制流劫持技术 (Exploitation)
+## 2. 形式化验证与缓解机制
 
-### 3.1 ROP (Return Oriented Programming)
+### 2.1 控制流完整性 (CFI) 的逻辑验证
 
-在 **NX** 开启时，攻击者无法直接执行栈上的 Shellcode。
+CFI 强制执行流严格遵循静态分析生成的控制流图 (CFG)。
+- **前向验证 (Indirect Branch)**：
+  $$Target \in \{Label_1, Label_2, \dots\}$$
+- **后向验证 (Return)**：
+  通过 **Shadow Stack**（影子栈）保存返回地址副本。当 $Stack[RET] \neq ShadowStack[RET]$ 时，触发异常。
 
-- **逻辑**：利用以 `ret` (指令码 `0xc3`) 结尾的指令片段 (Gadgets)。
-- **链条构造**：$\text{RET} \to \text{Gadget}_1 \to \text{Gadget}_2 \to \dots \to \text{System Call}$。
+### 2.2 内存安全的形式化约束
 
-### 3.2 SROP (Sigreturn Oriented Programming)
-
-利用 `sigreturn` 系统调用在栈上恢复伪造的寄存器上下文，从而一次性控制所有寄存器。
-
----
-
-## 4. 攻防模型：漏洞缓解与绕过 (Mitigations)
-
-### 4.1 控制流完整性 (CFI) 形式化
-
-CFI 旨在确保程序执行路径符合预定义的控制流图 (CFG)。
-
-- **前向保护 (Forward Edge)**：确保间接跳转/调用（如虚函数表、函数指针）的目标合法。
-- **后向保护 (Backward Edge)**：保护返回地址不被篡改（如 **Shadow Stack** 或 **Intel CET**）。
-
-| 保护机制   | 形式化定义 / 绕过策略                                                                               |
-| :--------- | :-------------------------------------------------------------------------------------------------- |
-| **NX**     | $\text{Permissions}(\text{Stack}) \subset \{R, W\}$；绕过：ROP                                      |
-| **ASLR**   | $\text{Base}_{\text{libc}} = \text{Random}()$；绕过：Memory Leak                                    |
-| **Canary** | $\text{Stack}[RBP-8] = \text{Secret}$；绕过：Leak or Arbitrary Write                                |
-| **CFI**    | $\forall j \in \text{Jump}, \text{Target}(j) \in \text{ValidTargets}$；绕过：非控制流数据攻击 (DOP) |
+利用 Rust/C++ 智能指针等现代工具实现形式化约束：
+- **借用检查 (Borrow Checking)**：确保生命周期 $\tau_{ptr} \le \tau_{obj}$。
+- **所有权模型**：防止 **Double Free** 与 **UAF (Use-After-Free)**。
 
 ---
 
-## 5. 深度例题与练习 (Exercises)
+## 3. 深度模拟演示 (C++ Engineering)
 
-### 例题 1：格式化字符串任意读 (C++)
-
-**题目**：假设程序存在 `printf(buf);` 漏洞。如何利用该漏洞读取栈上第 6 个参数的值？
+### 3.1 栈金丝雀 (Stack Canary) 机制逻辑模拟
 
 <details>
-<summary>点击查看解析 (Check Solution)</summary>
-
-**解析**：
-在 x86_64 下，`printf` 的前 6 个参数分别通过 `rdi`, `rsi`, `rdx`, `rcx`, `r8`, `r9` 传递。从第 7 个参数（即 `printf` 内部视角下的偏移）开始存放在栈上。
-**Payload**：`%6$p`。
-其中 `6` 是相对于格式化字符串起始位置的偏移。在很多 CTF 题目中，如果 `buf` 本身就在栈上，可以通过 `%n$p` 遍历查找。
-
-</details>
-
-### 练习 1：栈溢出绕过 Canary 逻辑模拟
-
-**题目**：如果一个程序开启了 Canary 保护，但存在一个**数组越界读**漏洞和一个**栈溢出**漏洞。请简述攻击步骤。
-
-<details>
-<summary>点击查看解析 (Check Solution)</summary>
-
-**攻击步骤**：
-
-1. **泄露 Canary**：利用数组越界读漏洞，读取存放 Canary 的位置（通常在 `rbp-0x8`），获取其随机值。
-2. **构造 Payload**：在栈溢出填充时，将泄露出的真实 Canary 填回正确位置，使得函数退出时的校验通过。
-3. **覆盖 RIP**：在补全 Canary 后，继续覆盖 Saved RBP 和 Return Address 为 ROP 链起始地址。
-</details>
-
-### 练习 2：堆 UAF 漏洞利用 (C++ 模拟)
-
-**题目**：阅读以下代码，分析如何通过 `uaf_ptr` 劫持控制流。
+<summary>点击查看 C++ 模拟：编译器如何通过 Canary 检测溢出</summary>
 
 ```cpp
-struct Note {
-    void (*print_func)(const char*);
-    char content[16];
+#include <iostream>
+#include <cstring>
+#include <random>
+
+// 模拟编译器插入的保护逻辑
+void guarded_function(const char* input) {
+    // 1. 初始化 Canary (通常由 OS 提供随机值)
+    static long long GLOBAL_CANARY = 0xdeadbeef12345678;
+    long long local_canary = GLOBAL_CANARY;
+
+    char buf[16];
+    std::cout << "[LOG] Buffer at: " << (void*)buf << ", Canary at: " << (void*)&local_canary << std::endl;
+
+    // 2. 模拟脆弱的写入操作
+    // 故意不检查长度，导致溢出
+    std::memcpy(buf, input, 32); 
+
+    // 3. 函数退出前的校验逻辑 (Epilogue)
+    if (local_canary != GLOBAL_CANARY) {
+        std::cerr << "*** Stack Smashing Detected! ***" << std::endl;
+        std::cerr << "Expected: " << std::hex << GLOBAL_CANARY << ", Found: " << local_canary << std::endl;
+        std::terminate();
+    }
+    std::cout << "Function returned safely." << std::endl;
+}
+
+int main() {
+    char malicious_payload[32];
+    std::memset(malicious_payload, 'A', 32); // 填充并覆盖 Canary
+
+    try {
+        guarded_function(malicious_payload);
+    } catch (...) {
+        // 实际上 std::terminate 无法捕获，此处仅作示意
+    }
+    return 0;
+}
+```
+</details>
+
+### 3.2 堆分配器 UAF 漏洞逻辑演练
+
+<details>
+<summary>点击查看 C++ 模拟：悬挂指针如何劫持控制流</summary>
+
+```cpp
+#include <iostream>
+#include <functional>
+
+struct User {
+    std::function<void()> role_action;
+    char name[16];
 };
 
-void safe_print(const char* s) { std::cout << s << std::endl; }
-void malicious_shell(const char* s) { system("/bin/sh"); }
+void admin_action() { std::cout << "ACCESS GRANTED: Root Shell" << std::endl; }
+void guest_action() { std::cout << "ACCESS DENIED: Guest View Only" << std::endl; }
 
-Note* n1 = new Note();
-n1->print_func = safe_print;
-delete n1; // n1 变成悬挂指针
+int main() {
+    // 1. 分配一个 Guest 用户
+    User* u1 = new User();
+    u1->role_action = guest_action;
+    
+    // 2. 释放用户，但未置空指针 (UAF 漏洞)
+    delete u1; 
 
-// 此时分配一个新的对象
-long long* n2 = new long long( (long long)malicious_shell );
-// 如果 n2 占用了 n1 原先的 print_func 空间...
-n1->print_func("Hello"); // 触发劫持
+    // 3. 此时攻击者触发新对象的分配 (覆盖 u1 原有的内存)
+    // 模拟堆块复用
+    long long* malicious_data = new long long( (long long)admin_action );
+
+    // 4. 触发 UAF：调用已被释放的指针
+    std::cout << "Triggering UAF..." << std::endl;
+    u1->role_action(); // 此时 role_action 已被 malicious_data 覆盖
+
+    return 0;
+}
 ```
+</details>
+
+---
+
+## 4. 综合练习 (Advanced Exercises)
+
+### 练习 1：ROP 链的逻辑构造
+
+**题目**：在一个开启了 NX 的系统中，如何利用 `pop rdi; ret` 和 `system` 函数构造一个执行 `/bin/sh` 的 ROP 链？
 
 <details>
 <summary>点击查看解析 (Check Solution)</summary>
 
 **解析**：
+1. **目标**：调用 `system("/bin/sh")`。根据 x64 调用约定，第一个参数在 `rdi` 寄存器。
+2. **步骤**：
+   - 找到 `pop rdi; ret` 指令片段的地址。
+   - 找到字符串 `"/bin/sh"` 在内存中的地址。
+   - 找到 `system` 函数的地址（通过泄露 libc 基址）。
+3. **Payload 布局**：
+   `[Padding] + [Addr(pop rdi; ret)] + [Addr("/bin/sh")] + [Addr(system)]`
+4. **执行流**：函数返回到 `pop rdi` -> 将 `"/bin/sh"` 地址加载到 `rdi` -> `ret` 跳转到 `system` 执行。
+</details>
 
-1. `n1` 被释放后，其所在的内存块进入堆管理器的空闲链表。
-2. 当分配 `n2` 时，堆管理器会复用刚刚释放的内存块以提高效率。
-3. 如果 `n2` 的内容（即 `malicious_shell` 的地址）正好覆盖了原 `n1->print_func` 的位置。
-4. 调用 `n1->print_func()` 时，程序实际上跳转到了 `malicious_shell`。
-**防御**：`delete` 后立即将指针置为 `nullptr`。
+### 练习 2：ASLR 熵量计算
+
+**题目**：假设 64 位系统的 ASLR 只随机化 28 位的地址。计算其提供的地址熵（Entropy）是多少位？如果攻击者可以泄露 1 个字节的地址信息，剩余熵是多少？
+
+<details>
+<summary>点击查看解析 (Check Solution)</summary>
+
+**解析**：
+1. **初始熵**：$H = 28$ bits。
+2. **泄露信息**：1 个字节等于 8 位。
+3. **剩余熵**：$H' = 28 - 8 = 20$ bits。
+**结论**：泄露越多，暴力破解的可能性越大。这说明了 **Memory Leak** 对绕过 ASLR 的关键作用。
 </details>

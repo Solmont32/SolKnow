@@ -1,207 +1,176 @@
 ---
-title: 现代密码学基础 (Modern Cryptography)
+title: 现代密码学精要 (Modern Cryptography)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { Lock, Key, Hash, ShieldCheck, History, Zap, ShieldAlert } from 'lucide-react';
+import { Lock, Key, Hash, ShieldCheck, History, Zap, ShieldAlert, Binary, Sigma } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-# 现代密码学基础
+# 现代密码学：从信息熵到语义安全
 
-> **核心定义**：密码学是研究如何隐藏信息以及确保信息真实性的科学。现代密码学的安全性建立在数学问题的**计算复杂度**之上，遵循 **Kerckhoffs's Principle**（系统的安全性应仅依赖于密钥的秘密性，而非算法的保密性）。
+> **公理**：在一个计算能力受限的敌手面前，一个安全的加密系统必须保证其密文不泄露关于明文的任何统计学信息。
 
-## 1. 经典加密：从置换到频率分析 (Classical Ciphers)
+## 1. 熵与完美安全性 (Entropy & Perfect Secrecy)
 
-经典密码学主要依赖于**字符置换 (Substitution)** 和 **置换 (Transposition)**。
+### 1.1 完美安全性的香农定义
 
-### 1.1 凯撒密码 (Caesar Cipher)
+设明文空间为 $\mathcal{M}$，密文空间为 $\mathcal{C}$，密钥空间为 $\mathcal{K}$。若对于任意明文 $m \in \mathcal{M}$ 和密文 $c \in \mathcal{C}$，满足：
+$$P(M=m | C=c) = P(M=m)$$
+则称该加密系统具有**完美安全性 (Perfect Secrecy)**。这意味着密文完全不改变敌手对明文的先验概率分布。
 
-- **原理**：将字母表平移 $k$ 位。$c \equiv m + k \pmod{26}$。
-- **破解**：由于密钥空间极小（仅 25 种可能），可通过穷举攻击轻松破解。
+### 1.2 系统化熵增证明 (Entropy Proof)
 
-### 1.2 维吉尼亚密码 (Vigenère Cipher)
+利用信息论中的**互信息 (Mutual Information)** 概念：
+$$I(M; C) = H(M) - H(M|C)$$
+完美安全等价于 $I(M; C) = 0$。
 
-- **原理**：多表替换密码，密钥循环使用。
-- **安全性分析**：虽然增加了复杂度，但由于其**周期性**，攻击者可以通过 **Kasiski 试验** 或 **重合指数 (Index of Coincidence)** 确定密钥长度，进而利用频率分析破解。
-
-## 2. 密码学数学基础 (Mathematical Foundations)
-
-现代密码学的安全性建立在**单向陷门函数 (Trapdoor One-way Function)** 的存在性假设之上。
-
-### 2.1 数论核心定理
-
-- **同余类环**：考虑环 $\mathbb{Z}/n\mathbb{Z}$，其可逆元构成的乘法群为 $(\mathbb{Z}/n\mathbb{Z})^\times$，阶数为 $\phi(n)$。
-- **欧拉定理 (Euler's Theorem)**：若 $\gcd(a, n) = 1$，则 $a^{\phi(n)} \equiv 1 \pmod n$。
-- **费马小定理**：作为欧拉定理的特例，若 $p$ 为质数，则 $a^{p-1} \equiv 1 \pmod p$。
-
-### 2.2 计算困难性假设 (Hardness Assumptions)
-
-1. **大整数分解问题 (IFP)**：给定 $n = pq$，在多项式时间内求 $p, q$ 是困难的。
-2. **离散对数问题 (DLP)**：在有限群 $G$ 中，给定 $g, g^x \in G$，求 $x$。
-3. **椭圆曲线离散对数问题 (ECDLP)**：在椭圆曲线群 $E(\mathbb{F}_p)$ 上，给定点 $P$ 和 $Q = [k]P$，求标量 $k$。其计算复杂度远高于同等模数长度的 DLP。
+**证明（One-Time Pad 的完美性）**：
+1. 在 OTP 中，$c = m \oplus k$，其中 $k$ 是均匀分布的随机变量。
+2. 对于固定的 $m$ 和 $c$，唯一的 $k = m \oplus c$ 使得加密成立。
+3. $P(C=c | M=m) = P(K=m \oplus c) = \frac{1}{|\mathcal{K}|}$。
+4. 由全概率公式，$P(C=c) = \sum_{m'} P(C=c|M=m')P(M=m') = \frac{1}{|\mathcal{K}|} \sum P(M=m') = \frac{1}{|\mathcal{K}|}$。
+5. 由贝叶斯定理：
+   $$P(M=m|C=c) = \frac{P(C=c|M=m)P(M=m)}{P(C=c)} = \frac{(1/|\mathcal{K}|)P(M=m)}{1/|\mathcal{K}|} = P(M=m)$$
+$\square$ **结论**：只要密钥随机且长度不小于明文，密文的熵便掩盖了明文的所有特征。
 
 ---
 
-## 3. 对称加密：置换-置换网络 (SPN)
+## 2. 算法形式化与计算复杂度
 
-### 3.1 AES (Advanced Encryption Standard) 形式化
+### 2.1 语义安全 (Semantic Security)
 
-AES 是一种基于 **SPN 结构** 的迭代分组加密算法。其状态可以用 $4 \times 4$ 的字节矩阵 $S$ 表示。
+在现代密码学中，我们放宽要求至**计算安全性**。一个系统是语义安全的，如果任何多项式时间算法（PPT）在观察到密文后，猜测明文特定属性的优势是**忽略不计 (Negligible)** 的。
 
-- **层级变换**：$\text{Round}(S, K) = \text{AddRoundKey} \circ \text{MixColumns} \circ \text{ShiftRows} \circ \text{SubBytes}(S)$。
-- **安全性逻辑**：通过 `SubBytes` 引入非线性（S-Box），通过 `ShiftRows` 与 `MixColumns` 实现**扩散 (Diffusion)**，使得明文的微小变化能迅速影响整个密文空间。
+### 2.2 对称加密的 SPN 网络量化
 
-### 3.2 工作模式与安全性
-
-- **ECB (Electronic Codebook)**：**不安全**。相同的明文块产生相同的密文块，暴露图像/结构信息。
-- **CBC (Cipher Block Chaining)**：引入 IV，每个块与前一个密文块异或。**注意**：容易受到 Padding Oracle 攻击。
-- **GCM (Galois/Counter Mode)**：提供 **AEAD**（关联数据的认证加密），目前 TLS 1.3 的主流。
+AES 的安全性源于**扩散 (Diffusion)** 与 **混乱 (Confusion)** 的量化保证。
+- **混乱**：通过 $S$-Box 最小化输入与输出之间的相关性（非线性度）。
+- **扩散**：通过 `MixColumns` 确保每一个明文比特的变化至少影响 $k$ 个密文比特（雪崩效应）。
 
 ---
 
-## 4. 非对称加密与 RSA 深度分析 (Asymmetric Encryption)
+## 3. 非对称加密与形式化验证逻辑
 
-### 4.1 RSA 算法流程与正确性证明
+### 3.1 RSA 的形式化安全边界
 
-1. **公私钥生成**：
-   - 选择大质数 $p, q$，计算 $n = pq$。
-   - $\phi(n) = (p-1)(q-1)$。
-   - 选择 $e \in (1, \phi(n))$ 且 $\gcd(e, \phi(n)) = 1$。
-   - 计算 $d \equiv e^{-1} \pmod{\phi(n)}$。
-2. **加解密**：$c = m^e \pmod n$, $m = c^d \pmod n$。
+RSA 的安全性依赖于**强 RSA 假设**。
+- **形式化逻辑**：给定 $(n, e)$ 和 $c$，求 $m$ 使得 $m^e \equiv c \pmod n$。
+- **攻击向量评估**：若敌手拥有能够高效解 $\phi(n)$ 的预示机 (Oracle)，RSA 即告破。
 
-**正确性证明**：
+### 3.2 形式化协议验证 (Formal Protocol Verification)
 
-- 目标：证明 $m^{ed} \equiv m \pmod n$。
-- 已知 $ed = k\phi(n) + 1$，则 $m^{ed} = m^{k\phi(n) + 1} = m \cdot (m^{\phi(n)})^k \pmod n$。
-- 若 $\gcd(m, n) = 1$，由欧拉定理 $m^{\phi(n)} \equiv 1 \pmod n$，故结论成立。
-- 若 $\gcd(m, n) > 1$，利用中国剩余定理 (CRT) 分别在 $\pmod p$ 和 $\pmod q$ 下讨论，结论依然成立。$\square$
+为了防止协议设计逻辑错误（如协议重放），我们引入**状态机验证**。
 
-### 4.2 椭圆曲线密码学 (ECC)
-
-椭圆曲线定义在有限域 $\mathbb{F}_p$ 上的方程为：
-$$E: y^2 = x^3 + ax + b \pmod p, \quad 4a^3 + 27b^2 \neq 0$$
-
-- **加法法则**：曲线上的点与无穷远点 $O$ 构成阿贝尔群。
-- **优势**：在提供相同安全强度的前提下，ECC 的密钥长度（如 256 位）远短于 RSA（如 3072 位），极大降低了计算与存储开销。
-
-### 4.2 RSA 常见攻击模型
-
-- **低加密指数攻击 ($e=3$)**：若明文 $m$ 较小，满足 $m^3 < n$，则直接对密文开立方根即可获得明文。
-- **共模攻击 (Common Modulus Attack)**：若两个用户使用相同的 $n$ 但不同的 $e_1, e_2$ 加密同一明文 $m$，且 $\gcd(e_1, e_2) = 1$，则攻击者可在不知晓 $d$ 的情况下恢复 $m$。
-- **Wiener's Attack**：当私钥 $d < \frac{1}{3} n^{1/4}$ 时，可以利用连分数展开在多项式时间内分解 $n$。
+**交互式证明逻辑示例 (DH 协议)**：
+1. **状态 A**：Alice 发送 $g^a$。
+2. **状态 B**：Bob 接收 $g^a$，回复 $g^b$。
+3. **不变式 (Invariant)**：密钥 $K = g^{ab}$ 仅由持有 $a$ 或 $b$ 的实体知晓。
+4. **验证**：利用 **Dolev-Yao 模型**，模拟敌手在截获所有信道消息的情况下，是否能推导出 $K$。
 
 ---
 
-## 5. 安全协议分析：Diffie-Hellman (DH)
+## 4. 深度模拟演示 (C++ Engineering)
 
-DH 用于在不安全信道上协商密钥。
-
-### 5.1 交互流程
-
-1. Alice 与 Bob 协商大质数 $g, p$。
-2. Alice 生成私钥 $a$，发送 $A = g^a \pmod p$。
-3. Bob 生成私钥 $b$，发送 $B = g^b \pmod p$。
-4. 共享密钥 $K = B^a \pmod p = A^b \pmod p$。
-
-### 5.2 攻防模型：中间人攻击 (MITM)
-
-- **威胁**：攻击者 Eve 截获 $A, B$，分别与 Alice 和 Bob 建立虚假的 DH 交换。
-- **对策**：必须引入**身份认证**（如数字签名或证书），构成 **Authenticated DH (STS 协议)**。
-
----
-
-## 6. 深度例题与练习 (Exercises)
-
-### 例题 1：RSA 共模攻击验证 (C++)
-
-**题目**：已知两个密文 $c_1, c_2$ 分别使用 $(n, e_1)$ 和 $(n, e_2)$ 加密。请实现一个函数恢复明文 $m$。
+### 4.1 完美随机数生成器 (PRNG) 与熵池模拟
 
 <details>
-<summary>点击查看解析 (Check Solution)</summary>
-
-**解析**：
-利用扩展欧几里得算法求出 $s_1, s_2$ 使得 $s_1 e_1 + s_2 e_2 = 1$。
-则 $c_1^{s_1} \cdot c_2^{s_2} \equiv (m^{e_1})^{s_1} \cdot (m^{e_2})^{s_2} \equiv m^{s_1 e_1 + s_2 e_2} \equiv m \pmod n$。
-
-**C++ 实现**：
+<summary>点击查看 C++ 模拟：熵池注入与检测</summary>
 
 ```cpp
 #include <iostream>
+#include <vector>
+#include <random>
+#include <cmath>
+#include <map>
 
-typedef __int128_t int128; // 处理大数溢出
-
-long long extended_gcd(long long a, long long b, long long &x, long long &y) {
-    if (b == 0) { x = 1; y = 0; return a; }
-    long long x1, y1;
-    long long d = extended_gcd(b, a % b, x1, y1);
-    x = y1;
-    y = x1 - y1 * (a / b);
-    return d;
-}
-
-long long power(long long a, long long b, long long m) {
-    int128 res = 1, base = a % m;
-    bool neg = b < 0; b = neg ? -b : b;
-    while (b > 0) {
-        if (b % 2 == 1) res = (res * base) % m;
-        base = (base * base) % m;
-        b /= 2;
+// 计算香农熵
+double calculate_entropy(const std::vector<unsigned char>& data) {
+    std::map<unsigned char, int> freq;
+    for (auto b : data) freq[b]++;
+    double entropy = 0;
+    for (auto const& [val, count] : freq) {
+        double p = (double)count / data.size();
+        entropy -= p * log2(p);
     }
-    // 处理负指数情况（求逆元）
-    if (neg) {
-        long long x, y;
-        extended_gcd((long long)res, m, x, y);
-        return (x % m + m) % m;
-    }
-    return (long long)res;
-}
-
-long long common_modulus_attack(long long c1, long long c2, long long e1, long long e2, long long n) {
-    long long s1, s2;
-    extended_gcd(e1, e2, s1, s2);
-    int128 m = (int128)power(c1, s1, n) * power(c2, s2, n) % n;
-    return (long long)m;
+    return entropy;
 }
 
 int main() {
-    // 示例数据
-    long long n = 3233, e1 = 17, e2 = 13, m_orig = 42;
-    long long c1 = power(m_orig, e1, n);
-    long long c2 = power(m_orig, e2, n);
+    // 模拟不同来源的数据熵
+    std::vector<unsigned char> low_entropy(1000, 0x41); // 全是 'A'
+    
+    std::random_device rd;
+    std::vector<unsigned char> high_entropy;
+    for(int i=0; i<1000; ++i) high_entropy.push_back(rd() % 256);
 
-    std::cout << "Recovered m: " << common_modulus_attack(c1, c2, e1, e2, n) << std::endl;
+    std::cout << "Low Entropy Data (Fixed): " << calculate_entropy(low_entropy) << " bits" << std::endl;
+    std::cout << "High Entropy Data (Hardware RD): " << calculate_entropy(high_entropy) << " bits" << std::endl;
+    
     return 0;
 }
 ```
-
 </details>
 
-### 练习 1：维吉尼亚密码重合指数分析
+### 4.2 RSA OAEP 填充逻辑模拟
 
-**题目**：解释为什么重合指数 (Index of Coincidence) 可以用来确定维吉尼亚密码的密钥长度。
+为了实现语义安全，RSA 必须使用非确定性填充（如 OAEP）。
+
+<details>
+<summary>点击查看 RSA OAEP 形式化逻辑演示</summary>
+
+```cpp
+// 概念性伪代码演示 OAEP 的掩码生成 (MGF) 逻辑
+#include <string>
+#include <vector>
+
+std::vector<char> mgf1(const std::vector<char>& seed, size_t mask_len) {
+    // 利用 Hash 函数多次迭代生成掩码
+    // 目的：将确定性明文转化为随机分布的密文块
+    return {}; 
+}
+
+// 核心逻辑：
+// 1. m' = (m || padding) XOR mgf(seed)
+// 2. seed' = seed XOR mgf(m')
+// 3. result = seed' || m'
+```
+</details>
+
+---
+
+## 5. 前沿：后量子密码学 (PQC)
+
+随着 Shor 算法对 RSA/ECC 的威胁，**基于格的加密 (Lattice-based Cryptography)** 成为主流。其安全性建立在 **LWE (Learning With Errors)** 问题的困难性之上。
+
+---
+
+## 6. 综合练习 (Advanced Exercises)
+
+### 练习 1：OTP 密钥重用攻击证明
+
+**题目**：证明如果 OTP 的密钥 $k$ 被用于加密两个明文 $m_1, m_2$，则安全性被彻底破坏。
 
 <details>
 <summary>点击查看解析 (Check Solution)</summary>
 
 **解析**：
-
-1. **重合指数** $IC$ 表示在一串文本中随机抽取两个字母相同的概率。
-2. 英文文本的 $IC \approx 0.0667$，而随机生成的字母序列 $IC \approx 1/26 \approx 0.0385$。
-3. 如果密钥长度为 $L$，我们将密文按 $L$ 分组。在每一组内，字母都是由同一个凯撒位移产生的，因此其分布符合英文特征，$IC$ 较高。
-4. 若分组长度不等于 $L$，则组内字母等效于随机分布，$IC$ 较低。
-**结论**：通过尝试不同的 $L$ 并计算平均 $IC$，值最大的 $L$ 即为可能的密钥长度。
+1. $c_1 = m_1 \oplus k$
+2. $c_2 = m_2 \oplus k$
+3. 计算 $c_1 \oplus c_2 = (m_1 \oplus k) \oplus (m_2 \oplus k) = m_1 \oplus m_2$。
+4. 敌手获得了两个明文的异或值。由于明文（如英文文本）具有高度统计特征，通过**词频分析**或**已知部分明文**，可以轻易恢复出 $m_1$ 和 $m_2$。
+$\square$ **推论**：密钥必须是一次性的。
 </details>
 
-### 练习 2：哈希函数抗碰撞性分析
+### 练习 2：形式化验证中的重放攻击
 
-**题目**：简述 SHA-1 碰撞攻击的原理及其对数字签名的影响。
+**题目**：在 DH 密钥交换中，如果 Bob 不验证 $A = g^a$ 的时效性，攻击者如何实施重放？
 
 <details>
 <summary>点击查看解析 (Check Solution)</summary>
 
 **解析**：
-
-1. **原理**：SHA-1 存在数学上的弱点。2017 年 Google 演示了 **SHAttered 攻击**，利用差分分析在 $2^{63}$ 次尝试（远低于理想的 $2^{80}$）内找到了两份内容不同但哈希值相同的 PDF 文件。
-2. **对数字签名的影响**：数字签名的安全性依赖于哈希值的唯一性。如果攻击者能构造两个不同文档 $D_1, D_2$ 使得 $H(D_1) = H(D_2)$，则受害者对 $D_1$ 的签名将被视为对 $D_2$ 同样有效，导致**伪造攻击**。
-**对策**：全面迁移至 SHA-256 或 SHA-3。
+1. 攻击者截获旧会话中的 $A$。
+2. 在新会话中，攻击者假冒 Alice 向 Bob 发送旧的 $A$。
+3. 如果 Bob 允许使用旧的 $A$，虽然攻击者不知道 $a$，无法解出 $K = B^a$，但攻击者可以利用这一逻辑漏洞干扰会话状态，或在某些特定实现下诱导 Bob 使用已泄露的旧密钥。
+**防御**：引入 Nonce（随机数）或 Timestamps。
 </details>

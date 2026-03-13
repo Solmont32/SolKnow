@@ -3,158 +3,150 @@ title: Web 安全与协议对垒 (Web Security & Protocols)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { Globe, ShieldAlert, Key, Zap, Lock, RefreshCcw } from 'lucide-react';
+import { Globe, ShieldAlert, Key, Zap, Lock, RefreshCcw, Target, ShieldCheck } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-# Web 安全与协议对垒
+# Web 安全：架构信任与攻击向量
 
-> **核心原则**：Web 安全的核心是 **信任边界的划分** 与 **用户输入的过滤**。任何来自用户端的数据在未经验证前都应被视为恶意。
+> **核心定理**：在一个分布式系统中，安全性的上限取决于**信任边界 (Trust Boundary)** 的最弱点。Web 安全的本质是管理跨边界的数据流向。
 
-## 1. 深度协议分析 (Protocol Deep Dive)
+## 1. 攻击面向量化评估 (Attack Surface Vector Assessment)
 
-### 1.1 TLS 1.3 握手协议
+在现代 Web 架构中，我们需要一种量化方法来评估系统的脆弱性。
 
-相比 TLS 1.2，TLS 1.3 极大地简化了握手流程（1-RTT），并移除了不安全的加密组件（如 RSA 密钥交换，全面改用 **正向加密** 的 DH）。
+### 1.1 形式化攻击向量模型
 
-- **流程**：Client Hello (含 Key Share) -> Server Hello (含 Key Share, Encrypted Extensions, Certificate, Finished) -> Client Finished。
-- **0-RTT**：利用 PSK (Pre-Shared Key) 实现首包加密发送数据，但需注意**重放攻击**风险。
+设系统 $S$ 的攻击面 $AS(S)$ 可以表示为不同维度向量的集合：
+$$AS(S) = \sum_{i} w_i \cdot V_i$$
+其中：
+- $V_{\text{entry}}$：入口点向量（API 端点、表单、Header 注入点）。
+- $V_{\text{data}}$：受信任程度向量（用户可控、第三方 API、内部数据库）。
+- $V_{\text{priv}}$：权限提升潜力向量。
 
-### 1.2 OAuth 2.0 与 OIDC
+### 1.2 攻击面缩减策略
 
-- **OAuth 2.0**：授权协议（Authorization）。核心是 `access_token`。
-- **OIDC (OpenID Connect)**：身份认证层（Authentication），在 OAuth 2.0 之上增加了 `id_token`。
-- **常见漏洞**：`redirect_uri` 校验不严导致 Token 被窃取、`state` 参数缺失导致 CSRF 登录劫持。
-
----
-
-## 2. 核心漏洞向量解析 (Vulnerabilities)
-
-### 2.1 注入攻击：上下文混淆模型 (Context Confusion)
-
-注入攻击的本质是**数据 (Data)** 与 **指令 (Code)** 的界限被打破。
-
-- **形式化定义**：设解析器函数为 $P(\text{Context}, \text{Input})$。当 Input 包含 Context 下的特殊元字符（如 SQL 的 `'`, HTML 的 `<`）时，$P$ 的逻辑结构被篡改。
-- **防御逻辑**：
-  - **参数化查询**：强制 $P$ 将所有 Input 视为 Data。
-  - **上下文相关编码 (Context-Aware Encoding)**：在数据进入 HTML/JS/CSS 上下文前，进行特定的转义处理。
-
-### 2.2 同源策略 (SOP) 与 CORS 形式化
-
-**同源策略 (Same-Origin Policy)** 是 Web 安全的基石。
-
-- **三元组定义**：源 $O = (\text{Protocol}, \text{Host}, \text{Port})$。当且仅当 $O_1 = O_2$ 时，允许跨源访问资源。
-
-**CORS (Cross-Origin Resource Sharing)** 是 SOP 的安全例外机制：
-
-1. **简单请求**：浏览器直接发送请求，并在 Header 中带上 `Origin`。
-2. **预检请求 (Preflight)**：对于非简单请求，先发送 `OPTIONS`。服务器需返回：
-   - `Access-Control-Allow-Origin: <origin> | *`
-   - `Access-Control-Allow-Methods: GET, POST, ...`
-
-- **安全风险**：若 `Access-Control-Allow-Origin: *` 且 `Access-Control-Allow-Credentials: true` 同时存在，将导致 CSRF 及敏感数据泄露。
+1. **最小化暴露面**：禁用不必要的 HTTP 方法（如 `TRACE`, `PUT`）。
+2. **零信任架构 (Zero Trust)**：对每一个跨边界请求进行强制鉴权。
 
 ---
 
-## 3. 现代前端安全架构
+## 2. 核心漏洞的形式化逻辑分析
 
-### 3.1 跨站请求伪造 (CSRF) 防御模型
+### 2.1 注入攻击：上下文冲突模型 (Context Conflict)
 
-CSRF 利用了浏览器自动携带 Cookie 的特性。
+注入的本质是**控制流与数据流的非预期交织**。
 
-- **同步令牌模式 (STP)**：服务器在表单中植入随机 Token，提交时校验。
-- **SameSite Cookie**：通过属性限制 Cookie 的跨站发送行为。
+**形式化描述**：
+设解析器为 $P$，执行上下文为 $C$，输入为 $I$。
+- 安全状态：$P(C, I)$ 的语法树 $G$ 的拓扑结构由 $C$ 预定义，且 $I$ 仅作为 $G$ 的叶子节点。
+- 注入状态：$I$ 包含元字符，使得 $P(C, I)$ 生成了新的语法分支 $G'$。
 
-### 3.1 SSRF (Server-Side Request Forgery)
+### 2.2 XSS 的形式化防御：内容安全策略 (CSP)
 
-攻击者诱使服务器访问内网敏感服务（如 `http://169.254.169.254` 元数据服务）。
+CSP 通过白名单机制，限制了浏览器执行代码的权限。
 
-- **绕过技巧**：利用 302 跳转、DNS 重绑定 (DNS Rebinding)。
-
-### 3.2 反序列化漏洞 (Deserialization)
-
-- **原理**：程序将用户可控的字节流还原为对象时，触发了恶意构造的魔术方法。
-- **典型**：PHP `unserialize()`, Java `ObjectInputStream`。
+**逻辑规则示例**：
+- `script-src 'self'`：仅允许加载同源脚本，禁止内联 `eval()`。
+- `object-src 'none'`：禁止 Flash 等插件。
+- **验证**：利用形式化逻辑检查 CSP 策略是否存在 `'unsafe-inline'` 等绕过点。
 
 ---
 
-## 4. 深度例题与练习 (Exercises)
+## 3. 现代鉴权协议与形式化验证
 
-### 例题 1：SSRF DNS 重绑定攻击模拟
+### 3.1 JWT 的安全性量化
 
-**题目**：如果后端只对域名进行了黑名单过滤（如禁止访问 `127.0.0.1`），攻击者如何绕过？
+JWT (JSON Web Token) 的安全性建立在签名算法之上。
+
+- **脆弱性评估**：
+  - `alg: none` 攻击：敌手修改 Header 绕过签名校验。
+  - 密钥硬编码：量化为 $V_{\text{secret}}$ 的熵值为 0。
+
+### 3.2 OAuth 2.0 状态机验证
 
 <details>
-<summary>点击查看解析 (Check Solution)</summary>
+<summary>点击查看 OAuth 2.0 授权码模式的状态转换模型</summary>
 
-**解析**：
+1. **状态 1 (Start)**：Client 重定向用户至 AS (Authorization Server)。
+2. **状态 2 (Auth)**：用户在 AS 登录并授权。
+3. **状态 3 (Code)**：AS 返回 `code` 给 Client。
+4. **状态 4 (Token)**：Client 用 `code` 换取 `access_token`。
+**不变式检查**：`code` 必须是一次性的且与 `client_id` 绑定。
 
-1. **DNS 重绑定**：攻击者控制一个域名（如 `rebind.evil.com`），并配置 DNS 服务器。
-2. **第一次解析**：返回一个合法的外部 IP，绕过黑名单校验。
-3. **TTL 设置为 0**：服务器再次请求该域名时，DNS 返回 `127.0.0.1`。
-4. **结果**：后端代码在校验通过后，实际请求发送到了 `127.0.0.1`。
-**防御**：请求发起时锁定解析后的 IP，或使用统一的内网访问网关。
 </details>
 
-### 练习 1：IDOR 漏洞检测 (C++ 逻辑模拟)
+---
 
-**题目**：实现一个简单的鉴权逻辑，防止用户通过修改 `order_id` 查看他人的订单。
+## 4. 深度模拟演示 (C++ Logic Simulation)
+
+### 4.1 SQL 注入防御逻辑模拟（预编译原理）
 
 <details>
-<summary>点击查看解析 (Check Solution)</summary>
-
-**代码模拟**：
+<summary>点击查看 C++ 模拟：参数化查询如何分离指令与数据</summary>
 
 ```cpp
 #include <iostream>
-#include <map>
 #include <string>
+#include <vector>
+#include <regex>
 
-struct Order {
-    int user_id;
-    std::string product;
-};
-
-std::map<int, Order> order_db = {
-    {101, {1, "MacBook"}},
-    {102, {2, "iPhone"}}
-};
-
-void get_order_details(int current_user_id, int requested_order_id) {
-    if (order_db.find(requested_order_id) == order_db.end()) {
-        std::cout << "Order not found." << std::endl;
-        return;
+class MockDatabase {
+public:
+    // 模拟参数化查询
+    void execute_parameterized(const std::string& query_template, const std::vector<std::string>& params) {
+        std::string final_query = query_template;
+        for (size_t i = 0; i < params.size(); ++i) {
+            std::string placeholder = "?" + std::to_string(i + 1);
+            // 关键逻辑：参数在进入 SQL 前进行转义，或在协议层直接绑定
+            std::string safe_param = "'" + std::regex_replace(params[i], std::regex("'"), "''") + "'";
+            size_t pos = final_query.find(placeholder);
+            if (pos != std::string::npos) {
+                final_query.replace(pos, placeholder.length(), safe_param);
+            }
+        }
+        std::cout << "Executing Safe Query: " << final_query << std::endl;
     }
-
-    Order order = order_db[requested_order_id];
-
-    // 关键修复：除了检查订单是否存在，还必须校验归属权
-    if (order.user_id != current_user_id) {
-        std::cout << "Access Denied: You do not own this order!" << std::endl;
-        return;
-    }
-
-    std::cout << "Order Details: " << order.product << std::endl;
-}
+};
 
 int main() {
-    std::cout << "User 1 tries to access User 2's order:" << std::endl;
-    get_order_details(1, 102); // 应该被拒绝
+    MockDatabase db;
+    std::string malicious_input = "1' OR '1'='1";
+    
+    // 参数化查询模拟
+    db.execute_parameterized("SELECT * FROM users WHERE id = ?1", {malicious_input});
+    
     return 0;
 }
 ```
-
 </details>
 
-### 练习 2：Cookie 安全属性解读
+---
 
-**题目**：解释 `SameSite=Lax`, `SameSite=Strict` 和 `SameSite=None` 对 CSRF 防御的影响。
+## 5. 综合练习 (Advanced Exercises)
+
+### 练习 1：攻击面向量量化计算
+
+**题目**：一个 Web 系统有 5 个公开 API 端点，其中 2 个涉及数据库写操作。每个 API 均通过 JWT 鉴权。请设计一个简单的评分公式计算其初步攻击面分值。
+
+<details>
+<summary>点击查看解析 (Check Solution)</summary>
+
+**解析方案**：
+$$Score = (N_{read} \cdot w_r) + (N_{write} \cdot w_w) + (N_{auth\_bypass\_risk} \cdot w_a)$$
+- 设 $w_r = 1, w_w = 3$。
+- 如果 JWT 未开启 `exp` 校验，则 $w_a$ 增加。
+**示例计算**：$Score = (3 \cdot 1) + (2 \cdot 3) = 9$。分值越高，防御优先级越高。
+</details>
+
+### 练习 2：CSRF 令牌的时空局部性
+
+**题目**：解释为什么 CSRF Token 应该与 Session 绑定，而不是与特定页面绑定？
 
 <details>
 <summary>点击查看解析 (Check Solution)</summary>
 
 **解析**：
-
-1. **Strict**：最严格。跨站请求（包括链接点击）均不发送 Cookie。
-2. **Lax**：默认值。跨站 POST 不发送，但顶级导航（如 `<a>` 链接跳转）会发送。能有效防御大部分 CSRF。
-3. **None**：必须配合 `Secure` 使用。跨站请求始终发送。
-**结论**：现代 Web 开发应优先使用 `Lax` 或 `Strict`。
+1. **安全性**：如果 Token 仅与页面绑定，一旦某个页面存在 XSS，敌手可以轻松获取该页面的 Token。
+2. **Session 绑定**：确保了 Token 的产生源于受信任的服务器状态。
+3. **时空局部性**：Token 应具有时效性。一旦 Session 销毁，Token 必须失效，防止重放攻击。
 </details>
