@@ -80,35 +80,64 @@ $n = p_1^{e_1} p_2^{e_2} \dots p_k^{e_k}$
   选择 $i$ 个质因子组成的约数共有 $\binom{k}{i}$ 个，其 $\mu$ 值为 $(-1)^i$。
   总和为 $\sum_{i=0}^k \binom{k}{i} (-1)^i = (1-1)^k = 0$。
 
-### 2.2 Dirichlet 卷积常用性质
+### 2.2 Dirichlet 卷积与常用积性函数
 
-1. $\mu * 1 = \epsilon$
-2. $\phi * 1 = Id$ （由 $n = \sum_{d|n} \phi(d)$ 得出）
-3. $\mu * Id = \phi$ （对 2 两边卷 $\mu$：$\phi * 1 * \mu = Id * \mu \implies \phi = Id * \mu$）
+**常用积性函数表**：
+- **单位元**：$\epsilon(n) = [n=1]$。
+- **恒等函数**：$1(n) = 1$。
+- **幂函数**：$Id_k(n) = n^k$。其中 $Id(n) = n$。
+- **约数个数**：$d(n) = (1 * 1)(n)$。
+- **约数和**：$\sigma(n) = (1 * Id)(n)$。
+- **欧拉函数**：$\phi(n)$，满足 $\phi * 1 = Id$。
+- **莫比乌斯函数**：$\mu(n)$，满足 $\mu * 1 = \epsilon$。
+
+**Dirichlet 卷积常用恒等式证明**：
+1. **$\phi = \mu * Id$**：
+   由 $\phi * 1 = Id$。两边同时卷积 $\mu$：
+   $\phi * 1 * \mu = Id * \mu \implies \phi * (1 * \mu) = Id * \mu \implies \phi * \epsilon = Id * \mu \implies \phi = Id * \mu$。
+   即：$\phi(n) = \sum_{d|n} d \cdot \mu(n/d)$。
+
+2. **$d = 1 * 1$ 与 $\sigma = 1 * Id$**：
+   这些是定义式。利用积性，若 $f, g$ 为积性函数，则 $f * g$ 亦为积性函数。
+   对于 $n = p^e$：
+   $d(p^e) = \sum_{i=0}^e 1 \cdot 1 = e+1$。
+   $\sigma(p^e) = \sum_{i=0}^e p^i = \frac{p^{e+1}-1}{p-1}$。
 
 ---
 
-## 3. 高阶技术：杜教筛与 Lucas 定理
+## 3. 高阶技术：杜教筛与反演进阶
 
-### 3.1 杜教筛收敛性分析
+### 3.1 杜教筛收敛性与构造技巧
 
-求解 $S(n) = \sum_{i=1}^n f(i)$，利用 $g(1)S(n) = \sum_{i=1}^n (f*g)(i) - \sum_{d=2}^n g(d)S(\lfloor n/d \rfloor)$。
-**复杂度推导**：
-设预处理到 $m$。总复杂度 $T(n) = O(m) + \int_1^{n/m} \sqrt{n/x} dx = O(m + n/\sqrt{m})$。
-取 $m = n^{2/3}$ 得最优复杂度 $O(n^{2/3})$。
+求解 $S(n) = \sum_{i=1}^n f(i)$，若能找到 $g, h$ 使得 $h = f * g$ 且 $g, h$ 的前缀和易求。
+则 $g(1)S(n) = \sum_{i=1}^n h(i) - \sum_{d=2}^n g(d)S(\lfloor n/d \rfloor)$。
 
-### 3.2 Lucas 定理 (组合数取模)
+**构造示例**：
+- 求 $\mu$ 前缀和：取 $g=1, h=\mu*1=\epsilon$。
+- 求 $\phi$ 前缀和：取 $g=1, h=\phi*1=Id$。
+- 求 $i \cdot \phi(i)$ 前缀和：取 $g=Id, h=(i\phi) * Id = \sum_{d|n} (d\phi(d) \cdot \frac{n}{d}) = n \sum_{d|n} \phi(d) = n^2$。
 
-对于素数 $p$，有 $\binom{n}{m} \equiv \prod \binom{n_i}{m_i} \pmod p$，其中 $n_i, m_i$ 是 $n, m$ 的 $p$ 进制位。
-**证明核心**：利用生成函数 $(1+x)^p \equiv 1+x^p \pmod p$。
+### 3.2 莫比乌斯反演的两种形式
+
+1. **约数形式**：$g(n) = \sum_{d|n} f(d) \iff f(n) = \sum_{d|n} \mu(n/d)g(d)$。
+2. **倍数形式**：$g(n) = \sum_{n|d} f(d) \iff f(n) = \sum_{n|d} \mu(d/n)g(d)$。
 
 ---
 
 ## 4. 综合练习与 C++ 解答
 
-### 练习 1：[HAOI2011] Problem b (莫比乌斯反演)
+### 练习 1：[NOI2010] 能量采集 (反演基础)
 
-求 $\sum_{i=a}^b \sum_{j=c}^d [gcd(i, j) = k]$。
+求 $\sum_{i=1}^n \sum_{j=1}^m (2\gcd(i, j) - 1)$。
+
+<details>
+<summary>Check Solution (思路)</summary>
+
+1. 原式 $= 2 \sum_{i=1}^n \sum_{j=1}^m \gcd(i, j) - nm$。
+2. 设 $G(k) = \sum_{i=1}^n \sum_{j=1}^m [\gcd(i, j) = k] = \sum_{i=1}^{\lfloor n/k \rfloor} \sum_{j=1}^{\lfloor m/k \rfloor} [\gcd(i, j) = 1]$。
+3. 利用 $\phi * 1 = Id$，$\sum \gcd(i, j) = \sum \sum_{d|\gcd(i, j)} \phi(d) = \sum_{d=1}^{\min(n,m)} \phi(d) \lfloor n/d \rfloor \lfloor m/d \rfloor$。
+4. 数论分块即可。
+</details>
 
 <details>
 <summary>Check Solution (C++)</summary>
