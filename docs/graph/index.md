@@ -1,72 +1,92 @@
 ---
-title: 图论算法：结构、对偶与建模精要
-sidebar_position: 1
+title: 图论算法精要：拓扑、流与对偶
+slug: /graph
 ---
 
-import { Network, Sigma, Workflow, Box, ShieldCheck, Zap, Activity, Compass } from 'lucide-react';
+import { Network, GitBranch, Zap, GitMerge, Share2, Target, Sigma, Workflow, ShieldCheck, Layers } from 'lucide-react';
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
-# <Network className="inline-block mr-2 mb-1 text-blue-600" /> 图论算法精要 (Graph Theory Essentials)
+# <Network className="inline-block mr-2 mb-1 text-blue-600" /> 图论算法精要 (Graph Algorithms)
 
-图论（Graph Theory）不仅是研究离散结构的数学分支，更是计算机科学中描述非线性关系、状态空间转移与约束满足的核心语言。本版块旨在从**教材化**视角，系统性地构建从基础遍历到复杂流网络、从组合对偶到拓扑分析的理论体系。
-
----
-
-## 1. <Box className="inline-block mr-2 mb-1 text-indigo-500" /> 理论架构模型 (Architectural Model)
-
-图论学习可以划分为四个递进的层级，每一层都建立在前一层的拓扑性质之上：
-
-- **层级 I：拓扑感知 (Topology Awareness)**
-  - 图的存储（矩阵 vs 链表）、DFS/BFS 搜索序、拓扑排序。
-  - **核心命题**：连通性、环路判定、欧拉回路与哈密顿路径。
-- **层级 II：最优性路径 (Optimality Paths)**
-  - 最短路理论（Dijkstra/Bellman-Ford/Floyd）、最小生成树（Prim/Kruskal/Boruvka）。
-  - **数学本质**：动态规划在循环图上的不动点求解与贪心拟阵论（Matroid Theory）。
-- **层级 III：约束与流 (Constraints & Flows)**
-  - 网络流（最大流、最小割、费用流）、二分图匹配（匈牙利、HK、Gale-Shapley）。
-  - **数学本质**：线性规划的对偶性（LP Duality）及其在离散图上的投影。
-- **层级 IV：连通性深度分析 (Deep Connectivity)**
-  - SCC (Tarjan/Kosaraju)、双连通分量 (BCC)、2-SAT 约束满足。
-  - **数学本质**：图的强/弱连通序关系与其缩点后的 DAG 结构转换。
+图论不仅是离散数学的基石，更是刻画现实世界复杂关联的有力工具。本板块致力于构建一个**教材级**的图论知识体系，涵盖从最短路、最小生成树到网络流与二分图匹配的深度理论、收敛性证明与 C++ 工业级实现。
 
 ---
 
-## 2. <Sigma className="inline-block mr-2 mb-1 text-purple-500" /> 图论建模哲学：节点与边的本质
+## 🗺️ 知识版块导航
 
-在高级建模中，图不再仅仅是点的集合，而是**状态与决策**的抽象：
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-<KnowledgeCard title="建模三要素" icon={<Zap size={20} />}>
+<KnowledgeCard 
+  title="最短路理论体系" 
+  icon={<Zap className="text-amber-500" />}
+  description="从形式化松弛 (Relaxation) 到 Dioid 路径代数证明，深入探讨 Dijkstra、Bellman-Ford 与 Johnson 势能变换。"
+  link="/docs/graph/shortest-path"
+/>
 
-1.  **节点 (Vertex)**：代表一个**确定的状态**。在分层图中，节点是 $(v, state)$ 的二元组。
-2.  **边 (Edge)**：代表一次**合法的决策/转移**。边权代表转移的代价、概率或容量约束。
-3.  **图结构**：代表**约束的集合**。最短路寻求最优决策序列，最大流寻求整体系统吞吐量。
+<KnowledgeCard 
+  title="最小生成树 (MST)" 
+  icon={<GitBranch className="text-green-500" />}
+  description="基于拟阵 (Matroid) 理论的切分与回路定理证明，探讨 Kruskal 重构树与有向树形图算法。"
+  link="/docs/graph/mst"
+/>
 
-</KnowledgeCard>
+<KnowledgeCard 
+  title="网络流与对偶理论" 
+  icon={<GitMerge className="text-blue-500" />}
+  description="最大流最小割定理的严密证明，探讨 Ford-Fulkerson 算法的收敛性与 MCMF 建模技巧。"
+  link="/docs/graph/network-flow"
+/>
+
+<KnowledgeCard 
+  title="二分图匹配与覆盖" 
+  icon={<Layers className="text-purple-500" />}
+  description="基于 Berge 定理与 Hall 婚姻定理的匹配性质分析，涵盖 Kőnig 定理的对偶性证明。"
+  link="/docs/graph/bipartite-matching"
+/>
+
+<KnowledgeCard 
+  title="连通性与 Tarjan 算法" 
+  icon={<Network className="text-indigo-500" />}
+  description="利用 DFS 树的时间戳 (dfn) 与追溯值 (low) 判定割点、桥及双连通分量，构建圆方树。"
+  link="/docs/graph/tarjan"
+/>
+
+<KnowledgeCard 
+  title="拓扑排序与 DAG 优化" 
+  icon={<Workflow className="text-orange-500" />}
+  description="探讨有向无环图 (DAG) 的拓扑排序性质、关键路径分析及基于拓扑序的 DP 优化。"
+  link="/docs/graph/topo-sort"
+/>
+
+</div>
 
 ---
 
-## 3. <Workflow className="inline-block mr-2 mb-1 text-green-500" /> 学习路线图
+## 💎 教材化核心标准
 
-以下是推荐的深度进阶路径，点击下方模块进入详细文档：
+本板块遵循以下严谨的工程与教学标准：
 
-- **[图的存储与建模](./representation.md)**：链式前向星与状态空间构建。
-- **[最短路理论体系](./shortest-path.md)**：从三角不等式到势能函数重标定。
-- **[最小生成树与瓶颈理论](./mst.md)**：切分定理、回路定理与重构树。
-- **[网络流理论与对偶范式](./network-flow.md)**：最大流最小割、权闭合子图与费用流对偶。
-- **[二分图匹配与覆盖](./bipartite-matching.md)**：Kőnig 定理、Hall 定理与稳定婚姻。
-- **[强连通分量与连通性分析](./tarjan.md)**：Tarjan 的时间戳魔法与 2-SAT 判定。
-
----
-
-## 4. <Activity className="inline-block mr-2 mb-1 text-red-500" /> 复杂度边界总览
-
-| 问题分类 | 核心算法 | 时间复杂度 | 空间复杂度 | 备注 |
-| :--- | :--- | :--- | :--- | :--- |
-| **最短路 (SSSP)** | Dijkstra (Heap) | $O(E \log V)$ | $O(V+E)$ | 权值 $\ge 0$ |
-| **最小生成树 (MST)** | Kruskal | $O(E \log E)$ | $O(V+E)$ | 贪心序排序 |
-| **最大流 (Max-Flow)** | Dinic | $O(V^2 E)$ | $O(V+E)$ | 二分图匹配时 $O(E\sqrt{V})$ |
-| **强连通分量 (SCC)** | Tarjan | $O(V+E)$ | $O(V+E)$ | 单次 DFS 线性收敛 |
+- **系统化证明**：不仅给出算法流程，更通过**归纳法、矛盾法、对偶性分析**提供形式化证明。
+- **收敛性分析**：量化算法在不同数据规模下的行为，特别是网络流中关于**实数容量收敛性**的边界讨论。
+- **连通性一致性校验**：通过路径拓扑性质，校验图在操作（增边、缩点、删割点）前后的连通性变化。
+- **工业级 C++ 实现**：所有代码模版均采用现代 C++ 风格，具备鲁棒性与高效的时间常数。
+- **折叠例题解析**：每章配备 3-5 道深度练习，答案默认折叠，通过点击展示完整的逻辑推导与代码实现。
 
 ---
 
-> **教授寄语**：*“图论之美在于其‘牵一发而动全身’的联动性。理解了最大流与最小割的对偶，你就理解了优化问题的阴阳两面。”*
+## 🚀 学习路径建议
+
+1. **基础阶段**：理解图的存储（邻接表/矩阵）与遍历（DFS/BFS）。
+2. **核心阶段**：掌握最短路与最小生成树，重点理解**贪心正确性证明**。
+3. **进阶阶段**：深入 Tarjan 算法处理强连通性与圆方树建模。
+4. **巅峰阶段**：攻克网络流与二分图匹配，重点在于**建模转化能力**与**对偶理论应用**。
+
+---
+
+<div className="flex items-center justify-center p-8 bg-blue-50 rounded-xl border border-blue-100 mt-8">
+  <Sigma className="text-blue-600 mr-4" size={32} />
+  <div>
+    <h3 className="text-blue-900 font-bold mb-1">“图论的精髓在于从局部拓扑约束中推导出全局一致性。”</h3>
+    <p className="text-blue-700 text-sm">—— SolKnow 算法委员会 (2026)</p>
+  </div>
+</div>

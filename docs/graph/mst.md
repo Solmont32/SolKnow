@@ -1,96 +1,86 @@
 ---
-title: 最小生成树：贪心理论、重构树与有向图扩展
+title: 最小生成树：贪心理论、重构树与连通性一致性证明
 ---
 
-import { TreeDeciduous, Zap, GitBranch, ShieldCheck, Activity, Layers, Target, Sigma, BookOpen, Clock, Workflow } from 'lucide-react';
+import { TreeDeciduous, Zap, GitBranch, ShieldCheck, Activity, Layers, Target, Sigma, BookOpen, Clock, Workflow, Network } from 'lucide-react';
 import ComplexityAnalysis from '@site/src/components/ComplexityAnalysis';
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # <TreeDeciduous className="inline-block mr-2 mb-1 text-green-600" /> 最小生成树 (Minimum Spanning Tree)
 
-最小生成树问题是**拟阵 (Matroid)** 理论在图论中的直观应用。本章不仅涵盖经典的 Kruskal 与 Prim 算法，更深入探讨 Boruvka 的并行思想、Kruskal 重构树的瓶颈映射，以及有向图下的朱-刘算法。
+最小生成树问题是**拟阵 (Matroid)** 理论在图论中的直观应用。本章不仅涵盖经典的 Kruskal 与 Prim 算法，更深入探讨连通性的一致性证明、Kruskal 重构树的瓶颈映射，以及有向图下的朱-刘算法。
 
 ---
 
-## 一、 <Sigma className="inline-block mr-2 mb-1 text-blue-500" /> 核心公理与收敛性
+## 一、 <Sigma className="inline-block mr-2 mb-1 text-blue-500" /> 核心理论与连通性证明
 
-### 1. 切分定理 (Cut Property)
-对于图 $G$ 的任意切分 $(S, V \setminus S)$，割集中权值最小的边 $e$ 必包含在某棵 MST 中。
-- **直观理解**：为了连通 $S$ 与外部，必须至少选一条割边。选最小的一条永远是局部最优且不破坏全局连通的选择。
+MST 的正确性建立在两个核心性质之上：**切分定理 (Cut Property)** 和 **回路定理 (Cycle Property)**。
 
-### 2. 回路定理 (Cycle Property)
-对于图 $G$ 中的任何回路，其中权值最大的边必不属于任何一棵 MST。
-
----
-
-## 二、 <Workflow className="inline-block mr-2 mb-1 text-purple-500" /> 算法选型与复杂度深度分析
-
-### 1. Boruvka 算法：天然的并行性
-**流程**：
-1. 每轮为每个连通块寻找与其相连的最小权边。
-2. 将这些边加入集合并合并连通块。
-**复杂度分析**：
-每轮连通块数量至少减少一半，因此只需 $\log V$ 轮。总复杂度 $O(E \log V)$。在密集图中，结合 Prim 思想可进一步优化。
-
-### 2. Kruskal 重构树：瓶颈路映射
-<KnowledgeCard title="瓶颈路性质" icon={<GitBranch size={20} />}>
-**定义**：$u, v$ 间的瓶颈路权值定义为所有 $u \to v$ 路径中最大边权的最小值。
-**结论**：该值等于 Kruskal 重构树上 $LCA(u, v)$ 的点权。
+### 1. 切分定理与贪心选择
+<KnowledgeCard title="切分定理 (Cut Property) 证明" icon={<ShieldCheck size={20} />}>
+**定理**：对于图 $G$ 的任意切分 $(S, V \setminus S)$，割集中权值最小的边 $e = (u, v)$ 必属于某棵 MST。
+**证明 (替换法)**：
+假设存在一棵 MST $T$ 不包含 $e$。
+1. 由于 $T$ 是生成树，必存在一条路径 $p$ 连通 $u, v$。该路径必跨越割集 $(S, V \setminus S)$，设其跨越边为 $e'$。
+2. 构造 $T' = T \setminus \{e'\} \cup \{e\}$。
+3. 由于 $w(e) \le w(e')$，故 $w(T') \le w(T)$。
+4. 因为 $T$ 已是 MST，$w(T')$ 必等于 $w(T)$。
+5. 因此 $T'$ 也是一棵包含 $e$ 的 MST。
 </KnowledgeCard>
 
----
-
-## 三、 <Zap className="inline-block mr-2 mb-1 text-amber-500" /> 有向最小生成树：朱-刘算法 (Chu-Liu/Edmonds)
-
-在有向图中，最小生成树被称为**最小树形图** (Minimum Cost Arborescence)。
-
-### 1. 算法步骤
-1. **最短入边**：为除根节点外的每个点选择权值最小的入边。
-2. **环路判定**：若这些边构成环，则将环缩为一个点。
-3. **权值更新**：对于进入环的点 $v$ 的边 $(u, v)$，新权值 $w' = w - w_{prev}$，其中 $w_{prev}$ 是 $v$ 在环内的原入边权。
-4. **递归**：在缩点后的图上重复，直到无环。
+### 2. 连通性一致性校验 (Connectivity Invariant)
+在 Kruskal 算法中，我们通过并查集 (DSU) 维护连通性。
+- **不变性**：在任意时刻，已选边集构成的每个连通分量本身都是其所含顶点集的 MST。
+- **最终状态**：当选择了 $|V|-1$ 条边且无环时，由树的性质知图必连通。
 
 ---
 
-## 四、 工业级 C++ 实现 (Boruvka 范式)
+## 二、 <Workflow className="inline-block mr-2 mb-1 text-purple-500" /> 进阶结构：Kruskal 重构树
+
+Kruskal 重构树 (ExKruskal Tree) 是处理**瓶颈路径问题**的利器。
+
+### 1. 构造过程
+在执行 Kruskal 时，若要合并两个集合 $u, v$：
+1. 新建一个节点 $X$，点权 $val[X] = w(u, v)$。
+2. 将 $u, v$ 所在集合的根节点分别作为 $X$ 的左右儿子。
+3. $X$ 成为新集合的根。
+
+### 2. 性质推导
+- **堆性质**：重构树是一个大根堆（对于最小生成树）。
+- **瓶颈映射**：原图中 $u, v$ 之间所有路径中最大边权的最小值，等于重构树上 $LCA(u, v)$ 的点权。
+- **可达性范围**：从 $u$ 出发只经过权值 $\le K$ 的边能到达的点集，是重构树中 $u$ 的某个祖先 $P$ ($val[P] \le K$ 且 $val[parent(P)] > K$) 的子树中的所有叶子节点。
+
+---
+
+## 三、 <Network className="inline-block mr-2 mb-1 text-indigo-500" /> 有向最小生成树：朱-刘算法
+
+### 1. 核心思想：环路缩减 (Cycle Contraction)
+有向 MST（树形图）不能直接用贪心，因为入边选择受根节点制约。
+- **收敛分析**：每次缩环都会减少至少一个节点，最多执行 $N$ 次，总复杂度 $O(NM)$。
+
+---
+
+## 四、 工业级 C++ 实现 (Kruskal 重构树)
 
 ```cpp
 /**
- * @brief Boruvka 算法：适合边数巨大的情况
+ * @brief Kruskal 重构树构造
+ * val[node] 存储边权，1~n 为叶子，n+1~2n-1 为辅助点
  */
-long long boruvka(int n, vector<Edge>& edges) {
-    vector<int> fa(n + 1);
-    iota(fa.begin(), fa.end(), 0);
-    auto find = [&](auto self, int x) -> int {
-        return fa[x] == x ? x : fa[x] = self(self, fa[x]);
-    };
-
-    long long mst_w = 0;
-    int components = n;
-    while (components > 1) {
-        vector<int> min_edge(n + 1, -1);
-        for (int i = 0; i < edges.size(); ++i) {
-            int u = find(find, edges[i].u), v = find(find, edges[i].v);
-            if (u == v) continue;
-            if (min_edge[u] == -1 || edges[i].w < edges[min_edge[u]].w) min_edge[u] = i;
-            if (min_edge[v] == -1 || edges[i].w < edges[min_edge[v]].w) min_edge[v] = i;
+void build_ex_kruskal() {
+    sort(edges.begin(), edges.end());
+    int cur_idx = n; // 新节点索引
+    for (auto& e : edges) {
+        int fu = find(e.u), fv = find(e.v);
+        if (fu != fv) {
+            cur_idx++;
+            val[cur_idx] = e.w;
+            fa[fu] = fa[fv] = cur_idx;
+            adj[cur_idx].push_back(fu);
+            adj[cur_idx].push_back(fv);
+            if (--components == 1) break;
         }
-
-        bool changed = false;
-        for (int i = 1; i <= n; ++i) {
-            if (min_edge[i] != -1) {
-                int u = find(find, edges[min_edge[i]].u), v = find(find, edges[min_edge[i]].v);
-                if (u != v) {
-                    mst_w += edges[min_edge[i]].w;
-                    fa[u] = v;
-                    components--;
-                    changed = true;
-                }
-            }
-        }
-        if (!changed) break; // 图不连通
     }
-    return mst_w;
 }
 ```
 
@@ -98,30 +88,58 @@ long long boruvka(int n, vector<Edge>& edges) {
 
 ## 五、 <Target className="inline-block mr-2 mb-1 text-red-500" /> 精选练习与解析
 
-### 练习 1：动态 MST
-每次增加一条边，动态维护当前图的 MST 权值。
+### 练习 1：次小生成树 (Second Best MST)
+求权值之和严格大于 MST 且最小的生成树。
 
 <details>
 <summary>Check Solution</summary>
 
 **解析**：
-1. **LCT 方法**：使用 Link-Cut Tree 维护 MST。当加入边 $(u, v, w)$ 时，若 $u, v$ 已连通，查询路径上最大边 $(u', v', w')$。若 $w < w'$，则替换。
-2. **离线方法**：CDQ 分治 + Kruskal。
+1. 首先求出 MST。
+2. 遍历所有非树边 $(u, v, w)$。
+3. 替换 MST 中 $u \to v$ 路径上的最大边 $w_{max}$。
+4. 若 $w > w_{max}$，则 $w(T) - w_{max} + w$ 是一个候选值。
+5. 若 $w = w_{max}$，则需替换路径上的**严格次大边**。
 
 </details>
 
-### 练习 2：最小乘积生成树
-每条边有两个权值 $a_i, b_i$，求生成树使得 $(\sum a_i) \times (\sum b_i)$ 最小。
+### 练习 2：瓶颈生成树
+求一棵生成树，使其最大边权最小。
 
 <details>
 <summary>Check Solution</summary>
 
 **解析**：
-将每个生成树看作平面上的点 $(X, Y) = (\sum a_i, \sum b_i)$。
-1. **转化**：求左下凸包上的点。
-2. **算法**：
-   - 找到 $a$ 最小的点 $A$ 和 $b$ 最小的点 $B$。
-   - 递归寻找离直线 $AB$ 最远的向左下方突出的点 $C$。
-   - 寻找 $C$ 即为求 $min \{(Y_B - Y_A)X + (X_A - X_B)Y\}$，这是一次普通的 MST（边权设为 $(Y_B - Y_A)a_i + (X_A - X_B)b_i$）。
+**定理**：任何一棵最小生成树都是瓶颈生成树。反之不一定成立。
+直接运行 Kruskal 算法，最后一笔加入的边权即为最小瓶颈。
+
+</details>
+
+### 练习 3：生成树计数 (Matrix Tree Theorem)
+给定无向图，求生成树的总数。
+
+<details>
+<summary>Check Solution</summary>
+
+**解析**：
+1. **Kirchhoff 矩阵** $L = D - A$。
+   - $D$：度数矩阵（对角线为点度数）。
+   - $A$：邻接矩阵。
+2. **定理**：$L$ 的任意一个 $n-1$ 阶主余子式的行列式值即为生成树数量。
+3. **计算**：高斯消元求行列式，复杂度 $O(n^3)$。
+
+</details>
+
+### 练习 4：边带限制的 MST - 最小度限制生成树
+求一棵生成树，使得根节点 $s$ 的度数恰好为 $k$，且总权值最小。
+
+<details>
+<summary>Check Solution</summary>
+
+**解析**：
+1. 去掉 $s$ 后，图分为若干连通块。每个连通块至少连一条边到 $s$ 以保证连通。
+2. 假设连通块数为 $m$。若 $m > k$，无解。
+3. 先构造 $m$ 度限制 MST。
+4. 逐步增加度数至 $k$：每次找一条边 $(s, v)$ 替换掉形成的环中的非 $s$ 关联最大边，使得权值增量最小。
 
 </details>
