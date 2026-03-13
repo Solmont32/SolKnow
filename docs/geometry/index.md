@@ -70,15 +70,38 @@ inline int dcmp(DB x, DB y) {
 
 <KnowledgeCard type="theorem" title="叉积的面积与方向性">
 
-**定理**：对于向量 $\vec{a}=(x_1, y_1), \vec{b}=(x_2, y_2)$，其叉积 $x_1y_2 - x_2y_1$ 等于以其为邻边的平行四边形的有向面积。
+**定理**：对于向量 $\vec{a}=(x_1, y_1), \vec{b}=(x_2, y_2)$，其叉积定义为 $\vec{a} \times \vec{b} = x_1y_2 - x_2y_1$。该值等于以 $\vec{a}, \vec{b}$ 为邻边的平行四边形的**有向面积**。
 
 **证明**：
-利用极坐标表示：$\vec{a} = (r_1\cos\alpha, r_1\sin\alpha), \vec{b} = (r_2\cos\beta, r_2\sin\beta)$。
-$\vec{a} \times \vec{b} = r_1\cos\alpha \cdot r_2\sin\beta - r_1\sin\alpha \cdot r_2\cos\beta$
-$= r_1r_2(\sin\beta\cos\alpha - \cos\beta\sin\alpha) = r_1r_2\sin(\beta-\alpha)$。
-该值正负直接反映了 $\vec{b}$ 相对于 $\vec{a}$ 的旋转方向（逆时针为正）。
+利用极坐标表示：$\vec{a} = (r_a\cos\alpha, r_a\sin\alpha), \vec{b} = (r_b\cos\beta, r_b\sin\beta)$。
+$\vec{a} \times \vec{b} = r_a\cos\alpha \cdot r_b\sin\beta - r_a\sin\alpha \cdot r_b\cos\beta$
+$= r_ar_b(\sin\beta\cos\alpha - \cos\beta\sin\alpha) = r_ar_b\sin(\beta-\alpha)$。
+
+由于 $|\vec{a}| = r_a, |\vec{b}| = r_b$，且 $\beta-\alpha$ 为 $\vec{a}$ 到 $\vec{b}$ 的夹角 $\theta$，故 $\vec{a} \times \vec{b} = |\vec{a}||\vec{b}|\sin\theta$。
+由几何定义，平行四边形面积 $S = |\vec{a}|h = |\vec{a}|(|\vec{b}||\sin\theta|)$。
+叉积的正负反映了 $\theta$ 的象限：
+- $\vec{a} \times \vec{b} > 0 \iff \vec{b}$ 在 $\vec{a}$ 的左侧（逆时针）。
+- $\vec{a} \times \vec{b} < 0 \iff \vec{b}$ 在 $\vec{a}$ 的右侧（顺时针）。
+- $\vec{a} \times \vec{b} = 0 \iff \vec{a}, \vec{b}$ 共线。
 
 </KnowledgeCard>
+
+### 3.2 浮点误差收敛性 (Floating-Point Convergence)
+
+在迭代算法（如牛顿迭代、割线法）或高维几何运算中，误差 $\delta$ 会随操作深度 $D$ 累积。
+
+<KnowledgeCard type="warning" title="误差放大效应 (Error Amplification)">
+
+设基础运算精度为 $\epsilon_{mach}$。
+1. **加减法**：$\delta(a \pm b) \approx \delta(a) + \delta(b)$。若 $a \approx b$，则 $a-b$ 的相对误差可能趋于无穷大（Catastrophic Cancellation）。
+2. **乘法**：$\delta(a \cdot b) \approx a\delta(b) + b\delta(a)$。
+3. **叉积**：$x_1y_2 - x_2y_1$ 包含两次乘法和一次减法，若坐标量级为 $L$，绝对误差量级约为 $L \cdot \delta(L)$。
+
+**收敛建议**：
+- 尽量推迟除法：保持分母形式，最后统一判定。
+- 坐标归一化：将所有点映射到 $[0, 1]$ 或 $[-1, 1]$ 区间，可使绝对误差与相对误差量级对齐。
+</KnowledgeCard>
+
 
 ---
 

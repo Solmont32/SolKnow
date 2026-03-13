@@ -12,32 +12,42 @@ import { Target, ShieldCheck, Activity, BookOpen, Layers, ShieldAlert } from 'lu
 
 ---
 
-## 1. 形式化描述与拓扑性质证明
+### 1.1 形式化描述与拓扑性质证明
 
-### 1.1 算术表示
+**定义**：一个半平面 $H_i$ 可以表示为 $H_i = \{ (x, y) \in \mathbb{R}^2 \mid ax + by + c \ge 0 \}$。
 
-一个半平面可以表示为线性不等式：
-$$ax + by + c \ge 0$$
-在计算几何实现中，通常使用**有向直线**表示：规定直线左侧为有效区域。
+<KnowledgeCard type="theorem" title="半平面交的拓扑一致性">
 
-<KnowledgeCard type="theorem" title="交集的凸性与存在性证明">
+**定理 1：凸性收敛**
+半平面交 $S = \bigcap H_i$ 的凸性保证了扫描算法的收敛性。
+**证明**：
+设 $P, Q \in S$，由交集定义，$P, Q \in H_i$ 对所有 $i$ 成立。
+由于每个 $H_i$ 是凸集，线段 $PQ \subseteq H_i$ 成立。
+因此 $PQ \subseteq \bigcap H_i = S$，由凸集定义，$S$ 为凸集。
 
-**定理 1：凸性证明**
-每个半平面都是凸集。根据凸集的定义，若 $A, B$ 在交集内，则它们在每个半平面内。由于每个半平面是凸的，线段 $AB$ 也在每个半平面内，因此线段 $AB$ 在交集内。得证。
-
-**定理 2：Helly 定理 (应用)**
-在平面上，如果一组有限个凸多边形中任意三个都有公共点，那么这组多边形全体必有公共点。
-*推论*：判定半平面交是否为空，理论上可以转化为检查每三个半平面的交集。
+**定理 2：极角排序的拓扑意义**
+对有向直线进行极角排序，保证了构建过程中相邻直线的交点始终沿着凸包边界逆时针推进，这是双端队列维护正确性的核心。
 
 </KnowledgeCard>
 
 ---
 
-## 2. $O(N \log N)$ 增量算法 (Sort-and-Scan)
+## 2. 浮点误差收敛性 (Numerical Convergence)
 
-目前主流的算法是基于极角排序的增量法，利用双端队列维护当前半平面序列。
+在半平面交中，误差主要来自交点计算：$P = \text{Intersection}(L_i, L_j)$。
 
-### 2.1 几何鲁棒性边界分析 (Robustness)
+<KnowledgeCard type="warning" title="交点误差放大效应">
+
+若两条直线 $L_i, L_j$ 的夹角 $\theta \to 0$（几近平行），交点坐标的误差 $\delta$ 满足：
+$$\delta(P) \approx \frac{\delta(L)}{\sin \theta}$$
+当 $\theta$ 极小时，交点坐标可能超出浮点数表示范围，导致判定点是否在半平面右侧（`onRight`）时逻辑失效。
+
+**收敛建议**：
+1. **预去重**：在极角排序后，合并夹角 $\Delta \theta < \epsilon$ 的直线，仅保留最内侧者。
+2. **包围盒**：增加一个极大的矩形限制（Bounding Box），防止无界区域导致的坐标溢出。
+
+</KnowledgeCard>
+
 
 <KnowledgeCard type="warning" title="平行线与退化判定">
 

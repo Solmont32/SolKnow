@@ -14,28 +14,37 @@ import { MoveRight, Zap, Activity, BookOpen, Layers, ShieldAlert } from 'lucide-
 
 ## 1. 核心模型：矩形面积并 (Area Union)
 
-### 1.1 拓扑性质证明
+### 1.1 矩形面积并的拓扑分解定理
 
-<KnowledgeCard type="theorem" title="面积并的离散分解证明">
+**定理**：对于 $N$ 个矩形 $\{R_1, R_2, \dots, R_N\}$，其并集 $U = \bigcup R_i$ 的面积可通过对 $x, y$ 轴进行离散化分解。
 
-**定理**：$N$ 个矩形的并集面积可以通过其所有垂直边界 $x_i$ 将其划分为 $2N-1$ 个不相交的垂直条带（Slabs）。
+<KnowledgeCard type="theorem" title="Lebesgue 测度分解证明">
 
-**证明**：
-在任意两个相邻的垂直边界 $x_j, x_{j+1}$ 之间，所有包含该条带的矩形的 $y$ 轴覆盖集合是恒定不变的。因此，在该条带内的面积可以表示为 $(x_{j+1} - x_j) \times \text{Length}(Y_{set})$，其中 $\text{Length}(Y_{set})$ 为一维区间并的长度。总面积即为所有条带面积之和。得证。
+**证明：Fubini 定理应用**
+面积可以表示为指示函数 $I_U(x, y)$ 的二重积分：
+$$A(U) = \iint_{\mathbb{R}^2} I_U(x, y) dA = \int_{-\infty}^{\infty} \left( \int_{-\infty}^{\infty} I_U(x, y) dy \right) dx$$
+内部积分 $L(x) = \int_{-\infty}^{\infty} I_U(x, y) dy$ 代表 $x$ 处垂直切线的覆盖长度。
+1.  **事件离散性**：$L(x)$ 仅在矩形边界 $x \in \{x_{i,1}, x_{i,2}\}$ 处发生变化。
+2.  **分段常数性**：在相邻 $x$ 坐标区间 $(x_j, x_{j+1})$ 内，$L(x)$ 为常数 $L_j$。
+3.  **最终求和**：$A(U) = \sum L_j \cdot (x_{j+1} - x_j)$。得证。
 
 </KnowledgeCard>
 
 ---
 
-## 2. 几何鲁棒性边界 (Robustness)
+## 2. 拓扑一致性与线段树维护 (Consistency)
 
-<KnowledgeCard type="warning" title="扫描线中的退化情况">
+在扫描线算法中，线段树不仅是数据结构，更是拓扑信息的载体。
 
-1.  **坐标重合**：当多个矩形的左右边界 $x$ 坐标相同时，必须确保线段树的更新顺序。通常建议先处理“入边”再处理“出边”，或将重合 $x$ 的事件合并处理，以避免面积计算中出现宽度为 0 的异常。
-2.  **大坐标范围**：若坐标达到 $10^9$，直接建树不可行，必须进行**离散化 (Discretization)**。离散化后，$y$ 轴区间变为 $[1, M]$，其中 $M$ 为不同 $y$ 坐标的数量。
-3.  **精度误差**：尽管扫描线主要处理整数坐标，但在某些题目中涉及浮点数坐标，此时线段树的区间端点判定需严格遵守 $\epsilon$ 规则。
+<KnowledgeCard type="warning" title="覆盖状态一致性原则">
+
+1.  **计数的非负性**：`tree[u].count` 始终非负。出边更新必须与入边严格匹配，否则破坏拓扑单调性。
+2.  **区间闭包性**：线段树节点 $[l, r]$ 实际代表 $y$ 轴离散化后的区间段 $[Y_l, Y_{r+1}]$。
+    - **推论**：若节点 $u$ 的 `count > 0`，其长度 $len$ 立即收敛为 $Y_{tree[u].r+1} - Y_{tree[u].l}$。
+3.  **拓扑退化**：若多个矩形边界重合，扫描线应在同一 $x$ 位置批量处理所有事件后再计算面积，以维持逻辑一致性。
 
 </KnowledgeCard>
+
 
 ---
 
