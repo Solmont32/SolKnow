@@ -6,41 +6,44 @@ sidebar_position: 1
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 import {
-BookOpen,
-Trophy,
-Code2,
-Infinity as InfinityIcon,
-Brain,
-ShieldCheck,
-ChevronRight,
-Target,
-BarChart3,
-Layers,
-Search,
-GitBranch,
-Terminal,
-Cpu,
-Network,
-Zap
+  BookOpen,
+  Trophy,
+  Code2,
+  Infinity as InfinityIcon,
+  Brain,
+  ShieldCheck,
+  ChevronRight,
+  Target,
+  BarChart3,
+  Layers,
+  Search,
+  GitBranch,
+  Terminal,
+  Cpu,
+  Network,
+  Zap,
+  FlaskConical,
+  Scale,
+  Microscope
 } from 'lucide-react';
 
 # 全域综合练习库 (Global Comprehensive Exercise Library)
 
-> **“大道至简，实干为要。”** —— 本库旨在构建一个横跨**计算机科学 (CS)**、**学术数学 (Math)** 与 **算法竞赛 (CP)** 的立体化练习体系。通过难度梯度映射与解题思维链导向，助你完成从理论到工程实践的深度蜕变。
+> **“大道至简，实干为要。”** —— 本库旨在构建一个横跨**计算机科学 (CS)**、**学术数学 (Math)**、**算法竞赛 (CP)** 与 **人工智能 (AI)** 的立体化练习体系。通过难度梯度映射与解题思维链导向，助你完成从理论到工程实践的深度蜕变。
 
 ---
 
 ## 🗺️ 全域考点覆盖模型 (Systematic Knowledge Matrix)
 
-本矩阵展示了 SolKnow 练习库的核心知识分布与难度映射。点击知识点即可直达专项练习。
+本矩阵展示了 SolKnow 练习库的核心知识分布与难度映射。点击领域名称即可进入专项练习。
 
-| 领域                | 核心考点 (Knowledge Points)                             | 难度梯度  | 关联文档与练习                                               |
-| :------------------ | :------------------------------------------------------ | :-------- | :----------------------------------------------------------- |
-| **算法竞赛 (CP)**   | 线性/区间/数位 DP, 高级数据结构, 复杂图论建模           | Level A-C | [算法竞赛练习集](./cs/algorithm-basic)                       |
-| **学术数学 (Math)** | $\epsilon-\delta$ 证明, Jordan 标准型, 测度论, 拓扑空间 | Level A-C | [数学分析专题](./math/analysis) / [代数专题](./math/algebra) |
-| **计算机系统 (CS)** | 进程调度模拟, 内存管理原语, C++ 现代特性, Linux 运维    | Level A-B | [C++ 实战](./cs/cpp) / [操作系统](./cs/os)                   |
-| **人工智能 (AI)**   | 反向传播矩阵化, Transformer 架构推导, 算子级优化        | Level B-C | [深度学习实战](./ai/dl) / [机器学习](./ai/ml)                |
-| **信息安全 (Sec)**  | RSA/ECC 密码学证明, Web 漏洞挖掘, Pwn 溢出利用          | Level B-C | [网络安全](./infosec/web) / [Pwn 基础](./infosec/pwn)        |
+| 领域 | 核心考点 (Knowledge Points) | 难度梯度 | 跨学科关联 (Cross-Disciplinary) |
+| :--- | :--- | :--- | :--- |
+| **[算法竞赛 (CP)](./cs/algorithm-basic)** | DP 优化, 高级数据结构, 图论建模 | Level A-C | 离散数学, 复杂度理论 |
+| **[学术数学 (Math)](./math/analysis)** | $\epsilon-\delta$ 证明, Jordan 标准型, 测度论 | Level A-C | 计算机代数, 自动定理证明 |
+| **[计算机系统 (CS)](./cs/os)** | 进程调度, 内存管理, 并发一致性 | Level A-B | 形式化验证, 排队论 |
+| **[人工智能 (AI)](./ai/dl-math)** | 矩阵求导, 反向传播, 优化算法收敛性 | Level B-C | 统计学习, 凸优化, 线性代数 |
+| **[信息安全 (Sec)](./infosec/web)** | 密码学证明, 漏洞挖掘, Pwn 利用 | Level B-C | 数论, 计算复杂性, 汇编 |
 
 ---
 
@@ -74,74 +77,82 @@ Zap
 
 ---
 
+## 🚀 跨学科实验室 (Cross-Disciplinary Laboratory)
+
+> **“领域之交，创新之源。”** 在这里，我们打破学科壁垒，通过代码验证数学猜想，用数学建模解决工程难题。
+
+<div className="row">
+  <div className="col col--6">
+    <KnowledgeCard type="info" title="计算数学与工程验证">
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+        <FlaskConical size={20} color="#3b82f6" />
+        <strong style={{ color: '#3b82f6' }}>Scientific Computing</strong>
+      </div>
+      <ul style={{ fontSize: '0.9rem', paddingLeft: '1.2rem' }}>
+        <li><a href="math/numerical-analysis">数值分析：Newton 迭代与插值算法的 C++ 实现</a></li>
+        <li><a href="math/discrete-math">离散数学：图论算法及其在系统设计中的应用</a></li>
+        <li><a href="math/probability">随机算法：蒙特卡洛模拟与概率分布验证</a></li>
+      </ul>
+    </KnowledgeCard>
+  </div>
+  
+  <div className="col col--6">
+    <KnowledgeCard type="tip" title="AI 底层数学逻辑">
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+        <Brain size={20} color="#8b5cf6" />
+        <strong style={{ color: '#8b5cf6' }}>AI Foundations</strong>
+      </div>
+      <ul style={{ fontSize: '0.9rem', paddingLeft: '1.2rem' }}>
+        <li><a href="ai/dl-math">深度学习数学：自动求导原理与矩阵反向传播</a></li>
+        <li><a href="math/algebra">线性代数：SVD 分解在图像压缩与降维中的应用</a></li>
+        <li><a href="math/analysis">分析学：梯度下降法的收敛性证明与 C++ 模拟</a></li>
+      </ul>
+    </KnowledgeCard>
+  </div>
+</div>
+
+---
+
+## 📂 全量版块快速索引
+
+### 1. 计算机算法与结构 (CP/DS)
+- [基础算法 (二分/双指针/排序)](./cs/algorithm-basic)
+- [高级数据结构 (线段树/平衡树/持久化)](./cs/algorithm-ds)
+- [动态规划深度建模库](./cs/algorithm-dp-comprehensive)
+- [图论算法综合实战 (网络流/连通性)](./cs/algorithm-graph-comprehensive)
+- [计算几何与拓扑](./cs/algorithm-geometry)
+- [数论与组合数学专题](./cs/algorithm-number-theory)
+- [搜索优化与启发式算法](./cs/algorithm-search)
+- [字符串算法精要](./cs/algorithm-string)
+
+### 2. 学术数学理论体系 (Theoretical Math)
+- [数学分析：极限、微积分与级数](./math/analysis)
+- [高等代数：特征值、特征向量与 Jordan 标准型](./math/algebra)
+- [抽象代数：群环域结构与格论](./math/abstract-algebra)
+- [离散数学：关系、图论与布尔代数](./math/discrete-math)
+- [数值分析：计算方法与误差理论](./math/numerical-analysis)
+- [泛函分析与度量空间](./math/functional-analysis)
+- [点集拓扑学](./math/topology)
+- [复变函数与留数理论](./math/analysis-series-fourier)
+
+### 3. 系统工程与安全 (Systems & Sec)
+- [操作系统原理与调度实战](./cs/os)
+- [C++ 现代特性与性能优化](./cs/cpp)
+- [Linux 系统管理与脚本工程](./cs/linux)
+- [Web 安全与渗透测试实战](./infosec/web)
+- [二进制漏洞挖掘与 Pwn](./infosec/pwn)
+
+---
+
 ## 🧠 解题思维链导向 (Solution Thought Chain)
 
 我们不只提供代码，更注重**思维过程的重现**。每一道 Level B 以上的题目均遵循以下解题范式：
 
 1.  **建模 (Modeling)**：将现实或抽象描述转化为数学模型或数据结构表示。
 2.  **判定 (Analysis)**：利用单调性、最优子结构等性质确定算法边界。
-3.  **推导 (Derivation)**：严密的数学推导，确保逻辑无死角。
+3.  **推导 (Derivation)**：严密的数学推导 (LaTeX 格式)，确保逻辑无死角。
 4.  **实现 (Implementation)**：配套工业级 C++ 代码，注重封装性与执行效率。
-5.  **验证 (Verification)**：通过复杂度边界分析与典型 Case 验证。
-
----
-
-## 🧩 练习版块索引
-
-<div className="row">
-  <div className="col col--6">
-    <KnowledgeCard type="info" title="计算机算法与结构" className="margin-bottom--md">
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-        <Code2 size={20} color="#3b82f6" />
-        <strong style={{ color: '#3b82f6' }}>Algorithms & DS</strong>
-      </div>
-      <ul style={{ fontSize: '0.9rem', paddingLeft: '1.2rem' }}>
-        <li><a href="cs/algorithm-basic">基础算法 (二分/双指针/排序)</a></li>
-        <li><a href="cs/algorithm-ds">高级数据结构 (线段树/平衡树)</a></li>
-        <li><a href="cs/algorithm-dp-comprehensive">动态规划深度建模库</a></li>
-        <li><a href="cs/algorithm-graph-comprehensive">图论算法综合实战</a></li>
-        <li><a href="cs/algorithm-geometry">计算几何与拓扑</a></li>
-      </ul>
-    </KnowledgeCard>
-  </div>
-  
-  <div className="col col--6">
-    <KnowledgeCard type="tip" title="学术数学与理论体系" className="margin-bottom--md">
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-        <InfinityIcon size={20} color="#8b5cf6" />
-        <strong style={{ color: '#8b5cf6' }}>Advanced Mathematics</strong>
-      </div>
-      <ul style={{ fontSize: '0.9rem', paddingLeft: '1.2rem' }}>
-        <li><a href="math/analysis">数学分析：极限、微积分与级数</a></li>
-        <li><a href="math/algebra">高等代数：矩阵论与向量空间</a></li>
-        <li><a href="math/abstract-algebra">抽象代数：群环域结构</a></li>
-        <li><a href="math/discrete-math">离散数学：逻辑与图论</a></li>
-        <li><a href="math/probability">概率论与数理统计</a></li>
-      </ul>
-    </KnowledgeCard>
-  </div>
-</div>
-
-<div className="row">
-  <div className="col col--4">
-    <KnowledgeCard type="code" title="系统工程实战">
-      <Cpu size={18} color="#10b981" style={{ marginRight: '8px' }} />
-      <a href="cs/os">OS 原理</a> | <a href="cs/cpp">C++ 现代特性</a> | <a href="cs/linux">Linux 运维</a>
-    </KnowledgeCard>
-  </div>
-  <div className="col col--4">
-    <KnowledgeCard type="warning" title="AI 与安全实验室">
-      <ShieldCheck size={18} color="#f59e0b" style={{ marginRight: '8px' }} />
-      <a href="ai/dl">深度学习</a> | <a href="infosec/web">Web 安全</a> | <a href="infosec/pwn">Pwn 利用</a>
-    </KnowledgeCard>
-  </div>
-  <div className="col col--4">
-    <KnowledgeCard type="success" title="K-12 竞赛数学">
-      <Trophy size={18} color="#ef4444" style={{ marginRight: '8px' }} />
-      <a href="math/competition/elementary">小学</a> | <a href="math/competition/junior">初中</a> | <a href="math/competition/senior">高中</a>
-    </KnowledgeCard>
-  </div>
-</div>
+5.  **验证 (Verification)**：通过复杂度分析与极端数据验证。
 
 ---
 
