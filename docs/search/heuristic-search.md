@@ -4,6 +4,9 @@ sidebar_position: 2
 ---
 
 import { Search, Zap, Target, Thermometer, Box, ArrowRightCircle, Layers, ShieldCheck, Activity, Cpu, Database, Swords, Microscope, TrendingUp, Binary, Info, BookOpen, Calculator, RefreshCcw, CheckCircle2 } from 'lucide-react';
+import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import CodeCollapse from '@site/src/components/CodeCollapse';
+import ComplexityAnalysis from '@site/src/components/ComplexityAnalysis';
 
 # <Target className="inline-block mr-2 mb-1 text-purple-500" /> 搜索算法精要 (Search Essentials)
 
@@ -24,35 +27,42 @@ import { Search, Zap, Target, Thermometer, Box, ArrowRightCircle, Layers, Shield
 ### 2. 复杂度分析与有效分支因子 $b^*$
 搜索算法的性能由其扩展的节点总数 $N$ 衡量。对于深度为 $d$ 的解，定义**有效分支因子 $b^*$** 满足：
 $$N = 1 + b^* + (b^*)^2 + \dots + (b^*)^d$$
-- **目标**：通过设计高效的启发式函数，使 $b^* \to 1$。
-- **收敛性**：若算法能保证在有限步内找到最优解，则称其为**完备且最优**的。
+
+<KnowledgeCard type="complexity" title="有效分支因子 b* 的意义">
+在无启发式的暴力搜索中，$b^*$ 等于状态转移的平均度数。通过设计高效的启发式函数，我们的目标是使 $b^* \to 1$。即使 $b^*$ 从 3.0 降低到 1.1，在深度 $d=50$ 时，搜索空间将从 $10^{23}$ 压缩到 $10^2$ 级别，这是指数级优化的威力。
+</KnowledgeCard>
 
 ---
 
-## 一、 <ShieldCheck className="inline-block mr-2 mb-1 text-green-500" /> 剪枝策略：单调性证明与逻辑断言
+## 一、 <ShieldCheck className="inline-block mr-2 mb-1 text-green-500" /> 剪枝策略：形式化逻辑与安全性证明
 
-剪枝的本质是根据已知信息，证明搜索树的某个子树中不包含最优解。
+剪枝的本质是根据已知信息，证明搜索树的某个子树中不包含最优解（或任何可行解）。
 
-### 1. 剪枝策略的单调性证明
+### 1. 最优性剪枝 (Optimality Pruning)
 **定理（最优性剪枝的安全性）**：
-设当前已找到的最优解代价为 $C_{best}$。若估价函数 $f(s) = g(s) + \hat{h}(s)$ 满足**单调递增性**（即对于任意 $s \to s'$，有 $f(s) \le f(s')$），且 $\hat{h}(s)$ 是 $h^*(s)$ 的下界，则当 $f(s) > C_{best}$ 时，剪去以 $s$ 为根的子树是安全的。
+设当前已找到的最优解代价为 $C_{best}$。若估价函数 $f(s) = g(s) + \hat{h}(s)$ 满足**可接受性**（即 $\hat{h}(s) \le h^*(s)$），则当 $f(s) \ge C_{best}$ 时，剪去以 $s$ 为根的子树是安全的。
 
 **证明**：
-由于 $f$ 是单调递增的，对于 $s$ 的任意后继节点 $s''$，必有 $f(s'') \ge f(s)$。
-因为 $f(s) > C_{best}$，故 $f(s'') > C_{best}$。
-又因为 $\hat{h}(s'') \le h^*(s'')$，故真正的路径代价 $g(s'') + h^*(s'') \ge f(s'') > C_{best}$。
-因此，子树中任何路径的代价都将超过当前最优解，剪枝不会丢失全局最优。证毕。
+对于 $s$ 的任意后继节点 $s_{goal} \in G$，路径代价 $C = g(s) + \text{dist}(s, s_{goal})$。
+根据定义，$\text{dist}(s, s_{goal}) \ge h^*(s)$。
+由可接受性，$\hat{h}(s) \le h^*(s) \le \text{dist}(s, s_{goal})$。
+因此，$C = g(s) + \text{dist}(s, s_{goal}) \ge g(s) + \hat{h}(s) = f(s)$。
+若 $f(s) \ge C_{best}$，则通过 $s$ 到达的任何目标的代价 $C \ge C_{best}$，剪枝不会丢失更优解。证毕。
 
-### 2. 经典案例：木棒拼接 (Sticks)
-<details>
-<summary><Search size={16} className="inline mr-1" /> 高级 DFS 剪枝实现（C++）</summary>
+### 2. 可行性剪枝 (Feasibility Pruning)
+**逻辑断言**：设 $\Phi(s)$ 为状态 $s$ 满足目标可达性的必要 condition（Necessary Condition）。
+若 $\neg \Phi(s)$，则对于所有后继 $s'$，必有 $\neg \Phi(s')$。此时可安全剪枝。
+
+<CodeCollapse title="经典案例：木棒拼接 (Sticks) 剪枝证明" language="cpp">
 
 ```cpp
 /**
- * 核心剪枝策略证明：
- * 1. 降序排列：优先尝试长的木棒，减少分支因子。
- * 2. 排除冗余：若当前位置放置长度为 L 的木棒失败，则后续相同长度的木棒均无需尝试（逻辑对称性）。
- * 3. 边界判定：若第一根或最后一根拼接失败，则当前整体组合必败。
+ * 核心剪枝策略：
+ * 1. 降序排列：优先尝试长的木棒，使得 cur + a[i] 更快超过 target，增加剪枝频率。
+ * 2. 冗余排除：若 a[i] 尝试失败，则跳过后续所有长度等于 a[i] 的木棒。
+ * 3. 边界逻辑：
+ *    - cur == 0: 若第一根木棒就无法放入任何空位，说明当前整体组合非法。
+ *    - cur + a[i] == target: 若最后一根拼满当前组的木棒导致后续失败，则无需尝试更小的组合（贪心最优性）。
  */
 bool dfs(int cnt, int cur, int last) {
     if (cnt == m) return true;
@@ -64,47 +74,54 @@ bool dfs(int cnt, int cur, int last) {
         if (dfs(cnt, cur + a[i], i - 1)) return true;
         vis[i] = 0;
 
-        // 剪枝关键：
         if (cur == 0 || cur + a[i] == target) return false; 
         while (i > 0 && a[i] == a[i - 1]) i--; 
     }
     return false;
 }
 ```
-</details>
+</CodeCollapse>
 
 ---
 
-## 二、 <Target className="inline-block mr-2 mb-1 text-red-500" /> A* 算法：启发式函数与一致性证明
+## 二、 <Target className="inline-block mr-2 mb-1 text-red-500" /> A* 算法：一致性分析与单调性
 
-### 1. 可接受性与一致性
-- **可接受性 (Admissibility)**：$0 \le h(n) \le h^*(n)$。确保 A* 不会错过更优解。
-- **一致性 (Consistency)**：$h(n) \le c(n, a, n') + h(n')$。确保搜索过程的单调性，即 $f(n)$ 沿路径不减。
+### 1. 可接受性 vs. 一致性
+- **可接受性 (Admissibility)**：$h(n) \le h^*(n)$。保证找到最优解。
+- **一致性 (Consistency / Monotonicity)**：$h(n) \le c(n, a, n') + h(n')$。
 
-### 2. 一致性推导单调性证明
+<KnowledgeCard type="theorem" title="一致性与三角不等式">
+一致性等价于在状态空间图中，$h(n)$ 满足三角不等式。
+若 $h$ 是一致的，则 $f(n)$ 沿任何搜索路径是非递减的。
+**推论**：若 $h$ 一致，则当 A* 扩展到一个节点 $n$ 时，已经找到了到达 $n$ 的最短路径，因此**无需在发现更短路径时重新打开 CLOSED 集中的节点**。
+</KnowledgeCard>
+
+### 2. 一致性推导 $f(n)$ 单调性
 **证明**：
 $f(n') = g(n') + h(n') = g(n) + c(n, a, n') + h(n')$
 由一致性：$c(n, a, n') + h(n') \ge h(n)$
-$\therefore f(n') \ge g(n) + h(n) = f(n)$。证毕。
-
-### 3. 收敛性与搜索效率分析
-**收敛速度定理**：
-若 $h_1(n) > h_2(n)$ 对所有非目标节点成立，且两者均满足一致性，则使用 $h_1$ 的 A* 扩展的节点数必少于使用 $h_2$ 的 A*。
-这表明**启发式函数越接近 $h^*$，搜索树收敛越快**。
+$\therefore f(n') \ge g(n) + h(n) = f(n)$。
 
 ---
 
-## 三、 <Zap className="inline-block mr-2 mb-1 text-yellow-500" /> IDA*：迭代加深与一致性校验
+## 三、 <Zap className="inline-block mr-2 mb-1 text-yellow-500" /> IDA* 与迭代加深收敛验证
 
-IDA* (Iterative Deepening A*) 是内存受限环境下的首选。
+IDA* (Iterative Deepening A*) 将 DFS 的空间优势与 A* 的启发式引导结合。
 
-### 1. 核心思想与一致性校验
-IDA* 使用 DFS 模拟 A* 的过程。其正确性依赖于**阈值更新机制**。
-- **一致性校验**：在实现 IDA* 时，必须确保 $h(n)$ 满足 $h(n) \le h(n') + \text{cost}(n, n')$。若不满足，搜索可能会陷入重复路径或无法在当前层找到解。
+### 1. 迭代加深的收敛性与开销分析
+**问题**：迭代加深（IDDFS）每次都会重新搜索前一层，是否太慢？
+**证明（几何级数开销）**：
+设分支因子为 $b$，深度为 $d$。IDDFS 扩展的节点总数为：
+$$N_{ID} = \sum_{i=1}^d (d - i + 1) b^i$$
+当 $b > 1$ 时，该式由最后一项 $b^d$ 主导：
+$$\frac{N_{ID}}{N_{BFS}} \approx \frac{b}{b-1}$$
+对于 $b=2$，总开销仅为 BFS 的 2 倍；对于 $b=10$，开销仅多出 11%。这换取了 $O(d)$ 的线性空间复杂度，极其划算。
 
-### 2. [15-Puzzle] 曼哈顿距离启发式
-<details>
-<summary><Calculator size={16} className="inline mr-1" /> IDA* 解决 15-数码（C++）</summary>
+### 2. IDA* 的最优性证明
+若启发式函数 $h(n)$ 是**可接受的**，则 IDA* 第一次找到目标时，其路径代价必为最优。
+**理由**：IDA* 按 $f$ 值的阈值 $L$ 从小到大进行搜索。若存在一个代价更小的最优解 $C^*$，它必定在阈值 $L=C^*$ 的迭代中被发现。
+
+<CodeCollapse title="IDA* 解决 15-数码（C++ 核心逻辑）" language="cpp">
 
 ```cpp
 int get_h() {
@@ -112,20 +129,20 @@ int get_h() {
     for (int i = 0; i < 16; i++) {
         if (q[i] == 0) continue;
         int v = q[i] - 1;
-        h += abs(i / 4 - v / 4) + abs(i % 4 - v % 4);
+        h += abs(i / 4 - v / 4) + abs(i % 4 - v % 4); // 曼哈顿距离
     }
     return h;
 }
 
 int solve(int dep, int limit, int prev) {
     int h = get_h();
-    if (dep + h > limit) return dep + h; // 返回下一次限制的最小值
-    if (h == 0) return 0; // 找到目标
+    if (dep + h > limit) return dep + h; // 返回下一次迭代的最小阈值
+    if (h == 0) return 0; // 成功标识
 
-    int next_limit = 100;
+    int next_limit = INF;
     for (int i = 0; i < 4; i++) {
-        if (abs(i - prev) == 2) continue; // 不往回走
-        // 执行移动并递归...
+        if (abs(i - prev) == 2) continue; // 禁止往回走（对称性剪枝）
+        // Swap, DFS, Unswap...
         int t = solve(dep + 1, limit, i);
         if (t == 0) return 0;
         next_limit = min(next_limit, t);
@@ -133,62 +150,46 @@ int solve(int dep, int limit, int prev) {
     return next_limit;
 }
 ```
+</CodeCollapse>
+
+---
+
+## 四、 <Microscope className="inline-block mr-2 mb-1 text-blue-500" /> 高级课题：双向搜索与状态压缩
+
+### 1. 双向 A* (Bidirectional A*)
+同时从 $s_0 \to G$ 和 $G \to s_0$ 搜索。当两个前沿相遇时停止。
+注意：相遇时的路径不一定是全局最优，需要特定的停止准则。
+
+### 2. Zobrist Hashing 与状态判重
+在 IDA* 中，由于不存储节点，极易出现重复状态搜索。使用 Zobrist Hashing 配合哈希表可以实现 $O(1)$ 的状态记忆化。
+
+---
+
+## 🎯 教材配套练习 (Exercises)
+
+### 练习 1：一致性判别
+> 若 $h(n)$ 满足可接受性，定义 $h'(n) = \max(h(n), h(p) - c(p, n))$，其中 $p$ 是 $n$ 的父节点。证明 $h'(n)$ 是一致的。
+<details>
+<summary>Check Solution</summary>
+这是 Pathmax 方程。通过取父节点推导出的下界与当前估价的较大值，强制满足 $h(p) \le c(p, n) + h(n)$，从而修正了不满足一致性的启发式函数，使其满足单调性。
+</details>
+
+### 练习 2：IDA* 的阈值更新
+> 为什么 IDA* 的下一次阈值要取所有超过当前阈值的 $f(n)$ 中的最小值？
+<details>
+<summary>Check Solution</summary>
+这是为了保证算法的**完备性**。取最小值能确保我们不错过任何可能的最小代价解，同时将搜索空间尽可能缓慢地扩大，保持迭代加深的渐进性质。
+</details>
+
+### 练习 3：[实战挑战] 埃及分数问题
+> 使用 IDA* 寻找将分数 $a/b$ 分解为 $k$ 个互不相同的单位分数之和（$1/n_1 + 1/n_2 + \dots$），要求 $n_k$ 最小。请给出该问题的启发式函数 $\hat{h}$。
+<details>
+<summary>Check Strategy</summary>
+设当前剩余分数为 $res = a/b$，还需选 $m$ 个数。
+若当前选到的最大分数为 $1/n_{last}$，则 $res$ 至少需要 $\lceil res / (1/n_{last}) \rceil$ 个数。
+启发式 $\hat{h}$：若剩余 $res$，后续最大可能的单位分数为 $1/(n_{last}+1)$，若 $res / (1/(n_{last}+1)) > m$，则剪枝。
 </details>
 
 ---
 
-## 四、 <Thermometer className="inline-block mr-2 mb-1 text-orange-500" /> 随机化搜索：模拟退火 (SA)
-
-对于极度复杂的能谱面（Energy Landscape），模拟退火通过概率跳出局部最优。
-
-### 1. Metropolis 准则
-接受新解的概率 $P$ 定义为：
-$$P = \begin{cases} 1 & \text{if } \Delta E < 0 \\ \exp(-\frac{\Delta E}{T}) & \text{if } \Delta E \ge 0 \end{cases}$$
-其中 $T$ 是温度，随时间降温。
-
----
-
-## 🎯 综合练习：从理论到实战
-
-### 练习 1：剪枝单调性判定
-> 给定一个状态空间，已知 $g(s)$ 是从起点到 $s$ 的最短路径，$\hat{h}(s)$ 是估价函数。如果 $\hat{h}(s)$ 违反了可接受性（即存在 $\hat{h}(s) > h^*(s)$），请说明为何最优性剪枝可能会导致算法失败。
-<details>
-<summary>Check Answer</summary>
-若 $\hat{h}(s) > h^*(s)$，则 $f(s) = g(s) + \hat{h}(s)$ 可能会大于当前最优解 $C_{best}$，即使真正通过 $s$ 的路径代价 $g(s) + h^*(s) \le C_{best}$。这将导致算法错误地剪掉包含全局最优解的子树。
-</details>
-
-### 练习 2：IDA* 的一致性校验
-> 在设计 IDA* 的估价函数时，如果使用了比曼哈顿距离更“激进”的启发式（例如曼哈顿距离乘以 1.5），这会产生什么后果？
-<details>
-<summary>Check Answer</summary>
-这种启发式虽然能大幅减少节点访问数（$b^*$ 变小），但它违反了**可接受性**。后果是 IDA* 可能会在找到真正的最短路径之前，“跳过”它并返回一个代价较高的解，从而失去最优性。
-</details>
-
-### 练习 3：[实战] 骑士巡游优化
-> 使用 A* 算法解决骑士巡游问题，设计一个合适的启发式函数并给出 C++ 实现。
-<details>
-<summary>Check Solution: Warnsdorff's Rule 启发式</summary>
-
-```cpp
-// 启发式：优先移动到后继分支最少的格子 (Warnsdorff's Rule)
-struct Node {
-    int x, y, degree;
-    bool operator<(const Node& other) const {
-        return degree > other.degree; // 小顶堆，度数小的优先
-    }
-};
-
-int get_degree(int x, int y) {
-    int cnt = 0;
-    for (int i = 0; i < 8; i++) {
-        int nx = x + dx[i], ny = y + dy[i];
-        if (is_valid(nx, ny)) cnt++;
-    }
-    return cnt;
-}
-```
-</details>
-
----
-
-_“搜索是在复杂性中寻找秩序。从 $f(n)$ 的单调性证明到模拟退火的概率演化，算法的深度决定了问题的边界。”_
+_“搜索的边界即是认知的边界。通过数学严谨性，我们将混沌的状态空间转化为有序的求解路径。”_
