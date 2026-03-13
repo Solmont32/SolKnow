@@ -4,7 +4,7 @@ description: 凸包对踵点维护、线性时间几何特性求解与拓扑证�
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { Waypoints, Zap, Activity, BookOpen, Scaling, ShieldAlert } from 'lucide-react';
+import { Waypoints, Zap, Activity, BookOpen, Scaling, ShieldAlert, Scale } from 'lucide-react';
 
 # 旋转卡壳 (Rotating Calipers)
 
@@ -23,9 +23,11 @@ import { Waypoints, Zap, Activity, BookOpen, Scaling, ShieldAlert } from 'lucide
 **证明：直径取得性**
 1.  **极值性**：令 $d(P, Q) = \max_{A, B \in H} d(A, B)$。设 $L_P, L_Q$ 为过 $P, Q$ 且垂直于 $PQ$ 的直线。
 2.  **支撑性**：若 $H$ 在 $L_P$ 的 $Q$ 点反侧有部分区域，则该区域内的点 $P'$ 到 $Q$ 的距离 $d(P', Q) > d(P, Q)$（由直角三角形斜边性质），矛盾。
-3.  **对踵性**：故 $L_P, L_Q$ 必然是 $H$ 的平行支撑线，$(P, Q)$ 必为对踵点。得证。
+3.  **对踵性**：故 $L_P, L_Q$ 必然是 $H$ 的平行支撑线，$(P, Q)$ 必为对踵点。
 
-**单调性（Monotonicity）**：当支撑线沿 $H$ 边界顺时针旋转时，其对应的对踵点指针也在 $H$ 边界上单调顺时针移动。
+**单调性（Monotonicity）证明**：
+设当前支撑线与边 $e_i = P_iP_{i+1}$ 重合，对踵点为 $Q_j$。当支撑线旋转至下一条边 $e_{i+1}$ 时，对应的最远点 $Q_{j'}$ 在多边形边界上的位置必然满足 $j' \ge j$（逆时针序）。
+*直觉*：多边形的凸性保证了顶点到对边的垂直距离函数是**单峰（Unimodal）**的。
 
 </KnowledgeCard>
 
@@ -37,9 +39,9 @@ import { Waypoints, Zap, Activity, BookOpen, Scaling, ShieldAlert } from 'lucide
 
 <KnowledgeCard type="warning" title="退化拓扑处理">
 
-1.  **线段凸包**：若凸包仅含两点 $P, Q$，对踵点即为 $(P, Q)$，旋转一周过程中指针不发生位移。算法应在初始化阶段判定 `n < 3` 并直接返回 $d(P, Q)$。
-2.  **共线多边形**：若旋转过程中支撑线与凸包某条边 $E$ 重合，则该边上的所有点相对于对踵点 $Q$ 的面积（即到 $Q$ 的高度）均相等。
-    - **一致性要求**：指针更新判定应使用 `sign(cross(...) - cross(...)) <= 0` 而非 `< 0`，以确保在平行情况下指针能正确跳过共线点。
+1.  **线段凸包**：若凸包仅含两点 $P, Q$，对踵点即为 $(P, Q)$。算法应判定 `n == 2` 并直接返回 $d(P, Q)$。
+2.  **平行边退化**：若旋转过程中支撑线同时与两条平行边重合，此时对踵点对包含两对端点（四个点）。
+    - **一致性要求**：指针更新判定应使用 `sign(area_next - area_curr) >= 0` 以遍历所有可能的对踵点对。
 
 </KnowledgeCard>
 
@@ -50,16 +52,14 @@ DB getDiameter(const vector<Point>& h) {
     if (n < 2) return 0;
     if (n == 2) return length(h[0] - h[1]);
     DB res = 0;
-    int j = 2; // 最远点指针
+    int j = 1; // 对踵点指针
     for (int i = 0; i < n; i++) {
         // 寻找距离边 h[i]-h[i+1] 最远的点 j
-        // 利用叉积比较三角形面积，面积大则距离远
-        while (sign(cross(h[i+1] - h[i], h[j] - h[i]) -
-                   cross(h[i+1] - h[i], h[(j+1)%n] - h[i])) < 0) {
+        while (sign(cross(h[(i+1)%n] - h[i], h[(j+1)%n] - h[i]) -
+                   cross(h[(i+1)%n] - h[i], h[j] - h[i])) > 0) {
             j = (j + 1) % n;
         }
-        // 对踵点可能为 (h[i], h[j]) 或 (h[i+1], h[j])
-        res = max({res, distSq(h[i], h[j]), distSq(h[i+1], h[j])});
+        res = max({res, distSq(h[i], h[j]), distSq(h[(i+1)%n], h[j])});
     }
     return sqrt(res);
 }
@@ -67,14 +67,14 @@ DB getDiameter(const vector<Point>& h) {
 
 ---
 
-## 4. 经典练习库 (Exercises)
+## 3. 经典练习库 (Exercises)
 
 <details>
-<summary>例题 1：最小外接矩形面积 (Min-Area Rectangle)</summary>
+<summary>例题 1：最小外接矩形 (Min-Area Rectangle)</summary>
 
 **题目描述**：给定 $n$ 个点，求覆盖所有点的面积最小的矩形。
-**思路**：最小面积矩形的一条边必然与凸包的一条边重合。
-维护三个指针：最远点 $p$、最左点 $l$、最右点 $r$。
+**定理**：面积最小的外接矩形必然有一条边与凸包的某条边共线。
+**思路**：维护三个指针：高度最远点 $p$、最左点 $l$、最右点 $r$。
 
 <details>
 <summary>Check Solution</summary>
@@ -83,21 +83,20 @@ DB getDiameter(const vector<Point>& h) {
 DB minBoundingBox(vector<Point>& pts) {
     vector<Point> h = getConvexHull(pts);
     int n = h.size();
+    if (n < 3) return 0;
     DB minS = 1e18;
     int p = 1, l = 1, r = 1;
     for (int i = 0; i < n; i++) {
         Vector v = h[(i+1)%n] - h[i];
-        DB d = length(v);
-        // 更新高度点 p (叉积最大)
+        DB d2 = distSq(h[i], h[(i+1)%n]);
+        // 旋转卡壳更新三个极点
         while (sign(cross(v, h[(p+1)%n] - h[i]) - cross(v, h[p] - h[i])) >= 0) p = (p+1)%n;
-        // 更新右侧点 r (点积最大)
         while (sign(dot(v, h[(r+1)%n] - h[i]) - dot(v, h[r] - h[i])) >= 0) r = (r+1)%n;
         if (i == 0) l = r;
-        // 更新左侧点 l (点积最小)
         while (sign(dot(v, h[(l+1)%n] - h[i]) - dot(v, h[l] - h[i])) <= 0) l = (l+1)%n;
         
-        DB H = cross(v, h[p] - h[i]) / d;
-        DB W = (dot(v, h[r] - h[i]) - dot(v, h[l] - h[i])) / d;
+        DB H = cross(v, h[p] - h[i]) / sqrt(d2);
+        DB W = (dot(v, h[r] - h[i]) - dot(v, h[l] - h[i])) / sqrt(d2);
         minS = min(minS, H * W);
     }
     return minS;
@@ -111,7 +110,7 @@ DB minBoundingBox(vector<Point>& pts) {
 <summary>练习 1：两个凸包的最小距离</summary>
 
 **题目描述**：给定两个不相交的凸包 $A, B$，求它们之间的最短距离。
-**思路**：使用两组卡壳平行线。寻找 $A$ 上的边和 $B$ 上的点，或反之，使得距离最小。
+**思路**：最短距离可能在 点-点、点-边 之间取得。使用两组卡壳平行线。
 
 <details>
 <summary>Check Solution</summary>
@@ -119,13 +118,11 @@ DB minBoundingBox(vector<Point>& pts) {
 ```cpp
 DB minDistanceBetweenHulls(vector<Point>& A, vector<Point>& B) {
     int n = A.size(), m = B.size();
-    // 找到 A 的 y 最小和 B 的 y 最大点
     int a = 0, b = 0;
     for (int i = 1; i < n; i++) if (A[i].y < A[a].y) a = i;
     for (int i = 1; i < m; i++) if (B[i].y > B[b].y) b = i;
     DB res = 1e18;
     for (int i = 0; i < n; i++) {
-        // 旋转过程中更新 B 上的对应点
         while (sign(cross(A[(a+1)%n] - A[a], B[(b+1)%m] - A[a]) - 
                    cross(A[(a+1)%n] - A[a], B[b] - A[a])) < 0) b = (b+1)%m;
         res = min(res, distToSegment(B[b], A[a], A[(a+1)%n]));
@@ -139,10 +136,10 @@ DB minDistanceBetweenHulls(vector<Point>& A, vector<Point>& B) {
 </details>
 
 <details>
-<summary>练习 2：多边形内的最大三角形</summary>
+<summary>练习 2：凸多边形内的最大三角形</summary>
 
-**题目描述**：在给定的凸多边形中，选出三个顶点，使得构成的三角形面积最大。
-**思路**：固定一个底边 $h[i]h[j]$，面积最大的第三点必然是旋转卡壳中的极点。复杂度 $O(n^2)$ 或优化至 $O(n)$。
+**题目描述**：在给定的凸多边形中，选出三个顶点，使得构成的三角形面积最大。要求 $O(N)$。
+**思路**：固定底边一个点 $i$，双指针维护另外两个点 $j, k$，使三角形 $ijk$ 面积最大。
 
 </details>
 

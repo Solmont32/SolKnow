@@ -4,7 +4,7 @@ description: 极角排序、双端队列维护与线性约束求解证明。
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { Target, ShieldCheck, Activity, BookOpen, Layers, ShieldAlert } from 'lucide-react';
+import { Target, ShieldCheck, Activity, BookOpen, Layers, ShieldAlert, Scale } from 'lucide-react';
 
 # 半平面交 (Half-plane Intersection)
 
@@ -12,7 +12,7 @@ import { Target, ShieldCheck, Activity, BookOpen, Layers, ShieldAlert } from 'lu
 
 ---
 
-### 1.1 形式化描述与拓扑性质证明
+## 1. 形式化描述与拓扑性质证明
 
 **定义**：一个半平面 $H_i$ 可以表示为 $H_i = \{ (x, y) \in \mathbb{R}^2 \mid ax + by + c \ge 0 \}$。
 
@@ -22,7 +22,7 @@ import { Target, ShieldCheck, Activity, BookOpen, Layers, ShieldAlert } from 'lu
 半平面交 $S = \bigcap H_i$ 的凸性保证了扫描算法的收敛性。
 **证明**：
 设 $P, Q \in S$，由交集定义，$P, Q \in H_i$ 对所有 $i$ 成立。
-由于每个 $H_i$ 是凸集，线段 $PQ \subseteq H_i$ 成立。
+由于每个 $H_i$ 是凸集（线性约束定义的空间必为凸），线段 $PQ \subseteq H_i$ 成立。
 因此 $PQ \subseteq \bigcap H_i = S$，由凸集定义，$S$ 为凸集。
 
 **定理 2：极角排序的拓扑意义**
@@ -32,28 +32,21 @@ import { Target, ShieldCheck, Activity, BookOpen, Layers, ShieldAlert } from 'lu
 
 ---
 
-## 2. 浮点误差收敛性 (Numerical Convergence)
+## 2. 精度收敛与数值稳定性 (Numerical Stability)
 
-在半平面交中，误差主要来自交点计算：$P = \text{Intersection}(L_i, L_j)$。
+在半平面交中，由于涉及大量直线交点计算，误差的累积与放大是核心风险。
 
-<KnowledgeCard type="warning" title="交点误差放大效应">
+### 2.1 交点误差放大效应
 
-若两条直线 $L_i, L_j$ 的夹角 $\theta \to 0$（几近平行），交点坐标的误差 $\delta$ 满足：
-$$\delta(P) \approx \frac{\delta(L)}{\sin \theta}$$
-当 $\theta$ 极小时，交点坐标可能超出浮点数表示范围，导致判定点是否在半平面右侧（`onRight`）时逻辑失效。
+<KnowledgeCard type="warning" title="接近平行的直线判定">
+
+若两条直线 $L_i, L_j$ 的夹角 $\theta \to 0$（几近平行），交点坐标 $P$ 的绝对误差 $\delta(P)$ 满足：
+$$\delta(P) \approx \frac{L \cdot \epsilon_{mach}}{\sin \theta}$$
+其中 $L$ 是坐标量级。当 $\sin \theta$ 极小时，交点坐标可能发生剧烈跳变。
 
 **收敛建议**：
 1. **预去重**：在极角排序后，合并夹角 $\Delta \theta < \epsilon$ 的直线，仅保留最内侧者。
 2. **包围盒**：增加一个极大的矩形限制（Bounding Box），防止无界区域导致的坐标溢出。
-
-</KnowledgeCard>
-
-
-<KnowledgeCard type="warning" title="平行线与退化判定">
-
-1.  **平行线处理**：若极角相同且方向一致，必须仅保留“最内侧”的直线。
-2.  **极角排序冲突**：在处理极角相同的直线时，若不进行去重或择优，算法会产生除零错误或逻辑死循环。
-3.  **无界转化为有界**：为简化实现，建议预先添加一个巨大的矩形框（如 $[-10^{12}, 10^{12}]$）包裹所有可能区域。
 
 </KnowledgeCard>
 
@@ -64,8 +57,11 @@ struct Line {
     Point p; Vector v; DB ang;
     Line() {}
     Line(Point p, Vector v): p(p), v(v) { ang = atan2(v.y, v.x); }
-    // 排序优先级：极角升序
-    bool operator< (const Line& L) const { return ang < L.ang; }
+    // 排序优先级：极角升序，极角相同时保留最左侧
+    bool operator< (const Line& L) const {
+        if (sign(ang - L.ang) != 0) return ang < L.ang;
+        return sign(cross(v, L.p - p)) > 0;
+    }
 };
 
 // 检查直线 L 与队列中交点 P 的关系
@@ -75,31 +71,30 @@ bool onRight(Line L, Point P) {
 
 vector<Point> halfPlaneIntersection(vector<Line>& L) {
     sort(L.begin(), L.end());
-    int n = L.size(), head = 0, tail = 0;
+    int n = L.size();
     vector<Line> q(n + 5);
     vector<Point> p(n + 5);
 
-    // 1. 去重：极角相同时保留最左侧直线
+    // 1. 去重：极角相同时保留最内侧直线
     int m = 0;
     for (int i = 0; i < n; i++) {
-        if (i > 0 && sign(L[i].ang - L[i-1].ang) == 0) {
-            if (onRight(L[m-1], L[i].p)) L[m-1] = L[i]; // L[i] 坐标更内侧
-            continue;
-        }
+        if (i > 0 && sign(L[i].ang - L[i-1].ang) == 0) continue;
         L[m++] = L[i];
     }
 
     // 2. 双端队列扫描
+    int head = 0, tail = 0;
     for (int i = 0; i < m; i++) {
         while (tail - head > 1 && onRight(L[i], p[tail - 1])) tail--;
         while (tail - head > 1 && onRight(L[i], p[head + 1])) head++;
         q[tail++] = L[i];
         if (tail - head > 1) p[tail - 1] = getLineIntersection(q[tail-2], q[tail-1]);
     }
+    // 闭合处理
     while (tail - head > 1 && onRight(q[head], p[tail - 1])) tail--;
 
-    if (tail - head < 3) return {}; // 交集为空或点、线
-    p[head] = getLineIntersection(q[head], q[tail-1]); // 计算最后一个顶点
+    if (tail - head < 3) return {}; // 交集为空或退化
+    p[head] = getLineIntersection(q[head], q[tail-1]);
 
     vector<Point> res;
     for (int i = head; i < tail; i++) res.push_back(p[i]);
@@ -114,13 +109,11 @@ vector<Point> halfPlaneIntersection(vector<Line>& L) {
 <details>
 <summary>例题 1：多边形核 (Polygon Kernel)</summary>
 
-**题目描述**：给定一个 $n$ 边形，判断是否存在一个点 $P$ 位于多边形内部，且 $P$ 与多边形所有顶点连线均不穿过外部（即 $P$ 能看到所有边）。
+**题目描述**：给定一个 $n$ 边形，判断其核（Kernel）是否为空。核是内部所有点都能看到所有顶点的集合。
+**证明**：多边形的核是所有边所在半平面的交。由于半平面交必为凸集，故多边形的核若不为空，则必为凸多边形。
 
 <details>
 <summary>Check Solution</summary>
-
-多边形的核即为所有边所在直线的半平面交。
-*注意：顶点顺序必须统一为逆时针，确保左侧为内部。*
 
 ```cpp
 bool hasKernel(const vector<Point>& poly) {
@@ -136,27 +129,26 @@ bool hasKernel(const vector<Point>& poly) {
 </details>
 
 <details>
-<summary>练习 1：最大内切圆中心 (Largest Inscribed Circle)</summary>
+<summary>练习 1：最大内切圆 (Largest Inscribed Circle)</summary>
 
-**题目描述**：给定一个凸多边形，求其内部最大的圆。
-**思路**：将问题转化为半平面交。圆心 $(x, y)$ 到边 $ax+by+c=0$ 的距离 $\frac{|ax+by+c|}{\sqrt{a^2+b^2}} \ge R$。
-通过**二分答案 $R$**，将每条边向内平移 $R$ 距离，检查平移后的半平面交是否为空。
+**题目描述**：给定凸多边形，求其内部半径最大的圆。
+**思路**：二分半径 $R$。将每条边向内平移 $R$ 距离后，检查半平面交是否非空。
+**代数一致性**：平移距离 $d$ 对应的向量为 $d \cdot \frac{\text{normal}}{\text{length}}$。
 
 <details>
 <summary>Check Solution</summary>
 
 ```cpp
-// 直线向左平移 d 距离
 Line moveLeft(Line L, DB d) {
-    Vector normal = {-L.v.y, L.v.x}; // 左垂直向量
-    normal = normal / length(normal) * d;
-    return Line(L.p + normal, L.v);
+    Vector n = {-L.v.y, L.v.x}; // 左垂直向量
+    n = n / length(n) * d;
+    return Line(L.p + n, L.v);
 }
 
 bool check(DB R, const vector<Line>& L) {
     vector<Line> shifted;
     for (auto& line : L) shifted.push_back(moveLeft(line, R));
-    return halfPlaneIntersection(shifted).size() >= 1; // 仅需非空
+    return halfPlaneIntersection(shifted).size() > 0;
 }
 ```
 
@@ -164,11 +156,10 @@ bool check(DB R, const vector<Line>& L) {
 </details>
 
 <details>
-<summary>练习 2：赛车竞速 (Intersection of Linear Constraints)</summary>
+<summary>练习 2：凸多边形的最小包含面积三角形</summary>
 
-**题目描述**：有 $n$ 辆赛车在无限长的跑道上以恒定速度行驶，给定初始位置 $s_i$ 和速度 $v_i$。求哪些赛车在某些时刻（$t \ge 0$）能够处于领先位置（即排名第一）。
-**思路**：
-赛车 $i$ 的轨迹为直线 $f_i(t) = v_it + s_i$。处于领先位置意味着 $f_i(t) \ge f_j(t)$ 对所有 $j$ 成立。这相当于求解所有半平面 $f_i(t) - f_j(t) \ge 0$ 的交。在 $(t, s)$ 坐标系中，这对应于下凸壳或半平面交的上边界。
+**题目描述**：给定凸多边形，求一个面积最小的三角形，使其包含该多边形。
+**思路**：三角形的三条边必然与凸多边形的三条支撑线重合。可以通过旋转卡壳或半平面交的变体进行求解。
 
 </details>
 

@@ -21,14 +21,16 @@ import { Waypoints, ShieldCheck, Zap, PenTool, Activity, BookOpen, Scale } from 
 
 </KnowledgeCard>
 
-### 1.1 Andrew 算法的拓扑一致性证明
+### 1.1 Andrew 算法（单调链法）的严格证明
 
-**定理**：Andrew 算法（单调链法）构造的序列必为原点集 $S$ 的凸包顶点。
+**算法步骤**：
+1. 将所有点按 $x$ 坐标升序排序（$x$ 相同时按 $y$ 升序）。
+2. 从左到右构建下凸壳，从右到左构建上凸壳。
 
 **证明（拓扑性质）**：
 1.  **极点保证**：排序后的首点 $P_1$ 和末点 $P_n$ 具有最小和最大的 $x$ 坐标。根据凸包定义，这两点必然位于凸包边界上（支撑线存在性）。
-2.  **局部凸性维持**：对于下凸壳，考虑三个连续点 $h_{k-2}, h_{k-1}, p_i$。算法判定 $\vec{h_{k-2}h_{k-1}} \times \vec{h_{k-1}p_i} \le 0$。由叉积的方向性（定理 3.1），若叉积 $\le 0$，则 $p_i$ 位于前两个点确定的向量右侧。此时 $h_{k-1}$ 位于三角形 $h_{k-2}h_{k-1}p_i$ 内部或边界。弹出 $h_{k-1}$ 保证了新栈顶序列始终保持“向左转”（Left-turn Only）的拓扑特性。
-3.  **单调性收敛**：排序确保了每一步扫描都是 $x$ 单调增加的。下凸壳覆盖了 $x$ 轴正向投影，上凸壳覆盖了 $x$ 轴负向投影，两者拼接必然形成包围所有点的简单凸多边形。
+2.  **局部凸性维持**：对于下凸壳，考虑三个连续点 $h_{k-2}, h_{k-1}, p_i$。算法判定 $\vec{h_{k-2}h_{k-1}} \times \vec{h_{k-1}p_i} \le 0$。由叉积的方向性，若叉积 $\le 0$，则 $p_i$ 位于前两个点确定的向量右侧或共线。此时 $h_{k-1}$ 位于线段 $h_{k-2}p_i$ 的左侧或上方（对于下凸壳而言是“凹陷”的）。弹出 $h_{k-1}$ 保证了新栈顶序列始终保持“向左转”（Left-turn Only）的拓扑特性。
+3.  **单调性与全覆盖**：排序确保了每一步扫描都是 $x$ 单调增加的。下凸壳覆盖了 $S$ 的所有点在 $x$ 轴上的投影下方区域。由对称性，上凸壳覆盖了上方区域。两链拼接形成的简单多边形 $H$ 满足：所有 $P \in S$ 都在 $H$ 内部或边界。由于每一步都保持了局部凸性且起始/终止于极点，$H$ 必为 $S$ 的凸包。
 
 ---
 
@@ -57,7 +59,7 @@ import { Waypoints, ShieldCheck, Zap, PenTool, Activity, BookOpen, Scale } from 
 - **严格凸包**：使用 `sign(cross(...)) <= 0` 弹出。此时凸包边上不含除顶点外的点。
 - **包含边界点**：使用 `sign(cross(...)) < 0` 弹出。此时共线点会被保留。
 
-**注意**：若保留共线点，排序和扫描逻辑需极端小心，尤其是最末尾的一段共线点在反向扫描时可能导致重复计算。
+**注意**：若保留共线点，上凸壳扫描起始位置需为 $n-2$，且最后的 `resize(k-1)` 逻辑需确保不误删共线点。
 
 </KnowledgeCard>
 
@@ -76,7 +78,7 @@ vector<Point> getConvexHull(vector<Point>& p) {
         while (k > 1 && sign(cross(h[k-1] - h[k-2], p[i] - h[k-1])) <= 0) k--;
         h[k++] = p[i];
     }
-    // 构建上凸壳 (注意起始 t 标记)
+    // 构建上凸壳
     for (int i = n - 2, t = k; i >= 0; i--) {
         while (k > t && sign(cross(h[k-1] - h[k-2], p[i] - h[k-1])) <= 0) k--;
         h[k++] = p[i];
@@ -91,56 +93,67 @@ vector<Point> getConvexHull(vector<Point>& p) {
 ## 4. 经典推导与练习库 (Exercises)
 
 <details>
-<summary>例题 1：动态凸包维护 (Incremental Convex Hull)</summary>
+<summary>例题 1：动态凸包判定 (Point in Convex Polygon)</summary>
 
-**题目描述**：支持动态加点，并实时查询当前凸包的周长。
-**思路**：利用 `std::set` 维护凸包顶点。加点 $P$ 时，先判定是否在当前凸包内（二分）。若不在，寻找前驱后继并删除被 $P$ “覆盖”的旧边。
-
-```cpp
-struct Node {
-    Point p;
-    bool operator< (const Node& b) const { 
-        return dcmp(p.x, b.p.x) < 0 || (dcmp(p.x, b.p.x) == 0 && dcmp(p.y, b.p.y) < 0); 
-    }
-};
-set<Node> hull;
-```
-
-</details>
-
-<details>
-<summary>练习 1：凸包的稳定性验证</summary>
-
-**题目描述**：给定一个凸多边形，判断其每一条边是否都包含至少一个除了端点之外的原点。
-**思路**：在求凸包时保留所有共线点，遍历凸包顶点序列，检查每条边对应的原始点数。
+**题目描述**：给定一个凸多边形（顶点按逆时针排序），判断点 $P$ 是否在多边形内部。要求复杂度 $O(\log N)$。
+**思路**：利用凸性。点 $P$ 必须在所有有向边 $P_iP_{i+1}$ 的左侧。通过二分查找找到 $P$ 可能对应的向量区间。
 
 <details>
 <summary>Check Solution</summary>
 
 ```cpp
-bool checkStability(vector<Point>& pts) {
-    // 1. 求包含共线点的凸包
-    int n = pts.size(), k = 0;
+bool isPointInConvex(const vector<Point>& h, Point p) {
+    int n = h.size();
+    // 基础判定：是否在最左侧两边的夹角内
+    if (sign(cross(h[1] - h[0], p - h[0])) < 0) return false;
+    if (sign(cross(h[n-1] - h[0], p - h[0])) > 0) return false;
+    
+    // 二分查找向量
+    int l = 1, r = n - 2, line = -1;
+    while (l <= r) {
+        int mid = (l + r) >> 1;
+        if (sign(cross(h[mid] - h[0], p - h[0])) >= 0) {
+            line = mid; l = mid + 1;
+        } else r = mid - 1;
+    }
+    return sign(cross(h[line+1] - h[line], p - h[line])) >= 0;
+}
+```
+
+</details>
+</details>
+
+<details>
+<summary>练习 1：凸包的稳定性验证</summary>
+
+**题目描述**：给定一个凸多边形，判断其每一条边是否都包含至少一个除了端点之外的原点（即该凸包在轻微扰动下是否稳定）。
+**思路**：求凸包时保留所有共线点，检查凸包相邻三点是否共线。
+
+<details>
+<summary>Check Solution</summary>
+
+```cpp
+bool isStable(vector<Point>& pts) {
+    int n = pts.size();
+    if (n < 6) return false; // 每条边至少 3 点，至少 3 条边
     sort(pts.begin(), pts.end());
-    vector<Point> h(2 * n);
+    int k = 0; vector<Point> h(2 * n);
+    // 保留共线点：使用 < 0
     for (int i = 0; i < n; i++) {
-        while (k > 1 && sign(cross(h[k-1] - h[k-2], pts[i] - h[k-1])) < 0) k--;
+        while (k > 1 && sign(cross(h[k-1]-h[k-2], pts[i]-h[k-1])) < 0) k--;
         h[k++] = pts[i];
     }
-    for (int i = n - 2, t = k; i >= 0; i--) {
-        while (k > t && sign(cross(h[k-1] - h[k-2], pts[i] - h[k-1])) < 0) k--;
+    for (int i = n-2, t = k; i >= 0; i--) {
+        while (k > t && sign(cross(h[k-1]-h[k-2], pts[i]-h[k-1])) < 0) k--;
         h[k++] = pts[i];
     }
     h.resize(k - 1);
     
-    // 2. 统计每条边的点数
     int sz = h.size();
     for (int i = 0; i < sz; i++) {
-        Point a = h[i], b = h[(i+1)%sz], c = h[(i+2)%sz];
-        // 若连续三点不共线，说明边 (a, b) 只有两个端点
-        if (sign(cross(b - a, c - b)) != 0) {
-            // 这里逻辑需根据题目定义微调，即判定边上的点数
-        }
+        // 如果点 i 和前后都不共线，说明边 i-1, i 和 i, i+1 都是不稳定的
+        if (sign(cross(h[(i+1)%sz]-h[i], h[(i+2)%sz]-h[(i+1)%sz])) != 0 &&
+            sign(cross(h[i]-h[(i-1+sz)%sz], h[(i+1)%sz]-h[i])) != 0) return false;
     }
     return true;
 }
@@ -150,30 +163,11 @@ bool checkStability(vector<Point>& pts) {
 </details>
 
 <details>
-<summary>练习 2：凸包与面积期望</summary>
+<summary>练习 2：凸多边形相交判定</summary>
 
-**题目描述**：在单位圆内随机选取 $n$ 个点，其凸包顶点数的期望为 $O(n^{1/3})$。请通过 C++ 模拟验证。
+**题目描述**：给定两个凸多边形 $A, B$，判断它们是否相交。要求复杂度 $O(N+M)$。
+**思路**：利用分离轴定理（SAT）或闵可夫斯基和（Minkowski Sum）。若 $A - B$ 的闵可夫斯基和包含原点，则相交。
 
-<details>
-<summary>Check Solution</summary>
-
-```cpp
-void runSimulation(int n, int trials) {
-    double avgV = 0;
-    for (int i = 0; i < trials; i++) {
-        vector<Point> p;
-        for (int j = 0; j < n; j++) {
-            double r = sqrt((double)rand()/RAND_MAX);
-            double theta = 2 * PI * rand()/RAND_MAX;
-            p.push_back({r * cos(theta), r * sin(theta)});
-        }
-        avgV += getConvexHull(p).size();
-    }
-    cout << "Expected Vertices: " << avgV / trials << endl;
-}
-```
-
-</details>
 </details>
 
 ---

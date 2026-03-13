@@ -1,10 +1,10 @@
 ---
 title: 计算几何基础 (Geometry Basics)
-description: 系统化精度控制模型、拓扑性质证明与几何鲁棒性分析。
+description: 系统化精度控制模型、代数一致性验证与几何鲁棒性分析。
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { Trophy, Waypoints, Compass, Target, Circle, MoveRight, Sigma, Activity, ShieldAlert, Cpu } from 'lucide-react';
+import { Trophy, Waypoints, Compass, Target, Circle, MoveRight, Sigma, Activity, ShieldAlert, Cpu, Scale } from 'lucide-react';
 
 # 计算几何基础 (Geometry Basics)
 
@@ -18,7 +18,7 @@ import { Trophy, Waypoints, Compass, Target, Circle, MoveRight, Sigma, Activity,
 
 ### 1.1 静态 $\epsilon$ 模型 (Static Epsilon)
 
-通过引入一个小量 $\epsilon$ ($10^{-9} \sim 10^{-11}$)，我们将连续判定转化为区间判定。
+通过引入一个小量 $\epsilon$ ($10^{-9} \sim 10^{-11}$ )，我们将连续判定转化为区间判定。
 
 ```cpp
 typedef double DB;
@@ -41,26 +41,37 @@ inline int dcmp(DB x, DB y) {
 例如，若 $a-b = 0.6\epsilon$ 且 $b-c = 0.6\epsilon$，则 $a=b, b=c$，但 $a-c = 1.2\epsilon > \epsilon$，导致 $a \neq c$。这会破坏凸包构建、排序等依赖传递性的算法。
 </KnowledgeCard>
 
-### 1.2 整数内核 (Integer Kernel)
+### 1.2 代数一致性 (Algebraic Consistency)
 
-**最佳实践**：若输入坐标均为整数且不涉及除法/开方，应优先使用 `long long`。
-- **点积/叉积**：坐标范围 $10^9$ 时，乘积达到 $10^{18}$，需使用 `__int128`。
-- **判定优于计算**：比较距离大小时，比较 $d^2$ 而非 $d$。
+几何算法的鲁棒性不仅取决于精度，更取决于**逻辑一致性**。
+- **全序关系保护**：在对点集进行极角排序或坐标排序时，必须保证严格弱序（Strict Weak Ordering）。
+- **判定语义统一**：例如，在 `sign(x) == 0` 的判定中，所有涉及该变量的逻辑（如 `if (x > 0)` 和 `if (x < 0)`）必须互斥。
 
 ---
 
-## 2. 几何鲁棒性分析 (Geometric Robustness)
+## 2. 数值稳定性分析 (Numerical Stability)
 
-鲁棒性（Robustness）指算法在面对**退化情况 (Degeneracy)** 时的稳定性。
+数值不稳定性通常源于**大数相减导致的有效位丢失**（Catastrophic Cancellation）。
 
-### 2.1 退化情况分类
-1.  **重合 (Coincidence)**：两点重合，导致向量模长为 0。
-2.  **共线 (Collinearity)**：三点共线，叉积为 0。
-3.  **垂直/平行 (Orthogonality/Parallelism)**：点积或叉积为 0。
+### 2.1 算子稳定性评估
 
-### 2.2 鲁棒性增强策略
-- **微扰法 (Simulation of Simplicity)**：给坐标添加极小的随机扰动，消除退化。
-- **符号判定逻辑**：严格区分 `sign(x) == 0` 与 `sign(x) > 0`，在凸包等算法中明确处理边界共线点。
+| 算子类型 | 代数形式 | 稳定性评价 | 优化建议 |
+| :--- | :--- | :--- | :--- |
+| **点积** | $x_1x_2 + y_1y_2$ | 高 | 适合判定角度、长度投影 |
+| **叉积** | $x_1y_2 - x_2y_1$ | 中 | 坐标极大时易溢出，优先使用整数内核 |
+| **斜率** | $\Delta y / \Delta x$ | **极低** | **禁止使用**。应通过叉积正负号判定共线或旋转方向 |
+| **欧氏距离** | $\sqrt{\Delta x^2 + \Delta y^2}$ | 中 | 若仅需比较大小，比较距离平方 $d^2$ |
+
+### 2.2 误差传播定理 (Error Propagation)
+
+<KnowledgeCard type="theorem" title="浮点计算的相对误差界">
+
+设实数 $x, y$ 的机器表示为 $fl(x) = x(1+\delta)$，其中 $|\delta| < \epsilon_{mach}$。
+对于二元运算 $\circ \in \{+, -, \times, \div\}$，有：
+$$fl(x \circ y) = (x \circ y)(1 + \epsilon_{calc})$$
+**推论**：在几何算法中，尽量使用**低阶多项式**（如叉积是二阶）而非超越函数（如 `atan2`, `acos`），因为后者的误差项 $\epsilon_{calc}$ 包含更高阶的泰勒展开剩余项。
+
+</KnowledgeCard>
 
 ---
 
@@ -86,42 +97,28 @@ $= r_ar_b(\sin\beta\cos\alpha - \cos\beta\sin\alpha) = r_ar_b\sin(\beta-\alpha)$
 
 </KnowledgeCard>
 
-### 3.2 浮点误差收敛性 (Floating-Point Convergence)
-
-在迭代算法（如牛顿迭代、割线法）或高维几何运算中，误差 $\delta$ 会随操作深度 $D$ 累积。
-
-<KnowledgeCard type="warning" title="误差放大效应 (Error Amplification)">
-
-设基础运算精度为 $\epsilon_{mach}$。
-1. **加减法**：$\delta(a \pm b) \approx \delta(a) + \delta(b)$。若 $a \approx b$，则 $a-b$ 的相对误差可能趋于无穷大（Catastrophic Cancellation）。
-2. **乘法**：$\delta(a \cdot b) \approx a\delta(b) + b\delta(a)$。
-3. **叉积**：$x_1y_2 - x_2y_1$ 包含两次乘法和一次减法，若坐标量级为 $L$，绝对误差量级约为 $L \cdot \delta(L)$。
-
-**收敛建议**：
-- 尽量推迟除法：保持分母形式，最后统一判定。
-- 坐标归一化：将所有点映射到 $[0, 1]$ 或 $[-1, 1]$ 区间，可使绝对误差与相对误差量级对齐。
-</KnowledgeCard>
-
-
 ---
 
-## 4. 拓扑关系判定判定证明 (Topological Predicates)
+## 4. 拓扑关系判定证明 (Topological Predicates)
 
-### 4.1 跨立实验 (Straddle Test) 的代数判定
+### 4.1 点在线段上的代数充分性
 
 ```cpp
 // 判定点 p 是否在线段 ab 上 (含端点)
 bool onSegment(Point p, Point a, Point b) {
-    // 叉积为 0 保证共线，点积 <= 0 保证在 ab 之间
+    // 1. 叉积为 0 保证共线 (代数一致性)
+    // 2. 点积 <= 0 保证 p 在 a, b 投影之间 (拓扑单调性)
     return sign(cross(a - p, b - p)) == 0 && sign(dot(a - p, b - p)) <= 0;
 }
 ```
 
+### 4.2 线段相交的严格判定 (Straddle Test)
+
 <KnowledgeCard type="algorithm" title="线段规范相交判定">
 两线段 $AB, CD$ 规范相交（交点不为端点）当且仅当：
-$A, B$ 位于直线 $CD$ 两侧 **且** $C, D$ 位于直线 $AB$ 两侧。
-即：$\text{sign}(\vec{CA} \times \vec{CD}) \cdot \text{sign}(\vec{CB} \times \vec{CD}) < 0$
-且 $\text{sign}(\vec{AC} \times \vec{AB}) \cdot \text{sign}(\vec{AD} \times \vec{AB}) < 0$。
+$A, B$ 分别位于直线 $CD$ 两侧，**且** $C, D$ 分别位于直线 $AB$ 两侧。
+代数判定式：
+$(\vec{CD} \times \vec{CA}) \cdot (\vec{CD} \times \vec{CB}) < 0$ 且 $(\vec{AB} \times \vec{AC}) \cdot (\vec{AB} \times \vec{AD}) < 0$。
 </KnowledgeCard>
 
 ---
@@ -132,7 +129,8 @@ $A, B$ 位于直线 $CD$ 两侧 **且** $C, D$ 位于直线 $AB$ 两侧。
 <summary>例题 1：点到直线的投影与对称点 (Projection)</summary>
 
 **推导**：
-设直线由点 $A$ 和向量 $\vec{v}$ 定义。点 $P$ 在直线上的投影 $P'$ 满足 $\vec{AP'} = \text{proj}_{\vec{v}}(\vec{AP}) = \frac{\vec{AP} \cdot \vec{v}}{|\vec{v}|^2} \vec{v}$。
+设直线由点 $A$ 和向量 $\vec{v}$ 定义。点 $P$ 在直线上的投影 $P'$ 满足 $\vec{AP'}$ 是 $\vec{AP}$ 在 $\vec{v}$ 方向上的射影：
+$$\vec{AP'} = \frac{\vec{AP} \cdot \vec{v}}{|\vec{v}|^2} \vec{v}$$
 
 ```cpp
 Point getProjection(Point p, Point a, Point b) {
@@ -149,10 +147,12 @@ Point getSymmetry(Point p, Point a, Point b) {
 </details>
 
 <details>
-<summary>练习 1：两条直线的交点计算</summary>
+<summary>练习 1：两条直线的交点计算（代数推导版）</summary>
 
 **题目描述**：给定四点 $A, B, C, D$，求直线 $AB$ 与直线 $CD$ 的交点。
-**思路**：利用面积比例。交点 $P = C + \vec{CD} \cdot \frac{\text{area}(ABC)}{\text{area}(ABC) + \text{area}(ABD)}$。
+**推导**：设交点 $P = A + t\vec{AB}$。由于 $P$ 在直线 $CD$ 上，故 $\vec{CP} \times \vec{CD} = 0$。
+$$(A - C + t\vec{AB}) \times \vec{CD} = 0 \implies (A-C) \times \vec{CD} + t(\vec{AB} \times \vec{CD}) = 0$$
+解得 $t = \frac{(C-A) \times \vec{CD}}{\vec{AB} \times \vec{CD}}$。
 
 <details>
 <summary>Check Solution</summary>
@@ -160,38 +160,35 @@ Point getSymmetry(Point p, Point a, Point b) {
 ```cpp
 Point getLineIntersection(Point a, Point b, Point c, Point d) {
     Vector v = b - a, w = d - c, u = a - c;
-    DB t = cross(w, u) / cross(v, w);
+    DB t = cross(w, u) / cross(v, w); // 注意 cross(v, w) == 0 时平行
     return a + v * t;
 }
 ```
-*注意：调用前需确保 `cross(v, w) != 0`（不平行）。*
+*稳定性分析：若 `cross(v, w)` 接近 0，则 $t$ 会发生极大的精度溢出。*
 
 </details>
 </details>
 
 <details>
-<summary>练习 2：多边形面积性质 (Pick's Theorem)</summary>
+<summary>练习 2：多边形重心 (Centroid of Polygon)</summary>
 
-**题目描述**：对于顶点均为格点的简单多边形，其面积 $A$、内部格点数 $I$、边界格点数 $B$ 满足：$A = I + \frac{B}{2} - 1$。
-请编写程序计算边界格点数 $B$。
+**题目描述**：计算 $n$ 个顶点多边形的重心坐标。
+**思路**：将多边形三角化。对于以原点和边 $P_iP_{i+1}$ 构成的三角形，其重心为 $(P_i+P_{i+1}+O)/3$，面积为有向面积 $S_i$。全多边形重心为 $\sum (\text{Centroid}_i \cdot S_i) / \sum S_i$。
 
 <details>
 <summary>Check Solution</summary>
 
-对于线段 $(x_1, y_1)$ 到 $(x_2, y_2)$，边界上的格点数为 $\gcd(|x_1-x_2|, |y_1-y_2|) + 1$。
-累计各边格点数并减去重复计算的顶点即可。
-
 ```cpp
-long long gcd(long long a, long long b) { return b == 0 ? a : gcd(b, a % b); }
-
-long long getBoundaryPoints(const vector<Point>& poly) {
-    long long res = 0;
-    int n = poly.size();
+Point getCentroid(const vector<Point>& p) {
+    Point res = {0, 0};
+    DB totalArea = 0;
+    int n = p.size();
     for (int i = 0; i < n; i++) {
-        Point a = poly[i], b = poly[(i + 1) % n];
-        res += gcd(abs((long long)a.x - b.x), abs((long long)a.y - b.y));
+        DB area = cross(p[i], p[(i + 1) % n]);
+        totalArea += area;
+        res = res + (p[i] + p[(i + 1) % n]) * area;
     }
-    return res;
+    return res / (3.0 * totalArea);
 }
 ```
 

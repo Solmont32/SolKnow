@@ -4,7 +4,7 @@ description: 降维打击、区间覆盖维护与几何面积并求解。
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { MoveRight, Zap, Activity, BookOpen, Layers, ShieldAlert } from 'lucide-react';
+import { MoveRight, Zap, Activity, BookOpen, Layers, ShieldAlert, Scale } from 'lucide-react';
 
 # 扫描线技巧 (Scanning Line)
 
@@ -24,7 +24,7 @@ import { MoveRight, Zap, Activity, BookOpen, Layers, ShieldAlert } from 'lucide-
 面积可以表示为指示函数 $I_U(x, y)$ 的二重积分：
 $$A(U) = \iint_{\mathbb{R}^2} I_U(x, y) dA = \int_{-\infty}^{\infty} \left( \int_{-\infty}^{\infty} I_U(x, y) dy \right) dx$$
 内部积分 $L(x) = \int_{-\infty}^{\infty} I_U(x, y) dy$ 代表 $x$ 处垂直切线的覆盖长度。
-1.  **事件离散性**：$L(x)$ 仅在矩形边界 $x \in \{x_{i,1}, x_{i,2}\}$ 处发生变化。
+1.  **事件离散性**：$I_U(x, y)$ 的值仅在矩形边界 $x \in \{x_{i,1}, x_{i,2}\}$ 处发生跃迁。
 2.  **分段常数性**：在相邻 $x$ 坐标区间 $(x_j, x_{j+1})$ 内，$L(x)$ 为常数 $L_j$。
 3.  **最终求和**：$A(U) = \sum L_j \cdot (x_{j+1} - x_j)$。得证。
 
@@ -32,16 +32,16 @@ $$A(U) = \iint_{\mathbb{R}^2} I_U(x, y) dA = \int_{-\infty}^{\infty} \left( \int
 
 ---
 
-## 2. 拓扑一致性与线段树维护 (Consistency)
+## 2. 离散化与数值稳定性 (Numerical Stability)
 
-在扫描线算法中，线段树不仅是数据结构，更是拓扑信息的载体。
+在扫描线算法中，坐标离散化是处理浮点数坐标的关键步骤。
 
-<KnowledgeCard type="warning" title="覆盖状态一致性原则">
+<KnowledgeCard type="warning" title="离散化中的精度陷阱">
 
-1.  **计数的非负性**：`tree[u].count` 始终非负。出边更新必须与入边严格匹配，否则破坏拓扑单调性。
-2.  **区间闭包性**：线段树节点 $[l, r]$ 实际代表 $y$ 轴离散化后的区间段 $[Y_l, Y_{r+1}]$。
+1.  **唯一化失败**：若坐标间距 $\Delta < \epsilon$，`unique` 函数可能无法正确识别重复坐标。
+2.  **映射漂移**：在查找原坐标对应的索引时，必须使用 `lower_bound` 结合 $\epsilon$ 判定。
+3.  **区间闭包性**：线段树节点 $[l, r]$ 实际代表 $y$ 轴离散化后的区间段 $[Y_l, Y_{r+1}]$。
     - **推论**：若节点 $u$ 的 `count > 0`，其长度 $len$ 立即收敛为 $Y_{tree[u].r+1} - Y_{tree[u].l}$。
-3.  **拓扑退化**：若多个矩形边界重合，扫描线应在同一 $x$ 位置批量处理所有事件后再计算面积，以维持逻辑一致性。
 
 </KnowledgeCard>
 
@@ -65,7 +65,7 @@ struct Node {
 
 void pushup(int u) {
     if (tree[u].count > 0) tree[u].len = Y[tree[u].r + 1] - Y[tree[u].l];
-    else if (tree[u].l == tree[u].r) tree[u].len = 0; // 叶子节点
+    else if (tree[u].l == tree[u].r) tree[u].len = 0; 
     else tree[u].len = tree[2 * u].len + tree[2 * u + 1].len;
 }
 
@@ -90,32 +90,29 @@ void update(int u, int l, int r, int val) {
 <summary>例题 1：矩形周长并 (Perimeter Union)</summary>
 
 **题目描述**：给定 $N$ 个矩形，求其并集的轮廓总周长。
-**思路**：
-1.  **垂直边**：维护线段树的 `num_segments`（覆盖了多少个独立的区间段）。每次 $x$ 轴移动 $\Delta x$ 时，垂直边的贡献为 $| \text{NewLen} - \text{OldLen} |$。
-2.  **水平边**：水平边的贡献为 $2 \times \text{num\_segments} \times \Delta x$。
+**思路**：垂直边的贡献为线段树覆盖总长度的变化量 $|L_{new} - L_{old}|$；水平边的贡献为 $2 \times \text{独立连通段数} \times \Delta x$。
 
 <details>
 <summary>Check Solution</summary>
 
 ```cpp
 struct Node {
-    int l, r, count;
-    int num_segments; // 区间内独立覆盖段数
+    int l, r, count, num_seg;
     DB len;
-    bool l_covered, r_covered; // 左右端点是否被覆盖
+    bool l_cov, r_cov;
 } tree[N << 3];
 
 void pushup(int u) {
     if (tree[u].count > 0) {
         tree[u].len = Y[tree[u].r + 1] - Y[tree[u].l];
-        tree[u].num_segments = 1;
-        tree[u].l_covered = tree[u].r_covered = true;
+        tree[u].num_seg = 1;
+        tree[u].l_cov = tree[u].r_cov = true;
     } else {
         tree[u].len = tree[2*u].len + tree[2*u+1].len;
-        tree[u].num_segments = tree[2*u].num_segments + tree[2*u+1].num_segments;
-        if (tree[2*u].r_covered && tree[2*u+1].l_covered) tree[u].num_segments--;
-        tree[u].l_covered = tree[2*u].l_covered;
-        tree[u].r_covered = tree[2*u+1].r_covered;
+        tree[u].num_seg = tree[2*u].num_seg + tree[2*u+1].num_seg;
+        if (tree[2*u].r_cov && tree[2*u+1].l_cov) tree[u].num_seg--;
+        tree[u].l_cov = tree[2*u].l_cov;
+        tree[u].r_cov = tree[2*u+1].r_cov;
     }
 }
 ```
@@ -124,39 +121,35 @@ void pushup(int u) {
 </details>
 
 <details>
-<summary>练习 1：窗口内的最大点数 (Window Maximum)</summary>
+<summary>练习 1：窗口内的最大权值 (Window Max Points)</summary>
 
-**题目描述**：在平面上有 $n$ 个星星，每个星星有权值 $w_i$。给定一个 $W \times H$ 的矩形窗口，求窗口能覆盖的星星权值之和的最大值（窗口边界上的点不计）。
+**题目描述**：在平面上有 $n$ 个加权点，求一个 $W \times H$ 的窗口能覆盖的最大权值和。
+**思路**：将点 $(x, y)$ 转化为矩形 $[x, x+W] \times [y, y+H]$。扫描线维护区间最大值，支持区间加减。
+
+</details>
+
+<details>
+<summary>练习 2：矩形 $K$ 层覆盖面积</summary>
+
+**题目描述**：计算被至少 $K$ 个矩形覆盖的区域面积。
+**思路**：线段树节点维护 `len[i]`，表示覆盖次数 $\ge i$ 的长度。
+当 `tree[u].count >= i` 时，`len[i] = full_len`；否则由子节点合并。
 
 <details>
 <summary>Check Solution</summary>
 
-**转化**：将星星 $P(x, y)$ 转化为以 $P$ 为左下角的 $W \times H$ 的矩形。寻找一个点（窗口右上角），被这些矩形覆盖的权值和最大。
-**实现**：扫描线 + 线段树维护区间最大值（支持区间加法）。
-
 ```cpp
-// 线段树维护最大值 max_val
-void update(int u, int l, int r, int val) {
-    if (tree[u].l >= l && tree[u].r <= r) {
-        tree[u].max_val += val;
-        tree[u].lazy += val;
-        return;
+void pushup(int u, int K) {
+    for (int i = 1; i <= K; i++) {
+        if (tree[u].count >= i) tree[u].len[i] = Y[tree[u].r+1] - Y[tree[u].l];
+        else if (tree[u].l == tree[u].r) tree[u].len[i] = 0;
+        else tree[u].len[i] = tree[2*u].len[i - tree[u].count] + 
+                             tree[2*u+1].len[i - tree[u].count];
     }
-    pushdown(u);
-    // ... 标准线段树更新 ...
-    tree[u].max_val = max(tree[2*u].max_val, tree[2*u+1].max_val);
 }
 ```
 
 </details>
-</details>
-
-<details>
-<summary>练习 2：矩形 $k$ 层覆盖面积</summary>
-
-**题目描述**：求被至少 $k$ 个矩形覆盖的区域面积。
-**思路**：修改线段树的 `pushup` 逻辑。递归维护覆盖 $\ge 1$ 次，$\ge 2$ 次，... $\ge k$ 次的长度。
-
 </details>
 
 ---
