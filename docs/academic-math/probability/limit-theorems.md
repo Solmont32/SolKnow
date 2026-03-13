@@ -2,6 +2,8 @@
 title: 极限定理 (Limit Theorems)
 ---
 
+import { Code2 } from 'lucide-react';
+
 # 极限定理 (Limit Theorems)
 
 极限定理是概率论的核心内容，揭示了大量随机现象背后的确定性规律。

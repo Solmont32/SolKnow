@@ -106,7 +106,7 @@ void fwit_xor(vector<mint>& a, bool inv) {
 
 ## 📝 V. 进阶综合练习 (Advanced Exercises)
 
-<SupportingExercises />
+
 
 ### 练习 1：期望的线性性与状态合并
 **题目**：$N$ 个点随机连边直到全连通，求期望边数。

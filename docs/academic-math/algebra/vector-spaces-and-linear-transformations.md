@@ -2,6 +2,8 @@
 title: 向量空间与线性变换 (Vector Spaces and Linear Transformations)
 ---
 
+import { Code2 } from 'lucide-react';
+
 # 向量空间与线性变换
 
 本章按“空间结构-映射结构-矩阵表达”展开，目标是打通抽象定义与计算方法。

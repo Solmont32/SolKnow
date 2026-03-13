@@ -157,7 +157,7 @@ struct Mint {
 
 ## 📝 V. 进阶综合练习 (Advanced Exercises)
 
-<SupportingExercises />
+
 
 ### 练习 1：对拍与边界：计算几何稳定性
 **题目**：判断点 $P$ 是否在多边形内。要求在 $10^5$ 次询问下保证 $O(\log N)$ 且无浮点误差。

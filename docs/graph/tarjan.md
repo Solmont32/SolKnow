@@ -2,7 +2,7 @@
 title: Tarjan 算法：连通性、双连通分量与 2-SAT
 ---
 
-import { GitMerge, Layers, ShieldAlert, Share2, Zap, LayoutGrid, CircleDot, Network, GitBranch, Sigma, BookOpen, Target, Workflow } from 'lucide-react';
+import { GitMerge, Layers, ShieldAlert, Share2, Zap, LayoutGrid, CircleDot, Network, GitBranch, Sigma, BookOpen, Target, Workflow, ShieldCheck } from 'lucide-react';
 import ComplexityAnalysis from '@site/src/components/ComplexityAnalysis';
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 

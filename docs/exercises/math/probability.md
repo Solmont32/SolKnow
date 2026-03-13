@@ -2,6 +2,8 @@
 title: 概率论练习题 (Probability Exercises)
 ---
 
+import { Code2 } from 'lucide-react';
+
 # 概率论练习题 (Probability Exercises)
 
 本练习库包含随机变量分布、数字特征及极限定理的相关练习，均配套折叠答案。
