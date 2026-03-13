@@ -4,7 +4,7 @@ sidebar_position: 8
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { GitBranch, GitMerge, Calculator, Terminal, Box, Binary, Network, Zap } from 'lucide-react';
+import { GitBranch, GitMerge, Calculator, Terminal, Box, Binary, Network, Zap, CheckCircle2 } from 'lucide-react';
 
 # 分治理论与复杂度收敛 (Divide and Conquer)
 
@@ -12,7 +12,7 @@ import { GitBranch, GitMerge, Calculator, Terminal, Box, Binary, Network, Zap } 
 
 ---
 
-## 一 : 形式化描述与三部曲
+## 一、 形式化描述与三部曲
 
 1.  **分解 (Divide)**：将原问题 $P(n)$ 划分为 $a$ 个规模为 $n/b$ 的子问题。
 2.  **治理 (Conquer)**：递归求解子问题。若规模足够小则直接求解（Base Case）。
@@ -20,84 +20,113 @@ import { GitBranch, GitMerge, Calculator, Terminal, Box, Binary, Network, Zap } 
 
 ---
 
-## 二 : 复杂度分析：减小系数 $a$ 的艺术
+## 二、 递归一致性校验 (Recursive Consistency)
 
-分治算法的性能提升往往源于减少递归分支数 $a$。
+为确保分治算法的正确性，必须满足以下三个准则：
 
-<KnowledgeCard type="info" title="典型案例：Karatsuba 乘法">
-普通 $n$ 位大整数乘法需 4 次 $n/2$ 位乘法，$T(n) = 4T(n/2) + O(n) = O(n^2)$。
-Karatsuba 利用 $(ax+b)(cx+d) = acx^2 + ((a+b)(c+d)-ac-bd)x + bd$，仅需 3 次乘法。
-$T(n) = 3T(n/2) + O(n) = O(n^{\log_2 3}) \approx O(n^{1.58})$。
+### 1. 递归不变式 (Recursion Invariant)
+证明子问题的解在合并前满足预期的性质。
+*例如：在归并排序中，递归返回的左右两个子序列必须已经是各自有序的。*
+
+### 2. 边界完备性 (Base Case Completeness)
+确保所有可能的递归路径最终都能到达 Base Case，且 Base Case 的解是显然正确的。
+
+### 3. 合并正确性 (Merging Logic)
+证明通过子问题的解构造原问题解的过程覆盖了所有可能的情况，特别是**跨越边界**的情况。
+
+---
+
+## 三、 复杂度分析：主定理 (Master Theorem)
+
+分治算法的性能通常遵循递推式：$T(n) = aT(n/b) + f(n)$。
+
+- **Case 1**: $f(n) = O(n^{\log_b a - \epsilon}) \implies T(n) = \Theta(n^{\log_b a})$
+- **Case 2**: $f(n) = \Theta(n^{\log_b a}) \implies T(n) = \Theta(n^{\log_b a} \log n)$
+- **Case 3**: $f(n) = \Omega(n^{\log_b a + \epsilon}) \implies T(n) = \Theta(f(n))$
+
+<KnowledgeCard type="info" title="优化核心：减小系数 a">
+Karatsuba 乘法通过将 $a$ 从 4 减小到 3，使大整数乘法复杂度从 $O(n^2)$ 降至 $O(n^{1.58})$。
 </KnowledgeCard>
 
 ---
 
-## 三 : 空间复杂度收敛分析 (Space Convergence)
-
-分治算法的空间复杂度主要由**递归栈深度**与**各层临时辅助空间**决定。
-
-### 1. 递归栈空间 (Implicit Stack)
-$$ S_{stack} = O(\text{Recursion Depth}) $$
-对于平衡分治（$b=2$），深度为 $O(\log n)$。
-
-### 2. 辅助空间复用 (Auxiliary Space)
-- **不可复用**：若每层合并都需要开辟新空间且在递归返回前不释放，总空间为 $\sum a^i f_{space}(n/b^i)$。
-- **可复用**：若辅助空间在递归返回后立即释放，则总空间为 $O(n)$（归并排序的典型特征）。
-
----
-
-## 四 : 教材化例题
+## 四、 教材化例题
 
 ### 例题 1：最近点对问题 (平面分治)
 在 $O(n \log n)$ 内寻找平面上距离最近的两点。
 
 <details>
-<summary>证明与解析</summary>
+<summary>证明与一致性校验</summary>
 
-**分治决策**：
-1. 按 $x$ 坐标排序，划分为左右两半。
-2. 递归求出左右两半的最短距离 $d = \min(d_{left}, d_{right})$。
-3. **关键合并步**：考虑跨越中线的点对。只需考虑 $x$ 坐标距离中线小于 $d$ 的点。
-4. **鸽笼原理优化**：将这些点按 $y$ 坐标排序，对于每个点，在 $d \times 2d$ 的矩形区域内最多只有 6 个点。故只需检查后续 6 个点。
+**分治逻辑**：
+1. **分解**：按 $x$ 坐标排序，划分为左右两半。
+2. **治理**：递归求左右两侧的最短距离 $d = \min(d_{left}, d_{right})$。
+3. **合并（跨界校验）**：只需考虑 $x$ 坐标距离中线小于 $d$ 的点。
+4. **鸽笼原理证明**：对于选出的点，按 $y$ 排序。对于每个点，在其 $d \times 2d$ 的候选矩形内，最多只有 6 个点能满足互距 $\ge d$。因此合并复杂度为 $O(n)$。
 
 ```cpp
 #include <iostream>
 #include <algorithm>
 #include <cmath>
+#include <vector>
 using namespace std;
 
 struct Point {
     double x, y;
     bool operator< (const Point& W) const { return x < W.x; }
-} p[100010], tmp[100010];
+};
 
 double dist(Point a, Point b) {
     return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 }
 
-double solve(int l, int r) {
+double solve(int l, int r, vector<Point>& p) {
     if (l >= r) return 1e20;
     int mid = l + r >> 1;
     double mid_x = p[mid].x;
-    double d = min(solve(l, mid), solve(mid + 1, r));
+    double d = min(solve(l, mid, p), solve(mid + 1, r, p));
 
-    int k = 0;
+    vector<Point> tmp;
     for (int i = l; i <= r; i++)
-        if (abs(p[i].x - mid_x) < d) tmp[k++] = p[i];
+        if (abs(p[i].x - mid_x) < d) tmp.push_back(p[i]);
 
-    sort(tmp, tmp + k, [](Point a, Point b) { return a.y < b.y; });
+    sort(tmp.begin(), tmp.end(), [](Point a, Point b) { return a.y < b.y; });
 
-    for (int i = 0; i < k; i++)
-        for (int j = i + 1; j < k && tmp[j].y - tmp[i].y < d; j++)
+    for (int i = 0; i < tmp.size(); i++)
+        for (int j = i + 1; j < tmp.size() && tmp[j].y - tmp[i].y < d; j++)
             d = min(d, dist(tmp[i], tmp[j]));
     return d;
 }
 ```
 </details>
 
+### 例题 2：快速幂 (幂分治)
+计算 $a^b \pmod p$，要求 $O(\log b)$。
+
+<details>
+<summary>数学归纳证明</summary>
+
+**递推式**：
+$a^b = (a^{b/2})^2$ (若 $b$ 是偶数)
+$a^b = a \cdot (a^{(b-1)/2})^2$ (若 $b$ 是奇数)
+**一致性**：每次指数减半，符合 Case 1，总次数 $\lceil \log_2 b \rceil$。
+
+```cpp
+long long qmi(long long a, long long b, long long p) {
+    long long res = 1;
+    while (b) {
+        if (b & 1) res = res * a % p;
+        a = a * a % p;
+        b >>= 1;
+    }
+    return res;
+}
+```
+</details>
+
 ---
 
-## 五 : 综合练习库
+## 五、 综合练习库
 
 ### 练习 1：逆序对数量 (分治贡献统计)
 在一个序列中，若 $i < j$ 且 $a[i] > a[j]$，则称 $(i, j)$ 为一个逆序对。
@@ -105,7 +134,9 @@ double solve(int l, int r) {
 <details>
 <summary>Check Solution</summary>
 
-**思路**：在归并排序的合并阶段，若左半部分元素 $a[i] > a[j]$，则左半部分从 $i$ 到 $mid$ 的所有元素都与 $a[j]$ 构成逆序对。
+**一致性校验**：逆序对总数 = 左半部分逆序对 + 右半部分逆序对 + 跨越左右的逆序对。
+利用归并排序的合并过程，当 $a[i] > a[j]$ 时，左半部分 $[i, mid]$ 的所有元素都与 $a[j]$ 构成逆序对。
+
 ```cpp
 long long merge_sort(int l, int r) {
     if (l >= r) return 0;
@@ -115,18 +146,28 @@ long long merge_sort(int l, int r) {
     while (i <= mid && j <= r) {
         if (a[i] <= a[j]) tmp[k++] = a[i++];
         else {
-            res += mid - i + 1;
+            res += mid - i + 1; // 统计跨界贡献
             tmp[k++] = a[j++];
         }
     }
-    while (i <= mid) tmp[k++] = a[i++];
-    while (j <= r) tmp[k++] = a[j++];
-    for (i = l, j = 0; i <= r; i++, j++) a[i] = tmp[j];
+    // ... 剩余元素处理与回填
     return res;
 }
 ```
 </details>
 
+### 练习 2：二分查找的递归一致性
+证明递归实现的二分查找 `binary_search(l, r, target)` 满足 $O(\log n)$ 且结果正确。
+
+<details>
+<summary>Check Solution</summary>
+
+**递归不变式**：若 $target$ 存在，则一定在当前考察的区间 $[l, r]$ 中。
+- **Base Case**: $l > r$ 且未找到，返回失败；$a[mid] == target$，返回成功。
+- **一致性**: $a[mid] < target \implies target \in [mid+1, r]$；$a[mid] > target \implies target \in [l, mid-1]$。
+由主定理知 $T(n) = T(n/2) + O(1) = O(\log n)$。
+</details>
+
 ---
 
-_编者注：分治不仅能降低时间复杂度，更是实现并行计算的基础。每一个独立的子问题都可以被分发到不同的处理核心上并行执行。_
+_编者注：分治的核心价值在于“分而治之，合而胜之”。合并逻辑（Combine）往往是算法中最具创造力的部分，它决定了算法能否突破平凡的复杂度。_
