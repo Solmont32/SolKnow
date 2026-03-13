@@ -646,7 +646,7 @@ const sidebars: SidebarsConfig = {
         },
         { type: 'doc', id: 'cs/os/index', label: '操作系统' },
         { type: 'doc', id: 'cs/network/index', label: '计算机网络' },
-        { type: 'doc', id: 'cs/computer-system-essentials', label: '计算机系统精要' },
+        { type: 'doc', id: 'cs/computer-system-essentials', label: '计算机系统与 C++ 深度精要' },
       ],
     },
   ],

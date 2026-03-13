@@ -11,5 +11,5 @@
 - [计算机组织与结构](organization/)
 - [操作系统原理](os/)
 - [计算机网络](network/)
-- [计算机系统精要 (Computer System Essentials)](computer-system-essentials)
+- [计算机系统与 C++ 深度精要 (Deep Essentials)](computer-system-essentials)
 - [数据结构 (理论篇)](ds/)
