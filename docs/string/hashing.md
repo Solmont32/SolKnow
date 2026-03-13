@@ -1,89 +1,89 @@
 ---
-title: 字符串哈希
+title: 字符串哈希与随机化
 ---
 
-import { ShieldCheck, Zap, Hash, AlertTriangle, Scale, Network, Info } from 'lucide-react';
+import { Hash, ShieldCheck, Zap, Info, Cpu, Target, Activity } from 'lucide-react';
 import CodeCollapse from '@site/src/components/CodeCollapse';
 
-# 字符串哈希：高效判等与随机化算法
+# 字符串哈希：高效判等与碰撞分析
 
 <div className="flex gap-2 mb-6">
-  <span className="badge badge--primary"><Hash size={14} className="mr-1" /> $O(1)$ Substring Compare</span>
-  <span className="badge badge--success"><ShieldCheck size={14} className="mr-1" /> Collision Proofing</span>
-  <span className="badge badge--warning"><AlertTriangle size={14} className="mr-1" /> Birthday Paradox</span>
+  <span className="badge badge--primary"><Hash size={14} className="mr-1" /> 多项式哈希</span>
+  <span className="badge badge--success"><ShieldCheck size={14} className="mr-1" /> 双哈希策略</span>
+  <span className="badge badge--info"><Activity size={14} className="mr-1" /> 碰撞概率分析</span>
 </div>
 
-字符串哈希是将字符串映射为固定长度整数的技术。它通过 $O(N)$ 预处理，换取 $O(1)$ 的子串相等性判定，是处理子串匹配、去重及复杂结构对比的有力工具。
+字符串哈希将任意长度的字符串映射为固定范围的整数，通过 $O(1)$ 的数值比较替代 $O(L)$ 的字符比较，是处理字符串判等、重复性检测的有力武器。
 
 ---
 
-## 1. 数学模型：多项式哈希 (Polynomial Rolling Hash)
+## 1. 多项式哈希 (Polynomial Rolling Hash)
 
-对于字符串 $S = s_1 s_2 \dots s_n$，其哈希值 $H(S)$ 定义为：
+### 1.1 形式化定义
 
+对于字符串 $s = s_0 s_1 \dots s_{n-1}$，其多项式哈希定义为：
 $$
-H(S) = \left( \sum_{i=1}^n s_i \cdot B^{n-i} \right) \pmod M
+H(s) = \left( \sum_{i=0}^{n-1} s_i \cdot B^{n-1-i} \right) \pmod M
 $$
+其中 $B$ 为进制基数，$M$ 为大质数模数。
 
-其中 $B$（Base）为基数（通常取大于字符集大小的质数，如 131 或 13331），$M$（Modulus）为模数。
+### 1.2 滚动性质 (Rolling Property)
 
-### 1.1 区间哈希公式推导
-
-预处理前缀哈希数组 $h[i]$：
-- $h[0] = 0$
-- $h[i] = (h[i-1] \cdot B + s[i]) \pmod M$
-
-**定理**：子串 $S[l \dots r]$ 的哈希值为：
-$$ H(S[l \dots r]) = (h[r] - h[l-1] \cdot B^{r-l+1}) \pmod M $$
-
-**证明**：
-$h[r] = \sum_{i=1}^r s_i B^{r-i}$
-$h[l-1] = \sum_{i=1}^{l-1} s_i B^{l-1-i}$
-则 $h[l-1] \cdot B^{r-l+1} = \sum_{i=1}^{l-1} s_i B^{r-i}$
-两者相减即可消去前 $l-1$ 项，剩下第 $l$ 到第 $r$ 项。
+子串 $s[l \dots r]$ 的哈希值可以通过预处理前缀哈希 $h[i]$ 在 $O(1)$ 时间内求得：
+$$
+Hash(s[l \dots r]) = (h[r+1] - h[l] \cdot B^{r-l+1}) \pmod M
+$$
 
 ---
 
-## 2. 碰撞风险评估 (Collision Rate Evaluation)
+## 2. 碰撞概率分析 (Collision Analysis)
 
-### 2.1 生日悖论与碰撞概率
+### 2.1 生日悖论与碰撞风险
 
-**定理**：在 $M$ 个槽位中随机放入 $N$ 个哈希值，至少发生一次碰撞的概率 $P$ 约为：
-$$ P \approx 1 - e^{-\frac{N^2}{2M}} $$
+**定理**：对于模数为 $M$ 的哈希函数，若进行 $N$ 次不同的比对，发生至少一次碰撞的概率 $P$ 近似为：
+$$
+P \approx 1 - e^{-\frac{N^2}{2M}}
+$$
+- **单质数模数 ($10^9$)**：当 $N \approx 10^5$ 时，碰撞概率已显著增加，极易被精心构造的数据（Anti-hash）击破。
+- **双哈希策略**：使用两个互质的大模数 $M_1, M_2$，等效模数为 $M_1 \cdot M_2 \approx 10^{18}$，极大提升了安全性。
 
-- **单模数 $10^9$ 的局限**：当 $N = 10^5, M = 10^9$ 时，$P \approx 1 - e^{-5} \approx 99.3\%$。这意味着单模数 $10^9$ 在竞赛级数据规模下极易碰撞。
-- **安全阈值**：若要求碰撞概率 $P < 10^{-7}$，则对于 $N=10^6$，模数 $M$ 需满足 $M > \frac{N^2}{2 \ln(1/(1-P))} \approx 5 \times 10^{18}$。
+### 2.2 防御策略：随机化
 
-### 2.2 防御方案
+**核心策略**：基数 $B$ 与模数 $M$ 的选择应具有随机性。
+- 在程序运行时使用时间戳生成随机基数：`B = 131 + rand() % 1000`。
+- 随机基数使得攻击者无法预先构造 Anti-hash 数据，因为攻击者不知道你当前的基数。
 
-1. **双哈希 (Double Hash)**：使用两组不同的 $(B_1, M_1)$ 和 $(B_2, M_2)$。碰撞概率降为 $P_1 \cdot P_2$。
-2. **$2^{61}-1$ (梅森素数)**：利用 `__int128` 和位运算实现快速大模数取模。
-3. **基数随机化**：使用随机生成的基数防止针对性数据攻击。
+---
 
-<CodeCollapse title="安全双哈希实现 (C++)" language="cpp">
+## 3. 算法实现
+
+<CodeCollapse title="双哈希模板 (C++)" language="cpp">
 
 ```cpp
-typedef pair<long long, long long> pll;
-const long long M1 = 1e9 + 7, M2 = 1e9 + 9;
-const long long B1 = 131, B2 = 13331;
+typedef unsigned long long ull;
 
-struct StringHash {
-    vector<long long> h1, h2, p1, p2;
-    StringHash(string s) {
-        int n = s.size();
+struct DoubleHash {
+    const ull M1 = 1e9 + 7, M2 = 1e9 + 9;
+    ull B;
+    vector<ull> h1, h2, p1, p2;
+
+    DoubleHash(string s) {
+        int n = s.length();
+        B = 131 + (ull)new char % 1331; // 简单随机化
         h1.resize(n + 1); h2.resize(n + 1);
         p1.resize(n + 1); p2.resize(n + 1);
         p1[0] = p2[0] = 1;
-        for (int i = 1; i <= n; i++) {
-            h1[i] = (h1[i - 1] * B1 + s[i - 1]) % M1;
-            h2[i] = (h2[i - 1] * B2 + s[i - 1]) % M2;
-            p1[i] = (p1[i - 1] * B1) % M1;
-            p2[i] = (p2[i - 1] * B2) % M2;
+        for (int i = 0; i < n; i++) {
+            h1[i + 1] = (h1[i] * B + s[i]) % M1;
+            h2[i + 1] = (h2[i] * B + s[i]) % M2;
+            p1[i + 1] = (p1[i] * B) % M1;
+            p2[i + 1] = (p2[i] * B) % M2;
         }
     }
-    pll get(int l, int r) {
-        long long res1 = (h1[r] - h1[l - 1] * p1[r - l + 1] % M1 + M1) % M1;
-        long long res2 = (h2[r] - h2[l - 1] * p2[r - l + 1] % M2 + M2) % M2;
+
+    pair<ull, ull> get(int l, int r) { // [l, r] 0-indexed
+        ull res1 = (h1[r + 1] + M1 - h1[l] * p1[r - l + 1] % M1) % M1;
+        ull res2 = (h2[r + 1] + M2 - h2[l] * p2[r - l + 1] % M2) % M2;
         return {res1, res2};
     }
 };
@@ -93,23 +93,51 @@ struct StringHash {
 
 ---
 
-## 3. 经典例题
+## 4. 经典应用
 
-### 例题 1：[POJ 2774] 最长公共子串 (SA/SAM 的哈希平替)
+### 例题：[Luogu P3370] 字符串哈希模板
 
-> **思路**：二分答案长度 $L$，利用哈希判定是否存在两个长度为 $L$ 的子串相等。
-> **复杂度**：$O(N \log N)$。虽然理论不如 SAM，但哈希常数小且实现极其简单。
+> **题目**：给定 $N$ 个字符串，求其中不同字符串的个数。
+> **思路**：对每个字符串计算哈希值，存入 `std::set` 或排序后去重。
 
-### 例题 2：[Luogu P5043] 树同构 (树哈希建模)
+<details>
+<summary>Check Analysis</summary>
 
-> **核心公式**：$f(u) = 1 + \sum_{v \in son(u)} \phi(f(v))$。
-> 其中 $\phi(x)$ 是一个哈希映射函数（如 $x \oplus (x \gg 16)$ 或更复杂的随机映射），用于处理子树集合的无序性。
+```cpp
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+typedef unsigned long long ull;
+ull get_hash(string s) {
+    ull res = 0, base = 131;
+    for (char c : s) res = res * base + (ull)c;
+    return res;
+}
+
+int main() {
+    int n; cin >> n;
+    vector<ull> hashes;
+    for (int i = 0; i < n; i++) {
+        string s; cin >> s;
+        hashes.push_back(get_hash(s));
+    }
+    sort(hashes.begin(), hashes.end());
+    cout << unique(hashes.begin(), hashes.end()) - hashes.begin() << endl;
+    return 0;
+}
+```
+
+</details>
 
 ---
 
 ## 🎯 练习题清单
 
-1. **[Luogu P3370] 字符串哈希模板**：快速判定串个数。
-2. **[BZOJ 3097] Hash Killer I/II/III**：学习如何通过不同的构造方案击破各种哈希策略。
-3. **[CF 1200E] Compress Words**：利用哈希进行前后缀匹配加速字符串合并。
-4. **[POI2010] ANT-Antisymmetry**：哈希与二分的结合应用。
+1. **[Luogu P3370] 字符串哈希模板**
+2. **[POJ 1200] Crazy Search**：不同子串个数统计。
+3. **[HDU 4821] String**：哈希 + 滑动窗口。
+4. **[CF 514C] Watto and Mechanism**：哈希 + 容错匹配（修改一个字符）。

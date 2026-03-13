@@ -1,115 +1,111 @@
 ---
-title: KMP 算法
+title: KMP 算法与周期理论
 ---
 
-import { Zap, ShieldCheck, Code2, Target, Cpu, Info, Layers, Workflow } from 'lucide-react';
+import { Zap, ShieldCheck, Code2, Target, Cpu, Info, Layers, Workflow, Binary, Activity } from 'lucide-react';
 import CodeCollapse from '@site/src/components/CodeCollapse';
 
-# KMP 算法：前缀函数与模式匹配优化
+# KMP 算法：前缀函数与周期性边界分析
 
 <div className="flex gap-2 mb-6">
   <span className="badge badge--primary"><Zap size={14} className="mr-1" /> 线性匹配</span>
   <span className="badge badge--success"><ShieldCheck size={14} className="mr-1" /> 势能分析证明</span>
-  <span className="badge badge--info"><Cpu size={14} className="mr-1" /> $O(n+m)$ Time</span>
+  <span className="badge badge--info"><Activity size={14} className="mr-1" /> 周期理论</span>
 </div>
 
-KMP (Knuth-Morris-Pratt) 算法是字符串处理的基石。它的核心在于通过预处理模式串的**内部对称性**，使得在匹配失败时能够利用已知信息进行“跳跃”，从而实现线性时间复杂度的字符串检索。
+KMP (Knuth-Morris-Pratt) 算法不仅是字符串检索的利器，更是深入理解字符串**周期结构**的窗口。本章将从形式化定义出发，探讨前缀函数、势能分析以及周期性引理。
 
 ---
 
 ## 1. 前缀函数 (Prefix Function)
 
-### 1.1 形式化定义
+### 1.1 形式化定义与 Border 概念
 
-对于长度为 $n$ 的字符串 $s$，其前缀函数 $\pi[i]$ 定义为子串 $s[0 \dots i]$ 的最长真前缀的长度，且该真前缀同时也是 $s[0 \dots i]$ 的真后缀。
+**定义 (Border)**：字符串 $s$ 的一个真前缀 $s[0 \dots k-1]$ 如果同时也是 $s$ 的真后缀，则称其为 $s$ 的一个 **Border**。
 
+**前缀函数 $\pi[i]$**：定义为子串 $s[0 \dots i]$ 的**最长 Border** 的长度。
 $$
 \pi[i] = \max \{k : 0 < k \le i \text{ 且 } s[0 \dots k-1] = s[i-k+1 \dots i]\}
 $$
 
-规定 $\pi[0] = 0$。
-
 ### 1.2 递推转移的系统化证明
 
-为了在线性时间内计算 $\pi[i]$，我们需要基于 $\pi[i-1]$ 进行推导。
+**引理 1 (单调性限制)**：$\pi[i] \le \pi[i-1] + 1$。
+- **证明**：若 $\pi[i] = k > 1$，则 $s[0 \dots k-1]$ 是 $s[0 \dots i]$ 的 Border。去掉末尾字符，$s[0 \dots k-2]$ 必为 $s[0 \dots i-1]$ 的 Border。由定义 $\pi[i-1] \ge k-1$，证毕。
 
-**引理 1 (单调性限制)**：对于任意 $i > 0$，有 $\pi[i] \le \pi[i-1] + 1$。
-- **证明**：设 $\pi[i] = k$。这意味着 $s[0 \dots k-1] = s[i-k+1 \dots i]$。若 $k > 1$，则去掉最后一个字符后有 $s[0 \dots k-2] = s[i-k+1 \dots i-1]$，这表明 $s[0 \dots k-2]$ 是 $s[0 \dots i-1]$ 的一个相等真前后缀。根据定义 $\pi[i-1] \ge k-1$，即 $k \le \pi[i-1] + 1$。
-
-**引理 2 (转移搜索链)**：若 $s[i] \neq s[\pi[i-1]]$，则下一个可能匹配的位置是 $\pi[\pi[i-1]-1]$。
-- **证明**：我们需要找到 $s[0 \dots i]$ 的一个相等真前后缀 $s[0 \dots k-1]$，其必须满足 $s[k-1] = s[i]$。由于 $s[0 \dots k-2]$ 必须是 $s[0 \dots i-1]$ 的一个相等真前后缀，且其长度 $k-1$ 必须小于 $\pi[i-1]$。根据前缀函数的定义，比 $\pi[i-1]$ 短的最长相等真前后缀正是 $\pi[\pi[i-1]-1]$。通过不断迭代 $j = \pi[j-1]$，我们可以遍历所有候选项。
+**引理 2 (Border 的传递性)**：$s$ 的 Border 的 Border 也是 $s$ 的 Border。
+- 这意味着所有 Border 的长度可以通过迭代 $\pi$ 函数获得：$\{ \pi[i], \pi[\pi[i]-1], \pi[\pi[\pi[i]-1]-1], \dots \}$。
 
 ---
 
-## 2. 复杂度分析：势能分析法 (Amortized Analysis)
+## 2. 周期性边界分析 (Periodicity Theory)
 
-我们使用**势能分析法**严密证明 $O(n)$ 复杂度。
+### 2.1 周期 (Period) 与 Border 的对偶性
 
-**定义**：第 $i$ 步后的势函数 $\Phi_i = \pi[i]$。
-- 显然 $\Phi_i \ge 0$ 且 $\Phi_0 = 0$。
-- 在计算 $\pi[i]$ 时：
-  1. 初始令 $j = \pi[i-1]$。
-  2. 执行 `while (j > 0 && s[i] != s[j]) j = pi[j-1]`。每次 `j = pi[j-1]` 至少使 $j$ 减少 1。设该循环执行了 $k_i$ 次。
-  3. 若 $s[i] = s[j]$，则 $j$ 增加 1。
-- **总代价计算**：
-  - 实际代价 $c_i = 1 + k_i$（1次比较 + $k_i$ 次跳转）。
-  - 势能变化 $\Delta \Phi_i = \pi[i] - \pi[i-1] \le 1 - k_i$。
-  - 平摊代价 $\hat{c}_i = c_i + \Delta \Phi_i \le (1 + k_i) + (1 - k_i) = 2$。
-- **结论**：总复杂度 $\sum c_i = \sum \hat{c}_i - (\Phi_n - \Phi_0) \le 2n - \pi[n-1] = O(n)$。
+**定义 (Period)**：若对于所有 $0 \le i < |s| - p$，满足 $s[i] = s[i+p]$，则称 $p$ 为 $s$ 的一个周期。
+
+**定理 (周期-Border 对偶)**：$p$ 是 $s$ 的一个周期 $\iff$ $s$ 有一个长度为 $|s| - p$ 的 Border。
+- **直观理解**：由于前后缀相等，重叠部分的错位正好构成了周期的循环。
+
+### 2.2 弱周期引理 (Weak Periodicity Lemma)
+
+**引理**：若 $p$ 和 $q$ 是 $s$ 的周期，且 $p + q \le |s|$，则 $\gcd(p, q)$ 也是 $s$ 的周期。
+- **推论**：若一个字符串有多个周期，在长度足够时，它们会“收敛”到更小的公约数周期。
+- **Fine-Wilf 定理**：上述条件的极限界限是 $p+q-\gcd(p, q)$。
 
 ---
 
-## 3. 算法实现
+## 3. KMP 自动机：状态转移一致性
 
-<CodeCollapse title="前缀函数线性实现 (C++)" language="cpp">
+我们将 KMP 视为 DFA $\mathcal{A} = (Q, \Sigma, \delta, q_0, F)$。
+
+### 3.1 转移函数 $\delta(j, c)$ 的一致性证明
+
+状态 $j$ 表示当前匹配了模式串 $P$ 的前缀 $P[0 \dots j-1]$。
+- **一致性要求**：在状态 $j$ 输入 $c$ 后，新状态 $j'$ 必须是文本串当前后缀与 $P$ 的前缀的最长匹配长度。
+- **转移式**：
+  $$
+  \delta(j, c) = \begin{cases} j+1 & \text{if } c = P[j] \\ \delta(\pi[j-1], c) & \text{if } c \neq P[j] \text{ and } j > 0 \\ 1 \text{ or } 0 & \text{if } j = 0 \end{cases}
+  $$
+- **证明简述**：当失配时，我们需要找到 $P[0 \dots j-1]$ 的最长真后缀使得接上 $c$ 后能匹配 $P$ 的前缀。根据 Border 的性质，这等价于在 $P[0 \dots j-1]$ 的所有 Border 中寻找。
+
+---
+
+## 4. 复杂度分析：势能分析法
+
+**定义势函数** $\Phi = \pi[i]$（当前匹配长度）。
+- **Push 操作**（匹配成功）：$\Phi \to \Phi + 1$。
+- **Pop 操作**（`while` 循环跳转）：每次执行 $j = \pi[j-1]$，$\Phi$ 至少减少 1。
+- **平摊分析**：总增加量为 $n$，因此总减少量（`while` 执行次数）不会超过 $n$。总时间复杂度为 $O(n)$。
+
+---
+
+## 5. 算法实现与例题
+
+<CodeCollapse title="前缀函数与 KMP 自动机 (C++)" language="cpp">
 
 ```cpp
-/**
- * @brief 计算前缀函数 pi 数组
- * 时间复杂度: O(n), 空间复杂度: O(n)
- */
+// 前缀函数
 vector<int> prefix_function(const string& s) {
     int n = s.length();
     vector<int> pi(n);
     for (int i = 1; i < n; i++) {
         int j = pi[i - 1];
-        while (j > 0 && s[i] != s[j])
-            j = pi[j - 1]; // 沿着失配链回溯
+        while (j > 0 && s[i] != s[j]) j = pi[j - 1];
         if (s[i] == s[j]) j++;
         pi[i] = j;
     }
     return pi;
 }
-```
 
-</CodeCollapse>
-
----
-
-## 4. KMP 自动机：DFA 视角
-
-将 KMP 视为**确定有限状态自动机 (DFA)**。状态 $j$ 表示当前匹配了模式串的前 $j$ 个字符。
-
-### 4.1 转移函数 $\delta(j, c)$
-对于状态 $j$ 和输入字符 $c$：
-- 若 $c = P[j]$，则 $\delta(j, c) = j + 1$。
-- 若 $c \neq P[j]$，则 $\delta(j, c) = \delta(\pi[j-1], c)$。
-
-这种视角在处理“计数不包含某模式串的文本数”等 DP 问题时至关重要。
-
-<CodeCollapse title="KMP 自动机构建 (优化版)" language="cpp">
-
-```cpp
-void compute_automaton(string p, vector<vector<int>>& trans) {
+// 自动机预处理 (O(m * sigma))
+void build_kmp_automaton(string p, vector<vector<int>>& nxt) {
     int m = p.length();
-    trans.assign(m + 1, vector<int>(26));
-    vector<int> pi = prefix_function(p);
-    for (int j = 0; j <= m; j++) {
+    nxt.assign(m + 1, vector<int>(26));
+    for (int i = 0; i < m; i++) {
         for (int c = 0; c < 26; c++) {
-            if (j > 0 && (j == m || c != p[j] - 'a'))
-                trans[j][c] = trans[pi[j-1]][c];
-            else if (j < m && c == p[j] - 'a')
-                trans[j][c] = j + 1;
+            if (i > 0 && c != p[i] - 'a') nxt[i][c] = nxt[pi[i-1]][c];
+            else nxt[i][c] = i + (c == p[i] - 'a');
         }
     }
 }
@@ -117,62 +113,45 @@ void compute_automaton(string p, vector<vector<int>>& trans) {
 
 </CodeCollapse>
 
----
+### 例题：[Luogu P4391] 最小循环节
 
-## 5. 经典例题
-
-### 例题 1：最小循环节与周期
-
-> **题目**：给定字符串 $S$，求其最小周期长度。
-> **定理**：$S$ 具有长度为 $T$ 的周期 $\iff T | n$ 且 $n-T = \pi[n-1]$。
+> **题目**：给定长度为 $n$ 的字符串 $S$，求其最短循环节长度（循环节不必完整）。
+> **解法**：最短周期即为 $n - \pi[n-1]$。
 
 <details>
-<summary>Check Analysis</summary>
+<summary>Check Solution</summary>
 
-若 $n \% (n - \pi[n-1]) == 0$，则最小周期长度为 $n - \pi[n-1]$。
-否则，最小周期长度为 $n$（或理解为虽然有循环趋势但末尾不完整）。
+根据周期-Border 对偶性，$n - \pi[n-1]$ 是 $S$ 的一个周期。由于 $\pi[n-1]$ 是最长 Border，则 $n - \pi[n-1]$ 必为最小周期。
 
 ```cpp
-int get_min_period(string s) {
-    int n = s.length();
-    vector<int> pi = prefix_function(s);
-    int len = n - pi[n-1];
-    if (n % len == 0) return len;
-    return n;
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+int main() {
+    int n; string s;
+    cin >> n >> s;
+    vector<int> pi(n);
+    for (int i = 1; i < n; i++) {
+        int j = pi[i-1];
+        while (j > 0 && s[i] != s[j]) j = pi[j-1];
+        if (s[i] == s[j]) j++;
+        pi[i] = j;
+    }
+    cout << n - pi[n-1] << endl;
+    return 0;
 }
 ```
 
 </details>
 
-### 例题 2：[Codeforces 126B] Password
-
-> **核心思路**：候选长度 $k$ 必须同时满足：
-> 1. $k$ 是前缀和后缀的公共长度（即 $k \in \{ \pi[n-1], \pi[\pi[n-1]-1], \dots \}$）。
-> 2. $k$ 在中间出现过（即 $k \le \max_{i=1}^{n-2} \pi[i]$）。
-
-<CodeCollapse title="C++ 实现" language="cpp">
-
-```cpp
-string solve() {
-    string s; cin >> s;
-    int n = s.size();
-    vector<int> pi = prefix_function(s);
-    int max_mid = 0;
-    for (int i = 1; i < n - 1; i++) max_mid = max(max_mid, pi[i]);
-    int curr = pi[n-1];
-    while (curr > max_mid) curr = pi[curr - 1];
-    if (curr == 0) return "Just a legend";
-    return s.substr(0, curr);
-}
-```
-
-</CodeCollapse>
-
 ---
 
 ## 🎯 练习题清单
 
-1. **[Luogu P3375] KMP 模板**：基础匹配位置输出。
-2. **[POJ 2406] Power Strings**：利用 $\pi$ 数组求最大重复次数。
-3. **[HDU 3336] Count the string**：前缀出现次数总和，利用 $\pi$ 树 DP。
-4. **[CF 432D] Prefixes and Suffixes**：统计每个既是前缀又是后缀的子串在原串中出现的次数。
+1. **[Luogu P3375] KMP 模板**
+2. **[POJ 2185] 矩阵周期**：二维 KMP 应用。
+3. **[CF 1200E] Compress Words**：利用 KMP 优化字符串合并。
+4. **[TopCoder 11311] SrmCards**：结合 KMP 状态机的动态规划。
