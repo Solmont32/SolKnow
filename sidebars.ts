@@ -501,6 +501,7 @@ const sidebars: SidebarsConfig = {
                 'academic-math/topology/compactness',
                 'academic-math/topology/connectedness',
                 'academic-math/topology/homotopy',
+                'academic-math/topology/homology',
               ],
             },
             {

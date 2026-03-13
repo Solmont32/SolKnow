@@ -30,9 +30,10 @@ import { Infinity, BookOpen, PenTool, Lightbulb, Compass, Share2, Code2, Layers 
 - **[<Share2 size={18} /> 紧致性 (Compactness)](compactness)**：有限覆盖原理，Heine-Borel 与 Tychonoff 定理。
 - **[<Share2 size={18} /> 连通性 (Connectedness)](connectedness)**：连通集、路径连通与局部连通性，拓扑学家的正弦曲线。
 
-### 3. 同伦与代数初步 (Homotopy)
+### 3. 同伦与代数初步 (Homotopy & Homology)
 
 - **[<Infinity size={18} /> 同伦初步 (Basic Homotopy)](homotopy)**：连续形变、路径同伦与基本群的直观引入。
+- **[<Layers size={18} /> 同调论基础 (Homology Theory)](homology)**：单纯形、链复形与 Betti 数，空间的“孔洞”统计学。
 
 ---
 
