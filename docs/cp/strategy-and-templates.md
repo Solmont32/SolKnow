@@ -1,235 +1,191 @@
 ---
-title: 竞赛策略与工程模板：从代码复用优化到标准化验证
+title: 竞赛实战策略与平台适配：从 AtCoder/Codeforces 建模到综合实战演练
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { Trophy, Zap, Bug, Code2, Clock, ShieldCheck, Factory, Lightbulb, Brain, Gauge, Repeat, SearchCheck } from 'lucide-react';
+import ComplexityAnalysis from '@site/src/components/ComplexityAnalysis';
+import SupportingExercises from '@site/src/components/SupportingExercises';
+import { Trophy, Zap, Bug, Code2, Clock, ShieldCheck, Factory, Lightbulb, Brain, Gauge, Repeat, SearchCheck, Target, Layers, Cpu, Milestone } from 'lucide-react';
 
-# 竞赛策略与工程模板：从代码复用优化到标准化验证
+# 竞赛实战策略与平台适配：从建模到演练
 
-> **"Algorithms are the soul, but engineering is the armor."**
-> 在顶级竞赛（ICPC/World Finals/OI）中，稳健的工程化习惯与心理调控能力是决定胜负的最后 1%。本章旨在构建一套工业级的算法竞赛方法论。
-
----
-
-## 🧠 I. 竞赛心理博弈与状态管理 (Mental Game Theory)
-
-竞赛本质上是有限时间内的**博弈论应用**。除了技术实力，心理素质决定了上限。
-
-### 1.1 期望管理与止损逻辑
-
-在 5 小时的比赛中，情绪波动呈现周期性特征。
-
-- **冷启动 (Cold Start)**：前 30 分钟。心态：求稳。策略：先写最简单的签到题，通过第一个 AC 建立“正反馈循环”。
-- **瓶颈期 (Plateau)**：第 60-180 分钟。心态：焦虑。策略：若某题思路卡壳 30 分钟，执行**强制上下文切换**（洗手间、喝水、甚至完全不看题 2 分钟）。
-- **搏命时刻 (Clutch Moment)**：最后 60 分钟。心态：急躁。策略：禁止开启新模型。**回滚检查**已 AC 题目的潜在风险（如 `long long` 溢出）。
-
-### 1.2 风险控制矩阵
-
-| 行为类型         | 风险等级 | 收益预估        | 决策准则                                        |
-| :--------------- | :------- | :-------------- | :---------------------------------------------- |
-| **重写核心模块** | 极高     | 消除潜在隐患    | 仅当现有代码已完全无法调试且时间 > 45min 时执行 |
-| **特判暴力补丁** | 中       | 挽救 80% 测试点 | 当正解思路模棱两可且接近封榜时，果断拼写暴力    |
-| **更换算法模型** | 高       | 寻找全局最优解  | 必须在纸上重推复杂度，严禁盲目尝试              |
+> **"Modeling is the bridge between a problem and its solution; strategy is the compass that guides the traversal."**
+> 在顶级算法竞赛中，AC 不仅仅取决于算法知识的储备，更取决于对问题的**形式化建模**、**多维边界评估**以及对不同平台风格的**精准适配**。
 
 ---
 
-## 🛠️ II. 工程化调试与形式化校验 (Engineering & Verification)
+## 🧠 I. 系统化解题思维链 (Problem-Solving Thinking Chain)
 
-### 2.1 形式化校验流程 (Formal Verification)
+优秀的竞赛选手通常遵循一套标准化的思维链条，将模糊的题面转化为精确的代码实现。
 
-在编写复杂模板（如 SAM, LCT）后，应执行以下校验步骤：
+### 1.1 观察与猜想 (Observation & Conjecture)
+*   **小样本实验**：通过手算 $n=1, 2, 3, 4$ 的情况，寻找 $f(n)$ 的递推规律。
+*   **性质推导**：问题是否具备**单调性**？是否满足**决策单调性**？是否可以转化为**图论模型**（如：差分约束、二分图匹配）？
+*   **逆向思维**：如果正向求解困难，能否考虑“贡献度计数”或“容斥原理”？
 
-1.  **定义域检查**：所有数组下标是否严格符合 $[0, MAXN)$？
-2.  **不变性校验 (Invariants)**：例如，在并查集操作后，`p[find(x)] == find(x)` 必须成立；在 Splay 旋转后，BST 性质是否保持？
-3.  **对拍 (Stress Testing)**：编写简单的 $O(N^2)$ 暴力与 $O(N \log N)$ 的模板进行随机数据对比。
-
-```bash
-# 典型的对拍脚本 (PowerShell)
-for ($i=1; ; $i++) {
-    ./gen.exe > in.txt
-    ./sol.exe < in.txt > out.txt
-    ./std.exe < in.txt > ans.txt
-    if (Compare-Object (Get-Content out.txt) (Get-Content ans.txt)) {
-        Write-Host "Found Bug at Case $i" -ForegroundColor Red
-        break
-    }
-    Write-Host "Passed Case $i" -ForegroundColor Green
-}
-```
-
-### 2.2 现代 C++ Debug 环境配置
-
-利用编译器的静态与动态检查能力：
-
-- `-D_GLIBCXX_DEBUG`：开启 STL 容器越界检查（对 `vector`, `deque` 极其有效）。
-- `-Wall -Wextra -Wshadow`：捕捉变量名覆盖等低级逻辑错误。
+### 1.2 抽象建模 (Formal Modeling)
+将现实问题映射到经典的数学或计算机科学模型中：
+*   **状态表示**：定义 $DP[i][j]$ 或 $G = (V, E)$。
+*   **约束转换**：将“恰好 $k$ 次”转换为“至少 $k$ 次”进行容斥，或将区间限制转换为前缀和限制。
 
 ---
 
-## ⏱️ III. 复杂度预估与常数优化 (Complexity & Constants)
+## 🌍 II. 平台特性与适配策略 (Platform Adaptation)
 
-### 3.1 极限性能预估
+不同平台（AtCoder, Codeforces, ICPC）的题目风格存在显著差异，策略需随之调整。
 
-竞赛环境下的 CPU 主频约为 2.5GHz-3.5GHz。通常可以按照以下标准预估（1 秒限制）：
+| 平台 | 核心风格 | 推荐策略 | 典型图标 |
+| :--- | :--- | :--- | :---: |
+| **AtCoder** | 极致思维、数学构造、代码量极小但极其精妙 | 优先在纸上推导，不急于写代码。关注排列组合、位运算、异或性质。 | <Brain color="#3b82f6" /> |
+| **Codeforces** | 观察力、手速、复杂模拟、典型数据结构 | 快速识别套路。利用 `std::map`, `std::set` 等快速实现。注意交互题（Interaction）的清空缓冲区。 | <Zap color="#f59e0b" /> |
+| **USACO/OI** | 高难度算法组合、极致空间限制、侧重细节 | 严格进行空间预算。使用手写内存池或 `bitset` 优化空间。 | <Layers color="#8b5cf6" /> |
 
-- $O(N^2)$：$N \approx 5000$。
-- $O(N \log N)$：$N \approx 5 \times 10^5$。
-- $O(N)$：$N \approx 5 \times 10^7$。
+---
 
-<KnowledgeCard type="warning" title="常数警示">
-STL 容器（如 `std::map`, `std::set`）的常数极大，通常比手写 Hash 或树状数组慢 3-10 倍。在 $N=10^6$ 且时限紧张时，应优先使用 `std::vector` 配合排序或手写 `unordered_map`。
+## ⚖️ III. 多维边界评估 (Boundary Evaluation)
+
+在选型算法前，必须进行全方位的物理约束评估。
+
+### 3.1 时间边界：主频与常数
+现代评测系统（如 Codeforces 64-bit）每秒约可执行 $5 \times 10^8$ 次基本运算。
+
+<ComplexityAnalysis />
+
+### 3.2 精度与溢出边界
+*   **浮点数**：$10^9$ 以上的计算严禁使用 `float`，优先使用 `double`。若需更高精度，使用 `long double` 并配合 `eps = 1e-12`。
+*   **整型溢出**：
+    *   $10^9$: `int` 可行。
+    *   $10^{18}$: 必须使用 `long long`。
+    *   $10^{36}$: 考虑 `__int128` 或大数类。
+*   **取模运算**：在每一步乘法后执行 `(a * b) % MOD`，防止中间过程溢出。
+
+---
+
+## 🎯 IV. 算法选型一致性分析 (Algorithm Selection Consistency)
+
+**一致性准则**：算法的复杂度应与 $N$ 的规模保持高度契合。
+
+1.  **$N \le 20$**：指数级算法（状态压缩 DP, $2^n$ 暴力搜索）。
+2.  **$N \le 500$**：$O(N^3)$ 算法（Floyd-Warshall, 矩阵乘法）。
+3.  **$N \le 5000$**：$O(N^2)$ 算法（区间 DP, 基础双重循环）。
+4.  **$N \le 10^5 \sim 5 \times 10^5$**：$O(N \log N)$ 算法（线段树、排序、平衡树）。
+5.  **$N \ge 10^6$**：$O(N)$ 或 $O(1)$ 算法（数学公式、单调栈、线性筛）。
+
+<KnowledgeCard type="info" title="选型陷阱">
+当 $N=10^5$ 且涉及区间修改时，虽然线段树常数较大，但通常能过。若时限极其紧（< 500ms），则应考虑树状数组（Fenwick Tree）以减小常数。
 </KnowledgeCard>
 
-### 3.2 常数优化黑科技
+---
 
-1.  **循环展开 (Loop Unrolling)**：减少条件跳转。
-2.  **访存优化**：利用 CPU Cache L1/L2。多维数组尽量保证最后一位下标连续访问（$a[i][j]$ 而非 $a[j][i]$）。
-3.  **Fast I/O**：使用 `fread` 代替 `cin`。
+## 🛠️ V. 工业级竞赛代码标准 (Implementation Standards)
+
+### 5.1 健壮性自检清单
+1.  **初始化**：多组数据时，`memset` 复杂度是否为 $O(T \times N)$？（应仅重置有效范围）。
+2.  **边界情况**：$N=1$ 或 $N=0$ 是否处理？
+3.  **递归深度**：Windows 下默认栈空间较小，递归深度过大时需使用 `vector` 模拟栈或手工扩栈。
+
+### 5.2 常用代码片段：快速幂与逆元
 
 ```cpp
-inline char getc() {
-    static char buf[1 << 20], *p1 = buf, *p2 = buf;
-    return p1 == p2 && (p2 = (p1 = buf) + fread(buf, 1, 1 << 20, stdin), p1 == p2) ? EOF : *p1++;
+/**
+ * @brief 快速幂 $a^b \pmod{m}$
+ */
+long long binpow(long long a, long long b, long long m) {
+    a %= m;
+    long long res = 1;
+    while (b > 0) {
+        if (b & 1) res = res * a % m;
+        a = a * a % m;
+        b >>= 1;
+    }
+    return res;
 }
-template <typename T>
-inline void read(T &x) {
-    x = 0; int f = 1; char ch = getc();
-    while (!isdigit(ch)) { if (ch == '-') f = -1; ch = getc(); }
-    while (isdigit(ch)) { x = x * 10 + ch - '0'; ch = getc(); }
-    x *= f;
+
+/**
+ * @brief 费马小定理求逆元（m 为质数）
+ */
+long long inv(long long a, long long m) {
+    return binpow(a, m - 2, m);
 }
 ```
 
 ---
 
-## 🏭 IV. 标准化模板库：代码复用优化
+## 📝 VI. 综合实战演练 (Comprehensive Exercises)
 
-一套工业级的模板库应具备**模块化 (Modular)** 与 **类型无关 (Generic)**。
+<SupportingExercises />
 
-<details>
-<summary>1. 线性基与高斯消元集成 (Linear Basis)</summary>
-
-```cpp
-struct LinearBasis {
-    ll d[64];
-    LinearBasis() { memset(d, 0, sizeof(d)); }
-    bool insert(ll x) {
-        for (int i = 62; i >= 0; i--) {
-            if (!(x >> i)) continue;
-            if (!d[i]) { d[i] = x; return true; }
-            x ^= d[i];
-        }
-        return false;
-    }
-    ll query_max() {
-        ll res = 0;
-        for (int i = 62; i >= 0; i--) res = max(res, res ^ d[i]);
-        return res;
-    }
-};
-```
-
-</details>
+### 练习 1：AtCoder 风格构造题 (Thinking Chain)
+**题目**：构造一个长度为 $N$ 的排列 $P$，使得对于所有 $i$，满足 $P_i \neq i$ 且 $\sum |P_i - i|$ 最大。
+**提示**：考虑将 $1 \dots N/2$ 与 $N/2+1 \dots N$ 两半部分进行对角线交换。
 
 <details>
-<summary>2. 动态规划优化：斜率优化模版 (Slope Optimization)</summary>
-
-用于处理形如 $dp[i] = \min \{ dp[j] + w(j, i) \}$ 且具备决策单调性的问题。
+<summary>Check Solution (C++)</summary>
 
 ```cpp
-struct Line {
-    ll k, b;
-    ll eval(ll x) { return k * x + b; }
-};
-// 李超线段树：维护函数包络
-struct LiChaoTree {
-    Line t[MAXN << 2];
-    void update(int p, int l, int r, Line v) {
-        int mid = (l + r) >> 1;
-        if (v.eval(mid) < t[p].eval(mid)) swap(v, t[p]);
-        if (l == r) return;
-        if (v.eval(l) < t[p].eval(l)) update(p << 1, l, mid, v);
-        else update(p << 1 | 1, mid + 1, r, v);
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+    vector<int> p(n + 1);
+    for (int i = 1; i <= n; i++) p[i] = i;
+    
+    // 构造策略：将前半段与后半段交换
+    // 例如 N=4: [1, 2, 3, 4] -> [3, 4, 1, 2]
+    // 这样每个位置 |P[i] - i| 都尽可能大
+    for (int i = 1; i <= n / 2; i++) {
+        swap(p[i], p[i + (n + 1) / 2]);
     }
-};
-```
+    
+    // 如果 N 是奇数，最后一个元素需要特殊处理以满足 P[i] != i
+    if (n % 2 != 0) {
+        swap(p[n / 2 + 1], p[n]);
+    }
 
-</details>
-
----
-
-## 📝 V. 综合实战练习 (Comprehensive Exercises)
-
-### 练习 1：形式化校验实战
-
-**题目**：实现一个带懒标记的线段树，支持区间加、区间乘、区间求和。
-**要求**：推导两个懒标记（add, mul）的维护公式，并说明为什么乘法标记必须先作用于加法标记。
-
-<details>
-<summary>Check Solution</summary>
-
-**推导过程**：
-假设当前值为 $V$，乘法标记为 $m$，加法标记为 $a$。
-操作序列：$V \to V \times m_1 + a_1$。
-再次操作 $(m_2, a_2)$：
-$(V \times m_1 + a_1) \times m_2 + a_2 = V \times (m_1 m_2) + (a_1 m_2 + a_2)$。
-因此：
-
-- 新乘法标记：$m_{new} = m_{old} \times m_2$
-- 新加法标记：$a_{new} = a_{old} \times m_2 + a_2$
-
-```cpp
-void pushdown(int p) {
-    if (lazy_mul[p] == 1 && lazy_add[p] == 0) return;
-    auto apply = [&](int c, ll m, ll a) {
-        sum[c] = (sum[c] * m + a * len[c]) % MOD;
-        lazy_mul[c] = (lazy_mul[c] * m) % MOD;
-        lazy_add[c] = (lazy_add[c] * m + a) % MOD;
-    };
-    apply(p << 1, lazy_mul[p], lazy_add[p]);
-    apply(p << 1 | 1, lazy_mul[p], lazy_add[p]);
-    lazy_mul[p] = 1; lazy_add[p] = 0;
+    for (int i = 1; i <= n; i++) cout << p[i] << (i == n ? "" : " ");
+    cout << endl;
+    return 0;
 }
 ```
-
 </details>
 
-### 练习 2：复杂度预估挑战
-
-**题目**：给定 $N=2 \times 10^5$ 的序列，执行 $Q=2 \times 10^5$ 次操作，每次询问区间 $[L, R]$ 内出现频率最高元素的频率。时限 1.0s。
-**思考**：使用莫队算法（Mo's Algorithm）的复杂度为 $O((N+Q)\sqrt{N}) \approx 4 \times 10^5 \times 447 \approx 1.7 \times 10^8$。在 1.0s 内是否可行？如何优化块大小？
+### 练习 2：Codeforces 风格数据结构题 (Modeling)
+**题目**：给定一个数组，支持单点修改，询问区间内连续子段的最大和。
+**建模**：线段树每个节点维护四个值：`sum` (总和), `lmax` (前缀最大和), `rmax` (后缀最大和), `dat` (全局最大子段和)。
 
 <details>
-<summary>Check Solution</summary>
-
-**分析与优化**：
-
-1.  **理论计算**：$1.7 \times 10^8$ 操作次数在莫队这种纯访存操作中略显吃力。
-2.  **块大小优化**：传统 $\sqrt{N}$ 并非最优，应设为 $N/\sqrt{Q} \approx 450$。
-3.  **奇偶排序**：减少 $R$ 指针的回扫距离。
+<summary>Check Solution (C++)</summary>
 
 ```cpp
-sort(q + 1, q + Q + 1, [&](const Query &a, const Query &b) {
-    if (a.block != b.block) return a.block < b.block;
-    return (a.block & 1) ? (a.r < b.r) : (a.r > b.r);
-});
+struct Node {
+    long long sum, lmax, rmax, dat;
+};
+
+Node pushup(Node l, Node r) {
+    Node res;
+    res.sum = l.sum + r.sum;
+    res.lmax = max(l.lmax, l.sum + r.lmax);
+    res.rmax = max(r.rmax, r.sum + l.rmax);
+    res.dat = max({l.dat, r.dat, l.rmax + r.lmax});
+    return res;
+}
 ```
-
-4.  **结论**：配合奇偶排序与块大小调优，1.0s 内可稳过。
-
 </details>
 
 ---
 
-## 🏆 进阶路径建议
+## 🚀 总结与进阶
 
-1.  **构建私人库**：在 GitHub 维护一个专属模板库，不仅是代码，更要有对应的**复杂度分析**。
-2.  **模拟封榜环境**：练习在不看排名、不看测试反馈（Gym 环境）下的心理稳定性。
-3.  **阅读工业源码**：如 LLVM 或 Linux 内核的底层优化，理解现代 CPU 的流水线工作方式。
+1.  **建立个人 Checkpoint**：每场比赛后总结“为什么这道题我没能在 20 分钟内建模成功？”。
+2.  **对拍标准化**：熟练掌握 `generator.cpp` 的编写。
+3.  **保持肌肉记忆**：即使不打比赛，每周也应完成 1-2 道不同风格的 Hard 题目以保持手感。
 
 <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-  <a className="button button--primary button--lg" href="/docs/cp/strategy-and-templates">
-    回顾基础策略 <Repeat size={20} style={{ marginLeft: '8px' }} />
+  <a className="button button--primary button--lg" href="/docs/cp/atcoder">
+    前往 AtCoder 专题适配 <Milestone size={20} style={{ marginLeft: '8px' }} />
   </a>
 </div>
