@@ -593,7 +593,7 @@ const sidebars: SidebarsConfig = {
       label: '人工智能',
       link: { type: 'doc', id: 'ai/index' },
       items: [
-        { type: 'doc', id: 'ai/ai-essentials', label: '人工智能与深度学习基础精要 (Essentials)' },
+        { type: 'doc', id: 'ai/ai-essentials', label: '人工智能精要：从机器学习、深度学习到大模型架构与自然语言处理' },
         { type: 'doc', id: 'ai/higher-math-and-ai', label: '高等数学与 AI 原语' },
         { type: 'doc', id: 'ai/llm-architecture-deep-dive', label: 'AI/LLM 架构专题 (Deep Dive)' },
         { type: 'doc', id: 'ai/machine-learning', label: '机器学习' },
