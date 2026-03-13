@@ -24,7 +24,8 @@ import {
   Zap,
   FlaskConical,
   Scale,
-  Microscope
+  Microscope,
+  Activity
 } from 'lucide-react';
 
 # 全域综合练习库 (Global Comprehensive Exercise Library)
@@ -44,6 +45,21 @@ import {
 | **[计算机系统 (CS)](./cs/os)** | 进程调度, 内存管理, 并发一致性 | Level A-B | 形式化验证, 排队论 |
 | **[人工智能 (AI)](./ai/dl-math)** | 矩阵求导, 反向传播, 优化算法收敛性 | Level B-C | 统计学习, 凸优化, 线性代数 |
 | **[信息安全 (Sec)](./infosec/web)** | 密码学证明, 漏洞挖掘, Pwn 利用 | Level B-C | 数论, 计算复杂性, 汇编 |
+
+---
+
+## 🚀 综合评估系统 (Integrated Assessment)
+
+> **NEW!** 我们推出了[全域综合评估系统](./integrated-assessment)，专门用于考察跨学科的深度联通能力。
+
+<div style={{ padding: '20px', backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '12px', borderLeft: '5px solid var(--ifm-color-primary)', marginBottom: '2rem' }}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
+    <Activity size={24} color="var(--ifm-color-primary)" />
+    <h3 style={{ margin: 0 }}>阶梯式评估体系 (Step-by-step Evaluation)</h3>
+  </div>
+  <p>从逻辑构建到深度融合，再到架构巅峰。每一阶段都要求你在<strong>数学推导</strong>、<strong>算法建模</strong>与<strong>工业级 C++ 实现</strong>三个维度达到平衡。</p>
+  <a className="button button--outline button--primary" href="./integrated-assessment">进入评估系统 →</a>
+</div>
 
 ---
 
@@ -135,7 +151,12 @@ import {
 - [点集拓扑学](./math/topology)
 - [复变函数与留数理论](./math/analysis-series-fourier)
 
-### 3. 系统工程与安全 (Systems & Sec)
+### 3. 人工智能 (AI & Deep Learning)
+- [深度学习数学基础 (自动求导与矩阵)](./ai/dl-math)
+- [神经网络架构深度演练](./ai/dl)
+- [机器学习核心算法实践](./ai/ml)
+
+### 4. 系统工程与安全 (Systems & Sec)
 - [操作系统原理与调度实战](./cs/os)
 - [C++ 现代特性与性能优化](./cs/cpp)
 - [Linux 系统管理与脚本工程](./cs/linux)
@@ -156,9 +177,19 @@ import {
 
 ---
 
-## 🔗 知识图谱关联 (Knowledge Graph Integration)
+## 🕸️ 知识依赖图谱与校准 (Knowledge Dependency & Calibration)
 
 本库已与全站知识图谱深度关联。每一个练习节点都代表图谱中的一个实体，节点间的连线反映了考点间的内在逻辑依赖。
+
+```mermaid
+graph LR
+    Theory[核心理论] --> Practice[专项练习]
+    Practice --> Integration[综合评估]
+    Integration --> Engineering[工程能力]
+    
+    style Theory fill:#f9f,stroke:#333,stroke-width:2px
+    style Engineering fill:#00ff00,stroke:#333,stroke-width:4px
+```
 
 <div style={{ textAlign: 'center', marginTop: '2rem' }}>
   <a className="button button--primary button--lg" href="/graph">

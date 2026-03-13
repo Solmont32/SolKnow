@@ -656,6 +656,7 @@ const sidebars: SidebarsConfig = {
   // 练习库镜像结构
   mathExerciseSidebar: [
     { type: 'doc', id: 'exercises/index', label: '练习库总览' },
+    { type: 'doc', id: 'exercises/integrated-assessment', label: '全域综合评估系统 (NEW)' },
     {
       type: 'category',
       collapsible: true,
