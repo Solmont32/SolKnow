@@ -4,6 +4,7 @@ description: 极角排序、双端队列维护与线性约束求解证明。
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import CodeCollapse from '@site/src/components/CodeCollapse';
 import { Target, ShieldCheck, Activity, BookOpen, Layers, ShieldAlert, Scale } from 'lucide-react';
 
 # 半平面交 (Half-plane Intersection)
@@ -22,8 +23,8 @@ import { Target, ShieldCheck, Activity, BookOpen, Layers, ShieldAlert, Scale } f
 **命题**：半平面交 $S = \bigcap H_i$ 必为凸集。
 **证明**：
 1. 线性约束 $ax + by + c \ge 0$ 定义的是半平面，它是凸集。
-2. 任意数量凸集的交集仍为凸集。
-故 $S$ 为凸集。由于凸集的边界是由直线段或射线构成的，其拓扑结构表现为单凸多边形（有界）或凸链（无界）。
+2. 任意数量凸集的交集仍为凸集（凸性的交集封闭性）。
+故 $S$ 为凸集。其拓扑结构表现为凸多边形（有界）或凸链（无界）。
 
 **定理 2：极角扫描法的正确性**
 对所有有向直线按极角排序。排序确保了相邻直线的交点沿着凸包边界逆时针旋转。双端队列（Deque）维护这一单调链，使得每次加入新直线时，只需检查队列两端的交点是否被新直线排除。
@@ -45,21 +46,23 @@ $$\delta(P) \approx \frac{L \cdot \epsilon_{mach}}{\sin \theta}$$
 其中 $L$ 是坐标量级。当 $\sin \theta < \epsilon$ 时，交点计算会导致严重的精度崩塌。
 
 **鲁棒性策略**：
-1. **预去重**：极角排序后，若 $\text{ang}_i = \text{ang}_{i+1}$，仅保留最内侧（即最左侧）的直线。
-2. **平行过滤**：在 `getLineIntersection` 中，若 $|\vec{v_1} \times \vec{v_2}| < \text{eps}$，必须判定为平行且不相交（除非共线且同向）。
+1. **预去重**：极角排序后，若 $\text{ang}_i = \text{ang}_{i+1}$，仅保留最内侧（即最左侧）的直线。通过 `sign(cross(v, L.p - p)) > 0` 判定。
+2. **平行过滤**：在 `getLineIntersection` 中，若 $|\vec{v_1} \times \vec{v_2}| < \text{eps}$，必须判定为平行且不相交。
 
 </KnowledgeCard>
 
 ---
 
-## 3. 核心算法实现 (C++)
+## 3. 教材级核心算法实现 (C++)
+
+<CodeCollapse title="半平面交 (Incremental Algorithm) 完整实现" language="cpp">
 
 ```cpp
 struct Line {
     Point p; Vector v; DB ang;
     Line() {}
     Line(Point p, Vector v): p(p), v(v) { ang = atan2(v.y, v.x); }
-    // 排序：极角升序，极角相同时保留最左侧直线
+    // 排序规则：极角升序，极角相同时靠左侧的直线排在后面以保留
     bool operator< (const Line& L) const {
         if (sign(ang - L.ang) != 0) return ang < L.ang;
         return sign(cross(v, L.p - p)) > 0;
@@ -74,26 +77,28 @@ bool onRight(Line L, Point P) {
 vector<Point> halfPlaneIntersection(vector<Line>& L) {
     sort(L.begin(), L.end());
     int n = L.size(), m = 0;
-    // 1. 预处理：去重
+    // 1. 预处理：去重，相同极角仅保留最内侧
+    vector<Line> L_clean;
     for (int i = 0; i < n; i++) {
         if (i > 0 && sign(L[i].ang - L[i-1].ang) == 0) continue;
-        L[m++] = L[i];
+        L_clean.push_back(L[i]);
     }
 
     // 2. 双端队列维护单调链
     int head = 0, tail = 0;
-    vector<Line> q(m + 5);
-    vector<Point> p(m + 5);
-    for (int i = 0; i < m; i++) {
-        while (tail - head > 1 && onRight(L[i], p[tail - 1])) tail--;
-        while (tail - head > 1 && onRight(L[i], p[head + 1])) head++;
-        q[tail++] = L[i];
+    int k = L_clean.size();
+    vector<Line> q(k + 5);
+    vector<Point> p(k + 5);
+    for (int i = 0; i < k; i++) {
+        while (tail - head > 1 && onRight(L_clean[i], p[tail - 1])) tail--;
+        while (tail - head > 1 && onRight(L_clean[i], p[head + 1])) head++;
+        q[tail++] = L_clean[i];
         if (tail - head > 1) p[tail - 1] = getLineIntersection(q[tail-2], q[tail-1]);
     }
     // 3. 闭合判定：用队首直线检查队尾交点
     while (tail - head > 1 && onRight(q[head], p[tail - 1])) tail--;
     
-    if (tail - head < 3) return {}; // 交集退化为空或点/线
+    if (tail - head < 3) return {}; // 交集退化
     p[head] = getLineIntersection(q[head], q[tail-1]);
 
     vector<Point> res;
@@ -102,9 +107,11 @@ vector<Point> halfPlaneIntersection(vector<Line>& L) {
 }
 ```
 
+</CodeCollapse>
+
 ---
 
-## 4. 经典练习与应用 (Exercises)
+## 4. 经典教材级例题与应用 (Exercises)
 
 <details>
 <summary>例题 1：多边形核 (Polygon Kernel) 存在性证明</summary>
@@ -114,6 +121,8 @@ vector<Point> halfPlaneIntersection(vector<Line>& L) {
 
 <details>
 <summary>Check Solution</summary>
+
+<CodeCollapse title="多边形核判定" language="cpp">
 
 ```cpp
 bool hasKernel(const vector<Point>& poly) {
@@ -125,6 +134,8 @@ bool hasKernel(const vector<Point>& poly) {
 }
 ```
 
+</CodeCollapse>
+
 </details>
 </details>
 
@@ -135,10 +146,12 @@ bool hasKernel(const vector<Point>& poly) {
 **思路**：
 1. 若半径为 $R$，则圆心必在所有边向内平移 $R$ 后的半平面交内。
 2. 二分 $R$，检查平移后的半平面交是否非空。
-**一致性校验**：平移后的直线 $L'$ 定义为 $L.p + \text{normal} \cdot R$。
+**一致性校验**：平移后的直线 $L'$ 定义为 $L.p + \vec{n} \cdot R$，其中 $\vec{n}$ 为单位法向量。
 
 <details>
 <summary>Check Solution</summary>
+
+<CodeCollapse title="半平面平移封装" language="cpp">
 
 ```cpp
 Line moveLeft(Line L, DB d) {
@@ -147,6 +160,22 @@ Line moveLeft(Line L, DB d) {
     return Line(L.p + n, L.v);
 }
 ```
+
+</CodeCollapse>
+
+</details>
+</details>
+
+<details>
+<summary>练习 2：线性约束可行域面积</summary>
+
+**题目描述**：给定一组约束 $A_i x + B_i y + C_i \ge 0$，且 $x, y \in [-10^9, 10^9]$，求可行域面积。
+**技巧**：先添加四个边界半平面构成初始矩形，再运行半平面交。
+
+<details>
+<summary>Check Solution</summary>
+
+提示：将约束转化为直线形式：$ax + by + c = 0$ 对应点 $P$ 和方向向量 $V$。注意方向必须满足左侧为可行域。
 
 </details>
 </details>

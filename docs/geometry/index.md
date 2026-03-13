@@ -4,6 +4,7 @@ description: 系统化精度控制模型、代数一致性验证与几何鲁棒�
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import CodeCollapse from '@site/src/components/CodeCollapse';
 import { Trophy, Waypoints, Compass, Target, Circle, MoveRight, Sigma, Activity, ShieldAlert, Cpu, Scale, Ruler } from 'lucide-react';
 
 # 计算几何基础 (Geometry Basics)
@@ -12,13 +13,15 @@ import { Trophy, Waypoints, Compass, Target, Circle, MoveRight, Sigma, Activity,
 
 ---
 
-## 1. 精度控制与误差界证明 (Numerical Precision & Error Bounds)
+## 1. 精度控制与误差收敛分析 (Numerical Precision & Convergence)
 
 在计算机中，实数 $\mathbb{R}$ 被离散化为浮点数集。由于有限位数的限制，几何判定的**不一致性**是导致程序崩溃的主因。
 
 ### 1.1 机器精度与 $\epsilon$ 模型 (Static Epsilon)
 
 通过引入一个小量 $\epsilon$ ($10^{-9} \sim 10^{-11}$ )，我们将连续判定转化为区间判定。
+
+<CodeCollapse title="基础精度算子实现" language="cpp">
 
 ```cpp
 typedef double DB;
@@ -36,35 +39,40 @@ inline int dcmp(DB x, DB y) {
 }
 ```
 
-### 1.2 误差传播定理 (Error Propagation Theorem)
+</CodeCollapse>
 
-<KnowledgeCard type="theorem" title="浮点运算的相对误差界">
+### 1.2 误差传播与收敛界证明 (Error Propagation)
+
+<KnowledgeCard type="theorem" title="浮点运算的相对误差收敛界">
 
 **定理**：设实数 $x, y$ 的机器表示为 $fl(x) = x(1+\delta)$，其中 $|\delta| < \epsilon_{mach}$。
 对于二元运算 $\circ \in \{+, -, \times, \div\}$，存在 $\epsilon_{\circ}$ 使得：
 $$fl(x \circ y) = (x \circ y)(1 + \epsilon_{\circ})$$
 **证明概要**：
 由 IEEE 754 标准，舍入误差满足 $\frac{|fl(x)-x|}{|x|} \le \frac{1}{2} B^{1-p}$。对于多步运算，误差按泰勒展开线性累积。
-- **加法/减法**：$fl(x \pm y) = (x \pm y) + (x\delta_x \pm y\delta_y)$。若 $x \approx y$ 且异号，则绝对误差相对于结果极大（灾难性抵消）。
-- **乘法**：$fl(x \cdot y) = xy(1 + \delta_x + \delta_y + \delta_x\delta_y) \approx xy(1 + \delta_{sum})$。
-
-**推论**：在几何算法中，尽量使用**低阶多项式**（如叉积是坐标的二阶形式）而非超越函数（如 `atan2`, `acos`），因为后者的误差项包含更高阶的泰勒展开剩余项。
+- **灾难性抵消 (Catastrophic Cancellation)**：若 $x \approx y$ 且异号，则 $fl(x+y)$ 的相对误差会迅速发散。
+- **收敛准则**：在几何算法中，尽量使用**低阶多项式**（如叉积是坐标的二阶形式）而非超越函数（如 `atan2`, `acos`），因为后者的误差项包含更高阶的泰勒展开剩余项。
 
 </KnowledgeCard>
 
 ---
 
-## 2. 拓扑原语一致性验证 (Topological Consistency)
+## 2. 拓扑原语一致性证明 (Topological Consistency)
 
 几何算法的鲁棒性不仅取决于精度，更取决于**代数一致性**（Algebraic Consistency）。
 
 ### 2.1 全序关系保护 (Strict Weak Ordering)
 
-<KnowledgeCard type="warning" title="精度陷阱：传递性失效">
-在浮点运算中，$(a = b) \land (b = c) \centernot\implies (a = c)$。
-若 $a-b = 0.6\epsilon$ 且 $b-c = 0.6\epsilon$，则 $a=b, b=c$，但 $a-c = 1.2\epsilon > \epsilon$，导致 $a \neq c$。
+<KnowledgeCard type="warning" title="精度陷阱：传递性失效证明">
+**命题**：在浮点运算中，$(a = b) \land (b = c) \centernot\implies (a = c)$。
+**证明**：
+设 $a-b = 0.6\epsilon$ 且 $b-c = 0.6\epsilon$。
+按 `sign` 函数定义：
+1. $|a-b| < \epsilon \implies a = b$
+2. $|b-c| < \epsilon \implies b = c$
+然而 $a-c = (a-b) + (b-c) = 1.2\epsilon > \epsilon$，故 $a \neq c$。
 **后果**：会导致 `std::sort` 崩溃（Segment Fault）或产生逻辑环。
-**准则**：在排序算子中，必须强制使用 `dcmp(a, b) < 0` 而非 `a <= b`。
+**准则**：在排序算子中，必须强制使用 `dcmp(a, b) < 0` 而非 `a <= b` 以满足严格弱序。
 </KnowledgeCard>
 
 ### 2.2 几何原语判定 (Geometric Predicates)
@@ -77,7 +85,7 @@ $$fl(x \circ y) = (x \circ y)(1 + \epsilon_{\circ})$$
 
 ---
 
-## 3. 核心算子性质证明 (Proofs of Operators)
+## 3. 核心向量算子鲁棒性验证 (Robust Vector Operators)
 
 ### 3.1 叉积的有向面积特性
 
@@ -92,6 +100,28 @@ $\vec{a} \times \vec{b} = r_a r_b (\cos\alpha\sin\beta - \sin\alpha\cos\beta) = 
 由几何定义，平行四边形面积 $S = |\vec{a}| \cdot (|\vec{b}|\sin\theta)$。其正负号严格对应了转动方向。
 
 </KnowledgeCard>
+
+<CodeCollapse title="向量类与核心算子封装" language="cpp">
+
+```cpp
+struct Point {
+    DB x, y;
+    Point(DB x=0, DB y=0): x(x), y(y) {}
+};
+typedef Point Vector;
+
+Vector operator + (Vector A, Vector B) { return Vector(A.x + B.x, A.y + B.y); }
+Vector operator - (Point A, Point B) { return Vector(A.x - B.x, A.y - B.y); }
+Vector operator * (Vector A, DB p) { return Vector(A.x * p, A.y * p); }
+Vector operator / (Vector A, DB p) { return Vector(A.x / p, A.y / p); }
+
+DB dot(Vector A, Vector B) { return A.x * B.x + A.y * B.y; }
+DB length(Vector A) { return sqrt(dot(A, A)); }
+DB angle(Vector A, Vector B) { return acos(dot(A, B) / length(A) / length(B)); }
+DB cross(Vector A, Vector B) { return A.x * B.y - A.y * B.x; }
+```
+
+</CodeCollapse>
 
 ---
 
@@ -108,7 +138,7 @@ $$t = \frac{(P_2 - P_1) \times \vec{v_2}}{\vec{v_1} \times \vec{v_2}}$$
 
 ---
 
-## 5. 经典推导与练习库 (Exercises)
+## 5. 经典教材级例题与练习 (Exercises)
 
 <details>
 <summary>例题 1：点在线段上的充分必要条件证明</summary>
@@ -120,11 +150,15 @@ $$t = \frac{(P_2 - P_1) \times \vec{v_2}}{\vec{v_1} \times \vec{v_2}}$$
    $\vec{PA} \cdot \vec{PB} = -\lambda(1-\lambda)|B-A|^2 \le 0 \implies \lambda(1-\lambda) \ge 0 \implies 0 \le \lambda \le 1$。
    故 $P$ 在线段 $AB$ 上。
 
+<CodeCollapse title="点在线段上判定实现" language="cpp">
+
 ```cpp
 bool onSegment(Point p, Point a, Point b) {
     return sign(cross(a - p, b - p)) == 0 && sign(dot(a - p, b - p)) <= 0;
 }
 ```
+
+</CodeCollapse>
 
 </details>
 
@@ -137,6 +171,8 @@ bool onSegment(Point p, Point a, Point b) {
 <details>
 <summary>Check Solution</summary>
 
+<CodeCollapse title="多边形面积计算" language="cpp">
+
 ```cpp
 DB getArea(const vector<Point>& p) {
     DB res = 0;
@@ -146,6 +182,8 @@ DB getArea(const vector<Point>& p) {
 }
 ```
 
+</CodeCollapse>
+
 </details>
 </details>
 
@@ -153,10 +191,12 @@ DB getArea(const vector<Point>& p) {
 <summary>练习 2：最小圆覆盖 (Smallest Enclosing Circle)</summary>
 
 **题目描述**：给定 $n$ 个点，求覆盖所有点的最小圆。
-**思路**：随机增量法。期望复杂度 $O(n)$。
+**思路**：随机增量法。期望复杂度 $O(n)$。证明核心在于圆的唯一性与三点确定圆。
 
 <details>
 <summary>Check Solution</summary>
+
+<CodeCollapse title="随机增量法实现" language="cpp">
 
 ```cpp
 Circle getSmallestCircle(vector<Point> p) {
@@ -182,6 +222,8 @@ Circle getSmallestCircle(vector<Point> p) {
     return c;
 }
 ```
+
+</CodeCollapse>
 
 </details>
 </details>

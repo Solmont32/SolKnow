@@ -4,6 +4,7 @@ description: 凸包对踵点维护、线性时间几何特性求解与拓扑证�
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import CodeCollapse from '@site/src/components/CodeCollapse';
 import { Waypoints, Zap, Activity, BookOpen, Scaling, ShieldAlert, Scale, Ruler } from 'lucide-react';
 
 # 旋转卡壳 (Rotating Calipers)
@@ -43,6 +44,8 @@ import { Waypoints, Zap, Activity, BookOpen, Scaling, ShieldAlert, Scale, Ruler 
 
 </KnowledgeCard>
 
+<CodeCollapse title="旋转卡壳求凸包直径" language="cpp">
+
 ```cpp
 DB getDiameter(const vector<Point>& h) {
     int n = h.size();
@@ -51,6 +54,7 @@ DB getDiameter(const vector<Point>& h) {
     DB res = 0;
     for (int i = 0, j = 1; i < n; i++) {
         // 旋转：寻找距离边 h[i]-h[i+1] 最远的点 j
+        // 利用叉积比较三角形面积大小 (底边固定，面积越大高度越大)
         while (sign(cross(h[(i+1)%n] - h[i], h[(j+1)%n] - h[i]) -
                    cross(h[(i+1)%n] - h[i], h[j] - h[i])) >= 0) {
             j = (j + 1) % n;
@@ -61,9 +65,11 @@ DB getDiameter(const vector<Point>& h) {
 }
 ```
 
+</CodeCollapse>
+
 ---
 
-## 3. 经典练习库 (Exercises)
+## 3. 教材级经典推导与练习库 (Exercises)
 
 <details>
 <summary>例题 1：最小外接矩形 - 三指针一致性校验</summary>
@@ -79,6 +85,8 @@ DB getDiameter(const vector<Point>& h) {
 <details>
 <summary>Check Solution</summary>
 
+<CodeCollapse title="最小面积外接矩形 (Rotating Calipers)" language="cpp">
+
 ```cpp
 DB minAreaRect(vector<Point>& h) {
     int n = h.size();
@@ -86,11 +94,13 @@ DB minAreaRect(vector<Point>& h) {
     int p = 1, r = 1, l = 1;
     for (int i = 0; i < n; i++) {
         Vector v = h[(i+1)%n] - h[i];
-        DB len2 = distSq(h[i], h[(i+1)%n]);
-        // 更新最高点、最右点、最左点
+        DB len2 = dot(v, v);
+        // 更新最高点 (叉积单峰)
         while (sign(cross(v, h[(p+1)%n] - h[i]) - cross(v, h[p] - h[i])) >= 0) p = (p+1)%n;
+        // 更新最右点 (点积单峰)
         while (sign(dot(v, h[(r+1)%n] - h[i]) - dot(v, h[r] - h[i])) >= 0) r = (r+1)%n;
         if (i == 0) l = r;
+        // 更新最左点 (点积反向单峰)
         while (sign(dot(v, h[(l+1)%n] - h[i]) - dot(v, h[l] - h[i])) <= 0) l = (l+1)%n;
         
         DB H = cross(v, h[p] - h[i]) / sqrt(len2);
@@ -101,6 +111,8 @@ DB minAreaRect(vector<Point>& h) {
 }
 ```
 
+</CodeCollapse>
+
 </details>
 </details>
 
@@ -108,8 +120,45 @@ DB minAreaRect(vector<Point>& h) {
 <summary>练习 1：两个凸包的最小距离</summary>
 
 **题目描述**：求两个不相交凸包 $A, B$ 的最短距离。
-**思路**：使用两组卡壳平行线。当 $A$ 的支撑线与 $B$ 的支撑线平行且反向时，距离取得局部极小。
+**思路**：
+1. 使用两组卡壳平行线。当 $A$ 的支撑线与 $B$ 的支撑线平行且反向时，距离取得局部极小。
+2. 距离可能由点-点、点-边或边-边产生。
 
+<details>
+<summary>Check Solution</summary>
+
+提示：对两个凸包分别寻找 $y$ 最小和 $y$ 最大的点作为起始指针，进行同步旋转。比较四种组合下的最小距离。
+
+</details>
+</details>
+
+<details>
+<summary>练习 2：多边形宽度 (Width of Polygon)</summary>
+
+**题目描述**：凸多边形的宽度是其两条平行支撑线之间的最小距离。
+**推导**：宽度必由一条边 $e_i$ 及其对应的对踵点 $P$ 产生。即 $W = \min_i \text{dist}(P, \text{Line}(e_i))$。
+
+<details>
+<summary>Check Solution</summary>
+
+<CodeCollapse title="多边形宽度计算" language="cpp">
+
+```cpp
+DB getWidth(const vector<Point>& h) {
+    int n = h.size();
+    DB res = 1e18;
+    for (int i = 0, j = 1; i < n; i++) {
+        while (sign(cross(h[(i+1)%n] - h[i], h[(j+1)%n] - h[i]) -
+                   cross(h[(i+1)%n] - h[i], h[j] - h[i])) >= 0) j = (j + 1) % n;
+        res = min(res, cross(h[(i+1)%n] - h[i], h[j] - h[i]) / dist(h[i], h[(i+1)%n]));
+    }
+    return res;
+}
+```
+
+</CodeCollapse>
+
+</details>
 </details>
 
 ---

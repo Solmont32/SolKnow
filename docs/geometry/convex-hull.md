@@ -4,6 +4,7 @@ description: Andrew's 算法、拓扑性质证明与几何鲁棒性边界分析�
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
+import CodeCollapse from '@site/src/components/CodeCollapse';
 import { Waypoints, ShieldCheck, Zap, PenTool, Activity, BookOpen, Scale } from 'lucide-react';
 
 # 凸包算法 (Convex Hull)
@@ -63,13 +64,21 @@ Andrew 算法通过将凸包分解为**上凸壳（Upper Hull）**和**下凸壳
 
 ---
 
-## 3. 核心代码实现 (C++)
+## 3. 教材级核心代码实现 (C++)
+
+<CodeCollapse title="Andrew 算法 (Monotone Chain) 完整实现" language="cpp">
 
 ```cpp
 vector<Point> getConvexHull(vector<Point>& p) {
     int n = p.size(), k = 0;
     if (n <= 2) return p;
     sort(p.begin(), p.end());
+    // 去重以维护拓扑鲁棒性
+    n = unique(p.begin(), p.end(), [](Point a, Point b) {
+        return dcmp(a.x, b.x) == 0 && dcmp(a.y, b.y) == 0;
+    }) - p.begin();
+    p.resize(n);
+
     vector<Point> h(2 * n);
     // 构建下凸壳：强制左转 (CCW)
     for (int i = 0; i < n; i++) {
@@ -81,10 +90,12 @@ vector<Point> getConvexHull(vector<Point>& p) {
         while (k > t && sign(cross(h[k-1] - h[k-2], p[i] - h[k-1])) <= 0) k--;
         h[k++] = p[i];
     }
-    h.resize(k - 1); // 弹出最后一个重复的首点
+    if (n > 1) h.resize(k - 1); // 弹出最后一个重复的首点
     return h;
 }
 ```
+
+</CodeCollapse>
 
 ---
 
@@ -104,9 +115,12 @@ vector<Point> getConvexHull(vector<Point>& p) {
 <details>
 <summary>Check Solution</summary>
 
+<CodeCollapse title="O(log N) 凸包内部判定" language="cpp">
+
 ```cpp
 bool isPointInConvex(const vector<Point>& h, Point p) {
     int n = h.size();
+    if (n < 3) return onSegment(p, h[0], h[n-1]);
     if (sign(cross(h[1] - h[0], p - h[0])) < 0) return false;
     if (sign(cross(h[n-1] - h[0], p - h[0])) > 0) return false;
     
@@ -121,6 +135,8 @@ bool isPointInConvex(const vector<Point>& h, Point p) {
 }
 ```
 
+</CodeCollapse>
+
 </details>
 </details>
 
@@ -133,6 +149,8 @@ bool isPointInConvex(const vector<Point>& h, Point p) {
 
 <details>
 <summary>Check Solution</summary>
+
+<CodeCollapse title="闵可夫斯基和实现" language="cpp">
 
 ```cpp
 vector<Point> MinkowskiSum(vector<Point>& A, vector<Point>& B) {
@@ -153,6 +171,22 @@ vector<Point> MinkowskiSum(vector<Point>& A, vector<Point>& B) {
     return res;
 }
 ```
+
+</CodeCollapse>
+
+</details>
+</details>
+
+<details>
+<summary>练习 2：动态凸包维护 (Online Convex Hull)</summary>
+
+**题目描述**：支持动态插入点并实时查询凸包面积。
+**思路**：使用 `std::set` 按极角或坐标维护凸包顶点。插入点时，通过 `lower_bound` 找到邻居，利用叉积判断是否需要弹出受影响的旧顶点。
+
+<details>
+<summary>Check Solution</summary>
+
+提示：维护上凸壳与下凸壳的两个 `std::set<Point>`。插入点 $P$ 时，若 $P$ 已在壳内则跳过；否则插入并向两侧通过 `while` 循环删除非凸点。
 
 </details>
 </details>
