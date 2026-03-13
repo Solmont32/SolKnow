@@ -16,21 +16,21 @@ import { Waypoints, ShieldCheck, Zap, PenTool, Activity, BookOpen, Scale } from 
 
 <KnowledgeCard type="theorem" title="凸包的等价定义">
 
-1.  **最小性**：包含点集 $S$ 的所有凸集的交集。
-2.  **外推性**：由 $S$ 中点作为顶点的凸多边形，且所有点都在该多边形内或边界上。
+1.  **集合论定义**：包含点集 $S$ 的所有凸集的交集 $\text{CH}(S) = \bigcap \{ K \supseteq S \mid K \text{ is convex} \}$。
+2.  **组合定义**：$S$ 中所有点的凸组合构成的集合 $\{ \sum_{i=1}^n \lambda_i P_i \mid \sum \lambda_i = 1, \lambda_i \ge 0 \}$。
 
 </KnowledgeCard>
 
-### 1.1 Andrew 算法（单调链法）的严格证明
+### 1.1 Andrew 算法（单调链法）的单调性证明
 
-**算法步骤**：
-1. 将所有点按 $x$ 坐标升序排序（$x$ 相同时按 $y$ 升序）。
-2. 从左到右构建下凸壳，从右到左构建上凸壳。
+Andrew 算法通过将凸包分解为**上凸壳（Upper Hull）**和**下凸壳（Lower Hull）**进行构建。
 
-**证明（拓扑性质）**：
-1.  **极点保证**：排序后的首点 $P_1$ 和末点 $P_n$ 具有最小和最大的 $x$ 坐标。根据凸包定义，这两点必然位于凸包边界上（支撑线存在性）。
-2.  **局部凸性维持**：对于下凸壳，考虑三个连续点 $h_{k-2}, h_{k-1}, p_i$。算法判定 $\vec{h_{k-2}h_{k-1}} \times \vec{h_{k-1}p_i} \le 0$。由叉积的方向性，若叉积 $\le 0$，则 $p_i$ 位于前两个点确定的向量右侧或共线。此时 $h_{k-1}$ 位于线段 $h_{k-2}p_i$ 的左侧或上方（对于下凸壳而言是“凹陷”的）。弹出 $h_{k-1}$ 保证了新栈顶序列始终保持“向左转”（Left-turn Only）的拓扑特性。
-3.  **单调性与全覆盖**：排序确保了每一步扫描都是 $x$ 单调增加的。下凸壳覆盖了 $S$ 的所有点在 $x$ 轴上的投影下方区域。由对称性，上凸壳覆盖了上方区域。两链拼接形成的简单多边形 $H$ 满足：所有 $P \in S$ 都在 $H$ 内部或边界。由于每一步都保持了局部凸性且起始/终止于极点，$H$ 必为 $S$ 的凸包。
+**证明：拓扑单调性与正确性**
+1.  **全序单调性**：首先按 $x$ 坐标升序（$x$ 相同时按 $y$ 升序）对点集 $S$ 排序。排序后的序列 $P_1, P_2, \dots, P_n$ 确保了 $P_1$ 和 $P_n$ 必为凸包上的顶点（极点）。
+2.  **局部凸性维持**：在构建下凸壳时，维护一个栈 $H$。对于新点 $P_i$，若 $\vec{H_{k-2}H_{k-1}} \times \vec{H_{k-1}P_i} \le 0$，说明 $H_{k-1}$ 相对于 $H_{k-2}$ 和 $P_i$ 构成的链发生了“右转”或共线。
+    - **代数含义**：叉积 $\le 0$ 意味着 $H_{k-1}$ 落在向量 $\vec{H_{k-2}P_i}$ 的右侧。
+    - **单调性**：由于 $x_{H_{k-2}} < x_{H_{k-1}} < x_{P_i}$，弹出 $H_{k-1}$ 后连接 $H_{k-2}$ 与 $P_i$ 必然会扩大下方覆盖区域且保持下凸性。
+3.  **收敛性**：扫描完成后，下凸壳从 $P_1$ 单调增加至 $P_n$（按 $x$ 轴正向），上凸壳从 $P_n$ 单调减少回 $P_1$（按 $x$ 轴负向）。两链合围形成的区域包含了 $S$ 的所有点，且由于每一步都强制“左转”（Left-turn），结果必为凸集。
 
 ---
 
@@ -38,28 +38,26 @@ import { Waypoints, ShieldCheck, Zap, PenTool, Activity, BookOpen, Scale } from 
 
 在构建凸包时，**退化情况**可能破坏拓扑结构：
 
-<KnowledgeCard type="warning" title="重合点与垂直退化">
+<KnowledgeCard type="warning" title="退化拓扑判定">
 
-- **重合点**：若 $S$ 中存在多个相同坐标的点，`sort` 后它们相邻。必须在预处理中去重，或在叉积判定中严格使用 $\epsilon$。
-- **垂直线**：若所有点都在一条垂直线上，凸包退化为一条线段。
-- **退化拓扑判定**：
+- **重合点**：必须通过 `unique` 去重，否则在叉积计算中会出现零向量，导致 `sign` 判定失效。
+- **垂直退化**：若所有点 $x$ 坐标相同，排序后它们将按 $y$ 坐标排列。下凸壳将包含所有点，上凸壳则会立即退回起点。
+- **一致性校验逻辑**：
   ```cpp
-  // 拓扑一致性校验：凸包点数不应小于 3 (除非所有点共线)
+  // 拓扑一致性：结果点数应 >= 3 (除非所有点共线)
   if (hull.size() < 3 && pts.size() >= 3) {
-      // 说明所有点共线，凸包退化为线段
+      // 捕获退化为线段的情况
   }
   ```
 
 </KnowledgeCard>
 
 
-<KnowledgeCard type="info" title="共线点处理策略">
+<KnowledgeCard type="info" title="共线点保留策略">
 
-在构建凸包时，共线点的处理决定了算法的行为：
 - **严格凸包**：使用 `sign(cross(...)) <= 0` 弹出。此时凸包边上不含除顶点外的点。
-- **包含边界点**：使用 `sign(cross(...)) < 0` 弹出。此时共线点会被保留。
-
-**注意**：若保留共线点，上凸壳扫描起始位置需为 $n-2$，且最后的 `resize(k-1)` 逻辑需确保不误删共线点。
+- **非严格凸包**：使用 `sign(cross(...)) < 0` 弹出。此时共线点会被保留。
+**边界注意**：在处理上凸壳时，扫描起始位置应为 $n-2$，且最后的 `resize(k-1)` 逻辑需确保不误删首尾重复点。
 
 </KnowledgeCard>
 
@@ -73,17 +71,17 @@ vector<Point> getConvexHull(vector<Point>& p) {
     if (n <= 2) return p;
     sort(p.begin(), p.end());
     vector<Point> h(2 * n);
-    // 构建下凸壳
+    // 构建下凸壳：强制左转 (CCW)
     for (int i = 0; i < n; i++) {
         while (k > 1 && sign(cross(h[k-1] - h[k-2], p[i] - h[k-1])) <= 0) k--;
         h[k++] = p[i];
     }
-    // 构建上凸壳
+    // 构建上凸壳：从右向左反向扫描
     for (int i = n - 2, t = k; i >= 0; i--) {
         while (k > t && sign(cross(h[k-1] - h[k-2], p[i] - h[k-1])) <= 0) k--;
         h[k++] = p[i];
     }
-    h.resize(k - 1); // 首尾点重复
+    h.resize(k - 1); // 弹出最后一个重复的首点
     return h;
 }
 ```
@@ -93,10 +91,15 @@ vector<Point> getConvexHull(vector<Point>& p) {
 ## 4. 经典推导与练习库 (Exercises)
 
 <details>
-<summary>例题 1：动态凸包判定 (Point in Convex Polygon)</summary>
+<summary>例题 1：动态凸包判定 - 二分加速证明</summary>
 
-**题目描述**：给定一个凸多边形（顶点按逆时针排序），判断点 $P$ 是否在多边形内部。要求复杂度 $O(\log N)$。
-**思路**：利用凸性。点 $P$ 必须在所有有向边 $P_iP_{i+1}$ 的左侧。通过二分查找找到 $P$ 可能对应的向量区间。
+**题目描述**：给定一个逆时针序凸多边形，判断点 $P$ 是否在内部。
+**推导**：
+对于凸多边形 $V_0, V_1, \dots, V_{n-1}$，取 $V_0$ 为原点。点 $P$ 在多边形内当且仅当：
+1. $P$ 落在角 $\angle V_{n-1}V_0V_1$ 之间。
+2. 找到 $V_i, V_{i+1}$ 使得 $P$ 落在角 $\angle V_iV_0V_{i+1}$ 内。
+3. $P$ 在有向边 $\vec{V_iV_{i+1}}$ 的左侧。
+由于 $\angle V_iV_0V_{i+1}$ 随 $i$ 单调递增，步骤 2 可通过二分查找在 $O(\log n)$ 完成。
 
 <details>
 <summary>Check Solution</summary>
@@ -104,19 +107,17 @@ vector<Point> getConvexHull(vector<Point>& p) {
 ```cpp
 bool isPointInConvex(const vector<Point>& h, Point p) {
     int n = h.size();
-    // 基础判定：是否在最左侧两边的夹角内
     if (sign(cross(h[1] - h[0], p - h[0])) < 0) return false;
     if (sign(cross(h[n-1] - h[0], p - h[0])) > 0) return false;
     
-    // 二分查找向量
-    int l = 1, r = n - 2, line = -1;
+    int l = 1, r = n - 2, idx = 1;
     while (l <= r) {
         int mid = (l + r) >> 1;
         if (sign(cross(h[mid] - h[0], p - h[0])) >= 0) {
-            line = mid; l = mid + 1;
+            idx = mid; l = mid + 1;
         } else r = mid - 1;
     }
-    return sign(cross(h[line+1] - h[line], p - h[line])) >= 0;
+    return sign(cross(h[idx+1] - h[idx], p - h[idx])) >= 0;
 }
 ```
 
@@ -124,50 +125,36 @@ bool isPointInConvex(const vector<Point>& h, Point p) {
 </details>
 
 <details>
-<summary>练习 1：凸包的稳定性验证</summary>
+<summary>练习 1：闵可夫斯基和 (Minkowski Sum)</summary>
 
-**题目描述**：给定一个凸多边形，判断其每一条边是否都包含至少一个除了端点之外的原点（即该凸包在轻微扰动下是否稳定）。
-**思路**：求凸包时保留所有共线点，检查凸包相邻三点是否共线。
+**题目描述**：计算两个凸多边形 $A, B$ 的向量和 $C = \{ a+b \mid a \in A, b \in B \}$。
+**定理**：两个凸多边形的闵可夫斯基和仍为凸多边形，且其边集为 $A$ 和 $B$ 的边集按极角排序后的合并。
+**应用**：判断两个凸多边形是否相交。$A \cap B \neq \emptyset \iff 0 \in A - B$。
 
 <details>
 <summary>Check Solution</summary>
 
 ```cpp
-bool isStable(vector<Point>& pts) {
-    int n = pts.size();
-    if (n < 6) return false; // 每条边至少 3 点，至少 3 条边
-    sort(pts.begin(), pts.end());
-    int k = 0; vector<Point> h(2 * n);
-    // 保留共线点：使用 < 0
-    for (int i = 0; i < n; i++) {
-        while (k > 1 && sign(cross(h[k-1]-h[k-2], pts[i]-h[k-1])) < 0) k--;
-        h[k++] = pts[i];
-    }
-    for (int i = n-2, t = k; i >= 0; i--) {
-        while (k > t && sign(cross(h[k-1]-h[k-2], pts[i]-h[k-1])) < 0) k--;
-        h[k++] = pts[i];
-    }
-    h.resize(k - 1);
+vector<Point> MinkowskiSum(vector<Point>& A, vector<Point>& B) {
+    int n = A.size(), m = B.size();
+    vector<Vector> v1(n), v2(m);
+    for (int i = 0; i < n; i++) v1[i] = A[(i+1)%n] - A[i];
+    for (int i = 0; i < m; i++) v2[i] = B[(i+1)%m] - B[i];
     
-    int sz = h.size();
-    for (int i = 0; i < sz; i++) {
-        // 如果点 i 和前后都不共线，说明边 i-1, i 和 i, i+1 都是不稳定的
-        if (sign(cross(h[(i+1)%sz]-h[i], h[(i+2)%sz]-h[(i+1)%sz])) != 0 &&
-            sign(cross(h[i]-h[(i-1+sz)%sz], h[(i+1)%sz]-h[i])) != 0) return false;
+    vector<Point> res;
+    res.push_back(A[0] + B[0]);
+    int i = 0, j = 0;
+    while (i < n || j < m) {
+        if (i < n && (j == m || sign(cross(v1[i], v2[j])) >= 0))
+            res.push_back(res.back() + v1[i++]);
+        else
+            res.push_back(res.back() + v2[j++]);
     }
-    return true;
+    return res;
 }
 ```
 
 </details>
-</details>
-
-<details>
-<summary>练习 2：凸多边形相交判定</summary>
-
-**题目描述**：给定两个凸多边形 $A, B$，判断它们是否相交。要求复杂度 $O(N+M)$。
-**思路**：利用分离轴定理（SAT）或闵可夫斯基和（Minkowski Sum）。若 $A - B$ 的闵可夫斯基和包含原点，则相交。
-
 </details>
 
 ---

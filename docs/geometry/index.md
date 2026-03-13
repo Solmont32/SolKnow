@@ -4,7 +4,7 @@ description: 系统化精度控制模型、代数一致性验证与几何鲁棒�
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { Trophy, Waypoints, Compass, Target, Circle, MoveRight, Sigma, Activity, ShieldAlert, Cpu, Scale } from 'lucide-react';
+import { Trophy, Waypoints, Compass, Target, Circle, MoveRight, Sigma, Activity, ShieldAlert, Cpu, Scale, Ruler } from 'lucide-react';
 
 # 计算几何基础 (Geometry Basics)
 
@@ -12,11 +12,11 @@ import { Trophy, Waypoints, Compass, Target, Circle, MoveRight, Sigma, Activity,
 
 ---
 
-## 1. 精度控制模型 (Numerical Precision Model)
+## 1. 精度控制与误差界证明 (Numerical Precision & Error Bounds)
 
 在计算机中，实数 $\mathbb{R}$ 被离散化为浮点数集。由于有限位数的限制，几何判定的**不一致性**是导致程序崩溃的主因。
 
-### 1.1 静态 $\epsilon$ 模型 (Static Epsilon)
+### 1.1 机器精度与 $\epsilon$ 模型 (Static Epsilon)
 
 通过引入一个小量 $\epsilon$ ($10^{-9} \sim 10^{-11}$ )，我们将连续判定转化为区间判定。
 
@@ -36,89 +36,74 @@ inline int dcmp(DB x, DB y) {
 }
 ```
 
+### 1.2 误差传播定理 (Error Propagation Theorem)
+
+<KnowledgeCard type="theorem" title="浮点运算的相对误差界">
+
+**定理**：设实数 $x, y$ 的机器表示为 $fl(x) = x(1+\delta)$，其中 $|\delta| < \epsilon_{mach}$。
+对于二元运算 $\circ \in \{+, -, \times, \div\}$，存在 $\epsilon_{\circ}$ 使得：
+$$fl(x \circ y) = (x \circ y)(1 + \epsilon_{\circ})$$
+**证明概要**：
+由 IEEE 754 标准，舍入误差满足 $\frac{|fl(x)-x|}{|x|} \le \frac{1}{2} B^{1-p}$。对于多步运算，误差按泰勒展开线性累积。
+- **加法/减法**：$fl(x \pm y) = (x \pm y) + (x\delta_x \pm y\delta_y)$。若 $x \approx y$ 且异号，则绝对误差相对于结果极大（灾难性抵消）。
+- **乘法**：$fl(x \cdot y) = xy(1 + \delta_x + \delta_y + \delta_x\delta_y) \approx xy(1 + \delta_{sum})$。
+
+**推论**：在几何算法中，尽量使用**低阶多项式**（如叉积是坐标的二阶形式）而非超越函数（如 `atan2`, `acos`），因为后者的误差项包含更高阶的泰勒展开剩余项。
+
+</KnowledgeCard>
+
+---
+
+## 2. 拓扑原语一致性验证 (Topological Consistency)
+
+几何算法的鲁棒性不仅取决于精度，更取决于**代数一致性**（Algebraic Consistency）。
+
+### 2.1 全序关系保护 (Strict Weak Ordering)
+
 <KnowledgeCard type="warning" title="精度陷阱：传递性失效">
 在浮点运算中，$(a = b) \land (b = c) \centernot\implies (a = c)$。
-例如，若 $a-b = 0.6\epsilon$ 且 $b-c = 0.6\epsilon$，则 $a=b, b=c$，但 $a-c = 1.2\epsilon > \epsilon$，导致 $a \neq c$。这会破坏凸包构建、排序等依赖传递性的算法。
+若 $a-b = 0.6\epsilon$ 且 $b-c = 0.6\epsilon$，则 $a=b, b=c$，但 $a-c = 1.2\epsilon > \epsilon$，导致 $a \neq c$。
+**后果**：会导致 `std::sort` 崩溃（Segment Fault）或产生逻辑环。
+**准则**：在排序算子中，必须强制使用 `dcmp(a, b) < 0` 而非 `a <= b`。
 </KnowledgeCard>
 
-### 1.2 代数一致性 (Algebraic Consistency)
+### 2.2 几何原语判定 (Geometric Predicates)
 
-几何算法的鲁棒性不仅取决于精度，更取决于**逻辑一致性**。
-- **全序关系保护**：在对点集进行极角排序或坐标排序时，必须保证严格弱序（Strict Weak Ordering）。
-- **判定语义统一**：例如，在 `sign(x) == 0` 的判定中，所有涉及该变量的逻辑（如 `if (x > 0)` 和 `if (x < 0)`）必须互斥。
-
----
-
-## 2. 数值稳定性分析 (Numerical Stability)
-
-数值不稳定性通常源于**大数相减导致的有效位丢失**（Catastrophic Cancellation）。
-
-### 2.1 算子稳定性评估
-
-| 算子类型 | 代数形式 | 稳定性评价 | 优化建议 |
+| 算子 | 代数表达 | 鲁棒判定 | 几何意义 |
 | :--- | :--- | :--- | :--- |
-| **点积** | $x_1x_2 + y_1y_2$ | 高 | 适合判定角度、长度投影 |
-| **叉积** | $x_1y_2 - x_2y_1$ | 中 | 坐标极大时易溢出，优先使用整数内核 |
-| **斜率** | $\Delta y / \Delta x$ | **极低** | **禁止使用**。应通过叉积正负号判定共线或旋转方向 |
-| **欧氏距离** | $\sqrt{\Delta x^2 + \Delta y^2}$ | 中 | 若仅需比较大小，比较距离平方 $d^2$ |
-
-### 2.2 误差传播定理 (Error Propagation)
-
-<KnowledgeCard type="theorem" title="浮点计算的相对误差界">
-
-设实数 $x, y$ 的机器表示为 $fl(x) = x(1+\delta)$，其中 $|\delta| < \epsilon_{mach}$。
-对于二元运算 $\circ \in \{+, -, \times, \div\}$，有：
-$$fl(x \circ y) = (x \circ y)(1 + \epsilon_{calc})$$
-**推论**：在几何算法中，尽量使用**低阶多项式**（如叉积是二阶）而非超越函数（如 `atan2`, `acos`），因为后者的误差项 $\epsilon_{calc}$ 包含更高阶的泰勒展开剩余项。
-
-</KnowledgeCard>
+| **OnLine** | $\vec{a} \times \vec{b} = 0$ | `sign(cross(a, b)) == 0` | 共线判定 |
+| **LeftTurn** | $\vec{a} \times \vec{b} > 0$ | `sign(cross(a, b)) > 0` | 逆时针旋转 (CCW) |
+| **InSegment** | $(\vec{p}-\vec{a}) \cdot (\vec{p}-\vec{b}) \le 0$ | `sign(dot(a-p, b-p)) <= 0` | 点在线段投影内 |
 
 ---
 
-## 3. 几何原语代数建模 (Algebraic Modeling)
+## 3. 核心算子性质证明 (Proofs of Operators)
 
-### 3.1 核心算子性质证明
+### 3.1 叉积的有向面积特性
 
-<KnowledgeCard type="theorem" title="叉积的面积与方向性">
+<KnowledgeCard type="theorem" title="叉积的行列式几何意义">
 
-**定理**：对于向量 $\vec{a}=(x_1, y_1), \vec{b}=(x_2, y_2)$，其叉积定义为 $\vec{a} \times \vec{b} = x_1y_2 - x_2y_1$。该值等于以 $\vec{a}, \vec{b}$ 为邻边的平行四边形的**有向面积**。
-
+**定理**：对于向量 $\vec{a}=(x_1, y_1), \vec{b}=(x_2, y_2)$，$\vec{a} \times \vec{b} = x_1y_2 - x_2y_1$。
 **证明**：
-利用极坐标表示：$\vec{a} = (r_a\cos\alpha, r_a\sin\alpha), \vec{b} = (r_b\cos\beta, r_b\sin\beta)$。
-$\vec{a} \times \vec{b} = r_a\cos\alpha \cdot r_b\sin\beta - r_a\sin\alpha \cdot r_b\cos\beta$
-$= r_ar_b(\sin\beta\cos\alpha - \cos\beta\sin\alpha) = r_ar_b\sin(\beta-\alpha)$。
-
-由于 $|\vec{a}| = r_a, |\vec{b}| = r_b$，且 $\beta-\alpha$ 为 $\vec{a}$ 到 $\vec{b}$ 的夹角 $\theta$，故 $\vec{a} \times \vec{b} = |\vec{a}||\vec{b}|\sin\theta$。
-由几何定义，平行四边形面积 $S = |\vec{a}|h = |\vec{a}|(|\vec{b}||\sin\theta|)$。
-叉积的正负反映了 $\theta$ 的象限：
-- $\vec{a} \times \vec{b} > 0 \iff \vec{b}$ 在 $\vec{a}$ 的左侧（逆时针）。
-- $\vec{a} \times \vec{b} < 0 \iff \vec{b}$ 在 $\vec{a}$ 的右侧（顺时针）。
-- $\vec{a} \times \vec{b} = 0 \iff \vec{a}, \vec{b}$ 共线。
+利用极坐标：$\vec{a} = (r_a\cos\alpha, r_a\sin\alpha), \vec{b} = (r_b\cos\beta, r_b\sin\beta)$。
+$\vec{a} \times \vec{b} = r_a r_b (\cos\alpha\sin\beta - \sin\alpha\cos\beta) = r_a r_b \sin(\beta-\alpha)$。
+由于 $|\vec{a}|=r_a, |\vec{b}|=r_b$，且 $\theta = \beta-\alpha$ 为 $\vec{a}$ 到 $\vec{b}$ 的转角，
+故 $\vec{a} \times \vec{b} = |\vec{a}||\vec{b}|\sin\theta$。
+由几何定义，平行四边形面积 $S = |\vec{a}| \cdot (|\vec{b}|\sin\theta)$。其正负号严格对应了转动方向。
 
 </KnowledgeCard>
 
 ---
 
-## 4. 拓扑关系判定证明 (Topological Predicates)
+## 4. 交点一致性校验 (Intersection Consistency)
 
-### 4.1 点在线段上的代数充分性
+在计算直线交点时，必须处理**近乎平行**的情况。
 
-```cpp
-// 判定点 p 是否在线段 ab 上 (含端点)
-bool onSegment(Point p, Point a, Point b) {
-    // 1. 叉积为 0 保证共线 (代数一致性)
-    // 2. 点积 <= 0 保证 p 在 a, b 投影之间 (拓扑单调性)
-    return sign(cross(a - p, b - p)) == 0 && sign(dot(a - p, b - p)) <= 0;
-}
-```
-
-### 4.2 线段相交的严格判定 (Straddle Test)
-
-<KnowledgeCard type="algorithm" title="线段规范相交判定">
-两线段 $AB, CD$ 规范相交（交点不为端点）当且仅当：
-$A, B$ 分别位于直线 $CD$ 两侧，**且** $C, D$ 分别位于直线 $AB$ 两侧。
-代数判定式：
-$(\vec{CD} \times \vec{CA}) \cdot (\vec{CD} \times \vec{CB}) < 0$ 且 $(\vec{AB} \times \vec{AC}) \cdot (\vec{AB} \times \vec{AD}) < 0$。
+<KnowledgeCard type="formula" title="直线交点通用公式">
+设直线 $L_1: P_1 + t\vec{v_1}$，$L_2: P_2 + u\vec{v_2}$。
+交点存在当且仅当 $\vec{v_1} \times \vec{v_2} \neq 0$。
+$$t = \frac{(P_2 - P_1) \times \vec{v_2}}{\vec{v_1} \times \vec{v_2}}$$
+**稳定性校验**：若 $|\vec{v_1} \times \vec{v_2}| < \epsilon \cdot |\vec{v_1}||\vec{v_2}|$，应判定为平行，避免除以极小值导致的结果溢出。
 </KnowledgeCard>
 
 ---
@@ -126,69 +111,75 @@ $(\vec{CD} \times \vec{CA}) \cdot (\vec{CD} \times \vec{CB}) < 0$ 且 $(\vec{AB}
 ## 5. 经典推导与练习库 (Exercises)
 
 <details>
-<summary>例题 1：点到直线的投影与对称点 (Projection)</summary>
+<summary>例题 1：点在线段上的充分必要条件证明</summary>
 
-**推导**：
-设直线由点 $A$ 和向量 $\vec{v}$ 定义。点 $P$ 在直线上的投影 $P'$ 满足 $\vec{AP'}$ 是 $\vec{AP}$ 在 $\vec{v}$ 方向上的射影：
-$$\vec{AP'} = \frac{\vec{AP} \cdot \vec{v}}{|\vec{v}|^2} \vec{v}$$
+**命题**：点 $P$ 在线段 $AB$ 上当且仅当 $\vec{PA} \times \vec{PB} = 0$ 且 $\vec{PA} \cdot \vec{PB} \le 0$。
+**证明**：
+1. **必要性**：若 $P \in AB$，则 $A, P, B$ 共线 $\implies \vec{PA} \parallel \vec{PB} \implies \text{cross} = 0$。且 $P$ 在 $A, B$ 之间，向量方向相反 $\implies \text{dot} \le 0$。
+2. **充分性**：$\text{cross}=0 \implies P$ 在直线 $AB$ 上。设 $P = A + \lambda(B-A)$，则 $\vec{PA} = -\lambda(B-A)$，$\vec{PB} = (1-\lambda)(B-A)$。
+   $\vec{PA} \cdot \vec{PB} = -\lambda(1-\lambda)|B-A|^2 \le 0 \implies \lambda(1-\lambda) \ge 0 \implies 0 \le \lambda \le 1$。
+   故 $P$ 在线段 $AB$ 上。
 
 ```cpp
-Point getProjection(Point p, Point a, Point b) {
-    Vector v = b - a;
-    return a + v * (dot(v, p - a) / dot(v, v));
-}
-
-Point getSymmetry(Point p, Point a, Point b) {
-    Point proj = getProjection(p, a, b);
-    return proj * 2 - p;
+bool onSegment(Point p, Point a, Point b) {
+    return sign(cross(a - p, b - p)) == 0 && sign(dot(a - p, b - p)) <= 0;
 }
 ```
 
 </details>
 
 <details>
-<summary>练习 1：两条直线的交点计算（代数推导版）</summary>
+<summary>练习 1：多边形面积的有向性合并</summary>
 
-**题目描述**：给定四点 $A, B, C, D$，求直线 $AB$ 与直线 $CD$ 的交点。
-**推导**：设交点 $P = A + t\vec{AB}$。由于 $P$ 在直线 $CD$ 上，故 $\vec{CP} \times \vec{CD} = 0$。
-$$(A - C + t\vec{AB}) \times \vec{CD} = 0 \implies (A-C) \times \vec{CD} + t(\vec{AB} \times \vec{CD}) = 0$$
-解得 $t = \frac{(C-A) \times \vec{CD}}{\vec{AB} \times \vec{CD}}$。
+**题目描述**：给定简单多边形顶点 $P_1, P_2, \dots, P_n$，证明其面积 $S = \frac{1}{2} \sum_{i=1}^n (P_i \times P_{i+1})$。
+**推导**：利用格林公式的离散形式。每个对原点的三角形 $OP_iP_{i+1}$ 的有向面积为 $\frac{1}{2} P_i \times P_{i+1}$。若 $O$ 在多边形外，外部面积会在环绕过程中被正负抵消。
 
 <details>
 <summary>Check Solution</summary>
 
 ```cpp
-Point getLineIntersection(Point a, Point b, Point c, Point d) {
-    Vector v = b - a, w = d - c, u = a - c;
-    DB t = cross(w, u) / cross(v, w); // 注意 cross(v, w) == 0 时平行
-    return a + v * t;
+DB getArea(const vector<Point>& p) {
+    DB res = 0;
+    for (int i = 0; i < p.size(); i++)
+        res += cross(p[i], p[(i + 1) % p.size()]);
+    return fabs(res) / 2.0;
 }
 ```
-*稳定性分析：若 `cross(v, w)` 接近 0，则 $t$ 会发生极大的精度溢出。*
 
 </details>
 </details>
 
 <details>
-<summary>练习 2：多边形重心 (Centroid of Polygon)</summary>
+<summary>练习 2：最小圆覆盖 (Smallest Enclosing Circle)</summary>
 
-**题目描述**：计算 $n$ 个顶点多边形的重心坐标。
-**思路**：将多边形三角化。对于以原点和边 $P_iP_{i+1}$ 构成的三角形，其重心为 $(P_i+P_{i+1}+O)/3$，面积为有向面积 $S_i$。全多边形重心为 $\sum (\text{Centroid}_i \cdot S_i) / \sum S_i$。
+**题目描述**：给定 $n$ 个点，求覆盖所有点的最小圆。
+**思路**：随机增量法。期望复杂度 $O(n)$。
 
 <details>
 <summary>Check Solution</summary>
 
 ```cpp
-Point getCentroid(const vector<Point>& p) {
-    Point res = {0, 0};
-    DB totalArea = 0;
-    int n = p.size();
-    for (int i = 0; i < n; i++) {
-        DB area = cross(p[i], p[(i + 1) % n]);
-        totalArea += area;
-        res = res + (p[i] + p[(i + 1) % n]) * area;
+Circle getSmallestCircle(vector<Point> p) {
+    random_shuffle(p.begin(), p.end());
+    Circle c = {p[0], 0};
+    for (int i = 1; i < p.size(); i++) {
+        if (dcmp(dist(c.o, p[i]), c.r) > 0) {
+            c = {p[i], 0};
+            for (int j = 0; j < i; j++) {
+                if (dcmp(dist(c.o, p[j]), c.r) > 0) {
+                    c.o = (p[i] + p[j]) / 2.0;
+                    c.r = dist(p[i], p[j]) / 2.0;
+                    for (int k = 0; k < j; k++) {
+                        if (dcmp(dist(c.o, p[k]), c.r) > 0) {
+                            c.o = getCircumcenter(p[i], p[j], p[k]);
+                            c.r = dist(c.o, p[i]);
+                        }
+                    }
+                }
+            }
+        }
     }
-    return res / (3.0 * totalArea);
+    return c;
 }
 ```
 
@@ -202,3 +193,4 @@ Point getCentroid(const vector<Point>& p) {
 - <Waypoints className="inline-block w-4 h-4 mr-1 text-blue-500" /> [凸包算法 (Convex Hull)](convex-hull) - 构建最小凸闭包与拓扑证明。
 - <Target className="inline-block w-4 h-4 mr-1 text-amber-500" /> [半平面交 (Half-plane Intersection)](half-plane-intersection) - 线性约束与鲁棒性优化。
 - <MoveRight className="inline-block w-4 h-4 mr-1 text-emerald-500" /> [扫描线技巧 (Scanning Line)](scanning-line) - 降维打击与复杂度边界。
+- <Ruler className="inline-block w-4 h-4 mr-1 text-purple-500" /> [旋转卡壳 (Rotating Calipers)](rotating-calipers) - 极值问题与对踵点维护。

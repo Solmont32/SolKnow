@@ -8,43 +8,41 @@ import { MoveRight, Zap, Activity, BookOpen, Layers, ShieldAlert, Scale } from '
 
 # 扫描线技巧 (Scanning Line)
 
-**扫描线**（Scanning Line）是计算几何中一种极具“降维”思想的算法模型。它的核心是将二维几何问题转化为一维的动态区间维护问题，通过一根直线在平面上扫描，仅在特定的**关键事件点**处更新状态。
+**扫描线**（Scanning Line）是计算几何中处理区域覆盖与面积统计的核心方法。它利用“降维”思想，通过一根扫描线在平面上平移，将二维问题离散化为一维区间动态更新问题。
 
 ---
 
 ## 1. 核心模型：矩形面积并 (Area Union)
 
-### 1.1 矩形面积并的拓扑分解定理
-
-**定理**：对于 $N$ 个矩形 $\{R_1, R_2, \dots, R_N\}$，其并集 $U = \bigcup R_i$ 的面积可通过对 $x, y$ 轴进行离散化分解。
+### 1.1 拓扑分解与 Fubini 定理证明
 
 <KnowledgeCard type="theorem" title="Lebesgue 测度分解证明">
 
-**证明：Fubini 定理应用**
-面积可以表示为指示函数 $I_U(x, y)$ 的二重积分：
-$$A(U) = \iint_{\mathbb{R}^2} I_U(x, y) dA = \int_{-\infty}^{\infty} \left( \int_{-\infty}^{\infty} I_U(x, y) dy \right) dx$$
-内部积分 $L(x) = \int_{-\infty}^{\infty} I_U(x, y) dy$ 代表 $x$ 处垂直切线的覆盖长度。
-1.  **事件离散性**：$I_U(x, y)$ 的值仅在矩形边界 $x \in \{x_{i,1}, x_{i,2}\}$ 处发生跃迁。
-2.  **分段常数性**：在相邻 $x$ 坐标区间 $(x_j, x_{j+1})$ 内，$L(x)$ 为常数 $L_j$。
-3.  **最终求和**：$A(U) = \sum L_j \cdot (x_{j+1} - x_j)$。得证。
+**证明：测度离散化**
+1. 设平面内 $n$ 个矩形并集为 $U = \bigcup R_i$。其面积 $A(U) = \iint_U 1 dA$。
+2. 由 **Fubini 定理**，面积可写为积分的叠加：$A(U) = \int_{x_{min}}^{x_{max}} L(x) dx$，其中 $L(x)$ 为垂直线 $x$ 被 $U$ 覆盖的长度。
+3. **关键事件点**：$L(x)$ 仅在矩形的垂直边（$x = x_{left}$ 或 $x = x_{right}$）处发生变化。
+4. 在相邻两个 $x$ 坐标事件点 $[x_i, x_{i+1}]$ 之间，$L(x)$ 是常数。
+5. 故 $A(U) = \sum_{i=1}^{2n-1} L_i \cdot (x_{i+1} - x_i)$。
 
 </KnowledgeCard>
 
 ---
 
-## 2. 离散化与数值稳定性 (Numerical Stability)
+## 2. 离散化与线段树一致性 (Segment Tree Consistency)
 
-在扫描线算法中，坐标离散化是处理浮点数坐标的关键步骤。
+在扫描线算法中，线段树维护的是 $y$ 轴方向的覆盖区间。
 
-<KnowledgeCard type="warning" title="离散化中的精度陷阱">
+<KnowledgeCard type="warning" title="区间闭包与索引映射">
 
-1.  **唯一化失败**：若坐标间距 $\Delta < \epsilon$，`unique` 函数可能无法正确识别重复坐标。
-2.  **映射漂移**：在查找原坐标对应的索引时，必须使用 `lower_bound` 结合 $\epsilon$ 判定。
-3.  **区间闭包性**：线段树节点 $[l, r]$ 实际代表 $y$ 轴离散化后的区间段 $[Y_l, Y_{r+1}]$。
-    - **推论**：若节点 $u$ 的 `count > 0`，其长度 $len$ 立即收敛为 $Y_{tree[u].r+1} - Y_{tree[u].l}$。
+1. **区间表示**：线段树节点 $[l, r]$ 通常表示离散化后的第 $l$ 个 $y$ 区间到第 $r$ 个 $y$ 区间。即实际空间范围 $[Y_l, Y_{r+1}]$。
+2. **Pushup 逻辑**：
+   - 若当前节点 `count > 0`，覆盖长度即为该节点代表的全长：`len = Y[r+1] - Y[l]`。
+   - 若 `count == 0` 且是叶子节点，`len = 0`。
+   - 若 `count == 0` 且非叶子，`len = left.len + right.len`。
+3. **一致性保护**：确保 $y$ 坐标去重后，线段树的范围映射是严格单调的。
 
 </KnowledgeCard>
-
 
 ---
 
@@ -53,31 +51,30 @@ $$A(U) = \iint_{\mathbb{R}^2} I_U(x, y) dA = \int_{-\infty}^{\infty} \left( \int
 ```cpp
 struct Edge {
     DB x, y1, y2;
-    int type; // 1 为入边(左), -1 为出边(右)
-    bool operator< (const Edge& b) const { return x < b.x; }
+    int type; // 1: 入边, -1: 出边
+    bool operator< (const Edge& e) const { return x < e.x; }
 };
 
-// 线段树节点：维护区间覆盖长度
 struct Node {
-    int l, r, count; // count 为覆盖次数
-    DB len;         // 维护的总长度
+    int l, r, cnt;
+    DB len;
 } tree[N << 3];
 
 void pushup(int u) {
-    if (tree[u].count > 0) tree[u].len = Y[tree[u].r + 1] - Y[tree[u].l];
-    else if (tree[u].l == tree[u].r) tree[u].len = 0; 
-    else tree[u].len = tree[2 * u].len + tree[2 * u + 1].len;
+    if (tree[u].cnt) tree[u].len = Y[tree[u].r + 1] - Y[tree[u].l];
+    else if (tree[u].l == tree[u].r) tree[u].len = 0;
+    else tree[u].len = tree[u << 1].len + tree[u << 1 | 1].len;
 }
 
 void update(int u, int l, int r, int val) {
     if (tree[u].l >= l && tree[u].r <= r) {
-        tree[u].count += val;
+        tree[u].cnt += val;
         pushup(u);
         return;
     }
     int mid = (tree[u].l + tree[u].r) >> 1;
-    if (l <= mid) update(2 * u, l, r, val);
-    if (r > mid) update(2 * u + 1, l, r, val);
+    if (l <= mid) update(u << 1, l, r, val);
+    if (r > mid) update(u << 1 | 1, l, r, val);
     pushup(u);
 }
 ```
@@ -87,32 +84,26 @@ void update(int u, int l, int r, int val) {
 ## 4. 经典练习库 (Exercises)
 
 <details>
-<summary>例题 1：矩形周长并 (Perimeter Union)</summary>
+<summary>例题 1：矩形周长并 (Perimeter Union) - 连通性分析</summary>
 
-**题目描述**：给定 $N$ 个矩形，求其并集的轮廓总周长。
-**思路**：垂直边的贡献为线段树覆盖总长度的变化量 $|L_{new} - L_{old}|$；水平边的贡献为 $2 \times \text{独立连通段数} \times \Delta x$。
+**题目描述**：求 $N$ 个矩形并集的轮廓总周长。
+**思路**：
+1. **垂直边贡献**：相邻两次扫描线覆盖长度的变化量 $|L_{new} - L_{old}|$。
+2. **水平边贡献**：$2 \times \text{线段树内独立连通段数} \times (x_{i+1} - x_i)$。
+线段树需额外维护 `num_seg`（覆盖段数）及 `l_cov`, `r_cov`（左右端点是否覆盖）。
 
 <details>
 <summary>Check Solution</summary>
 
 ```cpp
-struct Node {
-    int l, r, count, num_seg;
-    DB len;
-    bool l_cov, r_cov;
-} tree[N << 3];
-
 void pushup(int u) {
-    if (tree[u].count > 0) {
+    if (tree[u].cnt) {
         tree[u].len = Y[tree[u].r + 1] - Y[tree[u].l];
-        tree[u].num_seg = 1;
-        tree[u].l_cov = tree[u].r_cov = true;
+        tree[u].num = 1; tree[u].lc = tree[u].rc = 1;
     } else {
-        tree[u].len = tree[2*u].len + tree[2*u+1].len;
-        tree[u].num_seg = tree[2*u].num_seg + tree[2*u+1].num_seg;
-        if (tree[2*u].r_cov && tree[2*u+1].l_cov) tree[u].num_seg--;
-        tree[u].l_cov = tree[2*u].l_cov;
-        tree[u].r_cov = tree[2*u+1].r_cov;
+        tree[u].len = tree[u<<1].len + tree[u<<1|1].len;
+        tree[u].num = tree[u<<1].num + tree[u<<1|1].num - (tree[u<<1].rc && tree[u<<1|1].lc);
+        tree[u].lc = tree[u<<1].lc; tree[u].rc = tree[u<<1|1].rc;
     }
 }
 ```
@@ -121,35 +112,11 @@ void pushup(int u) {
 </details>
 
 <details>
-<summary>练习 1：窗口内的最大权值 (Window Max Points)</summary>
+<summary>练习 1：窗口最大权值 - 扫描线变体</summary>
 
-**题目描述**：在平面上有 $n$ 个加权点，求一个 $W \times H$ 的窗口能覆盖的最大权值和。
-**思路**：将点 $(x, y)$ 转化为矩形 $[x, x+W] \times [y, y+H]$。扫描线维护区间最大值，支持区间加减。
+**题目描述**：用 $W \times H$ 的窗口覆盖带权点，求最大权值和。
+**思路**：将每个点 $(x, y)$ 扩大为矩形 $[x, x+W] \times [y, y+H]$。寻找被矩形覆盖层数（权值和）最多的点。线段树维护区间加和区间最大值。
 
-</details>
-
-<details>
-<summary>练习 2：矩形 $K$ 层覆盖面积</summary>
-
-**题目描述**：计算被至少 $K$ 个矩形覆盖的区域面积。
-**思路**：线段树节点维护 `len[i]`，表示覆盖次数 $\ge i$ 的长度。
-当 `tree[u].count >= i` 时，`len[i] = full_len`；否则由子节点合并。
-
-<details>
-<summary>Check Solution</summary>
-
-```cpp
-void pushup(int u, int K) {
-    for (int i = 1; i <= K; i++) {
-        if (tree[u].count >= i) tree[u].len[i] = Y[tree[u].r+1] - Y[tree[u].l];
-        else if (tree[u].l == tree[u].r) tree[u].len[i] = 0;
-        else tree[u].len[i] = tree[2*u].len[i - tree[u].count] + 
-                             tree[2*u+1].len[i - tree[u].count];
-    }
-}
-```
-
-</details>
 </details>
 
 ---

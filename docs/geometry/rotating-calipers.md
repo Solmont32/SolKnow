@@ -4,64 +4,60 @@ description: 凸包对踵点维护、线性时间几何特性求解与拓扑证�
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { Waypoints, Zap, Activity, BookOpen, Scaling, ShieldAlert, Scale } from 'lucide-react';
+import { Waypoints, Zap, Activity, BookOpen, Scaling, ShieldAlert, Scale, Ruler } from 'lucide-react';
 
 # 旋转卡壳 (Rotating Calipers)
 
-**旋转卡壳**（Rotating Calipers）是由 Michael Shamos 提出的一种在凸多边形（通常是凸包）上进行线性扫描的高效算法。它的形象比喻是：用两根平行的直线“卡”住多边形并旋转一周，从而在 $O(N)$ 时间内提取多边形的各种极性特征。
+**旋转卡壳**（Rotating Calipers）是由 Michael Shamos 提出的一种在凸多边形上进行线性扫描的高效算法。它的核心在于利用凸多边形的拓扑单调性，通过两根（或多根）平行支撑线的旋转，在 $O(N)$ 时间内解决直径、宽度、外接矩形等问题。
 
 ---
 
-## 1. 核心概念与拓扑证明
+## 1. 对踵点拓扑单调性证明
 
-### 1.1 对踵点 (Antipodal Pairs) 及其拓扑单调性
+<KnowledgeCard type="theorem" title="对踵点 (Antipodal Pairs) 的性质">
 
-<KnowledgeCard type="theorem" title="对踵点与直径性质证明">
+**定义**：若凸多边形 $H$ 存在两条平行支撑线分别过点 $P$ 和 $Q$，则 $(P, Q)$ 称为一对对踵点。
 
-**定义**：在凸多边形 $H$ 中，如果点 $P, Q$ 可由两条平行切线（Supporting Lines）支撑，则 $(P, Q)$ 为对踵点对。
-
-**证明：直径取得性**
-1.  **极值性**：令 $d(P, Q) = \max_{A, B \in H} d(A, B)$。设 $L_P, L_Q$ 为过 $P, Q$ 且垂直于 $PQ$ 的直线。
-2.  **支撑性**：若 $H$ 在 $L_P$ 的 $Q$ 点反侧有部分区域，则该区域内的点 $P'$ 到 $Q$ 的距离 $d(P', Q) > d(P, Q)$（由直角三角形斜边性质），矛盾。
-3.  **对踵性**：故 $L_P, L_Q$ 必然是 $H$ 的平行支撑线，$(P, Q)$ 必为对踵点。
-
-**单调性（Monotonicity）证明**：
-设当前支撑线与边 $e_i = P_iP_{i+1}$ 重合，对踵点为 $Q_j$。当支撑线旋转至下一条边 $e_{i+1}$ 时，对应的最远点 $Q_{j'}$ 在多边形边界上的位置必然满足 $j' \ge j$（逆时针序）。
-*直觉*：多边形的凸性保证了顶点到对边的垂直距离函数是**单峰（Unimodal）**的。
+**证明：距离函数的单峰性 (Unimodality)**
+**命题**：固定凸多边形的一条边 $e_i = V_iV_{i+1}$，顶点 $V_j$ 到直线 $V_iV_{i+1}$ 的垂直距离 $h(j)$ 是关于 $j$ 的单峰函数。
+**证明**：
+1. 设 $f(j) = \vec{V_iV_{i+1}} \times \vec{V_iV_j}$。由叉积定义，$|f(j)|$ 与距离 $h(j)$ 成正比。
+2. 由于 $H$ 是凸多边形，其内角均 $\le \pi$。当 $j$ 在边界上移动时，向量 $\vec{V_jV_{j+1}}$ 的极角单调变化。
+3. 考虑 $f(j+1) - f(j) = \vec{V_iV_{i+1}} \times \vec{V_jV_{j+1}}$。
+4. 由于凸性，该差值符号在绕行一周的过程中至多改变两次（对应极大值和极小值）。
+5. 故在固定底边的情况下，最远点（对踵点）随底边的逆时针旋转也呈逆时针单调移动。
 
 </KnowledgeCard>
 
 ---
 
-## 2. 拓扑不变性分析 (Topology Invariance)
+## 2. 数值鲁棒性分析 (Numerical Robustness)
 
-在特殊几何构型下，旋转卡壳需保持逻辑一致性：
+旋转卡壳对“平行”和“共线”高度敏感。
 
-<KnowledgeCard type="warning" title="退化拓扑处理">
+<KnowledgeCard type="warning" title="平行边与退化判定">
 
-1.  **线段凸包**：若凸包仅含两点 $P, Q$，对踵点即为 $(P, Q)$。算法应判定 `n == 2` 并直接返回 $d(P, Q)$。
-2.  **平行边退化**：若旋转过程中支撑线同时与两条平行边重合，此时对踵点对包含两对端点（四个点）。
-    - **一致性要求**：指针更新判定应使用 `sign(area_next - area_curr) >= 0` 以遍历所有可能的对踵点对。
+1.  **最大面积判定**：在更新对踵点指针 $j$ 时，比较 `area(i, i+1, j)` 与 `area(i, i+1, j+1)`。
+    - **逻辑一致性**：必须使用 `sign(area_next - area_curr) >= 0` 而非 `> 0`，以确保在存在平行边时，指针能遍历到所有对踵点。
+2.  **距离计算**：尽量避免直接计算垂直距离（涉及除法和开方），优先使用叉积进行大小比较。
 
 </KnowledgeCard>
-
 
 ```cpp
 DB getDiameter(const vector<Point>& h) {
     int n = h.size();
     if (n < 2) return 0;
-    if (n == 2) return length(h[0] - h[1]);
+    if (n == 2) return dist(h[0], h[1]);
     DB res = 0;
-    int j = 1; // 对踵点指针
-    for (int i = 0; i < n; i++) {
-        // 寻找距离边 h[i]-h[i+1] 最远的点 j
+    for (int i = 0, j = 1; i < n; i++) {
+        // 旋转：寻找距离边 h[i]-h[i+1] 最远的点 j
         while (sign(cross(h[(i+1)%n] - h[i], h[(j+1)%n] - h[i]) -
-                   cross(h[(i+1)%n] - h[i], h[j] - h[i])) > 0) {
+                   cross(h[(i+1)%n] - h[i], h[j] - h[i])) >= 0) {
             j = (j + 1) % n;
         }
-        res = max({res, distSq(h[i], h[j]), distSq(h[(i+1)%n], h[j])});
+        res = max({res, dist(h[i], h[j]), dist(h[(i+1)%n], h[j])});
     }
-    return sqrt(res);
+    return res;
 }
 ```
 
@@ -70,63 +66,36 @@ DB getDiameter(const vector<Point>& h) {
 ## 3. 经典练习库 (Exercises)
 
 <details>
-<summary>例题 1：最小外接矩形 (Min-Area Rectangle)</summary>
+<summary>例题 1：最小外接矩形 - 三指针一致性校验</summary>
 
-**题目描述**：给定 $n$ 个点，求覆盖所有点的面积最小的矩形。
-**定理**：面积最小的外接矩形必然有一条边与凸包的某条边共线。
-**思路**：维护三个指针：高度最远点 $p$、最左点 $l$、最右点 $r$。
+**题目描述**：求覆盖凸多边形的最小面积矩形。
+**推导**：
+最小矩形的一条边必然与凸多边形的一条边 $e_i$ 重合。
+我们需要维护三个极值点：
+1.  **最高点 $p$**：到 $e_i$ 距离最大（由叉积维护）。
+2.  **最右点 $r$**：在 $e_i$ 方向上的投影最大（由点积维护）。
+3.  **最左点 $l$**：在 $e_i$ 方向上的投影最小（由点积维护）。
 
 <details>
 <summary>Check Solution</summary>
 
 ```cpp
-DB minBoundingBox(vector<Point>& pts) {
-    vector<Point> h = getConvexHull(pts);
+DB minAreaRect(vector<Point>& h) {
     int n = h.size();
-    if (n < 3) return 0;
-    DB minS = 1e18;
-    int p = 1, l = 1, r = 1;
+    DB res = 1e18;
+    int p = 1, r = 1, l = 1;
     for (int i = 0; i < n; i++) {
         Vector v = h[(i+1)%n] - h[i];
-        DB d2 = distSq(h[i], h[(i+1)%n]);
-        // 旋转卡壳更新三个极点
+        DB len2 = distSq(h[i], h[(i+1)%n]);
+        // 更新最高点、最右点、最左点
         while (sign(cross(v, h[(p+1)%n] - h[i]) - cross(v, h[p] - h[i])) >= 0) p = (p+1)%n;
         while (sign(dot(v, h[(r+1)%n] - h[i]) - dot(v, h[r] - h[i])) >= 0) r = (r+1)%n;
         if (i == 0) l = r;
         while (sign(dot(v, h[(l+1)%n] - h[i]) - dot(v, h[l] - h[i])) <= 0) l = (l+1)%n;
         
-        DB H = cross(v, h[p] - h[i]) / sqrt(d2);
-        DB W = (dot(v, h[r] - h[i]) - dot(v, h[l] - h[i])) / sqrt(d2);
-        minS = min(minS, H * W);
-    }
-    return minS;
-}
-```
-
-</details>
-</details>
-
-<details>
-<summary>练习 1：两个凸包的最小距离</summary>
-
-**题目描述**：给定两个不相交的凸包 $A, B$，求它们之间的最短距离。
-**思路**：最短距离可能在 点-点、点-边 之间取得。使用两组卡壳平行线。
-
-<details>
-<summary>Check Solution</summary>
-
-```cpp
-DB minDistanceBetweenHulls(vector<Point>& A, vector<Point>& B) {
-    int n = A.size(), m = B.size();
-    int a = 0, b = 0;
-    for (int i = 1; i < n; i++) if (A[i].y < A[a].y) a = i;
-    for (int i = 1; i < m; i++) if (B[i].y > B[b].y) b = i;
-    DB res = 1e18;
-    for (int i = 0; i < n; i++) {
-        while (sign(cross(A[(a+1)%n] - A[a], B[(b+1)%m] - A[a]) - 
-                   cross(A[(a+1)%n] - A[a], B[b] - A[a])) < 0) b = (b+1)%m;
-        res = min(res, distToSegment(B[b], A[a], A[(a+1)%n]));
-        a = (a+1)%n;
+        DB H = cross(v, h[p] - h[i]) / sqrt(len2);
+        DB W = (dot(v, h[r] - h[i]) - dot(v, h[l] - h[i])) / sqrt(len2);
+        res = min(res, H * W);
     }
     return res;
 }
@@ -136,10 +105,10 @@ DB minDistanceBetweenHulls(vector<Point>& A, vector<Point>& B) {
 </details>
 
 <details>
-<summary>练习 2：凸多边形内的最大三角形</summary>
+<summary>练习 1：两个凸包的最小距离</summary>
 
-**题目描述**：在给定的凸多边形中，选出三个顶点，使得构成的三角形面积最大。要求 $O(N)$。
-**思路**：固定底边一个点 $i$，双指针维护另外两个点 $j, k$，使三角形 $ijk$ 面积最大。
+**题目描述**：求两个不相交凸包 $A, B$ 的最短距离。
+**思路**：使用两组卡壳平行线。当 $A$ 的支撑线与 $B$ 的支撑线平行且反向时，距离取得局部极小。
 
 </details>
 

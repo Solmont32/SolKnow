@@ -14,86 +14,86 @@ import { Target, ShieldCheck, Activity, BookOpen, Layers, ShieldAlert, Scale } f
 
 ## 1. 形式化描述与拓扑性质证明
 
-**定义**：一个半平面 $H_i$ 可以表示为 $H_i = \{ (x, y) \in \mathbb{R}^2 \mid ax + by + c \ge 0 \}$。
+**定义**：一个半平面 $H_i$ 可以表示为 $H_i = \{ (x, y) \in \mathbb{R}^2 \mid ax + by + c \ge 0 \}$。在计算几何中，通常由有向直线 $\vec{PQ}$ 定义，$H_i$ 位于向量 $\vec{PQ}$ 的左侧。
 
 <KnowledgeCard type="theorem" title="半平面交的拓扑一致性">
 
-**定理 1：凸性收敛**
-半平面交 $S = \bigcap H_i$ 的凸性保证了扫描算法的收敛性。
+**定理 1：凸性收敛证明**
+**命题**：半平面交 $S = \bigcap H_i$ 必为凸集。
 **证明**：
-设 $P, Q \in S$，由交集定义，$P, Q \in H_i$ 对所有 $i$ 成立。
-由于每个 $H_i$ 是凸集（线性约束定义的空间必为凸），线段 $PQ \subseteq H_i$ 成立。
-因此 $PQ \subseteq \bigcap H_i = S$，由凸集定义，$S$ 为凸集。
+1. 线性约束 $ax + by + c \ge 0$ 定义的是半平面，它是凸集。
+2. 任意数量凸集的交集仍为凸集。
+故 $S$ 为凸集。由于凸集的边界是由直线段或射线构成的，其拓扑结构表现为单凸多边形（有界）或凸链（无界）。
 
-**定理 2：极角排序的拓扑意义**
-对有向直线进行极角排序，保证了构建过程中相邻直线的交点始终沿着凸包边界逆时针推进，这是双端队列维护正确性的核心。
+**定理 2：极角扫描法的正确性**
+对所有有向直线按极角排序。排序确保了相邻直线的交点沿着凸包边界逆时针旋转。双端队列（Deque）维护这一单调链，使得每次加入新直线时，只需检查队列两端的交点是否被新直线排除。
 
 </KnowledgeCard>
 
 ---
 
-## 2. 精度收敛与数值稳定性 (Numerical Stability)
+## 2. 交点存在性一致性校验 (Intersection Consistency)
 
 在半平面交中，由于涉及大量直线交点计算，误差的累积与放大是核心风险。
 
-### 2.1 交点误差放大效应
+### 2.1 交点存在性判定
 
 <KnowledgeCard type="warning" title="接近平行的直线判定">
 
 若两条直线 $L_i, L_j$ 的夹角 $\theta \to 0$（几近平行），交点坐标 $P$ 的绝对误差 $\delta(P)$ 满足：
 $$\delta(P) \approx \frac{L \cdot \epsilon_{mach}}{\sin \theta}$$
-其中 $L$ 是坐标量级。当 $\sin \theta$ 极小时，交点坐标可能发生剧烈跳变。
+其中 $L$ 是坐标量级。当 $\sin \theta < \epsilon$ 时，交点计算会导致严重的精度崩塌。
 
-**收敛建议**：
-1. **预去重**：在极角排序后，合并夹角 $\Delta \theta < \epsilon$ 的直线，仅保留最内侧者。
-2. **包围盒**：增加一个极大的矩形限制（Bounding Box），防止无界区域导致的坐标溢出。
+**鲁棒性策略**：
+1. **预去重**：极角排序后，若 $\text{ang}_i = \text{ang}_{i+1}$，仅保留最内侧（即最左侧）的直线。
+2. **平行过滤**：在 `getLineIntersection` 中，若 $|\vec{v_1} \times \vec{v_2}| < \text{eps}$，必须判定为平行且不相交（除非共线且同向）。
 
 </KnowledgeCard>
 
-### 2.2 核心代码实现 (C++)
+---
+
+## 3. 核心算法实现 (C++)
 
 ```cpp
 struct Line {
     Point p; Vector v; DB ang;
     Line() {}
     Line(Point p, Vector v): p(p), v(v) { ang = atan2(v.y, v.x); }
-    // 排序优先级：极角升序，极角相同时保留最左侧
+    // 排序：极角升序，极角相同时保留最左侧直线
     bool operator< (const Line& L) const {
         if (sign(ang - L.ang) != 0) return ang < L.ang;
         return sign(cross(v, L.p - p)) > 0;
     }
 };
 
-// 检查直线 L 与队列中交点 P 的关系
+// 检查直线 L 是否排除点 P (P 在 L 的右侧则被排除)
 bool onRight(Line L, Point P) {
-    return sign(cross(L.v, P - L.p)) < 0; // P 在 L 右侧则该点无效
+    return sign(cross(L.v, P - L.p)) < 0;
 }
 
 vector<Point> halfPlaneIntersection(vector<Line>& L) {
     sort(L.begin(), L.end());
-    int n = L.size();
-    vector<Line> q(n + 5);
-    vector<Point> p(n + 5);
-
-    // 1. 去重：极角相同时保留最内侧直线
-    int m = 0;
+    int n = L.size(), m = 0;
+    // 1. 预处理：去重
     for (int i = 0; i < n; i++) {
         if (i > 0 && sign(L[i].ang - L[i-1].ang) == 0) continue;
         L[m++] = L[i];
     }
 
-    // 2. 双端队列扫描
+    // 2. 双端队列维护单调链
     int head = 0, tail = 0;
+    vector<Line> q(m + 5);
+    vector<Point> p(m + 5);
     for (int i = 0; i < m; i++) {
         while (tail - head > 1 && onRight(L[i], p[tail - 1])) tail--;
         while (tail - head > 1 && onRight(L[i], p[head + 1])) head++;
         q[tail++] = L[i];
         if (tail - head > 1) p[tail - 1] = getLineIntersection(q[tail-2], q[tail-1]);
     }
-    // 闭合处理
+    // 3. 闭合判定：用队首直线检查队尾交点
     while (tail - head > 1 && onRight(q[head], p[tail - 1])) tail--;
-
-    if (tail - head < 3) return {}; // 交集为空或退化
+    
+    if (tail - head < 3) return {}; // 交集退化为空或点/线
     p[head] = getLineIntersection(q[head], q[tail-1]);
 
     vector<Point> res;
@@ -104,13 +104,13 @@ vector<Point> halfPlaneIntersection(vector<Line>& L) {
 
 ---
 
-## 3. 经典练习与应用 (Exercises)
+## 4. 经典练习与应用 (Exercises)
 
 <details>
-<summary>例题 1：多边形核 (Polygon Kernel)</summary>
+<summary>例题 1：多边形核 (Polygon Kernel) 存在性证明</summary>
 
-**题目描述**：给定一个 $n$ 边形，判断其核（Kernel）是否为空。核是内部所有点都能看到所有顶点的集合。
-**证明**：多边形的核是所有边所在半平面的交。由于半平面交必为凸集，故多边形的核若不为空，则必为凸多边形。
+**题目描述**：判断一个多边形的核（Kernel）是否为空。
+**证明**：多边形的核是内部所有点都能看到所有顶点的集合。这等价于点必须位于所有边的左侧（若逆时针）。因此，多边形的核即为其边所在半平面的交。
 
 <details>
 <summary>Check Solution</summary>
@@ -129,38 +129,26 @@ bool hasKernel(const vector<Point>& poly) {
 </details>
 
 <details>
-<summary>练习 1：最大内切圆 (Largest Inscribed Circle)</summary>
+<summary>练习 1：最大内切圆 - 二分 + 半平面交</summary>
 
-**题目描述**：给定凸多边形，求其内部半径最大的圆。
-**思路**：二分半径 $R$。将每条边向内平移 $R$ 距离后，检查半平面交是否非空。
-**代数一致性**：平移距离 $d$ 对应的向量为 $d \cdot \frac{\text{normal}}{\text{length}}$。
+**题目描述**：在凸多边形内求半径最大的圆。
+**思路**：
+1. 若半径为 $R$，则圆心必在所有边向内平移 $R$ 后的半平面交内。
+2. 二分 $R$，检查平移后的半平面交是否非空。
+**一致性校验**：平移后的直线 $L'$ 定义为 $L.p + \text{normal} \cdot R$。
 
 <details>
 <summary>Check Solution</summary>
 
 ```cpp
 Line moveLeft(Line L, DB d) {
-    Vector n = {-L.v.y, L.v.x}; // 左垂直向量
+    Vector n = {-L.v.y, L.v.x}; 
     n = n / length(n) * d;
     return Line(L.p + n, L.v);
-}
-
-bool check(DB R, const vector<Line>& L) {
-    vector<Line> shifted;
-    for (auto& line : L) shifted.push_back(moveLeft(line, R));
-    return halfPlaneIntersection(shifted).size() > 0;
 }
 ```
 
 </details>
-</details>
-
-<details>
-<summary>练习 2：凸多边形的最小包含面积三角形</summary>
-
-**题目描述**：给定凸多边形，求一个面积最小的三角形，使其包含该多边形。
-**思路**：三角形的三条边必然与凸多边形的三条支撑线重合。可以通过旋转卡壳或半平面交的变体进行求解。
-
 </details>
 
 ---
