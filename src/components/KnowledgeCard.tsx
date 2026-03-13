@@ -11,6 +11,7 @@ import {
   BookOpen,
   Zap,
   Activity,
+  Sigma,
   ChevronDown,
   ChevronUp,
 } from 'lucide-react';
@@ -27,6 +28,7 @@ type CardType =
   | 'danger'
   | 'error'
   | 'theorem'
+  | 'formula'
   | 'complexity'
   | 'algorithm';
 
@@ -102,6 +104,13 @@ const config = {
     bg: 'rgba(139, 92, 246, 0.05)',
     border: 'rgba(139, 92, 246, 0.2)',
     label: '定理 (THEOREM)',
+  },
+  formula: {
+    icon: Sigma,
+    color: '#06b6d4',
+    bg: 'rgba(6, 182, 212, 0.05)',
+    border: 'rgba(6, 182, 212, 0.2)',
+    label: '公式 (FORMULA)',
   },
   complexity: {
     icon: Activity,

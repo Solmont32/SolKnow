@@ -737,6 +737,11 @@ const sidebars: SidebarsConfig = {
                   id: 'exercises/math/analysis-differential-equations',
                   label: '进阶：微分方程专题 (ODE/PDE)',
                 },
+                {
+                  type: 'doc',
+                  id: 'exercises/math/modern-synthesis',
+                  label: '进阶：现代数学综合练习',
+                },
                 { type: 'doc', id: 'exercises/math/topology', label: '点集拓扑专题' },
                 { type: 'doc', id: 'exercises/math/real-analysis', label: '实变函数专题' },
                 { type: 'doc', id: 'exercises/math/functional-analysis', label: '泛函分析专题' },
