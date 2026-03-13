@@ -3,7 +3,7 @@ title: 并查集 (Disjoint Set Union)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { GitMerge, Users, Zap, ShieldCheck, Sigma, Network } from 'lucide-react';
+import { GitMerge, Users, Zap, ShieldCheck, Sigma, Network, Database, Boxes } from 'lucide-react';
 
 # 并查集 (DSU): 集合关系的维护艺术
 
@@ -30,29 +30,44 @@ import { GitMerge, Users, Zap, ShieldCheck, Sigma, Network } from 'lucide-react'
 
 **命题**：并查集森林结构始终是一组互不相交的树，且根节点是该集合的唯一代表。
 **证明**：
-
 1. **初始状态**：每个节点自成一根，满足条件。
 2. **归纳步**：`Union(x, y)` 仅在 $x, y$ 的根节点 $r_x, r_y$ 不同时，将 $p[r_y] = r_x$。此操作仅合并两棵树且未引入环，故森林性质保持。
 
 ---
 
-## 2. 时空复杂度摊还证明
+## 2. 复杂度分析与空间分配证明
 
-### 2.1 路径压缩与按秩合并
+### 2.1 空间分配证明 (Systematic Space Allocation)
 
-**定理**：同时使用路径压缩和按秩（Rank/Size）合并，单次操作的均摊时间复杂度为 $O(\alpha(N))$，其中 $\alpha$ 是反阿克曼函数。
+**定理**：标准并查集的空间复杂度为 $\Theta(N)$。
+**证明**：
+并查集维护两个主要数组：父节点数组 $p[]$ 和秩数组 $rank[]$（或 $size[]$）。
+1. 每个节点在全集 $U = \{1, \dots, N\}$ 中仅出现一次。
+2. 每一个节点 $i \in U$ 对应且仅对应数组 $p$ 和 $rank$ 中的一个索引。
+3. 因此，总空间 $S(N) = \text{sizeof}(int) \times 2N + \text{const}$，即 $O(N)$。
+**推论**：对于可撤销并查集，由于不使用路径压缩而改用栈记录操作，空间复杂度为 $O(N + M)$，其中 $M$ 为操作次数。
 
-### 2.2 势能分析概要 (Tarjan 证明思路)
+### 2.2 时空复杂度摊还证明
 
-定义节点的秩 $rank(x)$ 为以 $x$ 为根时树的最大高度上界。
-定义势能函数 $\Phi(x)$ 取决于 $rank(x)$ 与其父节点秩之差。
+**定理**：同时使用路径压缩和按秩合并，单次操作的均摊时间复杂度为 $O(\alpha(N))$。
 
-1. **路径压缩**：每次 `find(x)` 会改变路径上所有节点的父节点，导致势能显著释放，补偿了遍历路径的代价。
-2. **收敛性**：由于秩的变化受限于 $\log N$ 或更小的层级划分，通过阿克曼函数的迭代定义，可以证明总代价被 $\alpha(N)$ 严格约束。
+**势能分析 (Potential Method) 概要**：
+定义节点的秩 $x.rank$。定义势能函数 $\Phi = \sum_{x \in U} \phi(x)$。
+1. **Union 操作**：增加一个节点的秩最多导致 $\alpha(N)$ 的势能变化。
+2. **Find 操作**：路径压缩将节点直接指向根，跨越了多个秩层级，导致大量的 $\phi(x)$ 减小。这种势能的释放足以支付 $O(\text{路径长度})$ 的实际代价，使得均摊代价仅为 $O(\alpha(N))$。
+*注：反阿克曼函数 $\alpha(N)$ 增长极慢，对于宇宙中可观测到的 $N$，其值均不超过 5。*
 
 ---
 
-## 3. 教材化例题与解析
+## 3. 拓扑一致性验证 (Topological Consistency)
+
+在维护带权并查集或动态连通性时，必须保证：
+- **路径压缩的一致性**：$d(x, root) = d(x, p(x)) \oplus d(p(x), root)$。在递归 `find` 返回时，先更新父节点的权值，再更新当前节点的权值。
+- **合并的对称性**：`unite(x, y)` 与 `unite(y, x)` 在逻辑上等价，但在物理实现中（按秩合并）应保证合并方向不影响等价类的连通性拓扑。
+
+---
+
+## 4. 教材化例题与解析
 
 ### 例题 1：食物链 (综合逻辑关系)
 
@@ -75,20 +90,25 @@ if (t == 1) { // x, y 是同类
 
 </details>
 
-### 例题 2：动态加边连通性
+### 例题 2：动态加边连通性 (Kruskal 重构树基础)
 
 <details>
 <summary>Check Solution</summary>
 
 **题目描述**：给定 $N$ 个点和 $M$ 条边 $(u, v, w)$，查询两点何时连通。
-**解析**：Kruskal 重构树基础。按权值排序后依次合并。
+**解析**：按权值排序后依次合并。新建节点 $node_{M+i}$ 作为 $find(u)$ 和 $find(v)$ 的父节点，权值为 $w$。
 
 ```cpp
-for (auto& edge : edges) {
-    if (dsu.find(edge.u) != dsu.find(edge.v)) {
-        dsu.unite(edge.u, edge.v);
-        // 记录此时的 w 为连通临界值
-    }
+int newNode(int w) {
+    val[++tot] = w;
+    return tot;
+}
+// 在 unite 中
+int u = find(x), v = find(y);
+if (u != v) {
+    int root = newNode(w);
+    fa[u] = fa[v] = root;
+    ch[root][0] = u; ch[root][1] = v;
 }
 ```
 
@@ -96,7 +116,7 @@ for (auto& edge : edges) {
 
 ---
 
-## 4. 综合练习与解答
+## 5. 综合练习与解答
 
 1. **[连通块维护]** 维护每个连通块的最小、最大元素及成员总数。
 <details>
@@ -107,6 +127,7 @@ struct Node { int p, sz, mi, ma; };
 void unite(int x, int y) {
     int rx = find(x), ry = find(y);
     if (rx != ry) {
+        if (sz[rx] < sz[ry]) swap(rx, ry); // 按大小合并优化
         p[ry] = rx;
         sz[rx] += sz[ry];
         mi[rx] = min(mi[rx], mi[ry]);
@@ -117,27 +138,11 @@ void unite(int x, int y) {
 
 </details>
 
-2. **[带权并查集]** 维护节点到根的距离 $d[x]$。
+2. **[进阶] 可撤销并查集 (Undoable DSU)**
 <details>
 <summary>Check Solution</summary>
 
-```cpp
-int find(int x) {
-    if (p[x] == x) return x;
-    int root = find(p[x]);
-    d[x] += d[p[x]]; // 路径压缩时更新权值
-    p[x] = root;
-    return root;
-}
-```
-
-</details>
-
-3. **[进阶] 可撤销并查集 (Undoable DSU)**
-<details>
-<summary>Check Solution</summary>
-
-**核心逻辑**：不使用路径压缩，仅用按秩合并。使用栈记录每次 `unite` 修改的 `p` 和 `sz` 状态。
+**核心逻辑**：**禁止路径压缩**（因为它会改变树的拓扑结构且难以撤销），仅用**按秩合并**（保证树高 $O(\log N)$）。使用栈记录每次修改。
 
 ```cpp
 struct Operation { int u, v, add_rank; };
@@ -153,6 +158,7 @@ void unite(int u, int v) {
 }
 
 void undo() {
+    if (st.empty()) return;
     auto t = st.top(); st.pop();
     p[t.v] = t.v;
     rank[t.u] -= t.add_rank;

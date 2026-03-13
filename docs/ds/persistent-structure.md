@@ -3,7 +3,7 @@ title: 可持久化数据结构 (Persistent Structures)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { History, Save, Layers, Share2, GitBranch, Clock, Database, Milestone } from 'lucide-react';
+import { History, Save, Layers, Share2, GitBranch, Clock, Database, Milestone, ShieldCheck } from 'lucide-react';
 
 # 可持久化数据结构: 时间与空间的博弈
 
@@ -16,33 +16,31 @@ import { History, Save, Layers, Share2, GitBranch, Clock, Database, Milestone } 
 
 ---
 
-## 1. 实现范式深度对比
+## 1. 拓扑一致性验证 (Topological Consistency)
 
-### 1.1 胖节点 (Fat Node)
-在每个节点内部维护一个修改日志（版本号 -> 值的映射）。
-- **优点**: 物理结构不变，不产生多余节点。
-- **缺点**: 查询复杂度从 $O(1)$ 降至 $O(\log V)$，且难以实现 Full Persistence。
-
-### 1.2 路径复制 (Path Copying)
-修改节点 $u$ 时，复制从根到 $u$ 的整条路径。
-- **优点**: 保持了原始查询复杂度，天然支持 Full Persistence。
-- **缺点**: 空间开销与树高成正比。在线段树中为 $O(\log N)$。
+在可持久化结构中，拓扑一致性意味着**历史版本不可变性 (Immutability)**：
+- **路径复制不变性**: 修改节点 $u$ 时产生的副本 $u'$，其子节点若未发生改变，必须指向原有的物理节点。
+- **逻辑独立性**: 对版本 $V_i$ 的修改绝对不能影响版本 $V_j (j < i)$ 的任何拓扑连接或数据属性。
 
 ---
 
-## 2. 复杂度收敛分析与多维验证
+## 2. 复杂度分析与空间分配证明
 
-### 2.1 时空复杂度证明
+### 2.1 空间分配证明 (Systematic Space Allocation)
 
-**定理**：路径复制在线段树上的单次更新空间复杂度为 $O(\log N)$。
-**证明**：线段树是一棵高度为 $\lceil \log_2 N \rceil$ 的平衡树。更新一个叶子节点只会影响其所有祖先。祖先节点的数量恰好等于树的高度。由于每个受影响的节点仅被复制一次，空间增量为 $O(\log N)$。
+**定理**：采用路径复制的可持久化线段树，单次更新的空间复杂度为 $O(\log N)$。
+**证明**：
+1. 设线段树深度为 $H = \lceil \log_2 N \rceil$。
+2. 任何单点更新仅影响从根到叶的一条路径，路径长度为 $H+1$。
+3. 路径复制机制会为该路径上的每个节点创建一个新副本。
+4. 总增量空间 $\Delta S = (H+1) \times \text{sizeof}(Node) = O(\log N)$。
+**推论**：对于 $M$ 次更新，总空间复杂度为 $O(N + M \log N)$。
 
-### 2.2 多维验证：二维可持久化线段树 (2D Persistent Segment Tree)
+### 2.2 时间复杂度均摊分析
 
-二维可持久化通常用于处理“矩形区域内的历史/权值查询”。
-- **方案**: 对 $x$ 坐标建立可持久化线段树。每个版本 $v_x$ 维护了区间 $[1, x]$ 内所有点的 $y$ 坐标信息。
-- **逻辑**: 查询矩形 $[x_1, x_2] \times [y_1, y_2]$ 等价于在版本 $v_{x_2}$ 和 $v_{x_1-1}$ 之间进行前缀和减法。
-- **时空**: 空间 $O(N \log M)$，查询 $O(\log M)$。
+**定理**：可持久化结构的查询时间与原始结构一致，均为 $O(\log N)$。
+**证明**：
+由于路径复制保持了树的拓扑深度，且每个版本都拥有一棵逻辑完整的树根，查询操作在任意版本上的执行逻辑与普通线段树完全一致，不增加任何分摊开销。
 
 ---
 
@@ -60,8 +58,8 @@ int insert(int p, int val) {
     int q = ++idx, cur = q;
     for (int i = 30; i >= 0; i--) {
         int v = (val >> i) & 1;
-        tr[cur] = tr[p];
-        tr[cur].ch[v] = ++idx;
+        tr[cur] = tr[p]; // 结构共享
+        tr[cur].ch[v] = ++idx; // 路径复制
         tr[cur].cnt++;
         cur = tr[cur].ch[v];
         p = tr[p].ch[v];
@@ -69,46 +67,24 @@ int insert(int p, int val) {
     tr[cur].cnt++;
     return q;
 }
-int query(int l, int r, int val) {
-    int res = 0;
-    for (int i = 30; i >= 0; i--) {
-        int v = (val >> i) & 1;
-        if (tr[tr[r].ch[v ^ 1]].cnt - tr[tr[l].ch[v ^ 1]].cnt > 0) {
-            res |= (1 << i);
-            l = tr[l].ch[v ^ 1]; r = tr[r].ch[v ^ 1];
-        } else {
-            l = tr[l].ch[v]; r = tr[r].ch[v];
-        }
-    }
-    return res;
-}
 ```
 
 </details>
 
-### 例题 2：可持久化平衡树 (Persistent Treap)
+### 例题 2：区间 K 大值 (主席树)
 
 <details>
-<summary>Check Solution (FHQ-Treap 实现)</summary>
+<summary>Check Solution</summary>
 
-**核心逻辑**：在 `split` 和 `merge` 操作中，涉及修改节点的动作前先进行 `copy_node`。
+**核心逻辑**：对值域建立线段树。按序列顺序插入，第 $i$ 个版本维护前 $i$ 个数的分布。查询 $[L, R]$ 转化为版本 $V_R$ 与 $V_{L-1}$ 的差分。
 
 ```cpp
-int copy_node(int u) {
-    if (!u) return 0;
-    int v = ++idx;
-    tr[v] = tr[u];
-    return v;
-}
-void split(int u, int v, int &l, int &r) {
-    if (!u) { l = r = 0; return; }
-    u = copy_node(u); // 路径复制关键点
-    if (tr[u].val <= v) {
-        l = u; split(tr[u].rs, v, tr[u].rs, r);
-    } else {
-        r = u; split(tr[u].ls, v, l, tr[u].ls);
-    }
-    push_up(u);
+int query(int u, int v, int l, int r, int k) {
+    if (l == r) return l;
+    int mid = (l + r) >> 1;
+    int x = tr[tr[v].ls].cnt - tr[tr[u].ls].cnt;
+    if (k <= x) return query(tr[u].ls, tr[v].ls, l, mid, k);
+    else return query(tr[u].rs, tr[v].rs, mid + 1, r, k - x);
 }
 ```
 
@@ -122,7 +98,7 @@ void split(int u, int v, int &l, int &r) {
 <details>
 <summary>Check Solution</summary>
 
-**核心逻辑**：树上差分。对应的主席树为 $T_u + T_v - T_{lca} - T_{fa[lca]}$。
+**核心逻辑**：树上差分。利用 $T_u + T_v - T_{lca} - T_{fa[lca]}$ 的性质在四棵线段树上同步同步跳转。
 
 </details>
 
@@ -130,15 +106,27 @@ void split(int u, int v, int &l, int &r) {
 <details>
 <summary>Check Solution</summary>
 
-**核心策略**：用可持久化线段树维护 `fa` 数组。单次修改（即 `merge`）会产生一个新的 `fa` 数组根节点。必须使用按秩合并。
+**核心策略**：用可持久化线段树维护 `fa[]` 数组。必须使用**按秩合并**。空间复杂度 $O(M \log N)$。
 
 </details>
 
-3. **[进阶] 可持久化 LCT?**
+3. **[进阶] 可持久化平衡树 (Persistent Treap)**
 <details>
 <summary>Check Solution</summary>
 
-**解析**：由于 LCT 深度依赖 Splay 的自平衡，而 Splay 的旋转会破坏路径复制的成本效益，可持久化 LCT 的空间复杂度极高。工业界通常使用 **Top Trees** 或 **Euler Tour Tree** 的可持久化版本替代。
+**注意事项**：必须在 `split` 和 `merge` 时下传 `copy_node`。
+```cpp
+void split(int u, int v, int &l, int &r) {
+    if (!u) { l = r = 0; return; }
+    u = copy_node(u); // 关键！
+    if (tr[u].val <= v) {
+        l = u; split(tr[u].rs, v, tr[u].rs, r);
+    } else {
+        r = u; split(tr[u].ls, v, l, tr[u].ls);
+    }
+    push_up(u);
+}
+```
 
 </details>
 

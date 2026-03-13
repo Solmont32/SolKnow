@@ -3,7 +3,7 @@ title: 线段树 (Segment Tree)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { Layers, Zap, ShieldCheck, BoxSelect, Code2, Sigma, Binary, Cpu, LayoutGrid } from 'lucide-react';
+import { Layers, Zap, ShieldCheck, BoxSelect, Code2, Sigma, Binary, Cpu, LayoutGrid, Maximize2, GitMerge } from 'lucide-react';
 
 # 线段树 (Segment Tree): 区间维护的工业级标准
 
@@ -21,7 +21,7 @@ import { Layers, Zap, ShieldCheck, BoxSelect, Code2, Sigma, Binary, Cpu, LayoutG
 
 ## 1. 系统化抽象数据类型 (ADT) 推导
 
-线段树是对区间信息的二叉划分映射。设 $S = \{a_1, a_2, \dots, a_n\}$ 为原始序列，线段树定义了一个映射 $\mathcal{T}: \mathcal{I} \to M$，其中 $\mathcal{I}$ 是 $[1, n]$ 的所有子区间。
+线段树是对区间信息的二叉划分映射。设 $S = \{a_1, a_2, \dots, a_n\}$ 为原始序列。
 
 ### 1.1 递归构造原语
 
@@ -29,27 +29,35 @@ import { Layers, Zap, ShieldCheck, BoxSelect, Code2, Sigma, Binary, Cpu, LayoutG
   - 若 $L=R$，创建叶节点 $u$，$\mathcal{T}(u) = a_L$。
   - 否则，递归构造 $mid = \lfloor (L+R)/2 \rfloor$ 的左子树与右子树，$\mathcal{T}(u) = \mathcal{T}(ls) \oplus \mathcal{T}(rs)$。
 
+### 1.2 拓扑一致性验证 (Topological Consistency)
+
+在执行 `push_down` (标记下传) 或 `push_up` (信息上传) 时，必须保证：
+- **信息不变量**: 节点 $u$ 的信息必须由其子节点 $ls, rs$ 完全决定，即 $\text{val}[u] = \text{merge}(\text{val}[ls], \text{val}[rs])$。
+- **算子顺序一致性**: 若标记支持非交换操作（如矩阵乘法），则标记 $f_1$ 在 $f_2$ 之后加入时，复合标记应更新为 $f_{new} = f_1 \circ f_2$。
+
 ---
 
-## 2. 复杂度分析与一致性证明
+## 2. 复杂度分析与空间分配证明
 
 ### 2.1 时间复杂度：$O(\log N)$ 剪枝证明
 
 **定理**：任何区间查询 $[l, r]$ 最多访问 $4 \log N$ 个节点。
 **证明**：
-1. 考虑查询区间在树中的分解。在每一层中，只有与 $[l, r]$ 边界相交的区间会继续分裂。
-2. 设当前节点代表区间 $[L, R]$。若 $[L, R] \subseteq [l, r]$，直接返回（$O(1)$）。
-3. 若 $[L, R] \cap [l, r] = \emptyset$，直接返回（$O(1)$）。
-4. 只有当 $[L, R]$ 包含 $l$ 或 $r$ 且不完全被 $[l, r]$ 覆盖时，才会进入下一层。每一层这样的节点最多 2 个，树高为 $\log N$，故总访问节点数为 $O(\log N)$。更精确的常数界为 $4 \log N$。
+1. 在每一层中，只有与 $[l, r]$ 边界相交的区间会分裂。
+2. 由于只有 2 个边界，$l$ 和 $r$，每一层最多产生 4 个受边界影响的节点。
+3. 树高为 $\lceil \log_2 N \rceil$，故总访问节点数为 $O(\log N)$。
 
-### 2.2 空间复杂度：4N 定律证明
+### 2.2 空间分配证明 (Systematic Space Allocation)
 
-**定理**：对于长度为 $N$ 的序列，采用完全二叉树堆式存储（$2u, 2u+1$）需要 $4N$ 的空间。
+**定理**：对于长度为 $N$ 的序列，采用堆式存储（索引 $2u, 2u+1$）需要 $4N$ 的空间。
 **证明**：
-线段树是二叉树，叶子节点数为 $N$。
-1. 最坏情况下，$N = 2^k + 1$。为了填满最后一层，树的高度将达到 $k+1$。
-2. 倒数第二层有 $2^k$ 个节点，其中一部分是叶子。最后一层将有最多 $2N$ 个位置。
-3. 总节点数 $\sum_{i=0}^{k+1} 2^i = 2^{k+2} - 1 \approx 4N$。
+1. 设 $N$ 不是 2 的幂。找到最小的 $2^k \ge N$。
+2. 将序列补齐到 $2^k$，此时线段树是一棵满二叉树。
+3. 满二叉树的叶子节点位于第 $k$ 层和第 $k+1$ 层。
+4. 最后一层（第 $k+1$ 层）的起始索引为 $2^{k+1}$。
+5. 最坏情况下 $N = 2^k + 1$，则补齐后的满二叉树需要 $2^{k+2} - 1$ 个节点。
+6. 由于 $2^k < N$，故 $2^{k+2} < 4N$。结论成立。
+**优化**：若采用**动态开点**或 **zkw 线段树**，空间可进一步压缩至 $2N$。
 
 ---
 
@@ -57,30 +65,22 @@ import { Layers, Zap, ShieldCheck, BoxSelect, Code2, Sigma, Binary, Cpu, LayoutG
 
 二维线段树（也称矩形树）用于维护二维平面上的矩形区域信息。
 
-### 3.1 树套树结构 (Tree in Tree)
+### 3.1 树套树结构与空间开销
 
-- **外层线段树**: 维护 $x$ 轴区间 $[x_L, x_R]$。
-- **内层线段树**: 外层线段树的每个节点 $u$ 都是一棵完整的维护 $y$ 轴的线段树 $\mathcal{T}_y(u)$。
-- **操作复杂度**:
-  - **修改**: $O(\log N \log M)$。
-  - **查询**: $O(\log N \log M)$。
-- **空间开销**: $O(N \log M)$。
-
-### 3.2 标记永久化 (Tag Persistence in 2D)
-
-在二维线段树中，`push_down` 操作非常复杂且开销巨大。通常采用**标记永久化**：
-- 修改时，在外层和内层对应的区间直接挂载标记，不向下传播。
-- 查询时，累加路径上遇到的所有标记贡献。
+- **空间证明**: 外层线段树有 $4N$ 个节点，每个节点对应一棵内层线段树。若内层线段树采用动态开点，且共有 $M$ 个点，总空间复杂度为 $O(M \log N)$ 而非 $O(N \cdot M)$。
 
 ---
 
-## 4. 工业级优化：分摊分析
+## 4. 工业级优化：均摊分析 (Segment Tree Beats)
 
-### 4.1 线段树 Beats (Segment Tree Beats)
+### 4.1 势能分析证明
 
-对于区间取 $\min$ ($a_i = \min(a_i, k)$) 和查询区间和：
-**复杂度分析**：
-定义势函数 $\Phi$ 为树中所有节点的“最大值与其严格次大值”不同的节点数。通过维护最大值 $mx$、次大值 $se$ 和最大值个数 $cnt$，可以实现均摊 $O(\log N)$ 的复杂度。
+对于区间取 $\min$ ($a_i = \min(a_i, k)$)：
+定义势函数 $\Phi$ 为树中所有节点的“最大值与其严格次大值”不同的节点数。
+- 当 $k \ge mx$ 时，不操作。
+- 当 $se < k < mx$ 时，仅更新最大值，不改变势能或减少。
+- 当 $k \le se$ 时，递归向下。
+通过势能分析可以证明其均摊复杂度为 $O(\log^2 N)$ 或在特定条件下 $O(\log N)$。
 
 ---
 
@@ -109,27 +109,17 @@ Node merge(Node l, Node r) {
 
 </details>
 
-### 例题 2：二维区域求和 (动态开点)
+### 例题 2：扫描线求矩形面积并
 
 <details>
-<summary>Check Solution (2D Segment Tree Sketch)</summary>
+<summary>Check Solution</summary>
+
+**核心逻辑**：将矩形左右边界视为加减操作。线段树维护区间被覆盖的次数 `cnt` 和被覆盖的长度 `len`。注意扫描线通常不需要 `push_down`，采用**标记永久化**。
 
 ```cpp
-void update_y(int &u, int l, int r, int y, int v) {
-    if (!u) u = ++idx;
-    tr[u].sum += v;
-    if (l == r) return;
-    int mid = (l + r) >> 1;
-    if (y <= mid) update_y(tr[u].ls, l, mid, y, v);
-    else update_y(tr[u].rs, mid + 1, r, y, v);
-}
-void update_x(int &u, int l, int r, int x, int y, int v) {
-    if (!u) u = ++idx_x;
-    update_y(roots_y[u], 1, M, y, v);
-    if (l == r) return;
-    int mid = (l + r) >> 1;
-    if (x <= mid) update_x(tr_x[u].ls, l, mid, x, y, v);
-    else update_x(tr_x[u].rs, mid + 1, r, x, y, v);
+void push_up(int u, int l, int r) {
+    if (tr[u].cnt > 0) tr[u].len = x_coords[r+1] - x_coords[l];
+    else tr[u].len = tr[u<<1].len + tr[u<<1|1].len;
 }
 ```
 
@@ -143,16 +133,17 @@ void update_x(int &u, int l, int r, int x, int y, int v) {
 <details>
 <summary>Check Solution</summary>
 
-**代数展开**：$V = \frac{1}{n} \sum (a_i - \bar{a})^2 = \frac{1}{n} (\sum a_i^2 - 2\bar{a} \sum a_i + n\bar{a}^2) = \frac{1}{n} \sum a_i^2 - (\frac{\sum a_i}{n})^2$。
-线段树只需维护区间和 $\sum a_i$ 和区间平方和 $\sum a_i^2$。
+**公式推导**：$V = \frac{1}{n} \sum a_i^2 - (\frac{\sum a_i}{n})^2$。
+线段树维护 $\sum a_i$ 和 $\sum a_i^2$。区间加 $d$ 时：
+$\sum (a_i + d)^2 = \sum (a_i^2 + 2a_id + d^2) = \sum a_i^2 + 2d \sum a_i + n d^2$。
 
 </details>
 
-2. **[矩阵乘法线段树]** 维护一个序列，支持区间乘以一个 $2 \times 2$ 矩阵，查询向量和。
+2. **[历史最值线段树]** 维护区间当前值和历史出现过的最大值。
 <details>
 <summary>Check Solution</summary>
 
-**核心逻辑**：线段树的每个节点存储一个向量 $V$。标记是一个矩阵 $M$。利用矩阵乘法的结合律 $M_1(M_2 V) = (M_1 M_2)V$。
+**辅助标记**：维护标记 $add$ (当前加) 和 $max\_add$ (历史最大加)。利用标记的复合性质 $(a, b) \circ (c, d) = (a+c, \max(b, a+d))$。
 
 </details>
 
