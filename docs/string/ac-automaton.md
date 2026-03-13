@@ -11,33 +11,41 @@ AC 自动机 (Aho-Corasick Automaton) 是处理多模式匹配问题的工业级
 
 ## 1. 核心构造：Fail 指针与 DFA
 
-### 1.1 Fail 指针的数学定义
+### 1.1 Fail 指针的数学定义与正确性证明
 
 对于 Trie 中的节点 $u$，其失败指针 $fail[u]$ 指向节点 $v$，满足 $v$ 所代表的字符串是 $u$ 所代表字符串在 Trie 中存在的最长**真后缀**。
 
-**性质证明**：
+**构造引理**：若 $u$ 的父节点为 $p$，且 $u = child(p, c)$，则 $fail[u] = \delta(fail[p], c)$。
 
-- **引理**：若 $v$ 是 $u$ 的真后缀，则 $fail[u]$ 所代表的字符串长度一定大于 $v$ 所代表的字符串长度（除非 $v = fail[u]$）。
-- **构造正确性**：采用 BFS 层序遍历。对于节点 $u$ 的字符 $c$ 的子节点 $v$：
-  - 若 $v$ 存在，寻找其真后缀等价于在 $fail[u]$ 的转移中寻找字符 $c$。
-  - $fail[v] = \delta(fail[u], c)$。根据 BFS 顺序，$fail[u]$ 的所有转移在计算 $v$ 时已确定。
+**证明**：
+1. 根据定义，$fail[p]$ 是 $p$ 的最长真后缀。
+2. 考虑 $p$ 的后缀链 $p \to fail[p] \to fail[fail[p]] \dots \to root$。
+3. 这些节点代表了 $p$ 的所有存在于 Trie 中的真后缀。
+4. 我们寻找第一个拥有字符 $c$ 转移的节点 $w$。则 $child(w, c)$ 必然是 $u = child(p, c)$ 的最长真后缀。
+5. 在 BFS 过程中，通过补全转移函数 $\delta(fail[p], c)$，我们已经在 $O(1)$ 时间内预处理了这一寻找过程。
 
-### 1.2 Trie 图 (DFA) 的状态转移
+### 1.2 Trie 图 (DFA) 与 Fail 树：双重图论视角
 
-为了消除匹配过程中的重复递归，我们将 Trie 补全为**确定有限状态自动机 (DFA)**。
-状态 $u$ 接收字符 $c$ 的转移函数 $\delta(u, c)$ 定义为：
+AC 自动机包含两层图结构：
+1. **Trie 图 (DFA)**：由转移函数 $\delta(u, c)$ 构成的有向图，每个节点对每个字符都有唯一的出边。它是处理文本匹配的**控制流图**。
+2. **Fail 树**：由 $(u, fail[u])$ 构成的有向树（边方向指向根或背离根，通常视为指向祖先）。它是后缀包含关系的**拓扑图**。
 
-$$
-\delta(u, c) =
-\begin{cases}
-child(u, c) & \text{若 } child(u, c) \text{ 存在} \\
-\delta(fail[u], c) & \text{若 } child(u, c) \text{ 不存在}
-\end{cases}
-$$
+<div className="flex gap-2 mb-4">
+  <span className="badge badge--primary"><Network size={14} className="mr-1" /> DFA: 状态转移</span>
+  <span className="badge badge--secondary"><GitBranch size={14} className="mr-1" /> Fail Tree: 后缀包含</span>
+</div>
 
-在实现中，我们直接覆盖 `trie[u][c]`，这样每次转移仅需 $O(1)$。
+### 1.3 复杂度分析 (Amortized Analysis)
+
+- **空间复杂度**：$O(\sum |P_i| \cdot |\Sigma|)$。
+- **构建复杂度**：
+  - Trie 插入：$O(\sum |P_i|)$。
+  - Fail 指针构建 (BFS)：每个状态访问一次，每个状态检查 $|\Sigma|$ 个转移，总计 $O(N \cdot |\Sigma|)$。
+- **匹配复杂度**：文本串 $T$ 的每个字符仅触发一次状态转移，总计 $O(|T|)$。
+  - *注意*：若需统计所有模式串出现次数且不使用拓扑优化，匹配复杂度可能退化为 $O(|T| \cdot \sqrt{\sum |P_i|})$ 或更差。
 
 <CodeCollapse title="AC 自动机核心构建 (C++)" language="cpp">
+
 
 ```cpp
 struct AC_Automaton {

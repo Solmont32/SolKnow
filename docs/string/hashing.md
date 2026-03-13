@@ -23,53 +23,39 @@ $$
 
 $$ H(S[l \dots r]) = (h[r] - h[l-1] \cdot B^{r-l+1}) \pmod M $$
 
-## 2. 安全性与抗攻击
+## 2. 安全性与碰撞深度分析 (Collision Analysis)
 
 ### 2.1 生日悖论与碰撞风险
 
 在处理 $K$ 个不同的子串时，发生碰撞（$H(S_i) = H(S_j)$ 但 $S_i \neq S_j$）的概率 $P$ 满足：
 $$ P \approx 1 - e^{-\frac{K(K-1)}{2M}} \approx 1 - e^{-\frac{K^2}{2M}} $$
 
-- 若 $M = 10^9$，$K \approx 4 \times 10^4$ 时碰撞概率即达 $50\%$。
-- **结论**：对于 $10^5$ 量级的数据，单模数 $10^9$ 极不安全。
+<div className="flex gap-2 mb-4">
+  <span className="badge badge--danger"><AlertTriangle size={14} className="mr-1" /> $10^9$ Mod: Unsafe</span>
+  <span className="badge badge--success"><ShieldCheck size={14} className="mr-1" /> $2^{61}-1$ Mod: Secure</span>
+</div>
+
+- **概率推演**：若 $M = 10^9$，$K \approx 4 \times 10^4$ 时碰撞概率即达 $50\%$。
+- **结论**：对于 $10^5$ 量级的数据，单模数 $10^9$ 极不安全。**双哈希 (Double Hash)** 或 **梅森素数 (Mersenne Prime) 哈希** 是标准防线。
 
 ### 2.2 抗攻击方案：$2^{61}-1$ 哈希
 
-使用梅森素数 $M = 2^{61}-1$。其优势在于：
+使用梅森素数 $M = 2^{61}-1$。
 
-1. **极大模数**：碰撞概率降至极低。
+1. **极大模数**：$M \approx 2.3 \times 10^{18}$，碰撞概率降至极低。
 2. **位运算加速**：利用 $a \cdot 2^{61} + b \equiv a + b \pmod{2^{61}-1}$ 实现快速取模。
+
+### 2.3 自然溢出与 Thue-Morse 攻击
+
+虽然 `unsigned long long` 自动取模极快，但存在**Thue-Morse 序列**攻击。该序列定义的字符串 $S$ 满足：$S_0 = "a", S_i = S_{i-1} + \overline{S_{i-1}}$。
+
+- **攻击原理**：对于任意基数 $B$，该序列构造出的两个不同字符串在 $2^{k}$ 模数下具有相同的哈希值。
+- **防御策略**：
+  - 使用大质数取模。
+  - **基数随机化**：使用 `mt19937` 生成随机基数 $B \in [|\Sigma|, M)$。
 
 <CodeCollapse title="双哈希与 2^61-1 实现 (C++)" language="cpp">
 
-```cpp
-typedef __int128_t int128;
-typedef unsigned long long ull;
-const ull M = (1ULL << 61) - 1;
-
-ull mod_mul(ull a, ull b) {
-    int128 res = (int128)a * b;
-    ull ans = (ull)(res >> 61) + (ull)(res & M);
-    if (ans >= M) ans -= M;
-    return ans;
-}
-
-ull get_hash(int l, int r) {
-    ull res = h[r] + M - mod_mul(h[l-1], p[r-l+1]);
-    return res >= M ? res - M : res;
-}
-```
-
-</CodeCollapse>
-
-### 2.3 自然溢出 (Mod 2^64) 的隐患
-
-虽然 `unsigned long long` 自动取模极快，但存在**Thue-Morse 序列**攻击。该序列定义的字符串 $S$ 满足：$S_0 = "a", S_i = S_{i-1} + \overline{S_{i-1}}$（其中 $\overline{S}$ 表示字符翻转）。
-
-- **原理**：该序列构造出的两个不同字符串在 $2^{64}$ 下具有相同的多项式哈希值。
-- **对策**：使用大质数取模，或随机化基数 $B$。
-
-## 3. 高级应用场景
 
 ### 例题：最长公共子串 (二分 + 哈希)
 

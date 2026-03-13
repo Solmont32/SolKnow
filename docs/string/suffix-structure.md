@@ -16,19 +16,28 @@ SAM 是接受字符串 $S$ 的所有后缀的最小确定有限状态自动机 (
 ### 1.1 核心理论：Endpos 等价类
 
 - **Endpos(s)**：子串 $s$ 在 $S$ 中出现的所有右端点位置集合。
-- **等价类性质**：
-  1. $S$ 的两个子串 $u, v$ ($|u| \le |v|$) 满足 $Endpos(u) = Endpos(v)$ 的充要条件是 $u$ 在 $S$ 中每次出现都是以 $v$ 的后缀形式出现。
-  2. 若 $Endpos(u) \cap Endpos(v) \neq \emptyset$，则其中一个必是另一个的后缀，且 $Endpos$ 集合呈包含关系。
-- **状态数与边数证明**：
-  - **状态数**：SAM 的状态数不超过 $2n-1$（由 $Endpos$ 集合构成的树形结构决定）。
-  - **边数**：SAM 的转移边数不超过 $3n-4$。
+- **等价类性质与推论**：
+  1. **层级包含性**：若 $Endpos(u) \subseteq Endpos(v)$，则 $v$ 是 $u$ 的后缀。
+  2. **非相交性**：对于任意两个子串 $u, v$，其 $Endpos$ 集合要么呈包含关系，要么互不相交。
+- **状态数与边数上限证明**：
+  - **状态数**：基于 $Endpos$ 集合构建的 Parent Tree，叶子节点最多 $n$ 个，总节点数 $\le 2n-1$。
+  - **边数**：通过主干与跨层转移的势能分析，边数 $\le 3n-4$。
 
 ### 1.2 Parent Tree (后缀链接树)
 
 $link(u)$ 指向 $u$ 所在的等价类中，最短子串去掉第一个字符后所在的状态。
 
-- $link$ 指针构成一棵以 $root$ 为根的树。
-- **意义**：在 Parent Tree 上，$u$ 到根的路径代表了 $u$ 所包含子串的所有后缀，且长度由 $maxlen(u)$ 递减至 0。
+<div className="flex gap-2 mb-4">
+  <span className="badge badge--success"><Box size={14} className="mr-1" /> $O(N \Sigma)$ DFA</span>
+  <span className="badge badge--info"><GitBranch size={14} className="mr-1" /> Parent Tree Structure</span>
+</div>
+
+### 1.3 复杂度与应用场景
+
+- **复杂度**：构建时间 $O(N \cdot |\Sigma|)$，内存开销约为字符数的 2-3 倍（通过 `clone` 机制实现动态分裂）。
+- **核心应用**：
+  - 子串频率统计：在 Parent Tree 上进行子树 Size 累加。
+  - 不同子串个数：在 SAM DAG 上进行路径计数 DP，或通过 $\sum (maxlen(u) - minlen(u) + 1)$ 求解。
 
 <CodeCollapse title="SAM 线性构建 (C++)" language="cpp">
 

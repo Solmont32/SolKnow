@@ -39,21 +39,30 @@ $$
 
 - **推广**：最小周期长度为 $n - \pi[n-1]$。若 $(n - \pi[n-1])$ 能整除 $n$，则该串由 $n / (n - \pi[n-1])$ 个循环节组成；否则，最小循环元长度仍为 $n - \pi[n-1]$，但末尾不完整。
 
-## 2. 复杂度证明：势能分析法
+## 2. 复杂度证明：势能分析法 (Amortized Analysis)
 
 **定理**：前缀函数的计算时间复杂度为 $O(n)$。
 
 **证明**：
+我们使用**势能分析法 (Potential Method)**。定义第 $i$ 步后的势函数 $\Phi_i = \pi[i]$。显然 $\Phi_i \ge 0$ 且 $\Phi_0 = 0$。
 
-1. 定义势函数 $\Phi_i = \pi[i]$。显然 $\Phi_i \ge 0$ 且 $\Phi_0 = 0$。
-2. 考察第 $i$ 次迭代的操作：
-   - `j++` 操作（最多一次）使势能增加 1：$\Delta \Phi_{inc} \le 1$。
-   - `while` 循环中的 `j = pi[j-1]` 使势能减小。由于 $\pi[k-1] < k$，每次迭代至少使 $j$ 减小 1。设第 $i$ 次循环中 `while` 迭代了 $k_i$ 次，则 $\Delta \Phi_{dec, i} \le -k_i$。
-3. 总复杂度为 $\sum_{i=1}^n (1 + \text{while 迭代次数}) = n + \sum k_i$。
-4. 由于 $\Phi_n = \Phi_0 + \sum \Delta \Phi_{inc} + \sum \Delta \Phi_{dec} \ge 0$，得 $0 + n - \sum k_i \ge 0$，即 $\sum k_i \le n$。
-5. 结论：总时间复杂度为 $O(n)$。
+1. **操作分析**：
+   - 外部循环执行 $n$ 次，每次使 $j$ 增加（最多）1，即 $\pi[i] \le \pi[i-1] + 1$。
+   - 内部 `while` 循环每次执行 $j = \pi[j-1]$。由于 $\pi[k-1] < k$，每次迭代至少使 $j$ 减小 1。
+2. **平摊代价**：
+   - 第 $i$ 次迭代的实际代价 $c_i = 1 + k_i$（其中 $k_i$ 为 `while` 循环次数）。
+   - 势能变化 $\Delta \Phi_i = \pi[i] - \pi[i-1] \le 1 - k_i$。
+   - 平摊代价 $\hat{c}_i = c_i + \Delta \Phi_i \le (1 + k_i) + (1 - k_i) = 2$。
+3. **总复杂度**：
+   - $\sum \hat{c}_i = \sum c_i + \Phi_n - \Phi_0 \ge \sum c_i$。
+   - 由于 $\sum \hat{c}_i \le 2n$，故总时间复杂度为 $O(n)$。
 
 ## 3. 算法实现
+
+<div className="flex gap-2 mb-4">
+  <span className="badge badge--info"><Cpu size={14} className="mr-1" /> $O(n)$ Time</span>
+  <span className="badge badge--warning"><Layers size={14} className="mr-1" /> $O(n)$ Space</span>
+</div>
 
 <CodeCollapse title="前缀函数线性实现 (C++)" language="cpp">
 
@@ -74,27 +83,31 @@ vector<int> prefix_function(const string& s) {
 
 </CodeCollapse>
 
-## 4. KMP 自动机 (DFA Perspective)
+## 4. KMP 自动机：图论建模 (DFA Perspective)
 
-### 4.1 状态转移函数 $\delta$
+将 KMP 视为一个**确定有限状态自动机 (DFA)**。状态集合 $Q = \{0, 1, \dots, m\}$，其中 $m$ 是模式串长度。状态 $j$ 表示当前已匹配的最长前缀长度。
 
-状态 $j$ 表示当前已匹配的模式串前缀长度。当接收字符 $c$ 时：
+### 4.1 状态转移图建模
 
-$$
-\delta(j, c) = \begin{cases} j+1 & \text{if } c = P[j] \\ \delta(\pi[j-1], c) & \text{if } c \neq P[j] \text{ and } j > 0 \\ 0 & \text{otherwise} \end{cases}
-$$
+每个状态 $j$ 接收字符 $c \in \Sigma$ 的转移 $\delta(j, c)$ 定义为：
+- 若 $c = P[j]$，则 $\delta(j, c) = j + 1$。
+- 若 $c \neq P[j]$，则 $\delta(j, c) = \delta(\pi[j-1], c)$。
 
-<CodeCollapse title="KMP 自动机构建" language="cpp">
+**图论意义**：KMP 自动机形成了一个有向图，其中“前进边”构成模式串的主干，“后退边”由 $fail$ 指针引导。利用这种建模，我们可以处理如“不包含模式串的路径计数”等图论问题。
+
+<CodeCollapse title="KMP 自动机构建 (优化版)" language="cpp">
 
 ```cpp
-void compute_automaton(string p, int trans[][26]) {
+// trans[state][char] 存储转移结果
+void compute_automaton(string p, vector<vector<int>>& trans) {
     p += '#'; // 终止符
-    int n = p.length();
+    int m = p.length();
+    trans.assign(m, vector<int>(26));
     vector<int> pi = prefix_function(p);
-    for (int j = 0; j < n; j++) {
+    for (int j = 0; j < m; j++) {
         for (int c = 0; c < 26; c++) {
             if (j > 0 && c != p[j] - 'a')
-                trans[j][c] = trans[pi[j-1]][c];
+                trans[j][c] = trans[pi[j-1]][c]; // 继承 fail 节点的转移
             else
                 trans[j][c] = j + (c == p[j] - 'a');
         }
@@ -106,22 +119,23 @@ void compute_automaton(string p, int trans[][26]) {
 
 ## 5. 经典应用与例题
 
-### 例题 1：模式串出现次数
+### 例题 1：模式串出现次数 (含重叠)
 
-> 统计模式串 $P$ 在文本串 $T$ 中出现的总次数。
+> 给定文本串 $S$ 和模式串 $P$，求 $P$ 在 $S$ 中出现的所有起始位置。
 
 <details>
 <summary>Check Solution</summary>
 
 ```cpp
-int count_occurrences(string t, string p) {
-    string s = p + "#" + t;
-    vector<int> pi = prefix_function(s);
-    int count = 0, m = p.length();
-    for (int i = m + 1; i < s.length(); i++) {
-        if (pi[i] == m) count++;
+vector<int> kmp_search(string s, string p) {
+    string combined = p + "#" + s;
+    vector<int> pi = prefix_function(combined);
+    vector<int> res;
+    int n = s.length(), m = p.length();
+    for (int i = m + 1; i < combined.length(); i++) {
+        if (pi[i] == m) res.push_back(i - 2 * m);
     }
-    return count;
+    return res;
 }
 ```
 
