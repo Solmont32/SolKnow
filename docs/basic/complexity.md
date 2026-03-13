@@ -3,7 +3,7 @@ title: 算法复杂度分析 (Complexity Analysis)
 sidebar_position: 2
 ---
 
-import { Clock, HardDrive, Zap, Binary, BarChart3, Calculator } from 'lucide-react';
+import { Clock, HardDrive, Zap, Binary, BarChart3, Calculator, Repeat, Layers } from 'lucide-react';
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # 算法复杂度分析 (Complexity Analysis)
@@ -18,8 +18,8 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 设 $f(n)$ 为算法的资源消耗函数：
 
-- **$O(g(n))$ (上界)**：$\exists c > 0, n_0 > 0, \forall n \ge n_0: f(n) \le c \cdot g(n)$。
-- **$\Omega(g(n))$ (下界)**：$\exists c > 0, n_0 > 0, \forall n \ge n_0: f(n) \ge c \cdot g(n)$。
+- **$O(g(n))$ (上界)**：$\exists c > 0, n_0 > 0, \forall n \ge n_0: 0 \le f(n) \le c \cdot g(n)$。
+- **$\Omega(g(n))$ (下界)**：$\exists c > 0, n_0 > 0, \forall n \ge n_0: 0 \le c \cdot g(n) \le f(n)$。
 - **$\Theta(g(n))$ (等价)**：$f(n) = O(g(n)) \land f(n) = \Omega(g(n))$。
 
 ### 2. 复杂度阶梯 (The Complexity Hierarchy)
@@ -28,71 +28,94 @@ $$ O(1) < O(\log \log n) < O(\log n) < O(\sqrt{n}) < O(n) < O(n \log n) < O(n^k)
 
 ---
 
-## 二、 递归复杂度：收敛性推导
+## 二、 递归复杂度：收敛性证明
 
-### 1. 递归树模型 (Recurrence Tree)
+对于分治算法，其复杂度通常遵循递推式：$T(n) = aT(n/b) + f(n)$。
 
-对于形如 $T(n) = aT(n/b) + f(n)$ 的递归式，其总开销可视为一颗树：
+### 1. 主定理 (Master Theorem) 的严格判定
 
-- **深度**：$\log_b n$。
-- **第 $i$ 层节点数**：$a^i$。
-- **第 $i$ 层总开销**：$a^i \cdot f(n/b^i)$。
+设 $a \ge 1, b > 1$ 为常数，$f(n)$ 为渐近正函数：
 
-**收敛推导公式**：
-$$ T(n) = \sum\_{i=0}^{\log_b n - 1} a^i f(n/b^i) + \Theta(n^{\log_b a}) $$
+1. **若 $f(n) = O(n^{\log_b a - \epsilon})$**，则 $T(n) = \Theta(n^{\log_b a})$。（递归树叶子节点占主导）
+2. **若 $f(n) = \Theta(n^{\log_b a})$**，则 $T(n) = \Theta(n^{\log_b a} \log n)$。（各层代价均衡）
+3. **若 $f(n) = \Omega(n^{\log_b a + \epsilon})$**，且满足正则性条件 $af(n/b) \le cf(n)$ ($c < 1$)，则 $T(n) = \Theta(f(n))$。（根节点代价占主导）
 
-### 2. 主定理 (Master Theorem) 的严格判定
+### 2. 递归树模型 (Recurrence Tree) 证明
 
-设 $T(n) = aT(n/b) + O(n^d)$，其中 $a \ge 1, b > 1$：
+$$ T(n) = f(n) + a f(n/b) + a^2 f(n/b^2) + \dots + a^{\log_b n} T(1) $$
+$$ T(n) = \sum_{j=0}^{\log_b n - 1} a^j f(n/b^j) + \Theta(n^{\log_b a}) $$
 
-1. **计算临界指数**：$c = \log_b a$。
-2. **比较 $c$ 与 $d$**：
-   - **Case 1 ($c > d$)**：递归分支开销主导。$T(n) = \Theta(n^{\log_b a})$。
-   - **Case 2 ($c = d$)**：各层开销均衡。$T(n) = \Theta(n^d \log n)$。
-   - **Case 3 ($c < d$)**：根节点合并开销主导。$T(n) = \Theta(n^d)$。
+<details>
+<summary>例题：归并排序复杂度推导</summary>
 
-<KnowledgeCard type="warning" title="主定理失效场景">
-当 $f(n)$ 不是多项式形式（如 $f(n) = 2^n$）或 $a$ 不是常数时，需使用**递归代入法**或**生成函数**求解。
+$T(n) = 2T(n/2) + O(n)$
+- $a=2, b=2, f(n)=n$
+- $n^{\log_b a} = n^{\log_2 2} = n^1$
+- 满足 Case 2，故 $T(n) = \Theta(n \log n)$。
+</details>
+
+---
+
+## 三、 均摊分析：势能法 (Potential Method)
+
+当单次操作最坏情况很差，但一系列操作的总和表现良好时使用。
+
+### 1. 势能函数定义
+定义势能函数 $\Phi(D)$，将数据结构 $D$ 的状态映射为实数。
+- **实际代价**：$c_i$
+- **均摊代价**：$\hat{c}_i = c_i + \Phi(D_i) - \Phi(D_{i-1})$
+
+### 2. 总代价界定
+$$ \sum_{i=1}^n c_i = \sum_{i=1}^n \hat{c}_i - (\Phi(D_n) - \Phi(D_0)) $$
+若 $\Phi(D_n) \ge \Phi(D_0)$，则总实际代价 $\le$ 总均摊代价。
+
+<KnowledgeCard type="info" title="典型案例：动态数组扩容">
+每次扩容（$c_i = n$）虽昂贵，但通过势能函数 $\Phi = 2 \cdot (\text{已用} - \text{半满})$，可证明均摊代价为 $O(1)$。
 </KnowledgeCard>
 
 ---
 
-## 三、 空间复杂度与时间权衡 (Space-Time Tradeoff)
+## 四、 空间复杂度与收敛分析
 
-算法设计往往是在**时间**（CPU 周期）与**空间**（内存占用）之间寻找帕累托最优：
+### 1. 递归栈空间 (Call Stack)
+递归调用的空间消耗取决于**递归深度**。
+- **二分搜索**：深度 $O(\log n)$，空间 $O(\log n)$（非原地实现）或 $O(1)$（原地实现）。
+- **快速排序**：最坏深度 $O(n)$，期望深度 $O(\log n)$。
 
-1. **以空间换时间**：
-   - **预处理 (Preprocessing)**：如前缀和、ST 表、动态规划。
-   - **记忆化 (Memoization)**：存储子问题解，避免重复计算。
-2. **以时间换空间**：
-   - **滚动数组**：将 $O(n)$ 空间压缩至 $O(1)$。
-   - **分块 (Blocking)**：在有限内存下分批处理大数据。
-
----
-
-## 四、 工业级分析范式
-
-### 1. 均摊分析 (Amortized Analysis)
-
-当单次操作最坏情况很差，但一系列操作的总和表现良好时使用。
-
-- **势能法 (Potential Method)**：定义势能函数 $\Phi(D_i)$，均摊代价 $\hat{c}_i = c_i + \Phi(D_i) - \Phi(D_{i-1})$。
-
-### 2. 概率分析 (Expectation)
-
-针对快速排序等具有随机性的算法，计算**期望复杂度** $E[T(n)]$。
+### 2. 空间复用原则
+在分治算法中，若子问题的辅助空间在回溯后释放，则总空间复杂度 $S(n) = S(n/b) + f_{space}(n)$。
+- **归并排序**：$S(n) = S(n/2) + O(n) \implies O(n)$（由 Case 3 推导）。
 
 ---
 
-## 五、 典型算法复杂度速查
+## 五 : 综合练习
 
-| 算法类型     | 时间 (最好/平均/最坏)                     | 空间        | 备注       |
-| :----------- | :---------------------------------------- | :---------- | :--------- |
-| **二分查找** | $O(1) / O(\log n) / O(\log n)$            | $O(1)$      | 需有序性   |
-| **快速排序** | $O(n \log n) / O(n \log n) / O(n^2)$      | $O(\log n)$ | 递归栈深度 |
-| **堆排序**   | $O(n \log n) / O(n \log n) / O(n \log n)$ | $O(1)$      | 不稳定     |
-| **基数排序** | $O(nk) / O(nk) / O(nk)$                   | $O(n+k)$    | $k$ 为位数 |
+### 练习 1：主定理应用
+求解 $T(n) = 3T(n/4) + n \log n$ 的渐近复杂度。
+
+<details>
+<summary>Check Solution</summary>
+
+1. $a=3, b=4 \implies n^{\log_4 3} \approx n^{0.793}$。
+2. $f(n) = n \log n = \Omega(n^{0.793 + \epsilon})$。
+3. 检查正则性：$3 \cdot (n/4 \log n/4) = \frac{3}{4} n (\log n - \log 4) \le \frac{3}{4} n \log n$。
+4. 符合 Case 3，故 $T(n) = \Theta(n \log n)$。
+</details>
+
+### 练习 2：栈操作均摊分析
+一个栈支持 `PUSH`, `POP`, `MULTIPOP(k)`（弹出 $k$ 个元素）。证明 $n$ 次操作的总复杂度为 $O(n)$。
+
+<details>
+<summary>Check Solution</summary>
+
+**势能法证明**：
+1. 定义势能函数 $\Phi(S) = |S|$（栈内元素个数）。
+2. `PUSH`：实际 $c=1$, $\Delta\Phi = 1$, $\hat{c} = 1 + 1 = 2$。
+3. `POP`：实际 $c=1$, $\Delta\Phi = -1$, $\hat{c} = 1 - 1 = 0$。
+4. `MULTIPOP(k)`：实际 $c = \min(k, |S|)$, $\Delta\Phi = -\min(k, |S|)$, $\hat{c} = c - c = 0$。
+由于 $\hat{c} \le 2$ 且 $\Phi \ge 0$，总复杂度 $O(n)$。
+</details>
 
 ---
 
-_编者注：理解复杂度的收敛性是算法进阶的标志。不仅要记住 $O(N \log N)$，更要理解那棵递归树是如何展开并最终收缩的。_
+_编者注：复杂度分析不是死记硬背公式，而是理解计算资源是如何在时间和空间维度上“流动”的。_

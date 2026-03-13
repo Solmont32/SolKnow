@@ -4,7 +4,7 @@ sidebar_position: 8
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { GitBranch, GitMerge, Calculator, Terminal, Box, Binary, Network } from 'lucide-react';
+import { GitBranch, GitMerge, Calculator, Terminal, Box, Binary, Network, Zap } from 'lucide-react';
 
 # 分治理论与复杂度收敛 (Divide and Conquer)
 
@@ -20,68 +20,92 @@ import { GitBranch, GitMerge, Calculator, Terminal, Box, Binary, Network } from 
 
 ---
 
-## 二 : 复杂度收敛性推导 (Master Theorem)
+## 二 : 复杂度分析：减小系数 $a$ 的艺术
 
-分治算法的复杂度通常满足递推式 $T(n) = aT(n/b) + f(n)$，其中 $f(n) = O(n^d)$。
+分治算法的性能提升往往源于减少递归分支数 $a$。
 
-### 1. 递归树深度分析
-
-树的深度为 $\log_b n$。第 $i$ 层的子问题数量为 $a^i$，每个子问题的规模为 $n/b^i$。
-第 $i$ 层总工作量为 $a^i \cdot f(n/b^i)$。
-
-### 2. 三种收敛场景
-
-- **Case 1**: $a > b^d$。叶子节点的工作量占主导。$T(n) = O(n^{\log_b a})$。
-- **Case 2**: $a = b^d$。每一层的工作量均衡分配。$T(n) = O(n^d \log n)$。
-- **Case 3**: $a < b^d$。根节点的合并工作量占主导。$T(n) = O(n^d)$。
-
-### 3. 空间复杂度收敛分析 (Space Convergence)
-
-分治算法的空间复杂度主要由**递归栈深度**与**各层临时辅助空间**决定。
-
-- **递归栈空间**: $S_{stack} = O(\log_b n)$。
-- **辅助空间**: $S_{aux} = \sum_{i=0}^{\log_b n} a^i \cdot f_{space}(n/b^i)$。
-- **收敛性**: 
-  - 若各层空间可复用（如快速排序），总空间为栈深 $O(\log n)$。
-  - 若各层空间需独立保留（如归并排序），总空间为 $O(n)$，因为每一层分配的空间在回溯后释放。
+<KnowledgeCard type="info" title="典型案例：Karatsuba 乘法">
+普通 $n$ 位大整数乘法需 4 次 $n/2$ 位乘法，$T(n) = 4T(n/2) + O(n) = O(n^2)$。
+Karatsuba 利用 $(ax+b)(cx+d) = acx^2 + ((a+b)(c+d)-ac-bd)x + bd$，仅需 3 次乘法。
+$T(n) = 3T(n/2) + O(n) = O(n^{\log_2 3}) \approx O(n^{1.58})$。
+</KnowledgeCard>
 
 ---
 
-## 三 : 经典模型深度解析
+## 三 : 空间复杂度收敛分析 (Space Convergence)
 
-### 1. 归并排序 (Merge Sort)
+分治算法的空间复杂度主要由**递归栈深度**与**各层临时辅助空间**决定。
 
-- **参数**: $a=2, b=2, d=1$。
-- **推导**: $\log_2 2 = 1$，满足 Case 2。$T(n) = O(n^1 \log n)$。
+### 1. 递归栈空间 (Implicit Stack)
+$$ S_{stack} = O(\text{Recursion Depth}) $$
+对于平衡分治（$b=2$），深度为 $O(\log n)$。
 
-### 2. 快速幂 (Modular Exponentiation)
-
-计算 $a^b \pmod p$。
-
-- **思路**: $a^b = (a^{b/2})^2$ (当 $b$ 为偶数) 或 $a \cdot a^{b-1}$ (当 $b$ 为奇数)。
-- **复杂度**: $T(b) = T(b/2) + O(1) \implies O(\log b)$。
+### 2. 辅助空间复用 (Auxiliary Space)
+- **不可复用**：若每层合并都需要开辟新空间且在递归返回前不释放，总空间为 $\sum a^i f_{space}(n/b^i)$。
+- **可复用**：若辅助空间在递归返回后立即释放，则总空间为 $O(n)$（归并排序的典型特征）。
 
 ---
 
 ## 四 : 教材化例题
 
-### 例题 1：逆序对数量 (分治贡献统计)
-
-在一个序列中，若 $i < j$ 且 $a[i] > a[j]$，则称 $(i, j)$ 为一个逆序对。
+### 例题 1：最近点对问题 (平面分治)
+在 $O(n \log n)$ 内寻找平面上距离最近的两点。
 
 <details>
 <summary>证明与解析</summary>
 
 **分治决策**：
-逆序对 $(i, j)$ 可能出现在：
+1. 按 $x$ 坐标排序，划分为左右两半。
+2. 递归求出左右两半的最短距离 $d = \min(d_{left}, d_{right})$。
+3. **关键合并步**：考虑跨越中线的点对。只需考虑 $x$ 坐标距离中线小于 $d$ 的点。
+4. **鸽笼原理优化**：将这些点按 $y$ 坐标排序，对于每个点，在 $d \times 2d$ 的矩形区域内最多只有 6 个点。故只需检查后续 6 个点。
 
-1. 左半部分 $[L, mid]$ 内部。
-2. 右半部分 $[mid+1, R]$ 内部。
-3. 跨越中点，即 $i \in [L, mid], j \in [mid+1, R]$。
+```cpp
+#include <iostream>
+#include <algorithm>
+#include <cmath>
+using namespace std;
 
-**关键性质**：
-当我们归并排序左右两个**已排序**子区间时，若左区间当前元素 $a[i] > a[j]$（右区间元素），由于左区间已升序，则 $a[i \dots mid]$ 均大于 $a[j]$。对逆序对的贡献为 $mid - i + 1$。
+struct Point {
+    double x, y;
+    bool operator< (const Point& W) const { return x < W.x; }
+} p[100010], tmp[100010];
 
+double dist(Point a, Point b) {
+    return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+}
+
+double solve(int l, int r) {
+    if (l >= r) return 1e20;
+    int mid = l + r >> 1;
+    double mid_x = p[mid].x;
+    double d = min(solve(l, mid), solve(mid + 1, r));
+
+    int k = 0;
+    for (int i = l; i <= r; i++)
+        if (abs(p[i].x - mid_x) < d) tmp[k++] = p[i];
+
+    sort(tmp, tmp + k, [](Point a, Point b) { return a.y < b.y; });
+
+    for (int i = 0; i < k; i++)
+        for (int j = i + 1; j < k && tmp[j].y - tmp[i].y < d; j++)
+            d = min(d, dist(tmp[i], tmp[j]));
+    return d;
+}
+```
+</details>
+
+---
+
+## 五 : 综合练习库
+
+### 练习 1：逆序对数量 (分治贡献统计)
+在一个序列中，若 $i < j$ 且 $a[i] > a[j]$，则称 $(i, j)$ 为一个逆序对。
+
+<details>
+<summary>Check Solution</summary>
+
+**思路**：在归并排序的合并阶段，若左半部分元素 $a[i] > a[j]$，则左半部分从 $i$ 到 $mid$ 的所有元素都与 $a[j]$ 构成逆序对。
 ```cpp
 long long merge_sort(int l, int r) {
     if (l >= r) return 0;
@@ -95,52 +119,12 @@ long long merge_sort(int l, int r) {
             tmp[k++] = a[j++];
         }
     }
-    // ... 处理剩余元素
+    while (i <= mid) tmp[k++] = a[i++];
+    while (j <= r) tmp[k++] = a[j++];
+    for (i = l, j = 0; i <= r; i++, j++) a[i] = tmp[j];
     return res;
 }
 ```
-
-</details>
-
----
-
-## 五 : 综合练习库
-
-### 练习 1：最近点对问题 (平面分治)
-
-在 $O(n \log n)$ 内寻找平面上距离最近的两点。
-
-<details>
-<summary>Check Solution</summary>
-
-**策略**：
-
-1. 按 $x$ 坐标分治。
-2. 合并时，只考虑距离中线 $d$ 范围内的点。
-3. **收敛性优化**：按 $y$ 坐标排序后，对每个点只需检查之后最多 6 个点。
-
-```cpp
-double solve(int l, int r) {
-    if (l >= r) return 1e20;
-    int mid = l + r >> 1;
-    double d = min(solve(l, mid), solve(mid + 1, r));
-    // 合并逻辑...
-}
-```
-
-</details>
-
-### 练习 2：Strassen 算法原理
-
-如何将 $T(n) = 8T(n/2) + O(n^2)$ 优化至 $T(n) = 7T(n/2) + O(n^2)$？
-
-<details>
-<summary>Check Solution</summary>
-
-**数学推导**：
-普通矩阵乘法需要 8 次子矩阵乘法。Strassen 定义了 7 个中间矩阵 $P_1 \dots P_7$，仅需 7 次乘法即可组合出原矩阵的所有项。
-根据主定理 Case 1: $\log_2 7 \approx 2.81 < \log_2 8 = 3$。
-
 </details>
 
 ---
