@@ -46,50 +46,37 @@ $$ d[i] = \min(d[j], R - i) \quad (\text{if } i < R) $$
 
 **证明**：
 1. **Case 1: $i + d[j] < R$**。由于 $j$ 以 $M$ 为对称中心，且 $j$ 的回文范围完全包含在 $M$ 的回文范围内，根据对称性，$i$ 的回文半径必然等于 $j$ 的回文半径，即 $d[i] = d[j]$。
-2. **Case 2: $i + d[j] \ge R$**。此时 $i$ 对称过去的部分超出了 $M$ 的已知回文范围 $R$。我们只能保证 $i$ 在 $R$ 以内的部分是对称的，即 $d[i] \ge R - i$。超出 $R$ 的部分需要继续通过**暴力中心扩展**来确定。
+2. **Case 2: $i + d[j] \ge R$**。此时 $i$ 对称过去的部分超出了 $M$ 的已知回文范围 $R$。我们只能保证 $i$ 在 $R$ 以内的部分是对称的，即 $d[i] \ge R - i$。超出 $R$ 的部分需要继续通过**中心扩展**来确定。
 
 ### 2.3 复杂度证明：势能分析
 
 **定理**：Manacher 算法的时间复杂度为 $O(n)$。
-
-**证明**：
-1. 算法的主要开销在于 `while` 循环中的字符匹配。
-2. 每次成功的匹配都会导致 $R$ 至少增加 1。
-3. $R$ 从 0 开始，最大增加到 $2n+3$，且在算法运行过程中**单调递增**。
-4. 总成功的匹配次数为 $O(n)$，总失败次数也为 $O(n)$，故总复杂度为 $O(n)$。
+每次成功的匹配都会导致 $R$ 至少增加 1。由于 $R$ 是单调不减的且最大为 $2n$，故总复杂度为 $O(n)$。
 
 ---
 
 ## 3. 算法实现
 
-<CodeCollapse title="Manacher 工业级模板 (C++)" language="cpp">
+<CodeCollapse title="Manacher 模板与应用 (C++)" language="cpp">
 
 ```cpp
-int manacher(string s) {
-    // 预处理
+vector<int> manacher(string s) {
     string t = "$#";
     for (char c : s) { t += c; t += '#'; }
     t += '@';
-
     int n = t.size();
     vector<int> d(n);
-    int m = 0, r = 0, max_len = 0;
-
+    int m = 0, r = 0;
     for (int i = 1; i < n - 1; i++) {
         if (i < r) d[i] = min(d[2 * m - i], r - i);
         else d[i] = 1;
-
-        // 中心扩展
         while (t[i - d[i]] == t[i + d[i]]) d[i]++;
-
-        // 更新边界
         if (i + d[i] > r) {
             m = i;
             r = i + d[i];
         }
-        max_len = max(max_len, d[i] - 1);
     }
-    return max_len;
+    return d; // 返回各位置半径
 }
 ```
 
@@ -97,21 +84,68 @@ int manacher(string s) {
 
 ---
 
-## 🎯 经典例题
+## 🎯 综合练习
 
-### 例题 1：最长双回文子串
+### 练习 1：[Luogu P4555] 最长双回文子串
 
-> **核心思路**：分别维护每个位置结尾的最长回文 $L[i]$ 和开始的最长回文 $R[i]$。通过 Manacher 更新后，利用递推补全。
+> **题目**：输入字符串 $S$，求 $S$ 的最长双回文子串 $T$ 的长度，使得 $T$ 可以写成两个回文串拼接的形式。
 
-### 例题 2：[Codeforces 1827C] Palindrome Partition
+<details>
+<summary>Check Solution</summary>
 
-> **核心思路**：求偶回文划分数。结合 Manacher 找到每个位置的最短回文结尾，然后进行线性 DP。
+**解法**：分别维护每个位置结尾的最长回文 $L[i]$ 和开始的最长回文 $R[i]$。
+1. 通过 Manacher 算法计算出每个位置的半径 $d[i]$。
+2. 更新边界：$L[i + d[i] - 1] = \max(L[i + d[i] - 1], d[i] - 1)$，$R[i - d[i] + 1] = \max(R[i - d[i] + 1], d[i] - 1)$。
+3. 递推补全：$L[i] = \max(L[i], L[i+2]-2)$，$R[i] = \max(R[i], R[i-2]-2)$。
+4. 遍历所有分割点，答案为 $\max(L[i] + R[i+2])$。
 
----
+```cpp
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
 
-## 🎯 练习题清单
+using namespace std;
 
-1. **[Luogu P3805] 模板题**：基础半径提取。
-2. **[HDU 3068] 最长回文**：基础练习。
-3. **[CF 7D] Palindrome Degree**：前缀回文等级判定。
-4. **[BZOJ 2561] 字符串**：Manacher 综合应用。
+int main() {
+    string s; cin >> s;
+    string t = "$#";
+    for (char c : s) { t += c; t += '#'; }
+    t += '@';
+    int n = t.size();
+    vector<int> d(n), L(n, 0), R(n, 0);
+    int m = 0, r = 0;
+    for (int i = 1; i < n - 1; i++) {
+        if (i < r) d[i] = min(d[2 * m - i], r - i);
+        else d[i] = 1;
+        while (t[i - d[i]] == t[i + d[i]]) d[i]++;
+        if (i + d[i] > r) { m = i; r = i + d[i]; }
+        L[i + d[i] - 1] = max(L[i + d[i] - 1], d[i] - 1);
+        R[i - d[i] + 1] = max(R[i - d[i] + 1], d[i] - 1);
+    }
+    for (int i = n - 2; i >= 1; i -= 2) L[i] = max(L[i], L[i + 2] - 2);
+    for (int i = 1; i <= n - 2; i += 2) R[i] = max(R[i], R[i - 2] - 2);
+    int ans = 0;
+    for (int i = 1; i <= n - 2; i += 2) {
+        if (L[i] && R[i + 2]) ans = max(ans, L[i] + R[i + 2]);
+    }
+    cout << ans << endl;
+    return 0;
+}
+```
+
+</details>
+
+### 练习 2：[Codeforces 7D] Palindrome Degree
+
+> **题目**：定义回文等级：若前缀是回文且其左半部分也是回文，则等级递增。求所有前缀等级之和。
+
+<details>
+<summary>Check Analysis</summary>
+
+**Manacher + DP**：
+1. 利用 Manacher 判断每个前缀是否为回文（即 $d[i] = i$ 在变换后的串中）。
+2. 设 $f[i]$ 为前缀 $S[0 \dots i-1]$ 的回文等级。
+3. 若 $S[0 \dots i-1]$ 是回文，则 $f[i] = f[i/2] + 1$；否则 $f[i] = 0$。
+
+</details>

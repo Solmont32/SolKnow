@@ -13,7 +13,7 @@ import CodeCollapse from '@site/src/components/CodeCollapse';
   <span className="badge badge--info"><Activity size={14} className="mr-1" /> 周期理论</span>
 </div>
 
-KMP (Knuth-Morris-Pratt) 算法不仅是字符串检索的利器，更是深入理解字符串**周期结构**的窗口。本章将从形式化定义出发，探讨前缀函数、势能分析以及周期性引理。
+KMP (Knuth-Morris-Pratt) 算法是字符串处理的基石，它通过挖掘模式串内部的**自我覆盖性质**，实现了在线性的时间内完成单模式匹配。本章将从形式化定义出发，探讨前缀函数、势能分析以及周期性引理。
 
 ---
 
@@ -36,6 +36,12 @@ $$
 **引理 2 (Border 的传递性)**：$s$ 的 Border 的 Border 也是 $s$ 的 Border。
 - 这意味着所有 Border 的长度可以通过迭代 $\pi$ 函数获得：$\{ \pi[i], \pi[\pi[i]-1], \pi[\pi[\pi[i]-1]-1], \dots \}$。
 
+### 1.3 失配指针收敛性证明
+
+在计算 $\pi[i]$ 时，我们不断跳跃 $j = \pi[j-1]$ 直到 $s[i] = s[j]$ 或 $j=0$。
+- **收敛性**：由于每次跳转 $j$ 都会严格减小（因为 $\pi[j-1] < j$），且 $j \ge 0$，该过程必然在有限步内终止。
+- **全局线性复杂度**：利用势函数 $\Phi(i) = \pi[i]$。每次 $i \to i+1$，$\pi[i]$ 最多增加 1。而每次 $j = \pi[j-1]$ 跳转，$\pi[i]$ 至少减少 1。总增加量为 $n$，故总跳转次数上限为 $n$。
+
 ---
 
 ## 2. 周期性边界分析 (Periodicity Theory)
@@ -45,12 +51,10 @@ $$
 **定义 (Period)**：若对于所有 $0 \le i < |s| - p$，满足 $s[i] = s[i+p]$，则称 $p$ 为 $s$ 的一个周期。
 
 **定理 (周期-Border 对偶)**：$p$ 是 $s$ 的一个周期 $\iff$ $s$ 有一个长度为 $|s| - p$ 的 Border。
-- **直观理解**：由于前后缀相等，重叠部分的错位正好构成了周期的循环。
 
 ### 2.2 弱周期引理 (Weak Periodicity Lemma)
 
 **引理**：若 $p$ 和 $q$ 是 $s$ 的周期，且 $p + q \le |s|$，则 $\gcd(p, q)$ 也是 $s$ 的周期。
-- **推论**：若一个字符串有多个周期，在长度足够时，它们会“收敛”到更小的公约数周期。
 - **Fine-Wilf 定理**：上述条件的极限界限是 $p+q-\gcd(p, q)$。
 
 ---
@@ -67,25 +71,16 @@ $$
   $$
   \delta(j, c) = \begin{cases} j+1 & \text{if } c = P[j] \\ \delta(\pi[j-1], c) & \text{if } c \neq P[j] \text{ and } j > 0 \\ 1 \text{ or } 0 & \text{if } j = 0 \end{cases}
   $$
-- **证明简述**：当失配时，我们需要找到 $P[0 \dots j-1]$ 的最长真后缀使得接上 $c$ 后能匹配 $P$ 的前缀。根据 Border 的性质，这等价于在 $P[0 \dots j-1]$ 的所有 Border 中寻找。
+- **证明**：若 $c \neq P[j]$，我们寻找 $P[0 \dots j-1]$ 的后缀 $S'$ 使得 $S'+c$ 是 $P$ 的前缀。根据 Border 的性质，$S'$ 必须是 $P[0 \dots j-1]$ 的一个 Border。为了使匹配最长，我们按 Border 长度从大到小（即迭代 $\pi$）检查，这恰好对应了递归转移过程。
 
 ---
 
-## 4. 复杂度分析：势能分析法
-
-**定义势函数** $\Phi = \pi[i]$（当前匹配长度）。
-- **Push 操作**（匹配成功）：$\Phi \to \Phi + 1$。
-- **Pop 操作**（`while` 循环跳转）：每次执行 $j = \pi[j-1]$，$\Phi$ 至少减少 1。
-- **平摊分析**：总增加量为 $n$，因此总减少量（`while` 执行次数）不会超过 $n$。总时间复杂度为 $O(n)$。
-
----
-
-## 5. 算法实现与例题
+## 4. 算法实现与例题
 
 <CodeCollapse title="前缀函数与 KMP 自动机 (C++)" language="cpp">
 
 ```cpp
-// 前缀函数
+// 前缀函数 (Next 数组)
 vector<int> prefix_function(const string& s) {
     int n = s.length();
     vector<int> pi(n);
@@ -99,8 +94,10 @@ vector<int> prefix_function(const string& s) {
 }
 
 // 自动机预处理 (O(m * sigma))
+// 通过 DP 优化转移过程
 void build_kmp_automaton(string p, vector<vector<int>>& nxt) {
     int m = p.length();
+    vector<int> pi = prefix_function(p);
     nxt.assign(m + 1, vector<int>(26));
     for (int i = 0; i < m; i++) {
         for (int c = 0; c < 26; c++) {
@@ -113,10 +110,13 @@ void build_kmp_automaton(string p, vector<vector<int>>& nxt) {
 
 </CodeCollapse>
 
-### 例题：[Luogu P4391] 最小循环节
+---
 
-> **题目**：给定长度为 $n$ 的字符串 $S$，求其最短循环节长度（循环节不必完整）。
-> **解法**：最短周期即为 $n - \pi[n-1]$。
+## 🎯 综合练习
+
+### 练习 1：[Luogu P4391] 最小循环节
+
+> **题目**：给定长度为 $n$ 的字符串 $S$，求其最短循环节长度（循环节不必完整，如 `abcabcab` 的最短循环节为 `abc`）。
 
 <details>
 <summary>Check Solution</summary>
@@ -147,11 +147,81 @@ int main() {
 
 </details>
 
----
+### 练习 2：[POJ 2406] Power Strings
 
-## 🎯 练习题清单
+> **题目**：求字符串 $S$ 的最大幂次数 $k$，使得 $S = T^k$。
 
-1. **[Luogu P3375] KMP 模板**
-2. **[POJ 2185] 矩阵周期**：二维 KMP 应用。
-3. **[CF 1200E] Compress Words**：利用 KMP 优化字符串合并。
-4. **[TopCoder 11311] SrmCards**：结合 KMP 状态机的动态规划。
+<details>
+<summary>Check Solution</summary>
+
+若 $n$ 能被 $n - \pi[n-1]$ 整除，则最小正周期为 $n - \pi[n-1]$，答案为 $n / (n - \pi[n-1])$；否则答案为 1。
+
+```cpp
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int main() {
+    string s;
+    while (cin >> s && s != ".") {
+        int n = s.length();
+        vector<int> pi(n);
+        for (int i = 1; i < n; i++) {
+            int j = pi[i-1];
+            while (j > 0 && s[i] != s[j]) j = pi[j-1];
+            if (s[i] == s[j]) j++;
+            pi[i] = j;
+        }
+        int L = n - pi[n-1];
+        if (n % L == 0) cout << n / L << endl;
+        else cout << 1 << endl;
+    }
+    return 0;
+}
+```
+
+</details>
+
+### 练习 3：[Luogu P3426] 串
+
+> **题目**：求最短的字符串 $T$，使得 $S$ 可以由 $T$ 通过不断覆盖（重叠地放置）得到。
+
+<details>
+<summary>Check Solution</summary>
+
+利用 DP。设 $f[i]$ 表示前缀 $S[0 \dots i]$ 的最短覆盖长度。
+1. $f[i]$ 的候选值一定是 $\pi[i]$ 相关的。
+2. 若存在 $j < i$ 满足 $f[j] = f[\pi[i]]$ 且 $j \ge i - \pi[i]$，说明可以通过重叠覆盖，此时 $f[i] = f[\pi[i]]$。
+3. 否则 $f[i] = i+1$。
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+int main() {
+    string s; cin >> s;
+    int n = s.length();
+    vector<int> pi(n), f(n), bucket(n + 1, -1);
+    for (int i = 1; i < n; i++) {
+        int j = pi[i-1];
+        while (j > 0 && s[i] != s[j]) j = pi[j-1];
+        if (s[i] == s[j]) j++;
+        pi[i] = j;
+    }
+    f[0] = 1; bucket[1] = 0;
+    for (int i = 1; i < n; i++) {
+        f[i] = i + 1;
+        if (bucket[f[pi[i]-1]] >= i - pi[i]) f[i] = f[pi[i]-1];
+        bucket[f[i]] = i;
+    }
+    cout << f[n-1] << endl;
+    return 0;
+}
+```
+
+</details>
