@@ -262,7 +262,7 @@ const sidebars: SidebarsConfig = {
             {
               type: 'doc',
               id: 'academic-math/modern-synthesis',
-              label: '现代数学分析与高等代数 (Modern Synthesis)',
+              label: '高等数学与数学分析精要 (Modern Synthesis)',
             },
             {
               type: 'category',
