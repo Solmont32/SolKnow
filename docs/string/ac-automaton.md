@@ -2,12 +2,20 @@
 title: AC 自动机
 ---
 
-import { Layers, GitBranch, Cpu, Search, Workflow, Network, Zap, Info } from 'lucide-react';
+import { Layers, GitBranch, Cpu, Search, Workflow, Network, Zap, Info, ShieldCheck, Target } from 'lucide-react';
 import CodeCollapse from '@site/src/components/CodeCollapse';
 
 # AC 自动机：多模式匹配与状态机建模
 
+<div className="flex gap-2 mb-6">
+  <span className="badge badge--primary"><Workflow size={14} className="mr-1" /> 多模式匹配</span>
+  <span className="badge badge--success"><ShieldCheck size={14} className="mr-1" /> DFA 建模</span>
+  <span className="badge badge--info"><Cpu size={14} className="mr-1" /> $O(\sum |P_i| + |T|)$ Time</span>
+</div>
+
 AC 自动机 (Aho-Corasick Automaton) 是处理多模式匹配问题的标准算法。它通过将 $k$ 个模式串构建为 Trie 树，并引入失配指针 ($fail$)，将多模式匹配转化为在确定有限状态自动机 (DFA) 上的状态转移。
+
+---
 
 ## 1. 核心构造：Fail 指针与 DFA
 
@@ -24,32 +32,23 @@ AC 自动机 (Aho-Corasick Automaton) 是处理多模式匹配问题的标准算
 - 若 $child(u, c)$ 不存在，则 $\delta(u, c) = \delta(fail[u], c)$（规定 $\delta(root, c) = child(root, c)$ 或 $root$）。
 
 **证明**：
-1. **基础情况**：当 $child(u, c)$ 存在时，显然而见。
+1. **基础情况**：当 $child(u, c)$ 存在时，显而易见。
 2. **归纳情况**：若 $child(u, c)$ 不存在，我们需要找到 $u$ 的一个最长真后缀 $s'$，使得 $s' + c$ 也是某个模式串的前缀。根据 $fail$ 定义，$fail[u]$ 是 $u$ 的最长真后缀。如果 $fail[u]$ 也没有 $c$ 转移，则继续考察 $fail[fail[u]]$，这正是递归定义 $\delta(fail[u], c)$ 的含义。
 3. **收敛性**：由于 $fail$ 指针指向的节点深度严格递减，递归必然在 $root$ 处终止，保证了 $\delta(u, c)$ 的唯一性与存在性。
 
-### 1.3 复杂度分析 (Amortized Analysis)
+---
 
-- **空间复杂度**：$O(\sum |P_i| \cdot |\Sigma|)$，其中 $\sum |P_i|$ 为模式串总长度。
-- **构建复杂度**：
-  - Trie 插入：$O(\sum |P_i|)$。
-  - Fail 构建 (BFS)：每个节点被访问一次。在处理节点 $u$ 的字符 $c$ 时，若 $child(u, c)$ 不存在，则通过 $\delta(fail[u], c)$ 赋值。由于 $\delta$ 已预处理，单次赋值为 $O(1)$。总复杂度 $O(N \cdot |\Sigma|)$。
-- **匹配复杂度**：给定文本 $T$，状态转移次数为 $|T|$。由于 $\delta$ 函数已预处理为数组，单次转移为 $O(1)$。总复杂度 $O(|T|)$。
+## 2. 算法实现与拓扑优化
 
-## 2. 后缀链接性质与 Fail 树
+### 2.1 复杂度分析
 
-### 2.1 Fail 树的拓扑性质
+- **时间复杂度**：构建过程 $O(\sum |P_i| \cdot \Sigma)$，查询过程 $O(|T|)$。
+- **空间复杂度**：$O(\sum |P_i| \cdot \Sigma)$。
 
-由 $(u, fail[u])$ 构成的图是一棵以 $root$ 为根的树（边方向通常视为由子指向父）。
+### 2.2 拓扑优化 (Topological Accumulation)
 
-**关键性质**：
-1. **后缀包含性**：若 $v$ 在 Fail 树上是 $u$ 的祖先，则 $v$ 代表的字符串是 $u$ 代表的字符串的真后缀。
-2. **匹配等价类**：当文本串匹配到状态 $u$ 时，它同时也匹配了从 $u$ 到 Fail 树根路径上所有**被标记为模式串结尾**的节点。
-
-### 2.2 拓扑优化原理
-
-在统计模式串出现次数时，直接沿 $fail$ 链上跳会导致 $O(|T| \cdot \text{max\_depth})$ 的复杂度。
-**优化方案**：在匹配时只给当前节点 $u$ 打上 `count++` 标记，最后在 Fail 树上从叶子到根进行贡献累加（即按 BFS 序的逆序遍历）。
+在统计模式串出现次数时，直接沿 $fail$ 链上跳会导致 $O(|T| \cdot \sqrt{\sum |P_i|})$ 的最坏复杂度。
+**方案**：在匹配时仅在当前节点标记 `count++`。匹配结束后，按 Fail 树的**拓扑序逆序**（即从叶子到根）进行贡献累加。
 
 <CodeCollapse title="AC 自动机工业级模板 (C++)" language="cpp">
 
@@ -65,7 +64,7 @@ struct AC_Automaton {
             if (!tr[u][v]) tr[u][v] = ++tot;
             u = tr[u][v];
         }
-        cnt[u]++; // 记录结尾
+        cnt[u]++; 
     }
 
     void build() {
@@ -76,20 +75,20 @@ struct AC_Automaton {
             int u = q[l++];
             for (int i = 0; i < 26; i++) {
                 if (tr[u][i]) {
-                    fail[tr[u][i]] = tr[fail[u]][i];
+                    fail[tr[u][i]] = tr[fail[u]][i]; // 核心：状态继承
                     q[r++] = tr[u][i];
                 } else {
-                    tr[u][i] = tr[fail[u]][i];
+                    tr[u][i] = tr[fail[u]][i]; // DFA 化：直接跳转
                 }
             }
         }
     }
 
-    void query(const string& t, vector<int>& match_cnt) {
-        int u = 0;
-        for (char c : t) {
-            u = tr[u][c - 'a'];
-            match_cnt[u]++;
+    // 拓扑排序累加贡献
+    void accumulate(int* ans) {
+        for (int i = tot - 1; i >= 0; i--) {
+            int u = q[i];
+            ans[fail[u]] += ans[u];
         }
     }
 };
@@ -99,70 +98,26 @@ struct AC_Automaton {
 
 ---
 
-## 🎯 经典例题与练习
+## 3. 经典例题
 
-### 例题 1：[Luogu P3808] 简单版
+### 例题 1：[POJ 2778] DNA Sequence (AC 自动机 + 矩阵快速幂)
 
-> 给定 $n$ 个模式串和一个文本串，求有多少个模式串在文本串中出现过。
+> **题目**：求长度为 $n$ 且不包含任何给定非法模式串的 DNA 序列个数。
+> **思路**：
+> 1. 构建 AC 自动机，标记所有包含非法串的状态（若 $fail[u]$ 是非法状态，则 $u$ 也是非法状态）。
+> 2. 将合法状态之间的转移构建为邻接矩阵 $M$。
+> 3. 答案即为 $M^n$ 的第一行元素之和。
 
-<details>
-<summary>Check Solution</summary>
+### 例题 2：[BZOJ 3172] 单词 (拓扑优化应用)
 
-```cpp
-int solve(const string& t) {
-    int u = 0, res = 0;
-    for (char c : t) {
-        u = tr[u][c - 'a'];
-        for (int j = u; j && ~cnt[j]; j = fail[j]) {
-            res += cnt[j];
-            cnt[j] = -1; // 标记已统计，避免重复
-        }
-    }
-    return res;
-}
-```
-
-</details>
-
-### 例题 2：[Luogu P5357] 二次加强版 (拓扑优化)
-
-> 求每个模式串在文本串中出现的次数。
-
-<details>
-<summary>Check Solution</summary>
-
-```cpp
-// 匹配后进行拓扑累加
-// q[] 存储的是 BFS 序
-void topological_sort(int tot, int* q, int* fail, int* match_cnt) {
-    for (int i = tot; i >= 1; i--) {
-        int u = q[i];
-        match_cnt[fail[u]] += match_cnt[u];
-    }
-}
-```
-
-</details>
-
-### 例题 3：[POJ 2778] DNA Sequence
-
-> 求长度为 $n$且不包含任何给定非法模式串的 DNA 序列个数。
-
-<details>
-<summary>Check Analysis</summary>
-
-**思路**：
-1. 构建 AC 自动机，标记所有包含非法串的状态（若 $u$ 结尾是非法串，或 $fail[u]$ 是非法状态，则 $u$ 非法）。
-2. 构建转移矩阵 $M$：若 $tr[u][i] = v$ 且 $v$ 合法，则 $M[u][v]++$。
-3. 答案为 $M^n$ 第一行所有合法状态之和。利用矩阵快速幂求解。
-
-</details>
+> **题目**：给定 $n$ 个单词，求每个单词在所有单词（包括自身）中出现的总次数。
+> **思路**：将所有单词插入 AC 自动机，匹配所有单词并在相应节点打标，最后通过拓扑排序累加 $fail$ 树上的贡献。
 
 ---
 
 ## 🎯 练习题清单
 
-1. [Luogu P3796] AC 自动机加强版：输出出现次数最多的模式串。
-2. [HDU 2222] Keywords Search：基础匹配。
-3. [CF 163E] e-AnTikhud：AC 自动机 + 树状数组动态维护 Fail 树。
-4. [BZOJ 3172] 单词：拓扑优化练习。
+1. **[Luogu P3808] AC 自动机简单版**：统计有多少模式串出现过。
+2. **[Luogu P3796] AC 自动机加强版**：输出出现次数最多的模式串。
+3. **[CF 163E] e-AnTikhud**：结合树状数组动态维护 Fail 树上的前缀和。
+4. **[HDU 2222] Keywords Search**：经典入门题。

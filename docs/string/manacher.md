@@ -2,12 +2,20 @@
 title: Manacher 算法
 ---
 
-import { Zap, ShieldCheck, Repeat, Activity, Ruler, Target, Info } from 'lucide-react';
+import { Zap, ShieldCheck, Repeat, Activity, Ruler, Target, Info, Cpu, Layers } from 'lucide-react';
 import CodeCollapse from '@site/src/components/CodeCollapse';
 
 # Manacher 算法：线性回文提取
 
+<div className="flex gap-2 mb-6">
+  <span className="badge badge--primary"><Zap size={14} className="mr-1" /> $O(n)$ Time</span>
+  <span className="badge badge--success"><ShieldCheck size={14} className="mr-1" /> Radius Symmetry</span>
+  <span className="badge badge--info"><Layers size={14} className="mr-1" /> Space $O(n)$</span>
+</div>
+
 Manacher 算法（马拉车算法）是解决最长回文子串问题的最优线性算法。它通过预处理消除字符串长度的奇偶差异，并利用已知的对称性信息跳过冗余计算。
+
+---
 
 ## 1. 预处理：消除奇偶差异
 
@@ -18,6 +26,8 @@ Manacher 算法（马拉车算法）是解决最长回文子串问题的最优�
 - `abba` $\to$ `$#a#b#b#a#@`
 
 **性质**：变换后的字符串长度始终为 $2n+3$。所有回文串在变换后的串中均表现为**奇回文**，其回文半径 $d[i]$ 与原串长度 $L$ 的关系为 $L = d[i] - 1$。
+
+---
 
 ## 2. 核心原理：半径对称性 (Radius Symmetry)
 
@@ -46,8 +56,11 @@ $$ d[i] = \min(d[j], R - i) \quad (\text{if } i < R) $$
 1. 算法的主要开销在于 `while` 循环中的字符匹配。
 2. 每次成功的匹配都会导致 $R$ 至少增加 1。
 3. $R$ 从 0 开始，最大增加到 $2n+3$，且在算法运行过程中**单调递增**。
-4. 每次失败的匹配会导致 `while` 循环终止，且每个中心 $i$ 最多只发生一次失败匹配。
-5. 因此，总成功的匹配次数为 $O(n)$，总失败次数也为 $O(n)$，总复杂度为 $O(n)$。
+4. 总成功的匹配次数为 $O(n)$，总失败次数也为 $O(n)$，故总复杂度为 $O(n)$。
+
+---
+
+## 3. 算法实现
 
 <CodeCollapse title="Manacher 工业级模板 (C++)" language="cpp">
 
@@ -84,56 +97,21 @@ int manacher(string s) {
 
 ---
 
-## 🎯 经典例题与练习
+## 🎯 经典例题
 
-### 例题 1：[Luogu P3805] 模板题
+### 例题 1：最长双回文子串
 
-> 给定一个字符串，求其最长回文子串的长度。
+> **核心思路**：分别维护每个位置结尾的最长回文 $L[i]$ 和开始的最长回文 $R[i]$。通过 Manacher 更新后，利用递推补全。
 
-<details>
-<summary>Check Solution</summary>
+### 例题 2：[Codeforces 1827C] Palindrome Partition
 
-直接使用上述模板即可，注意预处理后的半径 $d[i]-1$ 即为原串对应回文长度。
-
-</details>
-
-### 例题 2：最长双回文子串
-
-> 给定一个字符串 $S$，求两个相邻且不重叠的回文子串，使得它们的长度之和最大。
-
-<details>
-<summary>Check Analysis</summary>
-
-**思路**：
-1. 定义 $L[i]$ 为以 $i$ 结尾的最长回文长度，$R[i]$ 为以 $i$ 开头的最长回文长度。
-2. 运行 Manacher 算法，得到每个中心 $i$ 的半径 $d[i]$。
-3. 更新边界：
-   - $L[i + d[i] - 1] = \max(L[i + d[i] - 1], d[i] - 1)$
-   - $R[i - d[i] + 1] = \max(R[i - d[i] + 1], d[i] - 1)$
-4. 注意 $L[i]$ 和 $R[i]$ 还需要通过线性递推补全（因为长回文包含短回文）：
-   - $L[i] = \max(L[i], L[i+2] - 2)$
-   - $R[i] = \max(R[i], R[i-2] - 2)$
-5. 遍历分割点 $i$，答案为 $\max(L[i] + R[i+2])$（在预处理串中）。
-
-</details>
-
-### 例题 3：[Codeforces 1827C] Palindrome Partition
-
-> 给定字符串，求有多少种方式将其划分为若干个偶回文串。
-
-<details>
-<summary>Check Analysis</summary>
-
-**进阶建模**：
-虽然 Manacher 可以提取所有回文中心，但此题更适合使用 **回文自动机 (PAM)** 或 **DP + Manacher** 优化。利用 Manacher 找到每个位置作为右端点的最短偶回文，然后进行 DP。
-
-</details>
+> **核心思路**：求偶回文划分数。结合 Manacher 找到每个位置的最短回文结尾，然后进行线性 DP。
 
 ---
 
 ## 🎯 练习题清单
 
-1. [Luogu P1659] [国家集训队] 拉拉队排练：Manacher + 快速幂。
-2. [HDU 3068] 最长回文：基础练习。
-3. [CF 7D] Palindrome Degree：前缀回文判定（可用哈希或 KMP 优化，Manacher 亦可）。
-4. [BZOJ 2561] 字符串：Manacher 综合应用。
+1. **[Luogu P3805] 模板题**：基础半径提取。
+2. **[HDU 3068] 最长回文**：基础练习。
+3. **[CF 7D] Palindrome Degree**：前缀回文等级判定。
+4. **[BZOJ 2561] 字符串**：Manacher 综合应用。
