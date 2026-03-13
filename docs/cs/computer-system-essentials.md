@@ -1,11 +1,11 @@
 ---
-title: 计算机科学精要 (Computer Science Essentials)
+title: 计算机系统精要 (Computer System Essentials)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 import { Cpu, Network, Activity, Layers, Zap, HardDrive, Shield, Box, Code2, Infinity, Monitor, Youtube, Terminal, Workflow, Binary, MemoryStick, Microscope } from 'lucide-react';
 
-# 计算机科学精要：从底层原语到协议一致性
+# 计算机系统精要：从指令集架构到协议闭环
 
 > **核心哲学**：计算机系统是人类构建的最复杂的抽象层级。理解系统的关键在于洞察“冯·诺依曼架构”的确定性逻辑、指针模型的形式化定义、内存一致性的权衡，以及网络协议状态机的闭环验证。
 
@@ -45,209 +45,178 @@ $$*(base, T) = \text{Interpret}_T(M[base \dots base + size(T) - 1])$$
 **内存安全定理 (Memory Safety Theorem)**:
 若程序 $P$ 在执行流中满足以下不变式，则称该程序是 **空间安全 (Spatially Safe)** 的：
 $$\forall \text{ access } *(base, T), [base, base + size(T) - 1] \subseteq \text{AllocatedRegions}$$
-**证明思路**：利用循环不变式（Loop Invariant）证明索引 $i$ 在 $O(1)$ 或 $O(n)$ 时间内的演化始终满足 $0 \le i < Bound$。
 
 ---
 
-## 2. 操作系统：内存一致性与并发安全
-
-并发安全性是操作系统研究的核心，其本质是在共享资源上的互斥访问保证。
-
-### 2.1 内存一致性模型 (Memory Consistency Models)
+## 2. 内存一致性模型与语义验证
 
 在多核系统中，内存一致性决定了读写操作在不同核心间的可见顺序。
-1.  **顺序一致性 (Sequential Consistency)**：所有线程看到的执行顺序与全局某个全序一致。
-2.  **弱一致性 (Weak Consistency/TSO)**：允许写缓冲区 (Store Buffer) 导致重排序，仅在同步点保证一致。
 
-**一致性分析：MESI 协议状态转换**
-- **M (Modified)**: 块已修改，仅在此 Cache 中。
-- **E (Exclusive)**: 块未修改，仅在此 Cache 中。
-- **S (Shared)**: 块未修改，存在于多个 Cache 中。
-- **I (Invalid)**: 块无效。
-通过总线嗅探 (Bus Snooping) 维持全局一致性状态机。
+### 2.1 顺序一致性与 TSO 模型
 
-### 2.2 堆完整性分析 (Heap Integrity)
+1.  **顺序一致性 (Sequential Consistency, SC)**：由 Lamport 定义，即所有核心的操作按某种全局全序执行，且每个核心的操作保持其程序序 (Program Order)。
+2.  **全存储序 (Total Store Order, TSO)**：x86 架构采用的模型，允许写缓冲区 (Store Buffer) 导致的 `Store-Load` 重排序，即 $W(x) \to R(x)$ 可能在全局观测中变为 $R(x) \to W(x)$。
 
+### 2.2 内存屏障收敛分析 (Memory Barrier Convergence)
+
+为了在弱一致性模型下恢复顺序语义，引入了 **内存屏障 (Fence/Barrier)**。
+
+**收敛性质 (Convergence Property)**:
+设两个操作 $Op_A$ 和 $Op_B$ 在程序序中为 $Op_A \prec Op_B$。若在两者间插入屏障 $F$（如 `MFENCE`），则在全局观测序 $\lt_G$ 中：
+$$Op_A \prec Op_B \implies Op_A \lt_G Op_B$$
+
+**Happens-Before ($\xrightarrow{hb}$) 形式化**：
+C++11 内存模型通过 `acquire/release` 语义建立同步边：
+-   **Release**: $W_{rel}(x, v)$ 确保之前的所有写操作对后续 `acquire` 可见。
+-   **Acquire**: $R_{acq}(x) \to v$ 确保看到 $W_{rel}$ 及其之前的所有副作用。
+-   **传递性**: 若 $A \xrightarrow{hb} B$ 且 $B \xrightarrow{hb} C$，则 $A \xrightarrow{hb} C$。
+
+### 2.3 系统化语义一致性验证
+
+验证并发算法正确性的核心是证明其满足 **线性化 (Linearizability)**：
+每个并发操作都在其调用和返回之间的某个瞬间（线性化点）原子地生效。
+
+---
+
+## 3. 操作系统内核：并发控制与资源调度
+
+### 3.1 互斥锁 (Mutex) 的形式化定义
+互斥锁是不变量 $Inv: \sum_{i} InCriticalSection_i \le 1$ 的物理实现。
+
+### 3.2 堆完整性分析 (Heap Integrity)
 堆内存分配器（如 `ptmalloc`）通过元数据链表管理空间。
 **安全性逻辑验证**：
 $$\forall block, block \to next \to prev == block$$
-若攻击者破坏了 $block \to next$ 指针（缓冲区溢出），则在 `unlink` 操作时会触发 **任意地址写 (Arbitrary Write)**，导致系统崩溃或权限提升。
+若攻击者破坏了 $block \to next$ 指针（缓冲区溢出），则在 `unlink` 操作时会触发 **任意地址写 (Arbitrary Write)**。
 
-### 2.3 C++ 并发模拟：原子操作验证
+---
 
+## 4. 计算机网络：协议状态机校准与验证
+
+网络协议的设计目标是在不可靠媒介上构建确定性的通信逻辑。
+
+### 4.1 协议状态机校准 (FSM Calibration)
+
+协议的正确性依赖于通信双方状态机的 **协同校准 (Alignment)**。
+设 $S_C$ 和 $S_S$ 分别为客户端和服务器的状态。一个合法的全局状态 $G = (S_C, S_S)$ 必须属于 **一致性集合 (Consistency Set)** $\mathcal{C}$。
+
+**TCP 三次握手的收敛证明**：
+1.  初始状态: $(CLOSED, LISTEN)$
+2.  $C \to S[SYN]: (SYN\_SENT, LISTEN)$
+3.  $S \to C[SYN+ACK]: (SYN\_SENT, SYN\_RCVD)$
+4.  $C \to S[ACK]: (ESTABLISHED, SYN\_RCVD)$
+5.  $S$ 接收 ACK: $(ESTABLISHED, ESTABLISHED) \in \mathcal{C}$
+
+**校准失效处理**：若接收到不符合当前状态的报文（如在 `CLOSED` 状态收到 `DATA`），状态机必须发送 `RST` 强制复位，使全局状态回归 $(CLOSED, CLOSED)$。
+
+---
+
+## 5. 综合练习与系统级实现 (Exercises)
+
+### 练习 1：内存屏障与 Dekker 算法验证
+
+**题目**：在没有内存屏障的 TSO 架构上，分析以下代码是否能保证互斥。
 ```cpp
-#include <iostream>
-#include <atomic>
-#include <thread>
-#include <vector>
-
-std::atomic<int> counter(0); // 原子计数器保证 Safety
-
-void increment(int iterations) {
-    for (int i = 0; i < iterations; ++i) {
-        // memory_order_relaxed 提供最低限度的一致性保证
-        counter.fetch_add(1, std::memory_order_relaxed);
-    }
-}
-
-int main() {
-    const int num_threads = 10;
-    const int iterations = 100000;
-    std::vector<std::thread> threads;
-
-    for (int i = 0; i < num_threads; ++i) {
-        threads.emplace_back(increment, iterations);
-    }
-
-    for (auto& t : threads) t.join();
-    std::cout << "Final count: " << counter << std::endl;
-    return 0;
-}
+// Thread A          // Thread B
+flagA = true;        flagB = true;
+if (!flagB) {        if (!flagA) {
+    // Critical          // Critical
+}                    }
 ```
 
----
+<details>
+<summary>Check Solution</summary>
 
-## 3. 计算机网络：协议状态机逻辑验证
+**解析**：
+1.  **TSO 重排序**：x86 允许 `Store-Load` 重排序。Thread A 可能先执行 `if (!flagB)` 再将 `flagA = true` 写入内存（实际是写入 Store Buffer 尚未冲刷）。
+2.  **交错路径**：
+    -   A 读取 `flagB` (false)
+    -   B 读取 `flagA` (false)
+    -   两者同时进入临界区，违反互斥不变量。
+3.  **修复**：在赋值与读取之间插入 `std::atomic_thread_fence(std::memory_order_seq_cst)`。
+</details>
 
-网络协议的设计目标是在异构、不可靠的物理媒介上构建确定性的通信逻辑。
+### 练习 2：实现一个无锁环形队列 (Lock-free Ring Buffer)
 
-### 3.1 协议分层的数学本质
+**题目**：利用 C++ `atomic` 和内存屏障实现一个单生产者单消费者的无锁队列。
 
-协议栈可以看作是一个嵌套的函数映射 $f_{layer}$：
-$$Message_{Physical} = f_{L1}(f_{L2}(f_{L3}(f_{L4}(Data_{App}))))$$
-每一层通过添加 **报文首部 (Header)** 进行 **封装 (Encapsulation)**。
+<details>
+<summary>Check Solution</summary>
 
-### 3.2 协议状态机 (FSM) 逻辑验证
+```cpp
+template <typename T, size_t Size>
+class LockFreeQueue {
+    std::atomic<size_t> head{0};
+    std::atomic<size_t> tail{0};
+    T buffer[Size];
 
-TCP 协议的正确性由其有限状态机定义。
-**状态集合 $S$**: $\{CLOSED, LISTEN, SYN\_SENT, SYN\_RCVD, ESTABLISHED, \dots\}$
-**转换函数 $\delta(s, e) \to (s', a)$**:
-- $(LISTEN, \text{receive SYN}) \to (SYN\_RCVD, \text{send SYN+ACK})$
-- $(SYN\_SENT, \text{receive SYN+ACK}) \to (ESTABLISHED, \text{send ACK})$
+public:
+    bool push(const T& data) {
+        size_t t = tail.load(std::memory_order_relaxed);
+        size_t next_tail = (t + 1) % Size;
+        if (next_tail == head.load(std::memory_order_acquire)) return false;
 
-**逻辑收敛性证明：三次握手**
-设 $C$ 和 $S$ 分别为客户端和服务器。
-1. $C \to S: SYN(x)$
-2. $S \to C: SYN(y), ACK(x+1)$
-3. $C \to S: ACK(y+1)$
-**证明**：三次交互是建立双向可靠信道的最小代价，它使得双方都确认了对方的收发能力。两次握手无法防止失效的旧 SYN 包导致的“假性连接”，导致状态无法收敛到一致。
+        buffer[t] = data;
+        // Release 屏障确保数据写入先于 tail 更新对消费者可见
+        tail.store(next_tail, std::memory_order_release);
+        return true;
+    }
 
----
+    bool pop(T& data) {
+        size_t h = head.load(std::memory_order_relaxed);
+        if (h == tail.load(std::memory_order_acquire)) return false;
 
-## 4. 软件工程：核心库实现与系统化设计
+        data = buffer[h];
+        // Release 屏障确保数据读取先于 head 更新对生产者可见
+        head.store((h + 1) % Size, std::memory_order_release);
+        return true;
+    }
+};
+```
+**逻辑校准**：通过 `acquire/release` 对，建立生产者 $tail.store$ 与消费者 $tail.load$ 之间的同步关系。
+</details>
 
-软件工程通过抽象（Abstraction）与封装（Encapsulation）管理代码熵。
+### 练习 3：TCP 状态机“同时关闭”路径分析
 
-### 4.1 C++ 核心库原语实现：`SimplePtr` (智能指针)
+**题目**：若通信双方同时发送 `FIN` 包，TCP 状态机如何演化到 `TIME_WAIT`？
+
+<details>
+<summary>Check Solution</summary>
+
+**解析**：
+1.  **状态转移**：双方从 `ESTABLISHED` 发送 `FIN` 进入 `FIN_WAIT_1`。
+2.  **交叉接收**：在 `FIN_WAIT_1` 收到对方的 `FIN`（而非 `ACK`），根据 FSM 进入 `CLOSING` 状态。
+3.  **确认收敛**：发送针对对方 `FIN` 的 `ACK`。一旦收到对方对自己 `FIN` 的 `ACK`，状态转移至 `TIME_WAIT`。
+4.  **结论**：TCP 状态机考虑了所有时序交错，证明了其在分布式异步环境下的闭环完备性。
+</details>
+
+### 练习 4：C++ 智能指针所有权转移的系统级语义
+
+**题目**：实现 `SimpleUniquePtr` 并证明其符合单一所有权不变量。
+
+<details>
+<summary>Check Solution</summary>
 
 ```cpp
 template <typename T>
 class SimpleUniquePtr {
-private:
     T* ptr;
 public:
     explicit SimpleUniquePtr(T* p = nullptr) : ptr(p) {}
     ~SimpleUniquePtr() { delete ptr; }
 
-    // 禁止拷贝，保证唯一所有权 (Ownership Invariant)
+    // 删除拷贝，维持所有权唯一性
     SimpleUniquePtr(const SimpleUniquePtr&) = delete;
     SimpleUniquePtr& operator=(const SimpleUniquePtr&) = delete;
 
-    // 移动构造函数 (Move Semantics)
+    // 移动构造：语义上的所有权转让 (Transfer of Ownership)
     SimpleUniquePtr(SimpleUniquePtr&& other) noexcept : ptr(other.ptr) {
-        other.ptr = nullptr;
+        other.ptr = nullptr; // 关键：断开原指针，维持不变量
     }
 
     T& operator*() const { return *ptr; }
-    T* operator->() const { return ptr; }
+    T* get() const { return ptr; }
 };
 ```
-
----
-
-## 5. 综合练习与验证 (Exercises)
-
-### 练习 1：指针算术与内存越界证明
-
-**题目**：考虑 C++ 代码 `int a[5]; int* p = a + 6;`。根据指针模型定义，分析 `*p` 的安全性。
-
-<details>
-<summary>Check Solution</summary>
-
-**解析**：
-1.  **分配区域分析**：`a` 分配的区域为 $[base, base + 5 \times sizeof(int) - 1]$。
-2.  **指针计算**：`p` 的 `base` 为 $base + 6 \times sizeof(int)$。
-3.  **安全性验证**：访问区间 $[base + 6\text{size}, base + 7\text{size} - 1]$ 与 `AllocatedRegions` 的交集为空。
-4.  **结论**：违反 **Memory Safety Theorem**。在 C++ 标准中这属于未定义行为 (Undefined Behavior)，在底层可能导致段错误 (Segmentation Fault) 或脏数据读取。
-</details>
-
-### 练习 2：MESI 协议状态演化
-
-**题目**：核心 A 读地址 X (状态 I -> E)，核心 B 读地址 X。请描述两个核心中该 Cache 块的状态变化。
-
-<details>
-<summary>Check Solution</summary>
-
-**解析**：
-1.  **初始状态**：A: I, B: I。
-2.  **A 读 X**：A 发起读请求，由于 B 也没有，A 从内存读取，状态变为 **E (Exclusive)**。
-3.  **B 读 X**：B 发起读请求，A 嗅探到该请求。由于 A 拥有 E 状态，它将状态降级为 **S (Shared)** 并提供数据。B 收到数据后状态也变为 **S**。
-4.  **结论**：最终状态为 A: S, B: S。保证了多核之间数据的一致性视图。
-</details>
-
-### 练习 3：手写 `std::vector` 的扩容逻辑
-
-**题目**：实现一个简易 `SimpleVector`，重点展示内存重新分配与构造函数一致性。
-
-<details>
-<summary>Check Solution</summary>
-
-```cpp
-template <typename T>
-class SimpleVector {
-    T* data;
-    size_t sz;
-    size_t cap;
-
-    void reserve(size_t new_cap) {
-        if (new_cap <= cap) return;
-        T* new_data = static_cast<T*>(::operator new(new_cap * sizeof(T)));
-        for (size_t i = 0; i < sz; ++i) {
-            new (new_data + i) T(std::move(data[i])); // 移动元素
-            data[i].~T(); // 销毁旧元素
-        }
-        ::operator delete(data);
-        data = new_data;
-        cap = new_cap;
-    }
-
-public:
-    SimpleVector() : data(nullptr), sz(0), cap(0) {}
-    ~SimpleVector() {
-        for (size_t i = 0; i < sz; ++i) data[i].~T();
-        ::operator delete(data);
-    }
-
-    void push_back(const T& val) {
-        if (sz == cap) reserve(cap == 0 ? 1 : cap * 2);
-        new (data + sz) T(val); // placement new
-        sz++;
-    }
-};
-```
-**解析**：此实现展示了手动管理内存生命周期的核心：`operator new` 分配原始内存，`placement new` 调用构造函数，显式析构函数调用，以及 `operator delete` 释放内存。
-</details>
-
-### 练习 4：网络状态机自连接 (Self-connection) 悖论
-
-**题目**：如果一台机器自己连接自己 (Source Port == Dest Port)，TCP 状态机会如何演化？
-
-<details>
-<summary>Check Solution</summary>
-
-**解析**：
-1.  **过程**：机器发送 SYN。由于目的地是自己且端口匹配，它会收到这个 SYN。
-2.  **状态转移**：`SYN_SENT` 状态收到 SYN 后，根据 FSM 会转入 `SYN_RCVD` 状态并发送 `SYN+ACK`。
-3.  **收敛**：随后它收到自己发的 `SYN+ACK`，状态转入 `ESTABLISHED`。
-4.  **结论**：这就是 TCP 的 **Simultaneous Open (同时打开)** 逻辑，证明了 TCP 状态机在闭环反馈下的鲁棒性。
+**证明**：由于拷贝构造被禁用，且移动构造函数显式地将 `other.ptr` 置为 `nullptr`，因此在任何时间点 $t$，对于非空指针值 $V$，存在且仅存在一个 `SimpleUniquePtr` 实例 $p$ 满足 $p.ptr = V$。
 </details>
