@@ -4,10 +4,10 @@ description: 从数论硬核难题、对称/公钥体系到协议安全性证明
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { Lock, Key, Hash, ShieldCheck, History, Zap, ShieldAlert, Binary, Sigma, Cpu, Network } from 'lucide-react';
+import { Lock, Key, Hash, ShieldCheck, History, Zap, ShieldAlert, Binary, Sigma, Cpu, Network, Box, Layers } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-# 现代密码学：从数论难题到协议安全建模
+# 现代密码学：从数论难题到安全性约简证明
 
 > **公理系统**：现代密码学的安全性不依赖于算法的“秘密性”，而仅依赖于密钥的秘密性（Kerckhoffs 原理），其安全性必须建立在可量化的**计算复杂性难题**之上。
 
@@ -16,152 +16,183 @@ import { motion } from 'framer-motion';
 ## 1. 信息论与完美安全性 (Foundations)
 
 ### 1.1 香农熵与 OTP 证明
-设明文空间为 $\mathcal{M}$，密钥空间为 $\mathcal{K}$。**一次一密 (One-Time Pad)** 的完美安全性证明基于以下逻辑：
-若 $|\mathcal{K}| = |\mathcal{M}|$ 且密钥 $k$ 均匀分布，则对于任意 $c \in \mathcal{C}$：
-$$P(C=c | M=m) = \frac{1}{|\mathcal{K}|}$$
-由此推导出后验概率等于先验概率 $P(M=m|C=c) = P(M=m)$。
+设明文空间为 $\mathcal{M}$，密钥空间为 $\mathcal{K}$，密文空间为 $\mathcal{C}$。**一次一密 (One-Time Pad)** 的完美安全性证明基于以下逻辑：
+若 $|\mathcal{K}| = |\mathcal{M}| = |\mathcal{C}|$，密钥 $k$ 均匀随机选择且仅使用一次。对于任意明文 $m \in \mathcal{M}$ 和密文 $c \in \mathcal{C}$，有：
+$$P(C=c | M=m) = P(K = c \oplus m) = \frac{1}{|\mathcal{K}|}$$
+利用贝叶斯公式推导出后验概率等于先验概率：
+$$P(M=m | C=c) = \frac{P(C=c | M=m) P(M=m)}{P(C=c)} = \frac{\frac{1}{|\mathcal{K}|} P(M=m)}{\frac{1}{|\mathcal{K}|}} = P(M=m)$$
+**结论**：观察到密文 $c$ 后，敌手对明文分布的认知没有任何提升。
 
 ---
 
-## 2. 数论困难问题分析 (Hard Problems)
+## 2. 数论困难问题与形式化推导 (Hard Problems)
 
-现代非对称加密的安全性支柱是以下三大数学硬核难题：
+### 2.1 椭圆曲线标量乘法 (ECSM) 与同构安全性
+椭圆曲线在素数域 $\mathbb{F}_p$ 上的方程为 $y^2 = x^3 + ax + b \pmod p$。
+- **加法法则**：给定 $P, Q \in E(\mathbb{F}_p)$，直线 $PQ$ 与曲线的第三个交点关于 $x$ 轴的对称点即为 $P+Q$。
+- **ECDLP 困难性**：已知 $Q = [k]P$，求解 $k$。
+- **安全性边界**：对于 $n$ 位素数域，ECC 提供 $n/2$ 位的安全强度（抗 Rho 攻击）。
 
-### 2.1 大整数分解问题 (IFP)
-- **定义**：给定合数 $n = p \cdot q$，在多项式时间内求解 $p$ 和 $q$。
-- **复杂度**：目前最快算法为 **GNFS (通用数域筛法)**，复杂度为 $\exp\left(\left(\sqrt[3]{\frac{64}{9}} + o(1)\right) (\ln n)^{1/3} (\ln \ln n)^{2/3}\right)$。
-- **应用**：RSA 密码体系。
-
-### 2.2 离散对数问题 (DLP)
-- **定义**：给定有限循环群 $G$ 及其生成元 $g$，已知 $y = g^x \pmod p$，求解 $x$。
-- **亚指数特征**：在素数域 $\mathbb{F}_p^*$ 上，存在指数演算攻击；但在**椭圆曲线群 (ECDLP)** 上，目前仅知指数级算法（如 Rho 算法），这使得 ECC 在更短密钥下具备同等安全性。
-
-### 2.3 容错学习问题 (LWE) - 后量子核心
-- **定义**：给定一组近似线性方程 $b_i \approx \langle a_i, s \rangle \pmod q$，其中包含微小噪声 $e_i$。在格理论中，找到 $s$ 被证明等价于找到格中的最短向量 (SVP)，这是对抗量子搜索的关键。
+### 2.2 容错学习问题 (LWE) - 格密码之基
+LWE 是后量子密码学 (PQC) 的核心。给定 $n, q$ 和分布 $\chi$：
+- **判定性 LWE**：区分 $(A, As+e)$ 与 $(A, u)$，其中 $e \leftarrow \chi$ 是噪声。
+- **约简证明**：Regev 证明了 LWE 的安全性可以等价约简到格中的**最短向量问题 (SVP)** 的量子硬度。
+- **数学意义**：格规约算法（如 LLL）的复杂度随维数 $n$ 指数级增长。
 
 ---
 
-## 3. 对称加密与一致性评估 (Symmetric Systems)
+## 3. 形式化安全性约简 (Security Reductions)
 
-### 3.1 SPN 网络与 AES 形式化
-AES 采用 **Substitution-Permutation Network (SPN)** 结构：
-1. **SubBytes**：非线性层，通过 $GF(2^8)$ 上的逆元运算破坏代数特性。
-2. **ShiftRows / MixColumns**：线性层，提供**扩散 (Diffusion)**，确保 1 bit 的输入变化在两轮内影响全块。
-3. **AddRoundKey**：白化层，引入密钥熵。
-
-### 3.2 分组模式与安全性 (Modes of Operation)
-| 模式 | 特性 | 安全性评估 |
-| :--- | :--- | :--- |
-| **ECB** | 确定性映射 | **不安全**：泄露明文统计特征。 |
-| **CBC** | 链接模式 | 需随机 IV，易受 **Padding Oracle** 攻击。 |
-| **GCM** | AEAD (认证加密) | 提供机密性与**完整性校验 (GHASH)**，抗重放，工业标准。 |
+### 3.1 约简的思想 (Reduction Paradigm)
+我们证明“协议 $P$ 是安全的”，实际上是证明：**“如果存在一个有效的敌手 $\mathcal{A}$ 能攻破 $P$，那么我们就能构建一个算法 $\mathcal{B}$ 利用 $\mathcal{A}$ 来攻破某个公认的数学难题 $H$。”**
 
 ---
 
-## 4. 协议安全性证明 (Security Proofs)
+## 4. 深度模拟演示 (C++ Security Engineering)
 
-### 4.1 安全游戏建模 (Security Games)
-我们通过敌手（Adversary）与挑战者（Challenger）之间的博弈来定义安全性：
-
-- **IND-CPA (选择明文攻击下的不可区分性)**：
-  1. 敌手提交两个等长明文 $m_0, m_1$。
-  2. 挑战者随机加密其中之一 $c = E_k(m_b)$。
-  3. 敌手若能以显著大于 $1/2$ 的概率猜出 $b$，则系统不具备 CPA 安全。
-- **IND-CCA2 (自适应选择密文攻击)**：
-  允许敌手在挑战前后期解密除 $c$ 以外的任何密文。**RSA 原生是不支持 CCA2 的（同态特性）**，必须配合 OAEP 填充。
-
----
-
-## 5. CTF 实战建模与攻击向量 (CTF Modeling)
-
-### 5.1 RSA 常见攻击向量逻辑
-1. **低指数攻击 ($e=3$)**：若同一明文发给 3 个不同用户，利用中国剩余定理 (CRT) 可直接开三次方恢复明文。
-2. **Wiener 攻击**：若 $d < \frac{1}{3} n^{1/4}$，可利用连分数展开在多项式时间内分解 $n$。
-3. **Coppersmith 定理**：若已知明文的高位信息，可通过格规约（LLL 算法）求解剩余部分。
-
----
-
-## 6. 深度模拟演示 (C++ Engineering)
-
-### 6.1 AES S-Box 变换模拟
+### 4.1 格规约：LLL 算法模拟工具
 <details>
-<summary>点击查看 C++ 模拟：S-Box 的代数构造与非线性度验证</summary>
+<summary>点击查看 C++ 实现：LLL 算法（格密码分析核心工具）</summary>
 
 ```cpp
 #include <iostream>
-#include <iomanip>
+#include <vector>
+#include <cmath>
+#include <Eigen/Dense> // 需 Eigen 库进行矩阵运算
 
-// AES S-Box 生成逻辑的核心：GF(2^8) 逆元 + 仿射变换
-unsigned char apply_sbox(unsigned char b) {
-    // 此处简化为查表，但在建模中，b = 0 时映射为 0
-    // 然后进行仿射变换：b' = b ^ (b<<1) ^ (b<<2) ^ (b<<3) ^ (b<<4) ^ 0x63
-    static const unsigned char sbox[256] = { /* ... 完整 AES S-Box ... */ 0x63, 0x7c, 0x77, 0x7b }; 
-    return sbox[b];
+using namespace Eigen;
+
+// Gram-Schmidt 正交化
+MatrixXd gram_schmidt(const MatrixXd& B) {
+    int n = B.cols();
+    MatrixXd star = MatrixXd::Zero(B.rows(), n);
+    for (int i = 0; i < n; ++i) {
+        star.col(i) = B.col(i);
+        for (int j = 0; j < i; ++j) {
+            double mu = B.col(i).dot(star.col(j)) / star.col(j).squaredNorm();
+            star.col(i) -= mu * star.col(j);
+        }
+    }
+    return star;
+}
+
+// LLL 算法核心：δ = 0.75
+void lll_reduction(MatrixXd& B, double delta = 0.75) {
+    int n = B.cols();
+    int k = 1;
+    while (k < n) {
+        // 1. Size Reduction
+        MatrixXd star = gram_schmidt(B);
+        for (int j = k - 1; j >= 0; --j) {
+            double mu = B.col(k).dot(star.col(j)) / star.col(j).squaredNorm();
+            if (std::abs(mu) > 0.5) {
+                B.col(k) -= std::round(mu) * B.col(j);
+                star = gram_schmidt(B);
+            }
+        }
+        // 2. Lovász Condition
+        double mu_k_k1 = B.col(k).dot(star.col(k-1)) / star.col(k-1).squaredNorm();
+        if (star.col(k).squaredNorm() >= (delta - mu_k_k1 * mu_k_k1) * star.col(k-1).squaredNorm()) {
+            k++;
+        } else {
+            B.col(k).swap(B.col(k-1));
+            k = std::max(k - 1, 1);
+        }
+    }
 }
 
 int main() {
-    unsigned char input = 0x42;
-    std::cout << "Input: 0x42 -> S-Box Output: 0x" 
-              << std::hex << (int)apply_sbox(input) << std::endl;
-    // 逻辑验证：验证非线性度（输入异或分布）
+    MatrixXd basis(3, 3);
+    basis << 1, 1, 1, 
+             -1, 0, 2, 
+             3, 5, 6;
+    
+    std::cout << "Original Basis:\n" << basis << std::endl;
+    lll_reduction(basis);
+    std::cout << "LLL Reduced Basis:\n" << basis << std::endl;
     return 0;
 }
 ```
 </details>
 
-### 6.2 RSA Wiener 攻击逻辑验证 (连分数法)
+### 4.2 费马小定理与 Miller-Rabin 质数测试器
 <details>
-<summary>点击查看 C++ 模拟：基于连分数的私钥恢复</summary>
+<summary>点击查看 C++ 实现：工业级大质数生成逻辑</summary>
 
 ```cpp
 #include <iostream>
-#include <vector>
-#include <gmpxx.h> // 需要 GMP 库进行大数运算
+#include <boost/multiprecision/cpp_int.hpp>
+#include <boost/random.hpp>
 
-// 模拟连分数展开：找到 e/n 的渐近分数 k/d
-void wiener_attack(mpz_class e, mpz_class n) {
-    std::vector<mpz_class> q; // 连分数商
-    mpz_class a = e, b = n;
-    while (b != 0) {
-        q.push_back(a / b);
-        mpz_class t = a % b; a = b; b = t;
+using namespace boost::multiprecision;
+
+// 快速幂 a^b mod m
+cpp_int power(cpp_int a, cpp_int b, cpp_int m) {
+    cpp_int res = 1;
+    a %= m;
+    while (b > 0) {
+        if (b % 2 == 1) res = (res * a) % m;
+        a = (a * a) % m;
+        b /= 2;
     }
-    
-    // 遍历渐近分数进行私钥验证...
-    std::cout << "Searching for d via continued fractions..." << std::endl;
+    return res;
+}
+
+bool miller_rabin(cpp_int n, int k = 40) {
+    if (n < 2) return false;
+    if (n == 2 || n == 3) return true;
+    if (n % 2 == 0) return false;
+
+    cpp_int r = 0, d = n - 1;
+    while (d % 2 == 0) { d /= 2; r++; }
+
+    for (int i = 0; i < k; i++) {
+        cpp_int a = 2 + rand() % (n - 4);
+        cpp_int x = power(a, d, n);
+        if (x == 1 || x == n - 1) continue;
+        bool composite = true;
+        for (int j = 0; j < r - 1; j++) {
+            x = (x * x) % n;
+            if (x == n - 1) { composite = false; break; }
+        }
+        if (composite) return false;
+    }
+    return true;
 }
 ```
 </details>
 
 ---
 
-## 7. 综合练习 (Textbook Exercises)
+## 5. 综合练习 (Advanced Exercises)
 
-### 练习 1：ElGamal 的 CPA 安全性证明
-**题目**：证明如果 DDH (判定性 Diffie-Hellman) 假设成立，则 ElGamal 加密方案是 IND-CPA 安全的。
+### 练习 1：RSA OAEP 填充的安全性
+**题目**：为什么简单的 RSA 加密 $c = m^e \pmod n$ 不是 IND-CCA2 安全的？OAEP (Optimal Asymmetric Encryption Padding) 是如何解决这个问题的？
 
 <details>
-<summary>点击查看形式化证明</summary>
+<summary>点击查看形式化解析</summary>
 
-**证明**：
-1. 设敌手 $\mathcal{A}$ 能够区分 $c = (g^r, m_b \cdot h^r)$。
-2. 我们可以构建一个算法 $\mathcal{B}$ 解决 DDH 问题：给定 $(g^a, g^b, Z)$，判断 $Z$ 是 $g^{ab}$ 还是随机数。
-3. $\mathcal{B}$ 设置公钥 $h = g^a$，挑战密文 $c = (g^b, m \cdot Z)$。
-4. 若 $Z = g^{ab}$，则 $c$ 是合法的 ElGamal 密文；若 $Z$ 是随机数，则密文不包含 $m$ 的任何信息。
-5. 因此，区分密文的能力直接等价于解决 DDH 问题的能力。
-$\square$
+**解析**：
+1. **同态性缺陷**：原生 RSA 具有乘法同态性，$E(m_1) \cdot E(m_2) = (m_1 m_2)^e = E(m_1 m_2)$。敌手可以截获 $c = m^e$，构造 $c' = c \cdot 2^e = (2m)^e$，发送给解密服务器得到 $2m$，从而恢复 $m$。
+2. **OAEP 机制**：引入 Feistel 网络结构，将明文 $m$ 与随机盐 $r$ 通过两个哈希函数 $G, H$ 进行混合。
+   - $X = m00\dots0 \oplus G(r)$
+   - $Y = r \oplus H(X)$
+   - 最终加密 $E(X|Y)$。
+3. **效果**：OAEP 破坏了代数结构，使得密文具有“全体或全无”特性（All-or-Nothing），且任何位元的改动都会导致解密后的格式校验失败，从而实现 IND-CCA2 安全。
 </details>
 
-### 练习 2：CBC 模式的 Bit-Flipping 攻击
-**题目**：在 CBC 模式中，若攻击者已知密文 $c_{i-1}$ 对应明文 $m_i$，如何通过修改 $c_{i-1}$ 将 $m_i$ 的特定字节修改为目标值 $X$？
+### 练习 2：判定性 Diffie-Hellman (DDH) 与 ElGamal
+**题目**：证明如果 DDH 假设成立，则 ElGamal 方案在随机预言机模型下满足 IND-CPA 安全。
 
 <details>
-<summary>点击查看解析与 C++ 模拟</summary>
+<summary>点击查看证明过程</summary>
 
-**核心逻辑**：
-在 CBC 中，$m_i = D_k(c_i) \oplus c_{i-1}$。
-设我们想把 $m_i$ 改为 $m'_i$：
-1. 令 $c'_{i-1} = c_{i-1} \oplus m_i \oplus m'_i$。
-2. 接收方解密时：$m^{new}_i = D_k(c_i) \oplus c'_{i-1} = D_k(c_i) \oplus c_{i-1} \oplus m_i \oplus m'_i = m_i \oplus m_i \oplus m'_i = m'_i$。
-**副作用**：修改 $c_{i-1}$ 会导致 $m_{i-1}$ 彻底变成乱码（解密失败），但在某些协议（如认证缺失的登录包）中，这足以绕过检查。
+**证明（约简法）**：
+1. 假设存在敌手 $\mathcal{A}$ 能攻破 ElGamal。
+2. 我们构建算法 $\mathcal{B}$ 解决 DDH：输入为 $(g, g^a, g^b, Z)$。
+3. $\mathcal{B}$ 将公钥设为 $pk = g^a$，挑战密文设为 $C = (g^b, Z \cdot m_b)$。
+4. 如果 $Z = g^{ab}$，则 $C$ 是完美的 ElGamal 密文。
+5. 如果 $Z$ 是随机数，则密文与明文完全解耦，敌手获胜概率严格为 $1/2$。
+6. 因此，敌手 $\mathcal{A}$ 的优势直接转化为 $\mathcal{B}$ 解决 DDH 的优势。
+$\square$
 </details>

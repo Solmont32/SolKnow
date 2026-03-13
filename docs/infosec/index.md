@@ -28,18 +28,18 @@ import { motion } from 'framer-motion';
     <h3><Lock className="inline-icon" /> 维度 I：密码学语义安全</h3>
     <p>从信息论视角探讨香农完美安全性，构建基于计算复杂度的现代加解密原语。</p>
     <ul>
-      <li>[信息论与完美安全](./cryptography#1-熵与完美安全性)</li>
-      <li>[对称与非对称算法体系](./cryptography#2-算法形式化)</li>
-      <li>[量子抗性与后量子密码](./cryptography#5-前沿：后量子密码学)</li>
+      <li>[信息论与完美安全](./cryptography#1-信息论与完美安全性-foundations)</li>
+      <li>[数论难题与形式化推导](./cryptography#2-数论困难问题与形式化推导-hard-problems)</li>
+      <li>[安全性约简证明](./cryptography#3-形式化安全性约简-security-reductions)</li>
     </ul>
   </div>
   <div className="col col--6">
     <h3><Globe className="inline-icon" /> 维度 II：Web 协议对垒</h3>
     <p>分析分布式架构下的信任边界，量化 Web 应用的攻击向量与防御边界。</p>
     <ul>
-      <li>[注入漏洞的上下文模型](./web-security#21-注入攻击)</li>
-      <li>[身份认证与权限形式化](./web-security#12-oauth-20-与-oidc)</li>
-      <li>[现代浏览器防御沙箱](./web-security#3-现代前端安全架构)</li>
+      <li>[攻击面向量化评估](./web-security#1-攻击面向量化评估-attack-surface-vector-assessment)</li>
+      <li>[身份验证形式化验证](./web-security#3-身份验证协议的形式化验证-formal-verification)</li>
+      <li>[核心漏洞逻辑分析](./web-security#2-核心漏洞的形式化逻辑分析)</li>
     </ul>
   </div>
 </div>
@@ -49,9 +49,9 @@ import { motion } from 'framer-motion';
     <h3><Terminal className="inline-icon" /> 维度 III：二进制内存破坏</h3>
     <p>深入冯·诺依曼架构缺陷，通过形式化建模分析内存安全漏洞与控制流劫持。</p>
     <ul>
-      <li>[栈溢出与 ROP 形式化](./pwn#21-栈溢出形式化建模)</li>
-      <li>[堆管理算法安全性分析](./pwn#23-堆漏洞)</li>
-      <li>[硬件级缓解机制 (CET/PAE)](./pwn#4-攻防模型)</li>
+      <li>[内存破坏形式化建模](./pwn#1-内存破坏的形式化建模-formal-modeling)</li>
+      <li>[漏洞利用形式化逻辑](./pwn#2-漏洞利用的形式化逻辑-exploit-logic)</li>
+      <li>[现代缓解机制证明](./pwn#12-现代缓解机制的有效性证明)</li>
     </ul>
   </div>
   <div className="col col--6">

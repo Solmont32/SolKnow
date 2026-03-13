@@ -1,14 +1,17 @@
 ---
 title: Web 安全与协议对垒 (Web Security & Protocols)
+description: 从攻击面量化评估、身份验证形式化到现代浏览器防御沙箱
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { Globe, ShieldAlert, Key, Zap, Lock, RefreshCcw, Target, ShieldCheck } from 'lucide-react';
+import { Globe, ShieldAlert, Key, Zap, Lock, RefreshCcw, Target, ShieldCheck, Layers, Network } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-# Web 安全：架构信任与攻击向量
+# Web 安全：架构信任与协议形式化验证
 
-> **核心定理**：在一个分布式系统中，安全性的上限取决于**信任边界 (Trust Boundary)** 的最弱点。Web 安全的本质是管理跨边界的数据流向。
+> **核心定理**：在一个分布式系统中，安全性的上限取决于**信任边界 (Trust Boundary)** 的最弱点。Web 安全的本质是管理跨边界的数据流向与状态一致性。
+
+---
 
 ## 1. 攻击面向量化评估 (Attack Surface Vector Assessment)
 
@@ -22,11 +25,6 @@ $$AS(S) = \sum_{i} w_i \cdot V_i$$
 - $V_{\text{entry}}$：入口点向量（API 端点、表单、Header 注入点）。
 - $V_{\text{data}}$：受信任程度向量（用户可控、第三方 API、内部数据库）。
 - $V_{\text{priv}}$：权限提升潜力向量。
-
-### 1.2 攻击面缩减策略
-
-1. **最小化暴露面**：禁用不必要的 HTTP 方法（如 `TRACE`, `PUT`）。
-2. **零信任架构 (Zero Trust)**：对每一个跨边界请求进行强制鉴权。
 
 ---
 
@@ -45,76 +43,111 @@ $$AS(S) = \sum_{i} w_i \cdot V_i$$
 
 CSP 通过白名单机制，限制了浏览器执行代码的权限。
 
-**逻辑规则示例**：
-- `script-src 'self'`：仅允许加载同源脚本，禁止内联 `eval()`。
-- `object-src 'none'`：禁止 Flash 等插件。
-- **验证**：利用形式化逻辑检查 CSP 策略是否存在 `'unsafe-inline'` 等绕过点。
+**逻辑规则验证**：
+利用形式化逻辑检查 CSP 策略是否存在漏洞。例如，`script-src 'self' 'unsafe-inline'` 在逻辑上等价于放弃了对注入脚本的执行拦截。
 
 ---
 
-## 3. 现代鉴权协议与形式化验证
+## 3. 身份验证协议的形式化验证 (Formal Verification)
 
-### 3.1 JWT 的安全性量化
+### 3.1 OAuth 2.0 状态机一致性
+OAuth 2.0 的授权码模式可以建模为一个有限状态机 (FSM)。
 
-JWT (JSON Web Token) 的安全性建立在签名算法之上。
+- **安全性属性**：
+  - **保密性**：`access_token` 不应泄露给未授权的 Client。
+  - **一次性**：`authorization_code` 必须仅能使用一次。
+  - **绑定性**：Token 必须与特定的 `client_id` 和 `redirect_uri` 强绑定。
 
-- **脆弱性评估**：
-  - `alg: none` 攻击：敌手修改 Header 绕过签名校验。
-  - 密钥硬编码：量化为 $V_{\text{secret}}$ 的熵值为 0。
-
-### 3.2 OAuth 2.0 状态机验证
-
-<details>
-<summary>点击查看 OAuth 2.0 授权码模式的状态转换模型</summary>
-
-1. **状态 1 (Start)**：Client 重定向用户至 AS (Authorization Server)。
-2. **状态 2 (Auth)**：用户在 AS 登录并授权。
-3. **状态 3 (Code)**：AS 返回 `code` 给 Client。
-4. **状态 4 (Token)**：Client 用 `code` 换取 `access_token`。
-**不变式检查**：`code` 必须是一次性的且与 `client_id` 绑定。
-
-</details>
+### 3.2 JWT 安全性深度评估
+JWT 的安全性依赖于对 `alg` 字段的强制性约束。
+- **攻击向量**：`alg: none` 或非对称加密降级为对称加密（Key Confusion 攻击）。
+- **防御**：在协议层实现**硬编码算法白名单**。
 
 ---
 
-## 4. 深度模拟演示 (C++ Logic Simulation)
+## 4. 深度模拟演示 (C++ Security Logic)
 
-### 4.1 SQL 注入防御逻辑模拟（预编译原理）
-
+### 4.1 访问控制模型：RBAC 权限一致性验证器
 <details>
-<summary>点击查看 C++ 模拟：参数化查询如何分离指令与数据</summary>
+<summary>点击查看 C++ 实现：基于 RBAC 的形式化权限校验模拟</summary>
 
 ```cpp
 #include <iostream>
 #include <string>
 #include <vector>
-#include <regex>
+#include <map>
+#include <set>
 
-class MockDatabase {
+// 形式化定义：权限 (P), 角色 (R), 用户 (U)
+class RBAC_System {
+    std::map<std::string, std::set<std::string>> role_permissions;
+    std::map<std::string, std::set<std::string>> user_roles;
+
 public:
-    // 模拟参数化查询
-    void execute_parameterized(const std::string& query_template, const std::vector<std::string>& params) {
-        std::string final_query = query_template;
-        for (size_t i = 0; i < params.size(); ++i) {
-            std::string placeholder = "?" + std::to_string(i + 1);
-            // 关键逻辑：参数在进入 SQL 前进行转义，或在协议层直接绑定
-            std::string safe_param = "'" + std::regex_replace(params[i], std::regex("'"), "''") + "'";
-            size_t pos = final_query.find(placeholder);
-            if (pos != std::string::npos) {
-                final_query.replace(pos, placeholder.length(), safe_param);
-            }
+    void add_permission(std::string role, std::string perm) {
+        role_permissions[role].insert(perm);
+    }
+    
+    void assign_role(std::string user, std::string role) {
+        user_roles[user].insert(role);
+    }
+
+    // 形式化验证：u 是否拥有权限 p
+    bool has_permission(std::string user, std::string perm) {
+        if (user_roles.find(user) == user_roles.end()) return false;
+        
+        for (const auto& role : user_roles[user]) {
+            if (role_permissions[role].count(perm)) return true;
         }
-        std::cout << "Executing Safe Query: " << final_query << std::endl;
+        return false;
     }
 };
 
 int main() {
-    MockDatabase db;
-    std::string malicious_input = "1' OR '1'='1";
+    RBAC_System sys;
+    sys.add_permission("admin", "delete_user");
+    sys.add_permission("editor", "edit_post");
     
-    // 参数化查询模拟
-    db.execute_parameterized("SELECT * FROM users WHERE id = ?1", {malicious_input});
+    sys.assign_role("Alice", "editor");
     
+    std::cout << "Alice can delete_user? " << (sys.has_permission("Alice", "delete_user") ? "Yes" : "No") << std::endl;
+    std::cout << "Alice can edit_post? " << (sys.has_permission("Alice", "edit_post") ? "Yes" : "No") << std::endl;
+    return 0;
+}
+```
+</details>
+
+### 4.2 Web 路径穿越防御：规范化路径验证器
+<details>
+<summary>点击查看 C++ 实现：防御 Directory Traversal 的逻辑验证</summary>
+
+```cpp
+#include <iostream>
+#include <string>
+#include <filesystem>
+#include <algorithm>
+
+namespace fs = std::filesystem;
+
+// 核心逻辑：验证输入路径是否逃逸了基础目录 (Base Directory)
+bool is_path_safe(const std::string& base_dir, const std::string& user_path) {
+    try {
+        fs::path base = fs::canonical(base_dir);
+        fs::path target = fs::weakly_canonical(base / user_path);
+        
+        // 验证 target 是否以 base 为前缀
+        auto [it_base, it_target] = std::mismatch(base.begin(), base.end(), target.begin());
+        return it_base == base.end();
+    } catch (...) {
+        return false;
+    }
+}
+
+int main() {
+    std::string root = "./static_files";
+    std::string malicious = "../../etc/passwd";
+    
+    std::cout << "Path safety: " << (is_path_safe(root, malicious) ? "Safe" : "UNSAFE") << std::endl;
     return 0;
 }
 ```
@@ -124,29 +157,29 @@ int main() {
 
 ## 5. 综合练习 (Advanced Exercises)
 
-### 练习 1：攻击面向量量化计算
-
-**题目**：一个 Web 系统有 5 个公开 API 端点，其中 2 个涉及数据库写操作。每个 API 均通过 JWT 鉴权。请设计一个简单的评分公式计算其初步攻击面分值。
-
-<details>
-<summary>点击查看解析 (Check Solution)</summary>
-
-**解析方案**：
-$$Score = (N_{read} \cdot w_r) + (N_{write} \cdot w_w) + (N_{auth\_bypass\_risk} \cdot w_a)$$
-- 设 $w_r = 1, w_w = 3$。
-- 如果 JWT 未开启 `exp` 校验，则 $w_a$ 增加。
-**示例计算**：$Score = (3 \cdot 1) + (2 \cdot 3) = 9$。分值越高，防御优先级越高。
-</details>
-
-### 练习 2：CSRF 令牌的时空局部性
-
-**题目**：解释为什么 CSRF Token 应该与 Session 绑定，而不是与特定页面绑定？
+### 练习 1：OAuth 2.0 状态泄露分析
+**题目**：在 OAuth 2.0 中，如果不使用 `state` 参数，系统会面临什么攻击？请从 CSRF 的角度进行解释。
 
 <details>
-<summary>点击查看解析 (Check Solution)</summary>
+<summary>点击查看解析</summary>
 
 **解析**：
-1. **安全性**：如果 Token 仅与页面绑定，一旦某个页面存在 XSS，敌手可以轻松获取该页面的 Token。
-2. **Session 绑定**：确保了 Token 的产生源于受信任的服务器状态。
-3. **时空局部性**：Token 应具有时效性。一旦 Session 销毁，Token 必须失效，防止重放攻击。
+1. **攻击过程**：攻击者首先自己发起一个授权请求，获取到一个合法的 `code`。但他不完成最后一步，而是将回调 URL（包含他的 `code`）发送给受害者。
+2. **受害者触发**：受害者点击链接，其浏览器会携带受害者的 Session 访问 Client 的回调端点。
+3. **绑定错误**：Client 服务器收到 `code`，去 AS 换取 Token，并将其绑定到受害者的账户上。结果是，受害者的账户绑定了攻击者的第三方社交账号。
+4. **防御**：`state` 参数作为一个不可预测的随机值，由 Client 发送并在回调时校验一致性，确保了授权流的起始与终结来自同一个会话。
+</details>
+
+### 练习 2：SSRF 漏洞的内网边界推导
+**题目**：假设一个 Web 服务器可以访问内网 IP `10.0.0.1` 的管理接口。如果该服务器存在一个 URL 跳转漏洞，是否必然导致 SSRF？如何通过形式化边界防御？
+
+<details>
+<summary>点击查看解析</summary>
+
+**解析**：
+1. **必然性**：不一定。URL 跳转如果是前端 `location.href` 跳转，不涉及后端请求，则不构成 SSRF。只有后端服务器（如 `curl`, `urllib`）去请求用户输入的 URL 时才构成 SSRF。
+2. **形式化防御**：
+   - **协议白名单**：仅允许 `http`, `https`，禁止 `file://`, `gopher://`。
+   - **IP 范围校验**：通过 DNS 解析后的结果进行检查，而非原始输入（防止 DNS Rebinding）。
+   - **逻辑边界**：设置内网隔离区 (DMZ)，禁止 Web 服务器主动发起对核心生产网段的连接。
 </details>
