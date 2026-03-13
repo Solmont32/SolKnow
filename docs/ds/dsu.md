@@ -47,23 +47,40 @@ import { GitMerge, Users, Zap, ShieldCheck, Sigma, Network, Database, Boxes } fr
 3. 因此，总空间 $S(N) = \text{sizeof}(int) \times 2N + \text{const}$，即 $O(N)$。
 **推论**：对于可撤销并查集，由于不使用路径压缩而改用栈记录操作，空间复杂度为 $O(N + M)$，其中 $M$ 为操作次数。
 
-### 2.2 时空复杂度摊还证明
+### 2.2 势能分析证明 (The $\alpha(n)$ Proof via Potential Method)
 
-**定理**：同时使用路径压缩和按秩合并，单次操作的均摊时间复杂度为 $O(\alpha(N))$。
+**定理**：同时使用路径压缩和按秩合并，单次操作的均摊代价为 $O(\alpha(N))$。
 
-**势能分析 (Potential Method) 概要**：
-定义节点的秩 $x.rank$。定义势能函数 $\Phi = \sum_{x \in U} \phi(x)$。
-1. **Union 操作**：增加一个节点的秩最多导致 $\alpha(N)$ 的势能变化。
-2. **Find 操作**：路径压缩将节点直接指向根，跨越了多个秩层级，导致大量的 $\phi(x)$ 减小。这种势能的释放足以支付 $O(\text{路径长度})$ 的实际代价，使得均摊代价仅为 $O(\alpha(N))$。
-*注：反阿克曼函数 $\alpha(N)$ 增长极慢，对于宇宙中可观测到的 $N$，其值均不超过 5。*
+**证明框架**：
+定义节点的秩 $x.rank$ 为其在按秩合并中作为根时的最大高度。$x.rank$ 在其非根时固定。
+定义势能函数 $\Phi = \sum_{x} \phi(x)$，其中 $\phi(x)$ 取决于 $x.rank$ 与其父节点 $p[x].rank$ 的相对增长速度。
+
+1. **Ackermann 函数定义**: $A_k(j)$ 增长极快。其反函数 $\alpha(n) = \min \{k : A_k(1) \ge n\}$。
+2. **势能分配**: 
+   - 对于每个节点 $x$，定义 $iter(x) = \max \{k : p[x].rank \ge A_k(x.rank)\}$。
+   - 定义 $\phi(x) = (\alpha(N) - iter(x)) \times x.rank$。
+3. **Find(x) 均摊分析**:
+   - 路径压缩会使多个节点的 $p[x].rank$ 大幅增加。
+   - 当 $p[x].rank$ 跨越 $A_k(x.rank)$ 的阈值时，$iter(x)$ 增加，$\phi(x)$ 减少。
+   - 释放的势能足以支付路径上 $O(L)$ 的实际代价，仅余下根节点附近的 $O(\alpha(N))$ 项。
+**结论**：总摊还代价为 $O(\alpha(N))$。
 
 ---
 
-## 3. 拓扑一致性验证 (Topological Consistency)
+## 3. 结构拓扑一致性校验 (Topological Consistency)
 
-在维护带权并查集或动态连通性时，必须保证：
-- **路径压缩的一致性**：$d(x, root) = d(x, p(x)) \oplus d(p(x), root)$。在递归 `find` 返回时，先更新父节点的权值，再更新当前节点的权值。
-- **合并的对称性**：`unite(x, y)` 与 `unite(y, x)` 在逻辑上等价，但在物理实现中（按秩合并）应保证合并方向不影响等价类的连通性拓扑。
+在维护**带权并查集 (Weighted DSU)** 或动态连通性时，路径压缩必须满足向量加法的传递性。
+
+### 3.1 路径压缩的一致性方程
+设 $d(x)$ 为节点 $x$ 到其父节点 $p[x]$ 的权值。在 `find(x)` 过程中：
+$$d_{new}(x) = d_{old}(x) \oplus d_{old}(p[x]) \oplus \dots \oplus d_{old}(root)$$
+其中 $\oplus$ 是满足结合律的群运算（如加法、异或）。
+**校验逻辑**：必须**先递归**更新父节点，再利用更新后的父节点权值更新当前节点。
+
+### 3.2 合并的一致性方程
+若已知 $x, y$ 之间的关系 $w$（即 $x \xrightarrow{w} y$），设 $rx, ry$ 为各自根节点：
+$$d(rx) = d(y) \oplus w^{-1} \oplus d(x)$$
+此方程确保了合并后，新路径 $x \to rx \to ry$ 与已知关系一致。
 
 ---
 
@@ -78,37 +95,63 @@ import { GitMerge, Users, Zap, ShieldCheck, Sigma, Network, Database, Boxes } fr
 **核心逻辑**：利用扩展域（Domain Expansion）维护逻辑冲突。
 
 ```cpp
-// 域定义：x (自身), x+n (被x吃的), x+2n (吃x的)
-if (t == 1) { // x, y 是同类
-    if (dsu.same(x, y + n) || dsu.same(x, y + 2 * n)) ans++; // 冲突
-    else dsu.unite(x, y), dsu.unite(x + n, y + n), dsu.unite(x + 2 * n, y + 2 * n);
-} else { // x 吃 y
-    if (dsu.same(x, y) || dsu.same(x, y + 2 * n)) ans++; // 冲突
-    else dsu.unite(x, y + n), dsu.unite(x + n, y + 2 * n), dsu.unite(x + 2 * n, y);
+#include <iostream>
+#include <vector>
+#include <numeric>
+
+struct DSU {
+    std::vector<int> p;
+    DSU(int n) : p(3 * n + 1) { std::iota(p.begin(), p.end(), 0); }
+    int find(int x) { return p[x] == x ? x : p[x] = find(p[x]); }
+    void unite(int x, int y) { p[find(x)] = find(y); }
+    bool same(int x, int y) { return find(x) == find(y); }
+};
+
+int main() {
+    int n, k, ans = 0;
+    std::cin >> n >> k;
+    DSU dsu(n);
+    while (k--) {
+        int t, x, y;
+        std::cin >> t >> x >> y;
+        if (x > n || y > n) { ans++; continue; }
+        if (t == 1) { // x, y 是同类
+            if (dsu.same(x, y + n) || dsu.same(x, y + 2 * n)) ans++;
+            else dsu.unite(x, y), dsu.unite(x + n, y + n), dsu.unite(x + 2 * n, y + 2 * n);
+        } else { // x 吃 y
+            if (dsu.same(x, y) || dsu.same(x, y + 2 * n)) ans++;
+            else dsu.unite(x, y + n), dsu.unite(x + n, y + 2 * n), dsu.unite(x + 2 * n, y);
+        }
+    }
+    std::cout << ans << std::endl;
+    return 0;
 }
 ```
 
 </details>
 
-### 例题 2：动态加边连通性 (Kruskal 重构树基础)
+### 例题 2：银河英雄传说 (带权并查集)
 
 <details>
 <summary>Check Solution</summary>
 
-**题目描述**：给定 $N$ 个点和 $M$ 条边 $(u, v, w)$，查询两点何时连通。
-**解析**：按权值排序后依次合并。新建节点 $node_{M+i}$ 作为 $find(u)$ 和 $find(v)$ 的父节点，权值为 $w$。
+**题目描述**：维护若干列战舰，支持合并两列，查询两战舰是否在同一列及其间隔。
+**解析**：维护 $d[x]$ 为 $x$ 到根的距离，$sz[x]$ 为连通块大小。
 
 ```cpp
-int newNode(int w) {
-    val[++tot] = w;
-    return tot;
+int find(int x) {
+    if (p[x] == x) return x;
+    int root = find(p[x]);
+    d[x] += d[p[x]]; // 路径压缩时累加权值
+    return p[x] = root;
 }
-// 在 unite 中
-int u = find(x), v = find(y);
-if (u != v) {
-    int root = newNode(w);
-    fa[u] = fa[v] = root;
-    ch[root][0] = u; ch[root][1] = v;
+void unite(int x, int y) {
+    int rx = find(x), ry = find(y);
+    if (rx != ry) {
+        p[rx] = ry;
+        d[rx] = sz[ry]; // rx 接在 ry 尾部
+        sz[ry] += sz[rx];
+    }
 }
 ```
 
@@ -123,46 +166,64 @@ if (u != v) {
 <summary>Check Solution</summary>
 
 ```cpp
-struct Node { int p, sz, mi, ma; };
-void unite(int x, int y) {
-    int rx = find(x), ry = find(y);
-    if (rx != ry) {
-        if (sz[rx] < sz[ry]) swap(rx, ry); // 按大小合并优化
-        p[ry] = rx;
-        sz[rx] += sz[ry];
-        mi[rx] = min(mi[rx], mi[ry]);
-        ma[rx] = max(ma[rx], ma[ry]);
+struct Node {
+    std::vector<int> p, sz, mi, ma;
+    Node(int n) : p(n+1), sz(n+1, 1), mi(n+1), ma(n+1) {
+        std::iota(p.begin(), p.end(), 0);
+        mi = ma = p;
     }
-}
+    int find(int x) { return p[x] == x ? x : p[x] = find(p[x]); }
+    void unite(int x, int y) {
+        int rx = find(x), ry = find(y);
+        if (rx != ry) {
+            p[rx] = ry;
+            sz[ry] += sz[rx];
+            mi[ry] = std::min(mi[ry], mi[rx]);
+            ma[ry] = std::max(ma[ry], ma[rx]);
+        }
+    }
+};
 ```
 
 </details>
 
-2. **[进阶] 可撤销并查集 (Undoable DSU)**
+2. **[进阶] 可撤销并查集与二分图判定**
 <details>
 <summary>Check Solution</summary>
 
-**核心逻辑**：**禁止路径压缩**（因为它会改变树的拓扑结构且难以撤销），仅用**按秩合并**（保证树高 $O(\log N)$）。使用栈记录每次修改。
+**核心逻辑**：使用带权并查集维护边权的异或和。撤销操作通过栈实现，不能使用路径压缩。
 
 ```cpp
-struct Operation { int u, v, add_rank; };
-stack<Operation> st;
-
-void unite(int u, int v) {
-    u = find(u), v = find(v);
-    if (u == v) return;
-    if (rank[u] < rank[v]) swap(u, v);
-    st.push({u, v, rank[u] == rank[v]});
-    p[v] = u;
-    rank[u] += (rank[u] == rank[v]);
-}
-
-void undo() {
-    if (st.empty()) return;
-    auto t = st.top(); st.pop();
-    p[t.v] = t.v;
-    rank[t.u] -= t.add_rank;
-}
+struct UndoDSU {
+    std::vector<int> p, rk, d;
+    struct Op { int u, v, dr; };
+    std::vector<Op> st;
+    UndoDSU(int n) : p(n+1), rk(n+1, 0), d(n+1, 0) { std::iota(p.begin(), p.end(), 0); }
+    
+    std::pair<int, int> find(int x) {
+        int dist = 0;
+        while (x != p[x]) { dist ^= d[x]; x = p[x]; }
+        return {x, dist};
+    }
+    
+    bool unite(int u, int v, int w) {
+        auto [ru, du] = find(u);
+        auto [rv, dv] = find(v);
+        if (ru == rv) return (du ^ dv ^ w) == 0;
+        if (rk[ru] < rk[rv]) { std::swap(ru, rv); std::swap(du, dv); }
+        st.push_back({ru, rv, rk[ru] == rk[rv]});
+        p[rv] = ru;
+        d[rv] = du ^ dv ^ w;
+        rk[ru] += (rk[ru] == rk[rv]);
+        return true;
+    }
+    
+    void undo() {
+        Op t = st.back(); st.pop_back();
+        p[t.v] = t.v; d[t.v] = 0;
+        rk[t.u] -= t.dr;
+    }
+};
 ```
 
 </details>

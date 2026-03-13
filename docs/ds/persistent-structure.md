@@ -34,58 +34,87 @@ import { History, Save, Layers, Share2, GitBranch, Clock, Database, Milestone, S
 2. 任何单点更新仅影响从根到叶的一条路径，路径长度为 $H+1$。
 3. 路径复制机制会为该路径上的每个节点创建一个新副本。
 4. 总增量空间 $\Delta S = (H+1) \times \text{sizeof}(Node) = O(\log N)$。
-**推论**：对于 $M$ 次更新，总空间复杂度为 $O(N + M \log N)$。
 
-### 2.2 时间复杂度均摊分析
+### 2.2 时空复杂度边界验证 (Spatiotemporal Boundary Verification)
 
-**定理**：可持久化结构的查询时间与原始结构一致，均为 $O(\log N)$。
-**证明**：
-由于路径复制保持了树的拓扑深度，且每个版本都拥有一棵逻辑完整的树根，查询操作在任意版本上的执行逻辑与普通线段树完全一致，不增加任何分摊开销。
+**讨论：可持久化并查集的复杂度**
+1. **时间边界**: 
+   - 若使用可持久化线段树维护 `fa[]` 数组，`find` 操作由于不能使用路径压缩（会破坏历史版本），必须使用**按秩合并**。
+   - 每次 `find` 代价为 $O(\log N)$ 级别的线段树查询，总复杂度为 $O(M \log^2 N)$。
+   - **优化**: 若能保证树高平衡，且直接在数组上操作，可接近 $O(M \log N)$。
+2. **空间边界**:
+   - 每次 `unite` 或 `find`（若修改）产生 $O(\log N)$ 个线段树节点。
+   - 总空间 $O(N + M \log N)$。
 
 ---
 
 ## 3. 教材化例题与解析
 
-### 例题 1：可持久化字典树 (Persistent Trie)
+### 例题 1：可持久化线段树 (主席树)
 
 <details>
-<summary>Check Solution (C++ Implementation)</summary>
+<summary>Check Solution (完整实现)</summary>
 
-**题目背景**：给定序列，查询区间 $[L, R]$ 内与 $X$ 异或最大值。
+**题目背景**：给定序列，查询区间 $[L, R]$ 内第 $K$ 小值。
 
 ```cpp
-int insert(int p, int val) {
-    int q = ++idx, cur = q;
-    for (int i = 30; i >= 0; i--) {
-        int v = (val >> i) & 1;
-        tr[cur] = tr[p]; // 结构共享
-        tr[cur].ch[v] = ++idx; // 路径复制
-        tr[cur].cnt++;
-        cur = tr[cur].ch[v];
-        p = tr[p].ch[v];
-    }
-    tr[cur].cnt++;
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+const int N = 200010, M = N * 40;
+int n, m, a[N];
+std::vector<int> nums;
+int root[N], idx;
+struct Node { int l, r, cnt; } tr[M];
+
+int build(int l, int r) {
+    int p = ++idx;
+    if (l == r) return p;
+    int mid = (l + r) >> 1;
+    tr[p].l = build(l, mid); tr[p].r = build(mid + 1, r);
+    return p;
+}
+
+int update(int p, int l, int r, int x) {
+    int q = ++idx;
+    tr[q] = tr[p];
+    if (l == r) { tr[q].cnt++; return q; }
+    int mid = (l + r) >> 1;
+    if (x <= mid) tr[q].l = update(tr[p].l, l, mid, x);
+    else tr[q].r = update(tr[p].r, mid + 1, r, x);
+    tr[q].cnt = tr[tr[q].l].cnt + tr[tr[q].r].cnt;
     return q;
+}
+
+int query(int q, int p, int l, int r, int k) {
+    if (l == r) return l;
+    int mid = (l + r) >> 1;
+    int cnt = tr[tr[q].l].cnt - tr[tr[p].l].cnt;
+    if (k <= cnt) return query(tr[q].l, tr[p].l, l, mid, k);
+    else return query(tr[q].r, tr[p].r, mid + 1, r, k - cnt);
 }
 ```
 
 </details>
 
-### 例题 2：区间 K 大值 (主席树)
+### 例题 2：可持久化并查集 (Persistent DSU)
 
 <details>
 <summary>Check Solution</summary>
 
-**核心逻辑**：对值域建立线段树。按序列顺序插入，第 $i$ 个版本维护前 $i$ 个数的分布。查询 $[L, R]$ 转化为版本 $V_R$ 与 $V_{L-1}$ 的差分。
+**核心逻辑**：线段树维护 `fa` 和 `dep`（秩）。
 
 ```cpp
-int query(int u, int v, int l, int r, int k) {
-    if (l == r) return l;
+int update(int p, int l, int r, int x, int v) {
+    int q = ++idx; tr[q] = tr[p];
+    if (l == r) { fa[q] = v; dep[q] = dep[p]; return q; }
     int mid = (l + r) >> 1;
-    int x = tr[tr[v].ls].cnt - tr[tr[u].ls].cnt;
-    if (k <= x) return query(tr[u].ls, tr[v].ls, l, mid, k);
-    else return query(tr[u].rs, tr[v].rs, mid + 1, r, k - x);
+    if (x <= mid) tr[q].l = update(tr[p].l, l, mid, x, v);
+    else tr[q].r = update(tr[p].r, mid + 1, r, x, v);
+    return q;
 }
+// find(x) 在线段树上递归跳转直到 fa[p] == x
 ```
 
 </details>

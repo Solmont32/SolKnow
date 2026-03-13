@@ -15,33 +15,38 @@ import { GitBranch, Move, RotateCcw, Shuffle, Layers, Scissors, Repeat, Trending
 
 ---
 
-## 1. 拓扑一致性验证 (Topological Consistency)
+## 1. 结构拓扑一致性校验 (Topological Consistency)
 
-平衡树的核心在于**旋转 (Rotation)**。旋转必须保持 BST 性质：
-- **右旋 (Rotate Right)**: $u$ 是 $v$ 的左子，$v$ 变 $u$ 的右子，$u$ 原右子变 $v$ 的左子。
-- **性质验证**: 
-  - 旋转前: $ls(u) < u < rs(u) < v < rs(v)$
-  - 旋转后: $ls(u) < u < (rs(u) < v < rs(v))$
-  - BST 全序关系保持不变。
+平衡树的核心在于**旋转 (Rotation)**。旋转必须保持 BST 性质并满足拓扑不变性：
+
+### 1.1 旋转不变量方程
+设 $u$ 为 $v$ 的左子节点，$B$ 为 $u$ 的右子树。右旋后：
+1. $u$ 成为 $v$ 的父节点。
+2. $B$ 成为 $v$ 的左子树。
+**校验逻辑**：
+- **全序保持**: 旋转前 $A < u < B < v < C$；旋转后依然满足 $A < u < (B < v < C)$。
+- **信息维护**: 必须先更新原子节点（旋转后的子节点）的信息，再更新新父节点的信息。
 
 ---
 
-## 2. 伸展树 (Splay): 势能分析与自适应
+## 2. 伸展树 (Splay): 均摊复杂度证明
 
-### 2.1 双旋策略 (Zig-Zig) 的性质证明
+Splay 的核心在于其双旋（Zig-Zig）策略，这使得它能够自适应地调整结构。
 
-**定理 (Zig-Zig 优越性)**：先旋转父节点 $p$ 再旋转当前节点 $u$，路径上所有节点的深度减半。
-**证明要点**：
-设 $w(u)$ 为子树大小。双旋后，除了 $u$ 以外的所有节点在势能函数 $\Phi = \sum \log w(i)$ 中的增量均为负值。这导致了路径的“折叠”效应。
+### 2.1 势能分析证明 (The Access Lemma)
 
-### 2.2 均摊复杂度证明：势能分析法 (Access Lemma)
+**定理**：Splay 操作的均摊代价为 $O(\log N)$。
 
-**定理**：Splay 操作的均摊复杂度为 $O(\log N)$。
-**证明概要**：
-定义节点的秩 $r(u) = \log_2(size(u))$，系统势能 $\Phi = \sum_{i=1}^n r(i)$。
-1. **Zig (单旋)**: $A \le 1 + 3(r'(u) - r(u))$。
-2. **Zig-Zig/Zag-Zag**: $A \le 3(r'(u) - r(u))$。
-单次伸展的总均摊代价为 $\sum A \le 3(r(root) - r(u)) + 1 = O(\log N)$。
+**证明步骤**：
+1. 定义节点的秩 $r(u) = \log_2(size(u))$，系统势能 $\Phi = \sum_{i=1}^n r(i)$。
+2. **Zig-Zig/Zag-Zag (双旋)** 的均摊代价 $A$：
+   - 设 $u$ 为当前节点，$p$ 为父节点，$g$ 为祖父节点。
+   - $A = 实际代价(2) + \Delta \Phi = 2 + (r'(u) + r'(p) + r'(g) - r(u) - r(p) - r(g))$。
+   - 由于 $r'(u) = r(g)$ 且 $r(u) < r(p)$，利用对数函数的凹性可证明：
+   - $A \le 3(r'(u) - r(u))$。
+3. **总代价**: 单次伸展由若干次双旋和最多一次单旋组成。
+   - $A_{total} = \sum A_i \le 3(r(root) - r(start)) + 1$。
+   - 由于 $r(root) = \log N$ 且 $r(start) \ge 0$，故均摊复杂度为 $O(\log N)$。
 
 ---
 
@@ -72,17 +77,31 @@ import { GitBranch, Move, RotateCcw, Shuffle, Layers, Scissors, Repeat, Trending
 ### 例题 1：区间翻转 (文艺平衡树)
 
 <details>
-<summary>Check Solution (Splay 实现)</summary>
+<summary>Check Solution (Splay 完整实现)</summary>
 
 ```cpp
+#include <iostream>
+#include <algorithm>
+
+const int N = 100010;
+struct SplayNode {
+    int s[2], p, v, sz;
+    bool rev;
+    void init(int _v, int _p) { v = _v; p = _p; sz = 1; }
+} tr[N];
+int root, idx;
+
+void push_up(int x) { tr[x].sz = tr[tr[x].s[0]].sz + tr[tr[x].s[1]].sz + 1; }
+
 void push_down(int x) {
     if (tr[x].rev) {
-        swap(tr[x].s[0], tr[x].s[1]);
-        if (tr[x].s[0]) tr[tr[x].s[0]].rev ^= 1;
-        if (tr[x].s[1]) tr[tr[x].s[1]].rev ^= 1;
+        std::swap(tr[x].s[0], tr[x].s[1]);
+        tr[tr[x].s[0]].rev ^= 1;
+        tr[tr[x].s[1]].rev ^= 1;
         tr[x].rev = 0;
     }
 }
+
 void rotate(int x) {
     int y = tr[x].p, z = tr[y].p;
     int k = (tr[y].s[1] == x);
@@ -91,16 +110,61 @@ void rotate(int x) {
     tr[x].s[k ^ 1] = y; tr[y].p = x;
     push_up(y); push_up(x);
 }
+
+void splay(int x, int k) {
+    while (tr[x].p != k) {
+        int y = tr[x].p, z = tr[y].p;
+        if (z != k)
+            if ((tr[y].s[1] == x) ^ (tr[z].s[1] == y)) rotate(x);
+            else rotate(y);
+        rotate(x);
+    }
+    if (!k) root = x;
+}
 ```
 
 </details>
 
-### 例题 2：动态图连通性 (LCT 基础)
+### 例题 2：普通平衡树 (Treap / FHQ-Treap)
 
 <details>
-<summary>Check Solution</summary>
+<summary>Check Solution (FHQ-Treap 实现)</summary>
 
-**核心逻辑**：LCT (Link-Cut Tree) 维护的是一组虚实链。通过 `access(x)` 操作将根到 $x$ 的路径变为实链，并用 Splay 维护该实链。
+**核心逻辑**：通过 `split` 和 `merge` 操作替代旋转，代码极其简洁且支持可持久化。
+
+```cpp
+#include <random>
+
+const int N = 100010;
+struct FHQNode {
+    int l, r, val, key, sz;
+} tr[N];
+int root, idx;
+std::mt19937 rng(1337);
+
+void push_up(int u) { tr[u].sz = tr[tr[u].l].sz + tr[tr[u].r].sz + 1; }
+
+void split(int u, int v, int &l, int &r) {
+    if (!u) { l = r = 0; return; }
+    if (tr[u].val <= v) {
+        l = u; split(tr[u].r, v, tr[u].r, r);
+    } else {
+        r = u; split(tr[u].l, v, l, tr[u].l);
+    }
+    push_up(u);
+}
+
+int merge(int l, int r) {
+    if (!l || !r) return l + r;
+    if (tr[l].key > tr[r].key) {
+        tr[l].r = merge(tr[l].r, r);
+        push_up(l); return l;
+    } else {
+        tr[r].l = merge(l, tr[r].l);
+        push_up(r); return r;
+    }
+}
+```
 
 </details>
 
@@ -114,6 +178,20 @@ void rotate(int x) {
 
 **LCT + 线性基**：LCT 维护路径，Splay 节点维护其子树内所有权值的线性基（Linear Basis）。
 
+```cpp
+struct Basis {
+    int b[31];
+    void insert(int x) {
+        for (int i = 30; i >= 0; i--) {
+            if (!(x >> i)) continue;
+            if (!b[i]) { b[i] = x; return; }
+            x ^= b[i];
+        }
+    }
+};
+// LCT Node 增加 Basis 成员，并在 push_up 时合并子节点与自身的 Basis
+```
+
 </details>
 
 2. **[进阶] 替罪羊树 (Scapegoat Tree) 的重构一致性**
@@ -121,6 +199,24 @@ void rotate(int x) {
 <summary>Check Solution</summary>
 
 **重构判定**：$\max(sz[ls], sz[rs]) > \alpha \cdot sz[u]$。当触发重构时，将子树中序遍历存入数组，再通过二分法重新构建完全平衡的二叉树。
+
+```cpp
+void flatten(int u, std::vector<int> &v) {
+    if (!u) return;
+    flatten(tr[u].l, v);
+    v.push_back(tr[u].val);
+    flatten(tr[u].r, v);
+}
+int rebuild(int l, int r, const std::vector<int> &v) {
+    if (l > r) return 0;
+    int mid = (l + r) >> 1;
+    int u = newNode(v[mid]);
+    tr[u].l = rebuild(l, mid - 1, v);
+    tr[u].r = rebuild(mid + 1, r, v);
+    push_up(u);
+    return u;
+}
+```
 
 </details>
 
