@@ -31,16 +31,18 @@ $$D = I \oplus A \oplus A^{(2)} \oplus \dots \oplus A^{(n-1)}$$
 由于无负环，任意最短路径最多包含 $n-1$ 条边。对于 $k \ge n-1$，$A^{(k)}$ 的项不会产生更小的值（即 $\oplus$ 运算下的“更优”）。因此该级数在 $n-1$ 步内收敛。
 </KnowledgeCard>
 
-### 2. 形式化松弛算子 (Relaxation Invariant)
-**定义**：对于边 $(u, v) \in E$，松弛操作 $\text{RELAX}(u, v, w)$ 维持了**下界不变性**。
+### 2. 形式化松弛算子与收敛性分析 (Relaxation Convergence)
+**定义**：对于边 $(u, v) \in E$，松弛操作 $\text{RELAX}(u, v, w)$ 定义为：
+$$d[v] = \min(d[v], d[u] + w(u, v))$$
 
-<KnowledgeCard title="引理 1.2：下界不变性 (Lower-bound Property)" icon={<ShieldCheck size={20} />}>
-对于所有 $v \in V$，在初始化 $d[s]=0, d[v \neq s]=\infty$ 后，执行任意次数的松弛操作，始终满足 $d[v] \ge \delta(s, v)$。
-**归纳证明**：
-1. **基础步**：初始时 $d[s]=0=\delta(s,s)$，$d[v]=\infty \ge \delta(s,v)$，成立。
-2. **归纳步**：考虑 $\text{RELAX}(u, v)$。假设松弛前 $d[u] \ge \delta(s,u)$ 且 $d[v] \ge \delta(s,v)$。
-   松弛后 $d[v]' = \min(d[v], d[u] + w(u,v))$。
-   由归纳假设及三角不等式 $\delta(s,v) \le \delta(s,u) + w(u,v)$，知 $d[v]' \ge \delta(s,v)$。
+<KnowledgeCard title="引理 1.2：下界不变性与路径松弛性质" icon={<ShieldCheck size={20} />}>
+**1. 下界不变性 (Lower-bound Property)**：
+对于所有 $v \in V$，在初始化 $d[s]=0, d[v \neq s]=\infty$ 后，执行任意序列的松弛操作，始终满足 $d[v] \ge \delta(s, v)$。
+*证明*：初始状态成立。假设对边 $(u, v)$ 松弛前 $d[u] \ge \delta(s, u)$ 且 $d[v] \ge \delta(s, v)$。松弛后 $d'[v] = \min(d[v], d[u] + w(u, v)) \ge \min(\delta(s, v), \delta(s, u) + w(u, v)) = \delta(s, v)$（由三角不等式）。
+
+**2. 路径松弛性质 (Path-relaxation Property)**：
+设 $p = \langle v_0, v_1, \dots, v_k \rangle$ 是从 $s=v_0$ 到 $v_k$ 的最短路径。若对 $p$ 的边序列进行松弛操作（即便中间穿插其他边），则 $d[v_k] = \delta(s, v_k)$。
+*推论*：Bellman-Ford 算法通过 $n-1$ 轮全边松弛，保证了所有最短路径（长度最多 $n-1$）被正确识别。
 </KnowledgeCard>
 
 ---
@@ -48,7 +50,7 @@ $$D = I \oplus A \oplus A^{(2)} \oplus \dots \oplus A^{(n-1)}$$
 ## 二、 <Workflow className="inline-block mr-2 mb-1 text-purple-500" /> 核心算法深度分析与收敛性
 
 ### 1. Dijkstra 算法：贪心收敛性证明
-Dijkstra 算法本质上是在非负权图上维护一个**已确定集合 $S$**。
+Dijkstra 算法本质上是在非负权图上维护一个**已确定集合 $S$**。每次选取 $V \setminus S$ 中 $d[u]$ 最小的点，其贪心选择的正确性由非负权带来的“距离单调递增性”保证。
 
 <KnowledgeCard title="非负权前提下的完备证明" icon={<BookOpen size={20} />}>
 **定理**：每次从 $V \setminus S$ 中取出 $d[u]$ 最小的点加入 $S$，必有 $d[u] = \delta(s, u)$。
@@ -62,7 +64,12 @@ Dijkstra 算法本质上是在非负权图上维护一个**已确定集合 $S$**
 6. 结合以上知 $d[u] \le \delta(s, y) \le \delta(s, u)$。与假设 $d[u] > \delta(s, u)$ 矛盾。
 </KnowledgeCard>
 
-### 2. Johnson 算法：势能变换 (Reweighting)
+### 2. Bellman-Ford 与 SPFA：动态规划的视角
+Bellman-Ford 算法可以看作是状态转移方程：
+$$dp[k][v] = \min_{(u, v) \in E} \{ dp[k-1][u] + w(u, v) \}$$
+其中 $dp[k][v]$ 表示经过最多 $k$ 条边到达 $v$ 的最短路。SPFA (Shortest Path Faster Algorithm) 则是其队列优化版本，利用“只有被松弛的点才可能松弛后续点”的观测。
+
+### 3. Johnson 算法：势能变换 (Reweighting)
 Johnson 算法通过引入势能函数 $h(v)$ 重新标定边权：
 $$w'(u, v) = w(u, v) + h(u) - h(v)$$
 **收敛性分析**：

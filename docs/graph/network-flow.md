@@ -18,28 +18,38 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 **定义 (Feasible Flow)**：函数 $f: V \times V \to \mathbb{R}$ 满足：
 1. **容量限制**：$f(u, v) \le c(u, v)$。
 2. **斜对称性**：$f(u, v) = -f(v, u)$。
-3. **流量守恒**：除 $s, t$ 外，每个节点的净流量为 $0$。
+3. **流量守恒 (Flow Conservation)**：除 $s, t$ 外，对于任意 $u \in V \setminus \{s, t\}$，满足 $\sum_{v \in V} f(u, v) = 0$。
+
+<KnowledgeCard title="流量守恒一致性证明 (Consistency Proof)" icon={<ShieldCheck size={20} />}>
+**命题**：在增广路算法（如 FF 或 Dinic）中，对路径 $p$ 进行增广操作后，流量守恒性依然保持。
+*证明*：
+1. 设增广流量为 $\Delta$。对于路径上的中间点 $v \in p$，$v$ 必有入边 $(u, v)$ 和出边 $(v, w)$。
+2. 增广操作令 $f(u, v) \leftarrow f(u, v) + \Delta$，$f(v, w) \leftarrow f(v, w) + \Delta$。
+3. 对于点 $v$，入流净增 $\Delta$，出流净增 $\Delta$，其净流量 $\sum_{x \in V} f(v, x)$ 保持不变（原先为 $0$，增广后仍为 $0$）。
+4. 对于 $s$ 和 $t$，分别仅有出流或入流发生变化，符合流定义。
+</KnowledgeCard>
 
 ### 2. 割集与流量收敛性
 **引理 (Flow-Cut Duality)**：穿过任意割 $(S, T)$ 的净流量等于流的价值 $|f|$。
-$$\text{Proof: } f(S, T) = \sum_{u \in S} \sum_{v \in T} f(u, v) = \sum_{u \in S} \left( \sum_{v \in V} f(u, v) - \sum_{v \in S} f(u, v) \right) = |f|$$
+$$\text{Proof: } f(S, T) = \sum_{u \in S} \sum_{v \in T} f(u, v) = \sum_{u \in S} \left( \sum_{v \in V} f(u, v) - \sum_{v \in S} f(u, v) \right) = \sum_{u \in S} \sum_{v \in V} f(u, v)$$
+由于斜对称性，$\sum_{u \in S} \sum_{v \in S} f(u, v) = 0$。且根据守恒性，只有 $u=s$ 时 $\sum f(s, v)$ 非零，故 $f(S, T) = |f|$。
 
 ---
 
 ## 二、 <TrendingUp className="inline-block mr-2 mb-1 text-orange-500" /> 算法收敛性分析 (Convergence Analysis)
 
-网络流算法的演进史本质上是**增广路选择策略**的优化史。
+### 1. Dinic 算法：距离单调性与收敛界限
+Dinic 的高效性建立在**分层图 (Level Graph)** 的严格单调性上。
 
-### 1. Ford-Fulkerson 的病态收敛
-<KnowledgeCard title="实数容量下的非收敛性" icon={<AlertTriangle size={20} />}>
-**定理**：若容量为无理数，Ford-Fulkerson 算法可能永远不收敛，且流量可能收敛于非最大流的值。
-**结论**：在整数容量下，FF 算法在 $O(E|f|)$ 内收敛，但在实数环境下缺乏完备性保证。
+<KnowledgeCard title="Dinic 距离单调性证明" icon={<BookOpen size={20} />}>
+**引理**：在 Dinic 的一轮迭代（BFS + 多路 DFS 增广）后，下一轮 BFS 得到的 $dist(s, t)$ 严格增加。
+*证明要点*：
+1. 在残量网络 $G_f$ 中，只有当 $(u, v)$ 满足 $dist(u) + 1 = dist(v)$ 时才可能被增广。
+2. 增广后，原有层间的饱和边消失，而可能产生反向边 $(v, u)$。
+3. 反向边 $(v, u)$ 满足 $dist(v) = dist(u) + 1$，即它是指向前一层的，不会缩短 $s \to t$ 的最短距离。
+4. 只有当 $s \to t$ 在当前分层图中所有路径都饱和时，才需要重新 BFS 增加层数。
+*结论*：由于 $dist(s, t) \le n$，算法最多进行 $n$ 轮 BFS，总复杂度 $O(V^2E)$。
 </KnowledgeCard>
-
-### 2. Edmonds-Karp 与 Dinic：多项式收敛
-- **Edmonds-Karp**：每次选最短路增广，复杂度 $O(VE^2)$。其核心在于证明 $s \to v$ 的最短路距离 $d_f(s, v)$ 在增广过程中**单调不减**。
-- **Dinic**：引入**分层图 (Level Graph)** 思想，一次性推送多个流。
-  - **收敛性**：每轮 BFS 后，汇点 $t$ 的层数 $L(t)$ 严格单调增加，故最多 $n$ 轮 BFS 即可收敛。
 
 ---
 
