@@ -2,7 +2,7 @@
 title: 线性 DP
 ---
 
-import { Microscope, Layers, Activity, ShieldCheck, Brain, Zap, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Microscope, Layers, Activity, ShieldCheck, Brain, Zap, ArrowRight, CheckCircle2, BookOpen, Code2 } from 'lucide-react';
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # 线性动态规划 (Linear Dynamic Programming)
@@ -59,11 +59,12 @@ $$
 
 ---
 
-## <ShieldCheck className="inline-block mr-2" /> 3. 经典练习与严谨实现
+## <ShieldCheck className="inline-block mr-2" /> 3. 教材化典型例题
 
-### 练习 1：LIS 的 $O(N \log N)$ 二分优化
+### 例题 1：最长上升子序列 (LIS) - 贪心+二分优化
 
-通过维护一个“潜力序列” $d$，其中 $d[len]$ 表示长度为 $len$ 的上升子序列的最小结尾元素。
+**问题描述**：给定序列 $A$，求最长上升子序列的长度。
+**证明要点**：维护 $d[len]$ 为长度为 $len$ 的上升子序列的最小末尾元素。$d$ 数组显然具有单调性，可进行二分查找。
 
 <details>
 <summary>Check Solution (C++)</summary>
@@ -76,13 +77,11 @@ $$
 using namespace std;
 
 /**
- * @brief LIS Optimization Strategy
- * Space: O(N)
- * Time: O(N log N)
+ * @brief LIS O(N log N) implementation
  */
 int solve_lis(const vector<int>& a) {
     if (a.empty()) return 0;
-    vector<int> d; // d[i] stores the smallest ending element of an increasing subsequence of length i+1
+    vector<int> d;
     for (int x : a) {
         auto it = lower_bound(d.begin(), d.end(), x);
         if (it == d.end()) d.push_back(x);
@@ -102,32 +101,112 @@ int main() {
 
 </details>
 
-### 练习 2：编辑距离 (Levenshtein Distance)
+### 例题 2：乘积最大子数组 (Maximum Product Subarray)
+
+**状态定义**：$f_{max}[i]$ 表示以 $i$ 结尾的最大乘积，$f_{min}[i]$ 表示以 $i$ 结尾的最小乘积。
+**转移方程**：
+$$f_{max}[i] = \max(A[i], f_{max}[i-1] \cdot A[i], f_{min}[i-1] \cdot A[i])$$
+$$f_{min}[i] = \min(A[i], f_{max}[i-1] \cdot A[i], f_{min}[i-1] \cdot A[i])$$
 
 <details>
-<summary>Check Solution (Matrix DP)</summary>
+<summary>Check Solution (C++)</summary>
+
+```cpp
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int maxProduct(vector<int>& nums) {
+    if (nums.empty()) return 0;
+    long long max_val = nums[0], min_val = nums[0], res = nums[0];
+    for (size_t i = 1; i < nums.size(); ++i) {
+        long long next_max = max({(long long)nums[i], max_val * nums[i], min_val * nums[i]});
+        long long next_min = min({(long long)nums[i], max_val * nums[i], min_val * nums[i]});
+        max_val = next_max;
+        min_val = next_min;
+        res = max(res, max_val);
+    }
+    return (int)res;
+}
+```
+
+</details>
+
+---
+
+## <Code2 className="inline-block mr-2" /> 4. 课后强化练习
+
+### 练习 1：方格取数 (双线线性 DP)
+在 $N \times N$ 的方格中，从左上角出发两次到达右下角，求路径上数字和的最大值（每个位置的数字只能取一次）。
+
+<details>
+<summary>Check Analysis & Solution</summary>
+
+**分析**：设两路同时走，坐标分别为 $(x1, y1), (x2, y2)$。由于步数相同，$x1+y1 = x2+y2 = k$。
+状态定义：$f[k][i][j]$ 表示走了 $k$ 步，第一条路在第 $i$ 行，第二条路在第 $j$ 行。
 
 ```cpp
 #include <iostream>
-#include <string>
-#include <vector>
 #include <algorithm>
-
 using namespace std;
 
-int edit_distance(string s1, string s2) {
-    int n = s1.size(), m = s2.size();
-    vector<vector<int>> f(n + 1, vector<int>(m + 1));
-    for (int i = 0; i <= n; i++) f[i][0] = i;
-    for (int j = 0; j <= m; j++) f[0][j] = j;
-    
-    for (int i = 1; i <= n; i++) {
-        for (int j = 1; j <= m; j++) {
-            if (s1[i-1] == s2[j-1]) f[i][j] = f[i-1][j-1];
-            else f[i][j] = min({f[i-1][j], f[i][j-1], f[i-1][j-1]}) + 1;
+int a[15][15], f[30][15][15];
+
+int main() {
+    int n; cin >> n;
+    int x, y, z;
+    while (cin >> x >> y >> z, x || y || z) a[x][y] = z;
+
+    for (int k = 2; k <= n * 2; k++) {
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++) {
+                int y1 = k - i, y2 = k - j;
+                if (y1 >= 1 && y1 <= n && y2 >= 1 && y2 <= n) {
+                    int t = a[i][y1];
+                    if (i != j) t += a[j][y2];
+                    int &v = f[k][i][j];
+                    v = max({f[k-1][i-1][j-1], f[k-1][i-1][j], f[k-1][i][j-1], f[k-1][i][j]}) + t;
+                }
+            }
         }
     }
-    return f[n][m];
+    cout << f[n*2][n][n] << endl;
+    return 0;
+}
+```
+
+</details>
+
+### 练习 2：最长公共上升子序列 (LCIS)
+结合 LCS 与 LIS，要求在 $O(N^2)$ 时间内求解。
+
+<details>
+<summary>Check Solution (Optimized O(N^2))</summary>
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    int n; cin >> n;
+    vector<int> a(n + 1), b(n + 1);
+    for (int i = 1; i <= n; i++) cin >> a[i];
+    for (int i = 1; i <= n; i++) cin >> b[i];
+
+    vector<int> f(n + 1, 0);
+    for (int i = 1; i <= n; i++) {
+        int maxv = 0; // 维护 b[1..j-1] 中小于 a[i] 的 LCIS 最大值
+        for (int j = 1; j <= n; j++) {
+            if (a[i] == b[j]) f[j] = max(f[j], maxv + 1);
+            else if (b[j] < a[i]) maxv = max(maxv, f[j]);
+        }
+    }
+    int res = 0;
+    for (int i = 1; i <= n; i++) res = max(res, f[i]);
+    cout << res << endl;
+    return 0;
 }
 ```
 

@@ -2,7 +2,7 @@
 title: 状压 DP
 ---
 
-import { Microscope, Layers, Activity, ShieldCheck, Zap, Binary, Grid, Target, CheckCircle2 } from 'lucide-react';
+import { Microscope, Layers, Activity, ShieldCheck, Zap, Binary, Grid, Target, CheckCircle2, BookOpen, Code2 } from 'lucide-react';
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # 状态压缩动态规划 (State Compression DP)
@@ -18,8 +18,10 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 设全集 $U = \{0, 1, \dots, n-1\}$。任何子集 $S \subseteq U$ 可唯一映射为整数 $x = \sum_{i \in S} 2^i$。
 位运算为集合操作提供了 $O(1)$ 的封闭映射：
 - $i \in S \iff (x \gg i) \& 1$
-- $S \cup \{i\} \iff x | (1 \ll i)$
+- $S \cup \{i\} \iff x \mid (1 \ll i)$
 - $S \setminus \{i\} \iff x \oplus (1 \ll i)$
+- $S_1 \cap S_2 \iff x_1 \& x_2$
+- $S_1 \cup S_2 \iff x_1 \mid x_2$
 
 ### 1.2 无后效性 (No-after-effect) 逻辑验证
 
@@ -34,7 +36,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 ## <Layers className="inline-block mr-2" /> 2. 状态转移方程的导出
 
-状压 DP 的演进本质上是**集合规模的递增**。
+状压 DP 的演进本质上是**集合规模的递增**或**阶段的线性推进**。
 
 ### 2.1 路径/排列类 (Hamiltonian Path)
 $$dp[S][i] = \min_{j \in S, j \neq i} \{ dp[S \oplus (1 \ll i)][j] + \text{dist}(j, i) \}$$
@@ -42,65 +44,111 @@ $$dp[S][i] = \min_{j \in S, j \neq i} \{ dp[S \oplus (1 \ll i)][j] + \text{dist}
 
 ### 2.2 棋盘/覆盖类 (Grid Filling)
 $$dp[i][S] = \sum_{S'} dp[i-1][S'] \quad (\text{if } S \text{ is compatible with } S')$$
-*导出逻辑*：第 $i$ 行的状态 $S$ 仅由第 $i-1$ 行的兼容状态 $S'$ 转移而来，通过预处理兼容性矩阵可显著提速。
+*导出逻辑*：第 $i$ 行的状态 $S$ 仅由第 $i-1$ 行的兼容状态 $S'$ 转移而来。
 
----
-
-## <Binary className="inline-block mr-2" /> 3. 进阶技巧：子集枚举优化
-
+### 2.3 子集枚举优化 (Subset Enumeration)
 对于涉及“划分集合”的问题，需要枚举 $S$ 的所有非空子集 $s$。
 $$dp[S] = \max_{s \subset S} \{ dp[S \setminus s] + \text{cost}(s) \}$$
-
-**高效枚举实现**：
-```cpp
-for (int s = S; s; s = (s - 1) & S) {
-    // s 是 S 的子集，时间复杂度总计 O(3^N)
-}
-```
+**复杂度证明**：总枚举次数为 $\sum_{k=0}^n \binom{n}{k} \cdot 2^k = (1+2)^n = 3^n$。
 
 ---
 
-## <ShieldCheck className="inline-block mr-2" /> 4. 综合练习与严谨实现
+## <ShieldCheck className="inline-block mr-2" /> 3. 教材化典型例题
 
-### 练习 1：最短 Hamilton 路径 (TSP Base)
+### 例题 1：蒙德里安的梦想 (Mondriaan's Dream)
+
+**问题描述**：用 $1 \times 2$ 的多米诺骨牌填满 $N \times M$ 的棋盘，求方案数。
+**核心思路**：只需要确定所有横向骨牌的放置，纵向骨牌将自动填满剩余空间。
+**状态定义**：$f[i][S]$ 表示前 $i-1$ 列已摆好，且从第 $i-1$ 列伸到第 $i$ 列的状态为 $S$ 的方案数。
 
 <details>
 <summary>Check Solution (C++)</summary>
 
 ```cpp
 #include <iostream>
+#include <vector>
 #include <cstring>
-#include <algorithm>
 
 using namespace std;
 
-int f[1 << 20][20], d[20][20];
+long long f[12][1 << 11];
+bool st[1 << 11];
 
-/**
- * @brief Hamiltonian Path Implementation
- * Time: O(2^N * N^2)
- */
 int main() {
-    int n; cin >> n;
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++) cin >> d[i][j];
+    int n, m;
+    while (cin >> n >> m, n || m) {
+        // 预处理哪些状态 S 能够合法填入纵向骨牌
+        for (int i = 0; i < 1 << n; i++) {
+            int cnt = 0;
+            st[i] = true;
+            for (int j = 0; j < n; j++) {
+                if (i >> j & 1) {
+                    if (cnt & 1) st[i] = false;
+                    cnt = 0;
+                } else cnt++;
+            }
+            if (cnt & 1) st[i] = false;
+        }
 
-    memset(f, 0x3f, sizeof f);
-    f[1][0] = 0; // Start at point 0
-
-    for (int i = 1; i < (1 << n); i++) {
-        for (int j = 0; j < n; j++) {
-            if ((i >> j) & 1) { // Current end point j
-                for (int k = 0; k < n; k++) {
-                    if ((i ^ (1 << j)) >> k & 1) { // Prev end point k
-                        f[i][j] = min(f[i][j], f[i ^ (1 << j)][k] + d[k][j]);
-                    }
+        memset(f, 0, sizeof f);
+        f[0][0] = 1;
+        for (int i = 1; i <= m; i++) {
+            for (int j = 0; j < 1 << n; j++) {
+                for (int k = 0; k < 1 << n; k++) {
+                    if ((j & k) == 0 && st[j | k])
+                        f[i][j] += f[i - 1][k];
                 }
             }
         }
+        cout << f[m][0] << endl;
     }
-    cout << f[(1 << n) - 1][n - 1] << endl;
     return 0;
+}
+```
+
+</details>
+
+---
+
+## <Code2 className="inline-block mr-2" /> 4. 课后强化练习
+
+### 练习 1：玉米地 (Corn Fields)
+在 $M \times N$ 的土地上选择互不相邻的格子种草，有些格子贫瘠不能种，求总方案数。
+
+<details>
+<summary>Check Solution (Bitmask DP)</summary>
+
+```cpp
+// 状态：f[i][S] 表示第 i 行状态为 S
+// 转移：f[i][S] = sum(f[i-1][S']) if (S & S' == 0) and (S is valid)
+for (int i = 1; i <= m; i++) {
+    for (int s : head[i]) { // 预处理出每一行合法的状态
+        for (int pre : head[i-1]) {
+            if (!(s & pre)) f[i][s] = (f[i][s] + f[i-1][pre]) % MOD;
+        }
+    }
+}
+```
+
+</details>
+
+### 练习 2：愤怒的小鸟 (Angry Birds - Subset Optimization)
+给出 $N$ 个点的坐标，求最少发射多少条抛物线（过原点）能覆盖所有点。$N \le 18$。
+
+<details>
+<summary>Check Analysis & Trick</summary>
+
+**分析**：任意两个不共线的点可唯一确定一条过原点的抛物线。
+**技巧**：$f[S]$ 表示覆盖点集 $S$ 的最少抛物线数。
+为了避免重复枚举，我们每次选取 $S$ 中第一个未覆盖的点 $x$，枚举所有经过 $x$ 的可能抛物线来更新状态。
+
+```cpp
+for (int i = 0; i < (1 << n) - 1; i++) {
+    int x = 0;
+    while ((i >> x) & 1) x++; // 找到第一个未覆盖的点
+    for (int path : paths[x]) { // paths[x] 预处理了过点 x 的所有有效抛物线
+        f[i | path] = min(f[i | path], f[i] + 1);
+    }
 }
 ```
 
@@ -110,6 +158,7 @@ int main() {
 
 ## 延伸挑战
 
-- [洛谷 P1433 吃奶酪 (基础状压)](https://www.luogu.com.cn/problem/P1433)
+- [洛谷 P1433 吃奶酪](https://www.luogu.com.cn/problem/P1433)
 - [洛谷 P1879 [USACO06NOV] Corn Fields G](https://www.luogu.com.cn/problem/P1879)
 - [洛谷 P3959 [NOIP2017 提高组] 宝藏 (子集枚举优化)](https://www.luogu.com.cn/problem/P3959)
+- [AtCoder ABC 142 F - Pure (状压找最小环)](https://atcoder.jp/contests/abc142/tasks/abc142_f)
