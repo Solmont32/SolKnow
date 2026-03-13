@@ -35,6 +35,16 @@ import { GitBranch, GitMerge, Calculator, Terminal, Box, Binary, Network } from 
 - **Case 2**: $a = b^d$。每一层的工作量均衡分配。$T(n) = O(n^d \log n)$。
 - **Case 3**: $a < b^d$。根节点的合并工作量占主导。$T(n) = O(n^d)$。
 
+### 3. 空间复杂度收敛分析 (Space Convergence)
+
+分治算法的空间复杂度主要由**递归栈深度**与**各层临时辅助空间**决定。
+
+- **递归栈空间**: $S_{stack} = O(\log_b n)$。
+- **辅助空间**: $S_{aux} = \sum_{i=0}^{\log_b n} a^i \cdot f_{space}(n/b^i)$。
+- **收敛性**: 
+  - 若各层空间可复用（如快速排序），总空间为栈深 $O(\log n)$。
+  - 若各层空间需独立保留（如归并排序），总空间为 $O(n)$，因为每一层分配的空间在回溯后释放。
+
 ---
 
 ## 三 : 经典模型深度解析
