@@ -5,7 +5,7 @@ title: 竞赛进阶策略：从 AtCoder/Codeforces 战术、高级模板库到�
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 import ComplexityAnalysis from '@site/src/components/ComplexityAnalysis';
 import SupportingExercises from '@site/src/components/SupportingExercises';
-import { Trophy, Zap, Bug, Code2, Clock, ShieldCheck, Factory, Lightbulb, Brain, Gauge, Repeat, SearchCheck, Target, Layers, Cpu, Milestone, Terminal, FlaskConical } from 'lucide-react';
+import { Trophy, Zap, Bug, Code2, Clock, ShieldCheck, Factory, Lightbulb, Brain, Gauge, Repeat, SearchCheck, Target, Layers, Cpu, Milestone, Terminal, FlaskConical, Database, Timer, Activity } from 'lucide-react';
 
 # 竞赛进阶策略：战术、模板与性能全链路
 
@@ -32,71 +32,80 @@ DP 的正确性建立在**最优子结构**与**无后效性**之上。
 
 ---
 
-## ⚡ II. 常数级优化推导 (Constant-level Optimization)
+## ⏱️ II. 时间限制边界推导 (Time Limit Boundary Derivation)
 
-当时间复杂度 $O(f(N))$ 相同，常数项 $C$ 决定了能否在 1s 内处理 $10^8$ 级规模的数据。
+在 AtCoder/Codeforces 中，准确预估运行时间是选定算法的前提。
 
-### 2.1 缓存友好性 (Cache Locality)
-现代 CPU 具有多级缓存。访问连续内存地址的速度远高于随机访问。
-*   **优化策略**：在多维数组 `a[N][M]` 中，优先遍历最后一维：`for(i) for(j) sum += a[i][j]`。
-*   **推导**：若 $M > \text{CacheLineSize}$，随机访问会导致频繁的 Cache Miss，延迟从 $\sim 3$ cycles 飙升至 $> 200$ cycles。
+### 2.1 运算量阈值准则 (Operations per Second)
+现代评测环境（如 Codeforces 采用的 EPYC 7742 或 AtCoder 的 Xeon Platinum）通常支持：
+*   **$10^8$ ops/s**：保守基准线。
+*   **$2 \times 10^8 \sim 5 \times 10^8$ ops/s**：针对简单算术运算、位运算或连续内存访问。
+*   **$10^7$ ops/s**：涉及复杂递归、频繁内存分配或大量 `std::map` 操作。
 
-### 2.2 模运算优化 (Modulo Optimization)
-模运算 `%` 是代价昂贵的指令。
-*   **Trick 1：减法代替模**
-    ```cpp
-    // 慢
-    a = (a + b) % MOD;
-    // 快
-    a += b; if (a >= MOD) a -= MOD;
-    ```
-*   **Trick 2：Barrett Reduction / Montgomery Multiplication**
-    对于固定模数，利用乘法和位移预计算倒数。在现代编译器中，使用 `const int MOD` 往往能触发优化。
+**推导模型：**
+若限制为 $T$ 秒，复杂度为 $O(C \cdot f(N))$，则需满足：
+$$C \cdot f(N) \le T \times 10^8 \times \eta$$
+其中 $\eta$ 为常数因子（位运算 $\eta \approx 10$, 指数运算 $\eta \approx 0.1$）。
 
-### 2.3 指令级并行 (ILP) 与 循环展开
-```cpp
-// 循环展开减少分支预测压力
-for (int i = 0; i < n; i += 4) {
-    s1 += a[i];
-    s2 += a[i+1];
-    s3 += a[i+2];
-    s4 += a[i+3];
-}
-sum = s1 + s2 + s3 + s4;
-```
+### 2.2 常见复杂度规模映射
+| 复杂度 | $N \le 10^2$ | $N \le 10^3$ | $N \le 5 \cdot 10^5$ | $N \le 10^7$ | $N > 10^8$ |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| $O(N^4)$ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| $O(N^3)$ | ✅ | ⚠️ (1s 边缘) | ❌ | ❌ | ❌ |
+| $O(N^2)$ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| $O(N \log N)$ | ✅ | ✅ | ✅ | ✅ (常数需小) | ❌ |
+| $O(N)$ | ✅ | ✅ | ✅ | ✅ | ✅ (需 Fast I/O) |
 
 ---
 
-## 🛠️ III. 赛时工程一致性校验 (Contest Engineering)
+## 💾 III. 空间复杂度精细化分配 (Space Complexity Allocation)
 
-### 3.1 自动化对拍系统 (Stress Testing)
-当发现 WA 但找不到反例时，必须建立对拍环境。
+内存限制（通常为 256MB 或 512MB）在持久化数据结构和多维 DP 中极易触发。
 
-**`stress.py` (自动化脚本示例)**
-```python
-import os
-while True:
-    os.system("./gen > in.txt")
-    os.system("./sol < in.txt > out.txt")
-    os.system("./bf < in.txt > ans.txt")
-    if os.system("diff out.txt ans.txt"):
-        print("WA Found!")
-        break
-```
+### 3.1 字节级成本核算
+*   `int`: 4 bytes
+*   `long long`: 8 bytes
+*   `std::vector<int> a(N)`: $4N + 24$ (Header) bytes
+*   `std::map<int, int>`: $\sim 48$ bytes per node (R-B Tree pointers)
 
-### 3.2 交互题调试规范 (Interactive Problems)
-*   **清空缓冲区**：`cout << endl;` (自动 flush) 或 `fflush(stdout);`。
-*   **自制评测器**：在本地模拟交互过程，通过 `pipe` 或手工输入验证逻辑。
+**案例推导：**
+若 $N = 10^6$，开设 `int a[N][20]` (如 ST 表) 的开销为：
+$$10^6 \times 20 \times 4 \text{ bytes} = 80 \text{ MB}$$
+对于 $N = 5 \cdot 10^5$ 的**持久化线段树**，通常需要 $32N$ 个节点，若每个节点包含 `ls, rs, sum` (3 ints)：
+$$32 \times 5 \cdot 10^5 \times 12 \text{ bytes} \approx 192 \text{ MB}$$
+在 256MB 限制下极其危险，需使用 `short` 或位域压缩。
 
 ---
 
-## 📦 IV. 高性能生产力模板库 (Advanced Template Library)
+## ⚡ IV. 常数级优化推导 (Constant-level Optimization)
 
-### 4.1 工业级 Fast I/O (基于 `fread`/`fwrite`)
-针对 $10^6$ 以上的数据量，`scanf`/`printf` 往往成为瓶颈。
+### 4.1 缓存友好性与流水线
+*   **Cache Locality**：优先遍历最后一维，减少 Cache Miss。
+*   **SIMD 向量化**：使用 `std::vector<int>` 配合 `#pragma GCC optimize("Ofast,unroll-loops")` 引导编译器进行位宽并行。
 
+### 4.2 模运算与位运算
+*   **Barrett Reduction**：预计算模数的倒数。
+*   **枚举子集优化**：`for (int s = mask; s; s = (s - 1) & mask)` 相比遍历所有 $2^n$ 状态，效率提升极大。
+
+---
+
+## 🛠️ V. 模板鲁棒性验证 (Template Robustness & Verification)
+
+### 5.1 溢出防御 (Overflow Prevention)
+*   **强制类型转换**：在所有涉及乘法的表达式中显式使用 `1LL * a * b`。
+*   **取模安全性**：`(a % MOD + MOD) % MOD` 处理负数结果。
+
+### 5.2 边界一致性校验 (Boundary Checking)
+*   **Empty Case**：$N=0$ 或 $N=1$ 时的逻辑闭环。
+*   **Max Constraint**：使用 `numeric_limits<T>::max()` 进行压力测试。
+
+---
+
+## 📦 VI. 高性能生产力模板库 (Advanced Template Library)
+
+### 6.1 工业级 Fast I/O
 <details>
-<summary>C++ Fast I/O Template</summary>
+<summary>C++ Fast I/O (Production Grade)</summary>
 
 ```cpp
 namespace IO {
@@ -126,11 +135,9 @@ namespace IO {
 ```
 </details>
 
-### 4.2 模数类封装 (Modular Arithmetic Wrapper)
-支持运算符重载，避免手动溢出和模运算。
-
+### 6.2 动态模数类 (Dynamic Modular Integer)
 <details>
-<summary>Modular Integer Template</summary>
+<summary>Modular Integer Wrapper</summary>
 
 ```cpp
 template<int MOD>
@@ -155,13 +162,10 @@ struct Mint {
 
 ---
 
-## 📝 V. 进阶综合练习 (Advanced Exercises)
-
-
+## 📝 VII. 进阶综合练习 (Advanced Exercises)
 
 ### 练习 1：对拍与边界：计算几何稳定性
 **题目**：判断点 $P$ 是否在多边形内。要求在 $10^5$ 次询问下保证 $O(\log N)$ 且无浮点误差。
-**核心**：使用射线法时，将射线设为水平且通过顶点的情况需特殊处理，或使用“点在有向直线左侧”判断。
 
 <details>
 <summary>Check Solution (C++)</summary>
@@ -188,17 +192,13 @@ bool inConvex(const vector<Point>& poly, Point p) {
 </details>
 
 ### 练习 2：常数优化：位运算加速 $O(N^2/w)$
-**题目**：给定一个 $N=40000$ 的无向图，询问三元组 $(i, j, k)$ 使得 $i, j, k$ 两两相连的数量。
-**优化**：使用 `std::bitset<40000>` 存储邻接矩阵。对于每条边 $(u, v)$，计数 $bit[u] \ \& \ bit[v]$ 的 `count()`。
+**题目**：给定 $N=40000$ 的无向图，统计三元组 $(i, j, k)$ 使得三点两两相连的数量。
 
 <details>
 <summary>Check Solution (C++)</summary>
 
 ```cpp
 #include <bitset>
-#include <vector>
-using namespace std;
-
 bitset<40000> adj[40000];
 long long countTriangles(int n) {
     long long ans = 0;
@@ -209,18 +209,44 @@ long long countTriangles(int n) {
             }
         }
     }
-    return ans / 3; // 每个三角形被计算了 3 次
+    return ans / 3;
+}
+```
+</details>
+
+### 练习 3：空间优化：持久化线段树的极致压缩
+**题目**：在 $N=10^6, Q=10^6$ 的第 $K$ 小问题中，内存在 128MB 限制下如何实现？
+**策略**：不存储 `sum` 而是存储 `cnt`，并利用指针偏移或 `uint32_t` 压缩。
+
+<details>
+<summary>Check Solution (C++)</summary>
+
+```cpp
+struct Node {
+    unsigned int ls, rs;
+    int cnt;
+} tree[22000005]; // 20N 左右
+int tot = 0, root[1000005];
+
+void update(int &rt, int l, int r, int val) {
+    int cur = ++tot;
+    tree[cur] = tree[rt]; rt = cur;
+    tree[rt].cnt++;
+    if (l == r) return;
+    int mid = (l + r) >> 1;
+    if (val <= mid) update(tree[rt].ls, l, mid, val);
+    else update(tree[rt].rs, mid + 1, r, val);
 }
 ```
 </details>
 
 ---
 
-## 🚀 总结：从选手到大师的跨越
+## 🚀 总结：大师之路
 
-1.  **代码即艺术**：不仅要 AC，还要追求代码的**简洁度**（Conciseness）与**可维护性**。
-2.  **防御性编程**：在代码中加入 `assert()` 验证中间状态。
-3.  **多维复盘**：分析 CF 赛后前十名的代码，学习其独特的 Trick 与工程封装。
+1.  **防御性编程**：使用 `assert()` 和 `#ifdef LOCAL` 增强代码生命力。
+2.  **多维复盘**：分析赛后前十名代码，提取其工程化 Trick。
+3.  **速度即生命**：深刻理解指令级并行与内存分级。
 
 <div style={{ textAlign: 'center', marginTop: '2rem' }}>
   <a className="button button--primary button--lg" href="/docs/cp/codeforces">
