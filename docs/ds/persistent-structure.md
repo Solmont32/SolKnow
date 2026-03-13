@@ -3,7 +3,7 @@ title: 可持久化数据结构 (Persistent Structures)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { History, Save, Layers, Share2, GitBranch, Clock, Database } from 'lucide-react';
+import { History, Save, Layers, Share2, GitBranch, Clock, Database, Milestone } from 'lucide-react';
 
 # 可持久化数据结构: 时间与空间的博弈
 
@@ -16,80 +16,99 @@ import { History, Save, Layers, Share2, GitBranch, Clock, Database } from 'lucid
 
 ---
 
-## 1. 系统化抽象数据类型 (ADT) 推导
+## 1. 实现范式深度对比
 
-### 1.1 路径复制 (Path Copying) 的代数本质
+### 1.1 胖节点 (Fat Node)
+在每个节点内部维护一个修改日志（版本号 -> 值的映射）。
+- **优点**: 物理结构不变，不产生多余节点。
+- **缺点**: 查询复杂度从 $O(1)$ 降至 $O(\log V)$，且难以实现 Full Persistence。
 
-对于树形结构，修改一个节点 $u$ 会影响其所有祖先的拓扑关系。
-为了保证历史版本 $v$ 的不可变性，路径复制算法规定：
-$\forall p \in \text{path}(root, u)$，创建 $p$ 的副本 $p'$，使得新版本的 $root'$ 能够索引到修改后的 $u'$，同时共享未被修改的侧向子树。
-
-### 1.2 可持久化数组的退化
-
-可持久化数组通常通过可持久化线段树实现。单次修改代价为 $O(\log N)$ 空间。
-**Fat Node 方案**: 在每个节点记录 `(version, value)` 列表。查询复杂度提升至 $O(\log V)$，但空间常数显著降低。
+### 1.2 路径复制 (Path Copying)
+修改节点 $u$ 时，复制从根到 $u$ 的整条路径。
+- **优点**: 保持了原始查询复杂度，天然支持 Full Persistence。
+- **缺点**: 空间开销与树高成正比。在线段树中为 $O(\log N)$。
 
 ---
 
-## 2. 复杂度分析与数据完整性证明
+## 2. 复杂度收敛分析与多维验证
 
 ### 2.1 时空复杂度证明
 
-**定理**：对于高度为 $H$ 的树，路径复制单次修改的时间与空间复杂度均为 $O(H)$。
-**证明**：每次修改仅创建从根到叶子的单一路径节点。在线段树中，$H = \log N$，故空间增长量为 $O(\log N)$。
-**分摊空间优化**: 在 Full Persistence 中，若修改操作遵循特定的拓扑序，可以利用**原子化操作记录**（类似 AOF 日志）配合定期快照，实现 $O(1)$ 均摊空间开销。
+**定理**：路径复制在线段树上的单次更新空间复杂度为 $O(\log N)$。
+**证明**：线段树是一棵高度为 $\lceil \log_2 N \rceil$ 的平衡树。更新一个叶子节点只会影响其所有祖先。祖先节点的数量恰好等于树的高度。由于每个受影响的节点仅被复制一次，空间增量为 $O(\log N)$。
 
-### 2.2 数据完整性 (不可变性) 证明
+### 2.2 多维验证：二维可持久化线段树 (2D Persistent Segment Tree)
 
-**命题**：结构共享不会导致旧版本的意外修改。
-**证明**：在函数式实现中，所有更新操作均返回新创建的节点引用。任何对节点的写操作仅作用于新分配的内存空间。由于旧版本的根节点及其路径引用链未发生任何改变，其指向的数据拓扑保持恒定（Referential Transparency）。
+二维可持久化通常用于处理“矩形区域内的历史/权值查询”。
+- **方案**: 对 $x$ 坐标建立可持久化线段树。每个版本 $v_x$ 维护了区间 $[1, x]$ 内所有点的 $y$ 坐标信息。
+- **逻辑**: 查询矩形 $[x_1, x_2] \times [y_1, y_2]$ 等价于在版本 $v_{x_2}$ 和 $v_{x_1-1}$ 之间进行前缀和减法。
+- **时空**: 空间 $O(N \log M)$，查询 $O(\log M)$。
 
 ---
 
 ## 3. 教材化例题与解析
 
-### 例题 1：静态区间第 k 小 (主席树)
+### 例题 1：可持久化字典树 (Persistent Trie)
 
 <details>
-<summary>Check Solution (C++ 实现)</summary>
+<summary>Check Solution (C++ Implementation)</summary>
+
+**题目背景**：给定序列，查询区间 $[L, R]$ 内与 $X$ 异或最大值。
 
 ```cpp
-int update(int p, int l, int r, int x) {
-    int q = ++idx;
-    tr[q] = tr[p]; tr[q].cnt++;
-    if (l == r) return q;
-    int mid = l + r >> 1;
-    if (x <= mid) tr[q].l = update(tr[p].l, l, mid, x);
-    else tr[q].r = update(tr[p].r, mid + 1, r, x);
+int insert(int p, int val) {
+    int q = ++idx, cur = q;
+    for (int i = 30; i >= 0; i--) {
+        int v = (val >> i) & 1;
+        tr[cur] = tr[p];
+        tr[cur].ch[v] = ++idx;
+        tr[cur].cnt++;
+        cur = tr[cur].ch[v];
+        p = tr[p].ch[v];
+    }
+    tr[cur].cnt++;
     return q;
 }
-
-int query(int u, int v, int l, int r, int k) {
-    if (l == r) return l;
-    int mid = l + r >> 1;
-    int cnt = tr[tr[v].l].cnt - tr[tr[u].l].cnt;
-    if (k <= cnt) return query(tr[u].l, tr[v].l, l, mid, k);
-    else return query(tr[u].r, tr[v].r, mid + 1, r, k - cnt);
+int query(int l, int r, int val) {
+    int res = 0;
+    for (int i = 30; i >= 0; i--) {
+        int v = (val >> i) & 1;
+        if (tr[tr[r].ch[v ^ 1]].cnt - tr[tr[l].ch[v ^ 1]].cnt > 0) {
+            res |= (1 << i);
+            l = tr[l].ch[v ^ 1]; r = tr[r].ch[v ^ 1];
+        } else {
+            l = tr[l].ch[v]; r = tr[r].ch[v];
+        }
+    }
+    return res;
 }
 ```
 
 </details>
 
-### 例题 2：可持久化并查集 (按秩合并)
+### 例题 2：可持久化平衡树 (Persistent Treap)
 
 <details>
-<summary>Check Solution</summary>
+<summary>Check Solution (FHQ-Treap 实现)</summary>
 
-**解析**：不能使用路径压缩（会破坏历史版本），必须使用**按秩合并**保证树高 $O(\log N)$。
+**核心逻辑**：在 `split` 和 `merge` 操作中，涉及修改节点的动作前先进行 `copy_node`。
 
 ```cpp
-void merge(int &v_old, int &v_new, int a, int b) {
-    int ra = find(v_old, a), rb = find(v_old, b);
-    if (ra == rb) { v_new = v_old; return; }
-    if (tr[ra].dep > tr[rb].dep) swap(ra, rb);
-    // 将 ra 接到 rb 下，更新 v_new 的主席树
-    v_new = update_fa(v_old, ra, rb);
-    if (tr[ra].dep == tr[rb].dep) v_new = update_dep(v_new, rb);
+int copy_node(int u) {
+    if (!u) return 0;
+    int v = ++idx;
+    tr[v] = tr[u];
+    return v;
+}
+void split(int u, int v, int &l, int &r) {
+    if (!u) { l = r = 0; return; }
+    u = copy_node(u); // 路径复制关键点
+    if (tr[u].val <= v) {
+        l = u; split(tr[u].rs, v, tr[u].rs, r);
+    } else {
+        r = u; split(tr[u].ls, v, l, tr[u].ls);
+    }
+    push_up(u);
 }
 ```
 
@@ -107,29 +126,22 @@ void merge(int &v_old, int &v_new, int a, int b) {
 
 </details>
 
-2. **[动态主席树]** 支持单点修改与区间排名。
+2. **[历史版本并查集]**
 <details>
 <summary>Check Solution</summary>
 
-**核心逻辑**：树状数组套主席树。外层 BIT 维护位置，内层线段树维护权值。
-
-```cpp
-void add(int x, int v) {
-    for (int i = x; i <= n; i += lowbit(i))
-        update(roots[i], 1, M, v, 1);
-}
-```
+**核心策略**：用可持久化线段树维护 `fa` 数组。单次修改（即 `merge`）会产生一个新的 `fa` 数组根节点。必须使用按秩合并。
 
 </details>
 
-3. **[进阶] 历史记录索引**：实现一个高性能的文件版本控制系统元数据存储。
+3. **[进阶] 可持久化 LCT?**
 <details>
 <summary>Check Solution</summary>
 
-**核心思想**：利用 Full Persistence Treap 存储文件路径树。每次 Commit 对应一次全局根节点的持久化更新。
+**解析**：由于 LCT 深度依赖 Splay 的自平衡，而 Splay 的旋转会破坏路径复制的成本效益，可持久化 LCT 的空间复杂度极高。工业界通常使用 **Top Trees** 或 **Euler Tour Tree** 的可持久化版本替代。
 
 </details>
 
 ---
 
-_编者注：可持久化结构的精髓在于对“副作用”的严格管控。它不仅是算法竞赛的利器，更是现代数据库（如 MVCC 机制）与函数式编程的核心数学基础。_
+_编者注：可持久化结构的精髓在于对“历史”的尊重。它不仅是算法竞赛的利器，更是现代数据库实现快照隔离与并发控制的理论基石。_
