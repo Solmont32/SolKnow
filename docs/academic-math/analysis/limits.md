@@ -140,7 +140,7 @@ $$H_{2n}-H_n=\frac1{n+1}+\cdots+\frac1{2n}>n\cdot\frac1{2n}=\frac12.$$
 | :--- | :--- | :--- |
 | **多项式分式** | 放大分子，缩小分母 | $\frac{n^2+1}{n^3-2} \le \frac{2n^2}{n^3/2} = \frac{4}{n}$ (当 $n$ 足够大) |
 | **根式差** | 分子有理化 | $\sqrt{n+1}-\sqrt{n} = \frac{1}{\sqrt{n+1}+\sqrt{n}} < \frac{1}{2\sqrt{n}}$ |
-| **指数/阶乘** | 利用 Bernoulli 不等式或归纳 | $q^n \to 0 (|q|<1)$ 利用 $(1+h)^n \ge 1+nh$ |
+| **指数/阶乘** | 利用 Bernoulli 不等式或归纳 | $q^n \to 0 (|q| < 1)$ 利用 $(1+h)^n \ge 1+nh$ |
 
 ### 3. 高阶证明例题
 

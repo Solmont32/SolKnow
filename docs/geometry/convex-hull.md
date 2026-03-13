@@ -51,6 +51,8 @@ import { Waypoints, ShieldCheck, Zap, PenTool, Activity, BookOpen, Scale } from 
 </KnowledgeCard>
 
 
+<KnowledgeCard type="info" title="共线点处理策略">
+
 在构建凸包时，共线点的处理决定了算法的行为：
 - **严格凸包**：使用 `sign(cross(...)) <= 0` 弹出。此时凸包边上不含除顶点外的点。
 - **包含边界点**：使用 `sign(cross(...)) < 0` 弹出。此时共线点会被保留。

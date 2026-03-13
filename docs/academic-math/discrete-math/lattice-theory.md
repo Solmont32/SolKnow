@@ -69,10 +69,9 @@ description: 偏序关系、格的定义与性质、分配格与有补格
 2. **运算结果**：
    - $6 \lor 10 = lcm(6, 10) = 30$
    - $6 \land 10 = gcd(6, 10) = 2$
-   </details>
+</details>
 
-:::info 练习 2
-证明格中的吸收律：$a \lor (a \land b) = a$。
+   :::info 练习 2证明格中的吸收律：$a \lor (a \land b) = a$。
 :::
 
 <details>

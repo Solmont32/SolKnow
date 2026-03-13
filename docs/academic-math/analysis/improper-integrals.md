@@ -66,7 +66,7 @@ $$\left| \int_{A_1}^{A_2} f(x) dx \right| < \epsilon$$
    - $\int \sin x$ 有界。
    - $1/x^p$ 单调趋于 0。
    故由 Dirichlet 判别法知积分收敛。
-   </details>
+</details>
 
 <details>
 <summary><b>练习 2：瑕积分的判定</b></summary>
@@ -79,7 +79,6 @@ $$\left| \int_{A_1}^{A_2} f(x) dx \right| < \epsilon$$
 由 $p$-积分判别法，当 $p+1 < 1$ 即 $p < 0$ 时收敛。
 
 </details>
-
 <details>
 <summary><b>练习 3：Cauchy 主值计算</b></summary>
 
@@ -93,7 +92,6 @@ $= \lim (\ln|\ln(1-\epsilon)| - \ln|\ln(1/2)| + \ln|\ln 2| - \ln|\ln(1+\epsilon)
 结果为 $\ln|\ln 2| - \ln|\ln(1/2)| = 0$（由于 $\ln(1/2) = -\ln 2$）。
 
 </details>
-
 ---
 
 <SupportingExercises
