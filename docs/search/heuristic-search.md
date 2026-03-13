@@ -1,13 +1,13 @@
 ---
-title: 搜索算法精要：从启发式搜索到 A* 与 IDA*
+title: 搜索算法精要：从启发式搜索到 A* 与模拟退火
 sidebar_position: 2
 ---
 
-import { Search, Zap, Target, Thermometer, Box, ArrowRightCircle, Layers, ShieldCheck, Activity, Cpu, Database, Swords, Microscope, TrendingUp, Binary, Info, BookOpen, Calculator } from 'lucide-react';
+import { Search, Zap, Target, Thermometer, Box, ArrowRightCircle, Layers, ShieldCheck, Activity, Cpu, Database, Swords, Microscope, TrendingUp, Binary, Info, BookOpen, Calculator, RefreshCcw } from 'lucide-react';
 
 # <Target className="inline-block mr-2 mb-1 text-purple-500" /> 搜索算法精要 (Search Essentials)
 
-> **导语**：搜索 (Search) 是计算科学中处理“NP-Hard”问题的最后一道防线。从朴素的遍历到启发式引导，搜索算法的进化本质上是对**状态空间 (State Space)** 拓扑结构与数学特性的深度解构。本章旨在通过严密的数学证明与系统化的算法优化，揭示搜索树收敛的底层逻辑。
+> **导语**：搜索 (Search) 是计算科学中处理“NP-Hard”问题的最后一道防线。从启发式引导的确定性搜索到模拟物理退火的随机化优化，搜索算法的进化本质上是对**状态空间 (State Space)** 拓扑结构与数学特性的深度解构。
 
 ---
 
@@ -25,32 +25,28 @@ import { Search, Zap, Target, Thermometer, Box, ArrowRightCircle, Layers, Shield
 ### 2. 搜索树复杂度与收敛性分析
 
 在深度为 $d$、分支因子为 $b$ 的搜索树中：
-- **节点爆炸**：$|V| \approx b^d$。若 $b=10, d=20$，则 $10^{20}$ 次运算远超现代计算能力。
+- **节点爆炸**：$|V| \approx b^d$。
 - **收敛定义**：算法在有限步内找到路径（完备性）且该路径代价最小（最优性）。
-- **剪枝的本质**：通过引入谓词断言 $P(s)$，使搜索子空间 $S' \subset S$ 的测度尽可能小，而不损失目标状态 $G$。
+- **有效分支因子 $b^*$**：衡量启发式强度的核心指标。若总节点数为 $N$，则 $1 + b^* + (b^*)^2 + \dots + (b^*)^d = N$。一个好的 $h(n)$ 应使 $b^* \to 1$。
 
 ---
 
 ## 一、 <ShieldCheck className="inline-block mr-2 mb-1 text-green-500" /> 剪枝策略：逻辑断言与状态剪减
 
-### 1. 可行性剪枝 (Feasibility Pruning)
-**核心逻辑**：若当前状态 $s$ 满足某性质，使得其所有后继 $s'$ 均不可能到达 $G$，则立即回溯。
-- **数学表示**：$\exists \text{Predicate } \mathcal{P}(s) \text{ s.t. } \mathcal{P}(s) = \text{True} \implies \forall \tau \in A^*, T(s, \tau) \notin G$。
+### 1. 可行性与最优性剪枝
+- **可行性剪枝**：$\exists P(s) \text{ s.t. } P(s) \implies \forall \tau, T(s, \tau) \notin G$。
+- **最优性剪枝**：若 $g(s) + \text{low\_bound}(h^*(s)) \ge \text{ans}_{\text{current\_best}}$，则舍弃。
 
-### 2. 最优性剪枝与代价下界
-**定理 1**：令 $\text{best}$ 为当前全局最优代价。若 $g(s) + \hat{h}(s) \ge \text{best}$，其中 $\hat{h}(s)$ 为 $h^*(s)$ 的**下界估计**，则可剪除 $s$。
-- **一致性证明**：此剪枝之所以安全，是因为 $\hat{h}(s) \le h^*(s)$ 保证了真实解不会被“误杀”。
-
-### 3. 系统化剪枝准则：[木棒拼接问题]
+### 2. 系统化剪枝准则：[木棒拼接问题]
 <details>
 <summary><Search size={16} className="inline mr-1" /> 深度优先搜索剪枝证明（C++）</summary>
 
 ```cpp
 /**
- * 剪枝策略分析：
- * 1. 降序排列：先尝试长木棒，减少分支。
- * 2. 相同长度去重：避免重复搜索等价状态。
- * 3. 边界逻辑：若第一个或最后一个尝试的木棒失败，则当前路径必败（由于对称性）。
+ * 核心剪枝点分析：
+ * 1. 降序排列：长木棒约束力更强。
+ * 2. 相同长度去重：避免等价分支。
+ * 3. 失败回溯：若当前第一根或最后一根拼接失败，则该分支必败。
  */
 bool dfs(int cnt, int cur, int last) {
     if (cnt == m) return true;
@@ -62,7 +58,6 @@ bool dfs(int cnt, int cur, int last) {
         if (dfs(cnt, cur + a[i], i - 1)) return true;
         vis[i] = 0;
 
-        // 核心剪枝点
         if (cur == 0 || cur + a[i] == target) return false; 
         while (i > 0 && a[i] == a[i - 1]) i--; 
     }
@@ -73,177 +68,152 @@ bool dfs(int cnt, int cur, int last) {
 
 ---
 
-## 二、 <Target className="inline-block mr-2 mb-1 text-red-500" /> 启发式搜索：A* 算法与估价函数证明
+## 二、 <Target className="inline-block mr-2 mb-1 text-red-500" /> A* 算法：启发式函数与一致性证明
 
 ### 1. 估价函数 $f(n) = g(n) + h(n)$
 
-$h(n)$ 是搜索算法的“灵魂”，引导搜索向目标靠拢。
-
 #### A. 可接受性 (Admissibility)
-- **定义**：$0 \le h(n) \le h^*(n)$。
-- **推论**：若 $h(n)$ 可接受，则 A* 算法具有**最优性**。
+$0 \le h(n) \le h^*(n)$。保证找到最优解。
 
 #### B. 一致性 (Consistency / Monotonicity)
-- **定义**：对于任意状态 $n$ 及其后继 $n'$，满足 $h(n) \le c(n, a, n') + h(n')$，且目标状态 $h(G)=0$。
-- **重要性**：**一致性 $\implies$ 可接受性**。若 $h(n)$ 一致，则 $f(n)$ 在搜索路径上非递减，这确保了 A* 在处理图搜索时，每个节点只需被扩展一次。
+对于相邻节点 $n, n'$，满足：
+$$h(n) \le c(n, a, n') + h(n')$$
+且 $h(G) = 0$。
 
-### 2. A* 最优性形式化证明
-**证明 (反证法)**：假设 A* 选出非最优目标 $G_2$，而最优解路径上存在节点 $n$ 在 OpenList 中。
-1. $f(G_2) = g(G_2) + 0 > g(G^*) \quad (\text{因为 } G_2 \text{ 非最优})$
-2. $f(n) = g(n) + h(n) \le g(n) + h^*(n) = f^* \quad (\text{可接受性})$
-3. $\implies f(n) \le g(G^*) < f(G_2)$
-4. 根据优先队列性质，$n$ 必在 $G_2$ 之前弹出，产生矛盾。
+### 2. 一致性推导单调性证明
+**定理**：若 $h(n)$ 一致，则沿路径的 $f(n)$ 单调不减。
+**证明**：
+$f(n') = g(n') + h(n') = g(n) + c(n, a, n') + h(n')$
+由一致性：$c(n, a, n') + h(n') \ge h(n)$
+$\therefore f(n') \ge g(n) + h(n) = f(n)$。证毕。
 
 ---
 
-## 三、 <Zap className="inline-block mr-2 mb-1 text-yellow-500" /> IDA*：限深 DFS 与启发式融合
+## 三、 <Thermometer className="inline-block mr-2 mb-1 text-orange-500" /> 模拟退火 (Simulated Annealing, SA)
 
-IDA* (Iterative Deepening A*) 是解决状态空间极大的组合优化问题（如 15-Puzzle）的首选。
+当状态空间极大且不具备明显的单调性时，随机化优化是逃离局部最优的关键。
 
-### 1. IDA* 核心算法逻辑
-- **阈值演进**：以 $f(s)$ 作为搜索深度上限，初始阈值 $limit = f(s_0)$。
-- **递归回溯**：若当前 $f(s) > limit$，记录超过阈值的最小 $f(s)$，作为下一轮搜索的阈值。
-- **优点**：空间复杂度 $O(d)$，无 OpenList 开销，非常适合大规模状态空间。
+### 1. 物理模拟与 Metropolis 准则
+- **玻尔兹曼分布**：状态能量 $E$ 的概率 $P(E) \propto \exp(-E/kT)$。
+- **接受概率**：设当前能级为 $E_s$，新能级为 $E_{s'}$。
+  - 若 $E_{s'} < E_s$，必接受。
+  - 若 $E_{s'} \ge E_s$，以概率 $P = \exp(-\Delta E / T)$ 接受。
 
-### 2. 深度优化：[15-数码问题]
+### 2. 算法流程与收敛条件
+1. **初始温度** $T_0$（极大），**终止温度** $T_{end}$（极小），**降温系数** $\Delta$（如 $0.99$）。
+2. 在每个温度下进行若干次随机扰动（Metropolis 步）。
+3. **收敛性**：当 $T \to 0$ 且步数足够多时，SA 以概率 1 收敛到全局最优。
+
+### 3. [平衡点问题] 模拟退火实现
 <details>
-<summary><Calculator size={16} className="inline mr-1" /> 15-数码曼哈顿距离 + 线性冲突（IDA* C++ 实现）</summary>
+<summary><RefreshCcw size={16} className="inline mr-1" /> 寻找广义费马点（C++ 实现）</summary>
 
 ```cpp
-int get_h() {
-    int h = 0;
-    for (int i = 0; i < 16; i++) {
-        if (a[i] == 0) continue;
-        int target_x = (a[i] - 1) / 4, target_y = (a[i] - 1) % 4;
-        h += abs(i / 4 - target_x) + abs(i % 4 - target_y);
-        // 进阶优化：Linear Conflict 线性冲突可进一步压减 b*
+struct Node { double x, y, w; } p[N];
+double ansx, ansy, answ;
+
+double get_dist(double x, double y) {
+    double res = 0;
+    for (int i = 0; i < n; i++) {
+        double dx = x - p[i].x, dy = y - p[i].y;
+        res += sqrt(dx * dx + dy * dy) * p[i].w;
     }
-    return h;
+    return res;
 }
 
-bool dfs(int dep, int limit, int prev_op) {
-    int h = get_h();
-    if (dep + h > limit) return false;
-    if (h == 0) return true;
-
-    for (int i = 0; i < 4; i++) {
-        if (i + prev_op == 3) continue; // 避免无效往返
-        // ... 执行移动 ...
-        if (dfs(dep + 1, limit, i)) return true;
-        // ... 回溯 ...
+void sa() {
+    double x = ansx, y = ansy, t = 2000;
+    while (t > 1e-15) {
+        double nx = x + (rand() * 2.0 - RAND_MAX) * t;
+        double ny = y + (rand() * 2.0 - RAND_MAX) * t;
+        double nw = get_dist(nx, ny);
+        double delta = nw - answ;
+        if (delta < 0) {
+            ansx = x = nx, ansy = y = ny, answ = nw;
+        } else if (exp(-delta / t) > (double)rand() / RAND_MAX) {
+            x = nx, y = ny;
+        }
+        t *= 0.997;
     }
-    return false;
 }
 ```
 </details>
 
 ---
 
-## 四、 <Microscope className="inline-block mr-2 mb-1 text-cyan-500" /> 搜索树收敛分析：有效分支因子 $b^*$
+## 四 <Zap className="inline-block mr-2 mb-1 text-yellow-500" /> IDA*：限深搜索与内存优化
 
-如何量化启发式函数的好坏？
+IDA* 通过迭代加深解决了 A* 内存开销大的问题。
 
-**定义**：若搜索总节点数为 $N$，目标深度为 $d$，则 $b^*$ 满足：
-$$N + 1 = 1 + b^* + (b^*)^2 + \cdots + (b^*)^d = \frac{(b^*)^{d+1}-1}{b^*-1}$$
-- **曼哈顿距离 ($h_1$) vs 错位数 ($h_2$)**：在 15-Puzzle 中，$h_1$ 的 $b^*$ 远小于 $h_2$，意味着搜索树收敛速度指数级提升。
-- **收敛准则**：一个高质量的 $h(s)$ 应在保证 $h(s) \le h^*(s)$ 的前提下，尽可能逼近 $h^*(s)$。
-
----
-
-## 五、 <Binary className="inline-block mr-2 mb-1 text-green-400" /> 状态空间压缩与对称性
-
-### 1. 哈希表与记忆化 (Transposition Table)
-在搜索中，不同路径可能到达同一状态。利用 `std::unordered_map` 或 Zobrist Hashing 记录状态，可将搜索树转化为 **DAG (有向无环图)**，大幅减少重复计算。
-
-### 2. 对称性破缺 (Symmetry Breaking)
-若状态空间在某种几何变换 $\sigma$ 下具有不变性，即 $Evaluate(s) = Evaluate(\sigma(s))$，则只需搜索代表元。
+### 1. 迭代加深与阈值
+每次迭代以 $f(n)$ 的最小值作为下一轮限制。其有效性建立在 $h(n)$ 的一致性之上，确保了每次迭代都能实质性地推进搜索深度。
 
 ---
 
 ## 🎯 综合挑战：搜索算法的极限
 
-### 练习 1：一致性证明
-> 证明：若 $h(n)$ 是一致的，则沿任何路径的 $f(n)$ 都是单调不减的。
+### 练习 1：随机化局部最优解验证
+> 模拟退火为何能逃离局部最优？请从能量面 (Energy Landscape) 角度解释 $T$ 的作用。
 <details>
-<summary>Check Proof</summary>
-设 $n'$ 是 $n$ 的后继。
-$f(n') = g(n') + h(n') = g(n) + c(n, a, n') + h(n')$
-由一致性定义：$h(n) \le c(n, a, n') + h(n')$
-代入得：$f(n') \ge g(n) + h(n) = f(n)$。证毕。
+<summary>Check Analysis</summary>
+在高温 $T$ 时，$P = \exp(-\Delta E / T)$ 接近 1，算法几乎执行随机游走，从而跨越能垒；随着 $T$ 降低，接受劣解的概率指数级下降，算法逐渐收敛。这种“随机扰动”打破了贪心策略在局部极小值处的稳态。
 </details>
 
-### 练习 2：IDA* 与 [骑士精神 (Knight's Spirit)]
-> 给定一个 $5 \times 5$ 的棋盘，要求通过最少步数的骑士跳跃达到目标布局（IDA* 经典题）。
+### 练习 2：IDA* 解决 15-数码问题
+> 设计一个估价函数，并使用 IDA* 解决 15-Puzzle。
 <details>
-<summary>Check Solution: IDA* 骑士精神实现</summary>
+<summary>Check Solution: IDA* C++ 实现</summary>
 
 ```cpp
-#include <iostream>
-#include <algorithm>
-
-using namespace std;
-
-int target[5][5] = {
-    {1, 1, 1, 1, 1},
-    {0, 1, 1, 1, 1},
-    {0, 0, 2, 1, 1},
-    {0, 0, 0, 0, 1},
-    {0, 0, 0, 0, 0}
-};
-
-int dx[] = {1, 1, 2, 2, -1, -1, -2, -2};
-int dy[] = {2, -2, 1, -1, 2, -2, 1, -1};
-
-int board[5][5], limit;
-
 int get_h() {
     int h = 0;
-    for (int i = 0; i < 5; i++)
-        for (int j = 0; j < 5; j++)
-            if (board[i][j] != target[i][j]) h++;
+    for (int i = 0; i < 16; i++) {
+        if (q[i] == 0) continue;
+        int v = q[i] - 1;
+        h += abs(i / 4 - v / 4) + abs(i % 4 - v % 4); // 曼哈顿距离
+    }
     return h;
 }
 
-bool dfs(int dep, int x, int y) {
+bool dfs(int dep, int limit, int prev) {
     int h = get_h();
-    if (dep + h > limit + 1) return false; // 允许一个容错（空白位）
+    if (dep + h > limit) return false;
     if (h == 0) return true;
 
-    for (int i = 0; i < 8; i++) {
-        int nx = x + dx[i], ny = y + dy[i];
-        if (nx < 0 || nx >= 5 || ny < 0 || ny >= 5) continue;
-        swap(board[x][y], board[nx][ny]);
-        if (dfs(dep + 1, nx, ny)) return true;
-        swap(board[x][y], board[nx][ny]);
+    for (int i = 0; i < 4; i++) {
+        if (abs(i - prev) == 2) continue; // 避免无效往返
+        // ... swap and recurse ...
     }
     return false;
 }
+```
+</details>
 
-int main() {
-    int t; cin >> t;
-    while (t--) {
-        int sx, sy;
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                char c; cin >> c;
-                if (c == '*') { board[i][j] = 2; sx = i; sy = j; }
-                else board[i][j] = c - '0';
-            }
+### 练习 3：模拟退火解决 TSP 问题
+> 给定 $N$ 个城市的坐标，寻找最短闭合路径。
+<details>
+<summary>Check Solution: SA for TSP</summary>
+
+```cpp
+void sa() {
+    double t = 3000;
+    while (t > 1e-10) {
+        int a = rand() % n, b = rand() % n;
+        double old_dist = calc_dist();
+        reverse(path + a, path + b + 1); // 2-opt 变换
+        double new_dist = calc_dist();
+        double delta = new_dist - old_dist;
+        if (delta < 0 || exp(-delta / t) > (double)rand() / RAND_MAX) {
+            // accept
+        } else {
+            reverse(path + a, path + b + 1); // reject
         }
-        bool ok = false;
-        for (limit = 0; limit <= 15; limit++) {
-            if (dfs(0, sx, sy)) {
-                cout << limit << endl;
-                ok = true; break;
-            }
-        }
-        if (!ok) cout << -1 << endl;
+        t *= 0.9995;
     }
-    return 0;
 }
 ```
 </details>
 
 ---
 
-_“搜索不仅是寻找解的过程，更是在混乱的组合爆炸中，通过严密的数学逻辑建立秩序。$h(n)$ 就是那盏指路明灯。”_
+_“搜索是对确定性的追逐，而模拟退火是对混沌的利用。在 $T \to 0$ 的终点，逻辑与概率合二为一。”_
