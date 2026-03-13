@@ -38,24 +38,41 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
   <p>在 LIS 中，$dp[i]$ 定义为以 $A[i]$ 结尾的最长长度。当我们为 $j > i$ 进行转移时，只需知道 $dp[i]$ 的值和 $A[i]$ 的大小，无需关心 $A[i]$ 之前的元素是如何排列的。因此，满足无后效性。</p>
 </div>
 
+### 1.4 收敛性与终止性分析 (Convergence & Termination)
+
+**有向无环图 (DAG) 性质**：
+任何动态规划过程均可抽象为状态空间上的 DAG 遍历。对于线性 DP，其状态依赖关系具有严格的单调性：
+$$\forall \text{state}_u \to \text{state}_v, \quad \text{index}(u) < \text{index}(v)$$
+由于状态总数 $|V| = O(N)$ 且边数 $|E|$ 为有限值，算法必然在有限步内收敛于最优解。
+
+**递归深度与空间稳定性**：
+- **递推实现**：迭代次数严格等于状态数，空间复杂度 $O(N)$，具有极高的数值稳定性。
+- **记忆化搜索**：递归深度最大为 $N$，需通过系统栈深度检查或转化为迭代形式以规避栈溢出风险。
+
 ---
 
-## <Layers className="inline-block mr-2" /> 2. 状态转移方程的导出
+## <Layers className="inline-block mr-2" /> 2. 状态转移方程的导出与证明
 
 线性 DP 的方程通常由**边界条件**与**递归归纳**两部分构成。
 
 ### 2.1 路径计数类 (Number Triangle)
-$$dp[i][j] = \max(dp[i-1][j], dp[i-1][j-1]) + \text{weight}[i][j]$$
-*导出逻辑*：到达 $(i, j)$ 的唯一合法前驱是左上方 $(i-1, j-1)$ 或正上方 $(i-1, j)$，根据加法原理及最优性，取两者最大值。
+**方程**：$dp[i][j] = \max(dp[i-1][j], dp[i-1][j-1]) + \text{weight}[i][j]$
+**导出逻辑**：到达 $(i, j)$ 的唯一合法前驱是左上方 $(i-1, j-1)$ 或正上方 $(i-1, j)$，根据加法原理及最优性，取两者最大值。
 
 ### 2.2 匹配/序列类 (Edit Distance)
+**命题**：设 $dp[i][j]$ 为 $A[1 \dots i]$ 与 $B[1 \dots j]$ 的最小编辑距离。
+**方程**：
 $$
 dp[i][j] = \begin{cases} 
 dp[i-1][j-1] & \text{if } A[i] = B[j] \\
-\min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]) + 1 & \text{otherwise}
+\min(dp[i-1][j] + 1, dp[i][j-1] + 1, dp[i-1][j-1] + 1) & \text{otherwise}
 \end{cases}
 $$
-*导出逻辑*：若不匹配，则对应三种操作：删除 $A[i]$（从 $dp[i-1][j]$ 转移）、插入 $B[j]$（从 $dp[i][j-1]$ 转移）、替换（从 $dp[i-1][j-1]$ 转移）。
+**最优子结构证明**：若 $A[i] \neq B[j]$，则最后一步必为：
+1. 删除 $A[i]$：代价为 $dp[i-1][j] + 1$。
+2. 插入 $B[j]$：代价为 $dp[i][j-1] + 1$。
+3. 替换 $A[i]$ 为 $B[j]$：代价为 $dp[i-1][j-1] + 1$。
+根据最优性原理，全问题的最优解必为上述三个子问题最优解的最小值。
 
 ---
 

@@ -29,27 +29,33 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 <div className="bg-blue-50 border-l-4 border-blue-500 p-4 my-4">
   <p className="font-bold flex items-center"><CheckCircle2 className="mr-2 text-blue-500" /> 验证实例：TSP (旅行商问题)</p>
-  <p>在 TSP 中，$dp[S][i]$ 表示已访问城市集合为 $S$ 且当前处于城市 $i$ 的最小代价。只要 $S$ 和 $i$ 确定，后续访问剩余城市的代价仅取决于 $U \setminus S$，而与之前是如何穿过 $S$ 中城市的历史路径完全解耦。这满足无后效性。</p>
+  <p>在 TSP 中，$dp[S][i]$ 表示已访问城市集合为 $S$ 及当前处于城市 $i$ 的最小代价。只要 $S$ 和 $i$ 确定，后续访问剩余城市的代价仅取决于 $U \setminus S$，而与历史路径无关。这满足无后效性。</p>
 </div>
+
+### 1.3 收敛性与复杂度分析 (Convergence & Complexity)
+
+**基于子集格点的收敛性**：
+状压 DP 的状态空间构成一个 **布尔格 (Boolean Lattice)**。
+1. **拓扑序**：状态转移总是从集合规模 $|S|=k$ 指向 $|S|=k+1$（或按整数值递增）。
+2. **复杂度收敛分析**：
+   - **基础转移**：$O(2^n \cdot n^k)$，受限于指数级状态空间。
+   - **子集枚举**：$\sum_{k=0}^n \binom{n}{k} \cdot 2^k = (1+2)^n = 3^n$。通过二进制技巧 `for (int sub = (s-1)&s; sub; sub = (sub-1)&s)` 确保了枚举的紧致性。
 
 ---
 
-## <Layers className="inline-block mr-2" /> 2. 状态转移方程的导出
+## <Layers className="inline-block mr-2" /> 2. 状态转移方程的导出与证明
 
 状压 DP 的演进本质上是**集合规模的递增**或**阶段的线性推进**。
 
-### 2.1 路径/排列类 (Hamiltonian Path)
-$$dp[S][i] = \min_{j \in S, j \neq i} \{ dp[S \oplus (1 \ll i)][j] + \text{dist}(j, i) \}$$
-*导出逻辑*：要使当前状态为 $(S, i)$，上一个状态必然访问了 $S \setminus \{i\}$ 中的点，且最后停留在某个 $j$ 点。
+### 2.1 排列类最优子结构证明
 
-### 2.2 棋盘/覆盖类 (Grid Filling)
-$$dp[i][S] = \sum_{S'} dp[i-1][S'] \quad (\text{if } S \text{ is compatible with } S')$$
-*导出逻辑*：第 $i$ 行的状态 $S$ 仅由第 $i-1$ 行的兼容状态 $S'$ 转移而来。
+**命题**：在哈密顿路径问题中，全集的最优解包含其子集的最优解。
 
-### 2.3 子集枚举优化 (Subset Enumeration)
-对于涉及“划分集合”的问题，需要枚举 $S$ 的所有非空子集 $s$。
-$$dp[S] = \max_{s \subset S} \{ dp[S \setminus s] + \text{cost}(s) \}$$
-**复杂度证明**：总枚举次数为 $\sum_{k=0}^n \binom{n}{k} \cdot 2^k = (1+2)^n = 3^n$。
+**证明**：设 $f(S, i)$ 是经过点集 $S$ 且终点为 $i$ 的最短路径。若该路径由 $j$ 转移而来，则路径的前缀必然是经过 $S \setminus \{i\}$ 且终点为 $j$ 的最短路径。若存在更短的前缀，则替换后全路径更短，与 $f(S, i)$ 为最优解矛盾。
+
+### 2.2 典型转移模式
+- **路径类 (TSP)**：$dp[S][i] = \min \{ dp[S \setminus \{i\}][j] + dist(j, i) \}$。
+- **子集划分类**：$dp[S] = \max_{s \subset S} \{ dp[S \setminus s] + cost(s) \}$。
 
 ---
 

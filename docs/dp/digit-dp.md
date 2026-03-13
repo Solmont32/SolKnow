@@ -11,41 +11,32 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 ---
 
-<KnowledgeCard type="info" title="数位决策的公理化性质">
-    对于大整数 $N = d_k d_{k-1} \dots d_0$，满足条件的数的统计具有：
-    <br/>
-    1. **可差分性**：$count[L, R] = count[0, R] - count[0, L-1]$。
-    2. **逐位独立性**：在不触碰上界 (limit) 且不处于前导零 (lead) 状态时，后续位的决策方案数仅取决于当前业务逻辑状态。
-</KnowledgeCard>
+### 1.1 数位决策的公理化性质 (Axiomatic Properties)
+
+对于大整数 $N = d_k d_{k-1} \dots d_0$，满足条件的数的统计具有：
+1. **可差分性**：$count[L, R] = count[0, R] - count[0, L-1]$。
+2. **逐位独立性**：在不触碰上界 (limit) 且不处于前导零 (lead) 状态时，后续位的决策方案数仅取决于当前业务逻辑状态。
+
+### 1.2 收敛性与状态空间分析 (Convergence & State Space)
+
+**状态收敛性分析**：
+数位 DP 的收敛性建立在数字位数的严格单调减小上。
+1. **拓扑序**：状态转移 $pos \to pos-1$ 构成一条线性链。
+2. **有限性证明**：状态空间总大小为 $O(\text{digits} \times \text{business\_states})$。由于 `pos` 每次递归减 1，算法必然在 $O(\text{digits})$ 深度内返回。
+3. **复杂度收敛**：通过记忆化，实际访问的状态数远小于原始搜索空间的指数级，最终复杂度收敛于 $O(10 \cdot \text{digits} \cdot \text{business\_states})$。
 
 ---
 
-## <Microscope className="inline-block mr-2" /> 1. 形式化建模：状态机与约束控制
+## <BarChart className="inline-block mr-2" /> 2. 状态转移方程的导出与证明
 
-在数位 DP 的递归函数中，我们需要维护以下四个核心控制变量：
+### 2.1 数位组合最优子结构证明
 
-### 1.1 控制变量 (Control Variables)
+**命题**：数位统计问题的解满足最优子结构，即前 $k$ 位的合法计数可通过前 $k-1$ 位的状态唯一推导。
 
-- **`pos` (当前位)**：从高位到低位处理，`pos = 0` 表示处理完毕。
-- **`state` (业务状态)**：描述前缀属性（如已填数字之和、是否出现特定模式）。
-- **`limit` (上界限制)**：布尔值。若为 `true`，当前位可选范围受限于原数对应位 $d_{pos}$；若为 `false`，则可选 `0-9`。
-- **`lead` (前导零)**：布尔值。用于区分数值 `0` 与占位符 `0`。在统计数字出现次数或相邻属性（如 Windy 数）时必不可少。
-
----
-
-## <BarChart className="inline-block mr-2" /> 2. 状态空间分析与复杂度收敛
-
-数位 DP 的效率源于其**极高的状态重用率**。
-
-### 2.1 状态转移的形式化描述 (Formal Derivation)
-设 $f(pos, state, limit, lead)$ 为当前状态下的合法方案数。
-$$
-f(pos, state, limit, lead) = \sum_{d=0}^{up} f(pos-1, next\_state(state, d), limit \land (d=up), lead \land (d=0))
-$$
-其中 $up = limit ? d_{pos} : 9$。
-
-**证明要点**：
-当 $limit = false$ 且 $lead = false$ 时，当前位填入任何数字都不会超过原数限制，也不会受前导零干扰，因此该状态的结果对所有后续相同位及业务状态是**通用**的，可以缓存。
+**证明**：
+设 $f(pos, state)$ 为处理到第 $pos$ 位、业务状态为 $state$ 时的合法数量。
+对于第 $pos$ 位的每一个可选数字 $d \in [0, 9]$，其产生的合法数必然是：所有以 $d$ 为前缀、且剩余 $pos-1$ 位满足 $next\_state(state, d)$ 的组合。
+由于 $pos-1$ 位的解 $f(pos-1, next\_state)$ 已包含该状态下的最优（完备）计数，故 $f(pos, state)$ 亦为完备解。证毕。
 
 ---
 
