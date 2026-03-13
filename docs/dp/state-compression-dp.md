@@ -2,7 +2,7 @@
 title: 状压 DP
 ---
 
-import { Microscope, Layers, Activity, ShieldCheck, Zap, Binary, Grid, Target, CheckCircle2, BookOpen, Code2 } from 'lucide-react';
+import { Microscope, Layers, Activity, ShieldCheck, Zap, Binary, Grid, Target, CheckCircle2, BookOpen, Code2, Scaling } from 'lucide-react';
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # 状态压缩动态规划 (State Compression DP)
@@ -11,7 +11,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 ---
 
-## <Microscope className="inline-block mr-2" /> 1. 形式化建模：映射与验证
+## <Microscope className="inline-block mr-2" /> 1. 数理建模：映射与验证
 
 ### 1.1 集合状态的封闭性与映射 (Mapping)
 
@@ -38,8 +38,8 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 状压 DP 的状态空间构成一个 **布尔格 (Boolean Lattice)**。
 1. **拓扑序**：状态转移总是从集合规模 $|S|=k$ 指向 $|S|=k+1$（或按整数值递增）。
 2. **复杂度收敛分析**：
-   - **基础转移**：$O(2^n \cdot n^k)$，受限于指数级状态空间。
-   - **子集枚举**：$\sum_{k=0}^n \binom{n}{k} \cdot 2^k = (1+2)^n = 3^n$。通过二进制技巧 `for (int sub = (s-1)&s; sub; sub = (sub-1)&s)` 确保了枚举的紧致性。
+   - **基础转移**：$O(2^n \cdot n^k)$。
+   - **子集枚举**：$\sum_{k=0}^n \binom{n}{k} \cdot 2^k = 3^n$。利用 `for (int sub = (s-1)&s; sub; sub = (sub-1)&s)` 技巧可精确枚举所有子集。
 
 ---
 
@@ -53,19 +53,13 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 **证明**：设 $f(S, i)$ 是经过点集 $S$ 且终点为 $i$ 的最短路径。若该路径由 $j$ 转移而来，则路径的前缀必然是经过 $S \setminus \{i\}$ 且终点为 $j$ 的最短路径。若存在更短的前缀，则替换后全路径更短，与 $f(S, i)$ 为最优解矛盾。
 
-### 2.2 典型转移模式
-- **路径类 (TSP)**：$dp[S][i] = \min \{ dp[S \setminus \{i\}][j] + dist(j, i) \}$。
-- **子集划分类**：$dp[S] = \max_{s \subset S} \{ dp[S \setminus s] + cost(s) \}$。
-
 ---
 
 ## <ShieldCheck className="inline-block mr-2" /> 3. 教材化典型例题
 
-### 例题 1：蒙德里安的梦想 (Mondriaan's Dream)
+### 例题 1：最短 Hamilton 路径
 
-**问题描述**：用 $1 \times 2$ 的多米诺骨牌填满 $N \times M$ 的棋盘，求方案数。
-**核心思路**：只需要确定所有横向骨牌的放置，纵向骨牌将自动填满剩余空间。
-**状态定义**：$f[i][S]$ 表示前 $i-1$ 列已摆好，且从第 $i-1$ 列伸到第 $i$ 列的状态为 $S$ 的方案数。
+**问题描述**：给定 $N$ 个点的带权无向图，求从 $0$ 到 $N-1$ 经过每个点恰好一次的最短路径。
 
 <details>
 <summary>Check Solution (C++)</summary>
@@ -74,43 +68,47 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 #include <iostream>
 #include <vector>
 #include <cstring>
+#include <algorithm>
 
 using namespace std;
 
-long long f[12][1 << 11];
-bool st[1 << 11];
+int f[1 << 20][20], weight[20][20];
 
 int main() {
-    int n, m;
-    while (cin >> n >> m, n || m) {
-        // 预处理哪些状态 S 能够合法填入纵向骨牌
-        for (int i = 0; i < 1 << n; i++) {
-            int cnt = 0;
-            st[i] = true;
-            for (int j = 0; j < n; j++) {
-                if (i >> j & 1) {
-                    if (cnt & 1) st[i] = false;
-                    cnt = 0;
-                } else cnt++;
-            }
-            if (cnt & 1) st[i] = false;
-        }
+    int n; cin >> n;
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++) cin >> weight[i][j];
 
-        memset(f, 0, sizeof f);
-        f[0][0] = 1;
-        for (int i = 1; i <= m; i++) {
-            for (int j = 0; j < 1 << n; j++) {
-                for (int k = 0; k < 1 << n; k++) {
-                    if ((j & k) == 0 && st[j | k])
-                        f[i][j] += f[i - 1][k];
+    memset(f, 0x3f, sizeof f);
+    f[1][0] = 0; // 起点在 0，已访问集合为 {0}
+
+    for (int i = 1; i < 1 << n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (i >> j & 1) { // 终点 j 在集合 i 中
+                for (int k = 0; k < n; k++) {
+                    if ((i ^ (1 << j)) >> k & 1) { // 前驱点 k 在除去 j 的集合中
+                        f[i][j] = min(f[i][j], f[i ^ (1 << j)][k] + weight[k][j]);
+                    }
                 }
             }
         }
-        cout << f[m][0] << endl;
     }
+    cout << f[(1 << n) - 1][n - 1] << endl;
     return 0;
 }
 ```
+
+</details>
+
+### 例题 2：蒙德里安的梦想 (轮廓线/插头 DP 基础)
+
+**证明**：该问题的本质是状态的**逐列收敛**。当第 $i$ 列被填满后，其对第 $i+1$ 列的影响仅表现为是否向后伸出。
+
+<details>
+<summary>Check Solution Hint</summary>
+
+预处理 `st[S]` 表示状态 $S$ 是否含有奇数个连续的空位。
+$f[i][j]$ 表示前 $i-1$ 列已满，且从第 $i-1$ 列向第 $i$ 列伸出的状态为 $j$ 的方案数。
 
 </details>
 
@@ -118,43 +116,58 @@ int main() {
 
 ## <Code2 className="inline-block mr-2" /> 4. 课后强化练习
 
-### 练习 1：玉米地 (Corn Fields)
-在 $M \times N$ 的土地上选择互不相邻的格子种草，有些格子贫瘠不能种，求总方案数。
+### 练习 1：愤怒的小鸟 (Angry Birds - 子集优化)
+给出 $N$ 个点的坐标，求最少发射多少条过原点的抛物线能覆盖所有点。$N \le 18$。
 
 <details>
-<summary>Check Solution (Bitmask DP)</summary>
+<summary>Check Solution (Optimized Enumeration)</summary>
 
 ```cpp
-// 状态：f[i][S] 表示第 i 行状态为 S
-// 转移：f[i][S] = sum(f[i-1][S']) if (S & S' == 0) and (S is valid)
-for (int i = 1; i <= m; i++) {
-    for (int s : head[i]) { // 预处理出每一行合法的状态
-        for (int pre : head[i-1]) {
-            if (!(s & pre)) f[i][s] = (f[i][s] + f[i-1][pre]) % MOD;
+#include <iostream>
+#include <vector>
+#include <cstring>
+#include <cmath>
+
+using namespace std;
+
+const double eps = 1e-8;
+int path[20][20], f[1 << 18];
+
+void solve() {
+    int n, m; cin >> n >> m;
+    vector<pair<double, double>> p(n);
+    for (int i = 0; i < n; i++) cin >> p[i].first >> p[i].second;
+
+    memset(path, 0, sizeof path);
+    for (int i = 0; i < n; i++) {
+        path[i][i] = 1 << i;
+        for (int j = 0; j < n; j++) {
+            double x1 = p[i].first, y1 = p[i].second;
+            double x2 = p[j].first, y2 = p[j].second;
+            if (abs(x1 - x2) < eps) continue;
+            double a = (y1 / x1 - y2 / x2) / (x1 - x2);
+            double b = y1 / x1 - a * x1;
+            if (a < -eps) {
+                int state = 0;
+                for (int k = 0; k < n; k++) {
+                    if (abs(a * p[k].first * p[k].first + b * p[k].first - p[k].second) < eps)
+                        state |= (1 << k);
+                }
+                path[i][j] = state;
+            }
         }
     }
-}
-```
 
-</details>
-
-### 练习 2：愤怒的小鸟 (Angry Birds - Subset Optimization)
-给出 $N$ 个点的坐标，求最少发射多少条抛物线（过原点）能覆盖所有点。$N \le 18$。
-
-<details>
-<summary>Check Analysis & Trick</summary>
-
-**分析**：任意两个不共线的点可唯一确定一条过原点的抛物线。
-**技巧**：$f[S]$ 表示覆盖点集 $S$ 的最少抛物线数。
-为了避免重复枚举，我们每次选取 $S$ 中第一个未覆盖的点 $x$，枚举所有经过 $x$ 的可能抛物线来更新状态。
-
-```cpp
-for (int i = 0; i < (1 << n) - 1; i++) {
-    int x = 0;
-    while ((i >> x) & 1) x++; // 找到第一个未覆盖的点
-    for (int path : paths[x]) { // paths[x] 预处理了过点 x 的所有有效抛物线
-        f[i | path] = min(f[i | path], f[i] + 1);
+    memset(f, 0x3f, sizeof f);
+    f[0] = 0;
+    for (int i = 0; i < (1 << n) - 1; i++) {
+        int x = 0;
+        while (i >> x & 1) x++; // 核心：只需覆盖第一个未覆盖的点
+        for (int j = 0; j < n; j++) {
+            f[i | path[x][j]] = min(f[i | path[x][j]], f[i] + 1);
+        }
     }
+    cout << f[(1 << n) - 1] << endl;
 }
 ```
 
@@ -162,9 +175,19 @@ for (int i = 0; i < (1 << n) - 1; i++) {
 
 ---
 
+## <Scaling className="inline-block mr-2" /> 5. 时空优化与位运算技巧
+
+| 技巧 | 实现 | 效果 |
+| :--- | :--- | :--- |
+| **Lowbit** | `x & -x` | 提取最低位的 1 |
+| **子集枚举** | `for (int s = (U-1)&U; s; s = (s-1)&U)` | $O(3^n)$ 遍历所有子集 |
+| **GOSPER'S HACK** | `(x + (x & -x)) | ...` | 枚举大小为 $k$ 的子集 |
+| **预处理合法状态** | `if (!(i & (i << 1)))` | 大幅缩减状态搜索空间 |
+
+---
+
 ## 延伸挑战
 
 - [洛谷 P1433 吃奶酪](https://www.luogu.com.cn/problem/P1433)
-- [洛谷 P1879 [USACO06NOV] Corn Fields G](https://www.luogu.com.cn/problem/P1879)
-- [洛谷 P3959 [NOIP2017 提高组] 宝藏 (子集枚举优化)](https://www.luogu.com.cn/problem/P3959)
-- [AtCoder ABC 142 F - Pure (状压找最小环)](https://atcoder.jp/contests/abc142/tasks/abc142_f)
+- [洛谷 P1879 玉米地](https://www.luogu.com.cn/problem/P1879)
+- [AtCoder ABC 142 F - Pure](https://atcoder.jp/contests/abc142/tasks/abc142_f)

@@ -37,7 +37,7 @@ $$f[i][j] = \min_{i \le k < j} \{ f[i][k] + f[k+1][j] + \text{cost}(i, k, j) \}$
 1. **初始状态**：$L=1$ 的解已给出。
 2. **状态依赖**：$L=k$ 的解仅依赖于 $L < k$ 的子区间解。
 3. **有限性**：$1 \le L \le N$。
-因此，外层循环控制 $L \in [2, N]$ 保证了算法必然在 $O(N^3)$ 步内收敛。对于满足决策单调性的问题，利用 $s[i][j-1] \le s[i][j] \le s[i+1][j]$，其总代价收敛于 $O(N^2)$。
+因此，外层循环控制 $L \in [2, N]$ 保证了算法必然在 $O(N^3)$ 步内收敛。
 
 ---
 
@@ -63,86 +63,92 @@ $$f[i][j] = \min_{i \le k < j} \{ f[i][k] + f[k+1][j] + \text{cost}(i, k, j) \}$
 
 ## <ShieldCheck className="inline-block mr-2" /> 3. 教材化典型例题
 
-### 例题 1：石子合并 (环形优化版)
+### 例题 1：石子合并 (四边形不等式优化版)
 
-**问题描述**：$N$ 堆石子绕成一圈，每次合并相邻两堆，求最小总得分。
-**处理技巧**：倍长序列法。将序列 $1 \dots N$ 复制一份接在后面变成 $1 \dots 2N$，最后在所有长度为 $N$ 的区间中取最值。
+**证明**：合并代价 $w(i, j) = \sum_{k=i}^j a_k$ 满足四边形不等式（事实上其满足 $w(i, j) + w(i+1, j+1) = w(i, j+1) + w(i+1, j)$）。因此可以使用 Knuth 优化。
 
 <details>
-<summary>Check Solution (C++)</summary>
+<summary>Check Solution (C++ $O(N^2)$)</summary>
 
 ```cpp
 #include <iostream>
 #include <vector>
-#include <algorithm>
 #include <cstring>
+#include <algorithm>
 
 using namespace std;
 
-const int MAXN = 405;
-int f[MAXN][MAXN], s[MAXN], w[MAXN];
+const int MAXN = 1005;
+int a[MAXN], s[MAXN];
+int f[MAXN][MAXN], pos[MAXN][MAXN];
 
 int main() {
-    int n; cin >> n;
-    for (int i = 1; i <= n; i++) {
-        cin >> w[i];
-        w[i + n] = w[i];
-    }
-    for (int i = 1; i <= 2 * n; i++) s[i] = s[i - 1] + w[i];
+    int n;
+    while (cin >> n) {
+        for (int i = 1; i <= n; i++) {
+            cin >> a[i];
+            s[i] = s[i - 1] + a[i];
+            pos[i][i] = i;
+        }
 
-    memset(f, 0x3f, sizeof f);
-    for (int i = 1; i <= 2 * n; i++) f[i][i] = 0;
+        memset(f, 0x3f, sizeof f);
+        for (int i = 1; i <= n; i++) f[i][i] = 0;
 
-    for (int len = 2; len <= n; len++) {
-        for (int i = 1; i + len - 1 <= 2 * n; i++) {
-            int j = i + len - 1;
-            for (int k = i; k < j; k++) {
-                f[i][j] = min(f[i][j], f[i][k] + f[k + 1][j] + s[j] - s[i - 1]);
+        for (int len = 2; len <= n; len++) {
+            for (int i = 1; i + len - 1 <= n; i++) {
+                int j = i + len - 1;
+                // 核心：限制枚举范围 [pos[i][j-1], pos[i+1][j]]
+                for (int k = pos[i][j - 1]; k <= pos[i + 1][j]; k++) {
+                    int val = f[i][k] + f[k + 1][j] + s[j] - s[i - 1];
+                    if (val < f[i][j]) {
+                        f[i][j] = val;
+                        pos[i][j] = k;
+                    }
+                }
             }
         }
+        cout << f[1][n] << endl;
     }
-
-    int res = 1e9;
-    for (int i = 1; i <= n; i++) res = min(res, f[i][i + n - 1]);
-    cout << res << endl;
     return 0;
 }
 ```
 
 </details>
 
-### 例题 2：能量项链 (Matrix Chain Multiplication Variant)
-
-**状态定义**：$f[i][j]$ 表示将第 $i$ 颗到第 $j$ 颗珠子合并产生的最大能量。
-**转移方程**：$f[i][j] = \max \{ f[i][k] + f[k+1][j] + head[i] \cdot tail[k] \cdot tail[j] \}$
+### 例题 2：括号匹配 (Bracket Sequence)
+给定一个由 `(`、`)`、`[`、`]` 组成的字符串，求最少添加多少个字符使其变成合法括号序列。
 
 <details>
 <summary>Check Solution (C++)</summary>
 
 ```cpp
 #include <iostream>
+#include <string>
+#include <vector>
 #include <algorithm>
+
 using namespace std;
 
-int n, a[205], f[205][205];
+bool match(char l, char r) {
+    return (l == '(' && r == ')') || (l == '[' && r == ']');
+}
 
 int main() {
-    cin >> n;
-    for (int i = 1; i <= n; i++) {
-        cin >> a[i];
-        a[i + n] = a[i];
-    }
+    string s; cin >> s;
+    int n = s.size();
+    if (n == 0) { cout << 0 << endl; return 0; }
+    vector<vector<int>> f(n, vector<int>(n, 1e9));
+    for (int i = 0; i < n; i++) f[i][i] = 1;
+
     for (int len = 2; len <= n; len++) {
-        for (int i = 1; i + len - 1 <= 2 * n; i++) {
+        for (int i = 0; i + len - 1 < n; i++) {
             int j = i + len - 1;
-            for (int k = i; k < j; k++) {
-                f[i][j] = max(f[i][j], f[i][k] + f[k+1][j] + a[i] * a[k+1] * a[j+1]);
-            }
+            if (match(s[i], s[j])) f[i][j] = (len == 2 ? 0 : f[i + 1][j - 1]);
+            for (int k = i; k < j; k++)
+                f[i][j] = min(f[i][j], f[i][k] + f[k + 1][j]);
         }
     }
-    int res = 0;
-    for (int i = 1; i <= n; i++) res = max(res, f[i][i + n - 1]);
-    cout << res << endl;
+    cout << f[0][n - 1] << endl;
     return 0;
 }
 ```
@@ -153,29 +159,38 @@ int main() {
 
 ## <Code2 className="inline-block mr-2" /> 4. 课后强化练习
 
-### 练习 1：多边形游戏 (Polygon)
-一个多边形，顶点是数字，边是运算符（+ 或 *）。删除一条边变成链，求最大得分。注意负数乘负数可能变成极大正数。
-
-<details>
-<summary>Check Analysis</summary>
-
-**分析**：需要同时维护最大值 $f_{max}[i][j]$ 和最小值 $f_{min}[i][j]$。
-如果是乘法：
-- $max = \max(max\_l * max\_r, max\_l * min\_r, min\_l * max\_r, min\_l * min\_r)$
-- $min = \min(max\_l * max\_r, max\_l * min\_r, min\_l * max\_r, min\_l * min\_r)$
-
-</details>
-
-### 练习 2：最优二叉搜索树 (Optimal BST)
-给定一组关键字及其搜索频率，构造一棵搜索代价最小的二叉搜索树。
+### 练习 1：能量项链 (环形区间 DP)
+$N$ 颗珠子组成环，第 $i$ 颗珠子头标记 $m_i$，尾标记 $m_{i+1}$。两珠子合并释放能量 $m_i \cdot m_k \cdot m_j$。求最大能量。
 
 <details>
 <summary>Check Solution Hint</summary>
 
-这不仅满足最优子结构，且满足四边形不等式，可以用 $O(N^2)$ 求解。
-$$f[i][j] = \min \{ f[i][k-1] + f[k+1][j] \} + \sum_{p=i}^j weight[p]$$
+使用倍长数组处理环形结构。$f[i][j]$ 表示合并从 $i$ 到 $j$ 段珠子的最大能量。
+$f[i][j] = \max \{ f[i][k] + f[k+1][j] + a[i] \cdot a[k+1] \cdot a[j+1] \}$。
 
 </details>
+
+### 练习 2：多边形游戏 (Polygon)
+注意处理乘法的最大值可能由两个极小负数相乘得到。
+
+<details>
+<summary>Check Analysis</summary>
+
+维护 $f_{max}[i][j]$ 和 $f_{min}[i][j]$。对于乘法运算符：
+$f_{max} = \max(max \cdot max, max \cdot min, min \cdot max, min \cdot min)$
+$f_{min} = \min(max \cdot max, max \cdot min, min \cdot max, min \cdot min)$
+
+</details>
+
+---
+
+## <Scaling className="inline-block mr-2" /> 5. 复杂度与边界总结
+
+| 优化技术 | 适用场景 | 复杂度 | 核心判定 |
+| :--- | :--- | :--- | :--- |
+| **标准区间 DP** | 任意合并成本 | $O(N^3)$ | $len$ 从小到大遍历 |
+| **四边形不等式** | 成本函数满足特定性质 | $O(N^2)$ | 决策点单调性 $s[i][j-1] \le s[i][j] \le s[i+1][j]$ |
+| **倍长数组** | 环形结构 | $O((2N)^3)$ | 断环为链，长度限制为 $N$ |
 
 ---
 
