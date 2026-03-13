@@ -3,7 +3,7 @@ title: 搜索与启发式算法 (Search & Heuristics)
 sidebar_position: 1
 ---
 
-import { Search, Zap, Target, Thermometer, Trophy, Swords, Layers, Binary, Microscope } from 'lucide-react';
+import { Search, Zap, Target, Thermometer, Trophy, Swords, Layers, Binary, Microscope, ShieldCheck } from 'lucide-react';
 
 # <Search className="inline-block mr-2 mb-1 text-blue-500" /> 搜索与启发式算法
 
