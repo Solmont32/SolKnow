@@ -68,6 +68,32 @@ $$ \left(\frac{a}{p}\right) = \begin{cases} 1 & a \text{ 是二次剩余} \\ -1 
 对于不同奇素数 $p, q$：
 $$ \left(\frac{p}{q}\right) \left(\frac{q}{p}\right) = (-1)^{\frac{p-1}{2} \cdot \frac{q-1}{2}} $$
 
+### 1.6 素数分布理论 (Theory of Prime Distribution)
+
+**定理 1：素数无限性 (Euclid's Theorem)**
+假设素数有限，设为 $p_1, p_2, \dots, p_n$。构造 $N = p_1 p_2 \dots p_n + 1$。
+则 $N$ 必有质因子 $q$。若 $q \in \{p_1, \dots, p_n\}$，则 $q | (N - p_1 \dots p_n) = 1$，矛盾。故存在无穷多个素数。
+
+**定理 2：切比雪夫定理 (Chebyshev's Theorem)**
+令 $\pi(x)$ 为不超过 $x$ 的素数个数，则存在正数 $c_1, c_2$ 使得：
+$$ c_1 \frac{x}{\ln x} < \pi(x) < c_2 \frac{x}{\ln x} $$
+这证明了素数分布的密度大致为 $1/\ln x$。
+
+**定理 3：素数定理 (Prime Number Theorem)**
+$$ \lim_{x \to \infty} \frac{\pi(x)}{x / \ln x} = 1 $$
+**黎曼 Zeta 函数关联**：$\zeta(s) = \sum_{n=1}^\infty n^{-s} = \prod_{p} (1 - p^{-s})^{-1}$。素数定理的深层证明依赖于 $\zeta(s)$ 在 $\text{Re}(s)=1$ 线上无零点。
+
+### 1.7 同余方程收敛与 Hensel 引理
+
+**线性同余方程组 (CRT)**：
+$x \equiv a_i \pmod{m_i}$ 有解的充要条件是 $\gcd(m_i, m_j) \mid (a_i - a_j)$。若 $m_i$ 两两互质，则在 $\pmod{\prod m_i}$ 下有唯一解。
+
+**Hensel 引理 (收敛提升)**：
+若 $f(x)$ 是整系数多项式，且 $f(r) \equiv 0 \pmod{p^k}$，若 $f'(r) \not\equiv 0 \pmod p$，则存在唯一的 $t \pmod p$ 使得 $f(r + t p^k) \equiv 0 \pmod{p^{k+1}}$。
+**证明**：泰勒展开 $f(r + t p^k) = f(r) + f'(r) t p^k + \dots \equiv f(r) + f'(r) t p^k \pmod{p^{2k}}$。
+要使 $f(r + t p^k) \equiv 0 \pmod{p^{k+1}}$，只需 $\frac{f(r)}{p^k} + f'(r) t \equiv 0 \pmod p$。
+由于 $f'(r) \not\equiv 0 \pmod p$，其逆元存在，故 $t$ 唯一确定。这展现了同余解从低幂向高幂收敛的过程。
+
 ---
 
 ## 2. 积性函数与 Dirichlet 卷积
@@ -234,6 +260,54 @@ ll cipolla(ll n, ll p) {
         b >>= 1;
     }
     return res.r;
+}
+```
+
+</details>
+
+### 练习 5：[P4777] 扩展中国剩余定理 (EXCRT)
+
+求解方程组 $x \equiv a_i \pmod{m_i}$，其中 $m_i$ 不一定两两互质。
+
+<details>
+<summary>Check Solution (思路)</summary>
+
+1. 采用合并方程思想。设有方程 $x \equiv r_1 \pmod{m_1}$ 和 $x \equiv r_2 \pmod{m_2}$。
+2. 转化为 $k_1 m_1 + r_1 = k_2 m_2 + r_2$，即 $k_1 m_1 - k_2 m_2 = r_2 - r_1$。
+3. 利用 EXGCD 求解 $k_1$，若无解则原方程组无解。
+4. 合并后的新模数为 $M = \text{lcm}(m_1, m_2)$，新余数为 $r = (k_1 m_1 + r_1) \pmod M$。
+</details>
+
+<details>
+<summary>Check Solution (C++)</summary>
+
+```cpp
+#include <iostream>
+using namespace std;
+typedef __int128_t int128; // 使用 int128 防止溢出
+
+long long exgcd(long long a, long long b, long long &x, long long &y) {
+    if (!b) { x = 1, y = 0; return a; }
+    long long d = exgcd(b, a % b, y, x);
+    y -= (a / b) * x;
+    return d;
+}
+
+void solve() {
+    int n; cin >> n;
+    long long m1, r1, m2, r2;
+    cin >> m1 >> r1;
+    for (int i = 1; i < n; i++) {
+        cin >> m2 >> r2;
+        long long k1, k2;
+        long long d = exgcd(m1, m2, k1, k2);
+        long long target = (r2 - r1 % m2 + m2) % m2;
+        k1 = (int128)k1 * (target / d) % (m2 / d);
+        r1 += k1 * m1;
+        m1 = m1 / d * m2;
+        r1 = (r1 % m1 + m1) % m1;
+    }
+    cout << (long long)r1 << endl;
 }
 ```
 

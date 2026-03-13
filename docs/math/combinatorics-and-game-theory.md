@@ -70,6 +70,24 @@ $$ N = \frac{1}{|G|} \sum_{g \in G} |X^g| $$
 $$ N = \frac{1}{|G|} \sum_{g \in G} m^{c(g)} $$
 其中 $c(g)$ 为置换 $g$ 的循环节个数。
 
+### 2.3 多项式变换逻辑与收敛验证 (Polynomial Transformations)
+
+**1. 离散傅里叶变换 (DFT/NTT)**：
+多项式 $A(x) = \sum_{i=0}^{n-1} a_i x^i$ 的点值表示是在 $n$ 次单位根 $w_n^k = e^{j \frac{2\pi k}{n}}$ 上的取值。
+**线性变换矩阵**：$Y = V A$，其中 $V_{ij} = (w_n^i)^j$。
+**卷积定理**：$A(x) \cdot B(x) = \text{IDFT}(\text{DFT}(A) \cdot \text{DFT}(B))$。利用分治思想，FFT 将复杂度从 $O(n^2)$ 降低至 $O(n \log n)$。
+
+**2. 快速数论变换 (NTT)**：
+在模 $P$ 意义下，利用原根 $g$ 的性质 $g^{(P-1)/n} \pmod P$ 替代单位根。
+**存在条件**：$P = c \cdot 2^k + 1$，使得 $n \mid (P-1)$。常见模数为 $998244353$。
+
+**3. 多项式求逆与牛顿迭代 (Newton's Method)**：
+求解 $G(F(x)) \equiv 0 \pmod{x^n}$。
+**迭代公式**：$x_{k+1} = x_k - \frac{G(x_k)}{G'(x_k)}$。
+对于求逆 $F(x)B(x) \equiv 1 \pmod{x^n}$，令 $G(B) = \frac{1}{B} - F(x)$。
+$$ B_{k+1} \equiv B_k - \frac{1/B_k - F}{-1/B_k^2} \equiv B_k(2 - F B_k) \pmod{x^{2k}} $$
+**收敛性**：牛顿迭代在每次迭代中使得有效项数倍增，复杂度满足 $T(n) = T(n/2) + O(n \log n) = O(n \log n)$。
+
 ---
 
 ## 3. 博弈论与平衡状态
@@ -149,10 +167,74 @@ void poly_inv(int *a, int *b, int n) {
 <details>
 <summary>Check Solution (核心转移)</summary>
 
-```cpp
-// 考虑每条边对总距离的贡献
+// ... 考虑每条边对总距离的贡献
 long long val = (long long)j * (k - j) * e[i].w + (long long)(sz[v] - j) * (n - k - (sz[v] - j)) * e[i].w;
 f[u][i] = max(f[u][i], f[u][i-j] + f[v][j] + val);
+```
+
+</details>
+
+### 练习 6：[P4238] 多项式乘法逆 (Polynomial Inversion)
+
+给定 $n-1$ 次多项式 $A(x)$，求 $B(x)$ 使得 $A(x)B(x) \equiv 1 \pmod{x^n}$。
+
+<details>
+<summary>Check Solution (思路)</summary>
+
+1. 基础情况：当 $n=1$ 时，$B_0 \equiv A_0^{-1} \pmod P$。
+2. 迭代提升：假设已有 $B_{k/2} \equiv A^{-1} \pmod{x^{k/2}}$。
+3. 利用牛顿迭代：$B_k \equiv B_{k/2}(2 - AB_{k/2}) \pmod{x^k}$。
+4. 使用 NTT 加速多项式乘法。
+</details>
+
+<details>
+<summary>Check Solution (C++)</summary>
+
+```cpp
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+const int MOD = 998244353;
+typedef long long ll;
+
+void ntt(vector<ll>& a, int type) {
+    int n = a.size();
+    for (int i = 1, j = 0; i < n; i++) {
+        int bit = n >> 1;
+        for (; j & bit; bit >>= 1) j ^= bit;
+        j ^= bit;
+        if (i < j) swap(a[i], a[j]);
+    }
+    for (int mid = 1; mid < n; mid <<= 1) {
+        ll Wn = qpow(3, (MOD - 1) / (mid << 1), MOD);
+        if (type == -1) Wn = qpow(Wn, MOD - 2, MOD);
+        for (int j = 0; j < n; j += (mid << 1)) {
+            ll w = 1;
+            for (int k = 0; k < mid; k++, w = w * Wn % MOD) {
+                ll x = a[j + k], y = w * a[j + k + mid] % MOD;
+                a[j + k] = (x + y) % MOD;
+                a[j + k + mid] = (x - y + MOD) % MOD;
+            }
+        }
+    }
+}
+
+void poly_inv(int n, vector<ll>& a, vector<ll>& b) {
+    if (n == 1) { b[0] = qpow(a[0], MOD - 2, MOD); return; }
+    poly_inv((n + 1) >> 1, a, b);
+    int len = 1; while (len < (n << 1)) len <<= 1;
+    vector<ll> tmp(len, 0);
+    for (int i = 0; i < n; i++) tmp[i] = a[i];
+    b.resize(len, 0);
+    ntt(tmp, 1); ntt(b, 1);
+    for (int i = 0; i < len; i++) b[i] = b[i] * (2 - tmp[i] * b[i] % MOD + MOD) % MOD;
+    ntt(b, -1);
+    ll inv_len = qpow(len, MOD - 2, MOD);
+    for (int i = 0; i < n; i++) b[i] = b[i] * inv_len % MOD;
+    for (int i = n; i < len; i++) b[i] = 0;
+}
 ```
 
 </details>
@@ -162,6 +244,7 @@ initial={{ opacity: 0 }}
 whileInView={{ opacity: 1 }}
 className="mt-12 p-6 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl border border-indigo-100 dark:border-indigo-800">
 
+...
 <Shapes className="text-indigo-500 mb-2" />
 **大师寄语**：组合数学不仅仅是计数，更是寻找集合间的映射。博弈论则告诉我们，所有的竞争在某种高度上都是一种代数结构的对抗。
 </motion.div>
