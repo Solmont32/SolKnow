@@ -205,7 +205,9 @@ function Features() {
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
                 className={styles.roadmapCard}
-                style={{ '--accent-color': road.color } as React.CSSProperties & Record<string, string>}
+                style={
+                  { '--accent-color': road.color } as React.CSSProperties & Record<string, string>
+                }
               >
                 <div className={styles.roadmapHeader}>
                   <GraduationCap size={24} style={{ color: road.color }} />

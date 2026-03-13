@@ -23,6 +23,7 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 - **$\Theta(g(n))$ (等价)**：$f(n) = O(g(n)) \land f(n) = \Omega(g(n))$。
 
 ### 2. 复杂度阶梯 (The Complexity Hierarchy)
+
 $$ O(1) < O(\log \log n) < O(\log n) < O(\sqrt{n}) < O(n) < O(n \log n) < O(n^k) < O(a^n) < O(n!) $$
 
 ---
@@ -32,12 +33,13 @@ $$ O(1) < O(\log \log n) < O(\log n) < O(\sqrt{n}) < O(n) < O(n \log n) < O(n^k)
 ### 1. 递归树模型 (Recurrence Tree)
 
 对于形如 $T(n) = aT(n/b) + f(n)$ 的递归式，其总开销可视为一颗树：
+
 - **深度**：$\log_b n$。
 - **第 $i$ 层节点数**：$a^i$。
 - **第 $i$ 层总开销**：$a^i \cdot f(n/b^i)$。
 
 **收敛推导公式**：
-$$ T(n) = \sum_{i=0}^{\log_b n - 1} a^i f(n/b^i) + \Theta(n^{\log_b a}) $$
+$$ T(n) = \sum\_{i=0}^{\log_b n - 1} a^i f(n/b^i) + \Theta(n^{\log_b a}) $$
 
 ### 2. 主定理 (Master Theorem) 的严格判定
 
@@ -71,22 +73,25 @@ $$ T(n) = \sum_{i=0}^{\log_b n - 1} a^i f(n/b^i) + \Theta(n^{\log_b a}) $$
 ## 四、 工业级分析范式
 
 ### 1. 均摊分析 (Amortized Analysis)
+
 当单次操作最坏情况很差，但一系列操作的总和表现良好时使用。
+
 - **势能法 (Potential Method)**：定义势能函数 $\Phi(D_i)$，均摊代价 $\hat{c}_i = c_i + \Phi(D_i) - \Phi(D_{i-1})$。
 
 ### 2. 概率分析 (Expectation)
+
 针对快速排序等具有随机性的算法，计算**期望复杂度** $E[T(n)]$。
 
 ---
 
 ## 五、 典型算法复杂度速查
 
-| 算法类型 | 时间 (最好/平均/最坏) | 空间 | 备注 |
-| :--- | :--- | :--- | :--- |
-| **二分查找** | $O(1) / O(\log n) / O(\log n)$ | $O(1)$ | 需有序性 |
-| **快速排序** | $O(n \log n) / O(n \log n) / O(n^2)$ | $O(\log n)$ | 递归栈深度 |
-| **堆排序** | $O(n \log n) / O(n \log n) / O(n \log n)$ | $O(1)$ | 不稳定 |
-| **基数排序** | $O(nk) / O(nk) / O(nk)$ | $O(n+k)$ | $k$ 为位数 |
+| 算法类型     | 时间 (最好/平均/最坏)                     | 空间        | 备注       |
+| :----------- | :---------------------------------------- | :---------- | :--------- |
+| **二分查找** | $O(1) / O(\log n) / O(\log n)$            | $O(1)$      | 需有序性   |
+| **快速排序** | $O(n \log n) / O(n \log n) / O(n^2)$      | $O(\log n)$ | 递归栈深度 |
+| **堆排序**   | $O(n \log n) / O(n \log n) / O(n \log n)$ | $O(1)$      | 不稳定     |
+| **基数排序** | $O(nk) / O(nk) / O(nk)$                   | $O(n+k)$    | $k$ 为位数 |
 
 ---
 

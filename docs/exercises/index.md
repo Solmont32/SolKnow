@@ -6,22 +6,22 @@ sidebar_position: 1
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 import {
-  BookOpen,
-  Trophy,
-  Code2,
-  Infinity as InfinityIcon,
-  Brain,
-  ShieldCheck,
-  ChevronRight,
-  Target,
-  BarChart3,
-  Layers,
-  Search,
-  GitBranch,
-  Terminal,
-  Cpu,
-  Network,
-  Zap
+BookOpen,
+Trophy,
+Code2,
+Infinity as InfinityIcon,
+Brain,
+ShieldCheck,
+ChevronRight,
+Target,
+BarChart3,
+Layers,
+Search,
+GitBranch,
+Terminal,
+Cpu,
+Network,
+Zap
 } from 'lucide-react';
 
 # 全域综合练习库 (Global Comprehensive Exercise Library)
@@ -34,13 +34,13 @@ import {
 
 本矩阵展示了 SolKnow 练习库的核心知识分布与难度映射。点击知识点即可直达专项练习。
 
-| 领域 | 核心考点 (Knowledge Points) | 难度梯度 | 关联文档与练习 |
-| :--- | :--- | :--- | :--- |
-| **算法竞赛 (CP)** | 线性/区间/数位 DP, 高级数据结构, 复杂图论建模 | Level A-C | [算法竞赛练习集](./cs/algorithm-basic) |
+| 领域                | 核心考点 (Knowledge Points)                             | 难度梯度  | 关联文档与练习                                               |
+| :------------------ | :------------------------------------------------------ | :-------- | :----------------------------------------------------------- |
+| **算法竞赛 (CP)**   | 线性/区间/数位 DP, 高级数据结构, 复杂图论建模           | Level A-C | [算法竞赛练习集](./cs/algorithm-basic)                       |
 | **学术数学 (Math)** | $\epsilon-\delta$ 证明, Jordan 标准型, 测度论, 拓扑空间 | Level A-C | [数学分析专题](./math/analysis) / [代数专题](./math/algebra) |
-| **计算机系统 (CS)** | 进程调度模拟, 内存管理原语, C++ 现代特性, Linux 运维 | Level A-B | [C++ 实战](./cs/cpp) / [操作系统](./cs/os) |
-| **人工智能 (AI)** | 反向传播矩阵化, Transformer 架构推导, 算子级优化 | Level B-C | [深度学习实战](./ai/dl) / [机器学习](./ai/ml) |
-| **信息安全 (Sec)** | RSA/ECC 密码学证明, Web 漏洞挖掘, Pwn 溢出利用 | Level B-C | [网络安全](./infosec/web) / [Pwn 基础](./infosec/pwn) |
+| **计算机系统 (CS)** | 进程调度模拟, 内存管理原语, C++ 现代特性, Linux 运维    | Level A-B | [C++ 实战](./cs/cpp) / [操作系统](./cs/os)                   |
+| **人工智能 (AI)**   | 反向传播矩阵化, Transformer 架构推导, 算子级优化        | Level B-C | [深度学习实战](./ai/dl) / [机器学习](./ai/ml)                |
+| **信息安全 (Sec)**  | RSA/ECC 密码学证明, Web 漏洞挖掘, Pwn 溢出利用          | Level B-C | [网络安全](./infosec/web) / [Pwn 基础](./infosec/pwn)        |
 
 ---
 

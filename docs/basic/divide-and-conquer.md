@@ -25,10 +25,12 @@ import { GitBranch, GitMerge, Calculator, Terminal, Box, Binary, Network } from 
 分治算法的复杂度通常满足递推式 $T(n) = aT(n/b) + f(n)$，其中 $f(n) = O(n^d)$。
 
 ### 1. 递归树深度分析
+
 树的深度为 $\log_b n$。第 $i$ 层的子问题数量为 $a^i$，每个子问题的规模为 $n/b^i$。
 第 $i$ 层总工作量为 $a^i \cdot f(n/b^i)$。
 
 ### 2. 三种收敛场景
+
 - **Case 1**: $a > b^d$。叶子节点的工作量占主导。$T(n) = O(n^{\log_b a})$。
 - **Case 2**: $a = b^d$。每一层的工作量均衡分配。$T(n) = O(n^d \log n)$。
 - **Case 3**: $a < b^d$。根节点的合并工作量占主导。$T(n) = O(n^d)$。
@@ -38,11 +40,14 @@ import { GitBranch, GitMerge, Calculator, Terminal, Box, Binary, Network } from 
 ## 三 : 经典模型深度解析
 
 ### 1. 归并排序 (Merge Sort)
+
 - **参数**: $a=2, b=2, d=1$。
 - **推导**: $\log_2 2 = 1$，满足 Case 2。$T(n) = O(n^1 \log n)$。
 
 ### 2. 快速幂 (Modular Exponentiation)
+
 计算 $a^b \pmod p$。
+
 - **思路**: $a^b = (a^{b/2})^2$ (当 $b$ 为偶数) 或 $a \cdot a^{b-1}$ (当 $b$ 为奇数)。
 - **复杂度**: $T(b) = T(b/2) + O(1) \implies O(\log b)$。
 
@@ -51,6 +56,7 @@ import { GitBranch, GitMerge, Calculator, Terminal, Box, Binary, Network } from 
 ## 四 : 教材化例题
 
 ### 例题 1：逆序对数量 (分治贡献统计)
+
 在一个序列中，若 $i < j$ 且 $a[i] > a[j]$，则称 $(i, j)$ 为一个逆序对。
 
 <details>
@@ -58,6 +64,7 @@ import { GitBranch, GitMerge, Calculator, Terminal, Box, Binary, Network } from 
 
 **分治决策**：
 逆序对 $(i, j)$ 可能出现在：
+
 1. 左半部分 $[L, mid]$ 内部。
 2. 右半部分 $[mid+1, R]$ 内部。
 3. 跨越中点，即 $i \in [L, mid], j \in [mid+1, R]$。
@@ -90,12 +97,14 @@ long long merge_sort(int l, int r) {
 ## 五 : 综合练习库
 
 ### 练习 1：最近点对问题 (平面分治)
+
 在 $O(n \log n)$ 内寻找平面上距离最近的两点。
 
 <details>
 <summary>Check Solution</summary>
 
 **策略**：
+
 1. 按 $x$ 坐标分治。
 2. 合并时，只考虑距离中线 $d$ 范围内的点。
 3. **收敛性优化**：按 $y$ 坐标排序后，对每个点只需检查之后最多 6 个点。
@@ -112,6 +121,7 @@ double solve(int l, int r) {
 </details>
 
 ### 练习 2：Strassen 算法原理
+
 如何将 $T(n) = 8T(n/2) + O(n^2)$ 优化至 $T(n) = 7T(n/2) + O(n^2)$？
 
 <details>

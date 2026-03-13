@@ -2,7 +2,8 @@
 title: 动态规划 (Dynamic Programming)
 ---
 
-import { Brain, Network, Workflow, Target, Zap, Microscope } from 'lucide-react';
+import { Brain, Network, Workflow, Target, Zap, Microscope, BookOpen, Calculator, Code2 } from 'lucide-react';
+import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # 动态规划深度建模 (Dynamic Programming Deep Modeling)
 
@@ -10,44 +11,63 @@ import { Brain, Network, Workflow, Target, Zap, Microscope } from 'lucide-react'
 
 ---
 
-## <Microscope className="inline-block mr-2" /> 1. DP 的公理化基础
+## <Microscope className="inline-block mr-2" /> 1. DP 的公理化基础 (Axiomatic Foundations)
 
-一个问题能否使用动态规划求解，取决于其是否满足以下三个核心性质：
+一个问题能否使用动态规划求解，取决于其是否满足以下三个核心性质。我们将这些性质视为 DP 的“三要素”：
 
-1.  **最优子结构 (Optimal Substructure)**: 问题的最优解包含其子问题的最优解。即局部最优可以推导出全局最优。
-2.  **无后效性 (No After-Effect)**: 即“未来与过去无关”。一旦某个阶段的状态被确定，它之后的决策仅取决于当前状态，而与到达该状态的路径无关。
-3.  **子问题重叠 (Overlapping Subproblems)**: 在递归下降过程中，相同的子问题会被多次计算。DP 通过“空间换时间”的策略（表格法）消除此类冗余。
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+  <KnowledgeCard type="info" title="最优子结构">
+    问题的最优解包含其子问题的最优解。即全局最优解可以通过局部最优解构造而成。
+  </KnowledgeCard>
+  <KnowledgeCard type="warning" title="无后效性">
+    “未来与过去无关”。当前状态一旦确定，其后的决策仅受当前值影响，而不受历史路径干扰。
+  </KnowledgeCard>
+  <KnowledgeCard type="success" title="子问题重叠">
+    在递归过程中，相同的子问题会被多次访问。通过存储结果，我们将复杂度从指数级降至多项式级。
+  </KnowledgeCard>
+</div>
 
 ---
 
-## <Network className="inline-block mr-2" /> 2. 建模四步法 (The 4-Step Paradigm)
+## <BookOpen className="inline-block mr-2" /> 2. 教材化建模范式 (Textbook Modeling Paradigm)
 
-在 SolKnow 的体系中，我们提倡标准化的建模流程：
+在 SolKnow 体系中，我们遵循严密的 **"State-Transition-Initialization" (STI)** 建模流程：
 
-1.  **状态定义 (State Design)**: 确定 $dp[i][j \dots]$ 的物理意义。通常 $i$ 代表阶段（如序列位置、树节点、时间戳），$j \dots$ 代表约束（如体积、个数、集合状态）。
-2.  **状态转移方程 (Transition Equation)**: 推导 $dp[curr]$ 如何由 $dp[prev]$ 转化而来。这是问题的数学核心。
-3.  **边界与初始化 (Initialization)**: 确定最小子问题的解（如 $dp[0] = 0$）及非法状态的赋值（如 $\pm \infty$）。
-4.  **计算顺序与优化 (Order & Optimization)**: 确保计算当前状态时，所需的前置状态已计算完毕。评估时空复杂度并进行常数级或阶数级优化。
+1.  **状态空间定义 (State Space)**: 形式化定义 $dp[i][j \dots]$。
+    - 阶段 (Stage): 决策进行的步数或规模。
+    - 状态 (State): 描述每个阶段演进特征的变量。
+2.  **决策与转移 (Decision & Transition)**:
+    - 识别决策 (Choices): 在当前状态下可以采取的行为。
+    - 状态转移方程: 建立当前状态与前驱状态之间的函数映射 $f(curr) = \text{opt}\{ g(prev) + \text{cost} \}$。
+3.  **最优性证明 (Optimality Proof)**: 利用数学归纳法或反证法验证最优子结构的正确性。
+4.  **计算序与优化 (Ordering & Optimization)**: 确定状态依赖图 (DAG)，选择递推或记忆化搜索，并评估时空复杂度。
 
 ---
 
 ## <Workflow className="inline-block mr-2" /> 3. 知识版图 (Knowledge Map)
 
-| 模块                                     | 核心特征                           | 典型应用                     |
-| :--------------------------------------- | :--------------------------------- | :--------------------------- |
-| **[线性 DP](./linear-dp.md)**            | 阶段随序列下标线性增长             | LIS, LCS, 编辑距离           |
-| **[区间 DP](./range-dp.md)**             | 以区间长度为阶段，由小区间推大区间 | 石子合并, 矩阵链乘           |
-| **[树形 DP](./tree-dp.md)**              | 在树结构上进行递归决策             | 树上最大独立集, 树上背包     |
-| **[状压 DP](./state-compression-dp.md)** | 利用位运算压缩集合状态             | TSP, 蒙德里安的梦想          |
-| **[数位 DP](./digit-dp.md)**             | 解决与数字组成相关的计数问题       | 统计 $[L, R]$ 内满足条件的数 |
-| **[DP 优化](./optimization.md)**         | 利用单调性、凸性、数据结构降维     | 斜率优化, 四边形不等式       |
+我们将 DP 划分为以下核心模块，每个模块均配备严密的数学推导与 C++ 工业级实现：
+
+| 模块                                     | 核心特征           | 典型应用               | 复杂度分析                            |
+| :--------------------------------------- | :----------------- | :--------------------- | :------------------------------------ |
+| **[线性 DP](./linear-dp.md)**            | 阶段随下标线性增长 | LIS, LCS, 编辑距离     | $O(N^2)$ 或 $O(N \log N)$             |
+| **[背包问题](./knapsack.md)**            | 带约束的价值最大化 | 0/1, 完全, 多重背包    | $O(NW)$                               |
+| **[区间 DP](./range-dp.md)**             | 区间长度为演进阶段 | 石子合并, 矩阵链乘     | $O(N^3)$                              |
+| **[树形 DP](./tree-dp.md)**              | 在拓扑树上进行决策 | 最大独立集, 树上背包   | $O(N)$ 或 $O(NW)$                     |
+| **[状压 DP](./state-compression-dp.md)** | 位运算压缩集合状态 | TSP, 蒙德里安的梦想    | $O(2^N \cdot N^k)$                    |
+| **[数位 DP](./digit-dp.md)**             | 数字组成的约束计数 | 统计区间内特定数字     | $O(\text{digits} \cdot \text{state})$ |
+| **[DP 优化](./optimization.md)**         | 利用数学性质降维   | 斜率优化, 四边形不等式 | $\to O(N)$ 或 $O(N \log N)$           |
 
 ---
 
-## <Zap className="inline-block mr-2" /> 4. 学习建议
+## <Calculator className="inline-block mr-2" /> 4. 从数学到工程的跨越
 
 > "DP 的精髓不在于背诵方程，而在于**对问题阶段的深刻拆解**。"
->
-> —— 每一个初学者都应从**记忆化搜索 (Memory Search)** 开始理解 DP，逐步过渡到**递推 (Tabulation)**，最后掌握各种**时空优化技巧**。
 
-在本章中，我们将通过严格的数学推导、精选的 C++ 工业级代码以及由浅入深的折叠练习，带你领略动态规划的艺术。
+在本教材中，我们将通过：
+
+- **LaTeX 形式化推导**: 确保逻辑严密。
+- **折叠式 C++ 实现**: 保持页面整洁，强调自主思考。
+- **复杂度评估**: 培养工业级的时空权衡意识。
+
+准备好进入多阶段决策的数学世界了吗？从最基础的 [线性 DP](./linear-dp.md) 开始。

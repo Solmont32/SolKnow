@@ -13,23 +13,23 @@ import { Target, Zap, Trophy, BarChart3, ChevronRight, Code2, Cpu, Layers } from
 
 ## 🪜 练习阶梯与评价标准
 
-| 等级 | 难度目标 | 核心考察点 | 期望达成 |
-| :--- | :--- | :--- | :--- |
-| <span style={{ color: 'var(--ifm-color-success)' }}>● **Level A**</span> | 现代语法熟练度 | 智能指针、Lambda、auto、STL 基础 | 编写无内存泄漏的现代代码 |
-| <span style={{ color: 'var(--ifm-color-warning)' }}>● **Level B**</span> | 工程化抽象与性能 | 移动语义、模板元编程、RAII 模式 | 实现高效且类型安全的库组件 |
-| <span style={{ color: 'var(--ifm-color-danger)' }}>● **Level C**</span> | 底层机制与并发 | 内存模型 (Memory Barrier)、原子操作、协程 | 具备构建高性能分布式系统的能力 |
+| 等级                                                                     | 难度目标         | 核心考察点                                | 期望达成                       |
+| :----------------------------------------------------------------------- | :--------------- | :---------------------------------------- | :----------------------------- |
+| <span style={{ color: 'var(--ifm-color-success)' }}>● **Level A**</span> | 现代语法熟练度   | 智能指针、Lambda、auto、STL 基础          | 编写无内存泄漏的现代代码       |
+| <span style={{ color: 'var(--ifm-color-warning)' }}>● **Level B**</span> | 工程化抽象与性能 | 移动语义、模板元编程、RAII 模式           | 实现高效且类型安全的库组件     |
+| <span style={{ color: 'var(--ifm-color-danger)' }}>● **Level C**</span>  | 底层机制与并发   | 内存模型 (Memory Barrier)、原子操作、协程 | 具备构建高性能分布式系统的能力 |
 
 ---
 
 ## 🎯 考点覆盖模型 (Knowledge Matrix)
 
-| 知识模块 | 核心考点 | 关联习题 | 推荐等级 |
-| :--- | :--- | :--- | :--- |
-| **资源管理** | `unique_ptr` 所有权转移、`shared_ptr` 循环引用 | 练习 1 | Level A |
-| **泛型编程** | 模板特化、SFINAE (Enable_if)、Concepts | 练习 2 | Level B |
-| **移动语义** | 右值引用、完美转发 (Perfect Forwarding) | 练习 3 | Level B |
-| **底层性能** | 零开销抽象 (Zero-overhead)、虚函数开销分析 | 练习 4 | Level C |
-| **并发原语** | `std::atomic` 与内存顺序 (memory_order) | 练习 5 | Level C |
+| 知识模块     | 核心考点                                       | 关联习题 | 推荐等级 |
+| :----------- | :--------------------------------------------- | :------- | :------- |
+| **资源管理** | `unique_ptr` 所有权转移、`shared_ptr` 循环引用 | 练习 1   | Level A  |
+| **泛型编程** | 模板特化、SFINAE (Enable_if)、Concepts         | 练习 2   | Level B  |
+| **移动语义** | 右值引用、完美转发 (Perfect Forwarding)        | 练习 3   | Level B  |
+| **底层性能** | 零开销抽象 (Zero-overhead)、虚函数开销分析     | 练习 4   | Level C  |
+| **并发原语** | `std::atomic` 与内存顺序 (memory_order)        | 练习 5   | Level C  |
 
 ---
 
@@ -45,10 +45,12 @@ import { Target, Zap, Trophy, BarChart3, ChevronRight, Code2, Cpu, Layers } from
 <summary>Check Solution (C++ Implementation)</summary>
 
 **解题思维链**：
+
 1.  **所有权转移**：`unique_ptr` 禁止拷贝，必须用 `std::move`。
 2.  **循环引用**：两个对象互相持有对方的 `shared_ptr` 导致计数器永不归零。`weak_ptr` 不增加引用计数，可打破环路。
 
 **代码实现**：
+
 ```cpp
 #include <iostream>
 #include <memory>
@@ -88,10 +90,12 @@ int main() {
 <summary>Check Solution</summary>
 
 **解题思维链**：
+
 1.  **万能引用**：`Args&&` 配合模板可以匹配左值和右值。
 2.  **std::forward**：利用引用折叠规则，将参数完美转发。
 
 **代码实现**：
+
 ```cpp
 #include <utility>
 #include <memory>
@@ -137,6 +141,7 @@ inline constexpr bool my_is_pointer_v = my_is_pointer<T>::value;
 <summary>Check Solution</summary>
 
 **底层原理**：
+
 1.  **Relaxed**：仅保证原子性，不保证内存操作的顺序。
 2.  **Acquire-Release**：建立一个 **Synchronizes-with** 关系。
     - `Release` 确保在该操作之前的写操作对所有执行 `Acquire` 该变量的线程可见。

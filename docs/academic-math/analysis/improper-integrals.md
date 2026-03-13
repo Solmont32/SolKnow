@@ -66,7 +66,7 @@ $$\left| \int_{A_1}^{A_2} f(x) dx \right| < \epsilon$$
    - $\int \sin x$ 有界。
    - $1/x^p$ 单调趋于 0。
    故由 Dirichlet 判别法知积分收敛。
-</details>
+   </details>
 
 <details>
 <summary><b>练习 2：瑕积分的判定</b></summary>

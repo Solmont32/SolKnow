@@ -2,37 +2,56 @@
 title: 状压 DP
 ---
 
-import { Microscope, Layers, Activity, ShieldCheck, Zap } from 'lucide-react';
+import { Microscope, Layers, Activity, ShieldCheck, Zap, Binary, Grid, Target } from 'lucide-react';
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # 状态压缩动态规划 (State Compression DP)
 
-状压 DP 是一类特殊的动态规划，其核心思想是利用**位运算**将集合状态（如“哪些元素已被选中”）压缩成一个整数，从而将其作为 DP 的一个维度。它通常用于解决 $N$ 较小（一般 $N \le 20$）但具有指数级解空间的问题。
+状压 DP 是一类特殊的动态规划，其核心思想是利用**位运算**将集合状态（如“哪些元素已被选中”）压缩成一个整数，从而将其作为 DP 的一个维度。它通常用于解决 $N$ 较小（一般 $N \le 22$）但具有指数级解空间的问题。
 
 ---
 
-<KnowledgeCard type="info" title="集合与二进制的映射：最优子结构">
-    对于 TSP 问题的状态 $f[state][i]$，其**最优子结构**体现为：若 $0 \to \dots \to j \to i$ 是访问集合 $state$ 且止于 $i$ 的最短路径，则 $0 \to \dots \to j$ 必须是访问集合 $state \setminus \{i\}$ 且止于 $j$ 的最短路径。
-    <br/>
-    映射规则：
-    - $i \in S \iff (x \gg i) \& 1 = 1$
-    - $S_1 \cup S_2 \iff x_1 | x_2$
-    - $S_1 \setminus \{i\} \iff x \oplus (1 \ll i)$
+<KnowledgeCard type="info" title="集合与二进制的映射逻辑">
+    对于有限集合 $S \subseteq \{0, 1, \dots, n-1\}$，我们可以用一个 $n$ 位二进制数 $x$ 来表示：
+    - **元素存在性**：$i \in S \iff (x \gg i) \& 1 = 1$
+    - **并集操作**：$S_1 \cup S_2 \iff x_1 | x_2$
+    - **交集操作**：$S_1 \cap S_2 \iff x_1 \& x_2$
+    - **差集操作**：$S \setminus \{i\} \iff x \oplus (1 \ll i)$（前提是 $i \in S$）
+    - **全集状态**：$(1 \ll n) - 1$
 </KnowledgeCard>
 
 ---
 
-## <Microscope className="inline-block mr-2" /> 1. 子集遍历的艺术：从 $O(4^n)$ 到 $O(3^n)$
+## <Microscope className="inline-block mr-2" /> 1. 核心模型：哈密顿路径 (Hamiltonian Path)
 
-在许多状压 DP 中，我们需要枚举每个状态的所有子集。
-**朴素做法**：枚举所有状态 $S$ ($2^n$)，再枚举所有状态 $s \in [0, 2^n)$，检查 $s$ 是否为 $S$ 的子集。总复杂度 $O(4^n)$。
+**问题描述**：给定 $n$ 个点及其间的边权，求从点 0 到点 $n-1$ 经过每个点恰好一次的最短路径。
 
-**高效做法**：
+### 1.1 状态空间建模 (State Space)
+
+- **阶段 (Stage)**：当前已访问的点集（集合状态）。
+- **状态定义**：$f[S][i]$ 表示当前已访问点的集合为 $S$，且当前处于点 $i$ 的路径总权值最小值。
+- **无后效性证明**：给定当前访问集合 $S$ 和终点 $i$，未来的路径选择仅依赖于 $\{V \setminus S\}$ 中的点，而与到达 $i$ 的具体路径无关。
+
+### 1.2 状态转移方程 (Transition)
+
+若要到达状态 $(S, i)$，前驱状态必然是访问了 $S \setminus \{i\}$ 且止于某点 $j \in S \setminus \{i\}$：
+$$f[S][i] = \min_{j \in S, j \neq i} \{ f[S \oplus (1 \ll i)][j] + dist(j, i) \}$$
+
+- **初始条件**：$f[1][0] = 0$，其余为 $+\infty$。
+- **目标**：$f[(1 \ll n) - 1][n - 1]$。
+
+---
+
+## <Layers className="inline-block mr-2" /> 2. 子集遍历的艺术：复杂度从 $O(4^n)$ 到 $O(3^n)$
+
+在某些状压 DP 中（如划分集合问题），需要枚举每个状态 $S$ 的所有子集 $s \subset S$。
+
+**高效枚举技巧**：
 
 ```cpp
 for (int S = 0; S < (1 << n); S++) {
     for (int s = S; s; s = (s - 1) & S) {
-        // s 是 S 的子集
+        // s 是 S 的非空子集
     }
 }
 ```
@@ -41,53 +60,31 @@ for (int S = 0; S < (1 << n); S++) {
 总计算次数等于 $\sum_{k=0}^n \binom{n}{k} \cdot 2^k$。
 根据二项式定理 $(1+x)^n = \sum \binom{n}{k} x^k$，令 $x=2$，得：
 $$(1+2)^n = 3^n$$
-因此，该技巧将复杂度从 $O(4^n)$ 显著降至 $O(3^n)$。
+此技巧将复杂度从朴素的 $O(4^n)$ 降至 $O(3^n)$，在 $n=15$ 左右具有决定性差异。
 
 ---
 
-## <Layers className="inline-block mr-2" /> 2. 经典模型：哈密顿路径 (Hamiltonian Path)
+## <Binary className="inline-block mr-2" /> 3. 位运算工具箱
 
-**问题**：给定 $n$ 个点及其间的边权，求从点 0 到点 $n-1$ 经过每个点恰好一次的最短路径。
+在工业级状压 DP 实现中，利用内置函数可大幅提升性能：
 
-### 状态设计
-
-$f[state][i]$ 表示当前已访问点的集合为 $state$，且当前处于点 $i$ 的最短路径长度。
-
-### 转移方程
-
-$$f[state][i] = \min_{j \in state, j \neq i} \{ f[state \setminus \{i\}][j] + dist(j, i) \}$$
-其中 $state \setminus \{i\}$ 可表示为 `state ^ (1 << i)`。
-
-### 复杂度
-
-- 状态数：$2^n \cdot n$。
-- 转移：$O(n)$。
-- 总计：$O(2^n \cdot n^2)$。对比朴素排列搜索的 $O(n!)$，优化显著。
+- `__builtin_popcount(x)`: 返回 $x$ 二进制中 1 的个数。
+- `__builtin_ctz(x)`: 返回末尾 0 的个数（即最低位 1 的索引）。
+- `x & -x` (lowbit): 提取 $x$ 的最低位 1。
 
 ---
 
-## <Zap className="inline-block mr-2" /> 2. 工业级位运算技巧
-
-在状压 DP 中，高效的位运算是性能的关键：
-
-- `__builtin_popcount(x)`：统计 $x$ 中 1 的个数。
-- `x & -x` (Lowbit)：提取 $x$ 的最低位 1。
-- `for (int i = s; i; i = (i - 1) & s)`：**高效遍历子集**（复杂度 $O(3^n)$ 而非 $O(4^n)$）。
-
----
-
-## <ShieldCheck className="inline-block mr-2" /> 3. 综合练习与强化
+## <ShieldCheck className="inline-block mr-2" /> 4. 综合练习与强化
 
 ### 练习 1：最短 Hamilton 路径
 
-给定权值矩阵，求从 0 到 $n-1$ 的最短 Hamilton 路径。
+经典 TSP 简化版，求从 0 到 $n-1$ 的最短路径。
 
 <details>
 <summary>Check Solution (O(2^n * n^2))</summary>
 
 ```cpp
 #include <iostream>
-#include <vector>
 #include <cstring>
 #include <algorithm>
 
@@ -102,13 +99,13 @@ int main() {
             cin >> dist[i][j];
 
     memset(f, 0x3f, sizeof f);
-    f[1][0] = 0; // 初始状态：只访问了 0 号点，且停在 0 号点
+    f[1][0] = 0;
 
     for (int i = 1; i < (1 << n); i++) {
         for (int j = 0; j < n; j++) {
-            if ((i >> j) & 1) { // 如果当前集合包含 j
+            if ((i >> j) & 1) {
                 for (int k = 0; k < n; k++) {
-                    if ((i >> k) & 1 && k != j) { // 尝试从前一个点 k 转移
+                    if ((i >> k) & 1 && k != j) {
                         f[i][j] = min(f[i][j], f[i ^ (1 << j)][k] + dist[k][j]);
                     }
                 }
@@ -127,27 +124,72 @@ int main() {
 用 $1 \times 2$ 的骨牌铺满 $n \times m$ 的棋盘，求方案数。
 
 <details>
-<summary>Check Solution</summary>
+<summary>Check Solution (DP Logic)</summary>
 
-**核心逻辑**：
-$f[i][j]$ 表示第 $i$ 列的状态为 $j$（$j$ 的某位为 1 表示由第 $i-1$ 列横插过来的）。
-
-1.  横放确定后，剩下的空位必须能由竖放填满（即连续的空位必须是偶数）。
-2.  相邻两列状态必须兼容：`(j & k) == 0`。
+**状态定义**：$f[i][j]$ 表示第 $i$ 列的状态为 $j$（$j$ 的某位为 1 表示由第 $i-1$ 列横插过来的）。
 
 ```cpp
-// 预处理合法状态
-for (int i = 0; i < (1 << n); i++) {
-    int cnt = 0;
-    bool isValid = true;
-    for (int j = 0; j < n; j++) {
-        if ((i >> j) & 1) {
-            if (cnt & 1) isValid = false;
-            cnt = 0;
-        } else cnt++;
+#include <iostream>
+#include <vector>
+#include <cstring>
+
+using namespace std;
+
+long long f[12][1 << 11];
+bool st[1 << 11];
+
+int main() {
+    int n, m;
+    while (cin >> n >> m && (n || m)) {
+        // 预处理：判断连续空位是否为偶数
+        for (int i = 0; i < (1 << n); i++) {
+            int cnt = 0;
+            st[i] = true;
+            for (int j = 0; j < n; j++) {
+                if ((i >> j) & 1) {
+                    if (cnt & 1) st[i] = false;
+                    cnt = 0;
+                } else cnt++;
+            }
+            if (cnt & 1) st[i] = false;
+        }
+
+        memset(f, 0, sizeof f);
+        f[0][0] = 1;
+        for (int i = 1; i <= m; i++) {
+            for (int j = 0; j < (1 << n); j++) {
+                for (int k = 0; k < (1 << n); k++) {
+                    // 状态 k (i-1) 和状态 j (i) 兼容
+                    if ((j & k) == 0 && st[j | k]) {
+                        f[i][j] += f[i - 1][k];
+                    }
+                }
+            }
+        }
+        cout << f[m][0] << endl;
     }
-    if (cnt & 1) isValid = false;
-    st[i] = isValid;
+    return 0;
+}
+```
+
+</details>
+
+### 练习 3：最优二分图匹配 (Bitmask 版)
+
+给定二分图的邻接矩阵，求最大匹配。虽然匈牙利算法更快，但状压 DP 适用于带权匹配等变体。
+
+<details>
+<summary>Check Solution (O(2^N * N))</summary>
+
+```cpp
+// f[S] 表示已匹配左侧点集 S 时，前 popcount(S) 个右侧点的最大匹配价值
+for (int S = 0; S < (1 << n); S++) {
+    int i = __builtin_popcount(S); // 当前准备匹配右侧的第 i 个点
+    for (int j = 0; j < n; j++) {
+        if (!((S >> j) & 1)) { // 如果左侧第 j 个点未被匹配
+            f[S | (1 << j)] = max(f[S | (1 << j)], f[S] + weight[j][i]);
+        }
+    }
 }
 ```
 
@@ -158,5 +200,5 @@ for (int i = 0; i < (1 << n); i++) {
 ## 延伸挑战
 
 - [洛谷 P1879 [USACO06NOV] Corn Fields G](https://www.luogu.com.cn/problem/P1879)（基础状压）
-- [洛谷 P2704 [NOI2001] 炮兵阵地](https://www.luogu.com.cn/problem/P2704)（三进制/多行依赖状压）
-- [POJ 2411 Mondriaan's Dream](http://poj.org/problem?id=2411)
+- [洛谷 P2704 [NOI2001] 炮兵阵地](https://www.luogu.com.cn/problem/P2704)（多行依赖与状态精简）
+- [AtCoder DP Contest U - Grouping](https://atcoder.jp/contests/dp/tasks/dp_u)（$O(3^N)$ 子集枚举练习）

@@ -135,7 +135,11 @@ const KnowledgeGraphInner = () => {
           highlightLinks.has(link) ? 'var(--ifm-color-primary)' : 'var(--ifm-color-emphasis-200)'
         }
         linkWidth={(link: Link) => (highlightLinks.has(link) ? 3 : 1)}
-        nodeCanvasObject={(node: Node & { x: number; y: number; color?: string }, ctx: CanvasRenderingContext2D, globalScale: number) => {
+        nodeCanvasObject={(
+          node: Node & { x: number; y: number; color?: string },
+          ctx: CanvasRenderingContext2D,
+          globalScale: number,
+        ) => {
           const isHighlighted = highlightNodes.has(node.id);
           const isFocused = focusNode?.id === node.id;
 
