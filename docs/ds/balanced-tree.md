@@ -3,7 +3,7 @@ title: 平衡树 (Balanced Tree)
 ---
 
 import KnowledgeCard from '@site/src/components/KnowledgeCard';
-import { GitBranch, Move, RotateCcw, Shuffle, Layers, Scissors, Repeat, TrendingUp, MemoryStick, Box, ShieldCheck } from 'lucide-react';
+import { GitBranch, Move, RotateCcw, Shuffle, Layers, Scissors, Repeat, TrendingUp, MemoryStick, Box, ShieldCheck, CheckCircle2 } from 'lucide-react';
 
 # 平衡树 (Balanced Tree): 动态维护有序集
 
@@ -15,84 +15,54 @@ import { GitBranch, Move, RotateCcw, Shuffle, Layers, Scissors, Repeat, Trending
 
 ---
 
-## 1. 结构拓扑一致性校验 (Topological Consistency)
+## 1. 结构拓扑一致性与单调性校验
 
-平衡树的核心在于**旋转 (Rotation)**。旋转必须保持 BST 性质并满足拓扑不变性：
+平衡树的核心在于**旋转 (Rotation)** 或 **分裂与合并 (Split & Merge)**。这些操作必须严格保持 BST 的单调性。
 
-### 1.1 旋转不变量方程
+### 1.1 旋转不变量与单调性证明
+
 设 $u$ 为 $v$ 的左子节点，$B$ 为 $u$ 的右子树。右旋后：
-1. $u$ 成为 $v$ 的父节点。
-2. $B$ 成为 $v$ 的左子树。
-**校验逻辑**：
-- **全序保持**: 旋转前 $A < u < B < v < C$；旋转后依然满足 $A < u < (B < v < C)$。
-- **信息维护**: 必须先更新原子节点（旋转后的子节点）的信息，再更新新父节点的信息。
+**单调性保持证明 (Monotonicity Preservation)**：
+1. 旋转前：$val(ls(u)) < val(u) < val(rs(u)=B) < val(v) < val(rs(v))$。
+2. 旋转后：$ls(u)$ 仍为 $u$ 的左子树，$v$ 及其右子树整体变为 $u$ 的右子树，而 $B$ 变为 $v$ 的左子树。
+3. 验证：$val(ls(u)) < val(u) < (val(B) < val(v) < val(rs(v)))$。
+**结论**：全序关系（单调性）在拓扑变换中严格保持。
+
+### 1.2 分治边界验证 (Split & Merge Boundary)
+
+在 FHQ-Treap 中，`split(u, v, &l, &r)` 将树划分为两部分：
+1. **左子树 $l$**：所有节点的 $val \le v$。
+2. **右子树 $r$**：所有节点的 $val > v$。
+**一致性校验**：通过递归边界处理（`!u` 时返回空）与按值路由，确保原树中的每个节点**有且仅有一次**出现在 $l$ 或 $r$ 中，无信息丢失。
 
 ---
 
-## 2. 伸展树 (Splay): 均摊复杂度证明
+## 2. 复杂度分析与均摊证明
 
-Splay 的核心在于其双旋（Zig-Zig）策略，这使得它能够自适应地调整结构。
-
-### 2.1 势能分析证明 (The Access Lemma)
+### 2.1 伸展树 (Splay): 势能分析证明
 
 **定理**：Splay 操作的均摊代价为 $O(\log N)$。
-
-**证明步骤**：
-1. 定义节点的秩 $r(u) = \log_2(size(u))$，系统势能 $\Phi = \sum_{i=1}^n r(i)$。
-2. **Zig-Zig/Zag-Zag (双旋)** 的均摊代价 $A$：
-   - 设 $u$ 为当前节点，$p$ 为父节点，$g$ 为祖父节点。
-   - $A = 实际代价(2) + \Delta \Phi = 2 + (r'(u) + r'(p) + r'(g) - r(u) - r(p) - r(g))$。
-   - 由于 $r'(u) = r(g)$ 且 $r(u) < r(p)$，利用对数函数的凹性可证明：
-   - $A \le 3(r'(u) - r(u))$。
-3. **总代价**: 单次伸展由若干次双旋和最多一次单旋组成。
-   - $A_{total} = \sum A_i \le 3(r(root) - r(start)) + 1$。
-   - 由于 $r(root) = \log N$ 且 $r(start) \ge 0$，故均摊复杂度为 $O(\log N)$。
+定义势能 $\Phi = \sum_{i=1}^n \log_2(size(i))$。通过对 Zig-Zig 和 Zig-Zag 变换的 $\Delta \Phi$ 计算，可以证明单次 Access 的均摊代价受限于 $3(r(root) - r(start)) + 1$。
 
 ---
 
-## 3. 复杂度分析与空间分配证明
+## 3. FHQ-Treap: 随机化平衡的一致性
 
-### 3.1 空间分配证明 (Systematic Space Allocation)
-
-**定理**：标准平衡树（Splay, Treap, AVL）的空间复杂度为 $\Theta(N)$。
-**证明**：
-1. 每个元素对应一个独立的节点。
-2. 每个节点存储常数个信息：$val, ls, rs, p, sz, prio$。
-3. 空间 $S(N) = \sum_{i=1}^N \text{sizeof}(Node) = O(N)$。
-**注意**：在可持久化 Treap 中，单次操作由于路径复制产生 $O(\log N)$ 个新节点，总空间为 $O(N + M \log N)$。
-
----
-
-## 4. FHQ-Treap: 随机化平衡的一致性
-
-### 4.1 期望高度收敛分析
+### 3.1 期望高度收敛分析
 
 **命题**：随机权值 Treap 的期望高度为 $O(\log N)$。
-**证明**：节点 $i$ 是 $j$ 的祖先的概率 $P(i \to j) = \frac{1}{|rank(i) - rank(j)| + 1}$。期望深度 $E[D_j] = \sum_{i=1}^n P(i \to j) \approx 2 \ln N$。
+**证明**：节点 $i$ 是 $j$ 的祖先的概率取决于它们在随机权值序列中的相对位置。期望深度 $E[D_j] \approx 2 \ln N$。由于权值是独立同分布的随机变量，结构的平衡性具有极强的概率保障。
 
 ---
 
-## 5. 教材化例题与解析
+## 4. 教材化例题与解析
 
 ### 例题 1：区间翻转 (文艺平衡树)
-
 <details>
 <summary>Check Solution (Splay 完整实现)</summary>
 
+**核心逻辑**：将区间 $[l, r]$ 旋转到一棵子树中，通过打懒标记 `rev` 实现 $O(\log N)$ 翻转。
 ```cpp
-#include <iostream>
-#include <algorithm>
-
-const int N = 100010;
-struct SplayNode {
-    int s[2], p, v, sz;
-    bool rev;
-    void init(int _v, int _p) { v = _v; p = _p; sz = 1; }
-} tr[N];
-int root, idx;
-
-void push_up(int x) { tr[x].sz = tr[tr[x].s[0]].sz + tr[tr[x].s[1]].sz + 1; }
-
 void push_down(int x) {
     if (tr[x].rev) {
         std::swap(tr[x].s[0], tr[x].s[1]);
@@ -101,125 +71,48 @@ void push_down(int x) {
         tr[x].rev = 0;
     }
 }
-
-void rotate(int x) {
-    int y = tr[x].p, z = tr[y].p;
-    int k = (tr[y].s[1] == x);
-    tr[z].s[tr[z].s[1] == y] = x; tr[x].p = z;
-    tr[y].s[k] = tr[x].s[k ^ 1]; tr[tr[x].s[k ^ 1]].p = y;
-    tr[x].s[k ^ 1] = y; tr[y].p = x;
-    push_up(y); push_up(x);
-}
-
-void splay(int x, int k) {
-    while (tr[x].p != k) {
-        int y = tr[x].p, z = tr[y].p;
-        if (z != k)
-            if ((tr[y].s[1] == x) ^ (tr[z].s[1] == y)) rotate(x);
-            else rotate(y);
-        rotate(x);
-    }
-    if (!k) root = x;
-}
 ```
-
 </details>
 
-### 例题 2：普通平衡树 (Treap / FHQ-Treap)
-
+### 例题 2：名次树操作 (FHQ-Treap)
 <details>
-<summary>Check Solution (FHQ-Treap 实现)</summary>
+<summary>Check Solution</summary>
 
-**核心逻辑**：通过 `split` 和 `merge` 操作替代旋转，代码极其简洁且支持可持久化。
-
+**解析**：支持插入、删除、查排名、查数值、求前驱后继。
 ```cpp
-#include <random>
-
-const int N = 100010;
-struct FHQNode {
-    int l, r, val, key, sz;
-} tr[N];
-int root, idx;
-std::mt19937 rng(1337);
-
-void push_up(int u) { tr[u].sz = tr[tr[u].l].sz + tr[tr[u].r].sz + 1; }
-
-void split(int u, int v, int &l, int &r) {
-    if (!u) { l = r = 0; return; }
-    if (tr[u].val <= v) {
-        l = u; split(tr[u].r, v, tr[u].r, r);
-    } else {
-        r = u; split(tr[u].l, v, l, tr[u].l);
-    }
-    push_up(u);
-}
-
-int merge(int l, int r) {
-    if (!l || !r) return l + r;
-    if (tr[l].key > tr[r].key) {
-        tr[l].r = merge(tr[l].r, r);
-        push_up(l); return l;
-    } else {
-        tr[r].l = merge(l, tr[r].l);
-        push_up(r); return r;
-    }
+void insert(int v) {
+    int l, r;
+    split(root, v, l, r);
+    root = merge(merge(l, newNode(v)), r);
 }
 ```
-
 </details>
 
 ---
 
-## 6. 综合练习与解答
+## 5. 综合练习与解答
 
-1. **[最大异或路径]** 在树上支持动态加边、删边，查询两点间路径异或最大值。
+1. **[树上路径]** 配合 LCT 维护树上路径信息（如路径最大值）。
 <details>
 <summary>Check Solution</summary>
 
-**LCT + 线性基**：LCT 维护路径，Splay 节点维护其子树内所有权值的线性基（Linear Basis）。
-
-```cpp
-struct Basis {
-    int b[31];
-    void insert(int x) {
-        for (int i = 30; i >= 0; i--) {
-            if (!(x >> i)) continue;
-            if (!b[i]) { b[i] = x; return; }
-            x ^= b[i];
-        }
-    }
-};
-// LCT Node 增加 Basis 成员，并在 push_up 时合并子节点与自身的 Basis
-```
-
+**核心逻辑**：LCT 本质上是辅助树（Splay）维护实链。通过 `access` 和 `make_root` 将路径提取到一棵 Splay 中进行处理。
 </details>
 
-2. **[进阶] 替罪羊树 (Scapegoat Tree) 的重构一致性**
+2. **[可持久化]** 实现可持久化 Treap，支持回滚到历史版本。
 <details>
 <summary>Check Solution</summary>
 
-**重构判定**：$\max(sz[ls], sz[rs]) > \alpha \cdot sz[u]$。当触发重构时，将子树中序遍历存入数组，再通过二分法重新构建完全平衡的二叉树。
-
+**一致性保证**：在 `split` 和 `merge` 过程中，任何修改节点的操作都必须先 `copyNode`。这样可以保证历史版本的拓扑单调性不被破坏。
 ```cpp
-void flatten(int u, std::vector<int> &v) {
-    if (!u) return;
-    flatten(tr[u].l, v);
-    v.push_back(tr[u].val);
-    flatten(tr[u].r, v);
-}
-int rebuild(int l, int r, const std::vector<int> &v) {
-    if (l > r) return 0;
-    int mid = (l + r) >> 1;
-    int u = newNode(v[mid]);
-    tr[u].l = rebuild(l, mid - 1, v);
-    tr[u].r = rebuild(mid + 1, r, v);
-    push_up(u);
-    return u;
+int copyNode(int u) {
+    int v = ++idx;
+    tr[v] = tr[u];
+    return v;
 }
 ```
-
 </details>
 
 ---
 
-_编者注：平衡树的演进代表了从“绝对高度平衡”到“统计平衡”与“自适应平衡”的思想跃迁。理解不同平衡机制背后的数学支撑，是架构高性能复杂结构的前提。_
+_编者注：平衡树的演进代表了从“绝对高度平衡”到“统计平衡”与“自适应平衡”的思想跃迁。掌握其背后的数学支撑，是架构高性能复杂结构的前提。_
