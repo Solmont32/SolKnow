@@ -18,12 +18,12 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 对于边 $(u, v) \in E$，最短路权值 $\delta(s, v)$ 必须满足：
 $$\delta(s, v) \le \delta(s, u) + w(u, v)$$
 **松弛操作 (Relaxation)**：对于估计值 $d[v]$，若执行 $d[v] = \min(d[v], d[u] + w(u, v))$，其本质是向不动点 $\delta$ 的逼近。
+- **收敛属性**：一旦 $d[v] = \delta(s, v)$，后续松弛不会改变该值。
 
-### 2. 线性规划对偶 (LP Duality)
-单源最短路问题可建模为如下线性规划：
-- **目标**：$\max \sum_{v \in V} d[v]$
-- **约束**：$d[v] - d[u] \le w(u, v), \forall (u, v) \in E$ 且 $d[s] = 0$。
-此问题的对偶即为**最小费用流**的一种特殊形式。
+### 2. 线性规划对偶与势能
+最短路问题可视为 LP 问题的离散特例：
+- **约束**：$d[v] - d[u] \le w(u, v), \forall (u, v) \in E$。
+- **Bellman-Ford 的最优性原理**：在没有负环的情况下，任意最短路最多包含 $|V|-1$ 条边。因此，循环 $|V|-1$ 次松弛必然收敛。若第 $|V|$ 次松弛仍能减小 $d[v]$，则图中存在**负权环路**。
 
 ---
 
@@ -39,10 +39,10 @@ $$\delta(s, v) \le \delta(s, u) + w(u, v)$$
 </KnowledgeCard>
 
 ### 2. Johnson 算法：势能函数的妙用
-为了处理负权边并运行全源 Dijkstra，我们引入势能函数 $h(v)$：
+Johnson 算法通过重标定 (Reweighting) 消除负边权：
 - 定义新边权 $w'(u, v) = w(u, v) + h(u) - h(v)$。
-- **目标**：寻找 $h(v)$ 使得 $w'(u, v) \ge 0$。
-- **解法**：由三角不等式 $h(v) \le h(u) + w(u, v)$ 知，$h(v)$ 可取源点到各点的最短路长度。
+- **目标**：寻找 $h(v)$ 使得 $w'(u, v) \ge 0$。由三角不等式知，$h(v)$ 可由 SSSP（如 Bellman-Ford）求得。
+- **路径等价性**：$w'(p) = w(p) + h(s) - h(t)$，因此 SSSP 的序关系保持不变。
 
 ---
 

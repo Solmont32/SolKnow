@@ -8,26 +8,49 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 
 # <GitMerge className="inline-block mr-2 mb-1 text-blue-500" /> 网络流理论 (Network Flow Theory)
 
-网络流不仅是组合优化的核心，更是**线性规划 (Linear Programming)** 在图结构上的投影。本章将从形式化对偶性出发，深入探讨单位网络 (Unit Network) 的复杂度界限以及复杂的费用流对偶。
+网络流不仅是组合优化的核心，更是**线性规划 (Linear Programming)** 在图结构上的投影。本章将从形式化对偶性出发，系统性地构建流网络的性质证明、割集收敛性分析及其在单位网络中的复杂度界限。
 
 ---
 
-## 一、 <Sigma className="inline-block mr-2 mb-1 text-blue-500" /> 线性规划与对偶性
+## 一、 <Sigma className="inline-block mr-2 mb-1 text-blue-500" /> 形式化理论体系
 
-### 1. 最大流的 LP 描述
-- **目标**：$\max |f|$
-- **约束**：
-  - $\forall (u, v) \in E: f_{uv} \le c_{uv}$ (容量限制)
-  - $\forall u \in V \setminus \{s, t\}: \sum f_{uv} = \sum f_{vu}$ (守恒律)
+### 1. 流网络与可行流
+**定义 (Flow Network)**：一个流网络 $G=(V, E, c, s, t)$ 是一个有向图，其中 $c(u, v) \ge 0$ 为容量函数，$s, t$ 分别为源点和汇点。
 
-### 2. 最小割的对偶性
-最大流问题的对偶即为最小割问题。根据**强对偶定理 (Strong Duality)**：
-$$\max(\text{Flow Value}) = \min(\text{Cut Capacity})$$
-这是所有网络流算法收敛的数学保障。
+**定义 (Feasible Flow)**：函数 $f: V \times V \to \mathbb{R}$ 满足以下性质时称为可行流：
+1. **容量限制 (Capacity Constraint)**：$\forall u, v \in V, f(u, v) \le c(u, v)$。
+2. **斜对称性 (Skew Symmetry)**：$\forall u, v \in V, f(u, v) = -f(v, u)$。
+3. **流量守恒 (Flow Conservation)**：$\forall u \in V \setminus \{s, t\}, \sum_{v \in V} f(u, v) = 0$。
+
+### 2. 割集与流量收敛性
+**定义 (Cut)**：网络 $G$ 的一个割 $(S, T)$ 是对顶点集 $V$ 的一个划分，使得 $s \in S, t \in T$。
+
+**引理 (Net Flow Across a Cut)**：穿过任意割 $(S, T)$ 的净流量等于流的价值 $|f|$。
+$$\text{Proof: } f(S, T) = \sum_{u \in S} \sum_{v \in T} f(u, v) = \sum_{u \in S} \left( \sum_{v \in V} f(u, v) - \sum_{v \in S} f(u, v) \right)$$
+根据守恒律，当 $u \neq s$ 时 $\sum_{v \in V} f(u, v) = 0$；而 $f(S, S) = 0$（由于斜对称性）。
+故 $f(S, T) = \sum_{v \in V} f(s, v) = |f|$。
 
 ---
 
-## 二 <Workflow className="inline-block mr-2 mb-1 text-green-500" /> 特殊网络的复杂度边界
+## 二、 <ShieldCheck className="inline-block mr-2 mb-1 text-indigo-500" /> 最大流最小割定理 (Max-Flow Min-Cut Theorem)
+
+该定理是网络流理论的基石，建立了组合优化中原问题与对偶问题的桥梁。
+
+### 1. 核心命题
+以下三个命题是等价的：
+1. $f$ 是 $G$ 的一个最大流。
+2. 残量网络 $G_f$ 不包含任何增广路径。
+3. 存在某个割 $(S, T)$，使得 $|f| = c(S, T)$。
+
+### 2. 逻辑验证：割集的收敛性
+由于对于任意流 $f$ 和任意割 $(S, T)$，始终满足 $|f| \le c(S, T)$。
+当增广路径消失时，令 $S$ 为 $G_f$ 中从 $s$ 可达的点集，$T = V \setminus S$。
+此时对于 $\forall u \in S, v \in T$，必有 $c_f(u, v) = 0$（否则 $v$ 可达），即 $f(u, v) = c(u, v)$。
+由引理知 $|f| = f(S, T) = c(S, T)$，达到上界。
+
+---
+
+## 三、 <Workflow className="inline-block mr-2 mb-1 text-green-500" /> 特殊网络的复杂度边界
 
 ### 1. 单位网络 (Unit Network)
 若图中所有边的容量均为 $1$：
