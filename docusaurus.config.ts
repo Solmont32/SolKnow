@@ -76,6 +76,7 @@ const config: Config = {
             { type: 'docSidebar', sidebarId: 'csSidebar', label: '计算机科学' },
             { type: 'docSidebar', sidebarId: 'aiSidebar', label: '人工智能' },
             { type: 'docSidebar', sidebarId: 'infosecSidebar', label: '信息安全' },
+            { type: 'docSidebar', sidebarId: 'quantSidebar', label: '量化交易' },
           ],
         },
         {
