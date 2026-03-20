@@ -779,10 +779,29 @@ const sidebars: SidebarsConfig = {
             { type: 'doc', id: 'quant/math/time-series', label: '时间序列分析' },
           ],
         },
-        { type: 'doc', id: 'quant/strategy/index', label: '策略开发' },
+        {
+          type: 'category',
+          collapsible: true,
+          collapsed: true,
+          label: '策略开发',
+          link: { type: 'doc', id: 'quant/strategy/index' },
+          items: [
+            { type: 'doc', id: 'quant/strategy/momentum', label: '动量策略' },
+            { type: 'doc', id: 'quant/strategy/mean-reversion', label: '均值回归策略' },
+          ],
+        },
         { type: 'doc', id: 'quant/programming/index', label: '编程与工具' },
         { type: 'doc', id: 'quant/ml/index', label: '机器学习' },
-        { type: 'doc', id: 'quant/backtest/index', label: '回测系统' },
+        {
+          type: 'category',
+          collapsible: true,
+          collapsed: true,
+          label: '回测系统',
+          link: { type: 'doc', id: 'quant/backtest/index' },
+          items: [
+            { type: 'doc', id: 'quant/backtest/event-driven', label: '事件驱动回测' },
+          ],
+        },
         { type: 'doc', id: 'quant/risk/index', label: '风险管理' },
         { type: 'doc', id: 'quant/tools/index', label: '实用工具' },
         {
