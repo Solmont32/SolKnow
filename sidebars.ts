@@ -766,6 +766,18 @@ const sidebars: SidebarsConfig = {
         { type: 'doc', id: 'quant/backtest/index', label: '回测系统' },
         { type: 'doc', id: 'quant/risk/index', label: '风险管理' },
         { type: 'doc', id: 'quant/tools/index', label: '实用工具' },
+        {
+          type: 'category',
+          collapsible: true,
+          collapsed: true,
+          label: '区块链与加密货币',
+          link: { type: 'doc', id: 'quant/blockchain/index' },
+          items: [
+            { type: 'doc', id: 'quant/blockchain/fundamentals', label: '区块链基础' },
+            { type: 'doc', id: 'quant/blockchain/market-structure', label: '加密市场微观结构' },
+            { type: 'doc', id: 'quant/blockchain/trading-strategies', label: '加密货币量化策略' },
+          ],
+        },
         { type: 'doc', id: 'quant/practice/index', label: '实战案例' },
       ],
     },
