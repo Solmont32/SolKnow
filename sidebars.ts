@@ -788,6 +788,7 @@ const sidebars: SidebarsConfig = {
           items: [
             { type: 'doc', id: 'quant/strategy/momentum', label: '动量策略' },
             { type: 'doc', id: 'quant/strategy/mean-reversion', label: '均值回归策略' },
+            { type: 'doc', id: 'quant/strategy/trend-following', label: '趋势跟踪策略' },
           ],
         },
         { type: 'doc', id: 'quant/programming/index', label: '编程与工具' },
@@ -799,10 +800,20 @@ const sidebars: SidebarsConfig = {
           label: '回测系统',
           link: { type: 'doc', id: 'quant/backtest/index' },
           items: [
+            { type: 'doc', id: 'quant/backtest/vectorized', label: '向量化回测' },
             { type: 'doc', id: 'quant/backtest/event-driven', label: '事件驱动回测' },
           ],
         },
-        { type: 'doc', id: 'quant/risk/index', label: '风险管理' },
+        {
+          type: 'category',
+          collapsible: true,
+          collapsed: true,
+          label: '风险管理',
+          link: { type: 'doc', id: 'quant/risk/index' },
+          items: [
+            { type: 'doc', id: 'quant/risk/position-sizing', label: '仓位管理' },
+          ],
+        },
         { type: 'doc', id: 'quant/tools/index', label: '实用工具' },
         {
           type: 'category',
