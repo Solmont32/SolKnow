@@ -758,8 +758,27 @@ const sidebars: SidebarsConfig = {
       label: '量化交易',
       link: { type: 'doc', id: 'quant/index' },
       items: [
-        { type: 'doc', id: 'quant/basics/index', label: '基础入门' },
-        { type: 'doc', id: 'quant/math/index', label: '量化数学' },
+        {
+          type: 'category',
+          collapsible: true,
+          collapsed: true,
+          label: '基础入门',
+          link: { type: 'doc', id: 'quant/basics/index' },
+          items: [
+            { type: 'doc', id: 'quant/basics/market-fundamentals', label: '金融市场基础' },
+            { type: 'doc', id: 'quant/basics/trading-mechanism', label: '交易机制与订单类型' },
+          ],
+        },
+        {
+          type: 'category',
+          collapsible: true,
+          collapsed: true,
+          label: '量化数学',
+          link: { type: 'doc', id: 'quant/math/index' },
+          items: [
+            { type: 'doc', id: 'quant/math/time-series', label: '时间序列分析' },
+          ],
+        },
         { type: 'doc', id: 'quant/strategy/index', label: '策略开发' },
         { type: 'doc', id: 'quant/programming/index', label: '编程与工具' },
         { type: 'doc', id: 'quant/ml/index', label: '机器学习' },
