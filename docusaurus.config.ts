@@ -85,6 +85,10 @@ const config: Config = {
           position: 'left',
           items: [
             { type: 'docSidebar', sidebarId: 'exerciseSidebar', label: '练习库总览' },
+            { type: 'docSidebar', sidebarId: 'exerciseSidebar', label: '数学练习' },
+            { type: 'docSidebar', sidebarId: 'exerciseSidebar', label: '计算机练习' },
+            { type: 'docSidebar', sidebarId: 'exerciseSidebar', label: 'AI 练习' },
+            { type: 'docSidebar', sidebarId: 'exerciseSidebar', label: '安全练习' },
           ],
         },
 
