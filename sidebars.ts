@@ -835,6 +835,43 @@ const sidebars: SidebarsConfig = {
       ],
     },
   ],
+
+  // 金融知识库
+  financeSidebar: [
+    {
+      type: 'category',
+      collapsible: true,
+      collapsed: false,
+      label: '金融知识库',
+      link: { type: 'doc', id: 'finance/index' },
+      items: [
+        {
+          type: 'category',
+          collapsible: true,
+          collapsed: true,
+          label: '金融基础理论',
+          link: { type: 'doc', id: 'finance/basics/index' },
+          items: [],
+        },
+        {
+          type: 'category',
+          collapsible: true,
+          collapsed: true,
+          label: '投资学',
+          link: { type: 'doc', id: 'finance/investment/index' },
+          items: [],
+        },
+        {
+          type: 'category',
+          collapsible: true,
+          collapsed: true,
+          label: '公司金融',
+          link: { type: 'doc', id: 'finance/corporate/index' },
+          items: [],
+        },
+      ],
+    },
+  ],
 };
 
 export default sidebars;

@@ -17,6 +17,7 @@ import {
   Brain,
   ShieldCheck,
   TrendingUp,
+  Landmark,
 } from 'lucide-react';
 import styles from './index.module.css';
 
@@ -113,6 +114,14 @@ const FeatureList = [
     link: '/docs/quant/',
     linkText: '探索量化世界',
     color: '#22c55e',
+  },
+  {
+    title: '金融知识库',
+    Icon: Landmark,
+    description: '涵盖公司金融、投资学、资产定价与财务报表分析，构建系统的金融理论框架。',
+    link: '/docs/finance/',
+    linkText: '掌握金融原理',
+    color: '#eab308',
   },
   {
     title: '视频讲解整合',
