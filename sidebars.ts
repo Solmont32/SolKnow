@@ -8,11 +8,24 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       collapsible: true,
       collapsed: true,
-      label: '竞赛实战与工程化',
+      label: '算法竞赛',
+      link: { type: 'doc', id: 'cp/index' },
       items: [
+        { type: 'doc', id: 'cp/training-guide', label: '算法竞赛训练指南' },
+        { type: 'doc', id: 'cp/templates', label: '竞赛代码模板' },
         { type: 'doc', id: 'cp/strategy-and-templates', label: '竞赛策略与工程化模版' },
-        { type: 'doc', id: 'cp/codeforces', label: 'Codeforces' },
-        { type: 'doc', id: 'cp/atcoder', label: 'AtCoder' },
+        {
+          type: 'category',
+          collapsible: true,
+          collapsed: true,
+          label: '在线评测平台',
+          items: [
+            { type: 'doc', id: 'cp/codeforces', label: 'Codeforces' },
+            { type: 'doc', id: 'cp/atcoder', label: 'AtCoder' },
+            { type: 'doc', id: 'cp/luogu', label: '洛谷' },
+            { type: 'doc', id: 'cp/leetcode', label: 'LeetCode' },
+          ],
+        },
       ],
     },
     {
