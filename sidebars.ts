@@ -653,15 +653,16 @@ const sidebars: SidebarsConfig = {
 
   resourceSidebar: [{ type: 'doc', id: 'resources/index', label: '资源导航' }],
 
-  // 练习库镜像结构
-  mathExerciseSidebar: [
+  // 统一的练习库侧边栏
+  exerciseSidebar: [
     { type: 'doc', id: 'exercises/index', label: '练习库总览' },
-    { type: 'doc', id: 'exercises/integrated-assessment', label: '全域综合评估系统 (NEW)' },
+    { type: 'doc', id: 'exercises/integrated-assessment', label: '全域综合评估系统' },
     {
       type: 'category',
       collapsible: true,
       collapsed: true,
       label: '数学练习库',
+      link: { type: 'doc', id: 'exercises/math/composition-practice' },
       items: [
         {
           type: 'category',
@@ -678,75 +679,18 @@ const sidebars: SidebarsConfig = {
           type: 'category',
           collapsible: true,
           collapsed: false,
-          label: '大学数学练习 (数学分析)',
+          label: '大学数学练习',
           items: [
-            { type: 'doc', id: 'exercises/math/analysis', label: '数学分析精选练习 (综合)' },
-            {
-              type: 'category',
-              label: '上册同步专题 (Volume 1)',
-              items: [
-                {
-                  type: 'doc',
-                  id: 'exercises/math/analysis-foundations',
-                  label: 'Ch 1-4: 实数极限与连续',
-                },
-                {
-                  type: 'doc',
-                  id: 'exercises/math/analysis-derivatives-mean-value',
-                  label: 'Ch 5-7: 导数与中值定理',
-                },
-                {
-                  type: 'doc',
-                  id: 'exercises/math/analysis-integral-calculus',
-                  label: 'Ch 8-11: 一元积分学',
-                },
-              ],
-            },
-            {
-              type: 'category',
-              label: '下册同步专题 (Volume 2)',
-              items: [
-                {
-                  type: 'doc',
-                  id: 'exercises/math/analysis-series-fourier',
-                  label: 'Ch 12-15: 级数论与 Fourier 分析',
-                },
-                {
-                  type: 'doc',
-                  id: 'exercises/math/analysis-multivariable-calculus',
-                  label: 'Ch 16-23: 多元微积分与矢量分析',
-                },
-              ],
-            },
-            {
-              type: 'category',
-              label: '进阶与专项练习',
-              items: [
-                {
-                  type: 'doc',
-                  id: 'exercises/math/analysis-function-sequences',
-                  label: '进阶：函数列与级数性质',
-                },
-                {
-                  type: 'doc',
-                  id: 'exercises/math/analysis-differential-geometry',
-                  label: '进阶：微分几何专题',
-                },
-                {
-                  type: 'doc',
-                  id: 'exercises/math/analysis-differential-equations',
-                  label: '进阶：微分方程专题 (ODE/PDE)',
-                },
-                {
-                  type: 'doc',
-                  id: 'exercises/math/modern-synthesis',
-                  label: '进阶：现代数学综合练习',
-                },
-                { type: 'doc', id: 'exercises/math/topology', label: '点集拓扑专题' },
-                { type: 'doc', id: 'exercises/math/real-analysis', label: '实变函数专题' },
-                { type: 'doc', id: 'exercises/math/functional-analysis', label: '泛函分析专题' },
-              ],
-            },
+            { type: 'doc', id: 'exercises/math/analysis', label: '数学分析精选练习' },
+            { type: 'doc', id: 'exercises/math/analysis-foundations', label: 'Ch 1-4: 实数极限与连续' },
+            { type: 'doc', id: 'exercises/math/analysis-derivatives-mean-value', label: 'Ch 5-7: 导数与中值定理' },
+            { type: 'doc', id: 'exercises/math/analysis-integral-calculus', label: 'Ch 8-11: 一元积分学' },
+            { type: 'doc', id: 'exercises/math/analysis-series-fourier', label: 'Ch 12-15: 级数论与 Fourier 分析' },
+            { type: 'doc', id: 'exercises/math/analysis-multivariable-calculus', label: 'Ch 16-23: 多元微积分与矢量分析' },
+            { type: 'doc', id: 'exercises/math/modern-synthesis', label: '现代数学综合练习' },
+            { type: 'doc', id: 'exercises/math/topology', label: '点集拓扑专题' },
+            { type: 'doc', id: 'exercises/math/real-analysis', label: '实变函数专题' },
+            { type: 'doc', id: 'exercises/math/functional-analysis', label: '泛函分析专题' },
           ],
         },
         {
@@ -761,27 +705,17 @@ const sidebars: SidebarsConfig = {
         },
       ],
     },
-  ],
-
-  csExerciseSidebar: [
     {
       type: 'category',
       collapsible: true,
       collapsed: true,
       label: '计算机练习库',
+      link: { type: 'doc', id: 'exercises/cs/algorithm-basic' },
       items: [
         { type: 'doc', id: 'exercises/cs/algorithm-basic', label: '基础算法与线性结构' },
         { type: 'doc', id: 'exercises/cs/algorithm-ds', label: '高级数据结构专题' },
-        {
-          type: 'doc',
-          id: 'exercises/cs/algorithm-dp-comprehensive',
-          label: '动态规划 (DP) 专项强化',
-        },
-        {
-          type: 'doc',
-          id: 'exercises/cs/algorithm-graph-comprehensive',
-          label: '图论算法 (Graph) 综合库',
-        },
+        { type: 'doc', id: 'exercises/cs/algorithm-dp-comprehensive', label: '动态规划 (DP) 专项强化' },
+        { type: 'doc', id: 'exercises/cs/algorithm-graph-comprehensive', label: '图论算法 (Graph) 综合库' },
         { type: 'doc', id: 'exercises/cs/algorithm-string', label: '字符串算法专题' },
         { type: 'doc', id: 'exercises/cs/algorithm-number-theory', label: '数论与同余系专项强化' },
         { type: 'doc', id: 'exercises/cs/algorithm-search', label: '搜索与启发式算法' },
@@ -791,27 +725,23 @@ const sidebars: SidebarsConfig = {
         { type: 'doc', id: 'exercises/cs/os', label: '操作系统练习' },
       ],
     },
-  ],
-
-  aiExerciseSidebar: [
     {
       type: 'category',
       collapsible: true,
       collapsed: true,
       label: 'AI 练习库',
+      link: { type: 'doc', id: 'exercises/ai/ml' },
       items: [
         { type: 'doc', id: 'exercises/ai/ml', label: '机器学习练习' },
         { type: 'doc', id: 'exercises/ai/dl', label: '深度学习练习' },
       ],
     },
-  ],
-
-  infosecExerciseSidebar: [
     {
       type: 'category',
       collapsible: true,
       collapsed: true,
       label: '安全练习库',
+      link: { type: 'doc', id: 'exercises/infosec/web' },
       items: [
         { type: 'doc', id: 'exercises/infosec/web', label: 'Web 安全练习' },
         { type: 'doc', id: 'exercises/infosec/pwn', label: '二进制安全练习' },
