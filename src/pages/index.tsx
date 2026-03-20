@@ -16,6 +16,7 @@ import {
   Monitor,
   Brain,
   ShieldCheck,
+  TrendingUp,
 } from 'lucide-react';
 import styles from './index.module.css';
 
@@ -104,6 +105,14 @@ const FeatureList = [
     link: '/docs/infosec/',
     linkText: '筑牢安全防线',
     color: '#6366f1',
+  },
+  {
+    title: '量化交易知识库',
+    Icon: TrendingUp,
+    description: '从策略开发、回测系统到风险管理，涵盖股票、期货与加密货币的全栈量化投资体系。',
+    link: '/docs/quant/',
+    linkText: '探索量化世界',
+    color: '#22c55e',
   },
   {
     title: '视频讲解整合',
