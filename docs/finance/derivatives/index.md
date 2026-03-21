@@ -36,575 +36,216 @@
 ─────────────────────────────────────────
 ```
 
-### 衍生品市场参与者
+### 市场参与者
 
-```python
-class DerivativesMarketParticipants:
-    """
-    衍生品市场参与者
-    """
+| 参与者 | 目的 | 特征 |
+|--------|------|------|
+| **套期保值者** | 降低现有风险敞口 | 已有现货头寸，用衍生品对冲 |
+| **投机者** | 承担风险获取收益 | 无现货头寸，杠杆博取收益 |
+| **套利者** | 利用定价错误获利 | 同时持有相反头寸，锁定无风险收益 |
 
-    @staticmethod
-    def hedgers():
-        """
-        套期保值者
+---
 
-        使用衍生品降低现有风险敞口
-        """
-        return {
-            '描述': '已有现货头寸，用衍生品对冲风险',
-            '案例': {
-                '农民': '卖出农产品期货锁定售价',
-                '航空公司': '买入原油期货对冲油价上涨',
-                '出口企业': '外汇远期锁定汇率',
-                '基金经理': '买入看跌期权保护组合'
-            },
-            '目标': '减少不确定性，稳定现金流'
-        }
-
-    @staticmethod
-    def speculators():
-        """
-        投机者
-
-        承担风险以获取潜在收益
-        """
-        return {
-            '描述': '无现货头寸，用衍生品博取收益',
-            '杠杆效应': '小额资金控制大额标的',
-            '案例': {
-                '趋势交易': '期货追涨杀跌',
-                '波动率交易': '期权做多/做空波动率',
-                '事件驱动': '财报前买入跨式期权'
-            },
-            '风险': '杠杆放大亏损，可能损失全部本金'
-        }
-
-    @staticmethod
-    def arbitrageurs():
-        """
-        套利者
-
-        利用市场定价错误获取无风险收益
-        """
-        return {
-            '描述': '同时持有相反头寸锁定利润',
-            '类型': {
-                '空间套利': '同一资产在不同市场价格差异',
-                '时间套利': '期货与现货基差套利',
-                '转换套利': '期权平价关系套利'
-            },
-            '作用': '促进价格发现，提高市场效率'
-        }
-```
-
-## 期货合约
+## 远期与期货
 
 ### 期货定价
 
-```python
-import numpy as np
+**持有成本模型：**
+$$F = S \times e^{(r + u - y) \times T}$$
 
-class FuturesPricing:
-    """
-    期货定价理论
-    """
+其中：
+- $F$ = 期货价格
+- $S$ = 现货价格
+- $r$ = 无风险利率
+- $u$ = 存储成本率
+- $y$ = 便利收益率
+- $T$ = 到期时间
 
-    @staticmethod
-    def cost_of_carry(spot, r, q, T, storage_cost=0, convenience_yield=0):
-        """
-        持有成本模型
+**特殊类型：**
 
-        F = S × e^((r + u - y) × T)
+| 类型 | 定价公式 | 特殊因素 |
+|------|----------|----------|
+| **股指期货** | $F = S \times e^{(r-q)T}$ | $q$ = 股息率 |
+| **外汇期货** | $F = S \times e^{(r_d-r_f)T}$ | 利率平价 |
+| **商品期货** | $F = S \times e^{(r+u-y)T}$ | 便利收益率 |
 
-        r: 无风险利率
-        q: 股息率
-        u: 存储成本率
-        y: 便利收益率
-        """
-        cost = r + storage_cost - convenience_yield
-        return spot * np.exp((cost - q) * T)
+### 基差与收敛
 
-    @staticmethod
-    def index_futures(spot_index, r, q, T):
-        """
-        股指期货定价
+**基差：**
+$$基差 = 现货价格 - 期货价格$$
 
-        F = S × e^((r - q) × T)
-        """
-        return spot_index * np.exp((r - q) * T)
+**收敛性：**
+随着到期日临近，基差趋于零。
 
-    @staticmethod
-    def currency_futures(spot_rate, domestic_rate, foreign_rate, T):
-        """
-        外汇期货定价 (利率平价)
+### 保证金制度
 
-        F = S × e^((r_d - r_f) × T)
-        """
-        return spot_rate * np.exp((domestic_rate - foreign_rate) * T)
+| 类型 | 定义 | 作用 |
+|------|------|------|
+| **初始保证金** | 开仓时缴纳的保证金 | 覆盖潜在损失 |
+| **维持保证金** | 持仓期间最低保证金要求 | 触发追加保证金的阈值 |
+| **变动保证金** | 每日结算时补缴或退还的资金 | 实现每日无负债 |
 
-    @staticmethod
-    def commodity_futures(spot, r, storage_cost, convenience_yield, T):
-        """
-        商品期货定价
+**追加保证金通知：**
+当权益低于维持保证金时，需追加至初始保证金水平。
 
-        包含便利收益率
-        """
-        return spot * np.exp((r + storage_cost - convenience_yield) * T)
+---
 
-    @staticmethod
-    def basis(spot, futures):
-        """
-        基差 = 现货价格 - 期货价格
-        """
-        return spot - futures
+## 期权
 
-    @staticmethod
-    def convergence(spot_prices, futures_prices, approach_maturity=True):
-        """
-        收敛性
+### 期权基础
 
-        随着到期日临近，基差趋于零
-        """
-        if approach_maturity:
-            return {
-                'initial_basis': spot_prices[0] - futures_prices[0],
-                'final_basis': spot_prices[-1] - futures_prices[-1],
-                'convergence': abs(spot_prices[-1] - futures_prices[-1]) < 0.01
-            }
-```
+**期权类型：**
+| 类型 | 权利 | 买方预期 |
+|------|------|----------|
+| **看涨期权 (Call)** | 以行权价买入标的 | 股价上涨 |
+| **看跌期权 (Put)** | 以行权价卖出标的 | 股价下跌 |
 
-### 保证金与结算
+**行权方式：**
+- **美式期权：** 到期前任意时间可行权
+- **欧式期权：** 仅到期日可行权
 
-```python
-class FuturesMargin:
-    """
-    期货保证金制度
-    """
+### 期权价值构成
 
-    @staticmethod
-    def initial_margin(contract_value, margin_rate=0.1):
-        """
-        初始保证金
-        """
-        return contract_value * margin_rate
+$$期权价值 = 内在价值 + 时间价值$$
 
-    @staticmethod
-    def maintenance_margin(initial_margin, maintenance_ratio=0.75):
-        """
-        维持保证金
-        """
-        return initial_margin * maintenance_ratio
+**内在价值：**
+- 看涨：$\max(S - K, 0)$
+- 看跌：$\max(K - S, 0)$
 
-    @staticmethod
-    def margin_call(position_value, initial_margin, maintenance_margin):
-        """
-        追加保证金通知
-        """
-        equity = position_value
+**时间价值：**
+- 到期前存在获利可能性的价值
+- 随到期日临近而衰减（时间衰减）
 
-        if equity < maintenance_margin:
-            return {
-                'margin_call': True,
-                'amount': initial_margin - equity,
-                'action': '追加保证金或平仓'
-            }
-        else:
-            return {'margin_call': False}
+### 影响期权价格的因素
 
-    @staticmethod
-    def daily_settlement(daily_prices, position, contract_size=1):
-        """
-        每日结算 (Mark-to-Market)
-        """
-        daily_pnl = []
+| 因素 | 看涨期权 | 看跌期权 |
+|------|----------|----------|
+| 标的资产价格 ↑ | 价格上涨 | 价格下跌 |
+| 行权价格 ↑ | 价格下跌 | 价格上涨 |
+| 到期期限 ↑ | 价格上涨 | 价格上涨 |
+| 波动率 ↑ | 价格上涨 | 价格上涨 |
+| 无风险利率 ↑ | 价格上涨 | 价格下跌 |
+| 股息 ↑ | 价格下跌 | 价格上涨 |
 
-        for i in range(1, len(daily_prices)):
-            price_change = daily_prices[i] - daily_prices[i-1]
-            pnl = price_change * position * contract_size
-            daily_pnl.append(pnl)
+### Black-Scholes 模型
 
-        return daily_pnl
-```
+**假设条件：**
+1. 标的资产价格服从几何布朗运动
+2. 无风险利率恒定且已知
+3. 无股息（可扩展）
+4. 无套利机会
+5. 可以连续对冲
+6. 无交易成本
 
-## 期权基础
+**看涨期权定价公式：**
+$$C = S \times N(d_1) - K \times e^{-rT} \times N(d_2)$$
 
-### 期权定价模型
+**看跌期权定价公式：**
+$$P = K \times e^{-rT} \times N(-d_2) - S \times N(-d_1)$$
 
-```python
-class OptionPricingModels:
-    """
-    期权定价模型
-    """
+其中：
+$$d_1 = \frac{\ln(S/K) + (r + \sigma^2/2)T}{\sigma\sqrt{T}}$$
 
-    @staticmethod
-    def black_scholes(S, K, T, r, sigma, option_type='call'):
-        """
-        Black-Scholes期权定价模型
-
-        假设：
-        - 标的资产价格服从几何布朗运动
-        - 无风险利率恒定
-        - 无股息（可扩展）
-        - 无套利机会
-        - 可以连续对冲
-        """
-        from scipy import stats
-
-        d1 = (np.log(S / K) + (r + 0.5 * sigma ** 2) * T) / (sigma * np.sqrt(T))
-        d2 = d1 - sigma * np.sqrt(T)
-
-        if option_type == 'call':
-            price = S * stats.norm.cdf(d1) - K * np.exp(-r * T) * stats.norm.cdf(d2)
-        else:
-            price = K * np.exp(-r * T) * stats.norm.cdf(-d2) - S * stats.norm.cdf(-d1)
-
-        return price
-
-    @staticmethod
-    def binomial_option_pricing(S, K, T, r, sigma, n=100, option_type='call', american=False):
-        """
-        二叉树期权定价模型
-        """
-        dt = T / n
-        u = np.exp(sigma * np.sqrt(dt))
-        d = 1 / u
-        p = (np.exp(r * dt) - d) / (u - d)
-
-        # 股票价格树
-        stock_tree = np.zeros((n + 1, n + 1))
-        stock_tree[0, 0] = S
-
-        for i in range(1, n + 1):
-            stock_tree[i, 0] = stock_tree[i-1, 0] * u
-            for j in range(1, i + 1):
-                stock_tree[i, j] = stock_tree[i-1, j-1] * d
-
-        # 期权价值树
-        option_tree = np.zeros((n + 1, n + 1))
-
-        # 到期 payoff
-        for j in range(n + 1):
-            if option_type == 'call':
-                option_tree[n, j] = max(stock_tree[n, j] - K, 0)
-            else:
-                option_tree[n, j] = max(K - stock_tree[n, j], 0)
-
-        # 倒推
-        for i in range(n-1, -1, -1):
-            for j in range(i + 1):
-                hold_value = np.exp(-r * dt) * (p * option_tree[i+1, j] +
-                                                  (1-p) * option_tree[i+1, j+1])
-
-                if american:
-                    if option_type == 'call':
-                        exercise_value = max(stock_tree[i, j] - K, 0)
-                    else:
-                        exercise_value = max(K - stock_tree[i, j], 0)
-                    option_tree[i, j] = max(hold_value, exercise_value)
-                else:
-                    option_tree[i, j] = hold_value
-
-        return option_tree[0, 0]
-
-    @staticmethod
-    def monte_carlo_option(S, K, T, r, sigma, n_simulations=10000, option_type='call'):
-        """
-        蒙特卡洛期权定价
-        """
-        np.random.seed(42)
-        z = np.random.standard_normal(n_simulations)
-
-        # 模拟到期股价
-        ST = S * np.exp((r - 0.5 * sigma**2) * T + sigma * np.sqrt(T) * z)
-
-        # 计算 payoff
-        if option_type == 'call':
-            payoffs = np.maximum(ST - K, 0)
-        else:
-            payoffs = np.maximum(K - ST, 0)
-
-        # 折现
-        option_price = np.exp(-r * T) * np.mean(payoffs)
-
-        return option_price
-
-    @staticmethod
-    def implied_volatility(market_price, S, K, T, r, option_type='call'):
-        """
-        计算隐含波动率
-        """
-        from scipy.optimize import brentq
-
-        def price_diff(sigma):
-            return OptionPricingModels.black_scholes(S, K, T, r, sigma, option_type) - market_price
-
-        try:
-            iv = brentq(price_diff, 0.001, 5.0)
-            return iv
-        except:
-            return None
-```
+$$d_2 = d_1 - \sigma\sqrt{T}$$
 
 ### 期权希腊字母
 
-```python
-class OptionGreeks:
-    """
-    期权希腊字母 (风险度量)
-    """
+| 希腊字母 | 定义 | 含义 | 应用 |
+|----------|------|------|------|
+| **Delta ($\Delta$)** | $\frac{\partial V}{\partial S}$ | 标的资产价格变动1单位，期权价格变动多少 | 对冲比率 |
+| **Gamma ($\Gamma$)** | $\frac{\partial^2 V}{\partial S^2}$ | Delta的变化速度 | 调整对冲频率 |
+| **Theta ($\Theta$)** | $\frac{\partial V}{\partial t}$ | 时间流逝对期权价格的影响（通常负值） | 时间价值衰减 |
+| **Vega** | $\frac{\partial V}{\partial \sigma}$ | 波动率变化对期权价格的影响 | 波动率交易 |
+| **Rho ($\rho$)** | $\frac{\partial V}{\partial r}$ | 利率变化对期权价格的影响 | 利率风险管理 |
 
-    @staticmethod
-    def calculate_greeks(S, K, T, r, sigma, option_type='call'):
-        """
-        计算期权希腊字母
-        """
-        from scipy import stats
+**Delta 特征：**
+- 看涨期权：0 ~ 1
+- 看跌期权：-1 ~ 0
+- 平值期权：约 0.5（看涨）或 -0.5（看跌）
+- 深度实值：接近 1 或 -1
+- 深度虚值：接近 0
 
-        d1 = (np.log(S / K) + (r + 0.5 * sigma ** 2) * T) / (sigma * np.sqrt(T))
-        d2 = d1 - sigma * np.sqrt(T)
+### 期权平价关系
 
-        # Delta: 价格对标的资产价格的敏感度
-        if option_type == 'call':
-            delta = stats.norm.cdf(d1)
-            theta = (-S * stats.norm.pdf(d1) * sigma / (2 * np.sqrt(T)) -
-                     r * K * np.exp(-r * T) * stats.norm.cdf(d2)) / 365
-        else:
-            delta = stats.norm.cdf(d1) - 1
-            theta = (-S * stats.norm.pdf(d1) * sigma / (2 * np.sqrt(T)) +
-                     r * K * np.exp(-r * T) * stats.norm.cdf(-d2)) / 365
+$$C + K e^{-rT} = P + S$$
 
-        # Gamma: Delta对标的资产价格的敏感度 (二阶导)
-        gamma = stats.norm.pdf(d1) / (S * sigma * np.sqrt(T))
+**套利应用：**
+如果等式不成立，存在无风险套利机会。
 
-        # Vega: 价格对波动率的敏感度
-        vega = S * stats.norm.pdf(d1) * np.sqrt(T) / 100
-
-        # Theta: 价格对时间的敏感度 (时间衰减)
-        # 已在上面计算
-
-        # Rho: 价格对利率的敏感度
-        if option_type == 'call':
-            rho = K * T * np.exp(-r * T) * stats.norm.cdf(d2) / 100
-        else:
-            rho = -K * T * np.exp(-r * T) * stats.norm.cdf(-d2) / 100
-
-        return {
-            'delta': delta,
-            'gamma': gamma,
-            'theta': theta,
-            'vega': vega,
-            'rho': rho
-        }
-
-    @staticmethod
-    def greek_interpretation():
-        """
-        希腊字母解释
-        """
-        return {
-            'Delta (Δ)': {
-                '含义': '标的资产价格变动1单位，期权价格变动多少',
-                '范围': '看涨: 0~1，看跌: -1~0',
-                '应用': '对冲比率'
-            },
-            'Gamma (Γ)': {
-                '含义': 'Delta的变化速度',
-                '特点': '平值期权Gamma最大',
-                '应用': '调整对冲频率'
-            },
-            'Theta (Θ)': {
-                '含义': '时间流逝对期权价格的影响（通常负值）',
-                '特点': '临近到期衰减加速',
-                '应用': '卖方赚取时间价值'
-            },
-            'Vega (V)': {
-                '含义': '波动率变动1%，期权价格变动多少',
-                '特点': '长期期权Vega更大',
-                '应用': '波动率交易'
-            },
-            'Rho (ρ)': {
-                '含义': '利率变动对期权价格的影响',
-                '特点': '长期期权Rho更大',
-                '应用': '利率风险管理'
-            }
-        }
-```
+---
 
 ## 期权策略
 
-### 基本策略
+### 基础策略
 
-```python
-class OptionStrategies:
-    """
-    常用期权策略
-    """
+| 策略 | 构建方式 | 适用场景 | 风险收益特征 |
+|------|----------|----------|--------------|
+| **备兑看涨** | 持有股票 + 卖出看涨期权 | 中性偏乐观，增强收益 | 收益有限，风险有限 |
+| **保护性看跌** | 持有股票 + 买入看跌期权 | 看多远期风险，保险策略 | 下行保护，保留上行 |
+| **牛市价差** | 买入低行权价看涨 + 卖出高行权价看涨 | 温和看涨 | 风险收益均有限 |
+| **跨式组合** | 同时买入同价看涨和看跌 | 预期大幅波动但方向不确定 | 风险有限，收益无限 |
+| **蝶式价差** | 三个不同行权价的组合 | 预期低波动 | 风险收益均有限 |
+| **铁鹰式** | 卖出跨式 + 买入宽跨式 | 预期区间震荡 | 赚取时间价值 |
 
-    @staticmethod
-    def covered_call(stock_price, call_strike, call_premium):
-        """
-        备兑看涨期权
+### 策略盈亏特征
 
-        持有股票 + 卖出看涨期权
-        """
-        # 最大收益
-        max_profit = (call_strike - stock_price) + call_premium
+**备兑看涨 (Covered Call)：**
+- 最大收益：$行权价 - 买入价 + 权利金$
+- 盈亏平衡点：$买入价 - 权利金$
+- 适用：预期股价横盘或小幅上涨
 
-        # 盈亏平衡点
-        breakeven = stock_price - call_premium
+**保护性看跌 (Protective Put)：**
+- 最大损失：$买入价 - 行权价 + 权利金$
+- 盈亏平衡点：$买入价 + 权利金$
+- 适用：持股但担心下跌风险
 
-        return {
-            'strategy': 'Covered Call',
-            'max_profit': max_profit,
-            'max_loss': stock_price - call_premium,  # 股票跌到零
-            'breakeven': breakeven,
-            'outlook': '中性偏乐观',
-            'use_case': '增强收益、降低持股成本'
-        }
+**跨式组合 (Long Straddle)：**
+- 最大损失：支付的总权利金
+- 盈亏平衡点：$行权价 \pm 总权利金$
+- 适用：重大事件前预期大幅波动
 
-    @staticmethod
-    def protective_put(stock_price, put_strike, put_premium):
-        """
-        保护性看跌期权
-
-        持有股票 + 买入看跌期权
-        """
-        max_loss = (stock_price - put_strike) + put_premium
-        breakeven = stock_price + put_premium
-
-        return {
-            'strategy': 'Protective Put',
-            'max_profit': '无限',
-            'max_loss': max_loss,
-            'breakeven': breakeven,
-            'outlook': '看多但担心下跌',
-            'use_case': '保险策略'
-        }
-
-    @staticmethod
-    def bull_call_spread(lower_strike, upper_strike, lower_premium, upper_premium):
-        """
-        牛市看涨价差
-
-        买入低行权价看涨 + 卖出高行权价看涨
-        """
-        net_premium = lower_premium - upper_premium
-        max_profit = (upper_strike - lower_strike) - net_premium
-        max_loss = net_premium
-        breakeven = lower_strike + net_premium
-
-        return {
-            'strategy': 'Bull Call Spread',
-            'max_profit': max_profit,
-            'max_loss': max_loss,
-            'breakeven': breakeven,
-            'outlook': '温和看涨'
-        }
-
-    @staticmethod
-    def straddle(atm_strike, call_premium, put_premium):
-        """
-        跨式期权
-
-        同时买入同价看涨和看跌
-        """
-        total_premium = call_premium + put_premium
-
-        upper_breakeven = atm_strike + total_premium
-        lower_breakeven = atm_strike - total_premium
-
-        return {
-            'strategy': 'Long Straddle',
-            'max_profit': '无限',
-            'max_loss': total_premium,
-            'lower_breakeven': lower_breakeven,
-            'upper_breakeven': upper_breakeven,
-            'outlook': '预期大幅波动但方向不确定'
-        }
-
-    @staticmethod
-    def iron_condor(lower_put, higher_put, lower_call, higher_call,
-                    premiums):
-        """
-        铁鹰式期权
-
-        卖出跨式 + 买入宽跨式
-        """
-        # 简化计算
-        net_credit = sum(premiums['sold']) - sum(premiums['bought'])
-        max_profit = net_credit
-        max_loss = (higher_put - lower_put) - net_credit
-
-        return {
-            'strategy': 'Iron Condor',
-            'max_profit': max_profit,
-            'max_loss': max_loss,
-            'outlook': '预期区间震荡',
-            'use_case': '波动率做空'
-        }
-```
+---
 
 ## 互换合约
 
-```python
-class SwapContracts:
-    """
-    互换合约
-    """
+### 利率互换 (IRS)
 
-    @staticmethod
-    def interest_rate_swap(fixed_rate, floating_rates, notional, periods):
-        """
-        利率互换估值
+**定义：**
+双方约定在未来一定期限内，交换固定利率和浮动利率的利息支付。
 
-        固定利率 vs 浮动利率交换
-        """
-        # 固定端现值
-        fixed_leg = sum(
-            fixed_rate * notional / (1 + r) ** t
-            for t, r in enumerate(floating_rates[:periods], 1)
-        ) + notional / (1 + floating_rates[periods-1]) ** periods
+**常见类型：**
+- **普通香草互换：** 固定利率 vs 浮动利率（如LIBOR）
+- **基差互换：** 两种不同浮动利率的交换
 
-        # 浮动端现值（假设下一期利率已知）
-        floating_leg = notional  # 在付息日等于面值
+**估值：**
+互换价值 = 固定端现值 - 浮动端现值
 
-        swap_value = floating_leg - fixed_leg
+### 货币互换
 
-        return swap_value
+**定义：**
+双方约定交换不同货币的本金和利息。
 
-    @staticmethod
-    def currency_swap(domestic_payments, foreign_payments, spot_rate,
-                     domestic_curve, foreign_curve):
-        """
-        货币互换估值
-        """
-        # 本币端现值
-        pv_domestic = sum(
-            dp / (1 + domestic_curve[i]) ** (i+1)
-            for i, dp in enumerate(domestic_payments)
-        )
+**结构：**
+1. 期初交换本金（按即期汇率）
+2. 期间交换利息
+3. 期末换回本金
 
-        # 外币端现值 (转换为本币)
-        pv_foreign = sum(
-            fp / (1 + foreign_curve[i]) ** (i+1)
-            for i, fp in enumerate(foreign_payments)
-        ) * spot_rate
+**应用：**
+- 获得外币融资
+- 对冲外汇风险
+- 降低融资成本
 
-        return pv_domestic - pv_foreign
+### 信用违约互换 (CDS)
 
-    @staticmethod
-    def cds_premium(default_probability, recovery_rate, risk_free_rate, maturity):
-        """
-        信用违约互换 (CDS) 溢价估算
+**定义：**
+买方定期支付保费，换取参考实体违约时的损失补偿。
 
-        简化模型
-        """
-        expected_loss = default_probability * (1 - recovery_rate)
-        cds_spread = expected_loss / (1 - expected_loss) * (1 + risk_free_rate) ** maturity
+**功能：**
+- 信用风险转移
+- 信用风险定价
+- 做空信用工具
 
-        return cds_spread
-```
+---
 
 ## 延伸阅读
 

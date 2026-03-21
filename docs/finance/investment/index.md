@@ -6,468 +6,367 @@
 
 ### 马科维茨均值-方差模型
 
-```python
-import numpy as np
-import pandas as pd
-from scipy.optimize import minimize
+哈里·马科维茨 (Harry Markowitz) 于1952年提出的投资组合理论，开创了现代金融学的先河。
 
-class MarkowitzPortfolio:
-    """
-    马科维茨投资组合优化
-    """
+**核心思想：**
+- 投资者不仅关注收益，也关注风险
+- 通过资产分散化可以降低风险
+- 在给定风险水平下最大化收益，或在给定收益水平下最小化风险
 
-    def __init__(self, expected_returns, cov_matrix, risk_free_rate=0.02):
-        """
-        expected_returns: 预期收益率向量
-        cov_matrix: 收益率协方差矩阵
-        risk_free_rate: 无风险利率
-        """
-        self.expected_returns = expected_returns
-        self.cov_matrix = cov_matrix
-        self.risk_free_rate = risk_free_rate
-        self.n_assets = len(expected_returns)
+#### 组合收益与风险
 
-    def portfolio_performance(self, weights):
-        """
-        计算组合绩效
-        """
-        portfolio_return = np.dot(weights, self.expected_returns)
-        portfolio_volatility = np.sqrt(np.dot(weights.T, np.dot(self.cov_matrix, weights)))
-        sharpe_ratio = (portfolio_return - self.risk_free_rate) / portfolio_volatility
+对于包含 $n$ 个资产的投资组合：
 
-        return {
-            'return': portfolio_return,
-            'volatility': portfolio_volatility,
-            'sharpe_ratio': sharpe_ratio
-        }
+**组合预期收益：**
+$$E(R_p) = \sum_{i=1}^{n} w_i E(R_i)$$
 
-    def minimum_variance_portfolio(self):
-        """
-        最小方差组合
-        """
-        constraints = {'type': 'eq', 'fun': lambda x: np.sum(x) - 1}
-        bounds = tuple((0, 1) for _ in range(self.n_assets))
-        init_guess = np.array([1/self.n_assets] * self.n_assets)
+**组合方差：**
+$$\sigma_p^2 = \sum_{i=1}^{n} \sum_{j=1}^{n} w_i w_j \sigma_{ij}$$
 
-        result = minimize(
-            lambda x: np.dot(x.T, np.dot(self.cov_matrix, x)),
-            init_guess,
-            method='SLSQP',
-            bounds=bounds,
-            constraints=constraints
-        )
+其中：
+- $w_i$ = 第 $i$ 个资产的权重（$\sum w_i = 1$）
+- $E(R_i)$ = 第 $i$ 个资产的预期收益
+- $\sigma_{ij}$ = 资产 $i$ 和 $j$ 的协方差
 
-        return result.x
+#### 有效前沿
 
-    def tangency_portfolio(self):
-        """
-        切线组合（夏普比率最大化）
-        """
-        def negative_sharpe(weights):
-            return -self.portfolio_performance(weights)['sharpe_ratio']
-
-        constraints = {'type': 'eq', 'fun': lambda x: np.sum(x) - 1}
-        bounds = tuple((0, 1) for _ in range(self.n_assets))
-        init_guess = np.array([1/self.n_assets] * self.n_assets)
-
-        result = minimize(
-            negative_sharpe,
-            init_guess,
-            method='SLSQP',
-            bounds=bounds,
-            constraints=constraints
-        )
-
-        return result.x
-
-    def efficient_frontier(self, n_points=100):
-        """
-        生成有效前沿
-        """
-        min_vol_portfolio = self.minimum_variance_portfolio()
-        min_vol_return = self.portfolio_performance(min_vol_portfolio)['return']
-
-        max_return = np.max(self.expected_returns)
-        min_return = min_vol_return
-
-        target_returns = np.linspace(min_return, max_return, n_points)
-        efficient_portfolios = []
-
-        for target in target_returns:
-            # 约束：组合收益等于目标，权重和为1
-            constraints = [
-                {'type': 'eq', 'fun': lambda x: np.sum(x) - 1},
-                {'type': 'eq', 'fun': lambda x: np.dot(x, self.expected_returns) - target}
-            ]
-            bounds = tuple((0, 1) for _ in range(self.n_assets))
-            init_guess = np.array([1/self.n_assets] * self.n_assets)
-
-            result = minimize(
-                lambda x: np.dot(x.T, np.dot(self.cov_matrix, x)),
-                init_guess,
-                method='SLSQP',
-                bounds=bounds,
-                constraints=constraints
-            )
-
-            if result.success:
-                vol = np.sqrt(np.dot(result.x.T, np.dot(self.cov_matrix, result.x)))
-                efficient_portfolios.append({
-                    'return': target,
-                    'volatility': vol,
-                    'weights': result.x
-                })
-
-        return efficient_portfolios
+```
+收益
+  ↑
+  │      ★ 最优风险组合
+  │     ╱ ╲
+  │    ╱   ╲  有效前沿
+  │   ╱     ╲
+  │  ●───────●
+  │ ╱  非有效  ╲
+  │╱   组合     ╲
+  └──────────────→ 风险（标准差）
 ```
 
-### 资本资产定价模型 (CAPM)
+**有效前沿上的组合特征：**
+- 给定风险水平下收益最高
+- 给定收益水平下风险最低
+- 无法在不增加风险的情况下提高收益
 
-```python
-class CAPM:
-    """
-    资本资产定价模型
-    """
+#### 最小方差组合
 
-    def __init__(self, risk_free_rate=0.02, market_return=0.08):
-        self.risk_free_rate = risk_free_rate
-        self.market_return = market_return
-        self.market_premium = market_return - risk_free_rate
+目标：找到使组合方差最小的权重配置
 
-    def expected_return(self, beta):
-        """
-        CAPM公式: E(Ri) = Rf + βi * (E(Rm) - Rf)
-        """
-        return self.risk_free_rate + beta * self.market_premium
+$$\min_{w} \sigma_p^2 = w^T \Sigma w$$
 
-    def calculate_beta(self, stock_returns, market_returns):
-        """
-        计算贝塔系数
+约束条件：$\sum_{i=1}^{n} w_i = 1$
 
-        β = Cov(Ri, Rm) / Var(Rm)
-        """
-        covariance = np.cov(stock_returns, market_returns)[0][1]
-        market_variance = np.var(market_returns)
+其中 $\Sigma$ 是收益率的协方差矩阵。
 
-        if market_variance == 0:
-            return 0
+#### 切线组合（最优风险组合）
 
-        return covariance / market_variance
+切线组合是**夏普比率最大化**的组合：
 
-    def security_characteristic_line(self, stock_returns, market_returns):
-        """
-        证券市场线 (SCL)
+$$Sharpe = \frac{E(R_p) - R_f}{\sigma_p}$$
 
-        Ri - Rf = α + β(Rm - Rf) + ε
-        """
-        excess_stock = stock_returns - self.risk_free_rate
-        excess_market = market_returns - self.risk_free_rate
+其中 $R_f$ 是无风险利率。
 
-        # 线性回归
-        beta = self.calculate_beta(stock_returns, market_returns)
-        alpha = np.mean(excess_stock) - beta * np.mean(excess_market)
+**分离定理 (Separation Theorem)：**
+- 最优投资组合 = 无风险资产 + 切线组合
+- 投资者只需决定风险资产配置比例
 
-        return {
-            'alpha': alpha,
-            'beta': beta,
-            'expected_return': self.expected_return(beta)
-        }
+---
 
-    def security_market_line(self, betas):
-        """
-        证券市场线 (SML)
-        """
-        returns = [self.expected_return(beta) for beta in betas]
-        return returns
+## 资本资产定价模型 (CAPM)
+
+### 模型假设
+
+1. 投资者都是风险厌恶的
+2. 投资期限相同
+3. 可以无限制借贷无风险资产
+4. 无摩擦市场（无税、无交易成本）
+5. 所有投资者对预期收益、方差、协方差有相同预期
+
+### CAPM 公式
+
+$$E(R_i) = R_f + \beta_i [E(R_m) - R_f]$$
+
+其中：
+- $E(R_i)$ = 资产 $i$ 的预期收益
+- $R_f$ = 无风险利率
+- $E(R_m)$ = 市场组合预期收益
+- $\beta_i$ = 资产 $i$ 的系统性风险
+
+### Beta 系数
+
+$$\beta_i = \frac{Cov(R_i, R_m)}{Var(R_m)}$$
+
+| Beta 值 | 含义 | 风险特征 |
+|---------|------|----------|
+| $\beta = 1$ | 与市场同步波动 | 平均风险 |
+| $\beta > 1$ | 波动大于市场 | 激进型、高风险 |
+| $\beta < 1$ | 波动小于市场 | 防御型、低风险 |
+| $\beta = 0$ | 无系统性风险 | 类似无风险资产 |
+| $\beta < 0$ | 与市场反向波动 | 对冲工具 |
+
+### 证券市场线 (SML)
+
 ```
+收益
+  ↑
+  │        ╱ 证券市场线 (SML)
+  │       ╱
+  │      ╱
+  │     ╱
+  │    ╱
+  │   ●─────── 被高估（在SML下方）
+  │  ╱│
+  │ ╱ │●────── 被低估（在SML上方）
+  └────┼─────────→ Beta
+       R_f       1
+```
+
+**定价判断：**
+- 点在SML上方 → 被低估，应买入
+- 点在SML下方 → 被高估，应卖出
+- 点在SML上 → 合理定价
+
+---
+
+## 套利定价理论 (APT)
+
+### APT vs CAPM
+
+| 特征 | CAPM | APT |
+|------|------|-----|
+| **风险因子** | 单一（市场风险） | 多个宏观经济因子 |
+| **假设** | 较多限制 | 较少限制 |
+| **实证性** | 理论推导强 | 更贴近现实 |
+| **均衡机制** | 供需均衡 | 无套利均衡 |
+
+### 多因子模型
+
+$$E(R_i) = R_f + \sum_{k=1}^{K} \beta_{ik} \lambda_k$$
+
+其中：
+- $\beta_{ik}$ = 资产 $i$ 对第 $k$ 个因子的敏感度
+- $\lambda_k$ = 第 $k$ 个因子的风险溢价
+
+**常见因子：**
+- 市场因子
+- 规模因子 (SMB)
+- 价值因子 (HML)
+- 动量因子
+- 质量因子
+
+---
 
 ## 权益投资
 
 ### 股票估值模型
 
-```python
-class StockValuation:
-    """
-    股票估值方法
-    """
+#### 股利贴现模型 (DDM)
 
-    @staticmethod
-    def ddm_constant_growth(dividend, required_return, growth_rate):
-        """
-        股利贴现模型 (Gordon Growth Model)
+**戈登增长模型（固定增长）：**
+$$P_0 = \frac{D_1}{r - g}$$
 
-        P = D1 / (r - g)
-        """
-        if growth_rate >= required_return:
-            raise ValueError("增长率必须小于要求回报率")
+其中：
+- $P_0$ = 当前股价
+- $D_1$ = 下期预期股利
+- $r$ = 要求回报率
+- $g$ = 股利永续增长率（$g < r$）
 
-        return dividend / (required_return - growth_rate)
+**适用条件：**
+- 公司处于稳定增长阶段
+- 股利政策稳定
+- 增长率恒定
 
-    @staticmethod
-    def ddm_multi_stage(dividends, required_return, terminal_growth, high_growth_period=5):
-        """
-        多阶段股利贴现模型
-        """
-        # 高增长阶段现值
-        pv_high_growth = 0
-        for t, d in enumerate(dividends[:high_growth_period], 1):
-            pv_high_growth += d / (1 + required_return) ** t
+**多阶段股利贴现模型：**
 
-        # 终值 (Gordon Growth)
-        terminal_dividend = dividends[high_growth_period - 1] * (1 + terminal_growth)
-        terminal_value = terminal_dividend / (required_return - terminal_growth)
-        pv_terminal = terminal_value / (1 + required_return) ** high_growth_period
+适用于高增长公司，分阶段预测：
+- 第一阶段：高增长期（明确预测每年股利）
+- 第二阶段：过渡期（增长率逐步下降）
+- 第三阶段：永续增长期（戈登模型）
 
-        return pv_high_growth + pv_terminal
+#### 自由现金流模型
 
-    @staticmethod
-    def free_cash_flow_to_equity(fcfe, required_return, growth_rate):
-        """
-        股权自由现金流贴现模型
-        """
-        return fcfe * (1 + growth_rate) / (required_return - growth_rate)
+**股权自由现金流 (FCFE) 模型：**
+$$P_0 = \sum_{t=1}^{\infty} \frac{FCFE_t}{(1+r)^t}$$
 
-    @staticmethod
-    def pe_ratio Valuation(eps, pe_ratio):
-        """
-        市盈率估值法
-        """
-        return eps * pe_ratio
+FCFE = 净利润 + 折旧摊销 - 资本支出 - 营运资本增加 + 净借款
 
-    @staticmethod
-    def pb_ratio_valuation(book_value_per_share, pb_ratio):
-        """
-        市净率估值法
-        """
-        return book_value_per_share * pb_ratio
-```
+**企业自由现金流 (FCFF) 模型：**
+$$企业价值 = \sum_{t=1}^{\infty} \frac{FCFF_t}{(1+WACC)^t}$$
+
+FCFF = EBIT×(1-税率) + 折旧摊销 - 资本支出 - 营运资本增加
+
+#### 相对估值法
+
+| 指标 | 公式 | 适用场景 |
+|------|------|----------|
+| **市盈率 (P/E)** | 股价 / 每股收益 | 盈利稳定的公司 |
+| **市净率 (P/B)** | 股价 / 每股净资产 | 重资产行业、金融机构 |
+| **市销率 (P/S)** | 市值 / 营业收入 | 亏损公司、轻资产公司 |
+| **EV/EBITDA** | 企业价值 / 息税折旧前利润 | 跨国比较、资本密集型 |
+| **PEG** | 市盈率 / 盈利增长率 | 成长股估值 |
 
 ### 股票分析方法
 
-```python
-class EquityAnalysis:
-    """
-    股票分析框架
-    """
+#### 基本面分析框架
 
-    @staticmethod
-    def dupont_analysis(net_profit_margin, asset_turnover, equity_multiplier):
-        """
-        杜邦分析法
+```
+自上而下分析框架
+─────────────────────────────────────────
+1. 宏观经济分析
+   ├── 经济周期所处阶段
+   ├── 货币政策方向（宽松/紧缩）
+   ├── 财政政策（扩张/收缩）
+   └── 国际经济形势
 
-        ROE = 净利润率 × 总资产周转率 × 权益乘数
-        """
-        roe = net_profit_margin * asset_turnover * equity_multiplier
+2. 行业分析
+   ├── 波特五力模型
+   │   ├── 现有竞争者
+   │   ├── 潜在进入者
+   │   ├── 替代品威胁
+   │   ├── 供应商议价能力
+   │   └── 购买者议价能力
+   ├── 行业生命周期
+   └── 行业竞争格局
 
-        return {
-            'roe': roe,
-            'components': {
-                'profitability': net_profit_margin,
-                'efficiency': asset_turnover,
-                'leverage': equity_multiplier
-            },
-            'interpretation': {
-                'high_margin_low_turnover': '差异化战略',
-                'low_margin_high_turnover': '成本领先战略'
-            }
-        }
-
-    @staticmethod
-    def fundamental_analysis_framework():
-        """
-        基本面分析框架
-        """
-        return {
-            'macro_analysis': {
-                'economic_cycle': '经济周期所处阶段',
-                'monetary_policy': '货币政策方向',
-                'fiscal_policy': '财政政策',
-                'industry_trends': '行业趋势'
-            },
-            'industry_analysis': {
-                'porter_five_forces': '波特五力模型',
-                'industry_lifecycle': '行业生命周期',
-                'competitive_advantage': '竞争优势分析'
-            },
-            'company_analysis': {
-                'business_model': '商业模式',
-                'financial_health': '财务健康度',
-                'management_quality': '管理层质量',
-                'valuation': '估值水平'
-            }
-        }
+3. 公司分析
+   ├── 商业模式
+   ├── 竞争优势（护城河）
+   ├── 财务状况
+   ├── 管理层质量
+   └── 估值水平
+─────────────────────────────────────────
 ```
 
-## 固定收益
+#### 杜邦分析法
 
-### 债券定价与收益率
+$$ROE = \text{净利润率} \times \text{总资产周转率} \times \text{权益乘数}$$
 
-```python
-class FixedIncome:
-    """
-    固定收益证券分析
-    """
+$$ROE = \frac{\text{净利润}}{\text{营业收入}} \times \frac{\text{营业收入}}{\text{总资产}} \times \frac{\text{总资产}}{\text{股东权益}}$$
 
-    @staticmethod
-    def bond_price(face_value, coupon_rate, ytm, periods, frequency=1):
-        """
-        债券定价
+**战略含义：**
+| 模式 | 特征 | 代表类型 |
+|------|------|----------|
+| **高利润率低周转** | 差异化战略 | 奢侈品、科技 |
+| **低利润率高周转** | 成本领先战略 | 零售、超市 |
+| **高杠杆** | 金融杠杆驱动 | 银行、房地产 |
 
-        P = Σ(C/(1+y)^t) + F/(1+y)^n
-        """
-        coupon_payment = face_value * coupon_rate / frequency
+---
 
-        # 票息现值
-        pv_coupons = sum([
-            coupon_payment / (1 + ytm/frequency) ** t
-            for t in range(1, periods + 1)
-        ])
+## 固定收益证券
 
-        # 面值现值
-        pv_face = face_value / (1 + ytm/frequency) ** periods
+### 债券基本特征
 
-        return pv_coupons + pv_face
+| 特征 | 说明 |
+|------|------|
+| **面值 (Face Value)** | 债券到期时偿还的本金金额 |
+| **票面利率 (Coupon Rate)** | 年利息与面值的比率 |
+| **到期日 (Maturity)** | 本金偿还日期 |
+| **收益率 (Yield)** | 考虑价格后的实际回报率 |
+| **信用评级** | 发行人违约风险的评估 |
 
-    @staticmethod
-    def yield_to_maturity(price, face_value, coupon_rate, periods, frequency=1, guess=0.05):
-        """
-        计算到期收益率 (YTM)
-        """
-        from scipy.optimize import newton
+### 债券定价
 
-        coupon = face_value * coupon_rate / frequency
+$$P = \sum_{t=1}^{n} \frac{C}{(1+y)^t} + \frac{F}{(1+y)^n}$$
 
-        def price_diff(ytm):
-            calculated_price = sum([
-                coupon / (1 + ytm/frequency) ** t
-                for t in range(1, periods + 1)
-            ]) + face_value / (1 + ytm/frequency) ** periods
-            return calculated_price - price
+其中：
+- $P$ = 债券价格
+- $C$ = 每期票息
+- $F$ = 面值
+- $y$ = 到期收益率 (YTM)
+- $n$ = 剩余期数
 
-        try:
-            ytm = newton(price_diff, guess)
-            return ytm * frequency  # 年化
-        except:
-            return None
+### 利率风险度量
 
-    @staticmethod
-    def duration_and_convexity(face_value, coupon_rate, ytm, periods, frequency=1):
-        """
-        久期和凸性
-        """
-        coupon = face_value * coupon_rate / frequency
-        y = ytm / frequency
+#### 久期 (Duration)
 
-        # 麦考利久期
-        macaulay_duration = 0
-        bond_price = 0
+**麦考利久期：**
+$$MacD = \frac{\sum_{t=1}^{n} t \times PV(CF_t)}{P}$$
 
-        for t in range(1, periods + 1):
-            cf = coupon if t < periods else coupon + face_value
-            pv = cf / (1 + y) ** t
-            bond_price += pv
-            macaulay_duration += t * pv
+**修正久期：**
+$$ModD = \frac{MacD}{1 + y}$$
 
-        macaulay_duration /= bond_price
+**经济含义：**
+- 衡量债券价格对利率变化的敏感度
+- 近似公式：$\frac{\Delta P}{P} \approx -ModD \times \Delta y$
 
-        # 修正久期
-        modified_duration = macaulay_duration / (1 + y)
+#### 凸性 (Convexity)
 
-        # 凸性 (简化计算)
-        convexity = sum([
-            (t * (t + 1) * coupon / (1 + y) ** (t + 2))
-            for t in range(1, periods + 1)
-        ]) / bond_price
+$$Convexity = \frac{1}{P} \frac{\partial^2 P}{\partial y^2}$$
 
-        # 加上最后一期的面值部分
-        convexity += (periods * (periods + 1) * face_value / (1 + y) ** (periods + 2)) / bond_price
+**价格变化更精确估计：**
+$$\frac{\Delta P}{P} \approx -ModD \times \Delta y + \frac{1}{2} \times Convexity \times (\Delta y)^2$$
 
-        return {
-            'macaulay_duration': macaulay_duration / frequency,  # 年化
-            'modified_duration': modified_duration / frequency,
-            'convexity': convexity / (frequency ** 2),
-            'price_change_approx': lambda dy: -modified_duration * dy + 0.5 * convexity * (dy ** 2)
-        }
-```
+**重要性质：**
+- 凸性为正时，利率下降带来的价格上涨大于同等利率上升带来的价格下跌
+- 凸性是有利的，投资者愿意为高凸性支付溢价
+
+---
 
 ## 衍生工具
 
 ### 期权基础
 
-```python
-class OptionBasics:
-    """
-    期权基础概念
-    """
+#### 期权类型
 
-    @staticmethod
-    def option_payoff(stock_prices, strike, premium, option_type='call', position='long'):
-        """
-        期权到期 payoff
-        """
-        if option_type == 'call':
-            intrinsic = np.maximum(stock_prices - strike, 0)
-        else:
-            intrinsic = np.maximum(strike - stock_prices, 0)
+| 类型 | 权利 | 买方预期 | 卖方义务 |
+|------|------|----------|----------|
+| **看涨期权 (Call)** | 以行权价买入标的 | 股价上涨 | 按行权价卖出 |
+| **看跌期权 (Put)** | 以行权价卖出标的 | 股价下跌 | 按行权价买入 |
 
-        if position == 'long':
-            payoff = intrinsic - premium
-        else:
-            payoff = premium - intrinsic
+#### 期权价值构成
 
-        return payoff
+$$期权价值 = 内在价值 + 时间价值$$
 
-    @staticmethod
-    def put_call_parity(call_price, put_price, stock_price, strike, risk_free_rate, time):
-        """
-        期权平价公式
+**内在价值：**
+- 看涨：$\max(S - K, 0)$
+- 看跌：$\max(K - S, 0)$
 
-        C + K*e^(-rT) = P + S
-        """
-        left_side = call_price + strike * np.exp(-risk_free_rate * time)
-        right_side = put_price + stock_price
+**时间价值：**
+- 到期前存在获利可能性的价值
+- 随到期日临近而衰减（时间衰减）
 
-        return {
-            'parity_holds': np.isclose(left_side, right_side, rtol=0.01),
-            'difference': left_side - right_side,
-            'arbitrage_opportunity': abs(left_side - right_side) > 0.01
-        }
+#### 影响期权价格的因素
 
-    @staticmethod
-    def option_strategies():
-        """
-        常见期权策略
-        """
-        return {
-            'covered_call': {
-                'construction': '持有股票 + 卖出看涨期权',
-                'outlook': '中性偏乐观',
-                'max_profit': '权利金 + (行权价 - 买入价)',
-                'max_loss': '股票买入价 - 权利金'
-            },
-            'protective_put': {
-                'construction': '持有股票 + 买入看跌期权',
-                'outlook': '看多远期风险',
-                'max_profit': '无限',
-                'max_loss': '股票买入价 - 行权价 + 权利金'
-            },
-            'bull_spread': {
-                'construction': '买入低行权价看涨 + 卖出高行权价看涨',
-                'outlook': '温和看涨',
-                'max_profit': '行权价差 - 净权利金',
-                'max_loss': '净权利金'
-            },
-            'straddle': {
-                'construction': '同时买入同价看涨和看跌',
-                'outlook': '预期大幅波动',
-                'max_profit': '无限',
-                'max_loss': '两权利金之和'
-            }
-        }
-```
+| 因素 | 看涨期权 | 看跌期权 |
+|------|----------|----------|
+| 标的资产价格 ↑ | 价格上涨 | 价格下跌 |
+| 行权价格 ↑ | 价格下跌 | 价格上涨 |
+| 到期期限 ↑ | 价格上涨 | 价格上涨 |
+| 波动率 ↑ | 价格上涨 | 价格上涨 |
+| 无风险利率 ↑ | 价格上涨 | 价格下跌 |
+| 股息 ↑ | 价格下跌 | 价格上涨 |
+
+#### 期权平价关系
+
+$$C + K e^{-rT} = P + S$$
+
+其中：
+- $C$ = 看涨期权价格
+- $P$ = 看跌期权价格
+- $S$ = 标的资产价格
+- $K$ = 行权价
+- $r$ = 无风险利率
+- $T$ = 到期时间
+
+**套利应用：**
+如果等式不成立，存在无风险套利机会。
+
+#### 常见期权策略
+
+| 策略 | 构建方式 | 适用场景 | 风险收益特征 |
+|------|----------|----------|--------------|
+| **备兑看涨** | 持有股票 + 卖出看涨期权 | 中性偏乐观 | 收益有限，风险有限 |
+| **保护性看跌** | 持有股票 + 买入看跌期权 | 看多远期风险 | 下行保护，保留上行 |
+| **牛市价差** | 买入低行权价看涨 + 卖出高行权价看涨 | 温和看涨 | 风险收益均有限 |
+| **跨式组合** | 同时买入同价看涨和看跌 | 预期大幅波动 | 风险有限，收益无限 |
+| **蝶式价差** | 三个不同行权价的组合 | 预期低波动 | 风险收益均有限 |
+
+---
 
 ## 延伸阅读
 
 - [金融基础理论](../basics/) - 利率、货币时间价值
 - [公司金融](../corporate/) - 资本预算与估值
+- [固定收益](../fixed-income/) - 深度债券分析
+- [衍生品](../derivatives/) - 高级期权策略
 - [量化交易](../quant/) - 量化策略实现

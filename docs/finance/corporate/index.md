@@ -39,608 +39,260 @@
 
 ### 财务比率分析
 
-```python
-import numpy as np
-import pandas as pd
+#### 盈利能力比率
 
-class FinancialRatioAnalysis:
-    """
-    财务比率分析框架
-    """
+| 比率 | 公式 | 含义 |
+|------|------|------|
+| **毛利率** | $(营业收入 - 营业成本) / 营业收入$ | 产品盈利空间 |
+| **营业利润率** | $营业利润 / 营业收入$ | 核心经营盈利能力 |
+| **净利润率** | $净利润 / 营业收入$ | 最终盈利水平 |
+| **ROA** | $净利润 / 总资产$ | 资产使用效率 |
+| **ROE** | $净利润 / 股东权益$ | 股东回报率 |
 
-    @staticmethod
-    def profitability_ratios(net_income, revenue, total_assets, equity):
-        """
-        盈利能力比率
-        """
-        return {
-            'gross_margin': (revenue - cogs) / revenue if 'cogs' in dir() else None,
-            'operating_margin': operating_income / revenue if 'operating_income' in dir() else None,
-            'net_profit_margin': net_income / revenue,
-            'roa': net_income / total_assets,  # 资产收益率
-            'roe': net_income / equity,        # 净资产收益率
-        }
+#### 流动性比率
 
-    @staticmethod
-    def liquidity_ratios(current_assets, current_liabilities, inventory, receivables):
-        """
-        流动性比率
-        """
-        return {
-            'current_ratio': current_assets / current_liabilities,
-            'quick_ratio': (current_assets - inventory) / current_liabilities,
-            'cash_ratio': (current_assets - inventory - receivables) / current_liabilities,
-        }
+| 比率 | 公式 | 标准值 | 含义 |
+|------|------|--------|------|
+| **流动比率** | $流动资产 / 流动负债$ | 2:1 | 短期偿债能力 |
+| **速动比率** | $(流动资产 - 存货) / 流动负债$ | 1:1 | 剔除存货的偿债能力 |
+| **现金比率** | $现金及等价物 / 流动负债$ | 0.2:1 | 最保守的流动性度量 |
 
-    @staticmethod
-    def solvency_ratios(total_debt, total_assets, ebit, interest_expense):
-        """
-        偿债能力比率
-        """
-        return {
-            'debt_to_assets': total_debt / total_assets,
-            'debt_to_equity': total_debt / (total_assets - total_debt),
-            'interest_coverage': ebit / interest_expense if interest_expense != 0 else float('inf'),
-        }
+#### 偿债能力比率
 
-    @staticmethod
-    def efficiency_ratios(revenue, cogs, average_inventory, average_receivables, average_payables):
-        """
-        营运效率比率
-        """
-        return {
-            'inventory_turnover': cogs / average_inventory,
-            'days_inventory': 365 / (cogs / average_inventory),
-            'receivables_turnover': revenue / average_receivables,
-            'days_receivables': 365 / (revenue / average_receivables),
-            'payables_turnover': cogs / average_payables,
-            'days_payables': 365 / (cogs / average_payables),
-            'cash_conversion_cycle': (
-                365 / (cogs / average_inventory) +
-                365 / (revenue / average_receivables) -
-                365 / (cogs / average_payables)
-            ),
-        }
+| 比率 | 公式 | 含义 |
+|------|------|------|
+| **资产负债率** | $总负债 / 总资产$ | 长期偿债压力 |
+| **权益乘数** | $总资产 / 股东权益$ | 财务杠杆程度 |
+| **利息保障倍数** | $EBIT / 利息费用$ | 偿付利息能力 |
 
-    @staticmethod
-    def market_value_ratios(stock_price, eps, book_value_per_share, dividends_per_share):
-        """
-        市场价值比率
-        """
-        return {
-            'pe_ratio': stock_price / eps,
-            'pb_ratio': stock_price / book_value_per_share,
-            'dividend_yield': dividends_per_share / stock_price,
-            'payout_ratio': dividends_per_share / eps,
-        }
-```
+#### 营运效率比率
+
+| 比率 | 公式 | 含义 |
+|------|------|------|
+| **存货周转率** | $营业成本 / 平均存货$ | 存货管理效率 |
+| **应收账款周转率** | $营业收入 / 平均应收账款$ | 回款速度 |
+| **总资产周转率** | $营业收入 / 总资产$ | 资产使用效率 |
+| **现金转换周期** | 存货天数 + 应收天数 - 应付天数 | 营运资金占用 |
+
+---
 
 ## 资本预算
 
-### 投资决策方法
+### 投资决策方法比较
 
-```python
-class CapitalBudgeting:
-    """
-    资本预算决策方法
-    """
+| 方法 | 决策规则 | 优点 | 缺点 |
+|------|----------|------|------|
+| **NPV** | NPV > 0 接受 | 直接反映价值创造 | 需要估计折现率 |
+| **IRR** | IRR > 要求回报率 接受 | 直观显示收益率 | 可能存在多个解 |
+| **回收期** | 回收期 < 标准 接受 | 简单、考虑流动性 | 忽略时间价值 |
+| **盈利指数** | PI > 1 接受 | 适合资金受限情况 | 可能误导互斥项目 |
 
-    @staticmethod
-    def npv(cash_flows, discount_rate):
-        """
-        净现值 (NPV)
+### 净现值 (NPV)
 
-        NPV = Σ(CFt / (1+r)^t)
+$$NPV = \sum_{t=0}^{n} \frac{CF_t}{(1+r)^t}$$
 
-        NPV > 0: 接受项目
-        NPV < 0: 拒绝项目
-        """
-        npv_value = sum([
-            cf / (1 + discount_rate) ** t
-            for t, cf in enumerate(cash_flows)
-        ])
-        return npv_value
+**决策规则：**
+- NPV > 0：项目创造价值，接受
+- NPV < 0：项目毁损价值，拒绝
+- NPV = 0：刚好达到要求回报率
 
-    @staticmethod
-    def irr(cash_flows, initial_guess=0.1):
-        """
-        内部收益率 (IRR)
+### 内部收益率 (IRR)
 
-        使 NPV = 0 的折现率
-        """
-        from scipy.optimize import newton
+使 NPV = 0 的折现率：
 
-        def npv_func(rate):
-            return sum([
-                cf / (1 + rate) ** t
-                for t, cf in enumerate(cash_flows)
-            ])
+$$\sum_{t=0}^{n} \frac{CF_t}{(1+IRR)^t} = 0$$
 
-        try:
-            irr = newton(npv_func, initial_guess)
-            return irr
-        except:
-            return None
+**决策规则：**
+- IRR > 资本成本：接受项目
+- IRR < 资本成本：拒绝项目
 
-    @staticmethod
-    def payback_period(cash_flows):
-        """
-        投资回收期
+**局限性：**
+- 非常规现金流可能出现多重IRR
+- 互斥项目可能与NPV结论冲突
 
-        收回初始投资所需的年数
-        """
-        cumulative = 0
-        for t, cf in enumerate(cash_flows):
-            cumulative += cf
-            if cumulative >= 0:
-                # 插值计算精确回收期
-                if t > 0:
-                    prev_cumulative = cumulative - cf
-                    fraction = abs(prev_cumulative) / cf
-                    return t - 1 + fraction
-                return t
-        return float('inf')  # 无法回收
+### 自由现金流计算
 
-    @staticmethod
-    def profitability_index(cash_flows, discount_rate, initial_investment):
-        """
-        盈利指数 (PI)
+**经营现金流 (OCF) 三种等价算法：**
 
-        PI = 未来现金流现值 / 初始投资
+1. **自上而下法：**
+   $$OCF = 营业收入 - 付现成本 - 税金$$
 
-        PI > 1: 接受项目
-        """
-        pv_future = sum([
-            cf / (1 + discount_rate) ** t
-            for t, cf in enumerate(cash_flows[1:], 1)
-        ])
-        return pv_future / abs(initial_investment)
+2. **自下而上法：**
+   $$OCF = 净利润 + 折旧摊销$$
 
-    @staticmethod
-    def equivalent_annual_annuity(npv, discount_rate, project_life):
-        """
-        等额年金法 (EAA)
+3. **税盾法：**
+   $$OCF = (营业收入 - 付现成本) \times (1-T) + 折旧 \times T$$
 
-        用于比较不同期限的项目
-        """
-        annuity_factor = (1 - (1 + discount_rate) ** (-project_life)) / discount_rate
-        return npv / annuity_factor
+**项目自由现金流：**
+$$FCF = OCF - 资本支出 - 营运资本增加$$
+
+---
+
+## 资本成本
+
+### 资本成本构成
+
+```
+资本成本结构
+─────────────────────────────────────────
+
+    加权平均资本成本 (WACC)
+              │
+      ┌───────┴───────┐
+      ↓               ↓
+   债务成本       权益成本
+      │               │
+   税后债务      ┌────┴────┐
+   成本         ↓         ↓
+            CAPM      股利增
+            模型      长模型
+─────────────────────────────────────────
 ```
 
-### 现金流估算
+### 加权平均资本成本 (WACC)
 
-```python
-class CashFlowEstimation:
-    """
-    项目现金流估算
-    """
+$$WACC = \frac{E}{V} \times R_e + \frac{D}{V} \times R_d \times (1-T)$$
 
-    @staticmethod
-    def operating_cash_flow(revenue, costs, depreciation, tax_rate):
-        """
-        经营现金流 (OCF)
+其中：
+- $E$ = 权益市场价值
+- $D$ = 债务市场价值
+- $V = E + D$ = 企业总价值
+- $R_e$ = 权益成本
+- $R_d$ = 债务成本
+- $T$ = 企业所得税率
 
-        三种等价计算方法：
-        1. OCF = EBIT + 折旧 - 税
-        2. OCF = 净利润 + 折旧
-        3. OCF = (收入 - 付现成本) × (1 - 税率) + 折旧 × 税率
-        """
-        ebit = revenue - costs - depreciation
-        taxes = ebit * tax_rate
-        net_income = ebit - taxes
+### 权益成本估计
 
-        # 方法1
-        ocf1 = ebit + depreciation - taxes
+**CAPM 方法：**
+$$R_e = R_f + \beta \times (R_m - R_f)$$
 
-        # 方法2
-        ocf2 = net_income + depreciation
+**股利增长模型：**
+$$R_e = \frac{D_1}{P_0} + g$$
 
-        # 方法3
-        ocf3 = (revenue - (costs - depreciation)) * (1 - tax_rate) + depreciation * tax_rate
+### 债务成本估计
 
-        return {
-            'ebit': ebit,
-            'taxes': taxes,
-            'net_income': net_income,
-            'ocf': ocf1,
-            'ocf_alternatives': [ocf1, ocf2, ocf3]
-        }
+$$税后债务成本 = 到期收益率 \times (1 - T)$$
 
-    @staticmethod
-    def free_cash_flow(revenue, costs, depreciation, capex, nwc_change, tax_rate):
-        """
-        自由现金流 (FCF)
+**注意：** 债务的税盾效应降低了实际成本
 
-        FCF = OCF - 资本支出 - 营运资本变动
-        """
-        ocf_result = CashFlowEstimation.operating_cash_flow(
-            revenue, costs, depreciation, tax_rate
-        )
-
-        fcf = ocf_result['ocf'] - capex - nwc_change
-
-        return {
-            'ocf': ocf_result['ocf'],
-            'capex': capex,
-            'nwc_change': nwc_change,
-            'fcf': fcf
-        }
-
-    @staticmethod
-    def project_cash_flows(initial_investment, annual_revenues, annual_costs,
-                          depreciation_schedule, capex_schedule, nwc_changes,
-                          salvage_value, tax_rate, project_life):
-        """
-        完整项目现金流
-        """
-        cash_flows = [-initial_investment]
-
-        for t in range(1, project_life + 1):
-            fcf = CashFlowEstimation.free_cash_flow(
-                annual_revenues[t-1],
-                annual_costs[t-1],
-                depreciation_schedule[t-1],
-                capex_schedule[t-1],
-                nwc_changes[t-1],
-                tax_rate
-            )
-            cash_flows.append(fcf['fcf'])
-
-        # 期末回收
-        terminal_flow = salvage_value * (1 - tax_rate)  # 假设有资本利得税
-        cash_flows[-1] += terminal_flow
-
-        return cash_flows
-```
+---
 
 ## 资本结构
 
-### 资本成本
+### 资本结构理论演进
 
-```python
-class CostOfCapital:
-    """
-    资本成本计算
-    """
+| 理论 | 核心观点 | 最优资本结构 |
+|------|----------|--------------|
+| **MM理论（无税）** | 资本结构不影响价值 | 无差异 |
+| **MM理论（有税）** | 债务增加税盾价值 | 100%债务 |
+| **权衡理论** | 税盾收益 vs 破产成本 | 存在最优平衡点 |
+| **优序融资理论** | 信息不对称导致融资偏好 | 内源 > 债务 > 权益 |
 
-    @staticmethod
-    def cost_of_equity_capm(risk_free_rate, beta, market_return):
-        """
-        CAPM计算权益资本成本
+### MM 理论
 
-        Re = Rf + β × (Rm - Rf)
-        """
-        return risk_free_rate + beta * (market_return - risk_free_rate)
+**无税情况（命题1）：**
+$$V_L = V_U$$
 
-    @staticmethod
-    def cost_of_equity_ddm(dividend, stock_price, growth_rate):
-        """
-        股利增长模型计算权益成本
+企业价值与资本结构无关。
 
-        Re = D1/P0 + g
-        """
-        return (dividend / stock_price) + growth_rate
+**有税情况（命题1）：**
+$$V_L = V_U + T \times D$$
 
-    @staticmethod
-    def cost_of_debt(yield_to_maturity, tax_rate):
-        """
-        税后债务成本
+企业价值随债务增加而增加（税盾效应）。
 
-        Rd = YTM × (1 - T)
-        """
-        return yield_to_maturity * (1 - tax_rate)
+### 权衡理论
 
-    @staticmethod
-    def wacc(equity_value, debt_value, cost_of_equity, cost_of_debt, tax_rate):
-        """
-        加权平均资本成本 (WACC)
-
-        WACC = E/V × Re + D/V × Rd × (1 - T)
-        """
-        total_value = equity_value + debt_value
-        equity_weight = equity_value / total_value
-        debt_weight = debt_value / total_value
-
-        wacc = (equity_weight * cost_of_equity +
-                debt_weight * cost_of_debt * (1 - tax_rate))
-
-        return {
-            'wacc': wacc,
-            'equity_weight': equity_weight,
-            'debt_weight': debt_weight,
-            'cost_of_equity': cost_of_equity,
-            'after_tax_cost_of_debt': cost_of_debt * (1 - tax_rate)
-        }
+```
+企业价值
+    ↑
+    │     ╭────╮
+    │    ╱      ╲    税盾价值
+    │   ╱        ╲   (随债务增加)
+    │  ╱          ╲
+    │ ╱            ╲
+    │╱  破产成本    ╲
+    │   (随债务加速增加)
+    └────────────────→ 债务水平
+              ★ 最优资本结构
 ```
 
-### 资本结构理论
+**最优资本结构：**
+- 边际税盾收益 = 边际破产成本
+- 此时企业价值最大化
 
-```python
-class CapitalStructureTheory:
-    """
-    资本结构理论
-    """
+### 优序融资理论
 
-    @staticmethod
-    def mm_proposition_1_no_tax(vu, vl, debt):
-        """
-        MM定理1 (无税)
+**融资优先级：**
+1. **内部融资**（留存收益）- 无信息不对称成本
+2. **债务融资** - 信息不对称成本较低
+3. **权益融资** - 信息不对称成本最高（最后选择）
 
-        企业价值与资本结构无关
-        V_L = V_U
-        """
-        return {
-            'proposition': 'V_L = V_U',
-            'implication': '资本结构不影响企业价值',
-            'vl': vu,
-            'vu': vu
-        }
+**启示：**
+- 不存在目标资本结构
+- 盈利公司负债率较低
+- 公司偏好财务松弛
 
-    @staticmethod
-    def mm_proposition_1_with_tax(vu, debt, tax_rate):
-        """
-        MM定理1 (有税)
-
-        V_L = V_U + T × D
-
-        债务增加企业价值（税盾效应）
-        """
-        vl = vu + tax_rate * debt
-        return {
-            'proposition': 'V_L = V_U + T×D',
-            'implication': '债务增加企业价值',
-            'tax_shield': tax_rate * debt,
-            'vl': vl,
-            'vu': vu
-        }
-
-    @staticmethod
-    def trade_off_theory(vu, debt, tax_rate, bankruptcy_cost):
-        """
-        权衡理论
-
-        最优资本结构在税盾收益和破产成本之间权衡
-        """
-        tax_shield = tax_rate * debt
-        vl = vu + tax_shield - bankruptcy_cost
-
-        return {
-            'vl': vl,
-            'tax_shield_benefit': tax_shield,
-            'bankruptcy_cost': bankruptcy_cost,
-            'optimal_debt': '使税盾边际收益 = 破产成本边际增加'
-        }
-
-    @staticmethod
-    def pecking_order_theory():
-        """
-        优序融资理论
-
-        融资顺序：内部资金 > 债务 > 权益
-        """
-        return {
-            'hierarchy': [
-                '1. 内部融资（留存收益）',
-                '2. 债务融资',
-                '3. 权益融资（最后选择）'
-            ],
-            'rationale': '信息不对称导致权益融资传递负面信号',
-            'implications': [
-                '不存在目标资本结构',
-                '盈利公司负债较少',
-                '公司偏好财务松弛'
-            ]
-        }
-```
+---
 
 ## 企业估值
 
-### 估值方法
+### 估值方法对比
 
-```python
-class FirmValuation:
-    """
-    企业估值方法
-    """
+| 方法 | 适用场景 | 优点 | 缺点 |
+|------|----------|------|------|
+| **DCF** | 有稳定现金流的企业 | 理论基础扎实 | 预测不确定 |
+| **可比公司** | 上市公司比较 | 市场导向 | 难以找到真正可比公司 |
+| **先例交易** | 并购估值 | 包含控制权溢价 | 交易背景差异 |
+| **LBO** | 私募股权视角 | 考虑杠杆效应 | 依赖融资假设 |
 
-    @staticmethod
-    def dcf_valuation(free_cash_flows, wacc, terminal_growth_rate):
-        """
-        DCF估值法
+### DCF 估值
 
-        企业价值 = 预测期FCF现值 + 终值现值
-        """
-        # 预测期现值
-        pv_fcf = sum([
-            fcf / (1 + wacc) ** t
-            for t, fcf in enumerate(free_cash_flows, 1)
-        ])
+$$企业价值 = \sum_{t=1}^{n} \frac{FCF_t}{(1+WACC)^t} + \frac{终值}{(1+WACC)^n}$$
 
-        # 终值 (Gordon Growth)
-        terminal_fcf = free_cash_flows[-1] * (1 + terminal_growth_rate)
-        terminal_value = terminal_fcf / (wacc - terminal_growth_rate)
-        pv_terminal = terminal_value / (1 + wacc) ** len(free_cash_flows)
+**终值计算（Gordon增长模型）：**
+$$终值 = \frac{FCF_{n+1}}{WACC - g}$$
 
-        enterprise_value = pv_fcf + pv_terminal
+**关键假设：**
+- 预测期：通常5-10年
+- 永续增长率 $g$：通常2%-4%，不超过GDP增长
 
-        return {
-            'enterprise_value': enterprise_value,
-            'pv_fcf': pv_fcf,
-            'pv_terminal': pv_terminal,
-            'terminal_value': terminal_value
-        }
+### 从企业价值到股权价值
 
-    @staticmethod
-    def comparable_company_analysis(target_metrics, comparables_multiples):
-        """
-        可比公司法
+$$股权价值 = 企业价值 - 净债务$$
 
-        使用可比公司的估值乘数
-        """
-        # 计算可比公司平均乘数
-        avg_pe = np.mean([comp['pe'] for comp in comparables_multiples])
-        avg_pb = np.mean([comp['pb'] for comp in comparables_multiples])
-        avg_ev_ebitda = np.mean([comp['ev_ebitda'] for comp in comparables_multiples])
+$$每股价值 = \frac{股权价值}{流通股数}$$
 
-        # 估值
-        value_pe = target_metrics['earnings'] * avg_pe
-        value_pb = target_metrics['book_value'] * avg_pb
-        value_ev_ebitda = target_metrics['ebitda'] * avg_ev_ebitda
-
-        return {
-            'value_pe': value_pe,
-            'value_pb': value_pb,
-            'value_ev_ebitda': value_ev_ebitda,
-            'average_value': np.mean([value_pe, value_pb, value_ev_ebitda])
-        }
-
-    @staticmethod
-    def precedent_transactions(target_metrics, transaction_multiples):
-        """
-        先例交易法
-
-        使用并购交易的估值乘数（通常包含控制权溢价）
-        """
-        avg_multiple = np.mean([trans['multiple'] for trans in transaction_multiples])
-        implied_value = target_metrics * avg_multiple
-
-        return {
-            'implied_value': implied_value,
-            'control_premium': '先例交易通常包含20-40%控制权溢价'
-        }
-
-    @staticmethod
-    def lbo_valuation(initial_ebitda, growth_rate, exit_multiple,
-                     entry_ev_ebitda, debt_capacity, investment_horizon=5):
-        """
-        LBO估值法（杠杆收购视角）
-
-        从私募股权投资者角度估值
-        """
-        # 预测EBITDA
-        final_ebitda = initial_ebitda * ((1 + growth_rate) ** investment_horizon)
-
-        # 退出价值
-        exit_value = final_ebitda * exit_multiple
-
-        # 债务偿还
-        initial_debt = debt_capacity * initial_ebitda * entry_ev_ebitda
-
-        # 股权价值
-        equity_value = exit_value - initial_debt * 0.5  # 假设偿还一半债务
-
-        # IRR计算
-        initial_equity = initial_ebitda * entry_ev_ebitda - initial_debt
-        irr = (equity_value / initial_equity) ** (1 / investment_horizon) - 1
-
-        return {
-            'entry_equity': initial_equity,
-            'exit_equity': equity_value,
-            'irr': irr,
-            'money_multiple': equity_value / initial_equity
-        }
-```
+---
 
 ## 股利政策
 
 ### 股利政策理论
 
-```python
-class DividendPolicy:
-    """
-    股利政策
-    """
+| 理论 | 核心观点 | 对股利的偏好 |
+|------|----------|--------------|
+| **股利无关论** | 完美市场中股利不影响价值 | 无差异 |
+| **"一鸟在手"理论** | 股利比资本利得更确定 | 高股利 |
+| **税差理论** | 资本利得税率通常更低 | 低股利 |
+| **信号理论** | 股利变化传递信息 | 稳定股利 |
+| **客户效应** | 不同投资者有不同偏好 | 匹配客户群体 |
 
-    @staticmethod
-    def dividend_irrelevance_theory(firm_value_with_dividend, firm_value_without_dividend):
-        """
-        股利无关论 (MM理论)
+### 信号效应
 
-        在无税、无交易成本、信息对称的完美市场中，
-        股利政策不影响企业价值
-        """
-        return {
-            'theory': 'Dividend Irrelevance',
-            'assertion': '股利政策不影响企业价值',
-            'conditions': [
-                '无税',
-                '无交易成本',
-                '信息对称',
-                '投资政策固定'
-            ],
-            'conclusion': np.isclose(firm_value_with_dividend, firm_value_without_dividend)
-        }
+| 股利变化 | 传递信号 | 市场典型反应 |
+|----------|----------|--------------|
+| **增加股利** | 管理层对未来现金流有信心 | 股价上涨 |
+| **减少股利** | 财务困难或投资机会 | 股价下跌 |
+| **首次发放** | 从成长期进入成熟期 | 视情况而定 |
 
-    @staticmethod
-    def bird_in_hand_theory():
-        """
-        "一鸟在手"理论
+### 股利发放形式
 
-        投资者偏好现金股利而非资本利得
-        """
-        return {
-            'theory': 'Bird in Hand',
-            'assertion': '股利比资本利得更确定',
-            'implication': '高股利支付率提高股价',
-            'criticism': 'MM认为股利和资本利得风险相同'
-        }
+| 形式 | 特点 | 适用情况 |
+|------|------|----------|
+| **现金股利** | 直接现金支付 | 盈利稳定、现金流充裕 |
+| **股票股利** | 送股，不改变股权比例 | 保留现金用于投资 |
+| **股票回购** | 回购并注销股票 | 股价低估、税收优势 |
 
-    @staticmethod
-    def tax_preference_theory(dividend_tax, capital_gains_tax):
-        """
-        税差理论
-
-        如果资本利得税率低于股利税率，
-        投资者偏好低股利政策
-        """
-        return {
-            'theory': 'Tax Preference',
-            'dividend_tax': dividend_tax,
-            'capital_gains_tax': capital_gains_tax,
-            'preference': '低股利' if capital_gains_tax < dividend_tax else '高股利',
-            'effective_tax_advantage': 1 - (1 - capital_gains_tax) / (1 - dividend_tax)
-        }
-
-    @staticmethod
-    def signaling_theory(dividend_change, market_reaction):
-        """
-        信号理论
-
-        股利变化传递管理层对未来前景的预期
-        """
-        return {
-            'increase_dividend': {
-                'signal': '管理层对未来现金流有信心',
-                'typical_reaction': '股价上涨'
-            },
-            'decrease_dividend': {
-                'signal': '财务困难或投资机会',
-                'typical_reaction': '股价下跌'
-            },
-            'initiate_dividend': '从成长期进入成熟期'
-        }
-
-    @staticmethod
-    def clientele_effect():
-        """
-        客户效应
-
-        不同投资者群体偏好不同股利政策
-        """
-        return {
-            'high_dividend_prefer': [
-                '退休人员（需要稳定收入）',
-                '免税机构（养老金、捐赠基金）',
-                '低税率个人投资者'
-            ],
-            'low_dividend_prefer': [
-                '高税率个人投资者',
-                '追求资本增值的投资者',
-                '年轻投资者'
-            ],
-            'implication': '公司应坚持稳定的股利政策以吸引特定客户群'
-        }
-```
+---
 
 ## 延伸阅读
 

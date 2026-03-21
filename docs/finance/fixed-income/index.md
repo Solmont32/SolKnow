@@ -25,480 +25,271 @@
    - 年付、半年付、季付
    - 影响实际收益率
 
-5.  embedded options
+5. Embedded Options
    - 赎回条款 (Callable)
    - 回售条款 (Puttable)
    - 转换条款 (Convertible)
 ─────────────────────────────────────────
 ```
 
+### 债券分类
+
+| 分类维度 | 类型 | 特点 |
+|----------|------|------|
+| **发行主体** | 国债 | 无违约风险，流动性最好 |
+| | 地方政府债 | 税优，风险略高于国债 |
+| | 金融债 | 银行发行，信用度高 |
+| | 公司债 | 收益较高，信用风险需评估 |
+| **利率类型** | 固定利率 | 票面利率不变 |
+| | 浮动利率 | 利率随基准调整 |
+| | 零息债券 | 折价发行，到期按面值兑付 |
+| **Embedded Options** | 可赎回债券 | 发行人有权提前赎回 |
+| | 可回售债券 | 投资者有权提前回售 |
+| | 可转换债券 | 可转换为股票 |
+
 ### 债券定价
 
-```python
-import numpy as np
-from scipy.optimize import newton
+**基本定价公式：**
+$$P = \sum_{t=1}^{n} \frac{C}{(1+y)^t} + \frac{F}{(1+y)^n}$$
 
-class BondPricing:
-    """
-    债券定价方法
-    """
+其中：
+- $P$ = 债券价格
+- $C$ = 每期票息
+- $F$ = 面值
+- $y$ = 到期收益率 (YTM)
+- $n$ = 剩余期数
 
-    @staticmethod
-    def present_value(cash_flows, discount_rates):
-        """
-        债券现值计算
+**价格-收益率关系：**
+- 债券价格与市场利率呈反向关系
+- 利率下降 → 债券价格上涨
+- 利率上升 → 债券价格下跌
 
-        P = Σ(CF_t / (1+r_t)^t)
-        """
-        pv = sum(cf / (1 + r) ** t
-                 for t, (cf, r) in enumerate(zip(cash_flows, discount_rates), 1))
-        return pv
+### 收益率度量
 
-    @staticmethod
-    def price_from_ytm(face_value, coupon_rate, ytm, periods, frequency=1):
-        """
-        给定到期收益率计算债券价格
+| 指标 | 公式 | 应用场景 |
+|------|------|----------|
+| **当期收益率** | $\frac{年票息}{市场价格}$ | 快速估算收入回报 |
+| **到期收益率(YTM)** | 使现金流现值等于价格的折现率 | 最全面的收益度量 |
+| **赎回收益率(YTC)** | 假设债券被提前赎回的收益率 | 可赎回债券 |
+| **实现复利收益率** | 考虑再投资收益率的总回报 | 长期持有预期 |
 
-        P = Σ(C/(1+y)^t) + F/(1+y)^n
-        """
-        coupon_payment = face_value * coupon_rate / frequency
-        y = ytm / frequency
-        n = periods
-
-        # 票息现值
-        pv_coupons = coupon_payment * (1 - (1 + y) ** (-n)) / y
-
-        # 面值现值
-        pv_face = face_value / (1 + y) ** n
-
-        return pv_coupons + pv_face
-
-    @staticmethod
-    def yield_to_maturity(price, face_value, coupon_rate, periods, frequency=1, guess=0.05):
-        """
-        计算到期收益率 (YTM)
-
-        使债券现金流现值等于市场价格
-        """
-        coupon = face_value * coupon_rate / frequency
-
-        def price_diff(y):
-            calculated_price = sum(
-                coupon / (1 + y/frequency) ** t
-                for t in range(1, periods + 1)
-            ) + face_value / (1 + y/frequency) ** periods
-            return calculated_price - price
-
-        try:
-            ytm = newton(price_diff, guess)
-            return ytm * frequency
-        except:
-            return None
-
-    @staticmethod
-    def current_yield(annual_coupon, market_price):
-        """
-        当前收益率
-
-        年票息 / 市场价格
-        """
-        return annual_coupon / market_price
-
-    @staticmethod
-    def yield_to_call(price, face_value, coupon_rate, periods_to_call, call_price, frequency=1):
-        """
-        计算赎回收益率 (YTC)
-
-        可赎回债券可能被提前赎回
-        """
-        coupon = face_value * coupon_rate / frequency
-
-        def price_diff(y):
-            calculated_price = sum(
-                coupon / (1 + y/frequency) ** t
-                for t in range(1, periods_to_call + 1)
-            ) + call_price / (1 + y/frequency) ** periods_to_call
-            return calculated_price - price
-
-        try:
-            ytc = newton(price_diff, 0.05)
-            return ytc * frequency
-        except:
-            return None
-```
+---
 
 ## 利率风险度量
 
-### 久期与凸性
+### 久期 (Duration)
 
-```python
-class DurationAndConvexity:
-    """
-    久期与凸性计算
-    """
+**麦考利久期：**
+$$D_{Mac} = \frac{\sum_{t=1}^{n} t \times PV(CF_t)}{P}$$
 
-    @staticmethod
-    def macaulay_duration(cash_flows, ytm, frequency=1):
-        """
-        麦考利久期
+**修正久期：**
+$$D_{Mod} = \frac{D_{Mac}}{1+y}$$
 
-        现金流时间的加权平均
-        D_mac = Σ(t × PV(CF_t)) / P
-        """
-        y = ytm / frequency
-        times = np.arange(1, len(cash_flows) + 1) / frequency
+**经济含义：**
+- 衡量债券价格对利率变化的敏感度
+- 久期是现金流时间的加权平均
+- 久期越长，利率风险越大
 
-        pv_cash_flows = [cf / (1 + y) ** (t * frequency)
-                        for t, cf in enumerate(cash_flows, 1)]
+**价格变动近似：**
+$$\frac{\Delta P}{P} \approx -D_{Mod} \times \Delta y$$
 
-        total_pv = sum(pv_cash_flows)
-        weighted_times = sum(t * pv for t, pv in zip(times, pv_cash_flows))
+### 凸性 (Convexity)
 
-        return weighted_times / total_pv
+$$Convexity = \frac{\sum_{t=1}^{n} t(t+1) \times PV(CF_t)}{P \times (1+y)^2}$$
 
-    @staticmethod
-    def modified_duration(macaulay_duration, ytm, frequency=1):
-        """
-        修正久期
+**加入凸性的价格变动：**
+$$\frac{\Delta P}{P} \approx -D_{Mod} \times \Delta y + \frac{1}{2} \times Convexity \times (\Delta y)^2$$
 
-        D_mod = D_mac / (1 + y/f)
+**重要性质：**
+- 凸性为正时，利率下降带来的价格上涨大于同等利率上升带来的价格下跌
+- 凸性是有利的，投资者愿意为高凸性支付溢价
+- 零息债券凸性最小，可赎回债券凸性可能为负
 
-        价格变动近似：ΔP/P ≈ -D_mod × Δy
-        """
-        return macaulay_duration / (1 + ytm / frequency)
+### 美元久期与美元凸性
 
-    @staticmethod
-    def effective_duration(price, ytm_up, ytm_down, delta_y=0.0001):
-        """
-        有效久期
+| 指标 | 定义 | 应用 |
+|------|------|------|
+| **美元久期** | $市场价值 \times 修正久期 \times 0.01$ | 收益率变动1%的美元损失 |
+| **美元凸性** | $市场价值 \times 凸性 \times (0.01)^2$ | 凸性调整的美元影响 |
 
-        适用于含权债券
-        D_eff = (P_- - P_+) / (2 × P_0 × Δy)
-        """
-        price_up = BondPricing.price_from_ytm(100, 0.05, ytm_up, 10)
-        price_down = BondPricing.price_from_ytm(100, 0.05, ytm_down, 10)
+---
 
-        return (price_down - price_up) / (2 * price * delta_y)
+## 利率期限结构
 
-    @staticmethod
-    def convexity(cash_flows, ytm, frequency=1):
-        """
-        凸性
+### 收益率曲线
 
-        C = Σ[t(t+1) × PV(CF_t)] / [P × (1+y)²]
+```
+收益率曲线形状
+─────────────────────────────────────────
+收益
+  ↑     ╱  正常型
+  │    ╱   (经济扩张)
+  │   ╱
+  │  ╱
+  │ ╱
+  └────────→ 期限
 
-        加入凸性后的价格变动：
-        ΔP/P ≈ -D × Δy + 0.5 × C × (Δy)²
-        """
-        y = ytm / frequency
-        times = np.arange(1, len(cash_flows) + 1)
+  ↑ ╲      倒挂型
+  │  ╲     (经济衰退信号)
+  │   ╲
+  │    ╲
+  │     ╲
+  └────────→ 期限
 
-        pv_cash_flows = [cf / (1 + y) ** t for t, cf in zip(times, cash_flows)]
-        total_pv = sum(pv_cash_flows)
-
-        convexity_numerator = sum(
-            t * (t + 1) * pv for t, pv in zip(times, pv_cash_flows)
-        )
-
-        return convexity_numerator / (total_pv * (1 + y) ** 2)
-
-    @staticmethod
-    def dollar_duration(market_value, modified_duration):
-        """
-        美元久期
-
-        收益率变动1%时债券价值的美元变化
-        """
-        return market_value * modified_duration * 0.01
-
-    @staticmethod
-    def dollar_convexity(market_value, convexity):
-        """
-        美元凸性
-        """
-        return market_value * convexity * 0.0001
+  ↑ ─────  水平型
+  │        (经济过渡期)
+  └────────→ 期限
+─────────────────────────────────────────
 ```
 
-### 利率期限结构
+### 期限结构理论
 
-```python
-class TermStructure:
-    """
-    利率期限结构分析
-    """
+| 理论 | 核心观点 | 关键假设 |
+|------|----------|----------|
+| **预期理论** | 长期利率是预期短期利率的平均值 | 投资者风险中性 |
+| **流动性溢价理论** | 长期利率 = 预期短期利率 + 流动性溢价 | 投资者厌恶风险 |
+| **市场分割理论** | 不同期限市场相互独立 | 投资者有固定期限偏好 |
 
-    @staticmethod
-    def bootstrapping_spot_rates(bond_data):
-        """
-        拔靴法计算即期利率
+### 即期利率与远期利率
 
-        从平价债券收益率推导零息债券收益率
-        """
-        spot_rates = []
+**即期利率 (Spot Rate)：**
+零息债券的到期收益率。
 
-        for i, bond in enumerate(bond_data):
-            maturity = bond['maturity']
-            coupon = bond['coupon']
-            price = bond['price']
+**远期利率 (Forward Rate)：**
+未来两个时点之间的隐含利率。
 
-            if i == 0:
-                # 第一期：直接计算
-                spot = (100 / price) ** (1 / maturity) - 1
-            else:
-                # 后续期间：使用已知即期利率
-                pv_coupons = sum(
-                    coupon / (1 + spot_rates[j]) ** bond_data[j]['maturity']
-                    for j in range(i)
-                )
-                remaining = price - pv_coupons
-                spot = ((100 + coupon) / remaining) ** (1 / maturity) - 1
+$$(1+s_2)^2 = (1+s_1)(1+f_{1,2})$$
 
-            spot_rates.append(spot)
+$$f_{1,2} = \frac{(1+s_2)^2}{1+s_1} - 1$$
 
-        return spot_rates
+**拔靴法 (Bootstrapping)：**
+从平价债券收益率推导即期利率曲线。
 
-    @staticmethod
-    def forward_rate(spot_t1, spot_t2, t1, t2):
-        """
-        计算远期利率
-
-        (1 + f)^(t2-t1) = (1 + s2)^t2 / (1 + s1)^t1
-        """
-        return ((1 + spot_t2) ** t2 / (1 + spot_t1) ** t1) ** (1 / (t2 - t1)) - 1
-
-    @staticmethod
-    def par_yield_curve(spot_rates, maturities):
-        """
-        从即期利率推导平价收益率曲线
-        """
-        par_yields = []
-
-        for t, spot in zip(maturities, spot_rates):
-            # 平价债券：价格 = 面值
-            # 100 = Σ(c/(1+s)^i) + 100/(1+s)^t
-            # 解出 c
-            discount_factors = [(1 + spot_rates[i]) ** (-(i+1)) for i in range(t)]
-            annuity_factor = sum(discount_factors)
-
-            par_yield = (1 - discount_factors[-1]) / annuity_factor
-            par_yields.append(par_yield)
-
-        return par_yields
-
-    @staticmethod
-    def nelson_siegel(params, maturity):
-        """
-        Nelson-Siegel 期限结构模型
-
-        R(t) = β0 + β1 × (1 - e^(-t/τ))/(t/τ) + β2 × [(1 - e^(-t/τ))/(t/τ) - e^(-t/τ)]
-        """
-        beta0, beta1, beta2, tau = params
-        t = maturity
-
-        if t == 0:
-            return beta0 + beta1
-
-        term1 = (1 - np.exp(-t / tau)) / (t / tau)
-        term2 = term1 - np.exp(-t / tau)
-
-        return beta0 + beta1 * term1 + beta2 * term2
-```
+---
 
 ## 信用分析
 
-### 信用评级与利差
+### 信用评级
 
-```python
-class CreditAnalysis:
-    """
-    信用分析工具
-    """
+| 评级机构 | 投资级 | 投机级（垃圾债）|
+|----------|--------|-----------------|
+| **标普** | AAA ~ BBB- | BB+ ~ D |
+| **穆迪** | Aaa ~ Baa3 | Ba1 ~ C |
+| **惠誉** | AAA ~ BBB- | BB+ ~ D |
 
-    @staticmethod
-    def credit_spread(yield_corporate, yield_treasury):
-        """
-        信用利差
+**评级含义：**
+- **AAA/Aaa：** 最高信用质量，违约风险极低
+- **BBB/Baa：** 投资级最低档，违约风险较低
+- **BB/Ba：** 投机级最高档，有一定投机性
+- **CCC/Caa：** 高投机性，违约风险高
+- **D：** 违约
 
-        公司债收益率与国债收益率之差
-        """
-        return yield_corporate - yield_treasury
+### 信用利差
 
-    @staticmethod
-    def default_probability(credit_spread, recovery_rate=0.4):
-        """
-        从信用利差推导违约概率（简化模型）
+$$信用利差 = 公司债收益率 - 同期限国债收益率$$
 
-        P(default) ≈ Spread / (1 - Recovery Rate)
-        """
-        return credit_spread / (1 - recovery_rate)
+**利差影响因素：**
+- 违约概率
+- 违约损失率（回收率）
+- 流动性溢价
+- 系统性风险溢价
 
-    @staticmethod
-    def expected_loss(probability_default, loss_given_default, exposure_at_default):
-        """
-        预期损失 (EL)
+### 违约概率估计
 
-        EL = PD × LGD × EAD
-        """
-        return probability_default * loss_given_default * exposure_at_default
+**简化模型：**
+$$P(违约) \approx \frac{利差}{1 - 回收率}$$
 
-    @staticmethod
-    def z_score_model(current_assets, current_liabilities, total_assets,
-                     retained_earnings, ebit, sales, market_equity):
-        """
-        Altman Z-Score 模型
+**预期损失 (EL)：**
+$$EL = PD \times LGD \times EAD$$
 
-        Z = 1.2X1 + 1.4X2 + 3.3X3 + 0.6X4 + 1.0X5
-        """
-        x1 = (current_assets - current_liabilities) / total_assets  # 营运资金/总资产
-        x2 = retained_earnings / total_assets  # 留存收益/总资产
-        x3 = ebit / total_assets  # EBIT/总资产
-        x4 = market_equity / total_assets  # 市值/总资产
-        x5 = sales / total_assets  # 销售额/总资产
+其中：
+- PD = 违约概率
+- LGD = 违约损失率
+- EAD = 违约风险敞口
 
-        z_score = 1.2 * x1 + 1.4 * x2 + 3.3 * x3 + 0.6 * x4 + 1.0 * x5
+### Altman Z-Score
 
-        interpretation = {
-            'Z > 2.99': '安全区（低违约风险）',
-            '1.81 < Z < 2.99': '灰色地带',
-            'Z < 1.81': '困境区（高违约风险）'
-        }
+$$Z = 1.2X_1 + 1.4X_2 + 3.3X_3 + 0.6X_4 + 1.0X_5$$
 
-        return z_score, interpretation
-```
+| 变量 | 含义 |
+|------|------|
+| $X_1$ | 营运资金 / 总资产 |
+| $X_2$ | 留存收益 / 总资产 |
+| $X_3$ | EBIT / 总资产 |
+| $X_4$ | 市值 / 总负债 |
+| $X_5$ | 销售收入 / 总资产 |
+
+**判别标准：**
+- Z > 2.99：安全区（低违约风险）
+- 1.81 < Z < 2.99：灰色地带
+- Z < 1.81：困境区（高违约风险）
+
+---
 
 ## 债券组合管理
 
 ### 免疫策略
 
-```python
-class BondPortfolioManagement:
-    """
-    债券组合管理策略
-    """
+**目标：** 使组合价值不受利率变动影响。
 
-    @staticmethod
-    def cash_flow_matching(liabilities, available_bonds):
-        """
-        现金流匹配策略
+**利率免疫条件：**
+1. 资产久期 = 负债久期
+2. 资产现值 = 负债现值
+3. 资产凸性 > 负债凸性（有利）
 
-        选择债券使现金流恰好覆盖负债
-        """
-        # 线性规划问题：最小化成本，约束为现金流覆盖
-        # 简化示例
-        selected_bonds = []
-        remaining_liabilities = liabilities.copy()
+**现金流匹配：**
+选择债券使现金流恰好覆盖负债，无需再平衡。
 
-        for bond in sorted(available_bonds, key=lambda x: x['cost']):
-            # 检查债券现金流是否能覆盖剩余负债
-            if all(bond['cash_flows'][t] >= remaining_liabilities[t]
-                   for t in range(len(remaining_liabilities))):
-                selected_bonds.append(bond)
-                remaining_liabilities = [max(0, remaining_liabilities[t] - bond['cash_flows'][t])
-                                        for t in range(len(remaining_liabilities))]
+### 主动管理策略
 
-        return selected_bonds
+| 策略 | 方法 | 风险 |
+|------|------|------|
+| **利率预测** | 根据利率预期调整久期 | 预测错误风险 |
+| **收益率曲线策略** | 骑乘收益率曲线 | 利率意外上升 |
+| **利差交易** | 买入信用利差过宽的债券 | 信用恶化 |
+| **券种选择** | 选择被低估的个券 | 估值错误 |
 
-    @staticmethod
-    def duration_matching(portfolio_duration, target_duration, bonds):
-        """
-        久期匹配策略
+### 或有免疫策略
 
-        调整组合久期以匹配目标久期（如负债久期）
-        """
-        current_duration = portfolio_duration
-        adjustments = []
+结合积极管理和免疫保底：
+1. 设定最低可接受回报
+2. 计算触发免疫的阈值
+3. 高于阈值时积极管理
+4. 触及阈值时切换到免疫策略
 
-        if current_duration < target_duration:
-            # 需要增加久期，买入长期债券
-            long_bonds = [b for b in bonds if b['duration'] > current_duration]
-            adjustments.append(f"买入长期债券: {long_bonds[0] if long_bonds else '无合适标的'}")
-        elif current_duration > target_duration:
-            # 需要减少久期，买入短期债券
-            short_bonds = [b for b in bonds if b['duration'] < current_duration]
-            adjustments.append(f"买入短期债券: {short_bonds[0] if short_bonds else '无合适标的'}")
-
-        return adjustments
-
-    @staticmethod
-    def contingent_immunization(safety_net_return, current_portfolio_value,
-                               liability_value, immunized_return):
-        """
-        或有免疫策略
-
-        积极管理+免疫保底
-        """
-        # 计算触发免疫的阈值
-        trigger_value = liability_value / ((1 + immunized_return) ** years_to_liability)
-
-        cushion = current_portfolio_value - trigger_value
-        cushion_ratio = cushion / current_portfolio_value
-
-        return {
-            'trigger_value': trigger_value,
-            'current_cushion': cushion,
-            'cushion_ratio': cushion_ratio,
-            'strategy': '积极管理' if cushion_ratio > 0.05 else '切换到免疫策略'
-        }
-```
+---
 
 ## 抵押贷款支持证券 (MBS)
 
-```python
-class MBSAnalysis:
-    """
-    抵押贷款支持证券分析
-    """
+### 提前偿付风险
 
-    @staticmethod
-    def prepayment_model(cpr):
-        """
-        提前偿付率模型
+**条件提前偿付率 (CPR)：**
+年化提前偿付比例。
 
-        CPR: 年条件提前偿付率
-        SMM: 月提前偿付率 = 1 - (1 - CPR)^(1/12)
-        """
-        smm = 1 - (1 - cpr) ** (1/12)
-        return smm
+**单月偿付率 (SMM)：**
+$$SMM = 1 - (1 - CPR)^{1/12}$$
 
-    @staticmethod
-    def psa_benchmark(month, cpr_max=0.06):
-        """
-        PSA 提前偿付基准
+**PSA 基准：**
+- 第1个月 CPR = 0.2%
+- 每月增加0.2%，直到第30个月达到6%
+- 之后保持6%
 
-        第1个月 CPR = 0.2%
-        每月增加 0.2%，直到第30个月达到 6%
-        之后保持 6%
-        """
-        if month <= 30:
-            cpr = month * 0.002
-        else:
-            cpr = cpr_max
+### MBS 特征
 
-        return cpr
+| 特征 | 描述 |
+|------|------|
+| **负凸性** | 利率下降时提前偿付增加，价格上涨受限 |
+| **收缩风险** | 利率下降，提前偿付加速 |
+| **延展风险** | 利率上升，提前偿付减慢 |
+| **加权平均期限(WAL)** | 本金偿还时间的加权平均 |
 
-    @staticmethod
-    def weighted_average_life(cash_flows, principal_payments):
-        """
-        加权平均期限 (WAL)
+### 期权调整利差 (OAS)
 
-        本金偿还时间的加权平均
-        """
-        total_principal = sum(principal_payments)
+$$OAS = Z-Spread - 期权成本$$
 
-        wal = sum(t * pp / total_principal
-                 for t, pp in enumerate(principal_payments, 1))
+OAS 剔除了提前偿付期权的影响，用于比较不同MBS的相对价值。
 
-        return wal
-
-    @staticmethod
-    def oas_analysis(spread, z_spread, option_cost):
-        """
-        期权调整利差 (OAS)
-
-        OAS = Z-Spread - Option Cost
-        """
-        return z_spread - option_cost
-```
+---
 
 ## 延伸阅读
 
