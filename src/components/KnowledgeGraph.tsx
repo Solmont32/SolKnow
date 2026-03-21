@@ -21,6 +21,8 @@ import {
   Globe,
   Tag,
   FileText,
+  Play,
+  Pause,
 } from 'lucide-react';
 
 interface ForceGraph3DInstance {
@@ -63,8 +65,10 @@ const KnowledgeGraph3DInner = () => {
   const [focusNode, setFocusNode] = useState<Node | null>(null);
   const [hoverNode, setHoverNode] = useState<Node | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [showNodeList, setShowNodeList] = useState(true);
+  const [showNodeList, setShowNodeList] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
+  const [autoRotate, setAutoRotate] = useState(true);
+  const rotationRef = useRef<number>(0);
 
   useEffect(() => {
     Promise.all([
@@ -128,10 +132,31 @@ const KnowledgeGraph3DInner = () => {
     setFocusNode(null);
     setHoverNode(null);
     setSelectedGroup(null);
+    rotationRef.current = 0;
     if (fgRef.current) {
       fgRef.current.cameraPosition({ x: 0, y: 0, z: 350 }, { x: 0, y: 0, z: 0 }, 1200);
     }
   };
+
+  // 自动旋转效果
+  useEffect(() => {
+    if (!autoRotate || focusNode) return;
+
+    let animationId: number;
+    const rotate = () => {
+      if (fgRef.current && !focusNode) {
+        rotationRef.current += 0.002;
+        const radius = 350;
+        const x = Math.sin(rotationRef.current) * radius;
+        const z = Math.cos(rotationRef.current) * radius;
+        fgRef.current.cameraPosition({ x, y: 0, z }, { x: 0, y: 0, z: 0 }, 0);
+      }
+      animationId = requestAnimationFrame(rotate);
+    };
+
+    animationId = requestAnimationFrame(rotate);
+    return () => cancelAnimationFrame(animationId);
+  }, [autoRotate, focusNode]);
 
   const getGroupIcon = (group: number) => {
     switch (group) {
@@ -204,7 +229,10 @@ const KnowledgeGraph3DInner = () => {
         backgroundColor="rgba(0,0,0,0)"
         showNavInfo={false}
         cameraPosition={{ x: 0, y: 0, z: 350 }}
-        onNodeClick={handleNodeClick}
+        onNodeClick={(node: Node) => {
+          setAutoRotate(false);
+          handleNodeClick(node);
+        }}
         onNodeHover={setHoverNode}
         onBackgroundClick={() => setFocusNode(null)}
         cooldownTicks={200}
@@ -217,6 +245,56 @@ const KnowledgeGraph3DInner = () => {
         nodeThreeObjectExtend={false}
       />
 
+      {/* 顶部搜索栏 - 居中 */}
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 w-full max-w-xl px-4">
+        <div className="backdrop-blur-xl bg-white/90 dark:bg-black/80 border border-white/30 dark:border-white/10 rounded-2xl shadow-2xl p-3">
+          <div className="relative">
+            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              placeholder="搜索知识节点..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-2.5 pl-10 bg-gray-100 dark:bg-white/10 border border-transparent rounded-xl text-sm focus:outline-none focus:border-blue-500 transition-colors"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-200 dark:hover:bg-white/20 rounded"
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
+
+          {/* 搜索结果下拉 */}
+          {searchQuery && (
+            <div className="mt-2 max-h-48 overflow-y-auto border-t border-gray-200 dark:border-white/10 pt-2">
+              {filteredNodes.slice(0, 10).map((node) => (
+                <button
+                  key={node.id}
+                  onClick={() => {
+                    jumpToNode(node);
+                    setSearchQuery('');
+                  }}
+                  className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
+                >
+                  <div
+                    className="w-2 h-2 rounded-full flex-shrink-0"
+                    style={{ backgroundColor: GROUP_COLORS[node.group] }}
+                  />
+                  <span className="text-sm truncate">{node.name}</span>
+                  <span className="text-xs text-gray-400 ml-auto">{GROUP_NAMES[node.group]}</span>
+                </button>
+              ))}
+              {filteredNodes.length === 0 && (
+                <div className="text-center py-4 text-gray-400 text-sm">未找到匹配的节点</div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* 左侧节点列表 */}
       <AnimatePresence>
         {showNodeList && (
@@ -224,40 +302,15 @@ const KnowledgeGraph3DInner = () => {
             initial={{ x: -320, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -320, opacity: 0 }}
-            className="absolute top-4 left-4 bottom-4 w-80 backdrop-blur-xl bg-white/90 dark:bg-black/80 border border-white/30 dark:border-white/10 rounded-2xl shadow-2xl z-20 flex flex-col"
+            className="absolute top-20 left-4 bottom-4 w-72 backdrop-blur-xl bg-white/90 dark:bg-black/80 border border-white/30 dark:border-white/10 rounded-2xl shadow-2xl z-20 flex flex-col"
           >
-            {/* 搜索框 */}
-            <div className="p-4 border-b border-gray-200 dark:border-white/10">
-              <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
-                <Search size={18} />
-                知识节点
-              </h3>
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="搜索节点..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-3 py-2 pl-9 bg-gray-100 dark:bg-white/10 border border-transparent rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-colors"
-                />
-                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery('')}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-200 dark:hover:bg-white/20 rounded"
-                  >
-                    <X size={12} />
-                  </button>
-                )}
-              </div>
-            </div>
-
             {/* 领域筛选 */}
-            <div className="px-4 py-3 border-b border-gray-200 dark:border-white/10">
-              <div className="flex flex-wrap gap-2">
+            <div className="p-4 border-b border-gray-200 dark:border-white/10">
+              <h3 className="text-sm font-bold mb-3 text-gray-500">按领域筛选</h3>
+              <div className="flex flex-wrap gap-1.5">
                 <button
                   onClick={() => setSelectedGroup(null)}
-                  className={`px-2 py-1 text-xs rounded-full transition-colors ${
+                  className={`px-2.5 py-1 text-xs rounded-full transition-colors ${
                     selectedGroup === null
                       ? 'bg-blue-500 text-white'
                       : 'bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20'
@@ -269,7 +322,7 @@ const KnowledgeGraph3DInner = () => {
                   <button
                     key={group}
                     onClick={() => setSelectedGroup(Number(group))}
-                    className="px-2 py-1 text-xs rounded-full transition-colors"
+                    className="px-2.5 py-1 text-xs rounded-full transition-colors"
                     style={{
                       backgroundColor: selectedGroup === Number(group) ? GROUP_COLORS[Number(group)] : undefined,
                       color: selectedGroup === Number(group) ? 'white' : undefined,
@@ -285,11 +338,9 @@ const KnowledgeGraph3DInner = () => {
             {/* 节点列表 */}
             <div className="flex-1 overflow-y-auto p-2">
               {filteredNodes.length === 0 ? (
-                <div className="text-center py-8 text-gray-400 text-sm">
-                  未找到匹配的节点
-                </div>
+                <div className="text-center py-8 text-gray-400 text-sm">未找到匹配的节点</div>
               ) : (
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {filteredNodes.map((node) => (
                     <button
                       key={node.id}
@@ -324,14 +375,27 @@ const KnowledgeGraph3DInner = () => {
         )}
       </AnimatePresence>
 
-      {/* 切换节点列表按钮 */}
-      <button
-        onClick={() => setShowNodeList(!showNodeList)}
-        className="absolute top-4 left-4 z-30 p-3 backdrop-blur-md bg-white/80 dark:bg-black/70 border border-white/30 dark:border-white/10 rounded-xl shadow-lg hover:scale-110 transition-all"
-        style={{ marginLeft: showNodeList ? '320px' : '0' }}
-      >
-        {showNodeList ? <X size={20} /> : <Search size={20} />}
-      </button>
+      {/* 左侧控制按钮组 */}
+      <div className="absolute top-20 left-4 z-30 flex flex-col gap-2">
+        <button
+          onClick={() => setShowNodeList(!showNodeList)}
+          className="p-3 backdrop-blur-md bg-white/80 dark:bg-black/70 border border-white/30 dark:border-white/10 rounded-xl shadow-lg hover:scale-110 transition-all"
+          title={showNodeList ? '关闭列表' : '打开列表'}
+        >
+          {showNodeList ? <X size={20} /> : <Search size={20} />}
+        </button>
+        <button
+          onClick={() => setAutoRotate(!autoRotate)}
+          className={`p-3 backdrop-blur-md border rounded-xl shadow-lg hover:scale-110 transition-all ${
+            autoRotate
+              ? 'bg-blue-500/80 border-blue-400 text-white'
+              : 'bg-white/80 dark:bg-black/70 border-white/30 dark:border-white/10'
+          }`}
+          title={autoRotate ? '停止旋转' : '自动旋转'}
+        >
+          {autoRotate ? <Pause size={20} /> : <Play size={20} />}
+        </button>
+      </div>
 
       {/* 右侧节点详情 */}
       <AnimatePresence>
