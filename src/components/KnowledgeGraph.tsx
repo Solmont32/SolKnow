@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useEffect, useState } from 'react';
 import BrowserOnly from '@docusaurus/BrowserOnly';
-import { graphData, Node, Link } from '../data/graphData';
+import { graphData, Node } from '../data/graphData';
 import { useHistory } from '@docusaurus/router';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -11,83 +11,72 @@ import {
   Code2,
   Infinity as InfinityIcon,
   Monitor,
-  Youtube,
   TrendingUp,
   BarChart3,
   Shield,
+  Brain,
 } from 'lucide-react';
 
-interface ForceGraph2DInstance {
-  centerAt: (x: number, y: number, duration?: number) => void;
-  zoom: (scale: number, duration?: number) => void;
-  zoomToFit: (duration?: number, padding?: number) => void;
+interface ForceGraph3DInstance {
+  cameraPosition: (pos: { x: number; y: number; z: number }, lookAt?: { x: number; y: number; z: number }, transitionMs?: number) => void;
+  refresh: () => void;
 }
 
-const KnowledgeGraphInner = () => {
+// 7个领域的颜色配置
+const GROUP_COLORS: Record<number, string> = {
+  1: '#3b82f6', // 数学 - blue
+  2: '#8b5cf6', // 算法 - purple
+  3: '#f59e0b', // CS - amber
+  4: '#ef4444', // AI - red
+  5: '#10b981', // 金融 - emerald
+  6: '#06b6d4', // 量化 - cyan
+  7: '#f43f5e', // 安全 - rose
+};
+
+const KnowledgeGraph3DInner = () => {
   const history = useHistory();
-  const fgRef = useRef<ForceGraph2DInstance | null>(null);
-  const [ForceGraph2D, setForceGraph2D] = useState<React.ComponentType<any> | null>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
+  const fgRef = useRef<ForceGraph3DInstance | null>(null);
+  const [ForceGraph3D, setForceGraph3D] = useState<React.ComponentType<any> | null>(null);
   const [focusNode, setFocusNode] = useState<Node | null>(null);
-  const [highlightNodes, setHighlightNodes] = useState(new Set());
-  const [highlightLinks, setHighlightLinks] = useState(new Set());
+  const [hoverNode, setHoverNode] = useState<Node | null>(null);
 
   useEffect(() => {
-    import('react-force-graph-2d').then((mod) => {
-      setForceGraph2D(mod.default);
+    import('react-force-graph-3d').then((mod) => {
+      setForceGraph3D(mod.default);
     });
   }, []);
 
-  // Find neighbors for highlighting
-  const updateHighlight = (node: Node | null) => {
-    setHighlightNodes(new Set());
-    setHighlightLinks(new Set());
-
-    if (node) {
-      const neighbors = new Set();
-      const links = new Set();
-
-      graphData.links.forEach((link: Link) => {
-        const sourceId = typeof link.source === 'string' ? link.source : link.source.id;
-        const targetId = typeof link.target === 'string' ? link.target : link.target.id;
-        if (sourceId === node.id) {
-          neighbors.add(targetId);
-          links.add(link);
-        } else if (targetId === node.id) {
-          neighbors.add(sourceId);
-          links.add(link);
-        }
-      });
-
-      setHighlightNodes(new Set([node.id, ...Array.from(neighbors)]));
-      setHighlightLinks(links);
-    }
-  };
-
   const handleNodeClick = useCallback(
-    (node: Node & { x: number; y: number }) => {
+    (node: Node) => {
       if (focusNode?.id === node.id) {
-        // Double click or click on focused node -> Navigate
         if (node.path) history.push(node.path);
         return;
       }
-
-      // Aim at node
       setFocusNode(node);
-      updateHighlight(node);
 
+      // 相机聚焦到选中节点
       if (fgRef.current) {
-        fgRef.current.centerAt(node.x, node.y, 800);
-        fgRef.current.zoom(2.5, 800);
+        const distance = 200;
+        const distRatio = 1 + distance / Math.hypot(node.x || 0, node.y || 0, (node.z || 0) + distance);
+        fgRef.current.cameraPosition(
+          {
+            x: (node.x || 0) * distRatio,
+            y: (node.y || 0) * distRatio,
+            z: ((node.z || 0) + distance) * distRatio,
+          },
+          { x: node.x || 0, y: node.y || 0, z: node.z || 0 },
+          1500
+        );
       }
     },
-    [focusNode, history],
+    [focusNode, history]
   );
 
   const resetView = () => {
     setFocusNode(null);
-    updateHighlight(null);
+    setHoverNode(null);
     if (fgRef.current) {
-      fgRef.current.zoomToFit(800, 100);
+      fgRef.current.cameraPosition({ x: 0, y: 0, z: 400 }, { x: 0, y: 0, z: 0 }, 1500);
     }
   };
 
@@ -100,7 +89,7 @@ const KnowledgeGraphInner = () => {
       case 3:
         return <Monitor size={18} className="text-amber-500" />;
       case 4:
-        return <Youtube size={18} className="text-red-500" />;
+        return <Brain size={18} className="text-red-500" />;
       case 5:
         return <TrendingUp size={18} className="text-emerald-500" />;
       case 6:
@@ -112,7 +101,7 @@ const KnowledgeGraphInner = () => {
     }
   };
 
-  if (!ForceGraph2D)
+  if (!ForceGraph3D)
     return (
       <div
         style={{
@@ -126,89 +115,48 @@ const KnowledgeGraphInner = () => {
       >
         <div className="animate-pulse flex flex-col items-center gap-4">
           <div className="w-12 h-12 bg-gray-300 rounded-full dark:bg-gray-700"></div>
-          <span className="text-gray-500 font-medium">Loading SolKnow Graph...</span>
+          <span className="text-gray-500 font-medium">Loading 3D Knowledge Graph...</span>
         </div>
       </div>
     );
 
   return (
     <div className="knowledge-graph-container relative w-full h-[750px] rounded-3xl overflow-hidden border border-[var(--ifm-color-emphasis-200)] shadow-[var(--solknow-card-shadow)] bg-[var(--ifm-background-color)]">
-      <ForceGraph2D
+      <ForceGraph3D
         ref={fgRef}
         graphData={graphData}
         nodeLabel="name"
-        nodeRelSize={4}
-        linkDirectionalParticles={1}
-        linkDirectionalParticleWidth={1}
-        linkDirectionalParticleSpeed={(d: Link) => d.value * 0.002}
-        linkColor={(link: Link) =>
-          highlightLinks.has(link) ? 'var(--ifm-color-primary)' : 'var(--ifm-color-emphasis-200)'
-        }
-        linkWidth={(link: Link) => (highlightLinks.has(link) ? 2 : 0.5)}
-        nodeCanvasObject={(
-          node: Node & { x: number; y: number; color?: string },
-          ctx: CanvasRenderingContext2D,
-          globalScale: number,
-        ) => {
-          const isHighlighted = highlightNodes.has(node.id);
-          const isFocused = focusNode?.id === node.id;
-
-          const label = node.name;
-          const fontSize = (isFocused ? 14 : 12) / globalScale;
-          ctx.font = `${isFocused ? 'bold' : 'normal'} ${fontSize}px Inter, system-ui, sans-serif`;
-
-          // Draw shadow/glow for focused node
-          if (isFocused) {
-            ctx.shadowColor = 'rgba(59, 130, 246, 0.5)';
-            ctx.shadowBlur = 15;
-          }
-
-          // Node Circle - 7 domain colors
-          ctx.fillStyle =
-            node.color ||
-            (node.group === 1
-              ? '#3b82f6' // 数学 - blue
-              : node.group === 2
-                ? '#8b5cf6' // 算法 - purple
-                : node.group === 3
-                  ? '#f59e0b' // 计算 - amber
-                  : node.group === 4
-                    ? '#ef4444' // AI - red
-                    : node.group === 5
-                      ? '#10b981' // 金融 - emerald
-                      : node.group === 6
-                        ? '#06b6d4' // 量化 - cyan
-                        : '#f43f5e'); // 信息安全 - rose
-
-          // Fade out non-highlighted nodes if something is focused
-          if (focusNode && !isHighlighted) {
-            ctx.globalAlpha = 0.1;
-          } else if (focusNode && isHighlighted && highlightNodes.size > 2) {
-            // Also fade neighbors slightly when many are highlighted
-            ctx.globalAlpha = 0.7;
-          }
-
-          ctx.beginPath();
-          ctx.arc(node.x, node.y, node.val * 0.5, 0, 2 * Math.PI, false);
-          ctx.fill();
-
-          // Reset shadow
-          ctx.shadowBlur = 0;
-
-          // Label
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillStyle = 'var(--ifm-font-color-base)';
-          ctx.fillText(label, node.x, node.y + node.val + 5);
-
-          ctx.globalAlpha = 1.0;
-        }}
+        nodeColor={(node: Node) => GROUP_COLORS[node.group] || '#94a3b8'}
+        nodeRelSize={3}
+        nodeResolution={16}
+        linkColor={() => 'rgba(148, 163, 184, 0.3)'}
+        linkWidth={0.5}
+        linkOpacity={0.6}
+        backgroundColor="rgba(0,0,0,0)"
+        showNavInfo={false}
+        cameraPosition={{ x: 0, y: 0, z: 400 }}
         onNodeClick={handleNodeClick}
+        onNodeHover={setHoverNode}
         onBackgroundClick={resetView}
-        cooldownTicks={200}
-        d3AlphaDecay={0.01}
-        d3VelocityDecay={0.2}
-        d3ForceLink={{ distance: 150 }}
+        cooldownTicks={300}
+        d3AlphaDecay={0.005}
+        d3VelocityDecay={0.1}
+        d3ForceLink={{ distance: 80 }}
+        d3ForceCharge={-150}
+        warmupTicks={50}
+        // 3D效果增强
+        nodeThreeObject={(node: Node) => {
+          // 为不同类型的节点设置不同大小
+          const size = node.type === 'domain' ? 6 : node.type === 'category' ? 4 : 2.5;
+          const color = GROUP_COLORS[node.group] || '#94a3b8';
+
+          // 高亮效果
+          const isHighlighted = focusNode?.id === node.id || hoverNode?.id === node.id;
+          const finalSize = isHighlighted ? size * 1.5 : size;
+
+          return null; // 使用默认球体，大小由 nodeRelSize 控制
+        }}
+        nodeThreeObjectExtend={true}
       />
 
       {/* Side Panel */}
@@ -218,14 +166,19 @@ const KnowledgeGraphInner = () => {
             initial={{ x: 300, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: 300, opacity: 0 }}
-            className="absolute top-6 right-6 w-72 backdrop-blur-xl bg-white/70 dark:bg-black/40 border border-white/20 dark:border-white/10 rounded-2xl p-5 shadow-2xl z-10"
+            className="absolute top-6 right-6 w-72 backdrop-blur-xl bg-white/80 dark:bg-black/60 border border-white/30 dark:border-white/10 rounded-2xl p-5 shadow-2xl z-10"
           >
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-blue-500/10 rounded-lg">{getGroupIcon(focusNode.group)}</div>
+              <div
+                className="p-2 rounded-lg"
+                style={{ backgroundColor: `${GROUP_COLORS[focusNode.group]}20` }}
+              >
+                {getGroupIcon(focusNode.group)}
+              </div>
               <h3 className="m-0 text-lg font-bold truncate">{focusNode.name}</h3>
             </div>
 
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
               {focusNode.description || `探索关于 ${focusNode.name} 的知识体系与深度解析文档。`}
             </p>
 
@@ -242,7 +195,7 @@ const KnowledgeGraphInner = () => {
 
               <button
                 onClick={resetView}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-transparent hover:bg-gray-100 dark:hover:bg-white/5 text-gray-600 dark:text-gray-400 rounded-xl transition-all text-sm border-none cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 text-gray-700 dark:text-gray-300 rounded-xl transition-all text-sm border-none cursor-pointer"
               >
                 <RotateCcw size={14} />
                 <span>返回全景视图</span>
@@ -252,48 +205,54 @@ const KnowledgeGraphInner = () => {
         )}
       </AnimatePresence>
 
-      {/* Overlay Controls - 7 Domain Legend (Compact) */}
+      {/* Controls */}
+      <div className="absolute top-6 left-6 flex flex-col gap-2">
+        <button
+          onClick={resetView}
+          className="p-3 backdrop-blur-md bg-white/70 dark:bg-black/50 border border-white/30 dark:border-white/10 rounded-xl shadow-lg hover:scale-110 active:scale-95 transition-all cursor-pointer"
+          title="重置视角"
+        >
+          <Maximize2 size={20} className="text-gray-700 dark:text-gray-300" />
+        </button>
+      </div>
+
+      {/* Legend - 7 Domain Colors */}
       <div className="absolute bottom-6 left-6 flex items-center gap-2 pointer-events-none">
-        <div className="px-3 py-2 backdrop-blur-md bg-white/60 dark:bg-black/40 border border-white/20 rounded-2xl text-xs font-medium grid grid-cols-4 gap-x-4 gap-y-1.5">
+        <div className="px-4 py-3 backdrop-blur-md bg-white/70 dark:bg-black/50 border border-white/30 dark:border-white/10 rounded-2xl text-xs font-medium grid grid-cols-4 gap-x-4 gap-y-2">
           <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
-            <span className="text-gray-700 dark:text-gray-300">数学</span>
+            <div className="w-3 h-3 rounded-full bg-blue-500 shadow-lg shadow-blue-500/30"></div>
+            <span className="text-gray-700 dark:text-gray-200">数学</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-purple-500"></div>
-            <span className="text-gray-700 dark:text-gray-300">算法</span>
+            <div className="w-3 h-3 rounded-full bg-purple-500 shadow-lg shadow-purple-500/30"></div>
+            <span className="text-gray-700 dark:text-gray-200">算法</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-amber-500"></div>
-            <span className="text-gray-700 dark:text-gray-300">CS</span>
+            <div className="w-3 h-3 rounded-full bg-amber-500 shadow-lg shadow-amber-500/30"></div>
+            <span className="text-gray-700 dark:text-gray-200">CS</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-red-500"></div>
-            <span className="text-gray-700 dark:text-gray-300">AI</span>
+            <div className="w-3 h-3 rounded-full bg-red-500 shadow-lg shadow-red-500/30"></div>
+            <span className="text-gray-700 dark:text-gray-200">AI</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
-            <span className="text-gray-700 dark:text-gray-300">金融</span>
+            <div className="w-3 h-3 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/30"></div>
+            <span className="text-gray-700 dark:text-gray-200">金融</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-cyan-500"></div>
-            <span className="text-gray-700 dark:text-gray-300">量化</span>
+            <div className="w-3 h-3 rounded-full bg-cyan-500 shadow-lg shadow-cyan-500/30"></div>
+            <span className="text-gray-700 dark:text-gray-200">量化</span>
           </div>
           <div className="flex items-center gap-1.5 col-span-2">
-            <div className="w-2.5 h-2.5 rounded-full bg-rose-500"></div>
-            <span className="text-gray-700 dark:text-gray-300">安全</span>
+            <div className="w-3 h-3 rounded-full bg-rose-500 shadow-lg shadow-rose-500/30"></div>
+            <span className="text-gray-700 dark:text-gray-200">安全</span>
           </div>
         </div>
       </div>
 
-      <div className="absolute top-6 left-6 flex flex-col gap-2">
-        <button
-          onClick={resetView}
-          className="p-3 backdrop-blur-md bg-white/50 dark:bg-black/30 border border-white/20 rounded-xl shadow-lg hover:scale-110 active:scale-95 transition-all cursor-pointer pointer-events-auto"
-          title="Reset View"
-        >
-          <Maximize2 size={20} className="text-gray-700 dark:text-gray-300" />
-        </button>
+      {/* 操作提示 */}
+      <div className="absolute bottom-6 right-6 px-4 py-2 backdrop-blur-md bg-white/50 dark:bg-black/30 border border-white/20 rounded-full text-xs text-gray-500 dark:text-gray-400 pointer-events-none">
+        左键旋转 · 右键平移 · 滚轮缩放 · 点击节点聚焦
       </div>
     </div>
   );
@@ -311,11 +270,11 @@ export default function KnowledgeGraph() {
             justifyContent: 'center',
           }}
         >
-          Loading...
+          Loading 3D Graph...
         </div>
       }
     >
-      {() => <KnowledgeGraphInner />}
+      {() => <KnowledgeGraph3DInner />}
     </BrowserOnly>
   );
 }
