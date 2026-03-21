@@ -20,6 +20,11 @@ const config: Config = {
     hooks: {
       onBrokenMarkdownLinks: 'warn',
     },
+    mdx1Compat: {
+      comments: false,
+      admonitions: false,
+      headingIds: true,
+    },
   },
 
   i18n: {
@@ -112,22 +117,26 @@ const config: Config = {
           title: '核心领域',
           items: [
             { label: '算法竞赛', to: '/docs/intro' },
-            { label: '数学大厦', to: '/docs/academic-math/analysis/' },
+            { label: '系统数学', to: '/docs/academic-math/analysis/' },
             { label: '人工智能', to: '/docs/ai/' },
+            { label: '计算机科学', to: '/docs/cs/' },
           ],
         },
         {
-          title: '技术专栏',
+          title: '专业领域',
           items: [
-            { label: '计算机科学', to: '/docs/cs/' },
+            { label: '金融学', to: '/docs/finance/' },
+            { label: '量化交易', to: '/docs/quant/' },
             { label: '信息安全', to: '/docs/infosec/' },
             { label: '视频专栏', to: '/videos' },
           ],
         },
         {
-          title: '更多',
+          title: '探索',
           items: [
-            { label: 'Bilibili', href: 'https://space.bilibili.com' },
+            { label: '知识图谱', to: '/graph' },
+            { label: '资源导航', to: '/docs/resources' },
+            { label: '博客', to: '/blog' },
             { label: 'GitHub', href: 'https://github.com/Solmont32/SolKnow' },
           ],
         },

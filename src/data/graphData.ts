@@ -70,6 +70,14 @@ export const graphData: GraphData = {
       type: 'category',
       path: '/docs/academic-math/probability',
     },
+    {
+      id: 'statistics',
+      name: '统计学',
+      val: 7,
+      group: 1,
+      type: 'category',
+      path: '/docs/academic-math/statistics',
+    },
 
     // Algo Categories
     { id: 'basic-algo', name: '基础算法', val: 7, group: 2, type: 'category', path: '/docs/basic' },
@@ -201,6 +209,7 @@ export const graphData: GraphData = {
     { source: 'math', target: 'algebra', value: 2 },
     { source: 'math', target: 'discrete', value: 2 },
     { source: 'math', target: 'probability', value: 2 },
+    { source: 'math', target: 'statistics', value: 2 },
 
     { source: 'algo', target: 'basic-algo', value: 2 },
     { source: 'algo', target: 'ds', value: 2 },

@@ -12,6 +12,9 @@ import {
   Infinity as InfinityIcon,
   Monitor,
   Youtube,
+  TrendingUp,
+  BarChart3,
+  Shield,
 } from 'lucide-react';
 
 interface ForceGraph2DInstance {
@@ -98,6 +101,12 @@ const KnowledgeGraphInner = () => {
         return <Monitor size={18} className="text-amber-500" />;
       case 4:
         return <Youtube size={18} className="text-red-500" />;
+      case 5:
+        return <TrendingUp size={18} className="text-emerald-500" />;
+      case 6:
+        return <BarChart3 size={18} className="text-cyan-500" />;
+      case 7:
+        return <Shield size={18} className="text-rose-500" />;
       default:
         return <Info size={18} />;
     }
@@ -107,7 +116,7 @@ const KnowledgeGraphInner = () => {
     return (
       <div
         style={{
-          height: '650px',
+          height: '750px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -123,18 +132,19 @@ const KnowledgeGraphInner = () => {
     );
 
   return (
-    <div className="knowledge-graph-container relative w-full h-[650px] rounded-3xl overflow-hidden border border-[var(--ifm-color-emphasis-200)] shadow-[var(--solknow-card-shadow)] bg-[var(--ifm-background-color)]">
+    <div className="knowledge-graph-container relative w-full h-[750px] rounded-3xl overflow-hidden border border-[var(--ifm-color-emphasis-200)] shadow-[var(--solknow-card-shadow)] bg-[var(--ifm-background-color)]">
       <ForceGraph2D
         ref={fgRef}
         graphData={graphData}
         nodeLabel="name"
-        nodeRelSize={6}
-        linkDirectionalParticles={2}
-        linkDirectionalParticleSpeed={(d: Link) => d.value * 0.005}
+        nodeRelSize={4}
+        linkDirectionalParticles={1}
+        linkDirectionalParticleWidth={1}
+        linkDirectionalParticleSpeed={(d: Link) => d.value * 0.002}
         linkColor={(link: Link) =>
           highlightLinks.has(link) ? 'var(--ifm-color-primary)' : 'var(--ifm-color-emphasis-200)'
         }
-        linkWidth={(link: Link) => (highlightLinks.has(link) ? 3 : 1)}
+        linkWidth={(link: Link) => (highlightLinks.has(link) ? 2 : 0.5)}
         nodeCanvasObject={(
           node: Node & { x: number; y: number; color?: string },
           ctx: CanvasRenderingContext2D,
@@ -153,24 +163,33 @@ const KnowledgeGraphInner = () => {
             ctx.shadowBlur = 15;
           }
 
-          // Node Circle
+          // Node Circle - 7 domain colors
           ctx.fillStyle =
             node.color ||
             (node.group === 1
-              ? '#3b82f6'
+              ? '#3b82f6' // 数学 - blue
               : node.group === 2
-                ? '#8b5cf6'
+                ? '#8b5cf6' // 算法 - purple
                 : node.group === 3
-                  ? '#f59e0b'
-                  : '#ef4444');
+                  ? '#f59e0b' // 计算 - amber
+                  : node.group === 4
+                    ? '#ef4444' // AI - red
+                    : node.group === 5
+                      ? '#10b981' // 金融 - emerald
+                      : node.group === 6
+                        ? '#06b6d4' // 量化 - cyan
+                        : '#f43f5e'); // 信息安全 - rose
 
           // Fade out non-highlighted nodes if something is focused
           if (focusNode && !isHighlighted) {
-            ctx.globalAlpha = 0.2;
+            ctx.globalAlpha = 0.1;
+          } else if (focusNode && isHighlighted && highlightNodes.size > 2) {
+            // Also fade neighbors slightly when many are highlighted
+            ctx.globalAlpha = 0.7;
           }
 
           ctx.beginPath();
-          ctx.arc(node.x, node.y, node.val * 0.8, 0, 2 * Math.PI, false);
+          ctx.arc(node.x, node.y, node.val * 0.5, 0, 2 * Math.PI, false);
           ctx.fill();
 
           // Reset shadow
@@ -186,9 +205,10 @@ const KnowledgeGraphInner = () => {
         }}
         onNodeClick={handleNodeClick}
         onBackgroundClick={resetView}
-        cooldownTicks={100}
-        d3AlphaDecay={0.02}
-        d3VelocityDecay={0.3}
+        cooldownTicks={200}
+        d3AlphaDecay={0.01}
+        d3VelocityDecay={0.2}
+        d3ForceLink={{ distance: 150 }}
       />
 
       {/* Side Panel */}
@@ -232,24 +252,36 @@ const KnowledgeGraphInner = () => {
         )}
       </AnimatePresence>
 
-      {/* Overlay Controls */}
+      {/* Overlay Controls - 7 Domain Legend (Compact) */}
       <div className="absolute bottom-6 left-6 flex items-center gap-2 pointer-events-none">
-        <div className="px-3 py-1.5 backdrop-blur-md bg-white/50 dark:bg-black/30 border border-white/20 rounded-full text-xs font-medium flex items-center gap-4">
+        <div className="px-3 py-2 backdrop-blur-md bg-white/60 dark:bg-black/40 border border-white/20 rounded-2xl text-xs font-medium grid grid-cols-4 gap-x-4 gap-y-1.5">
           <div className="flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-            <span>数学</span>
+            <div className="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
+            <span className="text-gray-700 dark:text-gray-300">数学</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-full bg-purple-500"></div>
-            <span>算法</span>
+            <div className="w-2.5 h-2.5 rounded-full bg-purple-500"></div>
+            <span className="text-gray-700 dark:text-gray-300">算法</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-full bg-amber-500"></div>
-            <span>计算</span>
+            <div className="w-2.5 h-2.5 rounded-full bg-amber-500"></div>
+            <span className="text-gray-700 dark:text-gray-300">CS</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-full bg-red-500"></div>
-            <span>视频</span>
+            <div className="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+            <span className="text-gray-700 dark:text-gray-300">AI</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+            <span className="text-gray-700 dark:text-gray-300">金融</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-full bg-cyan-500"></div>
+            <span className="text-gray-700 dark:text-gray-300">量化</span>
+          </div>
+          <div className="flex items-center gap-1.5 col-span-2">
+            <div className="w-2.5 h-2.5 rounded-full bg-rose-500"></div>
+            <span className="text-gray-700 dark:text-gray-300">安全</span>
           </div>
         </div>
       </div>
@@ -273,7 +305,7 @@ export default function KnowledgeGraph() {
       fallback={
         <div
           style={{
-            height: '650px',
+            height: '750px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

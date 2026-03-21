@@ -34,11 +34,11 @@ export default function GraphPage() {
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Network className="text--primary" size={24} />
-                  <span>80+ 知识节点</span>
+                  <span>85+ 知识节点</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Zap style={{ color: '#8b5cf6' }} size={24} />
-                  <span>100+ 动态关联</span>
+                  <span>120+ 动态关联</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Cpu style={{ color: '#f59e0b' }} size={24} />

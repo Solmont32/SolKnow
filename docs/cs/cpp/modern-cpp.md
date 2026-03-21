@@ -21,7 +21,7 @@ auto p = make_unique<int>(10); // 自动释放内存
 ## Lambda 表达式 (Lambdas)
 
 即匿名函数，极大简化了算法的回调：
-`<!-- [capture](params) --> -> return_type { body }`
+`[capture](params) -> return_type { body }`
 
 ## 右值引用与移动语义 (R-value & Move)
 

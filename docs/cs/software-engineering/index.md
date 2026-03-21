@@ -30,5 +30,5 @@
 
 ## 板块索引
 
-- <!-- [Git 基础实践](git-basics) -->：从零开始掌握版本控制。
-- <!-- [软件设计原则 (SOLID)](design-principles) -->：编写可维护代码的基石。
+- {/* [Git 基础实践](git-basics) */}：从零开始掌握版本控制。
+- {/* [软件设计原则 (SOLID)](design-principles) */}：编写可维护代码的基石。

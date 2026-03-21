@@ -7,7 +7,7 @@ tags: [upgrade, aesthetics, engineering]
 
 今天，**SolKnow（知岛）** 迎来了一场从内到外的“换血式”升级。我们不仅确立了严谨的工业级开发标准，还在视觉体验上实现了向现代科技感的跨越。
 
-<!-- truncate -->
+{/* truncate */}
 
 ### 核心成就：审美与交互革命
 

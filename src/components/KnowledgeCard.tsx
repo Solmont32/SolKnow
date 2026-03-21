@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useState, memo } from 'react';
 import {
   Info,
   AlertTriangle,
@@ -132,7 +132,7 @@ const config = {
  * 专业的文档增强卡片
  * 用于高亮显示知识点、技巧、竞赛经验等
  */
-export default function KnowledgeCard({
+function KnowledgeCard({
   children,
   type = 'info',
   title,
@@ -237,3 +237,5 @@ export default function KnowledgeCard({
     </motion.div>
   );
 }
+
+export default memo(KnowledgeCard);
