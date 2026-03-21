@@ -32,15 +32,15 @@ interface ForceGraph3DInstance {
   renderer: () => any;
 }
 
-// 7个领域的颜色配置
+// 7个领域的颜色配置 - 高饱和度霓虹色
 const GROUP_COLORS: Record<number, string> = {
-  1: '#60a5fa', // 数学 - 亮蓝
-  2: '#a78bfa', // 算法 - 亮紫
-  3: '#fbbf24', // CS - 亮琥珀
-  4: '#f87171', // AI - 亮红
-  5: '#34d399', // 金融 - 亮翡翠
-  6: '#22d3ee', // 量化 - 亮青
-  7: '#fb7185', // 安全 - 亮玫瑰
+  1: '#00d4ff', // 数学 - 霓虹蓝
+  2: '#b829dd', // 算法 - 霓虹紫
+  3: '#ffb800', // CS - 霓虹琥珀
+  4: '#ff3366', // AI - 霓虹红
+  5: '#00ff88', // 金融 - 霓虹绿
+  6: '#00ffff', // 量化 - 霓虹青
+  7: '#ff0066', // 安全 - 霓虹玫瑰
 };
 
 const GROUP_NAMES: Record<number, string> = {
@@ -336,22 +336,22 @@ const KnowledgeGraph3DInner = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: 'radial-gradient(ellipse at center, #1e293b 0%, #0f172a 100%)',
+          background: 'radial-gradient(ellipse at center, #1e3a5f 0%, #0f1a2e 100%)',
           borderRadius: '24px',
         }}
       >
         <div className="animate-pulse flex flex-col items-center gap-4">
-          <div className="w-12 h-12 bg-slate-600 rounded-full"></div>
-          <span className="text-slate-400 font-medium">加载3D知识图谱...</span>
+          <div className="w-12 h-12 bg-blue-500 rounded-full shadow-lg shadow-blue-500/50"></div>
+          <span className="text-blue-200 font-medium">加载3D知识图谱...</span>
         </div>
       </div>
     );
 
   return (
     <div
-      className="knowledge-graph-container relative w-full h-[800px] rounded-3xl overflow-hidden border border-slate-700 shadow-2xl"
+      className="knowledge-graph-container relative w-full h-[800px] rounded-3xl overflow-hidden border border-slate-600 shadow-2xl"
       style={{
-        background: 'radial-gradient(ellipse at center, #1e293b 0%, #0f172a 50%, #020617 100%)',
+        background: 'radial-gradient(ellipse at center, #1e3a5f 0%, #0f1a2e 50%, #0a0f1d 100%)',
       }}
     >
       {/* 3D 图 */}
@@ -359,13 +359,13 @@ const KnowledgeGraph3DInner = () => {
         ref={fgRef}
         graphData={graphDataFiltered}
         nodeLabel="name"
-        nodeColor={(node: Node) => GROUP_COLORS[node.group] || '#94a3b8'}
+        nodeColor={(node: Node) => GROUP_COLORS[node.group] || '#ffffff'}
         nodeRelSize={getNodeSize}
-        nodeResolution={20}
-        nodeOpacity={0.95}
-        linkColor={() => 'rgba(148, 163, 184, 0.25)'}
-        linkWidth={0.2}
-        linkOpacity={0.3}
+        nodeResolution={24}
+        nodeOpacity={1}
+        linkColor={() => 'rgba(100, 180, 255, 0.4)'}
+        linkWidth={0.5}
+        linkOpacity={0.5}
         backgroundColor="rgba(0,0,0,0)"
         showNavInfo={false}
         cameraPosition={{ x: 0, y: 0, z: 400 }}
@@ -627,10 +627,10 @@ export default function KnowledgeGraph() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            background: 'radial-gradient(ellipse at center, #1e293b 0%, #0f172a 100%)',
+            background: 'radial-gradient(ellipse at center, #1e3a5f 0%, #0f1a2e 100%)',
           }}
         >
-          <span className="text-slate-400">加载3D图谱中...</span>
+          <span className="text-blue-200">加载3D图谱中...</span>
         </div>
       }
     >
