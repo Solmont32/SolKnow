@@ -32,7 +32,8 @@
     "react-force-graph-2d": "^1.29.1",
     "react-force-graph-3d": "^1.29.1",
     "rehype-katex": "^7.0.1",
-    "remark-math": "^6.0.0"
+    "remark-math": "^6.0.0",
+    "three-spritetext": "^1.10.0"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.9.2",
