@@ -38,6 +38,18 @@ import KnowledgeCard from '@site/src/components/KnowledgeCard';
 - **[迭代法与 Newton 法](nonlinear-equations)**：从二分法到切线法，探究非线性根搜索的高效路径。
 - **收敛性分析**：不动点迭代的压缩映射原理与收敛阶判定。
 
+### 5. 线性方程组数值解 (Linear Systems)
+
+- **[直接法：LU 分解与 Cholesky](linear-systems)**：Gauss 消元、矩阵分解与直接求解策略。
+- **[迭代法：Jacobi 与 Gauss-Seidel](linear-systems)**：大规模稀疏系统的迭代求解与收敛性分析。
+- **[稳定性与条件数](linear-systems)**：数值稳定性分析与病态问题处理。
+
+### 6. 常微分方程数值解 (ODE)
+
+- **[单步法：Euler 与 Runge-Kutta](ode)**：从基本 Euler 到经典 RK4，精度与效率的平衡。
+- **[多步法：Adams 方法](ode)**：利用历史信息提高计算效率的线性多步法。
+- **[稳定性与刚性问题](ode)**：绝对稳定性分析与刚性方程的处理策略。
+
 </div>
 
 ---

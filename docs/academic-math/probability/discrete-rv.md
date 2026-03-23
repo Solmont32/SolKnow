@@ -22,6 +22,8 @@ $$P(X = x_i) = p_i, \quad i = 1, 2, \dots$$
 3.  **二项分布 (Binomial Distribution)**: $X \sim B(n, p)$，$P(X=k) = \binom{n}{k} p^k (1-p)^{n-k}$。
 4.  **泊松分布 (Poisson Distribution)**: $X \sim P(\lambda)$，$P(X=k) = \frac{\lambda^k e^{-\lambda}}{k!}$。
 5.  **几何分布 (Geometric Distribution)**: $X \sim G(p)$，$P(X=k) = (1-p)^{k-1}p$。
+6.  **负二项分布 (Negative Binomial)**: $X \sim NB(r, p)$，第 $r$ 次成功所需的试验次数。
+7.  **超几何分布 (Hypergeometric)**: $X \sim H(N, M, n)$，不放回抽样中的成功次数。
 
 ## 2. 数字特征 (Numerical Characteristics)
 
@@ -67,6 +69,80 @@ $$Var(X) = E[(X - E(X))^2] = E(X^2) - [E(X)]^2$$
 $$E(X) = \sum_{k=0}^\infty k \cdot \frac{\lambda^k e^{-\lambda}}{k!} = \sum_{k=1}^\infty \frac{\lambda^k e^{-\lambda}}{(k-1)!} = \lambda e^{-\lambda} \sum_{k=1}^\infty \frac{\lambda^{k-1}}{(k-1)!}$$
 令 $j = k-1$，则：
 $$E(X) = \lambda e^{-\lambda} \sum_{j=0}^\infty \frac{\lambda^j}{j!} = \lambda e^{-\lambda} \cdot e^\lambda = \lambda$$
+
+</details>
+
+## 4. 分布间的关系
+
+```
+                    泊松分布 P(λ)
+                          ↑
+         二项分布 B(n,p) ←——→ 超几何分布 H(N,M,n)
+              ↓                   (不放回)
+    n=1 时为两点分布 B(1,p)
+              ↓
+         几何分布 G(p)
+              ↓
+         负二项分布 NB(r,p)
+```
+
+**重要极限关系**：当 $n \to \infty$，$p \to 0$ 且 $np = \lambda$ 时，二项分布收敛于泊松分布：
+$$\binom{n}{k} p^k (1-p)^{n-k} \xrightarrow{} \frac{\lambda^k e^{-\lambda}}{k!}$$
+
+---
+
+## 5. 计算验证：C++ 蒙特卡洛模拟
+
+以下代码通过随机模拟验证泊松分布的期望和方差。
+
+<details>
+<summary>点击查看 C++ 验证代码</summary>
+
+```cpp
+#include <iostream>
+#include <random>
+#include <vector>
+#include <cmath>
+#include <iomanip>
+
+using namespace std;
+
+// 生成泊松分布随机数 (使用 std::poisson_distribution)
+void test_poisson(double lambda, int trials) {
+    random_device rd;
+    mt19937 gen(rd());
+    poisson_distribution<> d(lambda);
+
+    vector<long long> counts(20, 0);
+    double sum = 0, sum_sq = 0;
+
+    for (int i = 0; i < trials; ++i) {
+        int x = d(gen);
+        if (x < 20) counts[x]++;
+        sum += x;
+        sum_sq += x * x;
+    }
+
+    double mean = sum / trials;
+    double variance = sum_sq / trials - mean * mean;
+
+    cout << fixed << setprecision(4);
+    cout << "λ = " << lambda << ", 试验次数 = " << trials << endl;
+    cout << "样本均值: " << mean << " (理论值: " << lambda << ")" << endl;
+    cout << "样本方差: " << variance << " (理论值: " << lambda << ")" << endl;
+    cout << "\n频率分布 vs 理论概率:" << endl;
+    for (int k = 0; k < 10; ++k) {
+        double freq = (double)counts[k] / trials;
+        double theory = exp(-lambda) * pow(lambda, k) / tgamma(k + 1);
+        cout << "P(X=" << k << "): 模拟=" << freq << " 理论=" << theory << endl;
+    }
+}
+
+int main() {
+    test_poisson(3.0, 100000);
+    return 0;
+}
+```
 
 </details>
 
