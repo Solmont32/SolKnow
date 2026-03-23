@@ -133,4 +133,3 @@ $$ \int_0^\infty \frac{\sin x}{x} dx = \frac{\pi}{2} $$
 这是复分析在解析数论与信号处理中不可或缺的经典应用。
 
 - [跳转：共形映射与几何理论](./conformal-mapping)
-- [跳转：复变函数综合练习库](/docs/exercises/math/complex-analysis)

@@ -3,22 +3,22 @@ title: 抽象代数 (Abstract Algebra)
 description: 群、环、域与模的现代代数结构理论
 ---
 
-import KnowledgeCard from “@site/src/components/KnowledgeCard”;
+import KnowledgeCard from "@site/src/components/KnowledgeCard";
 import { Group, Circle, Square, Box, Layers } from 'lucide-react';
 
 # 抽象代数 (Abstract Algebra)
 
-> “代数不再只是关于数字的运算，而是关于**结构**的研究。”
+> "代数不再只是关于数字的运算，而是关于**结构**的研究。"
 
-抽象代数（现代代数）研究群、环、域、模等代数结构及其态射，是现代数学中”结构化思维”的核心训练模块。它提供了描述对称性、数论和几何的统一语言。
+抽象代数（现代代数）研究群、环、域、模等代数结构及其态射，是现代数学中"结构化思维"的核心训练模块。它提供了描述对称性、数论和几何的统一语言。
 
 ---
 
 ## 核心代数结构
 
-<div className=”grid grid-cols-1 md:grid-cols-2 gap-4”>
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-<KnowledgeCard type=”info” title={<><Group className=”inline-block mr-2” /> 群 (Group)</>}>
+<KnowledgeCard type="info" title={<><Group className="inline-block mr-2" /> 群 (Group)</>}>
 具有一个二元运算的代数结构，满足结合律、单位元和逆元。群论是描述**对称性**的数学语言。
 
 **关键概念**：子群、陪集、正规子群、商群、同态、同构定理
@@ -26,7 +26,7 @@ import { Group, Circle, Square, Box, Layers } from 'lucide-react';
 [进入群论 →](groups)
 </KnowledgeCard>
 
-<KnowledgeCard type=”success” title={<><Circle className=”inline-block mr-2” /> 环 (Ring)</>}>
+<KnowledgeCard type="success" title={<><Circle className="inline-block mr-2" /> 环 (Ring)</>}>
 具有加法和乘法两种运算的结构，是整数和多项式的抽象。理想理论是环论的核心。
 
 **关键概念**：理想、商环、素理想、极大理想、唯一分解整环
@@ -34,7 +34,7 @@ import { Group, Circle, Square, Box, Layers } from 'lucide-react';
 [进入环论 →](rings)
 </KnowledgeCard>
 
-<KnowledgeCard type=”warning” title={<><Square className=”inline-block mr-2” /> 域 (Field)</>}>
+<KnowledgeCard type="warning" title={<><Square className="inline-block mr-2" /> 域 (Field)</>}>
 乘法可交换且非零元可逆的环。域论研究方程的可解性和扩域结构。
 
 **关键概念**：域扩张、代数元、分裂域、Galois 理论
@@ -42,15 +42,15 @@ import { Group, Circle, Square, Box, Layers } from 'lucide-react';
 [进入域扩张 →](modules-and-field-extensions)
 </KnowledgeCard>
 
-<KnowledgeCard type=”tip” title={<><Box className=”inline-block mr-2” /> 模 (Module)</>}>
-环上的”向量空间”。将线性代数的方法推广到更一般的代数结构。
+<KnowledgeCard type="tip" title={<><Box className="inline-block mr-2" /> 模 (Module)</>}>
+环上的"向量空间"。将线性代数的方法推广到更一般的代数结构。
 
 **关键概念**：自由模、投射模、正合序列、张量积
 
 [进入模论 →](modules-and-field-extensions)
 </KnowledgeCard>
 
-<KnowledgeCard type=”error” title={<><Layers className=”inline-block mr-2” /> 格与布尔代数</>}>
+<KnowledgeCard type="error" title={<><Layers className="inline-block mr-2" /> 格与布尔代数</>}>
 偏序集与代数结构的结合，在逻辑学和计算机科学中有重要应用。
 
 **关键概念**：偏序、上确界/下确界、分配格、布尔代数
@@ -64,7 +64,7 @@ import { Group, Circle, Square, Box, Layers } from 'lucide-react';
 
 ## 学习目标
 
-- 建立”定义-定理-例题-练习”闭环；
+- 建立"定义-定理-例题-练习"闭环；
 - 能独立完成基本结构判定（子群、理想、商结构）；
 - 能使用同构定理与群作用观点完成结构化化简；
 - 理解 Galois 理论在方程可解性中的应用。
@@ -128,7 +128,7 @@ class GF_Element {
 
 public:
     GF_Element(int v, int prime) : p(prime) {
-        if (prime <= 0) throw std::invalid_argument(“p must be positive”);
+        if (prime <= 0) throw std::invalid_argument("p must be positive");
         value = ((v % p) + p) % p;  // 保证非负
     }
 
@@ -141,7 +141,7 @@ public:
     }
 
     GF_Element inverse() const {
-        if (value == 0) throw std::runtime_error(“Zero has no inverse”);
+        if (value == 0) throw std::runtime_error("Zero has no inverse");
         // 扩展欧几里得算法求逆元
         int a = value, b = p;
         int x0 = 1, x1 = 0;
@@ -165,11 +165,11 @@ int main() {
 
     GF_Element a(3, p), b(5, p);
 
-    std::cout << “GF(“ << p << “) 运算示例:” << std::endl;
-    std::cout << “3 + 5 = “ << (a + b).get() << std::endl;
-    std::cout << “3 * 5 = “ << (a * b).get() << std::endl;
-    std::cout << “5^{-1} = “ << b.inverse().get() << std::endl;
-    std::cout << “3 / 5 = “ << (a / b).get() << std::endl;
+    std::cout << "GF(" << p << ") 运算示例:" << std::endl;
+    std::cout << "3 + 5 = " << (a + b).get() << std::endl;
+    std::cout << "3 * 5 = " << (a * b).get() << std::endl;
+    std::cout << "5^{-1} = " << b.inverse().get() << std::endl;
+    std::cout << "3 / 5 = " << (a / b).get() << std::endl;
 
     return 0;
 }
@@ -189,9 +189,9 @@ int main() {
 
 1. **先完成群论的定义与同态主线**：理解群作为对称性的描述工具
 2. **再学习群作用与 Sylow 定理**：掌握有限群计数与正规性判定模板
-3. **接着进入环论并掌握”理想-商环”语言**：类比群论中的正规子群
+3. **接着进入环论并掌握"理想-商环"语言**：类比群论中的正规子群
 4. **再学习模与域扩张**：把线性代数方法迁移到环与域结构中
-5. **最后学习格与布尔代数**：建立”偏序-代数运算-逻辑结构”三者联系
+5. **最后学习格与布尔代数**：建立"偏序-代数运算-逻辑结构"三者联系
 6. **配合练习库做分层训练**：基础/提高/挑战/格论专题/模与扩张专题/Sylow 专题
 
 ---
@@ -208,7 +208,7 @@ int main() {
 
 ---
 
-> **学习建议**：抽象代数初期可能感觉过于抽象，请务必通过**具体例子**（如对称群 $S_3$、整数环 $\mathbb{Z}$、有限域 $\mathbb{F}_p$）来建立直观。每学一个新概念，问自己：”这在 $\mathbb{Z}$ 或 $S_3$ 中长什么样？”
+> **学习建议**：抽象代数初期可能感觉过于抽象，请务必通过**具体例子**（如对称群 $S_3$、整数环 $\mathbb{Z}$、有限域 $\mathbb{F}_p$）来建立直观。每学一个新概念，问自己："这在 $\mathbb{Z}$ 或 $S_3$ 中长什么样？"
 
 ---
 

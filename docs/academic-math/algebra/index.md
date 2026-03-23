@@ -63,7 +63,7 @@ import { Grid, Box, Layers, GitCommit, Maximize, Activity } from 'lucide-react';
 
 ### 第三阶段：度量结构
 
-- [内积空间 (Inner Product Spaces)](inner-product-space)：正交性、正交变换
+- [内积空间 (Inner Product Spaces)](inner-product-spaces)：正交性、正交变换
 - [双线性型 (Bilinear Forms)](bilinear-forms)：对偶空间、张量
 - [二次型 (Quadratic Forms)](quadratic-forms)：合同、惯性指数、正定性
 
